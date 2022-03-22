@@ -13,11 +13,11 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
     <script data-pace-options='{ "ajax": true }' src="/assets/admin/scripts/pace.js"></script>
     <title>百萬信保檢核表</title>
-	<style>
-		.pointer{
-			cursor: pointer;
-		}
-	</style>
+    <style>
+        .pointer {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body style="background: rgb(204,204,204); font-size: 14px;">
@@ -44,10 +44,10 @@
         </div>
         <ul class="nav nav-tabs mt-2">
             <li class="nav-item pointer" onclick="changeTab('tab-skbank')">
-                <a class="nav-link" id="nav-tab-skbank" aria-current="page" >新光</a>
+                <a class="nav-link" id="nav-tab-skbank" aria-current="page">新光</a>
             </li>
             <li class="nav-item pointer" onclick="changeTab('tab-kgibank')">
-                <a class="nav-link" id="nav-tab-kgibank" >凱基</a>
+                <a class="nav-link" id="nav-tab-kgibank">凱基</a>
             </li>
         </ul>
         <div id="page-tab-skbank" class="nav-page" data-bankid="1">
@@ -138,7 +138,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司型態</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="CompType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -296,17 +296,19 @@
                                         </center>
                                     </td>
                                 </tr>
-								<tr>
-									<td class="bold-right-border">tab-skbank-custom</td>
-									<td colspan="3"><input name="customTab1_content" type="text" class="table-input" disabled>
-									</td>
-								
-									<td>
-										<center>
-											<input class="input-width" type="button" onclick="edit_click('customTab1')" value="Edit">
-										</center>
-									</td>
-								</tr>
+                                <tr>
+                                    <td class="bold-right-border">tab-skbank-custom</td>
+                                    <td colspan="3"><input name="customTab1_content" type="text" class="table-input"
+                                            disabled>
+                                    </td>
+
+                                    <td>
+                                        <center>
+                                            <input class="input-width" type="button" onclick="edit_click('customTab1')"
+                                                value="Edit">
+                                        </center>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td class="bold-right-border">公司登記地址-郵遞區號名稱</td>
                                     <td colspan="3"><input name="CompRegAddrZipName_content" type="text"
@@ -3636,31 +3638,33 @@
                                         (主計處)
                                     </td>
                                     <td class="bold-right-border">公司統一編號</td>
-                                    <td colspan="3"><input name="CompId_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="CompId_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompId_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompId_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司戶名</td>
-                                    <td colspan="3"><input name="CompName_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="CompName_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompName_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">組織類型</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="CompType2_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3673,8 +3677,8 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompType2_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompType2_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -3683,19 +3687,20 @@
                                         <div>公司核准設立日期</div>
                                         <div style="color:red;">格式:YYYYMMDD</div>
                                     </td>
-                                    <td colspan="3"><input name="CompSetDate_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="CompSetDate_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompSetDate_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompSetDate_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">依法核准情形</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="RegisterType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3706,14 +3711,14 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RegisterType_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RegisterType_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">是否公開發行</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="IsPublic_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3724,20 +3729,21 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('IsPublic_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('IsPublic_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司實收資本額</td>
-                                    <td colspan="3"><input name="CompCapital_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="CompCapital_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompCapital_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompCapital_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -3746,33 +3752,33 @@
                                         <div>公司最後核准變更實收資本額日期</div>
                                         <div style="color:red;">格式:YYYYMMDD</div>
                                     </td>
-                                    <td colspan="3"><input name="LastPaidInCapitalDate_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastPaidInCapitalDate_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastPaidInCapitalDate_content')" value="Edit">
+                                                onclick="edit_click('LastPaidInCapitalDate_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">營業登記地址</td>
                                     <td colspan="3"><input name="BizRegAddress_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddress_content')" value="Edit">
+                                                onclick="edit_click('BizRegAddress_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">是否有法人投資</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="HasJuridicalInvest_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3783,26 +3789,28 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('HasJuridicalInvest_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('HasJuridicalInvest_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">法人投資佔總股份(%)</td>
-                                    <td colspan="3"><input name="JuridicalInvestRate_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="JuridicalInvestRate_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('JuridicalInvestRate_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('JuridicalInvestRate_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">營業稅申報方式</td>
-                                    <td colspan="3"><select name="BizTaxFileWay_content" class="table-input" id="" disabled>
+                                    <td colspan="3"><select name="BizTaxFileWay_content" class="table-input" id=""
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="A">A:使用統一發票</option>
                                             <option value="B">B:免用統一發票核定繳納營業稅</option>
@@ -3814,26 +3822,26 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('BizTaxFileWay_content')" value="Edit">
+                                                onclick="edit_click('BizTaxFileWay_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">營業種類標準代碼</td>
                                     <td colspan="3"><input name="BusinessType2_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('BusinessType2_content')" value="Edit">
+                                                onclick="edit_click('BusinessType2_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">是否屬於製造業、營造業或礦業或土石採集業</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="IsManufacturing_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3844,8 +3852,8 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('IsManufacturing_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('IsManufacturing_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -3855,66 +3863,66 @@
                                     </td>
 
                                     <td class="bold-right-border">前一年度營業額</td>
-                                    <td colspan="3"><input name="LastYearRevenue_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastYearRevenue_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastYearRevenue_content')" value="Edit">
+                                                onclick="edit_click('LastYearRevenue_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">每日營運資金需求量</td>
-                                    <td colspan="3"><input name="DailyWorkingCapital_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="DailyWorkingCapital_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('DailyWorkingCapital_content')" value="Edit">
+                                                onclick="edit_click('DailyWorkingCapital_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">淨營業週期</td>
                                     <td colspan="3"><input name="OperatingCycle_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('OperatingCycle_content')" value="Edit">
+                                                onclick="edit_click('OperatingCycle_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負債總額</td>
-                                    <td colspan="3"><input name="LiabilitiesAmount_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LiabilitiesAmount_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LiabilitiesAmount_content')" value="Edit">
+                                                onclick="edit_click('LiabilitiesAmount_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">權益總額</td>
                                     <td colspan="3"><input name="EquityAmount_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('EquityAmount_content')" value="Edit">
+                                                onclick="edit_click('EquityAmount_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4029,7 +4037,7 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('CompDuType_content')" value="Edit">
+                                                onclick="edit_click('CompDuType_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4045,14 +4053,15 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('IsCovidAffected_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('IsCovidAffected_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">營業登記地址是否自有</td>
-                                    <td colspan="3"><select name="IsBizRegAddrSelfOwn_content" class="table-input" disabled>
+                                    <td colspan="3"><select name="IsBizRegAddrSelfOwn_content" class="table-input"
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="1">1:自有</option>
                                             <option value="0">0:非自有</option>
@@ -4062,7 +4071,7 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('IsBizRegAddrSelfOwn_content')" value="Edit">
+                                                onclick="edit_click('IsBizRegAddrSelfOwn_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4079,14 +4088,14 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrOwner_content')" value="Edit">
+                                                onclick="edit_click('BizRegAddrOwner_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">實際營業地址_是OR否 同營業登記地址</td>
-                                    <td colspan="3"><select name="IsBizAddrEqToBizRegAddr_content" class="table-input" id=""
-                                                            disabled>
+                                    <td colspan="3"><select name="IsBizAddrEqToBizRegAddr_content" class="table-input"
+                                            id="" disabled>
                                             <option value="" selected></option>
                                             <option value="1">1:同營業登記地址</option>
                                             <option value="0">0:不同於營業登記地址</option>
@@ -4096,27 +4105,27 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('IsBizAddrEqToBizRegAddr_content')" value="Edit">
+                                                onclick="edit_click('IsBizAddrEqToBizRegAddr_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">實際營業地址</td>
-                                        <td colspan="3"><input id="RealBizAddress_content" name="RealBizAddrCityName_content"
-                                                           type="text" class="table-input" disabled>
+                                    <td colspan="3"><input id="RealBizAddress_content"
+                                            name="RealBizAddrCityName_content" type="text" class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrCityName_content')" value="Edit">
+                                                onclick="edit_click('RealBizAddrCityName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">實際營業地址是否自有</td>
-                                    <td colspan="3"><select name="IsRealBizAddrSelfOwn_content" class="table-input" id=""
-                                                            disabled>
+                                    <td colspan="3"><select name="IsRealBizAddrSelfOwn_content" class="table-input"
+                                            id="" disabled>
                                             <option value="" selected></option>
                                             <option value="1">1:自有</option>
                                             <option value="0">0:非自有</option>
@@ -4126,13 +4135,14 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('IsRealBizAddrSelfOwn_content')" value="Edit">
+                                                onclick="edit_click('IsRealBizAddrSelfOwn_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">實際營業地址自有-所有權</td>
-                                    <td colspan="3"><select name="RealBizAddrOwner_content" class="table-input" id="" disabled>
+                                    <td colspan="3"><select name="RealBizAddrOwner_content" class="table-input" id=""
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="A">A:企業</option>
                                             <option value="B">B:負責人</option>
@@ -4143,16 +4153,16 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrOwner_content')" value="Edit">
+                                                onclick="edit_click('RealBizAddrOwner_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">企業聯絡人電話-區碼</td>
-                                    <td colspan="3"><input name="CompTelAreaCode_content" type="text" class="table-input"
-                                            disabled>
+                                    <td colspan="3"><input name="CompTelAreaCode_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
@@ -4162,103 +4172,111 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">企業聯絡人電話-電話號碼</td>
-                                    <td colspan="3"><input name="CompTelNo_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="CompTelNo_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompTelNo_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompTelNo_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">企業聯絡人電話-分機碼</td>
-                                    <td colspan="3"><input name="CompTelExt_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="CompTelExt_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompTelExt_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompTelExt_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">企業聯絡人姓名</td>
-                                    <td colspan="3"><input name="CompContactName_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="CompContactName_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompContactName_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompContactName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">企業聯絡人職稱</td>
-                                    <td colspan="3"><input name="CompContact_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="CompContact_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompContact_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompContact_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">企業財務主管姓名</td>
-                                    <td colspan="3"><input name="FinancialOfficerName_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="FinancialOfficerName_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('FinancialOfficerName_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('FinancialOfficerName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">企業財務主管分機</td>
-                                    <td colspan="3"><input name="FinancialOfficerExt_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="FinancialOfficerExt_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('FinancialOfficerExt_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('FinancialOfficerExt_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">企業Email</td>
-                                    <td colspan="3"><input name="CompEmail_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="CompEmail_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('CompEmail_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('CompEmail_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">目前員工人數</td>
-                                    <td colspan="3"><input name="EmployeeNum_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="EmployeeNum_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('EmployeeNum_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('EmployeeNum_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">是否有海外投資</td>
-                                    <td colspan="3"><select name="HasForeignInvestment_content" class="table-input" id=""
-                                                            disabled>
+                                    <td colspan="3"><select name="HasForeignInvestment_content" class="table-input"
+                                            id="" disabled>
                                             <option value="" selected></option>
                                             <option value="1">1:是</option>
                                             <option value="0">0:否</option>
@@ -4268,14 +4286,14 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('HasForeignInvestment_content')" value="Edit">
+                                                onclick="edit_click('HasForeignInvestment_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">是否有關係企業</td>
                                     <td colspan="3"><select name="HasRelatedCompany_content" class="table-input" id=""
-                                                            disabled>
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="1">1:是</option>
                                             <option value="0">0:否</option>
@@ -4285,35 +4303,37 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('HasRelatedCompany_content')" value="Edit">
+                                                onclick="edit_click('HasRelatedCompany_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(A)統一編號</td>
-                                    <td colspan="3"><input name="RelatedCompAGuiNumber_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="RelatedCompAGuiNumber_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompAGuiNumber_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompAGuiNumber_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(A)名稱</td>
-                                    <td colspan="3"><input name="RelatedCompAName_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="RelatedCompAName_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompAName_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompAName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(A)組織型態</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="RelatedCompAType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -4326,47 +4346,50 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompAType_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompAType_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(A)與借戶之關係</td>
-                                    <td colspan="3"><input name="RelatedCompARelationship_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="RelatedCompARelationship_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompARelationship_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompARelationship_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(B)統一編號</td>
-                                    <td colspan="3"><input name="RelatedCompBGuiNumber_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="RelatedCompBGuiNumber_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompBGuiNumber_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompBGuiNumber_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(B)名稱</td>
-                                    <td colspan="3"><input name="RelatedCompBName_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="RelatedCompBName_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompBName_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompBName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(B)組織型態</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="RelatedCompBType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -4379,47 +4402,50 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompBType_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompBType_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(B)與借戶之關係</td>
-                                    <td colspan="3"><input name="RelatedCompBRelationship_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="RelatedCompBRelationship_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompBRelationship_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompBRelationship_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(C)統一編號</td>
-                                    <td colspan="3"><input name="RelatedCompCGuiNumber_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="RelatedCompCGuiNumber_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompCGuiNumber_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompCGuiNumber_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(C)名稱</td>
-                                    <td colspan="3"><input name="RelatedCompCName_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="RelatedCompCName_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompCName_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompCName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(C)組織型態</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="RelatedCompCType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -4432,19 +4458,20 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompCType_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompCType_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(C)與借戶之關係</td>
-                                    <td colspan="3"><input name="RelatedCompCRelationship_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="RelatedCompCRelationship_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('RelatedCompCRelationship_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('RelatedCompCRelationship_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4459,12 +4486,12 @@
                                     </td>
                                     <td colspan="3">
                                         <input name="BusinessTaxLastOneYear_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('BusinessTaxLastOneYear_content')" value="Edit">
+                                                onclick="edit_click('BusinessTaxLastOneYear_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4475,12 +4502,12 @@
                                     </td>
                                     <td colspan="3">
                                         <input name="BusinessTaxLastTwoYear_content" type="text" class="table-input"
-                                               disabled>
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('BusinessTaxLastTwoYear_content')" value="Edit">
+                                                onclick="edit_click('BusinessTaxLastTwoYear_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4491,246 +4518,264 @@
                                     </td>
                                     <td colspan="3">
                                         <input name="BusinessTaxLastThreeYear_content" type="text" class="table-input"
-                                               disabled>
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('BusinessTaxLastThreeYear_content')" value="Edit">
+                                                onclick="edit_click('BusinessTaxLastThreeYear_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近一年申報營業稅01~02月開立發票金額</td>
-                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM1M2_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM1M2_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastOneYearInvoiceAmountM1M2_content')" value="Edit">
+                                                onclick="edit_click('LastOneYearInvoiceAmountM1M2_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近一年申報營業稅03~04月開立發票金額</td>
-                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM3M4_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM3M4_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastOneYearInvoiceAmountM3M4_content')" value="Edit">
+                                                onclick="edit_click('LastOneYearInvoiceAmountM3M4_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近一年申報營業稅05~06月開立發票金額</td>
-                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM5M6_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM5M6_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastOneYearInvoiceAmountM5M6_content')" value="Edit">
+                                                onclick="edit_click('LastOneYearInvoiceAmountM5M6_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近一年申報營業稅07~08月開立發票金額</td>
-                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM7M8_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM7M8_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastOneYearInvoiceAmountM7M8_content')" value="Edit">
+                                                onclick="edit_click('LastOneYearInvoiceAmountM7M8_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近一年申報營業稅09~10月開立發票金額</td>
-                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM9M10_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM9M10_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastOneYearInvoiceAmountM9M10_content')" value="Edit">
+                                                onclick="edit_click('LastOneYearInvoiceAmountM9M10_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近一年申報營業稅11~12月開立發票金額</td>
-                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM11M12_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastOneYearInvoiceAmountM11M12_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastOneYearInvoiceAmountM11M12_content')" value="Edit">
+                                                onclick="edit_click('LastOneYearInvoiceAmountM11M12_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近二年申報營業稅01~02月開立發票金額</td>
-                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM1M2_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM1M2_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastTwoYearInvoiceAmountM1M2_content')" value="Edit">
+                                                onclick="edit_click('LastTwoYearInvoiceAmountM1M2_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近二年申報營業稅03~04月開立發票金額</td>
-                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM3M4_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM3M4_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastTwoYearInvoiceAmountM3M4_content')" value="Edit">
+                                                onclick="edit_click('LastTwoYearInvoiceAmountM3M4_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近二年申報營業稅05~06月開立發票金額</td>
-                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM5M6_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM5M6_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastTwoYearInvoiceAmountM5M6_content')" value="Edit">
+                                                onclick="edit_click('LastTwoYearInvoiceAmountM5M6_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近二年申報營業稅07~08月開立發票金額</td>
-                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM7M8_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM7M8_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastTwoYearInvoiceAmountM7M8_content')" value="Edit">
+                                                onclick="edit_click('LastTwoYearInvoiceAmountM7M8_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近二年申報營業稅09~10月開立發票金額</td>
-                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM9M10_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM9M10_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastTwoYearInvoiceAmountM9M10_content')" value="Edit">
+                                                onclick="edit_click('LastTwoYearInvoiceAmountM9M10_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近二年申報營業稅11~12月開立發票金額</td>
-                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM11M12_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastTwoYearInvoiceAmountM11M12_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastTwoYearInvoiceAmountM11M12_content')" value="Edit">
+                                                onclick="edit_click('LastTwoYearInvoiceAmountM11M12_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近三年申報營業稅01~02月開立發票金額</td>
-                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM1M2_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM1M2_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastThreeYearInvoiceAmountM1M2_content')" value="Edit">
+                                                onclick="edit_click('LastThreeYearInvoiceAmountM1M2_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近三年申報營業稅03~04月開立發票金額</td>
-                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM3M4_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM3M4_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastThreeYearInvoiceAmountM3M4_content')" value="Edit">
+                                                onclick="edit_click('LastThreeYearInvoiceAmountM3M4_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近三年申報營業稅05~06月開立發票金額</td>
-                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM5M6_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM5M6_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastThreeYearInvoiceAmountM5M6_content')" value="Edit">
+                                                onclick="edit_click('LastThreeYearInvoiceAmountM5M6_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近三年申報營業稅07~08月開立發票金額</td>
-                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM7M8_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM7M8_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastThreeYearInvoiceAmountM7M8_content')" value="Edit">
+                                                onclick="edit_click('LastThreeYearInvoiceAmountM7M8_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近三年申報營業稅09~10月開立發票金額</td>
-                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM9M10_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM9M10_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastThreeYearInvoiceAmountM9M10_content')" value="Edit">
+                                                onclick="edit_click('LastThreeYearInvoiceAmountM9M10_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">近三年申報營業稅11~12月開立發票金額</td>
-                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM11M12_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="LastThreeYearInvoiceAmountM11M12_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('LastThreeYearInvoiceAmountM11M12_content')" value="Edit">
+                                                onclick="edit_click('LastThreeYearInvoiceAmountM11M12_content')"
+                                                value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4739,13 +4784,14 @@
                                         負責人身分證
                                     </td>
                                     <td class="bold-right-border">負責人姓名</td>
-                                    <td colspan="3"><input name="PrName_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="PrName_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('PrName_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('PrName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4753,17 +4799,18 @@
                                     <td class="bold-right-border">負責人身分證字號</td>
                                     <td colspan="3"><input name="_content" type="text" class="table-input" disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('PrincipalId_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('PrincipalId_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人配偶_有 OR 無</td>
-                                    <td colspan="3"><select name="IsPrMarried_content" class="table-input" id="" disabled>
+                                    <td colspan="3"><select name="IsPrMarried_content" class="table-input" id=""
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="1">1:有</option>
                                             <option value="0">0:無</option>
@@ -4772,8 +4819,8 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('IsPrMarried_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('IsPrMarried_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4782,13 +4829,14 @@
                                         <div>負責人出生日期</div>
                                         <div style="color:red;">格式:YYYYMMDD</div>
                                     </td>
-                                    <td colspan="3"><input name="PrBirth_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="PrBirth_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('PrBirth_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('PrBirth_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4801,13 +4849,14 @@
                                         <div>負責人擔任本企業負責人年度</div>
                                         <div style="color:red;">格式:YYYY</div>
                                     </td>
-                                    <td colspan="3"><input name="PrInChargeYear_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="PrInChargeYear_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('PrInChargeYear_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('PrInChargeYear_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4816,19 +4865,21 @@
                                         <div>負責人從事本行業年度</div>
                                         <div style="color:red;">格式:YYYY</div>
                                     </td>
-                                    <td colspan="3"><input name="PrStartYear_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="PrStartYear_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('PrStartYear_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('PrStartYear_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人學歷</td>
-                                    <td colspan="3"><select name="PrEduLevel_content" class="table-input" id="" disabled>
+                                    <td colspan="3"><select name="PrEduLevel_content" class="table-input" id=""
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="A">A:國小</option>
                                             <option value="B">B:國中</option>
@@ -4843,32 +4894,34 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('PrEduLevel_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('PrEduLevel_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人行動電話</td>
-                                    <td colspan="3"><input name="PrMobileNo_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="PrMobileNo_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('PrMobileNo_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('PrMobileNo_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人Email</td>
-                                    <td colspan="3"><input name="PrEmail_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="PrEmail_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('PrEmail_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('PrEmail_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4878,25 +4931,27 @@
                                     </td>
 
                                     <td class="bold-right-border">負責人配偶姓名</td>
-                                    <td colspan="3"><input name="SpouseName_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="SpouseName_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('SpouseName_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('SpouseName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人配偶身分證字號</td>
-                                    <td colspan="3"><input name="SpouseId_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="SpouseId_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('SpouseId_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('SpouseId_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4907,7 +4962,7 @@
                                     </td>
 
                                     <td class="bold-right-border">實際負責人是否等於登記負責人</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="IsPrRegister_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -4918,15 +4973,15 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('IsPrRegister_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('IsPrRegister_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">其他實際負責人_與借戶負責人之關係</td>
                                     <td colspan="3"><select name="OthRealPrRelWithPr_content" class="table-input" id=""
-                                                            disabled>
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="A">A:配偶</option>
                                             <option value="B">B:血親</option>
@@ -4942,84 +4997,85 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('OthRealPrRelWithPr_content')" value="Edit">
+                                                onclick="edit_click('OthRealPrRelWithPr_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">其他實際負責人_姓名</td>
                                     <td colspan="3"><input name="OthRealPrName_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('OthRealPrName_content')" value="Edit">
+                                                onclick="edit_click('OthRealPrName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">其他實際負責人_身分證字號</td>
-                                    <td colspan="3"><input name="OthRealPrId_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="OthRealPrId_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('OthRealPrId_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('OthRealPrId_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">其他實際負責人_出生日期</td>
                                     <td colspan="3"><input name="OthRealPrBirth_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('OthRealPrBirth_content')" value="Edit">
+                                                onclick="edit_click('OthRealPrBirth_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">其他實際負責人_從事本行業年度</td>
-                                    <td colspan="3"><input name="OthRealPrStartYear_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="OthRealPrStartYear_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('OthRealPrStartYear_content')" value="Edit">
+                                                onclick="edit_click('OthRealPrStartYear_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">其他實際負責人_擔任本公司職務</td>
                                     <td colspan="3"><input name="OthRealPrTitle_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('OthRealPrTitle_content')" value="Edit">
+                                                onclick="edit_click('OthRealPrTitle_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">其他實際負責人_持股比率%</td>
-                                    <td colspan="3"><input name="OthRealPrSHRatio_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="OthRealPrSHRatio_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('OthRealPrSHRatio_content')" value="Edit">
+                                                onclick="edit_click('OthRealPrSHRatio_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5030,7 +5086,7 @@
                                     </td>
 
                                     <td class="bold-right-border">是否有徵提保證人</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="HasGuarantor_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5041,14 +5097,15 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('HasGuarantor_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('HasGuarantor_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">配偶是否擔任本案保證人</td>
-                                    <td colspan="3"><select name="IsPrSpouseGu_content" class="table-input" id="" disabled>
+                                    <td colspan="3"><select name="IsPrSpouseGu_content" class="table-input" id=""
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="1">1:是</option>
                                             <option value="0">0:否</option>
@@ -5058,37 +5115,40 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('IsPrSpouseGu_content')" value="Edit">
+                                                onclick="edit_click('IsPrSpouseGu_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">保證人_姓名</td>
-                                    <td colspan="3"><input name="GuOneName_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="GuOneName_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('GuOneName_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('GuOneName_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">保證人_身分證字號</td>
-                                    <td colspan="3"><input name="GuOneId_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="GuOneId_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('GuOneId_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('GuOneId_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">保證人_與借戶負責人之關係</td>
-                                    <td colspan="3"><select name="GuOneRelWithPr_content" class="table-input" id="" disabled>
+                                    <td colspan="3"><select name="GuOneRelWithPr_content" class="table-input" id=""
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="A">A:配偶</option>
                                             <option value="B">B:血親</option>
@@ -5103,13 +5163,14 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('GuOneRelWithPr_content')" value="Edit">
+                                                onclick="edit_click('GuOneRelWithPr_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">保證人_任職公司</td>
-                                    <td colspan="3"><select name="GuOneCompany_content" class="table-input" id="" disabled>
+                                    <td colspan="3"><select name="GuOneCompany_content" class="table-input" id=""
+                                            disabled>
                                             <option value="" selected></option>
                                             <option value="A">A:公家機關</option>
                                             <option value="B">B:上市櫃公司</option>
@@ -5123,15 +5184,16 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('GuOneCompany_content')" value="Edit">
+                                                onclick="edit_click('GuOneCompany_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="6">公司聯徵報告</td>
+                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="6">
+                                        公司聯徵報告</td>
 
                                     <td class="bold-right-border">票債信情形是否異常</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="JcCompDebtLog_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5142,8 +5204,8 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('JcCompDebtLog_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('JcCompDebtLog_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5152,14 +5214,14 @@
                                         <div>聯徵中心資料日期</div>
                                         <div style="color:red;">格式:YYYYMMDD</div>
                                     </td>
-                                    <td colspan="3"><input name="CompJCICQueryDate_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="CompJCICQueryDate_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('CompJCICQueryDate_content')" value="Edit">
+                                                onclick="edit_click('CompJCICQueryDate_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5168,36 +5230,36 @@
                                         <div>聯徵J02資料年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="CompJCICDataDate_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="CompJCICDataDate_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('CompJCICDataDate_content')" value="Edit">
+                                                onclick="edit_click('CompJCICDataDate_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">企業信用評分</td>
                                     <td colspan="3"><input name="CompCreditScore_content" type="text"
-                                                           class="table-input" disabled>
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('CompCreditScore_content')" value="Edit">
+                                                onclick="edit_click('CompCreditScore_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">授信總餘額</td>
-                                    <td colspan="3"><input name="JcCompCreditAmount_content" type="text" class="table-input"
-                                            disabled>
+                                    <td colspan="3"><input name="JcCompCreditAmount_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
-        
+
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
@@ -5207,22 +5269,23 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">往來銀行家數</td>
-                                    <td colspan="3"><input name="JcCompBankDealingNum_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="JcCompBankDealingNum_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('JcCompBankDealingNum_content')" value="Edit">
+                                                onclick="edit_click('JcCompBankDealingNum_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="13">負責人聯徵報告</td>
+                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="13">
+                                        負責人聯徵報告</td>
 
                                     <td class="bold-right-border">票債信情形是否異常</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="PrDebtLog_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5233,8 +5296,8 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('PrDebtLog_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('PrDebtLog_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5244,78 +5307,78 @@
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
                                     <td colspan="3"><input name="PrJ02YM_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrJ02YM_content')" value="Edit">
+                                                onclick="edit_click('PrJ02YM_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">聯徵信用評分</td>
                                     <td colspan="3"><input name="PrCreditScore_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrCreditScore_content')" value="Edit">
+                                                onclick="edit_click('PrCreditScore_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">授信總餘額</td>
-                                    <td colspan="3"><input name="PrCreditTotalAmount_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="PrCreditTotalAmount_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrCreditTotalAmount_content')" value="Edit">
+                                                onclick="edit_click('PrCreditTotalAmount_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">現金卡張數</td>
                                     <td colspan="3"><input name="PrCashCardQty_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrCashCardQty_content')" value="Edit">
+                                                onclick="edit_click('PrCashCardQty_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">現金卡可動用額度</td>
-                                    <td colspan="3"><input name="PrCashCardAvailLimit_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="PrCashCardAvailLimit_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrCashCardAvailLimit_content')" value="Edit">
+                                                onclick="edit_click('PrCashCardAvailLimit_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">現金卡餘額合計</td>
                                     <td colspan="3"><input name="PrBal_CashCard_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrBal_CashCard_content')" value="Edit">
+                                                onclick="edit_click('PrBal_CashCard_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5331,46 +5394,46 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrHasWeekMonthDelay_content')" value="Edit">
+                                                onclick="edit_click('PrHasWeekMonthDelay_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">信用卡張數</td>
-                                    <td colspan="3"><input name="PrCreditCardQty_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="PrCreditCardQty_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrCreditCardQty_content')" value="Edit">
+                                                onclick="edit_click('PrCreditCardQty_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">信用卡可動用額度</td>
-                                    <td colspan="3"><input name="PrCreditCardAvailAmount_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="PrCreditCardAvailAmount_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrCreditCardAvailAmount_content')" value="Edit">
+                                                onclick="edit_click('PrCreditCardAvailAmount_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">信用卡餘額合計</td>
-                                    <td colspan="3"><input name="PrBal_CreditCard_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="PrBal_CreditCard_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrBal_CreditCard_content')" value="Edit">
+                                                onclick="edit_click('PrBal_CreditCard_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5386,27 +5449,29 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrHasLastThreeMonthDelay_content')" value="Edit">
+                                                onclick="edit_click('PrHasLastThreeMonthDelay_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人擔任其他企業負責人之企業統編</td>
                                     <td colspan="3">
-                                        <input name="PrBeingOthCompPrId_content" type="text" class="table-input" disabled>
+                                        <input name="PrBeingOthCompPrId_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrBeingOthCompPrId_content')" value="Edit">
+                                                onclick="edit_click('PrBeingOthCompPrId_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="4">負責人配偶聯徵報告</td>
+                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="4">
+                                        負責人配偶聯徵報告</td>
 
                                     <td class="bold-right-border">票債信情形是否異常</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="SpouseDebtLog_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5417,8 +5482,8 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('SpouseDebtLog_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('SpouseDebtLog_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5428,45 +5493,48 @@
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
                                     <td colspan="3"><input name="SpouseJ02YM_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('SpouseJ02YM_content')" value="Edit">
+                                                onclick="edit_click('SpouseJ02YM_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">聯徵信用評分</td>
                                     <td colspan="3">
-                                        <input name="SpouseCreditScore_content" type="text" class="table-input" disabled>
+                                        <input name="SpouseCreditScore_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('SpouseCreditScore_content')" value="Edit">
+                                                onclick="edit_click('SpouseCreditScore_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人配偶擔任其他企業負責人之企業統編</td>
                                     <td colspan="3">
-                                        <input name="SpouseBeingOthCompPrId_content" type="text" class="table-input" disabled>
+                                        <input name="SpouseBeingOthCompPrId_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('SpouseBeingOthCompPrId_content')" value="Edit">
+                                                onclick="edit_click('SpouseBeingOthCompPrId_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="3">保證人聯徵報告</td>
+                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="3">
+                                        保證人聯徵報告</td>
 
                                     <td class="bold-right-border">票債信情形是否異常</td>
-                                    
+
                                     <td colspan="3">
                                         <select name="GuarantorDebtLog_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5477,8 +5545,8 @@
 
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('GuarantorDebtLog_content')"
-                                                   value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('GuarantorDebtLog_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5493,7 +5561,7 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('GuarantorJ02YM_content')" value="Edit">
+                                                onclick="edit_click('GuarantorJ02YM_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5505,7 +5573,7 @@
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('GuOneCreditScore_content')" value="Edit">
+                                                onclick="edit_click('GuOneCreditScore_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5517,27 +5585,27 @@
                                         <div>公司近01個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM1_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM1_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM1_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM1_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近01個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured1_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured1_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured1_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5546,27 +5614,27 @@
                                         <div>公司近02個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM2_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM2_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM2_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM2_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近02個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured2_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured2_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured2_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5575,27 +5643,27 @@
                                         <div>公司近03個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM3_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM3_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM3_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM3_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近03個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured3_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured3_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured3_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5604,14 +5672,14 @@
                                         <div>公司近04個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM4_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM4_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM4_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM4_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5619,13 +5687,13 @@
                                     <td class="bold-right-border">公司近04個月投保人數-人數
                                     </td>
                                     <td colspan="3"><input name="NumOfInsured4_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured4_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured4_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5634,27 +5702,27 @@
                                         <div>公司近05個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM5_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM5_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM5_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM5_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近05個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured5_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured5_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured5_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5663,27 +5731,27 @@
                                         <div>公司近06個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM6_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM6_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM6_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM6_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近06個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured6_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured6_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured6_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5692,27 +5760,27 @@
                                         <div>公司近07個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM7_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM7_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM7_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM7_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近07個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured7_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured7_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured7_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5721,27 +5789,27 @@
                                         <div>公司近08個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM8_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM8_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM8_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM8_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近08個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured8_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured8_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured8_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5750,27 +5818,27 @@
                                         <div>公司近09個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM9_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM9_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM9_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM9_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近09個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured9_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured9_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured9_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5779,27 +5847,27 @@
                                         <div>公司近10個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM10_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM10_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM10_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM10_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近10個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured10_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured10_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured10_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5808,27 +5876,27 @@
                                         <div>公司近11個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM11_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM11_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM11_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM11_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近11個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured11_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured11_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured11_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5837,27 +5905,27 @@
                                         <div>公司近12個月投保人數-年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="NumOfInsuredYM12_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="NumOfInsuredYM12_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsuredYM12_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsuredYM12_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司近12個月投保人數-人數</td>
                                     <td colspan="3"><input name="NumOfInsured12_content" type="text" class="table-input"
-                                                           disabled>
+                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('NumOfInsured12_content')" value="Edit">
+                                                onclick="edit_click('NumOfInsured12_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5883,14 +5951,14 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人-被保險人勞保異動查詢-最近期投保薪資-人數</td>
-                                    <td colspan="3"><input name="PrLaborInsSalary_content" type="text" class="table-input"
-                                                           disabled>
+                                    <td colspan="3"><input name="PrLaborInsSalary_content" type="text"
+                                            class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrLaborInsSalary_content')" value="Edit">
+                                                onclick="edit_click('PrLaborInsSalary_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5900,7 +5968,8 @@
                                         <div style="color:red;">格式:YYYYMMDD</div>
                                     </td>
                                     <td colspan="3">
-                                        <input name="SpouseLaborQryDate_content" type="text" class="table-input" disabled>
+                                        <input name="SpouseLaborQryDate_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
@@ -5912,7 +5981,8 @@
                                 <tr>
                                     <td class="bold-right-border">配偶-被保險人勞保異動查詢-最近期投保薪資</td>
                                     <td colspan="3">
-                                        <input name="SpouseLaborInsSalary_content" type="text" class="table-input" disabled>
+                                        <input name="SpouseLaborInsSalary_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
@@ -5927,7 +5997,8 @@
                                         <div style="color:red;">格式:YYYYMMDD</div>
                                     </td>
                                     <td colspan="3">
-                                        <input name="GuOneLaborQryDate_content" type="text" class="table-input" disabled>
+                                        <input name="GuOneLaborQryDate_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
@@ -5939,7 +6010,8 @@
                                 <tr>
                                     <td class="bold-right-border">保證人-被保險人勞保異動查詢-最近期投保薪資</td>
                                     <td colspan="3">
-                                        <input name="GuOneLaborInsSalary_content" type="text" class="table-input" disabled>
+                                        <input name="GuOneLaborInsSalary_content" type="text" class="table-input"
+                                            disabled>
                                     </td>
                                     <td>
                                         <center>
@@ -5956,8 +6028,8 @@
                                     </td>
                                     <td>
                                         <center>
-                                            <input class="input-width" type="button" onclick="edit_click('OtherMemo_content')"
-                                                value="Edit">
+                                            <input class="input-width" type="button"
+                                                onclick="edit_click('OtherMemo_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -6010,28 +6082,32 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A04:保證人身分證 + 健保卡</td>
+                                <td class="title input-center bold-bottom-border bold-right-border">A04:保證人身分證 + 健保卡
+                                </td>
                                 <td class="bold-right-border ">
                                     <fieldset disabled name="A04">
                                     </fieldset>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A05:營業據點建物登記謄本 (公司或負責人或保證人自有)</td>
+                                <td class="title input-center bold-bottom-border bold-right-border">A05:營業據點建物登記謄本
+                                    (公司或負責人或保證人自有)</td>
                                 <td class="bold-right-border ">
                                     <fieldset disabled name="A03">
                                     </fieldset>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A06:近三年稅捐機關納稅證明(税簽)</td>
+                                <td class="title input-center bold-bottom-border bold-right-border">A06:近三年稅捐機關納稅證明(税簽)
+                                </td>
                                 <td class="bold-right-border ">
                                     <fieldset disabled name="A04">
                                     </fieldset>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A07:近12個月員工投保單位人數資料</td>
+                                <td class="title input-center bold-bottom-border bold-right-border">A07:近12個月員工投保單位人數資料
+                                </td>
                                 <td class="bold-right-border ">
                                     <fieldset disabled name="A05">
                                     </fieldset>
@@ -6066,35 +6142,40 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A12:負責人及保證人之被保險人勞保異動查詢</td>
+                                <td class="title input-center bold-bottom-border bold-right-border">
+                                    A12:負責人及保證人之被保險人勞保異動查詢</td>
                                 <td class="bold-right-border ">
                                     <fieldset disabled name="A07">
                                     </fieldset>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A13:公司近六個月往來存摺影本+內頁</td>
+                                <td class="title input-center bold-bottom-border bold-right-border">A13:公司近六個月往來存摺影本+內頁
+                                </td>
                                 <td class="bold-right-border ">
                                     <fieldset disabled name="B13">
                                     </fieldset>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A14:負責人近六個月往來存摺影本+內頁</td>
+                                <td class="title input-center bold-bottom-border bold-right-border">A14:負責人近六個月往來存摺影本+內頁
+                                </td>
                                 <td class="bold-right-border ">
                                     <fieldset disabled name="B14">
                                     </fieldset>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A15:保證人近六個月往來存摺影本+內頁</td>
+                                <td class="title input-center bold-bottom-border bold-right-border">A15:保證人近六個月往來存摺影本+內頁
+                                </td>
                                 <td class="bold-right-border ">
                                     <fieldset disabled name="B15">
                                     </fieldset>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A16:近三年 401/403/405 表</td>
+                                <td class="title input-center bold-bottom-border bold-right-border">A16:近三年 401/403/405
+                                    表</td>
                                 <td class="bold-right-border ">
                                     <fieldset disabled name="B16">
                                     </fieldset>
@@ -6134,20 +6215,20 @@
     ];
     // 送出時為數字欄位
     let is_int_array = ['CompCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'IsPrMarried', 'IsBizRegAddrSelfOwn', 'IsBizAddrEqToBizRegAddr', 'IsRealBizAddrSelfOwn', 'OthRealPrSHRatio',
-    'HasJuridicalInvest',  'IsManufacturing', 'LastYearRevenue', 'DailyWorkingCapital', 'OperatingCycle', 'LiabilitiesAmount', 'EquityAmount', 'IsCovidAffected', 'EmployeeNum', 'HasForeignInvestment', 'HasRelatedCompany', 'BusinessTaxLastOneYear', 'BusinessTaxLastTwoYear', 'BusinessTaxLastThreeYear',
-    'LastOneYearInvoiceAmountM1M2', 'LastOneYearInvoiceAmountM3M4'];
+        'HasJuridicalInvest', 'IsManufacturing', 'LastYearRevenue', 'DailyWorkingCapital', 'OperatingCycle', 'LiabilitiesAmount', 'EquityAmount', 'IsCovidAffected', 'EmployeeNum', 'HasForeignInvestment', 'HasRelatedCompany', 'BusinessTaxLastOneYear', 'BusinessTaxLastTwoYear', 'BusinessTaxLastThreeYear',
+        'LastOneYearInvoiceAmountM1M2', 'LastOneYearInvoiceAmountM3M4'];
     function edit_click(id_content) {
         $(`[name=${id_content}]`).each((i, e) => { $(e).prop('disabled', function (i, v) { return !v; }) })
     }
 
     function changeTab(tab) {
-		$(`#nav-tab-skbank`).removeClass('active')
-		$(`#nav-tab-kgibank`).removeClass('active')
-		$(`#nav-${tab}`).toggleClass('active')
-        $('.nav-page').each((i,e)=>{
-			$(e).hide()
-		})
-		$(`#page-${tab}`).show()
+        $(`#nav-tab-skbank`).removeClass('active')
+        $(`#nav-tab-kgibank`).removeClass('active')
+        $(`#nav-${tab}`).toggleClass('active')
+        $('.nav-page').each((i, e) => {
+            $(e).hide()
+        })
+        $(`#page-${tab}`).show()
     }
 
     function fillReport(data) {
@@ -6197,8 +6278,11 @@
     }
 
     // 取得收件檢核表文字資料
-    function getCheckLisTexttData() {
-        IDs.forEach((item, index) => {
+    function getCheckLisTexttData(bank_num) {
+        let selectIds = []
+        let all_data = {}
+        $(`[data-bankid=${bank_num}] input, [data-bankid=${bank_num}] select`).each(function () { if (this.name) selectIds.push(this.name) })
+        selectIds.forEach((item, index) => {
             if (item) {
                 if (item.match(/.*-selectized/g)) {
                     key = item.replace(/-selectized/g, '');
@@ -6233,7 +6317,7 @@
     }
 
     //儲存送出資料
-    function saveCheckListData(msg_no, data_type, data, bank=1) {
+    function saveCheckListData(msg_no, data_type, data, bank = 1) {
         $.ajax({
             type: "POST",
             url: `/admin/bankdata/saveCheckListData?msg_no=${msg_no}&data_type=${data_type}&bank=${bank}`,
@@ -6248,60 +6332,69 @@
         });
     }
 
-    function save(send_type, bank_num) {
+    async function save(send_type) {
         // 收件檢核表資料傳送
+        const sendData = (bank_num) => {
+            return new Promise((resolve) => {
+                $("#text_list").val("資料處理中");
+                all_data = getCheckLisTexttData(bank_num);
+                data_type = 'text';
+                getMappingMsgNo(target_id, 'send', data_type, bank_num, function (data) {
+                    msg_data = data;
+
+                    if (!msg_data) {
+                        return 'no response';
+                    }
+
+                    if (msg_data.status.code == 201 || msg_data.status.code == 202) {
+                        msg_no = msg_data.data.msg_no;
+                    } else {
+                        alert(`status code = ${msg_data.status.code}, error message = ${msg_data.status.message}`);
+                        return;
+                    }
+                    if (msg_no == '') {
+                        alert('交易序號為空');
+                        return;
+                    }
+                    request_data = {
+                        'MsgNo': msg_no,
+                        'CompId': `${all_data.CompId}`,
+                        'PrincipalId': `${all_data.PrincipalId}`,
+                    }
+                    delete all_data.CompId;
+                    delete all_data.PrincipalId;
+                    request_data.Data = all_data;
+                    request_data = JSON.stringify(request_data);
+
+                    save_response = saveCheckListData(msg_no, 'text', request_data, bank_num);
+
+                    console.log(save_response);
+                    // $.ajax({
+                    //     type: "POST",
+                    //     data: request_data,
+                    //     url: '/api/skbank/v1/LoanRequest/apply_text',
+                    //     dataType: "json",
+                    //     success: function (response) {
+                    //         $('#msg_no').val(response.msg_no);
+                    //         $('#case_no').val(response.case_no);
+                    //         alert(`新光送出結果 ： ${response.success}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
+                    //     },
+                    //     error: function(error) {
+                    //       alert(error);
+                    //     }
+                    // });
+
+                    $("#text_list").val("儲存資料");
+                    $(".sendBtn").prop("disabled", false);
+                    resolve()
+                });
+            })
+        }
         if (send_type == 'text_list') {
-            $("#text_list").val("資料處理中");
-            all_data = getCheckLisTexttData();
-            data_type = 'text';
-            getMappingMsgNo(target_id, 'send', data_type, bank_num, function (data) {
-                msg_data = data;
-
-                if (!msg_data) {
-                    return 'no response';
-                }
-
-                if (msg_data.status.code == 201 || msg_data.status.code == 202) {
-                    msg_no = msg_data.data.msg_no;
-                } else {
-                    alert(`status code = ${msg_data.status.code}, error message = ${msg_data.status.message}`);
-                    return;
-                }
-                if (msg_no == '') {
-                    alert('交易序號為空');
-                    return;
-                }
-                request_data = {
-                    'MsgNo': msg_no,
-                    'CompId': `${all_data.CompId}`,
-                    'PrincipalId': `${all_data.PrincipalId}`,
-                }
-                delete all_data.CompId;
-                delete all_data.PrincipalId;
-                request_data.Data = all_data;
-                request_data = JSON.stringify(request_data);
-
-                save_response = saveCheckListData(msg_no, 'text', request_data);
-
-                console.log(save_response);
-                // $.ajax({
-                //     type: "POST",
-                //     data: request_data,
-                //     url: '/api/skbank/v1/LoanRequest/apply_text',
-                //     dataType: "json",
-                //     success: function (response) {
-                //         $('#msg_no').val(response.msg_no);
-                //         $('#case_no').val(response.case_no);
-                //         alert(`新光送出結果 ： ${response.success}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
-                //     },
-                //     error: function(error) {
-                //       alert(error);
-                //     }
-                // });
-
-                $("#text_list").val("儲存資料");
-                $(".sendBtn").prop("disabled", false);
-            });
+			// 1=sk 2=kgi
+			for (const bank of [1,2]) {
+				await sendData(bank)
+			}
         }
         if (send_type == 'image_list') {
             $("#image_list").val("資料處理中");
@@ -6360,7 +6453,7 @@
         IDs = []
         $("body").find("input").each(function () { if (this.name) IDs.push(this.name); });
         $("body").find("select").each(function () { if (this.name) IDs.push(this.name); });
-		$(`#nav-tab-skbank`).click()
+        $(`#nav-tab-skbank`).click()
         fetchReport(target_id, table_type, function (data) {
             if (!data) {
                 alert('can\'t not get response');
@@ -6385,21 +6478,21 @@
             })
         })
 
-		$('select').on('change', (e) => {
-			const name = e.target.name
-			const val = e.target.value
-			$(`[name="${name}"]`).each(function () {
-				if (this.value != val) {
-					$(this).val(val)
-				}
-			})
-		})
+        $('select').on('change', (e) => {
+            const name = e.target.name
+            const val = e.target.value
+            $(`[name="${name}"]`).each(function () {
+                if (this.value != val) {
+                    $(this).val(val)
+                }
+            })
+        })
 
         $('.sendBtn').click(function () {
             $(".sendBtn").prop("disabled", true);
             let bank = $(this).parents('.nav-page').data('bankid');
             //console.log(bank);
-            save(this.id, bank);
+            save(this.id);
         });
 
     });
