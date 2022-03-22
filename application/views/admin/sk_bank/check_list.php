@@ -4797,7 +4797,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人身分證字號</td>
-                                    <td colspan="3"><input name="_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="PrincipalId_content" type="text" class="table-input" disabled>
                                     </td>
 
                                     <td>
@@ -6085,7 +6085,7 @@
                                 <td class="title input-center bold-bottom-border bold-right-border">A04:保證人身分證 + 健保卡
                                 </td>
                                 <td class="bold-right-border ">
-                                    <fieldset disabled name="A04">
+                                    <fieldset disabled name="B04">
                                     </fieldset>
                                 </td>
                             </tr>
@@ -6239,7 +6239,10 @@
                         var a_tag = `<a href="${data[key][key1]}" data-fancybox="images">
                                 <img id="${key}_${key1}"  src="${data[key][key1]}" style='width:30%;max-width:400px'>
                             </a>`;
-                        $(`[name=${key}]`).each((i, e) => $(e).append(a_tag))
+                        console.log($("#"+key+"_"+key1).length );
+                        if($("#"+key+"_"+key1).length === 0) {
+                            $(`[name=${key}]`).each((i, e) => $(e).append(a_tag))
+                        }
                     })
                 }
                 if (!rawData_array.includes($(`[name=${key}]`).attr('name'))) {
@@ -6250,10 +6253,10 @@
     }
 
     // 取得送件檢核表資料
-    function fetchReport(target_id, table_type, result) {
+    function fetchReport(target_id, table_type, bank, result) {
         $.ajax({
             type: "GET",
-            url: `/admin/bankdata/report?target_id=${target_id}&table_type=${table_type}`,
+            url: `/admin/bankdata/report?target_id=${target_id}&table_type=${table_type}&bank=${bank}`,
             success: function (response) {
                 result(response);
             },
@@ -6454,19 +6457,22 @@
         $("body").find("input").each(function () { if (this.name) IDs.push(this.name); });
         $("body").find("select").each(function () { if (this.name) IDs.push(this.name); });
         $(`#nav-tab-skbank`).click()
-        fetchReport(target_id, table_type, function (data) {
-            if (!data) {
-                alert('can\'t not get response');
-                return;
-            }
-            console.log(data);
-            if (data.status.code != '200') {
-                alert(data.response); return;
-            }
-            if (data.status.code == '200' && data.response) {
-                fillReport(data.response);
-            }
-        });
+        for (const bank of [1,2]) {
+            fetchReport(target_id, table_type, bank, function (data) {
+                if (!data) {
+                    alert('can\'t not get response');
+                    return;
+                }
+                console.log(data);
+                if (data.status.code != '200') {
+                    alert(data.response); return;
+                }
+                if (data.status.code == '200' && data.response) {
+                    fillReport(data.response);
+                }
+            });
+        }
+
 
         $('input').on('input', (e) => {
             const name = e.target.name

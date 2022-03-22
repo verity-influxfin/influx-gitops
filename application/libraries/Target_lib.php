@@ -2309,6 +2309,27 @@ class Target_lib
         return $rs;
     }
 
+    public function get_associates_data($target_id, $character = false, $status = [0, 1]){
+        $this->CI->load->model('loan/target_associate_model');
+
+        $params = [
+            "target_id" => $target_id,
+            "status" => $status
+        ];
+        if($character != 'all')
+        {
+            $params['character'] = (int)$character;
+        }
+
+        $rs = $this->CI->target_associate_model->as_array()->get_many_by($params);
+        $result = [];
+        if(!empty($rs))
+        {
+            $result = array_column($rs, NULL, 'character');
+        }
+        return $result;
+    }
+
     public function get_associates_list($target_id, $status = [0, 1], $product, $self_user_id, $self_certification)
     {
         $this->CI->load->model('loan/target_associate_model');

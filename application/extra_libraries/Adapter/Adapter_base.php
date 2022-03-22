@@ -13,4 +13,11 @@ abstract class Adapter_base implements Adapter_definition
      */
     abstract public function convert_text(array $data) : array;
 
+    /**
+     * 轉換圖片列表
+     * @param array $data
+     * @return array
+     */
+    abstract public function convert_attach(array $data, bool $get_api_attach_no = FALSE) : array;
+
 }

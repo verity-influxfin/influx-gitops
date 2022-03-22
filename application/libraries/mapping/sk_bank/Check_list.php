@@ -1,5 +1,6 @@
 <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+use Adapter\Adapter_factory;
 
 class Check_list
 {
@@ -257,104 +258,226 @@ class Check_list
 	}
 
 	// 附件檢核表圖片資料
-	public function get_raw_data($target_info=[]){
-		$response = [
-			'A01' => [],
-			'A02' => [],
-			'A03' => [],
-			'A04' => [],
-			'A05' => [],
-			'A06' => [],
-			'A07' => [],
-			'A08' => [],
-		];
+    public function get_raw_data($target_info=[], $bank=MAPPING_MSG_NO_BANK_NUM_SKBANK, $get_api_attach_no=FALSE): array
+    {
+	    $data = $this->_get_raw_data($target_info);
 
-		$mapping_config = [
-			// 變卡
-			'1007' => [
-				'location' => 'A01',
-				'raw_data_name' => ['governmentauthorities_image'],
-			],
-			// 實名
-			'1' => [
-				'location' => 'A02',
-				'raw_data_name' => ['front_image','back_image','healthcard_image']
-			],
+        $adapter = Adapter_factory::getInstance($bank);
+        return $adapter->convert_attach($data, $get_api_attach_no);
+    }
+
+    private function _get_raw_data($target_info = []): array
+    {
+        $response = [
+            'A01' => [], // 公司變更事項登記卡及工商登記查詢
+            'A02' => [], // 負責人及保證人身分證影本及第二證件、戶役政查詢
+            'A03' => [], // 營業據點建物登記謄本(公司或負責人或保證人自有才須提供)
+            'A04' => [], // 近三年公司所得稅申報書
+            'A05' => [], // 近12月勞保局投保資料
+            'A06' => [], // 公司、負責人、配偶及保證人的聯徵資料 J01、J02、J10、J20、A13、A11
+            'A07' => [], // 負責人及保證人之被保險人勞保異動查詢
+            'A08' => [], // 公司、負責人及保證人近六個月存摺餘額明細及存摺封面
+            'B02' => [], // 負責人身分證 + 健保卡
+            'B03' => [], // 負責人配偶身分證 + 健保卡
+            'B04' => [], // 保證人身分證 + 健保卡
+            'B08' => [], // 公司聯徵資料
+            'B09' => [], // 負責人聯徵資料
+            'B10' => [], // 負責人配偶聯徵資料
+            'B11' => [], // 保證人聯徵資料
+            'B13' => [], // 公司近六個月往來存摺影本+內頁
+            'B14' => [], // 負責人近六個月往來存摺影本+內頁
+            'B15' => [], // 保證人近六個月往來存摺影本+內頁
+            'B16' => [], // 近三年 401/403/405
+        ];
+
+        $mapping_config = [
+            // 變卡
+            CERTIFICATION_GOVERNMENTAUTHORITIES => [
+                [
+                    'location' => 'A01',
+                    'raw_data_name' => ['governmentauthorities_image']
+                ]
+            ],
+            // 實名
+            CERTIFICATION_IDCARD => [
+                [
+                    'location' => 'A02',
+                    'raw_data_name' => ['front_image', 'back_image', 'healthcard_image']
+                ],
+                [
+                    'location' => 'B02',
+                    'character' => ASSOCIATES_CHARACTER_OWNER,
+                    'raw_data_name' => ['front_image', 'back_image', 'healthcard_image']
+                ],
+                [
+                    'location' => 'B03',
+                    'character' => ASSOCIATES_CHARACTER_SPOUSE,
+                    'raw_data_name' => ['front_image', 'back_image', 'healthcard_image']
+                ],
+                [
+                    'location' => 'B04',
+                    'character' => ASSOCIATES_CHARACTER_GUARANTOR_A,
+                    'raw_data_name' => ['front_image', 'back_image', 'healthcard_image']
+                ],
+            ],
             // 公司資料表
-			'1018' => [
-				'location' => 'A03',
-				'raw_data_name' => ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03']
-			],
-			// 自然人連徵
-			'12' => [
-				'location' => 'A06',
-				'raw_data_name' =>['person_mq_image']
-			],
-			// 損益表
-			'1002' => [
-				'location' => 'A04',
-				'raw_data_name' => ['income_statement_image']
-			],
-			// 法人連徵
-			'1003' => [
-				'location' => 'A06',
-				'raw_data_name' => ['legal_person_mq_image','postal_image']
-			],
-			// 月末投保人數
-			'1017' => [
-				'location' => 'A05',
-				'raw_data_name' => ['employeeinsurancelist_image']
-			],
-			'501' => [
-				'location' => 'A07',
-				'raw_data_name' => ['labor_image']
-			],
-			'500' => [
-				'location' => 'A08',
-				'raw_data_name' => ['passbook_image']
-			],
-			'1004' => [
-				'location' => 'A08',
-				'raw_data_name' => ['passbook_image']
-			]
-		];
+            CERTIFICATION_PROFILEJUDICIAL => [
+                [
+                    'location' => 'A03',
+                    'raw_data_name' => ['BizLandOwnership', 'BizHouseOwnership', 'RealLandOwnership', 'RealHouseOwnership', 'DocTypeA03']
+                ]
+            ],
+            // 自然人聯合徵信報告+A11
+            CERTIFICATION_INVESTIGATIONA11 => [
+                [
+                    'location' => 'A06',
+                    'raw_data_name' => ['person_mq_image']
+                ],
+                [
+                    'location' => 'B09',
+                    'character' => ASSOCIATES_CHARACTER_OWNER,
+                    'raw_data_name' => ['person_mq_image']
+                ],
+                [
+                    'location' => 'B10',
+                    'character' => ASSOCIATES_CHARACTER_SPOUSE,
+                    'raw_data_name' => ['person_mq_image']
+                ],
+                [
+                    'location' => 'B11',
+                    'character' => ASSOCIATES_CHARACTER_GUARANTOR_A,
+                    'raw_data_name' => ['person_mq_image']
+                ]
+            ],
+            // 損益表
+            CERTIFICATION_INCOMESTATEMENT => [
+                [
+                    'location' => 'A04',
+                    'raw_data_name' => ['income_statement_image']
+                ]
+            ],
+            // 法人聯合徵信報告
+            CERTIFICATION_INVESTIGATIONJUDICIAL => [
+                [
+                    'location' => 'A06',
+                    'raw_data_name' => ['legal_person_mq_image', 'postal_image']
+                ],
+                [
+                    'location' => 'B08',
+                    'raw_data_name' => ['legal_person_mq_image', 'postal_image']
+                ]
+            ],
+            // 月末投保人數
+            CERTIFICATION_EMPLOYEEINSURANCELIST => [
+                [
+                    'location' => 'A05',
+                    'raw_data_name' => ['employeeinsurancelist_image']
+                ]
+            ],
+            // 負責人及保證人之被保險人勞保異動查詢
+            CERTIFICATION_SIMPLIFICATIONJOB => [
+                [
+                    'location' => 'A07',
+                    'raw_data_name' => ['labor_image']
+                ]
+            ],
+            // 個人近六個月往來存摺影本+內頁
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL => [
+                [
+                    'location' => 'A08',
+                    'raw_data_name' => ['passbook_image']
+                ],
+                [
+                    'location' => 'B14',
+                    'character' => ASSOCIATES_CHARACTER_OWNER,
+                    'raw_data_name' => ['passbook_image']
+                ],
+                [
+                    'location' => 'B15',
+                    'character' => ASSOCIATES_CHARACTER_GUARANTOR_A,
+                    'raw_data_name' => ['passbook_image']
+                ]
+            ],
+            // 公司近六個月往來存摺影本+內頁
+            CERTIFICATION_PASSBOOKCASHFLOW => [
+                [
+                    'location' => 'A08',
+                    'raw_data_name' => ['passbook_image']
+                ],
+                [
+                    'location' => 'B13',
+                    'raw_data_name' => ['passbook_image']
+                ]
+            ],
+            // 近三年 401/403/405
+            CERTIFICATION_BUSINESSTAX => [
+                [
+                    'location' => 'B16',
+                    'raw_data_name' => ['business_tax_image']
+                ]
+            ],
+        ];
 
         $user_list = [];
         // TODO: 改撈法人關係再撈全徵提資料圖片
-		if(!$target_info){
+        if ( ! $target_info)
+        {
             return [];
         }
         $user_list[] = $target_info->user_id;
+
         // 找案件關係人
         $this->CI->load->library('Target_lib');
-        $guarantors = $this->CI->target_lib->get_associates_user_data($target_info->id, 'all', [0 ,1], false);
-        if($guarantors && is_array($guarantors)){
-            foreach($guarantors as $k=>$v){
-                $user_list[] = isset($v->user_id) ? $v->user_id : '';
+        $guarantors = $this->CI->target_lib->get_associates_user_data($target_info->id, 'all', [0, 1], FALSE);
+        if ($guarantors && is_array($guarantors))
+        {
+            foreach ($guarantors as $k => $v)
+            {
+                $user_list[] = $v->user_id ?? '';
             }
         }
+
+        // 找案件關聯人，取得 [{character} => data]
+        $associate_list = $this->CI->target_lib->get_associates_data($target_info->id, 'all');
 
         // 找全部認證
         $this->CI->load->model('user/user_certification_model');
         $certification_info = $this->CI->user_certification_model->get_skbank_check_list($user_list);
-        if(!empty($certification_info)){
-            foreach($certification_info as $info_value){
-                $content = json_decode($info_value->content,true);
-                if(isset($mapping_config[$info_value->certification_id]) && is_array($content)){
+        if ( ! empty($certification_info))
+        {
+            foreach ($certification_info as $info_value)
+            {
+                $content = json_decode($info_value->content, TRUE);
+                if (isset($mapping_config[$info_value->certification_id]) && is_array($content))
+                {
                     // 找認證資料內有無相關圖片連結名稱
-                    foreach($mapping_config[$info_value->certification_id]['raw_data_name'] as $name){
-                        if(isset($content[$name])){
-                            $response_location = $mapping_config[$info_value->certification_id]['location'];
-                            if(is_array($content[$name])){
-                                $response[$response_location] = array_merge($response[$response_location],$content[$name]);
-                            }else{
-                                $response[$response_location][] = $content[$name];
+                    foreach ($mapping_config[$info_value->certification_id] as $mapping_info)
+                    {
+                        if (isset($mapping_info['character']) &&
+                            ( ! array_key_exists($mapping_info['character'], $associate_list) || $associate_list[$mapping_info['character']]['user_id'] != $info_value->user_id))
+                        {
+                            continue;
+                        }
+
+                        foreach ($mapping_info['raw_data_name'] as $name)
+                        {
+                            if (isset($content[$name]))
+                            {
+                                $response_location = $mapping_info['location'];
+                                if (is_array($content[$name]))
+                                {
+                                    $response[$response_location] = array_merge($response[$response_location], $content[$name]);
+                                }
+                                else
+                                {
+                                    $response[$response_location][] = $content[$name];
+                                }
                             }
                         }
                     }
                 }
             }
         }
-		return $response;
-	}
+        return $response;
+    }
 }
