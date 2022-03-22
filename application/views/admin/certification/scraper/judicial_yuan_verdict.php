@@ -77,7 +77,8 @@
                             <td style=background-color:white; id="id_card_place"></td>
                             <th class="table-title">母</th>
                             <td style=background-color:white; id="mother"></td>
-                            <th class="table-title" colspan="2">戶籍地址</th>
+                            <th class="table-title">ig帳號</th>
+                            <td style=background-color:white; id="instagram-username"></td>
                         </tr>
                         <tr>
                             <th class="table-title">身分證字號</th>
@@ -86,7 +87,10 @@
                             <td style=background-color:white; id="replacement"></td>
                             <th class="table-title">配偶</th>
                             <td style=background-color:white; id="spouse"></td>
-                            <td style=background-color:white; id="address" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th class="table-title">戶籍地址</th>
+                            <td style=background-color:white; id="address" colspan="7"></td>
                         </tr>
                     </table>
                 </td>
@@ -215,6 +219,7 @@
                     $('#born').text(judicialyuanInfoData.born);
                     $('#spouse').text(judicialyuanInfoData.spouse);
                     $('#address').text(judicialyuanInfoData.address);
+                    $('#instagram-username').text(judicialyuanInfoData.instagram_username);
                 }
                 return axios.get(`/admin/scraper/verdict_google_info?user_id=${this.userId}`).then(({ data }) => {
                     if (data.status.code === 200) {

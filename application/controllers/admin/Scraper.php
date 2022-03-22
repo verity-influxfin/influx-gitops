@@ -207,6 +207,19 @@ class Scraper extends MY_Admin_Controller
             $this->json_output->setStatusCode(401)->setResponse($info)->send();
         }
 
+        # ig 帳號
+        $social_content = $this->user_certification_model->get_content($input['user_id'], CERTIFICATION_SOCIAL);
+        
+        if ( ! isset($social_content[0]->content))
+        {
+            $this->json_output->setStatusCode(405)->setResponse(['message' => 'content not found'])->send();
+        }
+        $content = json_decode($social_content[0]->content, TRUE);
+        if (! isset($content['instagram']['username']))
+        {
+            $this->json_output->setStatusCode(405)->setResponse(['message' => 'name or ig username not found'])->send();
+        }
+
         $response = [
             'name' => '',
             'birthday' => '',
@@ -217,7 +230,8 @@ class Scraper extends MY_Admin_Controller
             'father' => '',
             'mother' => '',
             'born' => '',
-            'spouse' => ''
+            'spouse' => '',
+            'instagram_username' => ''
         ];
 
         $response['name'] = isset($info->name) ? $info->name : '';
@@ -238,6 +252,9 @@ class Scraper extends MY_Admin_Controller
                 $response['spouse'] = isset($result['spouse']) ? $result['spouse'] : '';
             }
         }
+        
+        $response['instagram_username'] = isset($content['instagram']['username']) ? $content['instagram']['username'] : '';
+
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
