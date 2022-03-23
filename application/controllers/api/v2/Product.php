@@ -2640,12 +2640,11 @@ class Product extends REST_Controller {
                 $credit = $this->credit_lib->get_credit($target->user_id, $target->product_id, $target->sub_product_id, $target);
                 $interest_rate = $credit['rate'] ?? 0;
                 $contract_type = 'lend';
-                $contract_data = ['', $target->user_id, $target->amount, $interest_rate, ''];
+                $contract_data = ['', $target->user_id, $target->loan_amount, $interest_rate, ''];
 
                 $this->target_model->update($insert, [
                     'status' => TARGET_WAITING_SIGNING,
-                    'loan_amount' => $target->amount,
-                    'platform_fee' => $this->financial_lib->get_platform_fee($target->amount, $product_info['charge_platform']),
+                    'platform_fee' => $this->financial_lib->get_platform_fee($target->loan_amount, $product_info['charge_platform']),
                     'interest_rate' => $interest_rate,
                     'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
                 ]);
