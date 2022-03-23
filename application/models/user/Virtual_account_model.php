@@ -108,4 +108,29 @@ class Virtual_account_model extends MY_Model
 
         return $result['virtual_account'] ?? 0;
     }
+
+    /**
+     * 取得用戶虛擬帳戶
+     *
+     * @param      int     $user_id   用戶 ID
+     * @param      int     $investor  投資人 (0:借款|1:投資)
+     * @return     string             虛擬帳戶
+     *
+     * @created_at                    2022-03-04
+     * @created_by                    Jack
+     */
+    public function get_virtual_account_by_user(int $user_id, int $investor)
+    {
+        $result = $this->db
+            ->select('va.virtual_account')
+            ->from('virtual_account va')
+            ->where([
+                'va.user_id'  => $user_id,
+                'va.investor' => $investor,
+                'va.status'   => VIRTUAL_ACCOUNT_STATUS_AVAILABLE
+            ])
+            ->get()
+            ->first_row('array');
+        return $result['virtual_account'] ?? 0;
+    }
 }

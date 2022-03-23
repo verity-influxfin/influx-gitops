@@ -734,20 +734,6 @@ class Certification extends REST_Controller {
      *       "error": "510"
      *     }
 	 *
-     * @apiError 511 此學生Email已被使用過
-     * @apiErrorExample {Object} 511
-     *     {
-     *       "result": "ERROR",
-     *       "error": "511"
-     *     }
-	 *
-     * @apiError 204 Email格式錯誤
-     * @apiErrorExample {Object} 204
-     *     {
-     *       "result": "ERROR",
-     *       "error": "204"
-     *     }
-	 *
      */
 	public function student_post()
     {
@@ -774,7 +760,11 @@ class Certification extends REST_Controller {
 			];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+					$this->response(array(
+					    'result'  => 'ERROR',
+                        'error'   => INPUT_NOT_CORRECT,
+                        'err_msg' => $field . 'is empty!'
+                    ));
 				}else{
 					$content[$field] = $input[$field];
 				}
@@ -783,7 +773,7 @@ class Certification extends REST_Controller {
             isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
 
 			$content['system'] 	 = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
-            isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:"";
+      isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:'';
 
 			$this->load->model('user/user_meta_model');
 
@@ -808,7 +798,11 @@ class Certification extends REST_Controller {
             foreach ($file_fields as $field) {
                 $image_id = intval($input[$field]);
                 if (!$image_id) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                    $this->response(array(
+                        'result' => 'ERROR',
+                        'error' => INPUT_NOT_CORRECT,
+                        'err_msg' => $field . 'is empty!'
+                    ));
                 }else{
                     $rs = $this->log_image_model->get_by([
                         'id'		=> $image_id,
@@ -819,16 +813,20 @@ class Certification extends REST_Controller {
                         $content[$field . '_id'] = $rs->id;
                         $content[$field] = $rs->url;
                     }else{
-                        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                        $this->response(array(
+                            'result' => 'ERROR',
+                            'error' => INPUT_NOT_CORRECT,
+                            'err_msg' => $image_id . 'not found in db!'
+                        ));
                     }
                 }
             }
 
 			$file_fields = [];
             isset($input['transcript_image']) && is_numeric($input['transcript_image'])?$file_fields[]='transcript_image':'';
-            isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:"";
+            isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:'';
             isset($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
-            isset($input['game_work'])?$content['game_work']=$input['game_work']:"";
+            isset($input['game_work'])?$content['game_work']=$input['game_work']:'';
             isset($input['game_work_image']) && !empty($input['game_work_image'])?$file_fields[]='game_work_image':'';
             //多個檔案欄位
             foreach ($file_fields as $field) {
@@ -851,7 +849,7 @@ class Certification extends REST_Controller {
                 }
             }
 
-            $content['graduate_date'] = isset($input['graduate_date'])?$input['graduate_date']:"";
+            $content['graduate_date'] = isset($input['graduate_date'])?$input['graduate_date']:'';
             $content['school'] = trim($content['school'], ' ');
             $content['sip_account'] = trim($content['sip_account'], ' ');
             $content['sip_password'] = trim($content['sip_password'], ' ');
@@ -2498,6 +2496,7 @@ class Certification extends REST_Controller {
 			$content['type'] 		  = array_key_exists(intval($input['type']),$job_type_name)?intval($input['type']):0;
 			$content['seniority'] 	  = array_key_exists(intval($input['seniority']),$seniority_range)?intval($input['seniority']):0;
 			$content['job_seniority'] = array_key_exists(intval($input['job_seniority']),$seniority_range)?intval($input['job_seniority']):0;
+            $content['job_title'] = $input['job_title'] ?? ''; // 工作職稱
 
 			// 使用者手填資料
 			$content['LaborQryDate'] = isset($input['LaborQryDate']) ? $input['LaborQryDate'] : '';

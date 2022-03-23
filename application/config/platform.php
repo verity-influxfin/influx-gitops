@@ -327,8 +327,10 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
-        'option_certifications' => [
-            CERTIFICATION_FINANCIAL
+        // [APP]上選填的徵信項，避免系統無法一審
+        'option_certifications' => [],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -378,8 +380,10 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
-        'option_certifications' => [
-            CERTIFICATION_FINANCIAL
+        // [APP]上選填的徵信項，避免系統無法一審
+        'option_certifications' => [],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -437,7 +441,12 @@ $config['product_list'] = [
             CERTIFICATION_JOB,
             CERTIFICATION_REPAYMENT_CAPACITY
         ],
+        // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -495,7 +504,12 @@ $config['product_list'] = [
             CERTIFICATION_JOB,
             CERTIFICATION_REPAYMENT_CAPACITY
         ],
+        // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -811,7 +825,12 @@ $config['product_list'] = [
             CERTIFICATION_JOB,
             CERTIFICATION_REPAYMENT_CAPACITY
         ],
+        // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -917,8 +936,12 @@ $config['product_list'] = [
 			CERTIFICATION_INVESTIGATIONA11,
             CERTIFICATION_COMPANYEMAIL,
         ],
+        // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
             CERTIFICATION_JUDICIALGUARANTEE
+        ],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -1242,8 +1265,10 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
-                'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certification_verify_stage' => [
                     [
@@ -1291,7 +1316,12 @@ $config['sub_product_list'] = [
                     CERTIFICATION_JOB,
                     CERTIFICATION_REPAYMENT_CAPACITY
                 ],
+                // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certification_verify_stage' => [
                     [
@@ -1565,7 +1595,11 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL
                 ],
+                // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certification_verify_stage' => [
                     [
@@ -1620,8 +1654,10 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
-                'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certifications_stage' => [
                     [
@@ -1674,7 +1710,12 @@ $config['sub_product_list'] = [
                     CERTIFICATION_JOB,
                     CERTIFICATION_REPAYMENT_CAPACITY
                 ],
+                // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certifications_stage' => [
                     [
@@ -1775,8 +1816,10 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
-                'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certifications_stage' => [
                     [
@@ -1825,7 +1868,13 @@ $config['sub_product_list'] = [
                     CERTIFICATION_JOB,
                     CERTIFICATION_REPAYMENT_CAPACITY
                 ],
+                // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                     CERTIFICATION_DIPLOMA,
                 ],
                 'certifications_stage' => [

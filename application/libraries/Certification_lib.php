@@ -1069,7 +1069,7 @@ class Certification_lib{
                                     }
                                     else
                                     {
-                                        $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                        $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                     }
                                     // 是否為私人帳號判斷
                                     if ($isPrivate === TRUE)
@@ -1093,12 +1093,12 @@ class Certification_lib{
                                                 }
                                                 else
                                                 {
-                                                    $verifiedResult->addMessage('IG爬蟲結果回應錯誤(子系統回應非200)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                    $verifiedResult->addMessage('IG爬蟲follow回應: ' . $follow_status['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                                 }
                                             }
                                             else
                                             {
-                                                $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                $verifiedResult->addMessage('IG爬蟲沒有回應: follow，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                             }
                                         }
                                     }
@@ -1107,7 +1107,7 @@ class Certification_lib{
                                     {
                                         if ($allFollowerCount <= FOLLOWER_ACTIVATE && $allFollowingCount <= FOLLOWING_ACTIVATE)
                                         {
-                                            $verifiedResult->addMessage('IG非活躍帳號', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                            $verifiedResult->addMessage('IG非活躍帳號，轉人工處理', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                         }
                                     }
                                     $content['instagram'] = [
@@ -1130,7 +1130,7 @@ class Certification_lib{
                                 }
                                 else
                                 {
-                                    $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                    $verifiedResult->addMessage('IG爬蟲沒有回應: risk_control_info，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                 }
                             }
                             // IG爬蟲狀態錯誤
@@ -1152,12 +1152,12 @@ class Certification_lib{
                         }
                         else
                         {
-                            $verifiedResult->addMessage('IG爬蟲回應非200或找不到爬蟲回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('IG爬蟲log_status回應: ' . $log_status['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                         }
                     }
                     else
                     {
-                        $verifiedResult->addMessage('IG爬蟲沒有回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                        $verifiedResult->addMessage('IG爬蟲沒有回應: log_status，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                     }
                 }
                 else
@@ -1206,7 +1206,7 @@ class Certification_lib{
 
             if (isset($info->user_id) && isset($content['instagram']['username']))
             {
-                // IG爬蟲狀態
+                // ig爬蟲狀態
                 $ig_username = trim($content['instagram']['username']);
                 $this->CI->load->library('scraper/instagram_lib');
                 $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username);
@@ -1225,11 +1225,10 @@ class Certification_lib{
                                 $allPostCount = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
                                 $followStatus = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
                                 $isFollower = isset($risk_control_info['response']['result']['isFollower']) ? $risk_control_info['response']['result']['isFollower'] : '';
-                                $allFollowerCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['following'] : '';
-                                $allFollowingCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['followers'] : '';
+                                $allFollowingCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
+                                $allFollowerCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
                                 $postsIn3Months = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
                                 $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['postsWithKeyWords'] : '';
-
                                 // 帳號是否存在
                                 if ($usernameExist === TRUE)
                                 {
@@ -1244,9 +1243,8 @@ class Certification_lib{
                                 }
                                 else
                                 {
-                                    $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                    $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                 }
-
                                 // 是否為私人帳號判斷
                                 if ($isPrivate === TRUE)
                                 {
@@ -1269,22 +1267,21 @@ class Certification_lib{
                                             }
                                             else
                                             {
-                                                $verifiedResult->addMessage('IG爬蟲結果回應錯誤(子系統回應非200)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                $verifiedResult->addMessage('IG爬蟲follow回應: ' . $follow_status['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                             }
                                         }
                                         else
                                         {
-                                            $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                            $verifiedResult->addMessage('IG爬蟲沒有回應: follow，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                         }
                                     }
                                 }
-
                                 // 是否為活躍社交帳號判斷
                                 if (is_numeric($allFollowerCount) && is_numeric($allFollowingCount))
                                 {
                                     if ($allFollowerCount <= FOLLOWER_ACTIVATE && $allFollowingCount <= FOLLOWING_ACTIVATE)
                                     {
-                                        $verifiedResult->addMessage('IG非活躍帳號', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                        $verifiedResult->addMessage('IG非活躍帳號，轉人工處理', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                     }
                                 }
                                 $content['instagram'] = [
@@ -1307,7 +1304,7 @@ class Certification_lib{
                             }
                             else
                             {
-                                $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                $verifiedResult->addMessage('IG爬蟲沒有回應: risk_control_info，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                             }
                         }
                         // IG爬蟲狀態錯誤
@@ -1329,12 +1326,12 @@ class Certification_lib{
                     }
                     else
                     {
-                        $verifiedResult->addMessage('IG爬蟲回應非200或找不到爬蟲回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                        $verifiedResult->addMessage('IG爬蟲log_status回應: ' . $log_status['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                     }
                 }
                 else
                 {
-                    $verifiedResult->addMessage('IG爬蟲沒有回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                    $verifiedResult->addMessage('IG爬蟲沒有回應: log_status，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                 }
             }
             else
@@ -2641,7 +2638,6 @@ class Certification_lib{
 				'school_system'			 => $content['system'],
 				'school_department'		 => $content['department'],
 				'school_major'			 => $content['major'],
-				'school_email'			 => $content['email'],
 				'school_grade'			 => $content['grade'],
 				'student_id'			 => $content['student_id'],
 				'student_card_front'	 => $content['front_image'],
