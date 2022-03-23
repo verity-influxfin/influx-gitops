@@ -771,7 +771,7 @@ class Certification extends REST_Controller {
 			}
 
             // for news 前端判斷email 待app新上版要刪除
-            $content['email'] = '';
+            $content['certification_content']['email'] = '';
             // alleninflux   2020-02-21 15:29:32 +0800 不知道作用
             isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
 
