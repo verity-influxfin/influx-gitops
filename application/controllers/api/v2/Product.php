@@ -1248,7 +1248,8 @@ class Product extends REST_Controller {
 					}
 					$user_certification = $this->user_certification_model->get_by(['id'=>$value['certification_id']]);
 					$content_array_data = [];
-					$content_key = ['labor_type','return_type','mail_file_status'];
+                    // email欄位待new新版app上線後刪除
+					$content_key = ['labor_type','return_type','mail_file_status', 'email'];
 					if(isset($user_certification->content) && $user_certification->content != '' ){
 						$user_certification = json_decode($user_certification->content,true);
 						foreach($content_key as $key_name){
