@@ -773,7 +773,7 @@ class Certification extends REST_Controller {
             isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
 
 			$content['system'] 	 = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
-            isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:'';
+      isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:'';
 
 			$this->load->model('user/user_meta_model');
 
@@ -864,8 +864,8 @@ class Certification extends REST_Controller {
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->load->library('scraper/sip_lib.php');
-                $this->sip_lib->requestSipLogin($content['school'], $content['sip_account'], $content['sip_password']);
-                $this->response(array('result' => 'SUCCESS'));
+				$this->sip_lib->requestDeep($content['school'], $content['sip_account'], $content['sip_password']);
+				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
@@ -894,24 +894,31 @@ class Certification extends REST_Controller {
     public function student_cards_post()
     {
         $post = $this->input->post(NULL, TRUE);
-        $imageId = isset($post['id']) ? intval($post['id']) : 0;
+        $front_image_id = isset($post['front_id']) ? intval($post['front_id']) : 0;
+        $back_image_id  = isset($post['back_id']) ? intval($post['back_id']) : 0;
 
-        if ($imageId <= 0) {
-            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        if ( ! $front_image_id || ! $back_image_id)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
 
         $this->load->model('log/log_image_model');
-        $imageLog = $this->log_image_model->get($imageId);
+        $front_image_log = $this->log_image_model->get($front_image_id);
+        $back_image_log  = $this->log_image_model->get($back_image_id);
 
         $ownerId = $this->user_info->id;
-        if (!$imageLog || $imageLog->user_id != $ownerId) {
-            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        if ( ! $front_image_log || ! $back_image_log)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
 
-        $ownerId = $this->user_info->id;
+        if ($front_image_log->user_id != $ownerId || $back_image_log->user_id != $ownerId)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
 
-        $this->load->library('image_recognition_lib');
-        $this->image_recognition_lib->requestStudentCardIdentification($imageLog, $ownerId);
+        $this->load->library('student_card_recognition_lib');
+        $this->student_card_recognition_lib->request_student_card_identification($front_image_log, $back_image_log);
 
         $this->response(['result' => 'SUCCESS']);
     }
@@ -922,7 +929,38 @@ class Certification extends REST_Controller {
      * @apiName PostCertificationStudentCards
      * @apiGroup Certification
      * @apiHeader {String} request_token 登入後取得的 Request Token
-     * @apiParam {String} photo id
+     * @apiParam {String} photo front_id
+     * @apiParam {String} photo back_id
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data":
+     *          {
+     *              status' => 0,
+     *              student_id' => '',
+     *              student_department' => '',
+     *              student_academic_degree' => '',
+     *              university' => '',
+     *              spent_time' => 0.15646
+     *          }
+     *    }
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data":
+     *          {
+     *              status' => 1,
+     *              student_id' => 'A100345871',
+     *              student_department' => '資工所',
+     *              student_academic_degree' => '碩士',
+     *              university' => '國立臺灣大學',
+     *              spent_time' => 8.34556
+     *          }
+     *    }
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -932,33 +970,47 @@ class Certification extends REST_Controller {
      *
      * @apiUse InputError
      * @apiUse TokenError
+     * @apiUse PictureNotClearError
      *
      */
     public function student_cards_get()
     {
         $get = $this->input->get(NULL, TRUE);
-        $imageId = isset($get['id']) ? intval($get['id']) : 0;
+        $front_image_id = isset($get['front_id']) ? intval($get['front_id']) : 0;
+        $back_image_id  = isset($get['back_id']) ? intval($get['back_id']) : 0;
+
+        if ( ! $front_image_id || ! $back_image_id)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
 
         $this->load->model('log/log_image_model');
-        $imageLog = $this->log_image_model->get($imageId);
-
-        if (!$imageLog) {
-            $this->response(['result' => 'SUCCESS']);
-        }
+        $front_image_log = $this->log_image_model->get($front_image_id);
+        $back_image_log  = $this->log_image_model->get($back_image_id);
 
         $ownerId = $this->user_info->id;
-        if (!$imageLog || $imageLog->user_id != $ownerId) {
-            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        if ( ! $front_image_log || ! $back_image_log)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
 
-        $this->load->library('image_recognition_lib');
-        $university = $this->image_recognition_lib->getStudentCardIdentification($imageLog);
-
-        if ($university) {
-            $this->response(['result' => 'SUCCESS', 'data' => ['university' => $university, 'status' => 1]]);
+        if ($front_image_log->user_id != $ownerId || $back_image_log->user_id != $ownerId)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
 
-        $this->response(['result' => 'SUCCESS', 'data' => ['university' => '', 'status' => 1]]);
+        $reference = $front_image_log->id . '-' . $back_image_log->id;
+        $this->load->library('student_card_recognition_lib');
+        $result = $this->student_card_recognition_lib->get_student_card_identification($reference);
+
+        if ( ! $result)
+        {
+            $this->response(['result' => 'ERROR', 'error' => EXIT_ERROR]);
+        }
+        else
+        {
+            $this->response(['result' => 'SUCCESS', 'data' => $result]);
+        }
     }
 
 	/**
