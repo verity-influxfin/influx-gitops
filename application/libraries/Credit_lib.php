@@ -1050,7 +1050,7 @@ class Credit_lib{
             'credit_amount' => 0, // 核可額度
             'target_amount' => 0, // 佔用中的額度
             'remain_amount' => 0, // 剩餘可用額度
-            'target_list' => []
+            'instalment' => 0
         ];
 
         // 撈取同產品的最新一筆核可資訊
