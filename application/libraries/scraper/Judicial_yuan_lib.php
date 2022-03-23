@@ -33,18 +33,12 @@ class Judicial_yuan_lib
             'address' => $address
         ];
 
-        $result = curl_get($url, $data);
-        $response = json_decode($result, TRUE);
-
-        if ( ! $result || ! isset($response['status']))
-        {
-            return FALSE;
-        }
+        $response = curl_get_statuscode($url, $data);
 
         return $response;
     }
 
-    # 用於司法院 instagram 帳號爬蟲
+    // 用於司法院 instagram 帳號爬蟲
     public function requestJudicialYuanAllCityVerdicts($query)
     {   
         if ( ! $query)
@@ -56,15 +50,9 @@ class Judicial_yuan_lib
 
         $data = [
             'query' => $query,
-        ];        
+        ];
 
-        $result = curl_get($url, $data);
-        $response = json_decode($result, TRUE);
-
-        if ( ! $result || ! isset($response['status']))
-        {
-            return FALSE;
-        }
+        $response = curl_get_statuscode($url, $data);
 
         return $response;
     }

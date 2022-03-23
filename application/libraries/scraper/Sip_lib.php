@@ -26,15 +26,9 @@ class Sip_lib
 
         $data = ["account" => $account, "password" => $password];
 
-        $result = curl_get($url, $data);
-        $response = json_decode($result, TRUE);
+        $response = curl_get_statuscode($url, $data);
 
-        if ( ! $result || ! isset($response['status']) || $response['status'] != 200)
-        {
-            return FALSE;
-        }
-
-        return TRUE;
+        return $response;
     }
 
     public function requestDeep($university, $account, $password)

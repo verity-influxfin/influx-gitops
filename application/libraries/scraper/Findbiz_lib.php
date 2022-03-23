@@ -17,7 +17,7 @@ class Findbiz_lib
     /**
      * [requestFindBizData 商業司爬蟲]
      * @param string $businessid [統一編號]
-     * @return object $response   [發送結果]
+     * @return array $response   [發送結果]
      *(
      * [status] => 200|204|400|201(SUCCESS|NO_CONTENT|BAD_REQUEST|TASK_REPEAT)
      *)
@@ -31,13 +31,7 @@ class Findbiz_lib
         }
 
         $url = $this->scraper_url . "{$businessid}/data";
-        $result = curl_get($url, ['']);
-        $response = json_decode($result);
-
-        if ( ! $result || ! isset($response->status) || $response->status != 200)
-        {
-            return;
-        }
+        $response = curl_get_statuscode($url, ['']);
 
         return $response;
     }

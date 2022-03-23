@@ -1,34 +1,78 @@
 <style lang="scss">
-    .table-title {
-        min-width: 75px;
-        background-color: #f9f9f9;
+    .d-flex {
+        display: flex;
     }
 
-    .table-content {
-        word-break: break-all;
+    .jcb {
+        justify-content: space-between;
     }
 
-    .table-ellipsis {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+    .aic {
+        align-items: center;
     }
-	.d-flex{
-		display: flex;
-	}
-	.jcb{
-		justify-content: space-between;
-	}
-	.aic{
-		align-items: center;
-	}
 </style>
-<script type="text/javascript">
+<div id="page-wrapper">
+    <div class="d-flex jcb aic page-header">
+        <h1>經濟部商業司資訊</h1>
+        <div>
+            <scraper-status-icon :column="column"></scraper-status-icon>
+            <button class="btn btn-danger" id="redo">重新執行爬蟲</button>
+        </div>
+    </div>
+    <div class="d-flex jcb aic page-header">
+        <h2>工作收入證明</h2>
+    </div>
+    <table class="table">
+        <tr>
+            <th>姓名</th>
+            <td id="name"></td>
+            <th>投保單位名稱</th>
+            <td id="companyName"></td>
+            <th>總工作年資</th>
+            <td id="total-count"></td>
+        </tr>
+        <tr>
+            <th>出生年月日</th>
+            <td id="birthday"></td>
+            <th>統一編號</th>
+            <td id="tax-id"></td>
+            <th>現任職公司年資</th>
+            <td id="this_company-count"></td>
+        </tr>
+        <tr>
+            <th>身分證字號</th>
+            <td id="id-number"></td>
+            <th>投保薪資</th>
+            <td id="insuranceSalary"></td>
+            <th>查詢日期起迄</th>
+            <td id="report-date"></td>
+        </tr>
+    </table>
+    <div class="d-flex jcb aic page-header">
+        <h2>公司基本資料</h2>
+    </div>
+    <table class="table">
+        <tbody id="first-page-company-info"></tbody>
+    </table>
+    <div class="d-flex jcb aic page-header">
+        <h2>監董事資料</h2>
+    </div>
+    <table class="table">
+        <tbody id="first-page-director-info"></tbody>
+    </table>
+    <div class="d-flex jcb aic page-header">
+        <h2>歷史資料</h2>
+    </div>
+    <table class="table">
+        <div id="history"></div>
+    </table>
+</div>
+<script>
     // SQL資料抓取
     function fetchInfoData(user_id) {
         $.ajax({
             type: "GET",
-            url: "/admin/scraper/biz_br_info" + "?user_id=" + user_id,
+            url: "/admin/scraper/business_info" + "?user_id=" + user_id,
             async: false,
             success: function (response) {
                 if (response.status.code != 200) {
@@ -72,7 +116,7 @@
 
     function getNewDate(str) {
         if (!str) {
-            return false;
+            return '';
         }
         newDateStr = str.toString()
         if (newDateStr.length === 7)
@@ -84,36 +128,18 @@
 
     function create_key_value_html(key, value) {
         html = `<tr>
-					<th class="table-title">${key}</th>
-					<td style=background-color:white;>${value}</td>
+					<th>${key}</th>
+					<td>${value}</td>
 				</tr>`
         return html;
     }
 
     function create_director_info_html(infoKey, key, value) {
         html = `<tr>
-					<th style=background-color:white; rowspan="5">${infoKey}</th>
-					<th class="table-title">${key}</th>
-					<td style=background-color:white;>${value}</td>
+					<th rowspan="5">${infoKey}</th>
+					<th>${key}</th>
+					<td>${value}</td>
 				</tr>`
-        return html;
-    }
-
-    function create_risk_level_html(level, time, content) {
-        html = `<div class="form-group">
-                <table class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">風險等級</td>
-                        <th class="table-title">事件時間</td>
-                        <th class="table-title">指標內容</td>
-                    </tr>
-                    <tr>
-                        <td>${level}</td>
-                        <td>${time}</td>
-                        <td>${content}</td>
-                    </tr>
-                </table>
-            </div>`
         return html;
     }
 
@@ -149,7 +175,7 @@
             }
         })
         table = `<div class="form-group">
-					<table style="table-layout:fixed;" class="table table-bordered table-hover table-striped" id="${id}">
+					<table class="table" id="${id}">
 						<tbody>
 							${htmls}
 						</tbody>
@@ -213,16 +239,6 @@
         })
     }
 
-    function fillRiskLevelData(response) {
-        if (!response) {
-            return false;
-        }
-        riskLevelResponse.forEach((response) => {
-            level_html = create_risk_level_html(response.level, response.time, response.content);
-            $('#risk-level').append(level_html);
-        })
-    }
-
     $(document).ready(function () {
         let urlString = window.location.href;
         let url = new URL(urlString);
@@ -230,115 +246,30 @@
         setTimeout(fetchInfoData(user_id), 1000);
         setTimeout(fetchBizData(), 1000);
 
-		$('#redo').on('click', () => {
+        $('#redo').on('click', () => {
             if (confirm('是否確定重新執行爬蟲？')) {
                 axios.post('/admin/scraper/requestFindBizData', {
                     tax_id: $('#tax-id').text(),
-                }).then(({ data }) => {
-                    if (data.status == 200) {
-                        location.reload()
-                    }
-                    else {
-                        alert(data.error.code)
+                }).then(({data}) => {
+                    if (data.code == 200) {
+                        if (data.response.status == 200) {
+                            alert('已成功送出追蹤')
+                        } else {
+                            alert(`子系統回應${data.response}，請洽工程師！`)
+                        }
+                    } else {
+                        alert(`http回應${data.code}，請洽工程師！`)
                     }
                 })
             }
         })
     });
-</script>
-<div id="page-wrapper">
-    <div class="d-flex jcb aic page-header">
-        <div>
-            <h1>經濟部商業司資訊</h1>
-        </div>
-		<div>
-			<scraper-status-icon :column="column"></scraper-status-icon>
-			<button class="btn btn-danger" id="redo">重新執行爬蟲</button>
-		</div>
-    </div>
-    <table class="table table-bordered table-hover table-striped">
-        <tbody>
-        <tr>
-            <th class="table-title">資料內容（工作收入證明）</th>
-        </tr>
-        <tr>
-            <td>
-                <table class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">姓名</th>
-                        <td style=background-color:white; id="name"></td>
-                        <th class="table-title">投保單位名稱</th>
-                        <td style=background-color:white; id="companyName"></td>
-                        <th class="table-title">總工作年資</th>
-                        <td style=background-color:white; id="total-count"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">出生年月日</th>
-                        <td style=background-color:white; id="birthday"></td>
-                        <th class="table-title">統一編號</th>
-                        <td style=background-color:white; id="tax-id"></td>
-                        <th class="table-title">現任職公司年資</th>
-                        <td style=background-color:white; id="this_company-count"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">身分證字號</th>
-                        <td style=background-color:white; id="id-number"></td>
-                        <th class="table-title">投保薪資</th>
-                        <td style=background-color:white; id="insuranceSalary"></td>
-                        <th class="table-title">查詢日期起迄</th>
-                        <td style=background-color:white; id="report-date"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        </tbody>
-        <table>
-            <table class="table table-bordered table-hover table-striped">
-                <tr>
-                    <th class="table-title">公司基本資料</th>
-                </tr>
-                <tr>
-                    <td>
-                        <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                            <tbody id="first-page-company-info"></tbody>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <table class="table table-bordered table-hover table-striped">
-                <tr>
-                    <th class="table-title">監董事資料</th>
-                </tr>
-                <tr>
-                    <td>
-                        <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                            <tbody id="first-page-director-info"></tbody>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <table class="table table-bordered table-hover table-striped">
-                <tr>
-                    <th class="table-title">歷史資料</th>
-                </tr>
-                <tr>
-                    <td>
-                        <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                            <div id="history"></div>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </table>
-    </table>
-</div>
-<script>
-	const v = new Vue({
-		el:'#page-wrapper',
-		computed: {
-			column(){
-				return 'biz_status'
-			}
-		},
-	})
+    const v = new Vue({
+        el: '#page-wrapper',
+        computed: {
+            column() {
+                return 'biz_status'
+            }
+        },
+    })
 </script>

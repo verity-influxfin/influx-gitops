@@ -2781,7 +2781,7 @@ class Certification_lib{
                 isset($content['meta']['key_word']) ? $data['key_word'] = $content['meta']['key_word'] : '';
             }
             
-            # 社交認證完成，觸發 ig 司法院爬蟲
+            // 社交認證完成，觸發 ig 司法院爬蟲
             $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($data['ig_username']);
             if(isset($verdicts_statuses['status']))
             {
@@ -2826,6 +2826,17 @@ class Certification_lib{
                 isset($content['meta']['follow_count']) ? $data['meta_follow_count'] = $content['meta']['follow_count'] : '';
                 isset($content['meta']['posts_in_3months']) ? $data['meta_posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
                 isset($content['meta']['key_word']) ? $data['meta_key_word'] = $content['meta']['key_word'] : '';
+            }
+
+            // 社交認證完成，觸發 ig 司法院爬蟲
+            $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($data['ig_username']);
+            if(isset($verdicts_statuses['status']))
+            {
+                if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
+                    || $verdicts_statuses['status'] == 204)
+                {
+                    $this->CI->judicial_yuan_lib->requestJudicialYuanAllCityVerdicts($data['ig_username']);
+                }
             }
 
             $rs = $this->user_meta_progress($data, $info);

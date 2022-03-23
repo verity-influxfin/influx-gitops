@@ -1,10 +1,4 @@
 <style lang="scss">
-    .table-title {
-        padding: 0;
-        min-width: 75px;
-        background-color: #f9f9f9;
-    }
-
     .f-red {
         background-color: red;
     }
@@ -37,99 +31,83 @@
             <h1>Google</h1>
         </div>
     </div>
-    <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
+    <div class="d-flex jcb aic page-header">
+        <h2>實名資訊</h2>
+    </div>
+    <table class="table">
+        <tbody>
         <tr>
-            <th class="table-title">資料內容（實名認證）</th>
+            <th>姓名</th>
+            <td>
+                <a target="_blank" :href="urls.name_url">{{info.name}}</a>
+            </td>
+            <th>發證日期</th>
+            <td>{{info.id_card_date}}</td>
+            <th>父</th>
+            <td>
+                <a target="_blank" :href="urls.father_url">{{info.father}}</a>
+            </td>
+            <th>出生地</th>
+            <td>{{info.born}}</td>
         </tr>
         <tr>
+            <th>出生年月日</th>
+            <td>{{info.birthday}}</td>
+            <th>發證地點</th>
+            <td>{{id_card_place}}</td>
+            <th>母</th>
             <td>
-                <table class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">姓名</th>
-                        <td style=background-color:white;>
-                            <a id="name" target="_blank" href="https://www.google.com/"></a>
-                        </td>
-                        <th class="table-title">發證日期</th>
-                        <td style=background-color:white; id="id-card-date"></td>
-                        <th class="table-title">父</th>
-                        <td style=background-color:white;>
-                            <a id="father" target="_blank" href="https://www.google.com/"></a>
-                        </td>
-                        <th class="table-title">出生地</th>
-                        <td style=background-color:white; id="born"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">出生年月日</th>
-                        <td style=background-color:white; id="birthday"></td>
-                        <th class="table-title">發證地點</th>
-                        <td style=background-color:white; id="id_card_place"></td>
-                        <th class="table-title">母</th>
-                        <td style=background-color:white;>
-                            <a id="mother" target="_blank" href="https://www.google.com/"></a>
-                        </td>
-                        <th class="table-title" colspan="2">戶籍地址</th>
-                    </tr>
-                    <tr>
-                        <th class="table-title">身分證字號</th>
-                        <td style=background-color:white; id="id-number"></td>
-                        <th class="table-title">補換證</th>
-                        <td style=background-color:white; id="replacement"></td>
-                        <th class="table-title">配偶</th>
-                        <td style=background-color:white;>
-                            <a id="spouse" target="_blank" href="https://www.google.com/"></a>
-                        </td>
-                        <td style=background-color:white; id="address" colspan="2"></td>
-                    </tr>
-                </table>
+                <a target="_blank" :href="urls.mother_url">{{info.mother}}</a>
+            </td>
+            <th>戶籍地址</th>
+            <td>{{info.address}}</td>
+        </tr>
+        <tr>
+            <th>身分證字號</th>
+            <td>{{info.id_number}}</td>
+            <th>補換證</th>
+            <td>{{replacement}}</td>
+            <th>配偶</th>
+            <td colspan="3">
+                <a target="_blank" :href="urls.spouse_url">{{info.spouse}}</a>
             </td>
         </tr>
+        </tbody>
     </table>
+    <div class="d-flex jcb aic page-header">
+        <h2>Google資訊</h2>
+        <div>
+            <scraper-status-icon :show-status="status"></scraper-status-icon>
+            <button class="btn btn-danger" @click="doRedo" :disabled="status == 'loading'">重新執行爬蟲</button>
+        </div>
+    </div>
     <ul class="nav nav-pills mb-3">
         <li role="presentation" v-for="tab in tabs" :class="{active: tab===chooseTab}">
             <a @click="clickTab(tab)" :href="'#'+ tab">{{tab}}</a>
         </li>
     </ul>
-    <table class="table table-bordered table-hover table-striped">
+    <table style="table-layout:fixed;" class="table"
+           v-for="(item,index) in googleInfos">
+        <tbody>
         <tr>
-            <th class="table-title d-flex aic">
-                <div class="mr-4">Google資訊</div>
-                <div>
-                    <scraper-status-icon :show-status="status"></scraper-status-icon>
-                    <button class="btn btn-danger" @click="doRedo" :disabled="status == 'loading'">重新執行爬蟲</button>
-                </div>
-            </th>
-        </tr>
-        <tr>
-            <td>
-                <div>
-                    <div class="form-group">
-                        <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped"
-                            v-for="(item,index) in googleInfos">
-                            <tbody>
-                                <tr>
-                                    <td class="table-title">標題</td>
-                                    <td style=background-color:white;>
-                                        <a class="fancyframe" target="_blank" :href="item.url">{{item.title}}</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="table-title">內容</td>
-                                    <td>{{item.content}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="table-title">
-                                        <a @click="watchContent(`case_content_${index}`)">內容(點我展開)</a>
-                                    </td>
-                                    <td class="table-content table-ellipsis" :id="`case_content_${index}`"
-                                        v-html="highlight(item.contentAll, chooseTab,'f-red')">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <th>標題</th>
+            <td style=background-color:white;>
+                <a class="fancyframe" target="_blank" :href="item.url">{{item.title}}</a>
             </td>
         </tr>
+        <tr>
+            <th>內容</th>
+            <td>{{item.content}}</td>
+        </tr>
+        <tr>
+            <th>
+                <a @click="watchContent(`case_content_${index}`)">內容(點我展開)</a>
+            </th>
+            <td class="table-content table-ellipsis" :id="`case_content_${index}`"
+                v-html="highlight(item.contentAll, chooseTab,'f-red')">
+            </td>
+        </tr>
+        </tbody>
     </table>
 </div>
 <script>
@@ -140,6 +118,21 @@
                 return 'google_status'
             }
         },
+        data() {
+            return {
+                tabs: [],
+                status: 'loading',
+                googleInfos: '',
+                chooseTab: '',
+                info: {},
+                urls: {
+                    name_url: '',
+                    father_url: '',
+                    mother_url: '',
+                    spouse_url: '',
+                }
+            }
+        },
         mounted() {
             const url = new URL(location.href)
             this.userId = url.searchParams.get('user_id')
@@ -148,15 +141,6 @@
             this.getInfoData().then(() => {
                 this.getTabData()
             })
-        },
-        data() {
-            return {
-                tabs: [],
-                status: 'loading',
-                googleInfos: '',
-                chooseTab: ''
-
-            }
         },
         methods: {
             watchContent(id) {
@@ -174,28 +158,22 @@
                 return highlighted;
             },
             getInfoData() {
-                const fillInfoData = (judicialyuanInfoData) => {
-                    if (!judicialyuanInfoData) {
+                const fillInfoData = (info) => {
+                    if (!info) {
                         return;
                     }
-                    idCardPlace = judicialyuanInfoData.id_card_place;
-                    idCardPlace = idCardPlace.split(')');
-                    $('#name').text(judicialyuanInfoData.name);
-                    $('#birthday').text(judicialyuanInfoData.birthday);
-                    $('#id-number').text(judicialyuanInfoData.id_number);
-                    $('#id-card-date').text(judicialyuanInfoData.id_card_date);
-                    $('#id_card_place').text(idCardPlace[0].replace('(', ''));
-                    $('#replacement').text(idCardPlace[1]);
-                    $('#father').text(judicialyuanInfoData.father);
-                    $('#mother').text(judicialyuanInfoData.mother);
-                    $('#born').text(judicialyuanInfoData.born);
-                    $('#spouse').text(judicialyuanInfoData.spouse);
-                    $('#address').text(judicialyuanInfoData.address);
+                    let idCardPlace = info.id_card_place.split(')')
+                    this.id_card_place = idCardPlace[0].replace('(', '');
+                    this.replacement = idCardPlace[1].replace(')', '');
+                    this.urls.name_url = `https://www.google.com/search?q="${info.name}"&num=100`;
+                    this.urls.father_url = `https://www.google.com/search?q="${info.father}"&num=100`;
+                    this.urls.mother_url = `https://www.google.com/search?q="${info.mother}"&num=100`;
+                    this.urls.spouse_url = `https://www.google.com/search?q="${info.spouse}"&num=100`;
                 }
-                return axios.get(`/admin/scraper/verdict_google_info?user_id=${this.userId}`).then(({ data }) => {
+                return axios.get(`/admin/scraper/identity_info?user_id=${this.userId}`).then(({data}) => {
                     if (data.status.code === 200) {
                         fillInfoData(data.response)
-                        this.judicialYuanInfo = data.response
+                        this.info = data.response
                         // tabs
                         const tabs = [data.response.name, data.response.father, data.response.mother, data.response.spouse]
                         this.tabs = tabs.filter(x => x.length > 0)
@@ -218,11 +196,10 @@
                         user_id: this.userId,
                         name,
                     }
-                }).then(({ data }) => {
+                }).then(({data}) => {
                     if (data.status.code === 200) {
                         this.googleInfos = data.response.results
-                    }
-                    else {
+                    } else {
                         alert(data.status.code + ' ' + data.status.message)
                     }
                 })
@@ -232,7 +209,7 @@
                     params: {
                         name: this.chooseTab,
                     }
-                }).then(({ data }) => {
+                }).then(({data}) => {
                     this.status = data.google_status
                 })
             },
@@ -240,16 +217,19 @@
                 if (confirm('是否確定重新執行爬蟲？')) {
                     axios.post('/admin/scraper/request_google', {
                         keyword: this.chooseTab,
-                    }).then(({ data }) => {
-                        if (data.status == 200) {
-                            location.reload()
-                        }
-                        else {
-                            alert(data.message)
+                    }).then(({data}) => {
+                        if (data.code == 200) {
+                            if (data.response.status == 200) {
+                                location.reload()
+                            } else {
+                                alert(`子系統回應${data.response}，請洽工程師！`)
+                            }
+                        } else {
+                            alert(`http回應${data.code}，請洽工程師！`)
                         }
                     })
                 }
             }
-        },
+        }
     })
 </script>

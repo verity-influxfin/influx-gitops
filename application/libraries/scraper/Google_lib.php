@@ -20,22 +20,14 @@ class Google_lib
         {
             return FALSE;
         }
-        $response = [];
-        $url = $this->scraperUrl . 'data';
+
+        $url = $this->scraperUrl . '/data';
 
         $data = [
             'keyword' => $keyword
         ];
 
-        $result = curl_get($url, $data);
-        if ($result)
-        {
-            $response = json_decode($result, TRUE);
-        }
-        else
-        {
-            return FALSE;
-        }
+        $response = curl_get_statuscode($url, $data);
 
         return $response;
     }

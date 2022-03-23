@@ -1,13 +1,4 @@
 <style lang="scss">
-    .table-title {
-        min-width: 75px;
-        background-color: #f9f9f9;
-    }
-
-    .table-content {
-        word-break: break-all;
-    }
-
     .d-flex {
         display: flex;
     }
@@ -20,246 +11,221 @@
         align-items: center;
     }
 </style>
-<script type="text/javascript">
-    // SQL資料抓取
-    function fetchInfoData(user_id) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/scraper/instagram_info" + "?user_id=" + user_id,
-            async: false,
-            success: function (response) {
-                if (response.status.code != 200) {
-                    console.log(response.status.code)
-                    return false;
-                }
-                instagramInfo = response.response;
-                fillInfoData(instagramInfo);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest.status);
-                console.log(XMLHttpRequest.readyState);
-                console.log(textStatus);
-            },
-        });
-    }
-
-    // 爬蟲資料抓取
-    function fetchInstagramData(user_id) {
-        ig_username = $('#ig-username').text();
-        $.ajax({
-            type: "GET",
-            url: "/admin/scraper/instagram" + "?user_id=" + user_id + "&ig_username=" + ig_username,
-            success: function (response) {
-                if (response.status.code != 200) {
-                    console.log(response.status.code)
-                    return false;
-                }
-                instagramData = response.response.result;
-                fillInstagramData(instagramData);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest.status);
-                console.log(XMLHttpRequest.readyState);
-                console.log(textStatus);
-            },
-        });
-    }
-
-
-
-    function create_risk_level_html(level, time, content) {
-        html = `<div class="form-group">
-                <table class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">風險等級</td>
-                        <th class="table-title">事件時間</td>
-                        <th class="table-title">指標內容</td>
-                    </tr>
-                    <tr>
-                        <td>${level}</td>
-                        <td>${time}</td>
-                        <td>${content}</td>
-                    </tr>
-                </table>
-            </div>`
-        return html;
-    }
-
-    function fillInfoData(instagramInfoData) {
-        if (!instagramInfoData) {
-            return false;
-        }
-        $('#name').text(instagramInfoData.name);
-        $('#ig-username').text(instagramInfoData.ig_username);
-        baseUrl = 'https://www.instagram.com/' + instagramInfoData.ig_username + '/';
-        $('#ig-username').attr("href", baseUrl);
-    }
-
-    function fillInstagramData(instagramData) {
-        if (!instagramData) {
-            return false;
-        }
-        switch (instagramData.followStatus) {
-            case 'followed':
-                followStatus = '追蹤中'
-                break;
-            case 'waitingFollowAccept':
-                followStatus = '已送出請求'
-                break;
-            case 'unfollowed':
-                followStatus = '未追蹤'
-                break;
-            default:
-                followStatus = ''
-        }
-
-        $('#is-exist').text(instagramData.isExist ? '是' : '否');
-        $('#is-private').text(instagramData.isPrivate ? '是' : '否');
-        $('#is-follower').text(instagramData.isFollower ? '是' : '否');
-        $('#posts').text(instagramData.posts);
-        $('#following').text(instagramData.following);
-        $('#followers').text(instagramData.followers);
-        $('#follow-status').text(followStatus);
-        $('#posts-in-3-months').text(instagramData.postsIn3Months);
-        $('#posts-with-key-words').text(instagramData.postsWithKeyWords);
-    }
-
-    function fillRiskLevelData(riskLevelResponse) {
-        if (!riskLevelResponse) {
-            return false;
-        }
-        riskLevelResponse.forEach((item) => {
-            level_html = create_risk_level_html(item.level, item.time, item.content);
-            $('#risk-level').append(level_html);
-        })
-    }
-
-    $(document).ready(function () {
-        let urlString = window.location.href;
-        let url = new URL(urlString);
-        let user_id = url.searchParams.get("user_id");
-        setTimeout(fetchInfoData(user_id), 1000);
-        setTimeout(fetchInstagramData(user_id), 1000);
-
-
-        $('#follow').on('click', () => {
-            if (!confirm('是否確定重新送出追蹤請求？')){
-                return
-            }
-            axios.post('/admin/scraper/autoFollowIG', {
-                userId: user_id,
-                followed_account: $('#ig-username').text(),
-            }).then(({ data }) => {
-                if (data.status == 200) {
-                    // location.reload()
-					alert('已成功送出追蹤')
-                }
-                else {
-                    alert(data.response.message)
-                }
-            })
-        })
-
-        $('#redo').on('click', () => {
-            if (confirm('是否確定重新執行爬蟲？')) {
-                axios.post('/admin/scraper/updateIGUserInfo', {
-                    userId: user_id,
-                    followed_account: $('#ig-username').text(),
-                }).then(({ data }) => {
-                    if (data.status == 200) {
-                        location.reload()
-                    }
-                    else {
-                        alert(data.error.code)
-                    }
-                })
-            }
-        })
-    });
-</script>
 <div id="page-wrapper">
     <div class="d-flex jcb aic page-header">
         <div>
-            <h1>社群-Instagram</h1>
+            <h1>Instagram</h1>
         </div>
         <div>
-			<scraper-status-icon :column="column"></scraper-status-icon>
-            <button class="btn btn-info" id="follow">追蹤</button>
-            <button class="btn btn-danger" id="redo">重新執行爬蟲</button>
+            <scraper-status-icon :column="column"></scraper-status-icon>
+            <button class="btn btn-info" id="follow" @click="doRedoFollow">追蹤</button>
+            <button class="btn btn-danger" id="redo" @click="doRedo">重新執行爬蟲</button>
         </div>
     </div>
-    <table class="table table-bordered table-hover table-striped">
+    <div class="d-flex jcb aic page-header">
+        <div>
+            <h2>實名資訊</h2>
+        </div>
+    </div>
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>姓名</th>
+            <td>{{info.name}}</td>
+            <th>發證日期</th>
+            <td>{{info.id_card_date}}</td>
+            <th>父</th>
+            <td>{{info.father}}</td>
+            <th>出生地</th>
+            <td>{{info.born}}</td>
+        </tr>
+        <tr>
+            <th>出生年月日</th>
+            <td>{{info.birthday}}</td>
+            <th>發證地點</th>
+            <td>{{id_card_place}}</td>
+            <th>母</th>
+            <td>{{info.mother}}</td>
+            <th>戶籍地址</th>
+            <td>{{info.address}}</td>
+        </tr>
+        <tr>
+            <th>身分證字號</th>
+            <td>{{info.id_number}}</td>
+            <th>補換證</th>
+            <td>{{replacement}}</td>
+            <th>配偶</th>
+            <td>{{info.spouse}}</td>
+            <th>ig帳號</th>
+            <td>
+                <a target="_blank" :href="ig_url">{{info.instagram_username}}</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="d-flex jcb aic page-header">
+        <div>
+            <h2>Instagram資訊</h2>
+        </div>
+    </div>
+    <table class="table">
         <tbody>
             <tr>
-                <th class="table-title">資料內容（社交認證）</th>
+                <th>帳號是否存在</th>
+                <th>是否為私人帳號</th>
+                <th>是否追蹤官方帳號</th>
             </tr>
             <tr>
-                <td>
-                    <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                        <tr>
-                            <th class="table-title">姓名</th>
-                            <td style=background-color:white; id="name"></td>
-                            <th class="table-title">IG帳號</th>
-                            <td style=background-color:white;>
-                                <a id="ig-username" target="_blank" href="https://www.instagram.com/"></a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
+                <td>{{is_exist}}</td>
+                <td>{{is_private}}</td>
+                <td>{{is_follower}}</td>
+            </tr>
+            <tr>
+                <th>總貼文數</th>
+                <th>追蹤數</th>
+                <th>粉絲數</th>
+
+            </tr>
+            <tr>
+                <td>{{igData.posts}}</td>
+                <td>{{igData.following}}</td>
+                <td>{{igData.followers}}</td>
+            </tr>
+            <tr>
+                <th>系統爬蟲帳號是否追蹤此帳號</th>
+                <th>3個月內po文</th>
+                <th>關鍵字命中(全球、財經、數位、兩岸)</th>
+            </tr>
+            <tr>
+                <td>{{follow_status}}</td>
+                <td>{{igData.postsIn3Months}}</td>
+                <td>{{igData.postsWithKeyWords}}</td>
             </tr>
         </tbody>
     </table>
-    <table class="table table-bordered table-hover table-striped">
-        <tr>
-            <th class="table-title">Instagram資訊</th>
-        </tr>
-        <tr>
-            <td>
-                <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">帳號是否存在</th>
-                        <th class="table-title">是否為私人帳號</th>
-                        <th class="table-title">是否追蹤官方帳號</th>
-                    </tr>
-                    <tr>
-                        <td style=background-color:white; id="is-exist"></td>
-                        <td style=background-color:white; id="is-private"></td>
-                        <td style=background-color:white; id="is-follower"></td>
-
-                    </tr>
-                    <tr>
-                        <th class="table-title">總貼文數</th>
-                        <th class="table-title">追蹤數</th>
-                        <th class="table-title">粉絲數</th>
-
-                    </tr>
-                    <tr>
-                        <td style=background-color:white; id="posts"></td>
-                        <td style=background-color:white; id="following"></td>
-                        <td style=background-color:white; id="followers"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">系統爬蟲帳號是否追蹤此帳號</th>
-                        <th class="table-title">3個月內po文</th>
-                        <th class="table-title">關鍵字命中(全球、財經、數位、兩岸)</th>
-                    </tr>
-                    <tr>
-                        <td style=background-color:white; id="follow-status"></td>
-                        <td style=background-color:white; id="posts-in-3-months"></td>
-                        <td style=background-color:white; id="posts-with-key-words"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
 </div>
 <script>
-	const v = new Vue({
-		el:'#page-wrapper',
-		computed: {
-			column(){
-				return 'instagram_status'
-			}
-		},
-	})
+    const v = new Vue({
+        el: '#page-wrapper',
+        data() {
+            return {
+                tabs: [],
+                chooseTab: '',
+                userId: '',
+                info: {},
+                ig_url: '',
+                id_card_place: '',
+                replacement: '',
+                igData: {},
+                is_exist: '',
+                is_private: '',
+                is_follower: '',
+                follow_status: '',
+                cases: [],
+                infos: [],
+                status: 'loading'
+            }
+        },
+        computed: {
+            column() {
+                return 'instagram_status'
+            }
+        },
+        mounted() {
+            const url = new URL(location.href);
+            this.userId = url.searchParams.get('user_id');
+            const hash = decodeURI(location.hash.slice(1))
+            this.chooseTab = decodeURI(location.hash.slice(1))
+            //apis
+            this.getJudicialYuanInfo().then(() => {
+                this.fillInstagramData()
+            })
+        },
+        methods: {
+            getJudicialYuanInfo() {
+                const fillInfoData = (info) => {
+                    if (!info) {
+                        return;
+                    }
+                    let idCardPlace = info.id_card_place.split(')')
+                    this.id_card_place = idCardPlace[0].replace('(', '');
+                    this.replacement = idCardPlace[1].replace(')', '');
+                    this.ig_url = `https://www.instagram.com/${info.instagram_username}`;
+                }
+                return axios.get(`/admin/scraper/identity_info?user_id=${this.userId}`).then(({data}) => {
+                    if (data.status.code === 200) {
+                        fillInfoData(data.response)
+                        this.info = data.response
+                    }
+                })
+            },
+            fillInstagramData() {
+                const fillData = (igData) => {
+                    if (!igData) {
+                        return false;
+                    }
+                    switch (igData.followStatus) {
+                        case 'followed':
+                            this.follow_status = '追蹤中'
+                            break;
+                        case 'waitingFollowAccept':
+                            this.follow_status = '已送出請求'
+                            break;
+                        case 'unfollowed':
+                            this.follow_status = '未追蹤'
+                            break;
+                        default:
+                            this.follow_status = ''
+                    }
+                    this.is_exist = igData.isExist ? '是' : '否';
+                    this.is_private = igData.isPrivate ? '是' : '否';
+                    this.is_follower = igData.isFollower ? '是' : '否';
+                }
+                return axios.get(`/admin/scraper/instagram?user_id=${this.userId}&ig_username=${this.info.instagram_username}`)
+                    .then(({data}) => {
+                        if (data.status.code === 200) {
+                            fillData(data.response.result)
+                            this.igData = data.response.result
+                        }
+                    })
+            },
+            doRedo() {
+                if (confirm('是否確定重新執行爬蟲？')) {
+                    axios.post('/admin/scraper/updateIGUserInfo', {
+                        userId: user_id,
+                        followed_account: $('#ig-username').text(),
+                    }).then(({data}) => {
+                        if (data.code == 200) {
+                            if (data.response.status == 200) {
+                                location.reload()
+                            } else {
+                                alert(`子系統回應${data.response.status}，請洽工程師！`)
+                            }
+                        } else {
+                            alert(`http回應${data.code}，請洽工程師！`)
+                        }
+                    })
+                }
+            },
+            doRedoFollow() {
+                if (!confirm('是否確定重新送出追蹤請求？')) {
+                    return
+                }
+                axios.post('/admin/scraper/autoFollowIG', {
+                    userId: user_id,
+                    followed_account: $('#ig-username').text(),
+                }).then(({data}) => {
+                    if (data.code == 200) {
+                        if (data.response.status == 200) {
+                            alert('已成功送出追蹤')
+                        } else {
+                            alert(`子系統回應${data.response}，請洽工程師！`)
+                        }
+                    } else {
+                        alert(`http回應${data.code}，請洽工程師！`)
+                    }
+                })
+            }
+        }
+    })
 </script>

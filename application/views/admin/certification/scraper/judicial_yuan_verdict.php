@@ -1,10 +1,4 @@
 <style lang="scss">
-    .table-title {
-        padding: 0;
-        min-width: 75px;
-        background-color: #f9f9f9;
-    }
-
     .f-red {
         background-color: red;
     }
@@ -35,133 +29,105 @@
         cursor: pointer;
     }
 </style>
-<script>
-    $(document).ready(function () {
-        let urlString = window.location.href;
-        let url = new URL(urlString);
-        user_id = url.searchParams.get("user_id");
-
-        $('#redo').on('click', () => {
-
-        })
-    });
-</script>
 <div id="page-wrapper">
     <div class="d-flex jcb aic page-header">
-        <div>
-            <h1>司法院判決案例</h1>
-        </div>
+        <h1>司法院判決案例</h1>
     </div>
-    <table class="table table-bordered table-hover table-striped">
+    <div class="d-flex jcb aic page-header">
+        <h2>實名資訊</h2>
+    </div>
+    <table class="table">
         <tbody>
-            <tr>
-                <th class="table-title">資料內容（實名認證）</th>
-            </tr>
-            <tr>
-                <td>
-                    <table class="table table-bordered table-hover table-striped">
-                        <tr>
-                            <th class="table-title">姓名</th>
-                            <td style=background-color:white; id="name"></td>
-                            <th class="table-title">發證日期</th>
-                            <td style=background-color:white; id="id-card-date"></td>
-                            <th class="table-title">父</th>
-                            <td style=background-color:white; id="father"></td>
-                            <th class="table-title">出生地</th>
-                            <td style=background-color:white; id="born"></td>
-                        </tr>
-                        <tr>
-                            <th class="table-title">出生年月日</th>
-                            <td style=background-color:white; id="birthday"></td>
-                            <th class="table-title">發證地點</th>
-                            <td style=background-color:white; id="id_card_place"></td>
-                            <th class="table-title">母</th>
-                            <td style=background-color:white; id="mother"></td>
-                            <th class="table-title">ig帳號</th>
-                            <td style=background-color:white; id="instagram-username"></td>
-                        </tr>
-                        <tr>
-                            <th class="table-title">身分證字號</th>
-                            <td style=background-color:white; id="id-number"></td>
-                            <th class="table-title">補換證</th>
-                            <td style=background-color:white; id="replacement"></td>
-                            <th class="table-title">配偶</th>
-                            <td style=background-color:white; id="spouse"></td>
-                        </tr>
-                        <tr>
-                            <th class="table-title">戶籍地址</th>
-                            <td style=background-color:white; id="address" colspan="7"></td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
+        <tr>
+            <th>姓名</th>
+            <td>{{info.name}}</td>
+            <th>發證日期</th>
+            <td>{{info.id_card_date}}</td>
+            <th>父</th>
+            <td>{{info.father}}</td>
+            <th>出生地</th>
+            <td>{{info.born}}</td>
+        </tr>
+        <tr>
+            <th>出生年月日</th>
+            <td>{{info.birthday}}</td>
+            <th>發證地點</th>
+            <td>{{id_card_place}}</td>
+            <th>母</th>
+            <td>{{info.mother}}</td>
+            <th>戶籍地址</th>
+            <td>{{info.address}}</td>
+        </tr>
+        <tr>
+            <th>身分證字號</th>
+            <td>{{info.id_number}}</td>
+            <th>補換證</th>
+            <td>{{replacement}}</td>
+            <th>配偶</th>
+            <td>{{info.spouse}}</td>
+            <th>ig帳號</th>
+            <td>
+                <a target="_blank" :href="ig_url">{{info.instagram_username}}</a>
+            </td>
+        </tr>
         </tbody>
     </table>
+    <div class="d-flex jcb aic page-header">
+        <h2>司法院筆數<span>(點選查詢詳細資訊)</span></h2>
+        <div>
+            <scraper-status-icon :show-status="status"></scraper-status-icon>
+            <button class="btn btn-danger" @click="doRedo" :disabled="status == 'loading'">重新執行爬蟲</button>
+        </div>
+    </div>
     <ul class="nav nav-pills mb-3">
         <li role="presentation" v-for="tab in tabs" :class="{active: tab===chooseTab}">
             <a @click="clickTab(tab)" :href="'#'+ tab">{{tab}}</a>
         </li>
     </ul>
-    <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-        <tr>
-            <th class="table-title d-flex aic">
-                <div class="mr-4">
-                    司法院筆數(點選項目進行查詢資訊)
-                </div>
-                <div>
-                    <scraper-status-icon :show-status="status"></scraper-status-icon>
-                    <button class="btn btn-danger" @click="doRedo" :disabled="status == 'loading'">重新執行爬蟲</button>
-                </div>
-            </th>
-        </tr>
-        <tr>
-            <td>
-                <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">項目</th>
-                        <th class="table-title">筆數</th>
-                    </tr>
-                    <tbody id="count">
-                        <tr v-for="item in cases">
-                            <td class="table-title"><a @click="getCase(item.case)" class="pointer">{{ item.case }}</a>
-                            </td>
-                            <td style=background-color:white;>{{ item.count }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>項目</th>
+                <th>筆數</th>
+            </tr>
+        </thead>
+        <tbody id="count">
+        <tr v-for="item in cases">
+            <td><a @click="getCase(item.case)" class="pointer">{{ item.case }}</a>
             </td>
+            <td>{{ item.count }}</td>
         </tr>
+        </tbody>
     </table>
-    <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-        <tr>
-            <th class="table-title" id="text-case-type">司法院資訊</th>
-        </tr>
-        <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-            <tbody v-for="(item,index) in infos">
-                <tr>
-                    <th class="table-title">裁判字號</th>
-                    <td style=background-color:white;>
-                        <a class="fancyframe" target="_blank" :href="item.url">{{item.title}}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="table-title">時間</th>
-                    <td>{{item.date}}</td>
-                </tr>
-                <tr>
-                    <th class="table-title">地點</th>
-                    <td style=background-color:white;>{{item.location}}</td>
-                </tr>
-                <tr>
-                    <th class="table-title">
-                        <a @click="watchContent(`case_content_${index}`)" class="pointer">內容（點我展開）</a>
-                    </th>
-                    <td class="table-content table-ellipsis" :id="`case_content_${index}`">
-                        {{item.content}}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="d-flex jcb aic page-header">
+        <h2>司法院資訊</h2>
+    </div>
+    <table style="table-layout:fixed;" class="table">
+        <tbody v-for="(item,index) in infos">
+            <tr>
+                <th>裁判字號</th>
+                <td>
+                    <a class="fancyframe" target="_blank" :href="item.url">{{item.title}}</a>
+                </td>
+            </tr>
+            <tr>
+                <th>時間</th>
+                <td>{{item.date}}</td>
+            </tr>
+            <tr>
+                <th>地點</th>
+                <td>{{item.location}}</td>
+            </tr>
+            <tr>
+                <th>
+                    <a @click="watchContent(`case_content_${index}`)" class="pointer">內容(點我展開)</a>
+                </th>
+                <td class="table-content table-ellipsis" :id="`case_content_${index}`"
+                    v-html="highlight(item.content, chooseTab,'f-red')">
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <script>
     const v = new Vue({
@@ -171,7 +137,10 @@
                 tabs: [],
                 chooseTab: '',
                 userId: '',
-                judicialYuanInfo: {},
+                info: {},
+                ig_url: '',
+                id_card_place: '',
+                replacement: '',
                 cases: [],
                 infos: [],
                 status: 'loading'
@@ -198,33 +167,29 @@
                 this.infos = []
                 this.getTabData()
             },
+            highlight(content, what, spanClass) {
+                pattern = new RegExp('([<.]*)(' + what + ')([<.]*)', 'gi'),
+                    replaceWith = '$1<span ' + (spanClass ? 'class="' + spanClass + '"' : '') + '">$2</span>$3',
+                    highlighted = content.replace(pattern, replaceWith);
+                return highlighted;
+            },
             watchContent(id) {
                 $('#' + id).toggleClass('table-ellipsis');
             },
             getJudicialYuanInfo() {
-                const fillInfoData = (judicialyuanInfoData) => {
-                    if (!judicialyuanInfoData) {
+                const fillInfoData = (info) => {
+                    if (!info) {
                         return;
                     }
-                    idCardPlace = judicialyuanInfoData.id_card_place;
-                    idCardPlace = idCardPlace.split(')');
-                    $('#name').text(judicialyuanInfoData.name);
-                    $('#birthday').text(judicialyuanInfoData.birthday);
-                    $('#id-number').text(judicialyuanInfoData.id_number);
-                    $('#id-card-date').text(judicialyuanInfoData.id_card_date);
-                    $('#id_card_place').text(idCardPlace[0].replace('(', ''));
-                    $('#replacement').text(idCardPlace[1]);
-                    $('#father').text(judicialyuanInfoData.father);
-                    $('#mother').text(judicialyuanInfoData.mother);
-                    $('#born').text(judicialyuanInfoData.born);
-                    $('#spouse').text(judicialyuanInfoData.spouse);
-                    $('#address').text(judicialyuanInfoData.address);
-                    $('#instagram-username').text(judicialyuanInfoData.instagram_username);
+                    let idCardPlace = info.id_card_place.split(')')
+                    this.id_card_place = idCardPlace[0].replace('(', '');
+                    this.replacement = idCardPlace[1].replace(')', '');
+                    this.ig_url = `https://www.instagram.com/${info.instagram_username}`;
                 }
-                return axios.get(`/admin/scraper/verdict_google_info?user_id=${this.userId}`).then(({ data }) => {
+                return axios.get(`/admin/scraper/identity_info?user_id=${this.userId}`).then(({ data }) => {
                     if (data.status.code === 200) {
                         fillInfoData(data.response)
-                        this.judicialYuanInfo = data.response
+                        this.info = data.response
                         // tabs
                         const tabs = [data.response.name, data.response.father, data.response.mother, data.response.spouse]
                         v.tabs = tabs.filter(x => x.length > 0)
@@ -246,7 +211,7 @@
                     params: {
                         user_id: this.userId,
                         name,
-                        address: this.judicialYuanInfo.address
+                        address: this.info.address
                     }
                 }).then(({ data }) => {
                     if (data.status.code === 200) {
@@ -260,7 +225,7 @@
                         user_id: this.userId,
                         name: this.chooseTab,
                         case_type,
-                        address: this.judicialYuanInfo.address
+                        address: this.info.address
                     }
                 }).then(({ data }) => {
                     if (data.status.code === 200) {
@@ -281,13 +246,18 @@
                 if (confirm('是否確定重新執行爬蟲？')) {
                     axios.post('/admin/scraper/judicial_yuan_verdicts', {
                         name: this.chooseTab,
-                        address: this.judicialYuanInfo.address
+                        address: this.info.address
                     }).then(({ data }) => {
-                        if (data.status == 200) {
-                            location.reload()
+                        if (data.code == 200){
+                            if (data.response.status == 200) {
+                                location.reload()
+                            }
+                            else {
+                                alert(`子系統回應${data.response}，請洽工程師！`)
+                            }
                         }
                         else {
-                            alert(data.message)
+                            alert(`http回應${data.code}，請洽工程師！`)
                         }
                     })
                 }

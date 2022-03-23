@@ -183,7 +183,7 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
-    public function verdict_google_info()
+    public function identity_info()
     {
         $input = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
@@ -461,7 +461,7 @@ class Scraper extends MY_Admin_Controller
         echo json_encode($result);
     }
 
-    public function biz_br_info()
+    public function business_info()
     {
         $input = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');

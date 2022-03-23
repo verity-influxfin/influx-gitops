@@ -18,14 +18,9 @@ class Business_registration_lib
     {
         $url = $this->scraper_url . '/download';
         $data = ['download'];
-        $result = curl_get($url, $data);
+        $response = curl_get_statuscode($url, $data);
 
-        if ( ! $result)
-        {
-            return FALSE;
-        }
-
-        return TRUE;
+        return $response;
     }
 
     public function getResultByBusinessId($businessid)

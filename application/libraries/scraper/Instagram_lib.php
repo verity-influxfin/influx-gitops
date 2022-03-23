@@ -23,15 +23,10 @@ class Instagram_lib
 
         $url = $this->scraper_url . "{$reference}/{$followed_account}/follow";
         $data = ['key' => ''];
-        $result = curl_get($url, $data);
+        $result = curl_get_statuscode($url, $data);
         $response = json_decode($result, TRUE);
 
-        if ( ! $result || ! isset($response['status']))
-        {
-            return FALSE;
-        }
-
-        return TRUE;
+        return $response;
     }
 
     public function getUserInfo($reference, $followed_account)
@@ -138,13 +133,7 @@ class Instagram_lib
 
         $url = $this->scraper_url . "{$reference}/{$followed_account}/riskControlInfo";
         $data = ['key' => ''];
-        $result = curl_get($url, $data);
-        $response = json_decode($result, TRUE);
-
-        if ( ! $result || ! isset($response['status']))
-        {
-            return FALSE;
-        }
+        $response = curl_get_statuscode($url, $data);
 
         return $response;
     }

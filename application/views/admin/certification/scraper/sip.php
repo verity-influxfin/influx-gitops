@@ -1,12 +1,4 @@
 <style lang="scss">
-    .table-title {
-        min-width: 75px;
-        background-color: #f9f9f9;
-    }
-
-    .table-content {
-        word-break: break-all;
-    }
 	.d-flex{
 		display: flex;
 	}
@@ -17,6 +9,91 @@
 		align-items: center;
 	}
 </style>
+<div id="page-wrapper">
+    <div class="d-flex jcb aic page-header">
+        <h1>學生SIP資訊</h1>
+        <div>
+            <scraper-status-icon :column="column"></scraper-status-icon>
+            <button class="btn btn-danger" id="redo">重新執行爬蟲</button>
+        </div>
+    </div>
+    <div class="d-flex jcb aic page-header">
+        <h2>學生認證資訊</h2>
+    </div>
+    <table class="table">
+        <tr>
+            <th>姓名</th>
+            <td id="name"></td>
+            <th>學校名稱</th>
+            <td id="school"></td>
+            <th>SIP帳號</th>
+            <td id="sip-account"></td>
+        </tr>
+        <tr>
+            <th>出生年月日</th>
+            <td id="birthday"></td>
+            <th>系所</th>
+            <td id="department"></td>
+            <th>SIP密碼</th>
+            <td id="sip-password"></td>
+        </tr>
+        <tr>
+            <th>身分證字號</th>
+            <td id="id-number"></td>
+            <th>學號</th>
+            <td id="student-id"></td>
+            <th>學校信箱</th>
+            <td id="email"></td>
+        </tr>
+    </table>
+    <div class="d-flex jcb aic page-header">
+        <h2>爬蟲資訊</h2>
+    </div>
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>姓名</th>
+            <td id="name-scraper"></td>
+            <th>身分證</th>
+            <td id="id-scraper"></td>
+        </tr>
+        <tr>
+            <th>學校</th>
+            <td id="university"></td>
+            <th>科系</th>
+            <td id="department-scraper"></td>
+        </tr>
+        <tr>
+            <th>在學狀態</th>
+            <td id="school-status"></td>
+            <th>手機</th>
+            <td id="student-phone"></td>
+        </tr>
+        <tr>
+            <th>家用電話</th>
+            <td id="home-phone"></td>
+            <th>緊急聯絡人</th>
+            <td id="guardian"></td>
+        </tr>
+        <tr>
+            <th>緊急聯絡人電話</th>
+            <td id="guardian-phone"></td>
+            <th>通訊地址</th>
+            <td id="communication-address"></td>
+        </tr>
+        <tr>
+            <th>戶籍地址</th>
+            <td id="household-address"></td>
+            <th>近一學期成績</th>
+            <td id="latest-grades"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="d-flex jcb aic page-header">
+        <h2>成績資訊</h2>
+    </div>
+    <div id="content"></div>
+</div>
 <script type="text/javascript">
     // SQL資料抓取
     function fetchInfoData(user_id) {
@@ -54,6 +131,7 @@
                 }
                 sipData = response.response;
                 fillSipData(sipData.university, sipData.result);
+                console.log(sipData.result.semesterGrades);
                 fillSipScore(sipData.result.semesterGrades);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -64,32 +142,12 @@
         });
     }
 
-
-
     function creat_url_html(university, url) {
         if (!university || !url) {
             return false;
         }
         url = `<a href="${url}" target="_blank" id="url">${university}</a>`
         return url;
-    }
-
-    function create_risk_level_html(level, time, content) {
-        html = `<div class="form-group">
-                <table class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">風險等級</td>
-                        <th class="table-title">事件時間</td>
-                        <th class="table-title">指標內容</td>
-                    </tr>
-                    <tr>
-                        <td>${level}</td>
-                        <td>${time}</td>
-                        <td>${content}</td>
-                    </tr>
-                </table>
-            </div>`
-        return html;
     }
 
     function fillInfoData(sqlResponse) {
@@ -132,44 +190,34 @@
         }
         i = 0;
         Object.keys(dataResponse).forEach((semester) => {
-            htmls = ''
-            dataResponse[semester]['class'].forEach((item) => {
+            let htmls = ''
+            const semester_class = dataResponse[semester]['class'] ?? []
+            semester_class.forEach((item) => {
                 html = `
 				<tr>
-					<td style=background-color:white;>${item.name}</td>
-					<td style=background-color:white;>${item.credit}</td>
-					<td style=background-color:white;>${item.score}</td>
+					<td>${item.name ?? ''}</td>
+					<td>${item.credit ?? ''}</td>
+					<td>${item.score ?? ''}</td>
 				</tr>`
                 htmls += html;
             })
-            table = `<div class="form-group">
-					<table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
+            table = `
+					<table class="table">
 						<tbody>
 							<tr>
 								<th>學年期/學期總平均</th>
-								<th style=background-color:white;>${semester}</th>
-								<th style=background-color:white;>${dataResponse[semester].totalAvg}</th>
+								<td>${semester}</th>
+								<td>${dataResponse[semester].totalAvg}</td>
 							</tr>
 							<tr>
-								<th class="table-title">課程名稱</th>
-								<th class="table-title">學分</th>
-								<th class="table-title">分數</th>
+								<th>課程名稱</th>
+								<th>學分</th>
+								<th>分數</th>
 							</tr>
 							${htmls}
 						</tbody>
-					</table>
-				</div>`
+					</table>`
             $('#content').append(table);
-        })
-    }
-
-    function fillRiskLevelData(riskLevelResponse) {
-        if (!riskLevelResponse) {
-            return false;
-        }
-        riskLevelResponse.forEach((item) => {
-            level_html = create_risk_level_html(item.level, item.time, item.content);
-            $('#risk-level').append(level_html);
         })
     }
 
@@ -187,118 +235,19 @@
 					account: $('#sip-account').text(),
 					password: $('#sip-password').text()
 				}).then(({ data }) => {
-					if (data.status == 200) {
-						location.reload()
-					}
-					else{
-						alert(data.error.code)
-					}
+                    if (data.code == 200) {
+                        if (data.response.status == 200) {
+                            alert('已成功送出追蹤')
+                        } else {
+                            alert(`子系統回應${data.response}，請洽工程師！`)
+                        }
+                    } else {
+                        alert(`http回應${data.code}，請洽工程師！`)
+                    }
 				})
 			}
 		})
     });
-</script>
-<div id="page-wrapper">
-    <div class="d-flex jcb aic page-header">
-        <div>
-            <h1>學生SIP資訊</h1>
-        </div>
-		<div>
-			<scraper-status-icon :column="column"></scraper-status-icon>
-			<button class="btn btn-danger" id="redo">重新執行爬蟲</button>
-		</div>
-    </div>
-    <table class="table table-bordered table-hover table-striped">
-        <tbody>
-        <tr>
-            <th class="table-title">資料內容（學生認證）</th>
-        </tr>
-        <tr>
-            <td>
-                <table class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">姓名</th>
-                        <td style=background-color:white; id="name"></td>
-                        <th class="table-title">學校名稱</th>
-                        <td style=background-color:white; id="school"></td>
-                        <th class="table-title">SIP帳號</th>
-                        <td style=background-color:white; id="sip-account"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">出生年月日</th>
-                        <td style=background-color:white; id="birthday"></td>
-                        <th class="table-title">系所</th>
-                        <td style=background-color:white; id="department"></td>
-                        <th class="table-title">SIP密碼</th>
-                        <td style=background-color:white; id="sip-password"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">身分證字號</th>
-                        <td style=background-color:white; id="id-number"></td>
-                        <th class="table-title">學號</th>
-                        <td style=background-color:white; id="student-id"></td>
-                        <th class="table-title">學校信箱</th>
-                        <td style=background-color:white; id="email"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <table class="table table-bordered table-hover table-striped">
-        <tr>
-            <th class="table-title">SIP爬蟲資訊</th>
-        </tr>
-        <tr>
-            <td>
-                <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                    <tbody>
-                    <tr>
-                        <th class="table-title">姓名</th>
-                        <td style=background-color:white; id="name-scraper"></td>
-                        <th class="table-title">身分證</th>
-                        <td style=background-color:white; id="id-scraper"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">學校</th>
-                        <td style=background-color:white; id="university"></td>
-                        <th class="table-title">科系</th>
-                        <td style=background-color:white; id="department-scraper"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">在學狀態</th>
-                        <td style=background-color:white; id="school-status"></td>
-                        <th class="table-title">手機</th>
-                        <td style=background-color:white; id="student-phone"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">家用電話</th>
-                        <td style=background-color:white; id="home-phone"></td>
-                        <th class="table-title">緊急聯絡人</th>
-                        <td style=background-color:white; id="guardian"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">緊急聯絡人電話</th>
-                        <td style=background-color:white; id="guardian-phone"></td>
-                        <th class="table-title">通訊地址</th>
-                        <td style=background-color:white; id="communication-address"></td>
-                    </tr>
-                    <tr>
-                        <th class="table-title">戶籍地址</th>
-                        <td style=background-color:white; id="household-address"></td>
-                        <th class="table-title">近一學期成績</th>
-                        <td style=background-color:white; id="latest-grades"></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                    <div id="content"></div>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
-<script>
 	const v = new Vue({
 		el:'#page-wrapper',
 		computed: {
