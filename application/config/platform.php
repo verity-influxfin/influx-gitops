@@ -945,7 +945,7 @@ $config['product_list'] = [
             CERTIFICATION_EMPLOYEEINSURANCELIST,
             CERTIFICATION_INCOMESTATEMENT,
             CERTIFICATION_INVESTIGATIONJUDICIAL,
-            CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_BUSINESSTAX,
             CERTIFICATION_COMPANYEMAIL,
         ],
         // [APP]上選填的徵信項，避免系統無法一審
@@ -961,11 +961,13 @@ $config['product_list'] = [
 
             ],
             [
+                // 負責人資料
                 CERTIFICATION_EMAIL,
                 CERTIFICATION_PROFILE,
                 CERTIFICATION_SIMPLIFICATIONJOB,
                 // CERTIFICATION_INVESTIGATION,
                 CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+                // 公司資料
                 CERTIFICATION_GOVERNMENTAUTHORITIES,
                 CERTIFICATION_JUDICIALGUARANTEE,
                 CERTIFICATION_PROFILEJUDICIAL,
@@ -973,7 +975,7 @@ $config['product_list'] = [
                 CERTIFICATION_EMPLOYEEINSURANCELIST,
                 CERTIFICATION_INCOMESTATEMENT,
                 CERTIFICATION_INVESTIGATIONJUDICIAL,
-                CERTIFICATION_INVESTIGATIONA11,
+                CERTIFICATION_BUSINESSTAX,
                 CERTIFICATION_COMPANYEMAIL,
             ]
         ],
