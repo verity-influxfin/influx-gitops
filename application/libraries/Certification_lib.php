@@ -293,7 +293,10 @@ class Certification_lib{
                         }
                     }
 
-                    $this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
+                    if (isset($certification['show']) && $certification['show'] != FALSE)
+                    {
+                        $this->CI->notification_lib->certification($info->user_id, $info->investor, $certification['name'], CERTIFICATION_STATUS_FAILED, $fail);
+                    }
 
                     // 驗證推薦碼失敗
                     $this->verify_promote_code($info, TRUE);
