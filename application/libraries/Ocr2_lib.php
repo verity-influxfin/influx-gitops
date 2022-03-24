@@ -45,6 +45,7 @@ class Ocr2_lib
         $this->session_id = $this->_session_register();
     }
 
+    // 檢查 _init_client() 是否註冊成功
     public function check_ocr_connection()
     {
         $data = [
@@ -74,6 +75,17 @@ class Ocr2_lib
         return $data;
     }
 
+    public function cards_identity($type, $image)
+    {
+        $router_mapping = [
+            'identification_card_front' => '/ocr/id_card',
+            'identification_card_back' => '/ocr/id_card_back',
+            'national_health_insurance' => '/ocr/health_card',
+        ];
+
+        return $this->_post($router_mapping[$type] ?? '', $image);
+    }
+
     public function identity_verification($images)
     {
         if ( ! $this->_is_valid())
@@ -82,6 +94,16 @@ class Ocr2_lib
         }
 
         $router = '/identity_verification';
+        return $this->_post($router, $images);
+    }
+
+    private function _post($router, $images)
+    {
+        if (empty($router))
+        {
+            return '';
+        }
+
         try
         {
             $res = $this->client->request('POST', $router, [
@@ -118,6 +140,18 @@ class Ocr2_lib
         return json_decode($res->getBody(), TRUE);
     }
 
+    /**
+     * 身份證|健保卡 的辨識結果需要重組回傳給前端的資料結構
+     *
+     * fucntion combine_ymd() 組成 6|7位數的 年月日
+     * @return Array
+     * function transfer_apply_code() 轉換身份證的發證類型
+     * @return String '未領|初發|補發|換發'
+     * function transfer_issue_site() 轉換身分證的發證地點
+     * @return String '北市|中市|南市|...'
+     * function get_gender_from_id_number() 判斷性別
+     * @return String '男|女'
+     **/
     public function combine_ymd($card)
     {
         $return_data = [
@@ -206,6 +240,15 @@ class Ocr2_lib
 
         return $list[$num];
     }
+
+    /**
+     * _init_client() 實作項目:
+     *
+     * 產生 secret_key: _create_secret_key()
+     * 取得 public_key: _get_public_key()
+     * 註冊 session_id: _session_register()
+     *
+     **/
 
     private function _session_register()
     {
