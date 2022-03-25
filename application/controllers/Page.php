@@ -376,14 +376,14 @@ class Page extends CI_Controller
         $token->set('iat', $time);
         $token->set('exp', $time->modify('+20 min'));
         $token->set('aud', 'appstoreconnect-v1');
-
-        return $token->getToken($signer, new Key(file_get_contents('./ios_key.txt')));
+        $ios_key = getenv('APP_STORE_KEY_DIR') . '/ios_key.txt';
+        return $token->getToken($signer, new Key(file_get_contents($ios_key)));
     }
 
     // init google client for ga service
     private function _initialize_analytics()
     {
-        $KEY_FILE_LOCATION = './influx-e-board-f5ba47ed5c0d.json';
+        $KEY_FILE_LOCATION = getenv('GCP_JSON_KEY_DIR') . '/influx-e-board-f5ba47ed5c0d.json';
 
         // Create and configure a new client object.
         $client = new Google\Client();
@@ -427,7 +427,7 @@ class Page extends CI_Controller
         $report_month = $date->format('Ym');
         $date_string = $date->format('Y-m-d');
 
-        $KEY_FILE_LOCATION = './influx-e-board-f5ba47ed5c0d.json';
+        $KEY_FILE_LOCATION = getenv('GCP_JSON_KEY_DIR') . '/influx-e-board-f5ba47ed5c0d.json';
         $report_bucket = 'pubsite_prod_rev_17015371377322917626';
         $report_path = 'stats/installs/installs_com.influxfin.borrow_' . $report_month . '_overview.csv';
 
