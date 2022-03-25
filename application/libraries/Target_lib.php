@@ -374,9 +374,11 @@ class Target_lib
                                     'status' => 0,
                                 ];
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
-                                if (!$product_info['secondInstance']
+                                if (
+                                    // 命中反詐欺或黑名單，一定要進待二審
+                                    !$matchBrookesia && (
+                                    !$product_info['secondInstance']
                                     && !$second_instance_check
-                                    && !$matchBrookesia
 //                                    && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
 //                                    && $this->judicialyuan($user_id)
                                     && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
@@ -386,6 +388,7 @@ class Target_lib
                                     || $renew
                                     || $evaluation_status
                                     || $creditSheet->hasCreditLine()
+                                    )
                                 ) {
                                     $param['status'] = TARGET_WAITING_SIGNING;
 
@@ -1830,17 +1833,17 @@ class Target_lib
                                 if (empty($is_user_blocked) || empty($is_user_second_instance))
                                 {
                                     $this->CI->black_list_lib->add_block_log(['userId' => $value->user_id]);
-                                    $second_instance_check = true;
+                                    $matchBrookesia = TRUE;
                                 }
                                 else if($is_user_blocked['isUserBlocked'])
                                 {
                                     $this->CI->black_list_lib->add_block_log($is_user_blocked);
-                                    $second_instance_check = true;
+                                    $matchBrookesia = TRUE;
                                 }
                                 else if($is_user_second_instance['isUserSecondInstance'])
                                 {
                                     $this->CI->black_list_lib->add_block_log($is_user_second_instance);
-                                    $second_instance_check = true;
+                                    $matchBrookesia = TRUE;
                                 }
 
                                 !is_object($targetData) ? $targetData = (object)($targetData) : $targetData;
