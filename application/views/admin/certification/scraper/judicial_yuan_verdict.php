@@ -38,38 +38,38 @@
     </div>
     <table class="table">
         <tbody>
-        <tr>
-            <th>姓名</th>
-            <td>{{info.name}}</td>
-            <th>發證日期</th>
-            <td>{{info.id_card_date}}</td>
-            <th>父</th>
-            <td>{{info.father}}</td>
-            <th>出生地</th>
-            <td>{{info.born}}</td>
-        </tr>
-        <tr>
-            <th>出生年月日</th>
-            <td>{{info.birthday}}</td>
-            <th>發證地點</th>
-            <td>{{id_card_place}}</td>
-            <th>母</th>
-            <td>{{info.mother}}</td>
-            <th>戶籍地址</th>
-            <td>{{info.address}}</td>
-        </tr>
-        <tr>
-            <th>身分證字號</th>
-            <td>{{info.id_number}}</td>
-            <th>補換證</th>
-            <td>{{replacement}}</td>
-            <th>配偶</th>
-            <td>{{info.spouse}}</td>
-            <th>ig帳號</th>
-            <td>
-                <a target="_blank" :href="ig_url">{{info.instagram_username}}</a>
-            </td>
-        </tr>
+            <tr>
+                <th>姓名</th>
+                <td>{{info.name}}</td>
+                <th>發證日期</th>
+                <td>{{info.id_card_date}}</td>
+                <th>父</th>
+                <td>{{info.father}}</td>
+                <th>出生地</th>
+                <td>{{info.born}}</td>
+            </tr>
+            <tr>
+                <th>出生年月日</th>
+                <td>{{info.birthday}}</td>
+                <th>發證地點</th>
+                <td>{{id_card_place}}</td>
+                <th>母</th>
+                <td>{{info.mother}}</td>
+                <th>戶籍地址</th>
+                <td>{{info.address}}</td>
+            </tr>
+            <tr>
+                <th>身分證字號</th>
+                <td>{{info.id_number}}</td>
+                <th>補換證</th>
+                <td>{{replacement}}</td>
+                <th>配偶</th>
+                <td>{{info.spouse}}</td>
+                <th>ig帳號</th>
+                <td>
+                    <a target="_blank" :href="ig_url">{{info.instagram_username}}</a>
+                </td>
+            </tr>
         </tbody>
     </table>
     <div class="d-flex jcb aic page-header">
@@ -92,11 +92,11 @@
             </tr>
         </thead>
         <tbody id="count">
-        <tr v-for="item in cases">
-            <td><a @click="getCase(item.case)" class="pointer">{{ item.case }}</a>
-            </td>
-            <td>{{ item.count }}</td>
-        </tr>
+            <tr v-for="item in cases">
+                <td><a @click="getCase(item.case)" class="pointer">{{ item.case }}</a>
+                </td>
+                <td>{{ item.count }}</td>
+            </tr>
         </tbody>
     </table>
     <div class="d-flex jcb aic page-header">
@@ -191,7 +191,7 @@
                         fillInfoData(data.response)
                         this.info = data.response
                         // tabs
-                        const tabs = [data.response.name, data.response.father, data.response.mother, data.response.spouse]
+                        const tabs = [data.response.name, data.response.father, data.response.mother, data.response.spouse, data.response.instagram_username]
                         v.tabs = tabs.filter(x => x.length > 0)
                         if (!this.chooseTab) {
                             this.chooseTab = data.response.name
@@ -244,11 +244,29 @@
             },
             doRedo() {
                 if (confirm('是否確定重新執行爬蟲？')) {
+                    // ig
+                    if (this.chooseTab === this.info.instagram_username) {
+                        return axios.post('/admin/scraper/judicial_yuan_verdicts', {
+                            ig: this.chooseTab,
+                        }).then(({ data }) => {
+                            if (data.code == 200) {
+                                if (data.response.status == 200) {
+                                    location.reload()
+                                }
+                                else {
+                                    alert(`子系統回應${data.response}，請洽工程師！`)
+                                }
+                            }
+                            else {
+                                alert(`http回應${data.code}，請洽工程師！`)
+                            }
+                        })
+                    }
                     axios.post('/admin/scraper/judicial_yuan_verdicts', {
                         name: this.chooseTab,
                         address: this.info.address
                     }).then(({ data }) => {
-                        if (data.code == 200){
+                        if (data.code == 200) {
                             if (data.response.status == 200) {
                                 location.reload()
                             }
