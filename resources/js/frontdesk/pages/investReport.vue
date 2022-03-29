@@ -2,13 +2,16 @@
   <div class="main">
     <div class="report-main" v-if="!loading">
       <div class="report-date">
-        <button class="btn btn-excel-download">Excel下載</button>
+        <button class="btn btn-excel-download" @click="downloadExcel">
+          Excel下載
+        </button>
         <div>製表日期 {{ invest_report.basic_info.export_date }}</div>
       </div>
       <div class="row no-gutters report-intro mx-auto">
         <p>親愛的會員您好：</p>
         <p>
-          感謝您長期以來對普匯的信賴與支持，在此為您結算至 {{ invest_report.basic_info.export_date }}
+          感謝您長期以來對普匯的信賴與支持，在此為您結算至
+          {{ invest_report.basic_info.export_date }}
           投資績效報告，如有任何問題，
           歡迎聯繫普匯客服Line@inFluxFin，我們將竭誠為您提供貼心的服務，
           再次感謝您的愛護與支持！
@@ -85,24 +88,27 @@
           <div class="underline"></div>
         </div>
         <div class="realized-table">
-          <div class="header-item dur">期間</div>
-          <div class="header-item avg">本金均額(※3)</div>
           <div class="header-item full-income">總收益(※1)</div>
-          <div class="header-item item-rate">報酬率(※2)</div>
+          <div class="header-sub-item item-rate">報酬率(※2)</div>
           <div class="test1">
-            <div class="test2 header-item">收入</div>
-            <div class="test3 header-item">支出</div>
+            <div class="item-1 header-item b-right">
+              投資年資：{{ invest_report.invest_performance.years }} (年)
+            </div>
+            <div class="item-2 header-item b-right">收入</div>
+            <div class="item-3 header-item b-right">支出</div>
+            <div class="header-sub-item">期間</div>
+            <div class="header-sub-item b-right">本金均額(※3)</div>
             <div class="header-sub-item">利息收入</div>
             <div class="header-sub-item">提還利息</div>
             <div class="header-sub-item">逾期償還利息</div>
             <div class="header-sub-item">延滯息</div>
-            <div class="header-sub-item">補貼息</div>
-            <div class="header-sub-item">回款手收</div>
+            <div class="header-sub-item b-right">補貼息</div>
+            <div class="header-sub-item b-right">回款手收</div>
           </div>
           <div class="rows">
             <div
               class="one-row"
-              v-for="x in invest_report.realized_rate_of_return"
+              v-for="x in local_realized_rate_of_return"
               :key="x.range_title"
             >
               <div class="table-title item">{{ x.range_title }}</div>
@@ -137,10 +143,10 @@
             <div class="item">金額</div>
             <div class="item">折現</div>
           </div>
-          <div v-if="invest_report.account_payable_interest">
+          <div v-if="local_account_payable_interest">
             <div
               class="table-row"
-              v-for="x in invest_report.account_payable_interest"
+              v-for="x in local_account_payable_interest"
               :key="x.range_title"
             >
               <div class="table-title item">
@@ -204,6 +210,7 @@ export default {
   data() {
     return {
       invest_report: {
+        /*
         basic_info: {
           id: '82',
           first_invest_date: '2018/11/09',
@@ -239,40 +246,92 @@ export default {
         },
         realized_rate_of_return: [
           {
-            allowance: 0,
-            average_principle: 353463,
-            days: 52,
-            delayed_interest: 0,
-            delayed_paid_interest: 0,
-            diff_month: 2,
-            end_date: '2018-12',
+            principle_list: {},
             interest: 3271,
-            platform_fee: 138,
             prepaid_interest: 0,
-            principle_list: [],
-            range_title: '201811-201812',
+            delayed_paid_interest: 0,
+            delayed_interest: 0,
+            allowance: 0,
+            platform_fee: 138,
+            total_income: 3133,
             rate_of_return: 0.9,
+            average_principle: 353463,
             start_date: '2018-11',
-            total_income: 3133
-          },
-          {
-            allowance: 0,
-            average_principle: 353463,
+            end_date: '2018-12',
             days: 52,
-            delayed_interest: 0,
-            delayed_paid_interest: 0,
             diff_month: 2,
-            end_date: '2019-02',
-            interest: 3271,
-            platform_fee: 138,
-            prepaid_interest: 0,
-            principle_list: [],
-            range_title: '201901-201902',
-            rate_of_return: 0.9,
-            start_date: '2019-01',
-            total_income: 3133
+            range_title: '201811-201812'
           },
           {
+            principle_list: {},
+            interest: 34484,
+            prepaid_interest: 304,
+            delayed_paid_interest: 3361,
+            delayed_interest: 3890,
+            allowance: 365,
+            platform_fee: 1894,
+            total_income: 44175,
+            rate_of_return: 12,
+            average_principle: 368474,
+            start_date: '2019-01',
+            end_date: '2019-12',
+            days: 365,
+            diff_month: 12,
+            range_title: '201901-201912'
+          },
+          {
+            principle_list: {},
+            interest: 76829,
+            prepaid_interest: 2513,
+            delayed_paid_interest: 1714,
+            delayed_interest: 78000,
+            allowance: 18429,
+            platform_fee: 41956,
+            total_income: 139756,
+            rate_of_return: 6.5,
+            average_principle: 2159440,
+            start_date: '2020-01',
+            end_date: '2020-12',
+            days: 366,
+            diff_month: 12,
+            range_title: '202001-202012'
+          },
+          {
+            principle_list: {},
+            interest: 63078,
+            prepaid_interest: 10,
+            delayed_paid_interest: 11885,
+            delayed_interest: 277000,
+            allowance: 147,
+            platform_fee: 13912,
+            total_income: 350103,
+            rate_of_return: 26.3,
+            average_principle: 1329234,
+            start_date: '2021-01',
+            end_date: '2021-12',
+            days: 365,
+            diff_month: 12,
+            range_title: '202101-202112'
+          },
+          {
+            principle_list: {},
+            interest: 0,
+            prepaid_interest: 0,
+            delayed_paid_interest: 0,
+            delayed_interest: 0,
+            allowance: 380,
+            platform_fee: 33,
+            total_income: 347,
+            rate_of_return: 0.1,
+            average_principle: 367632,
+            start_date: '2022-01',
+            end_date: '2022-02',
+            days: 59,
+            diff_month: 2,
+            range_title: '202201-202202'
+          },
+          {
+            principle_list: {},
             interest: 177662,
             prepaid_interest: 2827,
             delayed_paid_interest: 16960,
@@ -287,6 +346,9 @@ export default {
             days: 1520,
             diff_month: 50,
             range_title: '累計收益率'
+          },
+          {
+            principle_list: {}
           }
         ],
         account_payable_interest: [
@@ -321,37 +383,35 @@ export default {
           total: 480359
         },
         estimate_IRR: 0.161
+        */
       },
-      loading: true,
-      localRealizedRateOfReturn: []
+      loading: true
     }
   },
   created() {
     this.loading = false
+    // $parent myInvestment.vue
+    this.$parent.pageIcon = ''
+    this.$parent.pageTitle = ''
+    this.$parent.pagedesc = ''
     // this.getData().finally(() => {
     //   this.loading = false
-    //   this.localRealizedRateOfReturn = this.setRealizedRateOfReturn()
     // })
-
   },
   computed: {
-    today() {
-      // 2020/01/01
-      const today = new Date()
-      return `${today.getFullYear()}/${(today.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}/${today
-          .getDate()
-          .toString()
-          .padStart(2, '0')}`
-    },
     localInvestDescription() {
       const { assets_description } = this.invest_report
       if (Object.keys(assets_description).length > 0) {
         return {
-          amount_not_delay: Object.keys(assets_description).map(x => assets_description[x].amount_not_delay),
-          amount_delay: Object.keys(assets_description).map(x => assets_description[x].amount_delay),
-          total_amount: Object.keys(assets_description).map(x => assets_description[x].total_amount)
+          amount_not_delay: Object.keys(assets_description).map(
+            x => assets_description[x].amount_not_delay
+          ),
+          amount_delay: Object.keys(assets_description).map(
+            x => assets_description[x].amount_delay
+          ),
+          total_amount: Object.keys(assets_description).map(
+            x => assets_description[x].total_amount
+          )
         }
       }
       return {
@@ -359,7 +419,28 @@ export default {
         amount_delay: [],
         total_amount: []
       }
+    },
+    local_realized_rate_of_return() {
+      return this.invest_report.realized_rate_of_return.filter(x => x.range_title).map(x => {
+        const startArray = x.start_date.split('-')
+        const newTitle = x.range_title !== '累計收益率' ? `${startArray[0]}  ${startArray[1]}-${x.end_date.split('-')[1]} (月)` : '累計收益率'
+        return {
+          ...x,
+          range_title: newTitle
+          }
+      })
+    },
+    local_account_payable_interest() {
+      return this.invest_report.account_payable_interest.filter(x => x.range_title).map(x => {
+        const startArray = x.start_date.split('-')
+        const newTitle = x.range_title !== '內部報酬率預估' ? `${startArray[0]}  ${startArray[1]}-${x.end_date.split('-')[1]} (月)` : '累計收益率'
+        return {
+          ...x,
+          range_title: newTitle
+          }
+      })
     }
+
   },
   methods: {
     formate(x) {
@@ -367,51 +448,6 @@ export default {
         return x
       }
       return parseInt(x, 10).toLocaleString()
-    },
-    setRealizedRateOfReturn() {
-      const { realizedRateOfReturn } = this.invest_report
-      if (realizedRateOfReturn) {
-        return realizedRateOfReturn.flatMap(x => {
-          if (x.detail && x.detail.length > 0) {
-            const { detail, ...other } = x
-            const key = other.rangeOfYear
-            const newDetail = detail.map(item => {
-              return {
-                ...item,
-                show: false,
-                primary: false,
-                key
-              }
-            })
-            const newOther = {
-              ...other,
-              primary: true,
-              show: true
-            }
-            return [newOther, ...newDetail]
-          }
-          return {
-            ...x,
-            primary: true,
-            show: true
-          }
-        })
-      }
-      return []
-    },
-    localRealizedRateOfReturnShow(key) {
-      this.localRealizedRateOfReturn = this.localRealizedRateOfReturn.map(x => {
-        if (x.primary === false) {
-          if (x.key === key) {
-            //not primary and key
-            const change = !x.show
-            return { ...x, show: change }
-          }
-          // fold other
-          return { ...x, show: false }
-        }
-        return x
-      })
     },
     getData() {
       return Axios.post('/getInvestReport')
@@ -422,12 +458,25 @@ export default {
         .catch(err => {
           console.error(err)
         })
+    },
+    downloadExcel() {
+      $('body').append(
+        `<iframe id="csvDownloadIframe" src="${location.origin}/downloadInvestReport" style="display: none"></iframe>`
+      )
     }
   }
 }
 </script>
+<style>
+.investment-wrapper .member-menu .invest-card {
+  margin: 20px auto;
+}
+</style>
 
 <style lang="scss" scoped>
+.b-right {
+  border-right: 1px solid #fff;
+}
 .report-main {
   width: 940px;
   height: 1200px;
@@ -448,10 +497,10 @@ export default {
     right: 30px;
     line-height: 1.5;
     font-size: 16px;
-    .btn-excel-download{
-        color: #fff;
-        background-color: #036eb7;
-        border-radius: 6px;
+    .btn-excel-download {
+      color: #fff;
+      background-color: #036eb7;
+      border-radius: 6px;
     }
   }
   .report-intro {
@@ -501,12 +550,12 @@ export default {
     }
     .realized-table {
       display: grid;
-      grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 100px 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
       grid-template-rows: 42px auto;
       gap: 0px 0px;
       grid-auto-flow: row;
       grid-template-areas:
-        'dur avg test1 test1 test1 test1 test1 test1 full-income item-rate'
+        'test1 test1 test1 test1 test1 test1 test1 test1 full-income item-rate'
         'rows rows rows rows rows rows rows rows rows rows'
         'rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2';
       .header-item {
@@ -517,20 +566,12 @@ export default {
         justify-content: center;
       }
       .header-sub-item {
-        background-color: #fff;
+        background-color: #dbdcdc;
         color: #3b6188;
         display: flex;
         align-items: center;
         justify-content: center;
       }
-    }
-
-    .dur {
-      grid-area: dur;
-    }
-
-    .avg {
-      grid-area: avg;
     }
 
     .full-income {
@@ -543,29 +584,30 @@ export default {
 
     .test1 {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 100px 100px 1fr 1fr 1fr 1fr 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       gap: 0px 0px;
       grid-auto-flow: row;
       grid-template-areas:
-        'test2 test2 test2 test2 test2 test3'
-        '. . . . . .';
+        'item1 item1 item2 item2 item2 item2 item2 item3'
+        '. . . . . . . .';
       grid-area: test1;
-    }
-
-    .test2 {
-      grid-area: test2;
-    }
-
-    .test3 {
-      grid-area: test3;
+      .item-1 {
+        grid-area: item1;
+      }
+      .item-2 {
+        grid-area: item2;
+      }
+      .item-3 {
+        grid-area: item3;
+      }
     }
 
     .rows {
       grid-area: rows;
       .one-row {
         display: grid;
-        grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 100px 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
         grid-template-areas: '. . . . . . . . . .';
         .item {
           padding: 5px 0;
