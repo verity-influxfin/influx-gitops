@@ -88,52 +88,59 @@
               因AML防制法捐款金額若大於50萬，請洽客服
             </p>
             <div class="donate-group">
-              <button class="btn money-button">300元</button>
-              <button class="btn money-button">500元</button>
-              <button class="btn money-button">1000元</button>
-              <button class="btn money-button">3000元</button>
+              <button class="btn money-button" @click="donateForm.amount = 300">300元</button>
+              <button class="btn money-button" @click="donateForm.amount = 500">500元</button>
+              <button class="btn money-button" @click="donateForm.amount = 1000">1000元</button>
+              <button class="btn money-button" @click="donateForm.amount = 3000">3000元</button>
             </div>
             <form class="donate-form" @submit.prevent="doDonate">
               <input
                 type="text"
                 class="form-control donate-input"
                 placeholder="300"
+                v-model.number="donateForm.amount"
                 required
               />
               <div>捐款身份資訊（選填）</div>
               <input
                 type="text"
                 class="form-control donate-input"
+                v-model="donateForm.name"
                 placeholder="姓名/公司抬頭"
               />
               <input
                 type="text"
                 class="form-control donate-input"
+                v-model="donateForm.number"
                 placeholder="身分證字號/統一編號"
               />
               <input
                 type="text"
                 class="form-control donate-input"
+                v-model="donateForm.phone"
                 placeholder="聯絡手機"
               />
               <input
-                type="text"
+                type="email"
                 class="form-control donate-input"
+                v-model="donateForm.email"
                 placeholder="Email"
               />
               <label>
-                <input type="checkbox" />
+                <input type="checkbox" v-model="donateForm.upload" />
                 捐款收據代上傳國稅局
               </label>
               <label>
-                <input type="checkbox" v-model="paperTicket" />
+                <input type="checkbox" v-model="donateForm.receipt" />
                 索取紙本收據
               </label>
               <input
                 type="text"
                 class="form-control donate-input"
+                v-model="donateForm.address"
                 placeholder="收據寄送地址"
-                :disabled="!paperTicket"
+                :disabled="!donateForm.receipt"
+                :required="donateForm.receipt"
               />
               <button type="submit" class="btn submit-donate">
                 取得匯款帳戶
@@ -143,9 +150,15 @@
           <div v-show="step === 'account'">
             <div class="donate-title">捐款帳號</div>
             <p class="donate-info">您可於48小時內匯款至以下代收代付帳戶</p>
-            <p class="donate-info info-blue">戶名：台大兒醫慈善專戶</p>
-            <p class="donate-info info-blue">銀行代碼：國泰世華銀行 013</p>
-            <p class="donate-info info-blue">捐款帳號：11122344444</p>
+            <p class="donate-info info-blue">
+              戶名： {{ bankData.charity_title }}
+            </p>
+            <p class="donate-info info-blue">
+              銀行代碼： {{ bankData.bank_code }}
+            </p>
+            <p class="donate-info info-blue">
+              捐款帳號： {{ bankData.bank_account }}
+            </p>
             <p class="donate-info">
               感謝您的愛心 <br />
               待您匯款完成後<br />
@@ -155,6 +168,15 @@
             <button type="button" class="btn submit-donate" @click="reset">
               返回
             </button>
+          </div>
+          <div v-show="step === 'donate-error'">
+            <div class="donate-title mb-4">我要捐款</div>
+            <div class="donate-info mx-auto">
+              {{ donateErrorMsg }}
+            </div>
+            <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank">
+              <button type="button" class="btn submit-donate">聯繫客服</button>
+            </a>
           </div>
         </div>
         <div class="donate-function-page" v-show="showDonate === 'query'">
@@ -493,25 +515,41 @@
 <script>
 import certificateAppreciation from '@/component/certificateAppreciation'
 import html2canvas from 'html2canvas'
+import axios from 'axios'
 export default {
   components: {
-    certificateAppreciation,
+    certificateAppreciation
   },
   data() {
     return {
-      showDonate: 'query',
+      showDonate: 'yt',
       step: 'form',
-      haveQueryResult:false,
+      haveQueryResult: false,
       genCert: false,
       donateForm: {
-
+        amount: null,
+        name: '',
+        number: '',
+        phone: '',
+        email: '',
+        upload: 0,
+        receipt: 0,
+        address: ''
       },
-      paperTicket: false,
+      bankData: {
+        bank_code: '',
+        bank_account: '',
+        charity_title: ''
+      },
+      donateErrorMsg: '',
+      paperTicket: false
     }
   },
   methods: {
     openDonate() {
+      this.reset()
       this.showDonate = 'donate'
+      //   this.step = 'form'
     },
     openDonateQuery() {
       $('#modal-query').modal('show')
@@ -519,19 +557,50 @@ export default {
     reset() {
       this.showDonate = 'yt'
       this.step = 'form'
+      this.bankData = {
+        bank_code: '',
+        bank_account: '',
+        charity_title: ''
+      }
+      this.donateForm = {
+        amount: null,
+        name: '',
+        number: '',
+        phone: '',
+        email: '',
+        upload: 0,
+        receipt: 0,
+        address: ''
+      }
     },
     doDonate() {
-      this.step = 'account'
+      axios.post('charity/donate/anonymous', {
+        ...this.donateForm
+      }).then(({ data }) => {
+        this.bankData = data.data
+        this.step = 'account'
+        this.donateForm = {
+          amount: null,
+          name: '',
+          number: '',
+          phone: '',
+          email: '',
+          upload: 0,
+          receipt: 0,
+          address: ''
+        }
+      }).catch((err) => {
+        this.step = 'donate-error'
+        this.donateErrorMsg = err.msg || 'test'
+      })
     },
-    querySubmit() {
-
-    },
+    querySubmit() { },
     doShare() {
       if (this.genCert) {
         $('#modal-cert').modal('show')
         return
       }
-      html2canvas(document.querySelector('#cert')).then((canvas) => {
+      html2canvas(document.querySelector('#cert')).then(canvas => {
         const img = document.createElement('img')
         img.src = canvas.toDataURL()
         document.querySelector('#cert-img').appendChild(img)
@@ -539,8 +608,8 @@ export default {
         this.genCert = true
       })
     }
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped>
