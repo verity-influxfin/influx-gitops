@@ -1,35 +1,39 @@
 <template>
   <div class="main">
     <div class="report-main" v-if="!loading">
+      <div class="report-date">
+        <button class="btn btn-excel-download">Excel下載</button>
+        <div>製表日期 {{ invest_report.basic_info.export_date }}</div>
+      </div>
       <div class="row no-gutters report-intro mx-auto">
         <p>親愛的會員您好：</p>
         <p>
-          感謝您長期以來對普匯的信賴與支持，在此為您結算至{{ today }}
+          感謝您長期以來對普匯的信賴與支持，在此為您結算至 {{ invest_report.basic_info.export_date }}
           投資績效報告，如有任何問題，
           歡迎聯繫普匯客服Line@inFluxFin，我們將竭誠為您提供貼心的服務，
           再次感謝您的愛護與支持！
         </p>
       </div>
-      <div class="info-details" v-if="investReport.basicInfo">
+      <div class="info-details" v-if="invest_report.basic_info">
         <div class="item">
           <div class="item-title">投資人</div>
-          <div class="item-value">{{ investReport.basicInfo.id }}</div>
+          <div class="item-value">{{ invest_report.basic_info.id }}</div>
         </div>
         <div class="item">
           <div class="item-title">首筆投資</div>
           <div class="item-value">
-            {{ investReport.basicInfo.firstInvestDate }}
+            {{ invest_report.basic_info.export_date }}
           </div>
         </div>
         <div class="item">
           <div class="item-title">投資金額</div>
           <div class="item-value">
             $
-            {{ formate(investReport.basicInfo.investAmount) }}
+            {{ formate(invest_report.basic_info.invest_amount) }}
           </div>
         </div>
       </div>
-      <div class="row no-gutters justify-content-between mt-4">
+      <div class="row no-gutters justify-content-center mt-4">
         <div class="invest-overview">
           <div class="overview-title">
             <div class="text-center">(一)資產概況</div>
@@ -46,7 +50,7 @@
               <div class="table-title item">正常還款中</div>
               <div
                 class="item"
-                v-for="x in localInvestDescription.amountNotDelay"
+                v-for="x in localInvestDescription.amount_not_delay"
                 :key="x"
               >
                 {{ formate(x) }}
@@ -56,7 +60,7 @@
               <div class="table-title item">逾期中</div>
               <div
                 class="item"
-                v-for="x in localInvestDescription.amountDelay"
+                v-for="x in localInvestDescription.amount_delay"
                 :key="x"
               >
                 {{ formate(x) }}
@@ -66,7 +70,7 @@
               <div class="table-title item">本金餘額</div>
               <div
                 class="item"
-                v-for="x in localInvestDescription.totalAmount"
+                v-for="x in localInvestDescription.total_amount"
                 :key="x"
               >
                 {{ formate(x) }}
@@ -74,33 +78,10 @@
             </div>
           </div>
         </div>
-        <div class="invest-performance">
-          <div class="performance-title">
-            <div class="text-center">(二)投資績效</div>
-            <div class="underline"></div>
-          </div>
-          <div class="performance-table">
-            <div class="table-header">
-              <div class="item">科目</div>
-              <div class="item">績效</div>
-            </div>
-            <div
-              class="table-row"
-              v-for="(x, i) in investReport.investPerformance"
-              :key="x.name"
-            >
-              <div class="table-title item">{{ x.name }}</div>
-              <div class="item">
-                {{ formate(x.description) }}
-                {{ i == 1 || i == 4 ? "%" : "" }}
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="realized-rate">
         <div class="realized-title">
-          <div class="text-center">(三)已實現收益率</div>
+          <div class="text-center">(二)已實現收益率</div>
           <div class="underline"></div>
         </div>
         <div class="realized-table">
@@ -121,32 +102,20 @@
           <div class="rows">
             <div
               class="one-row"
-              v-for="x in investReport.realizedRateOfReturn"
-              :key="x.rangeOfYear"
+              v-for="x in invest_report.realized_rate_of_return"
+              :key="x.range_title"
             >
-              <div class="table-title item">{{ x.rangeOfYear }}</div>
-              <div class="item">{{ formate(x.principalBalance) }}</div>
+              <div class="table-title item">{{ x.range_title }}</div>
+              <div class="item">{{ formate(x.average_principle) }}</div>
               <div class="item">{{ formate(x.interest) }}</div>
-              <div class="item">{{ formate(x.withdrawInterest) }}</div>
-              <div class="item">{{ formate(x.repayDelayInterest) }}</div>
-              <div class="item">{{ formate(x.delayInterest) }}</div>
-              <div class="item">{{ formate(x.subsidyInterest) }}</div>
-              <div class="item">{{ formate(x.handlingFee) }}</div>
-              <div class="item">{{ formate(x.totalIncome) }}</div>
-              <div class="item">{{ x.rateOfReturn }}%</div>
+              <div class="item">{{ formate(x.prepaid_interest) }}</div>
+              <div class="item">{{ formate(x.delayed_paid_interest) }}</div>
+              <div class="item">{{ formate(x.delayed_interest) }}</div>
+              <div class="item">{{ formate(x.allowance) }}</div>
+              <div class="item">{{ formate(x.platform_fee) }}</div>
+              <div class="item">{{ formate(x.total_income) }}</div>
+              <div class="item">{{ x.rate_of_return }}%</div>
             </div>
-            <!-- <div class="one-row">
-              <div class="table-title item">累積收益率</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">1,239</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">12%</div>
-            </div> -->
           </div>
         </div>
       </div>
@@ -154,13 +123,13 @@
         <div>
           ※1.總收益=(利息收入+提還利息+逾期償還利息+延滯息+補貼息)-回款手收
         </div>
-        <div class="">※2.報酬率=當期(總收益/本金均額)</div>
-        <div class="">※3.本金均額=年度每月底本金餘額加總/期數</div>
+        <div class="">※2.年化報酬率=當期(總收益/本金均額)/期間月數*12</div>
+        <div class="">※3.本金均額=年度每月底本金餘額加總/天數</div>
       </div>
       <div class="row no-gutters justify-content-between mt-2">
         <div class="wait-for-realized">
           <div class="wait-title">
-            <div class="text-center">(四)待實現應收利息</div>
+            <div class="text-center">(三)待實現應收利息</div>
             <div class="underline"></div>
           </div>
           <div class="table-header">
@@ -168,45 +137,52 @@
             <div class="item">金額</div>
             <div class="item">折現</div>
           </div>
-          <div
-            v-if="
-              investReport.waitedRateOfReturn &&
-              investReport.waitedRateOfReturn.statisticsData
-            "
-          >
+          <div v-if="invest_report.account_payable_interest">
             <div
               class="table-row"
-              v-for="x in investReport.waitedRateOfReturn.statisticsData"
-              :key="x.rangeOfMonth"
+              v-for="x in invest_report.account_payable_interest"
+              :key="x.range_title"
             >
-              <div class="table-title item">{{ x.rangeOfMonth }}</div>
+              <div class="table-title item">
+                {{ x.range_title }}
+              </div>
               <div class="item">{{ formate(x.amount) }}</div>
-              <div class="item">{{ formate(x.discount) }}</div>
+              <div class="item">{{ formate(x.discount_amount) }}</div>
             </div>
             <div class="table-row">
               <div class="table-title item">內部報酬率預估</div>
-              <div class="item col">
-                {{ investReport.waitedRateOfReturn.predictRateOfReturn }}%
-              </div>
+              <div class="item col">{{ invest_report.estimate_IRR }}%</div>
             </div>
           </div>
         </div>
         <div class="overdue">
           <div class="overdue-title">
-            <div class="text-center">(五)逾期未收</div>
+            <div class="text-center">(四)逾期未收</div>
             <div class="underline"></div>
           </div>
           <div class="table-header">
             <div class="item">科目</div>
             <div class="item">金額</div>
           </div>
-          <div
-            class="table-row"
-            v-for="x in investReport.delayNotReturn"
-            :key="x.name"
-          >
-            <div class="table-title item">{{ x.name }}</div>
-            <div class="item">{{ formate(x.amount) }}</div>
+          <div class="table-row">
+            <div class="table-title item">逾期-尚欠本息</div>
+            <div class="item">
+              {{
+                formate(invest_report.delay_not_return.principal_and_interest)
+              }}
+            </div>
+          </div>
+          <div class="table-row">
+            <div class="table-title item">逾期-尚欠延滯息</div>
+            <div class="item">
+              {{ formate(invest_report.delay_not_return.delay_interest) }}
+            </div>
+          </div>
+          <div class="table-row">
+            <div class="table-title item">合計</div>
+            <div class="item">
+              {{ formate(invest_report.delay_not_return.total) }}
+            </div>
           </div>
         </div>
       </div>
@@ -215,169 +191,175 @@
 </template>
 
 <script>
-import Axios from "axios";
+import Axios from 'axios'
 export default {
   beforeRouteEnter(to, from, next) {
-    if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {
+    if (sessionStorage.length === 0 || sessionStorage.flag === 'logout') {
       next('/index')
       // next();
     } else {
-      next();
+      next()
     }
   },
   data() {
     return {
-      investReport: {
-        // "basicInfo": {
-        //   "id": "82",
-        //   "firstInvestDate": "2018/11/09",
-        //   "investAmount": "270000"
-        // },
-        // "assetsDescription": [
-        //   {
-        //     "name": "上班族貸",
-        //     "amountNotDelay": "126436",
-        //     "amountDelay": "943",
-        //     "totalAmount": "137379"
-        //   },
-        //   {
-        //     "name": "學生貸",
-        //     "amountNotDelay": "126436",
-        //     "amountDelay": "943",
-        //     "totalAmount": "137379"
-        //   },
-        //   {
-        //     "name": "本金餘額",
-        //     "amountNotDelay": "126436",
-        //     "amountDelay": "943",
-        //     "totalAmount": "137379"
-        //   }
-        // ],
-        // "investPerformance": [
-        //   {
-        //     "name": "投資年資",
-        //     "description": "2.9",
-        //   },
-        //   {
-        //     "name": "2021上半年",
-        //     "description": "7.1",
-        //   },
-        //   {
-        //     "name": "平均本金餘額",
-        //     "description": "167893934",
-        //   },
-        //   {
-        //     "name": "扣除逾期之折現收益",
-        //     "description": "5694463",
-        //   },
-        //   {
-        //     "name": "折現年化報酬率",
-        //     "description": "12.00",
-        //   },
-        // ],
-        // "realizedRateOfReturn": [
-        //   {
-        //     "rangeOfYear": "2018 01-12",
-        //     "principalBalance": "266734",
-        //     "interest": "3271",
-        //     "withdrawInterest": "15",
-        //     "repayDelayInterest": "546",
-        //     "delayInterest": "13424",
-        //     "subsidyInterest": "90",
-        //     "handlingFee": "141241",
-        //     "totalIncome": "99573552",
-        //     "rateOfReturn": "1"
-        //   },
-        //   {
-        //     "rangeOfYear": "2019 01-12",
-        //     "principalBalance": "266734",
-        //     "interest": "3271",
-        //     "withdrawInterest": "15",
-        //     "repayDelayInterest": "546",
-        //     "delayInterest": "13424",
-        //     "subsidyInterest": "90",
-        //     "handlingFee": "141241",
-        //     "totalIncome": "99573552",
-        //     "rateOfReturn": "1"
-        //   },
-        //   {
-        //     "rangeOfYear": "累績收益率",
-        //     "principalBalance": "266734",
-        //     "interest": "3271",
-        //     "withdrawInterest": "15",
-        //     "repayDelayInterest": "546",
-        //     "delayInterest": "13424",
-        //     "subsidyInterest": "90",
-        //     "handlingFee": "141241",
-        //     "totalIncome": "99577552",
-        //     "rateOfReturn": "1",
-        //   }
-        // ],
-        // "waitedRateOfReturn": {
-        //   "statisticsData": [
-        //     {
-        //       "rangeOfMonth": "2021 06-12",
-        //       "amount": "62041",
-        //       "discount": "41243"
-        //     },
-        //     {
-        //       "rangeOfMonth": "2021 06-12",
-        //       "amount": "62041",
-        //       "discount": "41243"
-        //     },
-        //     {
-        //       "rangeOfMonth": "合計",
-        //       "amount": "62041",
-        //       "discount": "41243"
-        //     }
-        //   ],
-        //   "predictRateOfReturn": "16.14"
-        // },
-        // "delayNotReturn": [
-        //   {
-        //     "name": "逾期-尚欠本息",
-        //     "amount": "58296"
-        //   },
-        //   {
-        //     "name": "逾期-尚欠延滯息",
-        //     "amount": "58296"
-        //   },
-        //   {
-        //     "name": "合計",
-        //     "amount": "58296"
-        //   }
-        // ]
+      invest_report: {
+        basic_info: {
+          id: '82',
+          first_invest_date: '2018/11/09',
+          invest_amount: '270000',
+          export_date: '2022-03-28'
+        },
+        assets_description: {
+          STN: {
+            name: '上班族貸',
+            amount_not_delay: '126436',
+            amount_delay: '943',
+            total_amount: '137379'
+          },
+          FGN: {
+            name: '學生貸',
+            amount_not_delay: '126436',
+            amount_delay: '943',
+            total_amount: '137379'
+          },
+          total: {
+            name: '本金餘額',
+            amount_not_delay: '126436',
+            amount_delay: '943',
+            total_amount: '137379'
+          }
+        },
+        invest_performance: {
+          years: 3.4,
+          prevHalf: 0,
+          average_principle: 1271796,
+          return_discount_without_delay: 231641,
+          discount_rate_of_return: 5.36
+        },
+        realized_rate_of_return: [
+          {
+            allowance: 0,
+            average_principle: 353463,
+            days: 52,
+            delayed_interest: 0,
+            delayed_paid_interest: 0,
+            diff_month: 2,
+            end_date: '2018-12',
+            interest: 3271,
+            platform_fee: 138,
+            prepaid_interest: 0,
+            principle_list: [],
+            range_title: '201811-201812',
+            rate_of_return: 0.9,
+            start_date: '2018-11',
+            total_income: 3133
+          },
+          {
+            allowance: 0,
+            average_principle: 353463,
+            days: 52,
+            delayed_interest: 0,
+            delayed_paid_interest: 0,
+            diff_month: 2,
+            end_date: '2019-02',
+            interest: 3271,
+            platform_fee: 138,
+            prepaid_interest: 0,
+            principle_list: [],
+            range_title: '201901-201902',
+            rate_of_return: 0.9,
+            start_date: '2019-01',
+            total_income: 3133
+          },
+          {
+            interest: 177662,
+            prepaid_interest: 2827,
+            delayed_paid_interest: 16960,
+            delayed_interest: 358890,
+            allowance: 19321,
+            platform_fee: 57933,
+            total_income: 537514,
+            rate_of_return: 56.3,
+            average_principle: 954005,
+            start_date: '2018-01',
+            end_date: '2022-02',
+            days: 1520,
+            diff_month: 50,
+            range_title: '累計收益率'
+          }
+        ],
+        account_payable_interest: [
+          {
+            amount: 3244,
+            discount_amount: 3232,
+            start_date: '2019-08',
+            end_date: '2019-10',
+            discount_exponent: 2.3,
+            range_title: '201908-201910'
+          },
+          {
+            amount: 4186,
+            discount_amount: 4178,
+            start_date: '2020-11',
+            end_date: '2020-12',
+            discount_exponent: 1.2,
+            range_title: '202011-202012'
+          },
+          {
+            amount: 4510,
+            discount_amount: 4508,
+            start_date: '2021-01',
+            end_date: '2021-10',
+            discount_exponent: 0.3,
+            range_title: '202101-202110'
+          }
+        ],
+        delay_not_return: {
+          principal_and_interest: 341897,
+          delay_interest: 138462,
+          total: 480359
+        },
+        estimate_IRR: 0.161
       },
       loading: true,
+      localRealizedRateOfReturn: []
     }
   },
   created() {
-    this.loading = true
-    this.getData().finally(() => {
-      this.loading = false
-    })
+    this.loading = false
+    // this.getData().finally(() => {
+    //   this.loading = false
+    //   this.localRealizedRateOfReturn = this.setRealizedRateOfReturn()
+    // })
+
   },
   computed: {
     today() {
       // 2020/01/01
       const today = new Date()
-      return `${today.getFullYear()}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getDate().toString().padStart(2, '0')}`
+      return `${today.getFullYear()}/${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}/${today
+          .getDate()
+          .toString()
+          .padStart(2, '0')}`
     },
     localInvestDescription() {
-      const { assetsDescription } = this.investReport
-      if (assetsDescription && assetsDescription.length > 0) {
+      const { assets_description } = this.invest_report
+      if (Object.keys(assets_description).length > 0) {
         return {
-          amountNotDelay: assetsDescription.map(x => x.amountNotDelay),
-          amountDelay: assetsDescription.map(x => x.amountDelay),
-          totalAmount: assetsDescription.map(x => x.totalAmount)
+          amount_not_delay: Object.keys(assets_description).map(x => assets_description[x].amount_not_delay),
+          amount_delay: Object.keys(assets_description).map(x => assets_description[x].amount_delay),
+          total_amount: Object.keys(assets_description).map(x => assets_description[x].total_amount)
         }
       }
       return {
-        amountNotDelay: [],
-        amountDelay: [],
-        totalAmount: []
+        amount_not_delay: [],
+        amount_delay: [],
+        total_amount: []
       }
-    },
+    }
   },
   methods: {
     formate(x) {
@@ -386,15 +368,62 @@ export default {
       }
       return parseInt(x, 10).toLocaleString()
     },
-    getData() {
-      return Axios.post('/getInvestReport').then(({ data }) => {
-        this.investReport = data.data
-        // console.log(data)
-      }).catch(err => {
-        console.error(err)
+    setRealizedRateOfReturn() {
+      const { realizedRateOfReturn } = this.invest_report
+      if (realizedRateOfReturn) {
+        return realizedRateOfReturn.flatMap(x => {
+          if (x.detail && x.detail.length > 0) {
+            const { detail, ...other } = x
+            const key = other.rangeOfYear
+            const newDetail = detail.map(item => {
+              return {
+                ...item,
+                show: false,
+                primary: false,
+                key
+              }
+            })
+            const newOther = {
+              ...other,
+              primary: true,
+              show: true
+            }
+            return [newOther, ...newDetail]
+          }
+          return {
+            ...x,
+            primary: true,
+            show: true
+          }
+        })
+      }
+      return []
+    },
+    localRealizedRateOfReturnShow(key) {
+      this.localRealizedRateOfReturn = this.localRealizedRateOfReturn.map(x => {
+        if (x.primary === false) {
+          if (x.key === key) {
+            //not primary and key
+            const change = !x.show
+            return { ...x, show: change }
+          }
+          // fold other
+          return { ...x, show: false }
+        }
+        return x
       })
+    },
+    getData() {
+      return Axios.post('/getInvestReport')
+        .then(({ data }) => {
+          this.invest_report = data.data
+          // console.log(data)
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
-  },
+  }
 }
 </script>
 
@@ -405,10 +434,26 @@ export default {
   margin: 30px auto;
   padding: 0 20px;
   background-size: cover;
-  background-image: url("../asset/images/invest-report-cover.jpg");
+  background-image: url('../asset/images/invest-report-cover.jpg');
   line-height: 1.5;
   font-size: 14px;
   font-weight: bold;
+  position: relative;
+  .report-date {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 70px;
+    right: 30px;
+    line-height: 1.5;
+    font-size: 16px;
+    .btn-excel-download{
+        color: #fff;
+        background-color: #036eb7;
+        border-radius: 6px;
+    }
+  }
   .report-intro {
     padding-top: 140px;
     width: 570px;
@@ -461,9 +506,9 @@ export default {
       gap: 0px 0px;
       grid-auto-flow: row;
       grid-template-areas:
-        "dur avg test1 test1 test1 test1 test1 test1 full-income item-rate"
-        "rows rows rows rows rows rows rows rows rows rows"
-        "rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2";
+        'dur avg test1 test1 test1 test1 test1 test1 full-income item-rate'
+        'rows rows rows rows rows rows rows rows rows rows'
+        'rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2';
       .header-item {
         background-color: #3b6188;
         color: #fff;
@@ -503,8 +548,8 @@ export default {
       gap: 0px 0px;
       grid-auto-flow: row;
       grid-template-areas:
-        "test2 test2 test2 test2 test2 test3"
-        ". . . . . .";
+        'test2 test2 test2 test2 test2 test3'
+        '. . . . . .';
       grid-area: test1;
     }
 
@@ -521,7 +566,7 @@ export default {
       .one-row {
         display: grid;
         grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-        grid-template-areas: ". . . . . . . . . .";
+        grid-template-areas: '. . . . . . . . . .';
         .item {
           padding: 5px 0;
           text-align: center;
@@ -647,6 +692,9 @@ export default {
     color: red;
     padding-left: 15px;
     font-size: 12px;
+  }
+  .clickable {
+    cursor: pointer;
   }
 }
 
