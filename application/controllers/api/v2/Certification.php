@@ -1247,6 +1247,7 @@ class Certification extends REST_Controller {
 
                 $phone_exist = $this->user_model->get_by([
                     'phone'		=> $content['phone'],
+                    'id'        => $user_id,
                     'status'	=> 1,
                 ]);
                 if($phone_exist){
