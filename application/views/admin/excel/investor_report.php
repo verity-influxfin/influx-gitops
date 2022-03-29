@@ -78,47 +78,18 @@
                 <th></th>
             </tr>
             <tr>
-                <th>(二)投資績效</th>
+                <th>(二)已實現收益率</th>
             </tr>
             <tr>
-                <th>科目</th>
-                <th>績效</th>
-            </tr>
-            <tr>
-                <th>投資年資</th>
-                <th>=(D1-B2)/365</th>
-<!--                <th>--><?//= $data['invest_performance']['years'] ?><!--</th>-->
-            </tr>
-            <tr>
-                <th>平均本金餘額</th>
-                <th>=B<?= $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']) ?>+D7</th>
-<!--                <th>--><?//= $data['invest_performance']['average_principle']) ?><!--</th>-->
-            </tr>
-<!--            <tr>-->
-<!--                <th>扣除逾期之折現收益</th>-->
-<!--                <th>=I--><?//= $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']) ?><!--+C--><?//= ($data['start_row']['delay_not_return']-4) ?><!---D7</th>-->
-<!--                <th>--><?//= $data['invest_performance']['return_discount_without_delay'] ?><!--</th>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th>折現年化報酬率</th>-->
-<!--                <th>=B15/B14/B12</th>-->
-<!--                <th>--><?//= $data['invest_performance']['discount_rate_of_return'] ?><!--</th>-->
-<!--            </tr>-->
-            <tr>
-                <th></th>
-            </tr>
-            <tr>
-                <th>(三)已實現收益率</th>
-            </tr>
-            <tr>
-                <th rowspan="2">期間</th>
-                <th rowspan="2">本金均額</th>
+                <th colspan="2">投資年資：<?= $data['invest_performance']['years'] ?></th>
                 <th colspan="5">收入</th>
                 <th>支出</th>
                 <th rowspan="2">總收益</th>
                 <th rowspan="2">年化報酬率</th>
             </tr>
             <tr>
+                <th>期間</th>
+                <th>本金均額</th>
                 <th>利息收入</th>
                 <th>提還利息</th>
                 <th>逾期償還利息</th>
@@ -152,13 +123,13 @@
                 <th colspan="7" style="text-align: left">2.年化報酬率=當期(總收益/本金均額)/期間月數*12</th>
             </tr>
             <tr>
-                <th colspan="7" style="text-align: left">3.本金均額=年度每月底本金餘額加總/期數</th>
+                <th colspan="7" style="text-align: left">3.本金均額=年度每日本金餘額加總/天數</th>
             </tr>
             <tr>
                 <th></th>
             </tr>
             <tr>
-                <th>(四)待實現應收利息</th>
+                <th>(三)待實現應收利息</th>
             </tr>
             <tr>
                 <th>期間</th>
@@ -177,10 +148,16 @@
 <!--                    <th>--><?//= $info['discount_amount'] ?><!--</th>-->
                 </tr>
             <? } ?>
+
             <tr>
                 <th>合計</th>
-                <th>=SUM(B<?=($data['start_row']['account_payable_interest']+1)?>:B<?=($data['start_row']['account_payable_interest']+count($data['account_payable_interest']))?>)</th>
+                <th>
+                    <? if( ! empty($data['account_payable_interest'])) { ?>
+                    =SUM(B<?=($data['start_row']['account_payable_interest']+1)?>:B<?=($data['start_row']['account_payable_interest']+count($data['account_payable_interest']))?>)
+                    <? } ?>
+                </th>
             </tr>
+
 <!--            <tr>-->
 <!--                <th>內部報酬率預估</th>-->
 <!--                <th colspan="2">--><?//= $data['estimate_IRR'] ?><!--</th>-->
@@ -189,7 +166,7 @@
                 <th></th>
             </tr>
             <tr>
-                <th>(五)逾期未收</th>
+                <th>(四)逾期未收</th>
             </tr>
             <tr>
                 <th>科目</th>

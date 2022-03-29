@@ -221,14 +221,6 @@ class Spreadsheet_lib
                 'format_code' => '#,##0'
             ],
             [
-                'range' => 'B12',
-                'format_code' => NumberFormat::FORMAT_NUMBER_00
-            ],
-            [
-                'range' => 'B13',
-                'format_code' => '#,##0'
-            ],
-            [
                 'range' => 'B'.($data['start_row']['realized_rate_of_return']+1).':I'.($data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])),
                 'format_code' => '#,##0'
             ],
@@ -272,16 +264,7 @@ class Spreadsheet_lib
                 ]
             ],
             [
-                'range' => 'A11:B13',
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => Border::BORDER_THIN,
-                        'color' => ['argb' => 'FFFFFFFFF'],
-                    ]
-                ]
-            ],
-            [
-                'range' => 'A16:J'.($data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])),
+                'range' => 'A11:J'.($data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])),
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,

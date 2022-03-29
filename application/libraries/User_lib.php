@@ -590,21 +590,21 @@ class User_lib {
             "assets_description" => [
                 $product_list[PRODUCT_ID_STUDENT]['alias'] => [
                     "name" => "學生貸",
-                    "amount_not_delay" => "126436",
-                    "total_amount" => "137379",
-                    "amount_delay" => "57340587234"
+                    "amount_not_delay" => "0",
+                    "total_amount" => "0",
+                    "amount_delay" => "0"
                 ],
                 $product_list[PRODUCT_ID_SALARY_MAN]['alias'] => [
                     "name" => "上班族貸",
-                    "amount_not_delay" => "126436",
-                    "total_amount" => "137379",
-                    "amount_delay" => "57340587234"
+                    "amount_not_delay" => "0",
+                    "total_amount" => "0",
+                    "amount_delay" => "0"
                 ],
                 'total' => [
                     "name" => "本金餘額",
-                    "amount_not_delay" => "126436",
-                    "total_amount" => "137379",
-                    "amount_delay" => "57340587234"
+                    "amount_not_delay" => "0",
+                    "total_amount" => "0",
+                    "amount_delay" => "0"
                 ]
             ],
             "invest_performance" => [
@@ -615,68 +615,8 @@ class User_lib {
                 'discount_rate_of_return' => 0.00,
             ],
             "realized_rate_of_return" => [
-                [
-                    'range_title' => '201801-201812',
-                    'interest' => 0,
-                    'prepaid_interest' => 0,
-                    'delayed_paid_interest' => 0,
-                    'delayed_interest' => 0,
-                    'allowance' => 0,
-                    'platform_fee' => 0,
-                    'total_income' => 0,
-                    'rate_of_return' => 0,
-                    'average_principle' => 0,
-                    'start_date' => '2018-01',
-                    'end_date' => '2018-12',
-                    'days' => 365
-                ],
-                [
-                    'range_title' => '201901-201912',
-                    'interest' => 0,
-                    'prepaid_interest' => 0,
-                    'delayed_paid_interest' => 0,
-                    'delayed_interest' => 0,
-                    'allowance' => 0,
-                    'platform_fee' => 0,
-                    'total_income' => 0,
-                    'rate_of_return' => 0,
-                    'average_principle' => 0,
-                    'start_date' => '2019-01',
-                    'end_date' => '2019-12',
-                    'days' => 365
-                ],
-                [
-                    'range_title' => '累績收益率',
-                    'interest' => 0,
-                    'prepaid_interest' => 0,
-                    'delayed_paid_interest' => 0,
-                    'delayed_interest' => 0,
-                    'allowance' => 0,
-                    'platform_fee' => 0,
-                    'total_income' => 0,
-                    'rate_of_return' => 0,
-                    'average_principle' => 0,
-                    'start_date' => '2018-01',
-                    'end_date' => '2019-12',
-                    'days' => 730
-                ],
             ],
             "account_payable_interest" => [
-                [
-                    "range_title" => "202101-202112",
-                    "amount" => 0,
-                    "discount_amount" => 0
-                ],
-                [
-                    "range_title" => "202201-202203",
-                    "amount" => 0,
-                    "discount_amount" => 0
-                ],
-                [
-                    "range_title" => "202101-202203",
-                    "amount" => 0,
-                    "discount_amount" => 0
-                ]
             ],
             "delay_not_return" => [
                 'principal_and_interest' => 0,
@@ -690,7 +630,7 @@ class User_lib {
         $this->CI->load->model('loan/investment_model');
         $this->CI->load->model('loan/transfer_investment_model');
         $first_investment = $this->get_first_investment_info($user_id);
-        if(!empty($first_investment))
+        if ( ! empty($first_investment) && $first_investment['amount'])
         {
             $data['basic_info']['first_invest_date'] = date('Y/m/d', strtotime($first_investment['tx_date']));
             $data['basic_info']['invest_amount'] = $first_investment['amount'];
@@ -757,7 +697,7 @@ class User_lib {
             ];
         };
 
-        if(!empty($first_investment))
+        if ( ! empty($first_investment)  && $first_investment['amount'])
         {
             try
             {
@@ -857,11 +797,11 @@ class User_lib {
                 {
                     $year = $start_date->add(DateInterval::createfromdatestring("+{$i} year"));
                     $year_str = $year->format('Y');
+                    $RoRList[$year_str]['interest'] -= $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'];
                     $RoRList[$year_str]['total_income'] = $RoRList[$year_str]['interest'] + $RoRList[$year_str]['delayed_interest'] +
                         $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'] +
                         $RoRList[$year_str]['allowance'] - $RoRList[$year_str]['platform_fee'];
-                    $RoRList[$year_str]['interest'] -= $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'];
-                    $RoRList[$year_str]['rate_of_return'] = $RoRList[$year_str]['average_principle'] != 0 ? round($RoRList[$year_str]['total_income'] / $RoRList[$year_str]['average_principle'] * 100, 1) : 0;
+                    $RoRList[$year_str]['rate_of_return'] = $RoRList[$year_str]['average_principle'] != 0 ? round($RoRList[$year_str]['total_income'] / $RoRList[$year_str]['average_principle'] / $RoRList[$year_str]['diff_month'] * 12 * 100, 2) : 0;
                     $RoRList[$year_str]['range_title'] = date('Ym', strtotime($RoRList[$year_str]['start_date'])).'-'.date('Ym', strtotime($RoRList[$year_str]['end_date']));
 
                     $RoRList['total']['average_principle'] += round($RoRList[$year_str]['average_principle'] * ($RoRList[$year_str]['days'] / $RoRList['total']['days']));
@@ -873,7 +813,7 @@ class User_lib {
                     $RoRList['total']['platform_fee'] += $RoRList[$year_str]['platform_fee'];
                     $RoRList['total']['total_income'] += $RoRList[$year_str]['total_income'];
                 }
-                $RoRList['total']['rate_of_return'] = $RoRList['total']['average_principle'] != 0 ? round($RoRList['total']['total_income'] / $RoRList['total']['average_principle'] * 100, 1) : 0;
+                $RoRList['total']['rate_of_return'] = $RoRList['total']['average_principle'] != 0 ? round($RoRList['total']['total_income'] / $RoRList['total']['average_principle'] / $RoRList['total']['diff_month'] * 12 * 100, 2) : 0;
                 $RoRList['total']['range_title'] = '累計收益率';
                 $data['realized_rate_of_return'] = array_values($RoRList);
 
@@ -918,6 +858,7 @@ class User_lib {
                 $ar_interest_list['total']['amount'] = array_sum(array_column($ar_interest_list, 'amount'));
                 $ar_interest_list['total']['discount_amount'] = array_sum(array_column($ar_interest_list, 'discount_amount'));
                 $ar_interest_list['total']['discount_exponent'] = 1;
+                $data['account_payable_interest'][] = $ar_interest_list['total'];
 
                 // -- 逾期未收
                 $delayed_ar_list_rs = $this->CI->transaction_model->get_delayed_ar_transaction([SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST], $user_id, $product_id_list, $is_group = TRUE);
@@ -946,16 +887,17 @@ class User_lib {
                     log_message('error', $e->getMessage());
                 }
 
-                // -- start row of every part for the layout
-                $data['start_row']['realized_rate_of_return'] = 17;
-                $data['start_row']['account_payable_interest'] = $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])+6;;
-                $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest']+count($data['account_payable_interest']??[])+4;
             }
             catch (Exception $e)
             {
                 log_message('error', $e->getMessage());
             }
         }
+
+        // -- start row of every part for the layout
+        $data['start_row']['realized_rate_of_return'] = 12;
+        $data['start_row']['account_payable_interest'] = $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])+6;;
+        $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest']+count($data['account_payable_interest']??[])+4;
 
         return $data;
     }
