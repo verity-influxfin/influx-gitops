@@ -483,31 +483,29 @@ class User_lib {
             'amount' => 0
         ];
 
-        // TODO: 不能group
         $rs = $this->CI->investment_model->get_principle_list($user_id, [], FALSE);
         if ( ! empty($rs))
         {
             $investment = reset($rs);
         }
 
-        // TODO: 不能group
         $rs = $this->CI->transfer_investment_model->get_principle_list([], $user_id, [], FALSE);
         if ( ! empty($rs))
         {
             $transfer_investment = reset($rs);
         }
 
-        if (!empty($investment) && ! isset($transfer_investment))
+        if ( ! empty($investment) && ! isset($transfer_investment))
         {
             $result['tx_date'] = $investment['tx_date'];
             $result['amount'] = $investment['amount'];
         }
-        else if ( empty($investment) && isset($transfer_investment))
+        else if (empty($investment) && isset($transfer_investment))
         {
             $result['tx_date'] = $transfer_investment['tx_date'];
             $result['amount'] = $transfer_investment['amount'];
         }
-        else if (!empty($investment) && isset($transfer_investment))
+        else if ( ! empty($investment) && isset($transfer_investment))
         {
             if ($transfer_investment['tx_date'] < $investment['tx_date'])
             {
@@ -543,7 +541,7 @@ class User_lib {
             $investment_principle_list = array_column($rs, NULL, 'tx_date');
 
             // 本金結清
-            $rs = $this->CI->transaction_model->get_paid_off_list(SOURCE_PRINCIPAL, $from=[], $to=$user_id, $product_id_list, $is_group=TRUE);
+            $rs = $this->CI->transaction_model->get_paid_off_list(SOURCE_PRINCIPAL, $from = [], $to = $user_id, $product_id_list, $is_group = TRUE);
             $paid_off_principle_list = array_column($rs, NULL, 'tx_date');
 
             $interval_date = $start_date->diff($end_date);
@@ -552,7 +550,8 @@ class User_lib {
             $prev_date = clone $start_date;
             $cur_date = clone $start_date;
 
-            for($i=0; $i<=$days; $i++) {
+            for ($i = 0; $i <= $days; $i++)
+            {
                 $prev_date_str = $prev_date->format('Y-m-d');
                 $cur_date_str = $cur_date->format('Y-m-d');
 
@@ -578,7 +577,7 @@ class User_lib {
     {
         // 產品列表名稱
         $product_list = $this->CI->config->item('product_list');
-        $display_product_ids = !empty($product_id_list) ? $product_id_list : [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN];
+        $display_product_ids = ! empty($product_id_list) ? $product_id_list : [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN];
 
         $data = [
             "basic_info" => [
@@ -677,7 +676,7 @@ class User_lib {
         ];
 
         // -- 已實現收益率
-        $generate_RoR_init_list = function(DateTimeImmutable $start_date, DateTimeImmutable $end_date) {
+        $generate_RoR_init_list = function (DateTimeImmutable $start_date, DateTimeImmutable $end_date) {
             $diff = $start_date->diff($end_date);
             return [
                 'principle_list' => [],
@@ -697,15 +696,15 @@ class User_lib {
             ];
         };
 
-        if ( ! empty($first_investment)  && $first_investment['amount'])
+        if ( ! empty($first_investment) && $first_investment['amount'])
         {
             try
             {
                 // -- 已實現收益率
                 $first_invest_date = new \DateTimeImmutable(date('Y-m-d', strtotime($first_investment['tx_date'])));
-                $start_date =  new \DateTimeImmutable($first_invest_date->format('Y-01-01'));
+                $start_date = new \DateTimeImmutable($first_invest_date->format('Y-01-01'));
                 $end_date = new \DateTimeImmutable(date('Y-m-t', strtotime("-1 month")));
-                $RoRList = [];
+                $RoR_List = [];
 
                 // 建立表格結構
                 $diff = $start_date->diff($end_date);
@@ -724,9 +723,9 @@ class User_lib {
                         $end_year_date = $end_date;
                     }
 
-                    $RoRList[$year_str] = $generate_RoR_init_list($start_year_date, $end_year_date);
+                    $RoR_List[$year_str] = $generate_RoR_init_list($start_year_date, $end_year_date);
                 }
-                $RoRList['total'] = $generate_RoR_init_list($start_date, $end_date);
+                $RoR_List['total'] = $generate_RoR_init_list($start_date, $end_date);
 
                 // 取得每天之本金餘額
                 $principle_list = $this->get_principle_list($user_id, $product_id_list, $start_date, $end_date);
@@ -734,7 +733,7 @@ class User_lib {
                 {
                     $ym_date = new \DateTimeImmutable($date);
                     $ym_date_str = $ym_date->format('Y');
-                    $RoRList[$ym_date_str]['principle_list'][] = $info['principle_balance'];
+                    $RoR_List[$ym_date_str]['principle_list'][] = $info['principle_balance'];
                 }
 
                 // 計算本金均額
@@ -742,7 +741,7 @@ class User_lib {
                 {
                     $year = $start_date->add(DateInterval::createfromdatestring("+{$i} year"));
                     $year_str = $year->format('Y');
-                    $RoRList[$year_str]['average_principle'] = round(array_sum($RoRList[$year_str]['principle_list']) / $RoRList[$year_str]['days']);
+                    $RoR_List[$year_str]['average_principle'] = round(array_sum($RoR_List[$year_str]['principle_list']) / $RoR_List[$year_str]['days']);
                 }
 
                 // 計算收入數據
@@ -754,13 +753,13 @@ class User_lib {
                     switch ($info['source'])
                     {
                         case SOURCE_INTEREST:
-                            $RoRList[$year_str]['interest'] += $info['amount'];
+                            $RoR_List[$year_str]['interest'] += $info['amount'];
                             break;
                         case SOURCE_DELAYINTEREST:
-                            $RoRList[$year_str]['delayed_interest'] += $info['amount'];
+                            $RoR_List[$year_str]['delayed_interest'] += $info['amount'];
                             break;
                         case SOURCE_PREPAYMENT_ALLOWANCE:
-                            $RoRList[$year_str]['allowance'] += $info['amount'];
+                            $RoR_List[$year_str]['allowance'] += $info['amount'];
                             break;
                     }
                 }
@@ -771,7 +770,7 @@ class User_lib {
                 {
                     $ym_date = new \DateTimeImmutable($info['tx_date']);
                     $year_str = $ym_date->format('Y');
-                    $RoRList[$year_str]['prepaid_interest'] += $info['amount'];
+                    $RoR_List[$year_str]['prepaid_interest'] += $info['amount'];
                 }
 
                 // 逾期後償還利息
@@ -780,7 +779,7 @@ class User_lib {
                 {
                     $ym_date = new \DateTimeImmutable($info['tx_date']);
                     $year_str = $ym_date->format('Y');
-                    $RoRList[$year_str]['delayed_paid_interest'] += $info['amount'];
+                    $RoR_List[$year_str]['delayed_paid_interest'] += $info['amount'];
                 }
 
                 // 平台服務費支出
@@ -789,7 +788,7 @@ class User_lib {
                 {
                     $ym_date = new \DateTimeImmutable($info['tx_date']);
                     $year_str = $ym_date->format('Y');
-                    $RoRList[$year_str]['platform_fee'] += $info['amount'];
+                    $RoR_List[$year_str]['platform_fee'] += $info['amount'];
                 }
 
                 // 轉換為每年區間的統計數據
@@ -797,25 +796,25 @@ class User_lib {
                 {
                     $year = $start_date->add(DateInterval::createfromdatestring("+{$i} year"));
                     $year_str = $year->format('Y');
-                    $RoRList[$year_str]['interest'] -= $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'];
-                    $RoRList[$year_str]['total_income'] = $RoRList[$year_str]['interest'] + $RoRList[$year_str]['delayed_interest'] +
-                        $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'] +
-                        $RoRList[$year_str]['allowance'] - $RoRList[$year_str]['platform_fee'];
-                    $RoRList[$year_str]['rate_of_return'] = $RoRList[$year_str]['average_principle'] != 0 ? round($RoRList[$year_str]['total_income'] / $RoRList[$year_str]['average_principle'] / $RoRList[$year_str]['diff_month'] * 12 * 100, 2) : 0;
-                    $RoRList[$year_str]['range_title'] = date('Ym', strtotime($RoRList[$year_str]['start_date'])).'-'.date('Ym', strtotime($RoRList[$year_str]['end_date']));
+                    $RoR_List[$year_str]['interest'] -= $RoR_List[$year_str]['prepaid_interest'] + $RoR_List[$year_str]['delayed_paid_interest'];
+                    $RoR_List[$year_str]['total_income'] = $RoR_List[$year_str]['interest'] + $RoR_List[$year_str]['delayed_interest'] +
+                        $RoR_List[$year_str]['prepaid_interest'] + $RoR_List[$year_str]['delayed_paid_interest'] +
+                        $RoR_List[$year_str]['allowance'] - $RoR_List[$year_str]['platform_fee'];
+                    $RoR_List[$year_str]['rate_of_return'] = $RoR_List[$year_str]['average_principle'] != 0 ? round($RoR_List[$year_str]['total_income'] / $RoR_List[$year_str]['average_principle'] / $RoR_List[$year_str]['diff_month'] * 12 * 100, 2) : 0;
+                    $RoR_List[$year_str]['range_title'] = date('Ym', strtotime($RoR_List[$year_str]['start_date'])) . '-' . date('Ym', strtotime($RoR_List[$year_str]['end_date']));
 
-                    $RoRList['total']['average_principle'] += round($RoRList[$year_str]['average_principle'] * ($RoRList[$year_str]['days'] / $RoRList['total']['days']));
-                    $RoRList['total']['interest'] += $RoRList[$year_str]['interest'];
-                    $RoRList['total']['delayed_interest'] += $RoRList[$year_str]['delayed_interest'];
-                    $RoRList['total']['prepaid_interest'] += $RoRList[$year_str]['prepaid_interest'];
-                    $RoRList['total']['delayed_paid_interest'] += $RoRList[$year_str]['delayed_paid_interest'];
-                    $RoRList['total']['allowance'] += $RoRList[$year_str]['allowance'];
-                    $RoRList['total']['platform_fee'] += $RoRList[$year_str]['platform_fee'];
-                    $RoRList['total']['total_income'] += $RoRList[$year_str]['total_income'];
+                    $RoR_List['total']['average_principle'] += round($RoR_List[$year_str]['average_principle'] * ($RoR_List[$year_str]['days'] / $RoR_List['total']['days']));
+                    $RoR_List['total']['interest'] += $RoR_List[$year_str]['interest'];
+                    $RoR_List['total']['delayed_interest'] += $RoR_List[$year_str]['delayed_interest'];
+                    $RoR_List['total']['prepaid_interest'] += $RoR_List[$year_str]['prepaid_interest'];
+                    $RoR_List['total']['delayed_paid_interest'] += $RoR_List[$year_str]['delayed_paid_interest'];
+                    $RoR_List['total']['allowance'] += $RoR_List[$year_str]['allowance'];
+                    $RoR_List['total']['platform_fee'] += $RoR_List[$year_str]['platform_fee'];
+                    $RoR_List['total']['total_income'] += $RoR_List[$year_str]['total_income'];
                 }
-                $RoRList['total']['rate_of_return'] = $RoRList['total']['average_principle'] != 0 ? round($RoRList['total']['total_income'] / $RoRList['total']['average_principle'] / $RoRList['total']['diff_month'] * 12 * 100, 2) : 0;
-                $RoRList['total']['range_title'] = '累計收益率';
-                $data['realized_rate_of_return'] = array_values($RoRList);
+                $RoR_List['total']['rate_of_return'] = $RoR_List['total']['average_principle'] != 0 ? round($RoR_List['total']['total_income'] / $RoR_List['total']['average_principle'] / $RoR_List['total']['diff_month'] * 12 * 100, 2) : 0;
+                $RoR_List['total']['range_title'] = '累計收益率';
+                $data['realized_rate_of_return'] = array_values($RoR_List);
 
                 // -- 待實現應收利息
                 $ar_interest_list = [];
@@ -848,10 +847,10 @@ class User_lib {
                 foreach ($ar_interest_list as $year_str => $info)
                 {
                     $end = new \DateTimeImmutable($info['end_date']);
-                    $diff = $end_date->setDate($end_date->format('Y'),$end_date->format('m'),1)->diff($end);
-                    $ar_interest_list[$year_str]['discount_exponent'] = $diff->y+round($diff->m/12,1);
-                    $ar_interest_list[$year_str]['discount_amount'] = round($info['amount'] / pow((($data['estimate_IRR']/100)+1),$ar_interest_list[$year_str]['discount_exponent']));
-                    $ar_interest_list[$year_str]['range_title'] = date('Ym', strtotime($info['start_date'])).'-'.date('Ym', strtotime($info['end_date']));
+                    $diff = $end_date->setDate($end_date->format('Y'), $end_date->format('m'), 1)->diff($end);
+                    $ar_interest_list[$year_str]['discount_exponent'] = $diff->y + round($diff->m / 12, 1);
+                    $ar_interest_list[$year_str]['discount_amount'] = round($info['amount'] / pow((($data['estimate_IRR'] / 100) + 1), $ar_interest_list[$year_str]['discount_exponent']));
+                    $ar_interest_list[$year_str]['range_title'] = date('Ym', strtotime($info['start_date'])) . '-' . date('Ym', strtotime($info['end_date']));
                 }
                 $data['account_payable_interest'] = array_values($ar_interest_list);
                 $ar_interest_list['total']['range_title'] = '合計';
@@ -863,9 +862,9 @@ class User_lib {
                 // -- 逾期未收
                 $delayed_ar_list_rs = $this->CI->transaction_model->get_delayed_ar_transaction([SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST], $user_id, $product_id_list, $is_group = TRUE);
                 $delayed_ar_list = [];
-                array_walk($delayed_ar_list_rs, function($item, $key) use (&$delayed_ar_list){
+                array_walk($delayed_ar_list_rs, function ($item, $key) use (&$delayed_ar_list) {
                     $source = $item['source'];
-                    $delayed_ar_list[$source] = isset($delayed_ar_list[$source]) ?  $item['amount'] + $delayed_ar_list[$source] : $item['amount'];
+                    $delayed_ar_list[$source] = isset($delayed_ar_list[$source]) ? $item['amount'] + $delayed_ar_list[$source] : $item['amount'];
                 });
 
                 $data['delay_not_return']['principal_and_interest'] = ($delayed_ar_list[SOURCE_AR_PRINCIPAL] ?? 0) + ($delayed_ar_list[SOURCE_AR_INTEREST] ?? 0);
@@ -878,8 +877,8 @@ class User_lib {
                     $d1 = new DateTime($first_investment['tx_date']);
                     $d2 = new DateTime($export_date);
                     $data['invest_performance']['years'] = round($d1->diff($d2)->days / 365.0, 1);
-                    $data['invest_performance']['average_principle'] = $RoRList['total']['average_principle'] + $data['assets_description']['total']['amount_delay'];
-                    $data['invest_performance']['return_discount_without_delay'] = $RoRList['total']['total_income'] + $ar_interest_list['total']['discount_amount'] - $data['assets_description']['total']['amount_delay'];
+                    $data['invest_performance']['average_principle'] = $RoR_List['total']['average_principle'] + $data['assets_description']['total']['amount_delay'];
+                    $data['invest_performance']['return_discount_without_delay'] = $RoR_List['total']['total_income'] + $ar_interest_list['total']['discount_amount'] - $data['assets_description']['total']['amount_delay'];
                     $data['invest_performance']['discount_rate_of_return'] = $data['invest_performance']['average_principle'] == 0 || $data['invest_performance']['years'] == 0 ? 0 : round($data['invest_performance']['return_discount_without_delay'] / $data['invest_performance']['average_principle'] / $data['invest_performance']['years'] * 100, 2);
                 }
                 catch (Exception $e)
@@ -896,12 +895,9 @@ class User_lib {
 
         // -- start row of every part for the layout
         $data['start_row']['realized_rate_of_return'] = 12;
-        $data['start_row']['account_payable_interest'] = $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])+6;;
-        $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest']+count($data['account_payable_interest']??[])+4;
+        $data['start_row']['account_payable_interest'] = $data['start_row']['realized_rate_of_return'] + count($data['realized_rate_of_return'] ?? []) + 6;;
+        $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest'] + count($data['account_payable_interest'] ?? []) + 4;
 
         return $data;
     }
-
-
-
 }
