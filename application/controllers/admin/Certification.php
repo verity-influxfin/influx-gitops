@@ -523,11 +523,25 @@ class Certification extends MY_Admin_Controller {
                         $cert = \Certification\Certification_factory::get_instance_by_model_resource($info);
                         if ($post['status'] == CERTIFICATION_STATUS_SUCCEED)
                         {
-                            $rs = isset($cert) && $cert->set_success(FALSE);
+                            if (isset($cert))
+                            {
+                                $rs = $cert->set_success(FALSE);
+                            }
+                            else
+                            {
+                                $rs = $this->certification_lib->set_success($post['id']);
+                            }
                         }
                         else if ($post['status'] == CERTIFICATION_STATUS_FAILED)
                         {
-                            $rs = isset($cert) && $cert->set_failure(FALSE);
+                            if (isset($cert))
+                            {
+                                $rs = $cert->set_failure(FALSE);
+                            }
+                            else
+                            {
+                                $rs = $this->certification_lib->set_failed($post['id'],$fail);
+                            }
                         }
                         else
                         {
