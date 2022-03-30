@@ -1,6 +1,31 @@
 <template>
-  <div class="main" v-if="invest_report.basic_info">
-    <div class="report-main" v-if="!loading">
+  <div class="main">
+    <div class="my-invest">
+      <div class="my-invest-header">
+        <div class="invest-title col">投資總覽</div>
+        <div class="invest-date col-auto">日期：{{ today }}</div>
+      </div>
+      <div class="invest-content">
+        <div class="invest-item">
+          <div class="item-title">應收款項</div>
+          <div class="item-info">${{ formate(tweenedPrincipal) }}</div>
+        </div>
+        <div class="invest-item">
+          <div class="item-title">持有債權本金餘額</div>
+          <div class="item-info">${{ formate(tweenedReceivable) }}</div>
+        </div>
+        <div class="invest-item">
+          <div class="item-title">得標/處理中</div>
+          <div class="item-info">${{ formate(tweenedFrozen) }}</div>
+        </div>
+        <div class="invest-item">
+          <div class="item-title">不足額待匯入</div>
+          <div class="item-info">${{ formate(tweenedInsufficient) }}</div>
+        </div>
+        <div class=""></div>
+      </div>
+    </div>
+    <div class="report-main" v-if="!loading && invest_report.basic_info">
       <div class="report-date">
         <button class="btn btn-excel-download" @click="downloadExcel">
           Excel下載
@@ -25,7 +50,7 @@
         <div class="item">
           <div class="item-title">首筆投資</div>
           <div class="item-value">
-            {{ invest_report.basic_info.export_date }}
+            {{ invest_report.basic_info.first_invest_date }}
           </div>
         </div>
         <div class="item">
@@ -132,7 +157,7 @@
         <div class="">※2.年化報酬率=當期(總收益/本金均額)/期間月數*12</div>
         <div class="">※3.本金均額=年度每月底本金餘額加總/天數</div>
       </div>
-      <div class="row no-gutters justify-content-between mt-2">
+      <div class="row no-gutters justify-content-center mt-2">
         <div class="wait-for-realized">
           <div class="wait-title">
             <div class="text-center">(三)待實現應收利息</div>
@@ -141,7 +166,6 @@
           <div class="table-header">
             <div class="item">期間</div>
             <div class="item">金額</div>
-            <div class="item">折現</div>
           </div>
           <div v-if="local_account_payable_interest">
             <div
@@ -153,11 +177,6 @@
                 {{ x.range_title }}
               </div>
               <div class="item">{{ formate(x.amount) }}</div>
-              <div class="item">{{ formate(x.discount_amount) }}</div>
-            </div>
-            <div class="table-row">
-              <div class="table-title item">內部報酬率預估</div>
-              <div class="item col">{{ invest_report.estimate_IRR }}%</div>
             </div>
           </div>
         </div>
@@ -385,7 +404,11 @@ export default {
         estimate_IRR: 0.161
         */
       },
-      loading: true
+      loading: true,
+      tweenedPrincipal: 0,
+      tweenedReceivable: 0,
+      tweenedFrozen: 0,
+      tweenedInsufficient: 0,
     }
   },
   created() {
@@ -400,6 +423,16 @@ export default {
     })
   },
   computed: {
+    today() {
+      // 2020/01/01
+      const today = new Date()
+      return `${today.getFullYear()}/${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}/${today
+          .getDate()
+          .toString()
+          .padStart(2, '0')}`
+    },
     localInvestDescription() {
       const { assets_description } = this.invest_report
       if (Object.keys(assets_description).length > 0) {
@@ -434,10 +467,7 @@ export default {
     local_account_payable_interest() {
       return this.invest_report.account_payable_interest.filter(x => x.range_title).map(x => {
         if (x.range_title === '合計') {
-          return {
-            ...x,
-            range_title: '累計收益率'
-          }
+          return x
         }
         const startArray = x.start_date.split('-')
         const newTitle = `${startArray[0]}  ${startArray[1]}-${x.end_date.split('-')[1]} (月)`
@@ -466,17 +496,32 @@ export default {
         })
     },
     downloadExcel() {
-        return Axios.get('/downloadInvestReport',{
-            responseType:'blob'
-        }).then(response=>{
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a')
-            link.href = url
-            link.setAttribute('download', '投資人報告書.xlsx')
-            document.body.appendChild(link)
-            link.click()
-        })
+      return Axios.get('/downloadInvestReport', {
+        responseType: 'blob'
+      }).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', '投資人報告書.xlsx')
+        document.body.appendChild(link)
+        link.click()
+      })
     }
+  },
+  watch: {
+    '$parent.tweenedPrincipal'(newValue) {
+      this.tweenedPrincipal = newValue
+    },
+    '$parent.tweenedReceivable'(newValue) {
+      this.tweenedReceivable = newValue
+    },
+    '$parent.tweenedFrozen'(newValue) {
+      this.tweenedFrozen = newValue
+    },
+    '$parent.tweenedInsufficient'(newValue) {
+      this.tweenedInsufficient = newValue
+      console.log(newValue)
+    },
   },
 }
 </script>
@@ -485,10 +530,62 @@ export default {
   display: none;
 }
 </style>
-
 <style lang="scss" scoped>
 .b-right {
   border-right: 1px solid #fff;
+}
+.my-invest {
+  width: 940px;
+  background-color: #fff;
+  border-radius: 28px;
+  box-shadow: 4px 4px 10px 3px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  padding: 20px 40px;
+  .my-invest-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    padding: 8px 0;
+    border-bottom: 2px solid #f3f3f3;
+    .invest-title {
+      left: 370px;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 1.5;
+      color: #036eb7;
+    }
+    .invest-date {
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 1.5;
+      text-align: center;
+      color: #036eb7;
+    }
+  }
+  .invest-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 25px;
+    margin-top: 25px;
+    .invest-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .item-title {
+          padding: 4px 0;
+        font-size: 20px;
+        line-height: 1.5;
+        text-align: center;
+        color: #707070;
+      }
+      .item-info {
+        font-size: 24px;
+        line-height: 1.5;
+        text-align: center;
+        color: #036eb7;
+      }
+    }
+  }
 }
 .report-main {
   width: 940px;
@@ -687,6 +784,7 @@ export default {
     }
   }
   .wait-for-realized {
+      margin-right: 80px;
     .wait-title {
       margin-bottom: 15px;
     }
