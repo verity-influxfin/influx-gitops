@@ -117,6 +117,8 @@ Route::get('/downloadStatement', 'Membercentrecontroller@downloadStatement');
 
 Route::post('/getInvestReport', 'Membercentrecontroller@getInvestReport');
 
+Route::get('/downloadInvestReport', 'Membercentrecontroller@downloadInvestReport');
+
 // backstage
 
 

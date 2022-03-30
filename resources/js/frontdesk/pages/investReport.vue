@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" v-if="invest_report.basic_info">
     <div class="report-main" v-if="!loading">
       <div class="report-date">
         <button class="btn btn-excel-download" @click="downloadExcel">
@@ -17,7 +17,7 @@
           再次感謝您的愛護與支持！
         </p>
       </div>
-      <div class="info-details" v-if="invest_report.basic_info">
+      <div class="info-details">
         <div class="item">
           <div class="item-title">投資人</div>
           <div class="item-value">{{ invest_report.basic_info.id }}</div>
@@ -394,9 +394,10 @@ export default {
     this.$parent.pageIcon = ''
     this.$parent.pageTitle = ''
     this.$parent.pagedesc = ''
-    // this.getData().finally(() => {
-    //   this.loading = false
-    // })
+    console.log(this.$parent.tweenedReceivable)
+    this.getData().finally(() => {
+      this.loading = false
+    })
   },
   computed: {
     localInvestDescription() {
@@ -427,20 +428,25 @@ export default {
         return {
           ...x,
           range_title: newTitle
-          }
+        }
       })
     },
     local_account_payable_interest() {
       return this.invest_report.account_payable_interest.filter(x => x.range_title).map(x => {
+        if (x.range_title === '合計') {
+          return {
+            ...x,
+            range_title: '累計收益率'
+          }
+        }
         const startArray = x.start_date.split('-')
-        const newTitle = x.range_title !== '內部報酬率預估' ? `${startArray[0]}  ${startArray[1]}-${x.end_date.split('-')[1]} (月)` : '累計收益率'
+        const newTitle = `${startArray[0]}  ${startArray[1]}-${x.end_date.split('-')[1]} (月)`
         return {
           ...x,
           range_title: newTitle
-          }
+        }
       })
-    }
-
+    },
   },
   methods: {
     formate(x) {
@@ -453,23 +459,30 @@ export default {
       return Axios.post('/getInvestReport')
         .then(({ data }) => {
           this.invest_report = data.data
-          // console.log(data)
+          console.log(data)
         })
         .catch(err => {
           console.error(err)
         })
     },
     downloadExcel() {
-      $('body').append(
-        `<iframe id="csvDownloadIframe" src="${location.origin}/downloadInvestReport" style="display: none"></iframe>`
-      )
+        return Axios.get('/downloadInvestReport',{
+            responseType:'blob'
+        }).then(response=>{
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', '投資人報告書.xlsx')
+            document.body.appendChild(link)
+            link.click()
+        })
     }
-  }
+  },
 }
 </script>
 <style>
-.investment-wrapper .member-menu .invest-card {
-  margin: 20px auto;
+.investment-wrapper .member-menu {
+  display: none;
 }
 </style>
 
