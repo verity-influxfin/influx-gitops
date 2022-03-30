@@ -1,10 +1,9 @@
-import freshGraduateLoan from "../pages/freshGraduateLoan";
 import engineerLoan from "../pages/engineerLoan";
 import transfer from "../pages/transfer";
-import mobileLoan from "../pages/mobileLoan";
-import qa from "../pages/qa";
 import company from "../pages/company";
 import news from "../pages/news";
+import ntu from "../pages/ntu"
+import charitableStatus from "../pages/charitableStatus"
 import blog from "../pages/blog";
 import vlog from "../pages/vlog";
 import videoPage from '../pages/videoPage';
@@ -12,6 +11,8 @@ import articlePage from '../pages/articlePage';
 import userTerms from '../pages/userTerms';
 import privacyTerms from '../pages/privacyTerms';
 import loanerTerms from '../pages/loanerTerms';
+import lenderTerms from '../pages/lenderTerms';
+import transferTerms from '../pages/transferTerms';
 import recruiting from '../pages/recruiting';
 import campusPartner from '../pages/campusPartner';
 import clubCooperation from '../pages/clubCooperation';
@@ -19,6 +20,7 @@ import firmCooperation from '../pages/firmCooperation';
 import companyCooperation from '../pages/companyCooperation';
 import register from '../pages/register';
 import myInvestment from '../pages/myInvestment';
+import promoteCode from '../pages/promoteCode.vue'
 import debt from '../pages/debt';
 import closedcase from '../pages/closedcase';
 import detail from '../pages/detail';
@@ -40,21 +42,30 @@ import projects from '../pages/alesis-projects';
 import workLoan from '../pages/alesis-workLoan';
 import collegeLoan from "../pages/alesis-collegeLoan";
 import investReport from "../pages/investReport"
+import collegeLoan3S from "../pages/3SCollegeLoan"
+import search from "../pages/search.vue";
+import promoteCodeIntro from '../pages/promoteCodeIntro.vue'
+import businessIndex from '../pages/BusinessLoan/index'
+import businessLoan from '../pages/BusinessLoan/businessLoan'
+import businessEnd from '../pages/BusinessLoan/end'
+import smeIndex from '../pages/BusinessLoan/smeLoan'
+import smeApply from '../pages/BusinessLoan/sme/apply'
+import smeConsult from '../pages/BusinessLoan/sme/consult'
+
 
 let routers = [
     { path: '*', redirect: '/index' },
     { path: '/index', component: index },
     { path: '/borrow', component: borrow },
-
     { path: '/workLoan', component: workLoan },
     { path: '/collegeLoan', component: collegeLoan },
+    { path: '/3s-college-loan', component: collegeLoan3S },
     { path: '/faq', component: faq },
     { path: '/risk', component: risk },
     { path: '/projects', component: projects },
-
-
-    { path: '/freshGraduateLoan', component: freshGraduateLoan },
-    { path: '/mobileLoan', component: mobileLoan },
+    { path: '/promote-code-intro', component: promoteCodeIntro },
+    // redirect for google搜尋
+    { path: '/freshGraduateLoan', redirect: '/workLoan' },
     { path: '/engineerLoan', component: engineerLoan },
     { path: '/investment', component: invest },
     { path: '/transfer', component: transfer },
@@ -63,17 +74,56 @@ let routers = [
     { path: '/blog', component: blog },
     { path: '/vlog', component: vlog },
     { path: '/invest', component: invest },
-    { path: '/qa', component: qa },
     { path: '/videopage', component: videoPage },
     { path: '/articlepage', component: articlePage },
     { path: '/userTerms', component: userTerms },
     { path: '/privacyTerms', component: privacyTerms },
     { path: '/loanerTerms', component: loanerTerms },
+    { path: '/lenderTerms', component: lenderTerms },
+    { path: '/transferTerms', component: transferTerms },
     { path: '/register', component: register },
     {
         path: '/myloan', component: myLoan, children: [
             { path: '/loannotification', component: notification, name: 'loan-notification' },
             { path: '/myrepayment', component: myrepayment }
+        ]
+    },
+    { path: '/promoteCode', component: promoteCode},
+    {
+        path: '/business-loan',
+        component: businessIndex,
+        children: [
+            {
+                path: '',
+                component: businessLoan
+            },
+            {
+                path: 'sme',
+                component: businessIndex,
+                children: [
+                    {
+                        path: '',
+                        component: smeIndex
+                    },
+                    {
+                        name: 'sme-apply',
+                        path: 'apply',
+                        component: smeApply
+                    },
+                    {
+                        name: 'sme-consult',
+                        path: 'consult',
+                        component: smeConsult
+                    }
+                ],
+
+            },
+            {
+                name: 'end',
+                path: 'end',
+                props: true,
+                component: businessEnd
+            }
         ]
     },
     {
@@ -92,9 +142,12 @@ let routers = [
     { path: '/companycooperation', component: companyCooperation },
     { path: '/feedback', component: feedback },
     { path: '/event', component: event },
-	{ path: '/scsbank', component: scsbank },
+    { path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
+    {path:'/charitable',component:ntu},
+    { path: '/charitable-status', component: charitableStatus},
+    { path: '/search',name:'search', component: search }
 ];
 
 export default routers;

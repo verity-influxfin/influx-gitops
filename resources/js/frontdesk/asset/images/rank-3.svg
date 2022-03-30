@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80.666" height="43.743" viewBox="0 0 80.666 43.743">
+    <defs>
+        <radialGradient id="dxhhou6vnb" cx=".5" cy=".63" r="1.143" gradientTransform="matrix(.525 0 0 1 .238 0)" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#d38531"/>
+            <stop offset="1" stop-color="#754c29"/>
+        </radialGradient>
+        <filter id="na9yfzqlfa" x="0" y="0" width="80.666" height="43.743" filterUnits="userSpaceOnUse">
+            <feOffset/>
+            <feGaussianBlur stdDeviation=".5" result="blur"/>
+            <feFlood flood-color="#150521" flood-opacity=".788"/>
+            <feComposite operator="in" in2="blur"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g style="filter:url(#na9yfzqlfa)">
+        <path data-name="路径 7665" d="M167.264 312.225h62.687a3.4 3.4 0 0 0 3.341-2.768l4.5-23.664a3.4 3.4 0 0 0-5.082-3.557L213.955 293.4a3.4 3.4 0 0 1-4.8-1.445l-8.955-18.548a3.4 3.4 0 0 0-6.212.19l-7.759 18.962a3.4 3.4 0 0 1-4.964 1.589l-15.863-10.019a3.4 3.4 0 0 0-5.169 3.444l3.675 21.817a3.4 3.4 0 0 0 3.356 2.835z" transform="translate(-158.69 -269.98)" style="fill:url(#dxhhou6vnb)"/>
+    </g>
+</svg>

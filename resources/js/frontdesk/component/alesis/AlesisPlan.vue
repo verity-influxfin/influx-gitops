@@ -92,6 +92,7 @@ export default {
 .單張容器 .特色 .清單 {
     font-size : .9rem;
     min-height: 43px;
+    max-width: 185px;
 }
 
 .單張容器 .特色 .清單 .項目 {
@@ -115,6 +116,7 @@ export default {
 .單張容器 > .清單 .項目 {
     display    : list-item;
     margin-left: 1rem;
+    white-space: pre-line;
 }
 
 .單張容器 > .清單 .尚未就緒 {
@@ -130,5 +132,10 @@ export default {
 
 .單張容器 .動作 > div {
     width: 100%;
+}
+@media screen and (max-width: 767px) {
+   .單張容器 .特色 .清單 {
+        max-width: 130px;
+    }
 }
 </style>

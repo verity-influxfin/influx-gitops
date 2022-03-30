@@ -5,7 +5,7 @@ html {
 
 body {
     cursor: default;
-    font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica,
+    font-family:  Noto Sans TC, Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica,
         sans-serif;
     width: 100%;
     overflow-x: hidden;
@@ -265,10 +265,10 @@ $ci-color: #153a71;
         }
 
         .item {
+            position: relative;
             color: #fff;
             text-decoration: none;
-            cursor: pointer;
-
+            padding: 7px 0;
             &:focus-within,
             &:hover,
             &.-active {
@@ -276,13 +276,64 @@ $ci-color: #153a71;
                     display: flex;
                 }
             }
-
+            &:focus-within,
+            &:hover,
+            &.-active {
+                .item-content {
+                    display: flex;
+                    position: absolute;
+                    top: 40px;
+                    gap: 25px;
+                    left: -145px;
+                    .sub {
+                        position: relative;
+                        padding: 0;
+                        .item {
+                            color: #8f8f8f;
+                            font-weight: 400;
+                            &.-disabled {
+                                color: #8f8f8f;
+                                background-color: #fff;
+                            }
+                            &:not(.-disabled) {
+                                &:focus-within,
+                                &:hover {
+                                    position: relative;
+                                    color: #1e69aa;
+                                    &::before {
+                                        content: "•";
+                                        position: absolute;
+                                        display: block;
+                                        left: 0.5rem;
+                                        font-size: 20px;
+                                        line-height: 24px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .sub-title {
+                display: flex;
+                align-items: center;
+                padding: 0.4rem 1.5rem;
+                gap: 10px;
+                background: #f2f2f2;
+                font-family: NotoSansTC;
+                font-size: 20px;
+                font-weight: 400;
+                line-height: 1.45;
+                letter-spacing: 1px;
+                text-align: left;
+                color: #112e53;
+            }
             .sub {
                 background: #fff;
                 color: #153a71;
-                min-width: 160px;
+                min-width: 180px;
                 text-align: left;
-                font-weight: 900;
+                font-weight: 400;
                 font-size: 16px;
                 padding: 0.35rem 0;
                 position: absolute;
@@ -291,7 +342,6 @@ $ci-color: #153a71;
                 flex-direction: column;
                 overflow: hidden;
                 border: 1px solid rgba(0, 0, 0, 0.15);
-
                 .item {
                     color: #153a71;
                     padding: 0.4rem 1.5rem;
@@ -319,7 +369,8 @@ $ci-color: #153a71;
     .aside {
         display: grid;
         margin-left: auto;
-        grid-template-columns: repeat(7, auto);
+        grid-template-rows: 1fr;
+        grid-template-columns: repeat(8, auto);
         gap: 2rem;
         font-size: 0.9rem;
         align-items: center;
@@ -329,8 +380,8 @@ $ci-color: #153a71;
         justify-content: flex-end;
 
         @include rwd {
-            grid-template-columns: 1fr;
-            text-align: right;
+            gap: 1.2rem;
+            display: flex;
         }
 
         .item {
@@ -392,10 +443,15 @@ $ci-color: #153a71;
 
                 @include rwd {
                     display: block;
+                    grid-area: 1/2/2/2;
                 }
 
-                img {
-                    width: 20px;
+                .icon {
+                    height: 20px;
+                    margin: 0 8px;
+                    &.icon-hamburger {
+                        margin-right: 0;
+                    }
                 }
             }
 
@@ -406,6 +462,58 @@ $ci-color: #153a71;
                 border-radius: 0.4rem;
                 padding: 0.25rem 0.5rem;
                 line-height: 1;
+            }
+            .search-icon {
+                height: 22px;
+                margin-bottom: 2px;
+            }
+        }
+        .search-group {
+            @include rwd {
+                width: 0;
+                flex: 1;
+                grid-area: 1/1/2/2;
+            }
+            position: relative;
+            display: none;
+            width: 550px;
+            grid-area: 1/1/2/8;
+            margin: -0.5rem -1rem;
+            &.inputing {
+                display: flex;
+            }
+            .search-input {
+                width: 100%;
+                border: none;
+                color: #fff;
+                padding: 19px;
+                font-size: 18px;
+                background-image: linear-gradient(
+                    to right,
+                    #3869ab 0%,
+                    #051f5d 73%
+                );
+                &::placeholder {
+                    color: rgba(255, 255, 255, 0.8);
+                }
+                @include rwd {
+                    padding: 8px;
+                    font-size: 14px;
+                }
+            }
+            .clear-icon {
+                padding: 13px;
+                cursor: pointer;
+                font-size: 22px;
+                color: #fff;
+                position: absolute;
+                right: 20px;
+                @include rwd {
+                    padding: 4px;
+                    font-size: 18px;
+                    top: 0;
+                    right: 6px;
+                }
             }
         }
     }
@@ -425,6 +533,19 @@ $ci-color: #153a71;
         .item {
             color: #fff;
             text-decoration: none;
+            .sub-title {
+                display: flex;
+                align-items: center;
+                padding: 0.4rem 1.5rem;
+                gap: 10px;
+                background: #f2f2f2;
+                font-family: NotoSansTC;
+                font-size: 16px;
+                line-height: 1.45;
+                letter-spacing: 1px;
+                text-align: left;
+                color: #112e53;
+            }
 
             &.-dropdown {
                 .text::after {
@@ -451,21 +572,18 @@ $ci-color: #153a71;
 
             .sub {
                 background: #fff;
-                padding: 0.35rem 0;
-
+                padding: 0;
                 border-radius: 0.25rem;
                 margin: 0.25rem 0;
                 display: none;
                 flex-direction: column;
                 overflow: hidden;
-
                 .item {
-                    color: #153a71;
+                    color: #8f8f8f;
                     padding: 0.4rem 1.5rem;
-
                     &.-disabled {
-                        background-color: #55595c;
-                        color: #000;
+                        color: #8f8f8f;
+                        background-color: #fff;
                     }
                 }
             }
@@ -655,6 +773,7 @@ $ci-color: #153a71;
 
         @include rwd {
             margin-top: 2rem;
+            margin-bottom: 4rem;
             flex-direction: column-reverse;
             align-items: center;
         }

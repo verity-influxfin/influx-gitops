@@ -345,10 +345,6 @@
                             <div class="名稱">國立臺北商業大學</div>
                         </div>
                         <div class="項目">
-                            <img src="/images/alesis-bordered-shanghai.svg" class="圖片">
-                            <div class="名稱">上海商業儲蓄銀行</div>
-                        </div>
-                        <div class="項目">
                             <img src="/images/alesis-bordered-skbank.svg" class="圖片">
                             <div class="名稱">新光銀行</div>
                         </div>
@@ -379,7 +375,6 @@ import AlesisMoon              from "../component/alesis/AlesisMoon";
 import AlesisPlan              from "../component/alesis/AlesisPlan";
 import AlesisProject           from "../component/alesis/AlesisProject";
 import AlesisSection           from "../component/alesis/AlesisSection";
-import AlesisShanghai          from "../component/alesis/AlesisShanghai";
 import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
 import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
@@ -417,7 +412,6 @@ export default {
         AlesisPlan,
         AlesisProject,
         AlesisSection,
-        AlesisShanghai,
         AlesisSuggestionReviews,
         AlesisSymcard,
         AlesisTaiwanMap,
@@ -1002,7 +996,7 @@ button[disabled] {
 .合作對象 .群組 {
     display              : grid;
     margin               : 0 auto 8rem;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     align-items          : center;
     justify-content      : center;
 

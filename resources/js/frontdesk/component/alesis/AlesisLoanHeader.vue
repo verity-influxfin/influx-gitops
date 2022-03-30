@@ -1,28 +1,38 @@
 <template>
     <div class="貸款標頭">
         <div class="背景">
-            <img :src="image" class="圖片">
+            <img :src="image" class="圖片 " :class="{'hidden-desktop':imagePhone}">
+            <div
+                class="圖片 hidden-phone"
+                v-if="imagePhone"
+                :style="{backgroundImage:`url(${imagePhone})`}"
+                style="background-position: top center;background-size: cover;">
+            </div>
         </div>
         <div class="遮罩">
-            <div class="標題">{{ header }}</div>
+            <div class="標題" v-if="headerImg">
+                <img :src="headerImg" :class="headerImgClass" alt="">
+            </div>
+            <div class="標題" v-if="header">{{ header }}</div>
             <div class="內容" v-html="content"></div>
-            <div class="動作 hidden-phone header_app_dl_link_mobile">
+            <slot>
+                <div class="動作 hidden-phone header_app_dl_link_mobile">
                 <a href="https://event.influxfin.com/R/url?p=webbanner">
                     <img src="/images/android_download_link_mobile.svg">
                 </a>
                 <a href="https://event.influxfin.com/R/url?p=webbanner" target="_balnk">
                     <img src="/images/ios_download_link_mobile.svg">
                 </a>
-            </div>
-
-            <div class="動作 hidden-desktop header_app_dl_link">
-                <a href="https://event.influxfin.com/R/url?p=webbanner" target="_balnk">
-                    <img src="/images/ios_download_link_desktop.png">
-                </a>
-                <a href="https://event.influxfin.com/R/url?p=webbanner">
-                    <img src="/images/android_download_link_desktop.png">
-                </a>
-            </div>
+                </div>
+                <div class="動作 hidden-desktop header_app_dl_link">
+                    <a href="https://event.influxfin.com/R/url?p=webbanner" target="_balnk">
+                        <img src="/images/ios_download_link_desktop.png">
+                    </a>
+                    <a href="https://event.influxfin.com/R/url?p=webbanner">
+                        <img src="/images/android_download_link_desktop.png">
+                    </a>
+                </div>
+            </slot>
         </div>
     </div>
 </template>
@@ -40,6 +50,15 @@ export default {
         image  : {
             default: "",
         },
+        imagePhone:{
+            default:"",
+        },
+        headerImg:{
+            default:"",
+        },
+        headerImgClass:{
+            default:"",
+        }
     }
 };
 </script>

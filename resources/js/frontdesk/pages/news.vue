@@ -16,7 +16,7 @@
       </div>
       <div class="header">
         <h1 class="float-left">最新消息</h1>
-        <div class="input-custom float-right">
+        <form class="input-custom float-right" @submit.prevent>
           <i class="fas fa-search"></i>
           <input
             type="text"
@@ -26,7 +26,7 @@
             v-model="filter"
           />
           <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
-        </div>
+        </form>
       </div>
     </div>
     <div class="hr"></div>
@@ -57,12 +57,17 @@ let newsRow = Vue.extend({
           <div class="img"><img :src="item.image_url" class="img-custom" /></div>
           <div class="cnt">
             <span class="date">{{item.post_date}}</span>
-            <p class="title">{{item.post_title}}</p>
+            <p class="title">{{filterBr(item.post_title)}}</p>
           </div>
           <div class="read">Read more+</div>
         </a>
       </li>
   `,
+  methods: {
+    filterBr(text) {
+        return text.replace(/<br\s*[\/]?>/gi, '');
+    }
+  }
 });
 
 export default {

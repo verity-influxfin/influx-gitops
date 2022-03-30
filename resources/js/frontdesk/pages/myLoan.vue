@@ -4,9 +4,21 @@
       <userInfo :userData="userData"></userInfo>
       <div class="menu-card">
         <div style="width: max-content; overflow: hidden">
+          <router-link class="menu-item" to="promoteCode">
+            <div class="img">
+              <img
+                src="../asset/images/icon-recommendmoney.svg"
+                style="width:45px"
+              />
+            </div>
+            <p>推廣有賞</p>
+          </router-link>
           <router-link class="menu-item" to="loannotification">
             <div class="img">
-              <img src="../asset/images/icon_notification.svg" class="img-fluid" />
+              <img
+                src="../asset/images/icon_notification.svg"
+                class="img-fluid"
+              />
               <span v-if="unreadCount !== 0">{{ unreadCount }}</span>
             </div>
             <p>通知</p>
@@ -98,7 +110,7 @@
 import userInfo from "../component/userInfoComponent";
 
 export default {
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {
       next("/index");
     } else {
@@ -123,7 +135,7 @@ export default {
     unreadCount: 0,
   }),
   computed: {
-    regards() {
+    regards () {
       let time = parseInt(new Date().getHours());
       let text = "";
       if (0 <= time && time < 5) {
@@ -138,7 +150,7 @@ export default {
       return `${text} ${this.userName}`;
     },
   },
-  created() {
+  created () {
     this.$store.dispatch("getRepaymentList");
     this.$router.push("/loannotification");
 
@@ -147,25 +159,25 @@ export default {
     $("title").text(`借款專區 - inFlux普匯金融科技`);
   },
   watch: {
-    funds(newValue) {
+    funds (newValue) {
       gsap.to(this.$data, { duration: 1, tweenedFunds: newValue });
     },
-    frozen(newValue) {
+    frozen (newValue) {
       gsap.to(this.$data, { duration: 1, tweenedFrozen: newValue });
     },
-    principal(newValue) {
+    principal (newValue) {
       gsap.to(this.$data, { duration: 1, tweenedPrIncipal: newValue });
     },
-    repaymentAmount(newValue) {
+    repaymentAmount (newValue) {
       gsap.to(this.$data, { duration: 1, tweenedRepayment: newValue });
     },
   },
   methods: {
-    format(data) {
+    format (data) {
       let l10nEN = new Intl.NumberFormat("en-US");
       return l10nEN.format(data.toFixed(0));
     },
-    getMyRepayment() {
+    getMyRepayment () {
       axios
         .get("getMyRepayment")
         .then((res) => {
@@ -234,6 +246,7 @@ export default {
     .menu-card {
       border: none;
       overflow: auto;
+      margin: 0 -20px;
       max-width: 850px;
 
       .menu-item {

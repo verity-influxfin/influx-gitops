@@ -9,7 +9,7 @@ ADD . /var/www/html
 RUN apt update && apt install -y libpng-dev zlib1g-dev nodejs npm libzip-dev zip
 
 RUN docker-php-ext-configure zip --with-libzip
-RUN docker-php-ext-install mbstring zip gd mysqli pdo pdo_mysql
+RUN docker-php-ext-install mbstring zip gd mysqli pdo pdo_mysql opcache
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && composer install

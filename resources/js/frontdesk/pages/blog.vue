@@ -62,8 +62,8 @@
                         <div class="panel-body">
                             <div class="row mb-3">
                                 <div class="col">
-                                    <a href="/scsbank?move=page" class="ad_aside" target="_blank">
-                                        <img src="/images/blog_ad_aside.jpg" />
+                                    <a href="/skbank" class="ad_aside" target="_blank">
+                                        <img src="~images/skbank-blog-ad.jpg" />
                                     </a>
                                 </div>
                             </div>
