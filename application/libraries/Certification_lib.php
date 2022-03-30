@@ -3035,23 +3035,6 @@ class Certification_lib{
             $targetData = json_decode($target->target_data, true);
             $targetData['verify_cetification_list'] = json_encode(array_column($pendingCertifications, 'id'));
 
-            // 工作收入證明直接改為人工
-            if (array_search(CERTIFICATION_JOB, $validateCertificationList) !== false) {
-                $this->CI->user_certification_model->update_by([
-                    'certification_id' => CERTIFICATION_JOB,
-                    'user_id' => $target->user_id,
-                    'investor' => USER_BORROWER,
-                    'status' => CERTIFICATION_STATUS_AUTHENTICATED
-                ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
-            }
-            // 將 已驗證資料真實性待使用者送出審核(6) 更改為 待驗證(0)
-            $this->CI->user_certification_model->update_by([
-                'certification_id' => $validateCertificationList,
-                'user_id' => $target->user_id,
-                'investor' => USER_BORROWER,
-                'status' => CERTIFICATION_STATUS_AUTHENTICATED
-            ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
-
             $this->CI->target_model->update_by([
                 'id' => $target->id
             ], ['target_data' => json_encode($targetData, JSON_INVALID_UTF8_IGNORE)]);
