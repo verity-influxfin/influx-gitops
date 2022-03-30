@@ -509,27 +509,42 @@ export default {
     }
   },
   watch: {
-    '$parent.tweenedPrincipal'(newValue) {
-      this.tweenedPrincipal = newValue
+    data: {
+      immediate: true,
+      deep: true,
+      handler(newValue, oldValue) {
+
+      }
+    }
+  },
+  watch: {
+    '$parent.tweenedPrincipal': {
+      immediate: true,
+      handler(newValue) {
+        this.tweenedPrincipal = newValue
+      }
     },
-    '$parent.tweenedReceivable'(newValue) {
-      this.tweenedReceivable = newValue
+    '$parent.tweenedReceivable': {
+      immediate: true,
+      handler(newValue) {
+        this.tweenedReceivable = newValue
+      }
     },
-    '$parent.tweenedFrozen'(newValue) {
-      this.tweenedFrozen = newValue
+    '$parent.tweenedFrozen': {
+      immediate: true,
+      handler(newValue) {
+        this.tweenedFrozen = newValue
+      }
     },
-    '$parent.tweenedInsufficient'(newValue) {
-      this.tweenedInsufficient = newValue
-      console.log(newValue)
+    '$parent.tweenedInsufficient': {
+      immediate: true,
+      handler(newValue) {
+        this.tweenedInsufficient = newValue
+      }
     },
   },
 }
 </script>
-<style>
-.investment-wrapper .member-menu {
-  display: none;
-}
-</style>
 <style lang="scss" scoped>
 .b-right {
   border-right: 1px solid #fff;
@@ -572,7 +587,7 @@ export default {
       flex-direction: column;
       justify-content: center;
       .item-title {
-          padding: 4px 0;
+        padding: 4px 0;
         font-size: 20px;
         line-height: 1.5;
         text-align: center;
@@ -784,7 +799,7 @@ export default {
     }
   }
   .wait-for-realized {
-      margin-right: 80px;
+    margin-right: 80px;
     .wait-title {
       margin-bottom: 15px;
     }
