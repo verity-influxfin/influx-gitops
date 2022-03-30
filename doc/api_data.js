@@ -1739,7 +1739,7 @@ define({
         {
             "type": "get",
             "url": "/V2/certification/businesstax",
-            "title": "認證 403/401稅務資料(法人)",
+            "title": "認證 近三年401/403/405表",
             "version": "0.2.0",
             "name": "GetCertificationBusinessTax",
             "group": "Certification",
@@ -3532,7 +3532,7 @@ define({
         {
             "type": "post",
             "url": "/V2/certification/businesstax",
-            "title": "認證 403/401稅務資料(法人)",
+            "title": "認證 近三年401/403/405表",
             "version": "0.2.0",
             "name": "PostCertificationBusinessTax",
             "group": "Certification",
@@ -3554,13 +3554,103 @@ define({
                     "Parameter": [
                         {
                             "group": "Parameter",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "nearly_1year",
+                            "description": "<p>近一年</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "nearly_2year",
+                            "description": "<p>近二年</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "nearly_3year",
+                            "description": "<p>近三年</p>"
+                        }, {
+                            "group": "nearly_1year",
                             "type": "String",
                             "optional": false,
-                            "field": "business_tax_image",
-                            "description": "<p>403/401表格照  ( 圖片IDs 以逗號隔開，最多3個)</p>"
+                            "field": "nearly_1year.business_tax_image",
+                            "description": "<p>近一年表格照：<br/>每二月為一組，共六組，沒上傳的區間留空，以分號相隔</p>"
+                        },
+                        {
+                            "group": "nearly_1year",
+                            "type": "String",
+                            "optional": false,
+                            "field": "nearly_1year.timespan",
+                            "description": "<p>近一年所屬年月：<br/>每二月為一組，共六組，沒輸入的區間留空，同區間資料以逗號相隔，不同區間資料以分號相隔</p>"
+                        }, {
+                            "group": "nearly_1year",
+                            "type": "String",
+                            "optional": false,
+                            "field": "nearly_1year.amount",
+                            "description": "<p>近一年銷售額總計：<br/>每二月為一組，共六組，沒輸入的區間留空，以分號相隔</p>"
+                        }, {
+                            "group": "nearly_2year",
+                            "type": "String",
+                            "optional": false,
+                            "field": "nearly_2year.business_tax_image",
+                            "description": "<p>近二年表格照：<br/>每二月為一組，共六組，沒上傳的區間留空，以分號相隔</p>"
+                        }, {
+                            "group": "nearly_2year",
+                            "type": "String",
+                            "optional": false,
+                            "field": "nearly_2year.timespan",
+                            "description": "<p>近二年所屬年月：<br/>每二月為一組，共六組，沒輸入的區間留空，同區間資料以逗號相隔，不同區間資料以分號相隔</p>"
+                        }, {
+                            "group": "nearly_2year",
+                            "type": "String",
+                            "optional": false,
+                            "field": "nearly_2year.amount",
+                            "description": "<p>近二年銷售額總計：<br/>每二月為一組，共六組，沒輸入的區間留空，以分號相隔</p>"
+                        }, {
+                            "group": "nearly_3year",
+                            "type": "String",
+                            "optional": false,
+                            "field": "nearly_3year.business_tax_image",
+                            "description": "<p>近三年表格照：<br/>每二月為一組，共六組，沒上傳的區間留空，以分號相隔</p>"
+                        }, {
+                            "group": "nearly_3year",
+                            "type": "String",
+                            "optional": false,
+                            "field": "nearly_3year.timespan",
+                            "description": "<p>近三年所屬年月：<br/>每二月為一組，共六組，沒輸入的區間留空，同區間資料以逗號相隔，不同區間資料以分號相隔</p>"
+                        }, {
+                            "group": "nearly_3year",
+                            "type": "String",
+                            "optional": false,
+                            "field": "nearly_3year.amount",
+                            "description": "<p>近三年銷售額總計：<br/>每二月為一組，共六組，沒輸入的區間留空，以分號相隔</p>"
                         }
                     ]
-                }
+                },
+                "examples": [
+                    {
+                        "title": "範例",
+                        "content": "{\n" +
+                            "    \"nearly_1year\": {\n" +
+                            "        \"business_tax_image\":\"52;;;;;\",\n" +
+                            "        \"timespan\":\"11101,11102;;;;;\",\n" +
+                            "        \"amount\":\"99888;;;;;\"\n" +
+                            "    },\n" +
+                            "    \"nearly_2year\":{\n" +
+                            "        \"business_tax_image\":\"46;47;48;49;50;51\",\n" +
+                            "        \"timespan\":\"11001,11002;11003,11004;11005,11006;11007,11008;11009,11010;11011,11012\",\n" +
+                            "        \"amount\":\"4777;4777;4777;4777;4777;4777\"\n" +
+                            "    },\n" +
+                            "    \"nearly_3year\":{\n" +
+                            "        \"business_tax_image\":\";41;42;43;44;45\",\n" +
+                            "        \"timespan\":\";10903,10904;10905,10906;10907,10908;10909,10910;10911,10912\",\n" +
+                            "        \"amount\":\";4777;4777;4777;4777;4777\"\n" +
+                            "    },\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
             },
             "success": {
                 "fields": {
@@ -3578,15 +3668,7 @@ define({
                     {
                         "title": "SUCCESS",
                         "content": "{\n" +
-                            "    \"result\": \"SUCCESS\",\n" +
-                            "    \"data\": {\n" +
-                            "        \"alias\": \"businesstax\",\n" +
-                            "        \"certification_id\": 1000,\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"expire_time\": \"1586861828\",\n" +
-                            "        \"created_at\": 1571050628,\n" +
-                            "        \"updated_at\": 1571050628,\n" +
-                            "    }\n" +
+                            "    \"result\": \"SUCCESS\"\n" +
                             "}",
                         "type": "Object"
                     }
@@ -3647,9 +3729,6 @@ define({
             "filename": "application/controllers/api/Certification.php",
             "groupTitle": "Certification",
             "sampleRequest": [
-                {
-                    "url": "/api/v2/certification/businesstax"
-                }
             ]
         },
         {

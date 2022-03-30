@@ -2943,7 +2943,7 @@ class Certification extends REST_Controller {
 
     public function businesstax_post()
     {
-        $certification_id 	= 1000;
+        $certification_id = CERTIFICATION_BUSINESSTAX;
         $certification 		= $this->certification[$certification_id];
         if($certification){
             $input 		= $this->input->post(NULL, TRUE);
@@ -2954,35 +2954,52 @@ class Certification extends REST_Controller {
             //是否驗證過
             $this->was_verify($certification_id);
 
-            //必填欄位
-            $fields 	= ['business_tax_image'];
-            foreach ($fields as $field) {
-                if (empty($input[$field])) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }else{
-                    $content[$field] = $input[$field];
+            $yearly = ['nearly_1year', 'nearly_2year', 'nearly_3year'];
+            foreach ($yearly as $this_year)
+            {
+                if (empty($input[$this_year]))
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
                 }
-            }
 
-            $file_fields = ['business_tax_image'];
-            //多個檔案欄位
-            foreach ($file_fields as $field) {
-                $image_ids = explode(',',$content[$field]);
-                if(count($image_ids)>6){
-                    $image_ids = array_slice($image_ids,0,6);
-                }
-                $list = $this->log_image_model->get_many_by([
-                    'id'		=> $image_ids,
-                    'user_id'	=> $user_id,
-                ]);
-
-                if($list && count($list)==count($image_ids)){
-                    $content[$field] = [];
-                    foreach($list as $k => $v){
-                        $content[$field][] = $v->url;
+                // 必填欄位
+                $fields = ['business_tax_image', 'timespan', 'amount'];
+                foreach ($fields as $field)
+                {
+                    if (empty($input[$this_year][$field]))
+                    {
+                        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
                     }
-                }else{
-                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    else
+                    {
+                        $content[$this_year][$field] = explode(';', $input[$this_year][$field]);
+                        if (count($content[$this_year][$field]) !== 6)
+                        {
+                            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                        }
+                    }
+                }
+
+                $file_fields = ['business_tax_image'];
+                // 多個檔案欄位
+                foreach ($file_fields as $field)
+                {
+                    $image_ids = array_filter(explode(';', $input[$this_year][$field]));
+                    if (empty($image_ids)) continue;
+                    $list = $this->log_image_model->get_many_by([
+                        'id' => $image_ids,
+                        'user_id' => $user_id,
+                    ]);
+
+                    if (empty($list) || count($list) !== count($image_ids))
+                    {
+                        $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+                    }
+                    foreach ($list as $v)
+                    {
+                        $key = array_search($v->id, $content[$this_year][$field]);
+                        $content[$this_year][$field][$key] = $v->url;
+                    }
                 }
             }
 
