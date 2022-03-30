@@ -2628,7 +2628,7 @@ class Certification extends REST_Controller {
         $result = $this->certification_lib->verify_certifications($target, 1);
         if ($result)
         {
-            if ($target->product_id < PRODUCT_FOR_JUDICIAL)
+            if (is_judicial_product($target->product_id) === FALSE)
             {
                 $this->target_model->update($targetId, [
                     'status' => TARGET_WAITING_APPROVE,

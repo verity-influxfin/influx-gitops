@@ -2631,7 +2631,7 @@ class Product extends REST_Controller {
         if ($insert) {
 
             $target = $this->target_model->get_by(['id' => $insert]);
-            if ($target->product_id < PRODUCT_FOR_JUDICIAL && $target->status == TARGET_WAITING_SIGNING)
+            if (is_judicial_product($target->product_id) === FALSE && $target->status == TARGET_WAITING_SIGNING)
             {
                 // 該產品有未使用額度
                 $this->load->library('loanmanager/product_lib');

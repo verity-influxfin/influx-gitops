@@ -318,7 +318,7 @@ abstract class Certification_base implements Certification_definition
     {
         $product = [];
         array_walk($this->related_product, function ($value, $key) use (&$product) {
-            if ($key < PRODUCT_FOR_JUDICIAL)
+            if (is_judicial_product($key) === FALSE)
             {
                 $product[$key] = $value;
             }
@@ -352,7 +352,7 @@ abstract class Certification_base implements Certification_definition
     {
         $product = [];
         array_walk($this->related_product, function ($value, $key) use (&$product) {
-            if ($key < PRODUCT_FOR_JUDICIAL)
+            if (is_judicial_product($key) === FALSE)
             {
                 $product[$key] = $value;
             }
