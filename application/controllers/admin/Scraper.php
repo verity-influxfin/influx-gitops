@@ -327,8 +327,17 @@ class Scraper extends MY_Admin_Controller
     public function judicial_yuan_verdicts(){
         $this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
+		
+		// ig
+		if (isset($input['ig']))
+		{
+			$result = $this->judicial_yuan_lib->requestJudicialYuanAllCityVerdicts($input['ig']);
+			echo json_encode($result);
+			die();
+		}
+
         $address = $this->_get_new_domicile($input['address']);
-        $result = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($input['name'], $address);
+        $result = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($input['name'], $address);	
         if( ! $result){
             $error = [
                 'response' => [

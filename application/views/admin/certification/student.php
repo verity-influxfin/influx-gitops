@@ -16,10 +16,49 @@
             $(document).ready(function() {
                 var university = $("#university").text();
                 var account = $("#account").text();
-
-                fetchSipLogin(university, account)
+				fetchSipData({university,account})
 
                 setInterval(regularCheckSipResult, 5000);
+
+				 // 爬蟲資料抓取
+				function fetchSipData({university,account}) {
+					$.ajax({
+						type: "GET",
+						url: "/admin/scraper/sip" + "?university=" + university + "&account=" + account,
+						success: function (response) {
+							if (response.status.code != 200) {
+								console.log(response.status.code)
+								return false;
+							}
+							sipData = response.response;
+							fillSipData(sipData.university, sipData.result);
+						},
+						error: function (XMLHttpRequest, textStatus, errorThrown) {
+							console.log(XMLHttpRequest.status);
+							console.log(XMLHttpRequest.readyState);
+							console.log(textStatus);
+						},
+					});
+				}
+
+				function fillSipData(university, dataResponse) {
+					if (!university || !dataResponse) {
+						return false;
+					}
+					// console.log(dataResponse);
+					$('#name-scraper').text(dataResponse.name);
+					$('#id-scraper').text(dataResponse.idNumber);
+					$('#sip-university').text(university);
+					$('#department-scraper').text(dataResponse.department);
+					$('#school-status').text(dataResponse.schoolStatus);
+					$('#student-phone').text(dataResponse.studentPhone);
+					$('#home-phone').text(dataResponse.homePhone);
+					$('#guardian').text(dataResponse.guardian);
+					$('#guardian-phone').text(dataResponse.guardianPhone);
+					$('#communication-address').text(dataResponse.communicationAddress);
+					$('#household-address').text(dataResponse.householdAddress);
+					$('#latest-grades').text(dataResponse.latestGrades);
+				}
 
                 function regularCheckSipResult() {
                     var sipResult = $("#sip-login-info").text();
@@ -29,49 +68,6 @@
                     }
 
                     fetchSipLogin(university, account)
-                }
-
-                function fetchSipLogin(university, account) {
-                    var data = {'university' : university, 'account' : account}
-                    var queryParam = jQuery.param(data);
-
-                    var url = '/admin/certification/sip?' + queryParam
-                    $.ajax({
-                        type: "GET",
-                        url: url,
-                        success: function(response) {
-                            if (!response) {
-                                fillSipLogin('response_not_json');
-                                return;
-                            }
-                            if (response.status.code == 204) {
-                                fillSipLogin('request_not_found');
-                                return;
-                            }
-
-                            if (response.response.sip.university == "university_not_found") {
-                                fillSipLogin(response.response.sip.university);
-                            } else if (response.response.sip.status == "finished") {
-                                fillSipLogin(response.response.sip.loginStatus);
-                            } else {
-                                fillSipLogin(response.response.sip.status);
-                            }
-                        },
-                        error: function() {
-                            fillSipLogin();
-                        }
-                    });
-                }
-
-                function fillSipLogin(status = null) {
-                    if (!status) {
-                        $("#sip-login-info").html("出現錯誤");
-                        return;
-                    }
-
-                    var mapping = getLoginStatusMapping()
-                    status = status.toLowerCase()
-                    $("#sip-login-info").html(mapping[status]);
                 }
 
                 function getLoginStatusMapping() {
@@ -201,9 +197,47 @@
 										<? }else{echo "無";} ?>
 									</div>
 									<div class="form-group">
-										<label>SIP登入結果</label><br>
-										<p id="sip-login-info" class="form-control-static">等待中...</p>
-										<a id="request-sip-login" class="btn btn-default">再登入一次</a>
+										<label>SIP結果</label><br>
+            							<table class="table">
+											<tbody>
+											<tr>
+												<th>姓名</th>
+												<td id="name-scraper"></td>
+												<th>身分證</th>
+												<td id="id-scraper"></td>
+											</tr>
+											<tr>
+												<th>學校</th>
+												<td id="sip-university"></td>
+												<th>科系</th>
+												<td id="department-scraper"></td>
+											</tr>
+											<tr>
+												<th>在學狀態</th>
+												<td id="school-status"></td>
+												<th>手機</th>
+												<td id="student-phone"></td>
+											</tr>
+											<tr>
+												<th>家用電話</th>
+												<td id="home-phone"></td>
+												<th>緊急聯絡人</th>
+												<td id="guardian"></td>
+											</tr>
+											<tr>
+												<th>緊急聯絡人電話</th>
+												<td id="guardian-phone"></td>
+												<th>通訊地址</th>
+												<td id="communication-address"></td>
+											</tr>
+											<tr>
+												<th>戶籍地址</th>
+												<td id="household-address"></td>
+												<th>近一學期成績</th>
+												<td id="latest-grades"></td>
+											</tr>
+											</tbody>
+										</table>
 									</div>
 									<div class="form-group">
 										<label>預計畢業時間</label>
