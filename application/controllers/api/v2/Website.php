@@ -924,7 +924,7 @@ class Website extends REST_Controller {
         ]);
     }
 
-    public function getInvestReport_get()
+    public function get_investor_report_get()
     {
         if ( ! app_access())
         {
@@ -940,7 +940,7 @@ class Website extends REST_Controller {
         $this->response(array('result' => 'SUCCESS', 'data' => $report_data));
     }
 
-    public function downloadInvestReport_get()
+    public function download_investor_report_get()
     {
         if ( ! app_access())
         {
@@ -958,6 +958,5 @@ class Website extends REST_Controller {
         $spreadsheet = $this->spreadsheet_lib->get_investor_report_from_html($html, $report_data);
         $this->spreadsheet_lib->download('投資人報告書.xlsx', $spreadsheet);
         exit(1);
-        //$this->response(array('result' => 'SUCCESS', 'data' => $report_data));
     }
 }
