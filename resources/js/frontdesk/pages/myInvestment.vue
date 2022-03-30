@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-    <div class="member-menu">
+    <div class="member-menu" v-if="getChild!=='/invest-report'">
       <div class="invest-card">
         <div class="invest-box">
           <div class="header">投資總覽</div>
@@ -130,6 +130,9 @@ export default {
     myInvsetment () {
       return this.$store.getters.InvestAccountData;
     },
+    getChild(){
+        return this.$route.path
+    }
   },
   created () {
     this.$store.dispatch("getRecoveriesList");
