@@ -2088,124 +2088,7 @@ define({
                 }
             ]
         },
-        {
-            "type": "get",
-            "url": "/V2/certification/investigationjudicial",
-            "title": "認證 聯合徵信(法人)",
-            "version": "0.2.0",
-            "name": "GetCertificationInvestigationJudicial",
-            "group": "Certification",
-            "header": {
-                "fields": {
-                    "Header": [
-                        {
-                            "group": "Header",
-                            "type": "String",
-                            "optional": false,
-                            "field": "request_token",
-                            "description": "<p>登入後取得的 Request Token</p>"
-                        }
-                    ]
-                }
-            },
-            "success": {
-                "fields": {
-                    "Success 200": [
-                        {
-                            "group": "Success 200",
-                            "type": "Object",
-                            "optional": false,
-                            "field": "result",
-                            "description": "<p>SUCCESS</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "legal_person_mq_image",
-                            "description": "<p>法人聯徵資料  ( 圖片IDs 以逗號隔開，最多15個)</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "SUCCESS",
-                        "content": "{\n" +
-                            "    \"result\": \"SUCCESS\",\n" +
-                            "    \"data\": {\n" +
-                            "        \"alias\": \"investigationjudicial\",\n" +
-                            "        \"certification_id\": 1003,\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"expire_time\": \"1586861828\",\n" +
-                            "        \"created_at\": 1571050628,\n" +
-                            "        \"updated_at\": 1571050628,\n" +
-                            "        \"return_type\": \"2\"\n" +
-                            "    }\n" +
-                            "}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "error": {
-                "fields": {
-                    "Error 4xx": [
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "501",
-                            "description": "<p>此驗證尚未啟用</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "503",
-                            "description": "<p>尚未驗證過</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "101",
-                            "description": "<p>帳戶已黑名單</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "501",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "503",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "100",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "101",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "filename": "application/controllers/api/Certification.php",
-            "groupTitle": "Certification",
-            "sampleRequest": [
-                {
-                    "url": "/api/v2/certification/investigationjudicial"
-                }
-            ]
-        },
+        
         {
             "type": "get",
             "url": "/V2/certification/passbookcashflow",
@@ -4167,10 +4050,30 @@ define({
                     "Parameter": [
                         {
                             "group": "Parameter",
-                            "type": "String",
+                            "type": "Number",
                             "optional": false,
-                            "field": "legal_person_mq_image",
-                            "description": "<p>法人聯徵資料  ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                            "field": "return_type",
+                            "description": "<p>寄回方式  ( 0:由郵局 1:由聯徵中心 )</p>"
+                        }, 
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>案件ID</p>"
+                        }, 
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "receipt_postal_image",
+                            "description": "<p>郵局申請的收執聯  ( 圖片IDs，以逗號隔開，最多15張 )</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "receipt_jcic_image",
+                            "description": "<p>聯徵中心臨櫃申請的收執聯  ( 圖片IDs，以逗號隔開，最多15張 )</p>"
                         }
                     ]
                 }
@@ -4192,15 +4095,6 @@ define({
                         "title": "SUCCESS",
                         "content": "{\n" +
                             "    \"result\": \"SUCCESS\",\n" +
-                            "    \"data\": {\n" +
-                            "        \"alias\": \"investigationjudicial\",\n" +
-                            "        \"certification_id\": 1003,\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"expire_time\": \"1586861828\",\n" +
-                            "        \"created_at\": 1571050628,\n" +
-                            "        \"updated_at\": 1571050628,\n" +
-                            "        \"return_type\": \"2\"\n" +
-                            "    }\n" +
                             "}",
                         "type": "Object"
                     }

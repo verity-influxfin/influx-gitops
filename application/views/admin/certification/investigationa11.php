@@ -61,23 +61,23 @@
                                     ?>
                                 </p>
                             </div>
-                            <form class="form-group" @submit.prevent="doSubmit">
+                            <form id="app1" class="form-group" @submit.prevent="doSubmit">
                                 <ul class="nav nav-tabs nav-justified mb-1">
                                     <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
                                     <li role="presentation" :class="{'active': tab ==='tab-kgibank'}"><a @click="changeTab('tab-kgibank')">凱基</a></li>
                                 </ul>
                                 <div id="tab-skbank" v-show="tab==='tab-skbank'">
                                     <ul class="nav nav-tabs" role="tablist">
-                                        <li role="presentation" class="active">
+                                        <li role="presentation" :class="{'active': subTab === 'Pr'}">
                                             <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
                                         </li>
-                                        <li role="presentation">
+                                        <li role="presentation" :class="{'active': subTab === 'Spouse'}">
                                             <a @click="changeSubTab('Spouse')" data-toggle="tab" aria-expanded="false">配偶</a>
                                         </li>
-                                        <li role="presentation">
+                                        <li role="presentation" :class="{'active': subTab === 'GuOne'}">
                                             <a @click="changeSubTab('GuOne')" data-toggle="tab" aria-expanded="false">保證人甲</a>
                                         </li>
-                                        <li role="presentation">
+                                        <li role="presentation" :class="{'active': subTab === 'GuTwo'}">
                                             <a @click="changeSubTab('GuTwo')" data-toggle="tab" aria-expanded="false">保證人乙</a>
                                         </li>
                                     </ul>
@@ -358,10 +358,10 @@
                                 </div>
                                 <div id="tab-kgibank" v-show="tab==='tab-kgibank'">
                                     <ul class="nav nav-tabs" role="tablist">
-                                        <li role="presentation" class="active">
+                                        <li role="presentation" :class="{'active': subTab === 'Pr'}">
                                             <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
                                         </li>
-                                        <li role="presentation">
+                                        <li role="presentation" :class="{'active': subTab === 'Spouse'}">
                                             <a @click="changeSubTab('Spouse')" data-toggle="tab" aria-expanded="false">配偶</a>
                                         </li>
                                         <li role="presentation">
@@ -680,7 +680,7 @@
                             <form role="form" method="post">
                                 <fieldset>
                                     <div class="form-group">
-                                        <select id="status" v-model="formData.status" class="form-control" onchange="check_fail();">
+                                        <select id="status" name="status" v-model="formData.status" class="form-control" onchange="check_fail();">
                                             <? foreach ($status_list as $key => $value) { ?>
                                                 <option value="<?= $key ?>"
                                                         <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
@@ -704,7 +704,7 @@
                                                value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : ""; ?>"
                                                style="background-color:white!important;display:none" disabled="false">
                                     </div>
-                                    <button type="submit" class="btn btn-primary">送出</button>
+                                    <button id="status-submit" type="submit" class="btn btn-primary" style="display: none;">送出</button>
                                 </fieldset>
                             </form>
                         </div>
@@ -742,11 +742,22 @@
 </div>
 <!-- /#page-wrapper -->
 <script>
+    const data_status = '<?php echo $data->status ?? 0; ?>';
+    const cert_status_spouse_associate = '<?php echo CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE; ?>';
+    if (data_status === cert_status_spouse_associate)
+    {
+        $('#status').attr('disabled', true);
+    } else {
+        $(`#status option[value=${cert_status_spouse_associate}]`).attr('disabled', true);
+        $('#status-submit').css('display', '');
+    }
+
     const v = new Vue({
-        el: '#page-wrapper',
+        el: '#app1',
         data() {
             return {
                 tab: 'tab-skbank',
+                subTab: data_status === cert_status_spouse_associate ? 'Spouse' : 'Pr',
                 pageId: '',
                 formData: {
                     PrJCICQueryDate: '',
@@ -809,7 +820,7 @@
         methods: {
             changeTab(tab) {
                 this.tab = tab
-                this.changeSubTab('Pr')
+                this.changeSubTab(this.subTab)
             },
             changeSubTab(show_id) {
                 $(".table-responsive").hide()

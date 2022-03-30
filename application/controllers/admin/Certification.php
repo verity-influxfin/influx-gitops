@@ -223,14 +223,17 @@ class Certification extends MY_Admin_Controller {
 
                 if(in_array($info->certification_id,['1003','9','12','501','1018', '500', '1004'])) {
                     // 上傳檔案功能
-                    if($info->status == 0 || $info->status == 3){
+                    if ($info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE ||
+                        $info->status == CERTIFICATION_STATUS_PENDING_TO_REVIEW ||
+                        $info->status == CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE)
+                    {
                         $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*,.heic,.heif','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
 						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
                     }
                     $return_config = [
                         '1003' => [
-                            '1' => '郵局申請(紙本)',
-                            '0' => '臨櫃申請(紙本)'
+                            0 => '郵局申請(紙本)',
+                            1 => '臨櫃申請(紙本)'
                         ],
                         '9' => [
                             '0' => '郵局申請(紙本)',
@@ -512,6 +515,13 @@ class Certification extends MY_Admin_Controller {
 								]);
 							}
 						}
+                        elseif($info->certification_id == CERTIFICATION_INVESTIGATIONA11)
+                        { // 聯徵+A11
+                            if ($info->status == CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE)
+                            {
+                                alert('配偶尚未歸戶，不得更改狀態');
+                            }
+                        }
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
 						$this->log_usercertification_model->insert(array(
@@ -1446,7 +1456,8 @@ class Certification extends MY_Admin_Controller {
 			die();
         }
 
-        if(isset($certification_info->status) && $certification_info->status != 3){
+        if(isset($certification_info->status) &&
+            ! in_array($certification_info->status, [CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE])){
             echo json_encode(['result'=>'資料更改失敗，狀態未在待人工審核中']);
 			die();
         }

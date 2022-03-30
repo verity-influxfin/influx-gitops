@@ -13,6 +13,7 @@ class User_certification_model extends MY_Model
         CERTIFICATION_STATUS_NOT_COMPLETED => "未完成填寫" ,
         CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION => "待資料檢核" ,
         CERTIFICATION_STATUS_AUTHENTICATED => "待送出審核" ,
+        CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE => '待配偶歸戶',
 	);
 	public $investor_list  	= array(
 		0 =>	"借款端",

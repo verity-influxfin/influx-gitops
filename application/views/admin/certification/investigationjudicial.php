@@ -48,18 +48,14 @@
                                 <label>交件方式</label>
                                 <p class="form-control-static">
                                     <?php
-                                        if(defined('return_type')){
-                                            echo $return_type;
-                                        }elseif(isset($content['return_type'])){
-                                            if($content['return_type'] == 1){
-                                                echo '電子郵件';
-                                            }else{
-                                                echo '紙本';
-                                            }
-                                            echo $content['return_type'];
-                                        }else{
-                                            echo '';
-                                        }
+                                    if (isset($return_type))
+                                    {
+                                        echo $return_type;
+                                    }
+                                    else
+                                    {
+                                        echo '';
+                                    }
                                     ?>
                                 </p>
                             </div>
@@ -223,6 +219,26 @@
                                             </a>
                                         <? }
                                     }?>
+
+                                    <?php
+                                    $content['receipt_postal_image'] = isset($content['receipt_postal_image'])
+                                        ? ! is_array($content['receipt_postal_image'])
+                                            ? [$content['receipt_postal_image']]
+                                            : $content['receipt_postal_image']
+                                        : [];
+                                    $content['receipt_jcic_image'] = isset($content['receipt_jcic_image'])
+                                        ? ! is_array($content['receipt_jcic_image'])
+                                            ? [$content['receipt_jcic_image']]
+                                            : $content['receipt_jcic_image']
+                                        : [];
+                                    $receipt_image = array_merge($content['receipt_postal_image'], $content['receipt_jcic_image']);
+                                    foreach ($receipt_image as $key => $value)
+                                    { ?>
+                                        <a href="<?= $value; ?>" data-fancybox="images">
+                                            <img src="<?= $value; ?>" alt="" style='width:30%;max-width:400px'>
+                                        </a>
+                                    <?php } ?>
+
                                 </div>
                             </fieldset>
                             <? if( ($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12) && isset($ocr['upload_page']) ){ ?>

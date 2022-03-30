@@ -80,7 +80,8 @@ class Certification_lib{
 			);
             !$get_fail ? $param['status'] = [CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
                 CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_PENDING_TO_REVIEW,
-                CERTIFICATION_STATUS_NOT_COMPLETED, CERTIFICATION_STATUS_AUTHENTICATED] : '';
+                CERTIFICATION_STATUS_NOT_COMPLETED, CERTIFICATION_STATUS_AUTHENTICATED]
+                : $param['status NOT'] = [CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE];
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
                 if ($get_expired == FALSE && $certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDENTITY,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
@@ -110,6 +111,7 @@ class Certification_lib{
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
+                'status NOT' => [CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE]
 			]);
 			if(!empty($certification)){
 				$certification->id 					= intval($certification->id);

@@ -2439,6 +2439,41 @@ class Product extends REST_Controller {
             $this->response(['result' => 'EXIT_ERROR']);
         }
 
+        if ($userId && $character == ASSOCIATES_CHARACTER_SPOUSE)
+        {
+            // [前提] 提交個人及公司「聯徵」時，會幫公司、負責人、負責人配偶(若有)新增一條 user_certification
+            // 若新增當下配偶未歸戶者，會將配偶的 user_certification 掛在負責人名下
+            // [現] 要將暫時掛在負責人名下的「聯徵A11」，轉到配偶名下，條件：
+            // 1. user_id = 負責人user_id
+            // 2. status = CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE
+
+            $cert_a11_info = $this->user_certification->get_many_by([
+                'user_id' => $this->user_info->id, //負責人user_id
+                'status NOT' => [CERTIFICATION_STATUS_FAILED]
+            ]);
+
+            if ( ! empty($cert_a11_info))
+            {
+                if ($cert_a11_info->status == CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE)
+                {
+                    $this->user_certification->update($cert_a11_info->id, [
+                        'user_id' => $userId, // 配偶user_id
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE // 待驗證
+                    ]);
+                }
+                else
+                {
+                    $this->user_certification->insert([
+                        'user_id' => $userId, // 配偶user_id
+                        'certification_id' => CERTIFICATION_INVESTIGATIONA11,
+                        'investor' => BORROWER,
+                        'content' => json_encode([]),
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE // 待驗證
+                    ]);
+                }
+            }
+        }
+
         $productName = '';
         if ($target->sub_product_id == 4) {
             $productName = "孵化基金";

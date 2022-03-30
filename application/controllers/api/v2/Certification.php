@@ -3130,6 +3130,44 @@ class Certification extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
+    /**
+     * @api {post} /v2/certification/investigationjudicial 認證 聯合徵信(法人)
+     * @apiVersion 0.2.0
+     * @apiName PostCertificationInvestigationjudicial
+     * @apiGroup Certification
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     *
+     * @apiParam {String=0,1} 寄回方式 0:由郵局 1:由聯徵中心
+     * @apiParam {Number} receipt_postal_image 郵局申請的收執聯 ( 圖片IDs，最多15張，以逗號隔開)
+     * @apiParam {Number} receipt_jcic_image 臨櫃申請的收執聯 ( 圖片IDs，最多15張，以逗號隔開)
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse InsertError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     * @apiUse IsCompany
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+     *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {Object} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+     *
+     */
     public function investigationjudicial_post()
     {
         $certification_id 	= 1003;
@@ -3186,12 +3224,100 @@ class Certification extends REST_Controller {
             ];
             $insert = $this->user_certification_model->insert($param);
             if($insert){
+                if (isset($input['target_id']))
+                {
+                    $a11_param = $this->_get_investigationa11($input['target_id']);
+                    if ( $a11_param && ! $this->user_certification_model->insert_many($a11_param))
+                    {
+                        $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
+                    }
+                }
+
                 $this->response(['result' => 'SUCCESS']);
             }else{
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
             }
         }
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    // 取得負責人與負責人配偶(若有)的聯徵A11
+    private function _get_investigationa11(int $target_id)
+    {
+        $certification_id = CERTIFICATION_INVESTIGATIONA11;
+        // 找不到徵信項設定
+        if ( ! isset($this->certification[$certification_id]))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        // 徵信項已提交驗證
+        if ($this->was_verify($certification_id, FALSE) === TRUE)
+        {
+            return FALSE;
+        }
+
+        // 如果從法人端登入上傳則將資料上傳位置更換為自然人ID
+        if ($this->user_info->company_status == 1)
+        {
+            $natural_user = $this->user_model->get_by(array('phone' => $this->user_info->phone, 'company_status' => 0, 'status' => 1, 'block_status' => 0));
+            if (empty($natural_user))
+            {
+                $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
+            }
+            $user_id = $natural_user->id;
+        }
+        else
+        {
+            $user_id = $this->user_info->id;
+        }
+
+        $param = [
+            [
+                'user_id' => $user_id,
+                'certification_id' => $certification_id,
+                'investor' => BORROWER,
+                'content' => json_encode([]),
+                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+            ]
+        ];
+
+        $this->load->model('loan/target_associate_model');
+        $target_associates = $this->target_associate_model->get_by([
+            'target_id' => $target_id,
+            'character' => ASSOCIATES_CHARACTER_SPOUSE,
+            'status' => [ASSOCIATES_STATUS_WAITTING_APPROVE, ASSOCIATES_STATUS_APPROVED]
+        ]);
+        // 找不到配偶
+        if (empty($target_associates))
+        {
+            return $param;
+        }
+        if ( ! $target_associates->user_id)
+        { // 不知道是誰
+            if ($this->user_certification_model->get_by(['user_id' => $user_id, 'status' => CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE, 'certification_id' => $certification_id]))
+            {
+                return $param;
+            }
+            $param[] = [
+                'user_id' => $user_id, // 暫時用負責人ID
+                'certification_id' => $certification_id,
+                'investor' => BORROWER,
+                'content' => json_encode([]),
+                'status' => CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE // 待配偶歸戶
+            ];
+        }
+        elseif ( ! $this->certification_lib->get_certification_info($target_associates->user_id, $certification_id))
+        { // 知道是誰，且該配偶名下無此徵信項
+            $param[] = [
+                'user_id' => $target_associates->user_id,
+                'certification_id' => $certification_id,
+                'investor' => BORROWER,
+                'content' => json_encode([]),
+                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+            ];
+        }
+        return $param;
     }
 
 	// 負責人聯徵
@@ -4436,14 +4562,20 @@ class Certification extends REST_Controller {
         $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
     }
 
-    private function was_verify($certification_id = 0){
+    private function was_verify($certification_id = 0, $need_output = TRUE)
+    {
         if(isset($this->user_info->naturalPerson) && $certification_id < 1000) {
             $this->user_info->id = $this->user_info->naturalPerson->id;
         }
         $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor);
         if($user_certification){
-            $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
+            if ($need_output === TRUE)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_WAS_VERIFY));
+            }
+            return TRUE;
         }
+        return FALSE;
     }
 
 
