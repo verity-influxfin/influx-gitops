@@ -139,8 +139,6 @@ export default {
     this.$store.dispatch("getRecoveriesFinished");
     this.$store.dispatch("getMyInvestment");
 
-    // this.$router.push("/investnotification");
-
     $("title").text(`投資專區 - inFlux普匯金融科技`);
 
     axios.interceptors.request.use(
