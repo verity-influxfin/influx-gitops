@@ -7,9 +7,9 @@
     </div>
     <div class="cert-solgan">台大兒醫 普匯希望</div>
     <div class="cert-info">
-      感謝捐款人 {{ info.name }} {{ info.sex === 'M' ? '先生' : '小姐' }}
+      感謝捐款人 {{ donateData.donator_name }} {{ donateData.donator_sex }}
     </div>
-    <div class="cert-info">捐助新台幣 {{ info.amount }} 元</div>
+    <div class="cert-info">捐助新台幣 {{ donateData.amount }} 元</div>
     <div class="cert-info mb-2">給台大兒童健康基金會</div>
     <div class="pictures">
       <img class="rocket" src="~images/NTUCH02F.png" alt="" />
@@ -30,19 +30,20 @@
 
 <script>
 export default {
-  data() {
-    return {
-      info: {
-        name: '王大明',
-        sex: 'M',
-        amount: 10000,
-        date: '111/2/10'
+  props: {
+    donateData: {
+      type: Object,
+      default: {
+        tx_datetime: '',
+        amout: 0,
+        donator_name: '',
+        donator_sex: ''
       }
-    }
+    },
   },
   computed: {
     renderDate() {
-      const dateArr = this.info.date.split('/')
+      const dateArr = this.donateData.tx_datetime.split('-')
       return `中華民國 ${dateArr[0]} 年 ${dateArr[1]} 月 ${dateArr[2]} 日`
     }
   },
@@ -115,7 +116,7 @@ export default {
   .dinosaurs {
     position: relative;
     width: 150px;
-        left: -10px;
+    left: -10px;
     top: -40px;
   }
 }

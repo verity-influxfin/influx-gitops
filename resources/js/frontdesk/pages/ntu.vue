@@ -88,10 +88,24 @@
               因AML防制法捐款金額若大於50萬，請洽客服
             </p>
             <div class="donate-group">
-              <button class="btn money-button" @click="donateForm.amount = 300">300元</button>
-              <button class="btn money-button" @click="donateForm.amount = 500">500元</button>
-              <button class="btn money-button" @click="donateForm.amount = 1000">1000元</button>
-              <button class="btn money-button" @click="donateForm.amount = 3000">3000元</button>
+              <button class="btn money-button" @click="donateForm.amount = 300">
+                300元
+              </button>
+              <button class="btn money-button" @click="donateForm.amount = 500">
+                500元
+              </button>
+              <button
+                class="btn money-button"
+                @click="donateForm.amount = 1000"
+              >
+                1000元
+              </button>
+              <button
+                class="btn money-button"
+                @click="donateForm.amount = 3000"
+              >
+                3000元
+              </button>
             </div>
             <form class="donate-form" @submit.prevent="doDonate">
               <input
@@ -182,7 +196,11 @@
         <div class="donate-function-page" v-show="showDonate === 'query'">
           <div class="donate-title mb-4">捐款查詢</div>
           <div v-if="haveQueryResult">
-            <certificate-appreciation class="mx-auto" id="cert" />
+            <certificate-appreciation
+              class="mx-auto"
+              id="cert"
+              :donate-data="queryResponse"
+            />
             <div class="text-center mt-2">
               <button class="btn share-btn" @click="doShare">分享</button>
             </div>
@@ -464,11 +482,15 @@
           </div>
           <form class="m-3 query-form" @submit.prevent="querySubmit">
             <div class="row no-gutters mb-2">
-              <div class="col-5 text-right form-info">捐款金額：</div>
+              <div class="col-5 text-right form-info form-require">
+                捐款金額：
+              </div>
               <input
                 type="text"
                 class="form-control col-7"
                 placeholder="輸入捐款金額"
+                v-model="queryForm.amount"
+                required
               />
             </div>
             <div class="row no-gutters mb-2">
@@ -477,6 +499,7 @@
                 type="text"
                 class="form-control col-7"
                 placeholder="輸入署名/抬頭"
+                v-model="queryForm.name"
               />
             </div>
             <div class="row no-gutters mb-2">
@@ -487,6 +510,7 @@
                 type="text"
                 class="form-control col-7"
                 placeholder="輸入身分證字號/統一編號"
+                v-model="queryForm.number"
               />
             </div>
             <div class="row no-gutters">
@@ -496,6 +520,7 @@
               <input
                 type="text"
                 class="form-control col-7"
+                v-model="queryForm.last5"
                 required
                 placeholder="輸入匯款帳戶末五碼"
               />
@@ -541,6 +566,18 @@ export default {
         bank_account: '',
         charity_title: ''
       },
+      queryForm: {
+        last5: null,
+        amount: null,
+        name: null,
+        number: null
+      },
+      queryResponse: {
+        tx_datetime: '',
+        amout: '',
+        donator_name: '',
+        donator_sex: ''
+      },
       donateErrorMsg: '',
       paperTicket: false
     }
@@ -574,27 +611,53 @@ export default {
       }
     },
     doDonate() {
-      axios.post('charity/donate/anonymous', {
-        ...this.donateForm
-      }).then(({ data }) => {
-        this.bankData = data.data
-        this.step = 'account'
-        this.donateForm = {
-          amount: null,
-          name: '',
-          number: '',
-          phone: '',
-          email: '',
-          upload: 0,
-          receipt: 0,
-          address: ''
-        }
-      }).catch((err) => {
-        this.step = 'donate-error'
-        this.donateErrorMsg = err.msg || 'test'
-      })
+      axios
+        .post('/charity/donate/anonymous', {
+          ...this.donateForm
+        })
+        .then(({ data }) => {
+          this.bankData = data.data
+          this.step = 'account'
+          this.donateForm = {
+            amount: null,
+            name: '',
+            number: '',
+            phone: '',
+            email: '',
+            upload: 0,
+            receipt: 0,
+            address: ''
+          }
+        })
+        .catch(err => {
+          this.step = 'donate-error'
+          this.donateErrorMsg = err.msg || 'test'
+        })
     },
-    querySubmit() { },
+    querySubmit() {
+      axios
+        .get('/charity/donate/anonymous', {
+          params: {
+            ...this.queryForm
+          }
+        })
+        .then(({ data }) => {
+          $('#modal-query').modal('hide')
+          this.showDonate = 'query'
+          this.haveQueryResult = true
+          this.queryResponse = {
+            tx_datetime: '2022-03-30',
+            amount: 300,
+            donator_name: '123',
+            donator_sex: '小姐'
+          }
+        })
+        .catch(err => {
+          $('#modal-query').modal('hide')
+          this.showDonate = 'query'
+          this.haveQueryResult = false
+        })
+    },
     doShare() {
       if (this.genCert) {
         $('#modal-cert').modal('show')
