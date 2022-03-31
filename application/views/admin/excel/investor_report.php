@@ -134,18 +134,15 @@
             <tr>
                 <th>期間</th>
                 <th>金額</th>
-<!--                <th>折現</th>-->
             </tr>
             <?
-//            $estimate_IRR_idx = $data['start_row']['delay_not_return'] - 3;
+            unset($data['account_payable_interest'][array_key_last($data['account_payable_interest'])]);
             foreach ($data['account_payable_interest'] as $i => $info) {
                 $idx = $data['start_row']['account_payable_interest'] + $i + 1;
                 ?>
                 <tr>
                     <th><?= $info['range_title'] ?></th>
                     <th><?= $info['amount'] ?></th>
-<!--                    <th>--><?//= '=B'.$idx.'/((B'.$estimate_IRR_idx.'+1)^'.$info['discount_exponent'].')' ?><!--</th>-->
-<!--                    <th>--><?//= $info['discount_amount'] ?><!--</th>-->
                 </tr>
             <? } ?>
 
@@ -157,11 +154,6 @@
                     <? } ?>
                 </th>
             </tr>
-
-<!--            <tr>-->
-<!--                <th>內部報酬率預估</th>-->
-<!--                <th colspan="2">--><?//= $data['estimate_IRR'] ?><!--</th>-->
-<!--            </tr>-->
             <tr>
                 <th></th>
             </tr>

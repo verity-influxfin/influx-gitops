@@ -608,10 +608,6 @@ class User_lib {
             ],
             "invest_performance" => [
                 'years' => 0,
-                'prevHalf' => 0,
-                'average_principle' => 0,
-                'return_discount_without_delay' => 0,
-                'discount_rate_of_return' => 0.00,
             ],
             "realized_rate_of_return" => [
             ],
@@ -828,7 +824,6 @@ class User_lib {
                     {
                         $ar_interest_list[$year_str] = [
                             'amount' => $info['amount'],
-                            'discount_amount' => 0,
                             'start_date' => $ym_date->format('Y-m'),
                             'end_date' => $ym_date->format('Y-m'),
                         ];
@@ -848,16 +843,11 @@ class User_lib {
                 {
                     $end = new \DateTimeImmutable($info['end_date']);
                     $diff = $end_date->setDate($end_date->format('Y'), $end_date->format('m'), 1)->diff($end);
-                    $ar_interest_list[$year_str]['discount_exponent'] = $diff->y + round($diff->m / 12, 1);
-                    $ar_interest_list[$year_str]['discount_amount'] = round($info['amount'] / pow((($data['estimate_IRR'] / 100) + 1), $ar_interest_list[$year_str]['discount_exponent']));
                     $ar_interest_list[$year_str]['range_title'] = date('Ym', strtotime($info['start_date'])) . '-' . date('Ym', strtotime($info['end_date']));
                 }
-                $data['account_payable_interest'] = array_values($ar_interest_list);
                 $ar_interest_list['total']['range_title'] = '合計';
                 $ar_interest_list['total']['amount'] = array_sum(array_column($ar_interest_list, 'amount'));
-                $ar_interest_list['total']['discount_amount'] = array_sum(array_column($ar_interest_list, 'discount_amount'));
-                $ar_interest_list['total']['discount_exponent'] = 1;
-                $data['account_payable_interest'][] = $ar_interest_list['total'];
+                $data['account_payable_interest'] = array_values($ar_interest_list);
 
                 // -- 逾期未收
                 $delayed_ar_list_rs = $this->CI->transaction_model->get_delayed_ar_transaction([SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST], $user_id, $product_id_list, $is_group = TRUE);
@@ -877,9 +867,6 @@ class User_lib {
                     $d1 = new DateTime($first_investment['tx_date']);
                     $d2 = new DateTime($export_date);
                     $data['invest_performance']['years'] = round($d1->diff($d2)->days / 365.0, 1);
-                    $data['invest_performance']['average_principle'] = $RoR_List['total']['average_principle'] + $data['assets_description']['total']['amount_delay'];
-                    $data['invest_performance']['return_discount_without_delay'] = $RoR_List['total']['total_income'] + $ar_interest_list['total']['discount_amount'] - $data['assets_description']['total']['amount_delay'];
-                    $data['invest_performance']['discount_rate_of_return'] = $data['invest_performance']['average_principle'] == 0 || $data['invest_performance']['years'] == 0 ? 0 : round($data['invest_performance']['return_discount_without_delay'] / $data['invest_performance']['average_principle'] / $data['invest_performance']['years'] * 100, 2);
                 }
                 catch (Exception $e)
                 {
@@ -896,7 +883,7 @@ class User_lib {
         // -- start row of every part for the layout
         $data['start_row']['realized_rate_of_return'] = 12;
         $data['start_row']['account_payable_interest'] = $data['start_row']['realized_rate_of_return'] + count($data['realized_rate_of_return'] ?? []) + 6;;
-        $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest'] + count($data['account_payable_interest'] ?? []) + 4;
+        $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest'] + count($data['account_payable_interest'] ?? []) + 3;
 
         return $data;
     }
