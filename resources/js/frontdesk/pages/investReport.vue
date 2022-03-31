@@ -505,16 +505,9 @@ export default {
         link.setAttribute('download', '投資人報告書.xlsx')
         document.body.appendChild(link)
         link.click()
+      }).catch(err=>{
+          alert('發生錯誤，請稍後再試')
       })
-    }
-  },
-  watch: {
-    data: {
-      immediate: true,
-      deep: true,
-      handler(newValue, oldValue) {
-
-      }
     }
   },
   watch: {
