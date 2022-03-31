@@ -264,6 +264,7 @@ export default {
         text-align: center;
         margin: 10px 5px;
         color: #157efb;
+        min-width: 80px;
 
         &:hover {
           text-decoration: none;
