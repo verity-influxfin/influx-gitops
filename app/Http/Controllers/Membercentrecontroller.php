@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use GuzzleHttp\Client;
 
 class Membercentrecontroller extends BaseController
 {
@@ -169,8 +170,22 @@ class Membercentrecontroller extends BaseController
     }
 
     public function downloadInvestReport(Request $request){
-        $curlScrapedPage = shell_exec('curl -k -X GET "' . $this->apiGetway . 'website/download_investor_report" -H "' . "request_token:" . Session::get('token') . '"');
-        echo $curlScrapedPage;
+        $client = new Client();
+        $res = $client->request('GET', $this->apiGetway.'website/download_investor_report', [
+            'headers' => [
+                'request_token' => Session::get('token')
+              ],
+            'decode_content' => FALSE,
+            'http_errors' => FALSE,
+        ]);
+        $body = $res->getBody();
+        $body_string = (string) $body;
+        if($res->getStatusCode()!=200)
+        {
+            // 503
+            return response()->json(json_decode($body_string,TRUE), 400);
+        }
+        echo $body_string;
         die();
     }
 }
