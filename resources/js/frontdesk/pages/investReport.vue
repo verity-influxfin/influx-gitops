@@ -511,15 +511,6 @@ export default {
     }
   },
   watch: {
-    data: {
-      immediate: true,
-      deep: true,
-      handler(newValue, oldValue) {
-
-      }
-    }
-  },
-  watch: {
     '$parent.tweenedPrincipal': {
       immediate: true,
       handler(newValue) {
