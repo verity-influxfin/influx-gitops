@@ -54,35 +54,25 @@
                                             <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                         </tr>
                                         <tr>
-                                            <td><span>公司行業別(主計處)</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompIdustry"></td>
+                                            <td><span>前一年度營業額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastYearRevenue"></td>
                                         </tr>
                                         <tr>
-                                            <td><span>近一年結算申報書營業收入-年度</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncomeYear1" placeholder="格式:YYYYMMDD">
+                                            <td><span>每日營運資金需求量</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.dailyWorkingCapital"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>淨營業週期</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.operatingCycle"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>負債總額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.liabilitiesAmount"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>權益總額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.equityAmount" placeholder="格式:YYYYMMDD">
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>近一年結算申報書營業收入-營收</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome1"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>近二年結算申報書營業收入-年度</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncomeYear2" placeholder="格式:YYYYMMDD">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>近二年結算申報書營業收入-營收</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome2"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>近三年結算申報書營業收入-年度</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncomeYear3" placeholder="格式:YYYYMMDD">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>近三年結算申報書營業收入-營收</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome3"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -91,20 +81,33 @@
                                 </table>
                                 <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-kgibank'">
                                     <tbody>
-                                        <tr style="text-align: center;">
-                                            <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司行業別(主計處)</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompIdustry"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>custom tab2</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.tab2Input"></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
-                                        </tr>
+                                    <tr style="text-align: center;">
+                                        <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>前一年度營業額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastYearRevenue"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>每日營運資金需求量</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.dailyWorkingCapital"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>淨營業週期</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.operatingCycle"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>負債總額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.liabilitiesAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>權益總額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.equityAmount" placeholder="格式:YYYYMMDD">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </form>
@@ -202,13 +205,11 @@
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
-                    CompIdustry: '',
-                    AnnualIncomeYear1: '',
-                    AnnualIncome1: '',
-                    AnnualIncomeYear2: '',
-                    AnnualIncome2: '',
-                    AnnualIncomeYear3: '',
-                    AnnualIncome3: '',
+                    lastYearRevenue: '',
+                    dailyWorkingCapital: '',
+                    operatingCycle: '',
+                    liabilitiesAmount: '',
+                    equityAmount: '',
                     tab2Input:'',
                     tab3Input:''
                 }

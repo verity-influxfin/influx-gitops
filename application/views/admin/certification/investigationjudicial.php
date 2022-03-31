@@ -70,36 +70,33 @@
                                             <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                         </tr>
                                         <tr>
-                                            <td><span>企業聯徵查詢日期</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompJCICQueryDate"
+                                            <td><span>公司聯徵-票債信情形是否異常</span></td>
+                                            <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
+                                                    <option :value="'1'">1:是</option>
+                                                    <option :value="'0'">0:否</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司聯徵-聯徵中心資料日期</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompDataDate"
                                                     placeholder="格式:YYYYMMDD"></td>
                                         </tr>
                                         <tr>
-                                            <td><span>公司中期放款餘額-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.MidTermLnYM"
+                                            <td><span>公司聯徵-聯徵J02資料年月</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompJ02YM"
                                                     placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
-                                            <td><span>公司中期放款餘額</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.MidTermLnBal"></td>
+                                            <td><span>公司聯徵-企業信用評分</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditScore"></td>
                                         </tr>
                                         <tr>
-                                            <td><span>公司短期放款餘額-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.ShortTermLnYM"
-                                                    placeholder="格式:YYYYMM"></td>
+                                            <td><span>公司聯徵-授信總餘額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditAmount"></td>
                                         </tr>
                                         <tr>
-                                            <td><span>公司短期放款餘額</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.ShortTermLnBal"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>企業聯徵J02資料年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompJCICDataDate"
-                                                    placeholder="格式:YYYYMM"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>企業信用評分</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompCreditScore"></td>
+                                            <td><span>公司聯徵-往來銀行家數</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompBankDealingNum"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -112,29 +109,33 @@
                                             <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                         </tr>
                                         <tr>
-                                            <td><span>票債信情形是否異常</span></td>
-                                            <td><select v-model="formData.CompJCDebtLog" class="table-input sk-input form-control">
+                                            <td><span>公司聯徵-票債信情形是否異常</span></td>
+                                            <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
                                                     <option :value="'1'">1:是</option>
                                                     <option :value="'0'">0:否</option>
                                                 </select></td>
                                         </tr>
                                         <tr>
-                                            <td><span>企業聯徵查詢日期</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompJCICQueryDate"
+                                            <td><span>公司聯徵-聯徵中心資料日期</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompDataDate"
                                                        placeholder="格式:YYYYMMDD"></td>
                                         </tr>
                                         <tr>
-                                            <td><span>企業聯徵J02資料年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompJCICDataDate"
+                                            <td><span>公司聯徵-聯徵J02資料年月</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompJ02YM"
                                                        placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
-                                            <td><span>企業信用評分</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompCreditScore"></td>
+                                            <td><span>公司聯徵-企業信用評分</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditScore"></td>
                                         </tr>
                                         <tr>
-                                            <td><span>往來銀行家數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompJCBankDealingNum"></td>
+                                            <td><span>公司聯徵-授信總餘額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditAmount"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司聯徵-往來銀行家數</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompBankDealingNum"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -268,15 +269,12 @@
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
-                    CompJCICQueryDate: '',
-                    MidTermLnYM: '',
-                    MidTermLnBal: '',
-                    ShortTermLnYM: '',
-                    ShortTermLnBal: '',
-                    CompJCICDataDate: '',
-                    CompCreditScore: '',
-                    CompJCDebtLog: '',
-                    CompJCBankDealingNum: '',
+                    jcCompDebtLog: '',
+                    jcCompDataDate: '',
+                    jcCompJ02YM: '',
+                    jcCompCreditScore: '',
+                    jcCompCreditAmount: '',
+                    jcCompBankDealingNum: '',
                 }
             }
         },

@@ -53,13 +53,10 @@
                                             <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
                                         </li>
                                         <li role="presentation">
-                                            <a @click="changeSubTab('Spouse')" data-toggle="tab" aria-expanded="false">配偶</a>
+                                            <a @click="changeSubTab('OtherRealPr')" data-toggle="tab" aria-expanded="false">其他實際負責人</a>
                                         </li>
                                         <li role="presentation">
-                                            <a @click="changeSubTab('GuOne')" data-toggle="tab" aria-expanded="false">保證人甲</a>
-                                        </li>
-                                        <li role="presentation">
-                                            <a @click="changeSubTab('GuTwo')" data-toggle="tab" aria-expanded="false">保證人乙</a>
+                                            <a @click="changeSubTab('GuOne')" data-toggle="tab" aria-expanded="false">保證人</a>
                                         </li>
                                     </ul>
                                     <div class="table-responsive Pr">
@@ -68,48 +65,20 @@
                                                 <tr style="text-align: center;">
                                                     <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                                 </tr>
-                                                <tr hidden>
-                                                    <td><span>徵提資料ID</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="id"
-                                                            value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                </tr>
                                                 <tr>
-                                                    <td><span>負責人現居地址-郵遞區號</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrCurAddrZip"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人現居地址-郵遞區號名稱</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrCurAddrZipName"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人現居地址-非郵遞地址資料</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrCurlAddress"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人連絡電話-區碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrTelAreaCode"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人連絡電話-電話號碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrTelNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人連絡電話-分機碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrTelExt"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人連絡行動電話</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrMobileNo"></td>
+                                                    <td><span>負責人擔任本企業負責人年度</span></td>
+                                                    <td><input class="sk-input form-control" type="text" name="prInChargeYear"
+                                                        placeholder="格式:YYY"></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span>負責人從事本行業年度</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrStartYear" placeholder="格式:YYYY">
-                                                    </td>
+                                                    <td><input class="sk-input form-control" type="text" name="prStartYear"
+                                                        placeholder="格式:YYY"></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span>負責人學歷</span></td>
                                                     <td>
-                                                        <select name="PrEduLevel" class="table-input form-control">
+                                                        <select name="prEduLevel" class="table-input form-control">
                                                             <option value="A">A:國小</option>
                                                             <option value="B">B:國中</option>
                                                             <option value="C">C:高中職</option>
@@ -128,58 +97,25 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="table-responsive Spouse">
+                                    <div class="table-responsive OtherRealPr">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
                                                 <tr style="text-align: center;">
                                                     <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                                 </tr>
-                                                <tr hidden>
-                                                    <td><span>徵提資料ID</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="id"
-                                                            value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                </tr>
                                                 <tr>
-                                                    <td><span>配偶現居地址-郵遞區號</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseCurAddrZip"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶現居地址-郵遞區號名稱</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseCurAddrZipName"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶現居地址-非郵遞地址資料</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseCurlAddress"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶連絡電話-區碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseTelAreaCode"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶連絡電話-電話號碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseTelNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶連絡電話-分機碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseTelExt"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶連絡行動電話</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseMobileNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶是否擔任本案保證人</span></td>
+                                                    <td><span>實際負責人是否等於登記負責人</span></td>
                                                     <td>
-                                                        <select name="IsPrSpouseGu" class="table-input sk-input form-control">
-                                                            <option value="A">1:是</option>
-                                                            <option value="B">2:否</option>
+                                                        <select name="isPrRegister" class="table-input sk-input form-control">
+                                                            <option value="1">1:是</option>
+                                                            <option value="0">0:否</option>
                                                         </select>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</span></td>
+                                                    <td><span>實際負責人與借戶、負責人之關係</span></td>
                                                     <td>
-                                                        <select name="OthRealPrRelWithPr" class="table-input sk-input form-control">
+                                                        <select name="prRelationship" class="table-input sk-input form-control">
                                                             <option value="A">A:配偶</option>
                                                             <option value="B">B:血親</option>
                                                             <option value="C">C:姻親</option>
@@ -192,17 +128,18 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_從事本行業年度</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrStartYear"
-                                                            placeholder="格式:YYYY"></td>
+                                                    <td><span>其他實際負責人從事本行業年度</span></td>
+                                                    <td><input class="sk-input form-control" type="text" name="othRealPrStartYear"
+                                                               placeholder="格式:YYY"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_擔任本公司職務</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrTitle"></td>
+                                                    <td><span>其他實際負責人擔任公司職務</span></td>
+                                                    <td><input class="sk-input form-control" type="text" name="othRealPrTitle"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_持股比率%</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrSHRatio"></td>
+                                                    <td><span>其他實際負責人持股比率(%)</span></td>
+                                                    <td><input class="sk-input form-control" type="text" name="othRealPrSHRatio"
+                                                        placeholder="請輸入數字部分即可"></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
@@ -217,56 +154,28 @@
                                                 <tr style="text-align: center;">
                                                     <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                                 </tr>
-                                                <tr hidden>
-                                                    <td><span>徵提資料ID</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="id"
-                                                            value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                </tr>
                                                 <tr>
-                                                    <td><span>保證人甲現居地址-郵遞區號</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneCurAddrZip"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲現居地址-郵遞區號名稱</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneCurAddrZipName"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲現居地址-非郵遞地址資料</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneCurlAddress"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲連絡電話-區碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneTelAreaCode"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲連絡電話-電話號碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneTelNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲連絡電話-分機碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneTelExt"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲連絡行動電話</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneMobileNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲_任職公司</span></td>
+                                                    <td><span>是否有徵提保證人</span></td>
                                                     <td>
-                                                        <select name="GuOneCompany" class="table-input sk-input form-control">
-                                                            <option value="A">A:公家機關</option>
-                                                            <option value="B">B:上市櫃公司</option>
-                                                            <option value="C">C:專業人士</option>
-                                                            <option value="D">D:借戶</option>
-                                                            <option value="E">E:其他民營企業</option>
-                                                            <option value="F">F:無</option>
+                                                        <select name="hasGuarantor" class="table-input sk-input form-control">
+                                                            <option value="1">1:是</option>
+                                                            <option value="0">0:否</option>
                                                         </select>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span>保證人甲_與借戶負責人之關係</span></td>
+                                                    <td><span>配偶是否擔任保證人</span></td>
                                                     <td>
-                                                        <select name="GuOneRelWithPr" class="table-input sk-input form-control">
+                                                        <select name="isPrSpouseGu" class="table-input sk-input form-control">
+                                                            <option value="1">1:是</option>
+                                                            <option value="0">0:否</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>保證人與借戶、負責人之關係</span></td>
+                                                    <td>
+                                                        <select name="guOneRelWithPr" class="table-input sk-input form-control">
                                                             <option value="A">A:配偶</option>
                                                             <option value="B">B:血親</option>
                                                             <option value="C">C:姻親</option>
@@ -279,106 +188,8 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</span></td>
-                                                    <td>
-                                                        <select name="OthRealPrRelWithPr" class="table-input sk-input form-control">
-                                                            <option value="A">A:配偶</option>
-                                                            <option value="B">B:血親</option>
-                                                            <option value="C">C:姻親</option>
-                                                            <option value="D">D:股東</option>
-                                                            <option value="E">E:朋友</option>
-                                                            <option value="F">F:本人</option>
-                                                            <option value="G">G:其他</option>
-                                                            <option value="H">H:與經營有關之借戶職員</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_從事本行業年度</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrStartYear"
-                                                            placeholder="格式:YYYY"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_擔任本公司職務</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrTitle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_持股比率%</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrSHRatio"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="table-responsive GuTwo">
-                                        <table class="table table-striped table-bordered table-hover dataTable">
-                                            <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                                </tr>
-                                                <tr hidden>
-                                                    <td><span>徵提資料ID</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="id"
-                                                            value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙現居地址-郵遞區號</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoCurAddrZip"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙現居地址-郵遞區號名稱</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoCurAddrZipName"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙現居地址-非郵遞地址資料</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoCurlAddress"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙連絡電話-區碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoTelAreaCode"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙連絡電話-電話號碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoTelNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙連絡電話-分機碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoTelExt"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙連絡行動電話</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoMobileNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙_任職公司</span></td>
-                                                    <td>
-                                                        <select name="GuTwoCompany" class="table-input sk-input form-control">
-                                                            <option value="A">A:公家機關</option>
-                                                            <option value="B">B:上市櫃公司</option>
-                                                            <option value="C">C:專業人士</option>
-                                                            <option value="D">D:借戶</option>
-                                                            <option value="E">E:其他民營企業</option>
-                                                            <option value="F">F:無</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙_與借戶負責人之關係</span></td>
-                                                    <td>
-                                                        <select name="GuTwoRelWithPr" class="table-input sk-input form-control">
-                                                            <option value="A">A:配偶</option>
-                                                            <option value="B">B:血親</option>
-                                                            <option value="C">C:姻親</option>
-                                                            <option value="D">D:股東</option>
-                                                            <option value="E">E:朋友</option>
-                                                            <option value="F">F:本人</option>
-                                                            <option value="G">G:其他</option>
-                                                            <option value="H">H:與經營有關之借戶職員</option>
-                                                        </select>
-                                                    </td>
+                                                    <td><span>保證人任職公司</span></td>
+                                                    <td><input class="sk-input form-control" type="text" name="guCompany"></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
@@ -394,342 +205,148 @@
                                             <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
                                         </li>
                                         <li role="presentation">
-                                            <a @click="changeSubTab('Spouse')" data-toggle="tab" aria-expanded="false">配偶</a>
+                                            <a @click="changeSubTab('OtherRealPr')" data-toggle="tab" aria-expanded="false">其他實際負責人</a>
                                         </li>
                                         <li role="presentation">
-                                            <a @click="changeSubTab('GuOne')" data-toggle="tab" aria-expanded="false">保證人甲</a>
-                                        </li>
-                                        <li role="presentation">
-                                            <a @click="changeSubTab('GuTwo')" data-toggle="tab" aria-expanded="false">保證人乙</a>
+                                            <a @click="changeSubTab('GuOne')" data-toggle="tab" aria-expanded="false">保證人</a>
                                         </li>
                                     </ul>
                                     <div class="table-responsive Pr">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                                </tr>
-                                                <tr hidden>
-                                                    <td><span>徵提資料ID</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="id"
-                                                            value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人現居地址-郵遞區號</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrCurAddrZip"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人現居地址-郵遞區號名稱</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrCurAddrZipName"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人現居地址-非郵遞地址資料</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrCurlAddress"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人連絡電話-區碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrTelAreaCode"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人連絡電話-電話號碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrTelNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人連絡電話-分機碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrTelExt"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人連絡行動電話</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrMobileNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人從事本行業年度</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="PrStartYear" placeholder="格式:YYYY">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人學歷</span></td>
-                                                    <td>
-                                                        <select name="PrEduLevel" class="table-input form-control">
-                                                            <option value="A">A:國小</option>
-                                                            <option value="B">B:國中</option>
-                                                            <option value="C">C:高中職</option>
-                                                            <option value="D">D:專科</option>
-                                                            <option value="E">E:大學</option>
-                                                            <option value="F">F:碩士</option>
-                                                            <option value="G">G:博士</option>
-                                                            <option value="H">H:無</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>costom 2</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.tab2Input">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
+                                            <tr style="text-align: center;">
+                                                <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人擔任本企業負責人年度</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="prInChargeYear"
+                                                           placeholder="格式:YYY"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人從事本行業年度</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="prStartYear"
+                                                           placeholder="格式:YYY"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人學歷</span></td>
+                                                <td>
+                                                    <select name="prEduLevel" class="table-input form-control">
+                                                        <option value="A">A:國小</option>
+                                                        <option value="B">B:國中</option>
+                                                        <option value="C">C:高中職</option>
+                                                        <option value="D">D:專科</option>
+                                                        <option value="E">E:大學</option>
+                                                        <option value="F">F:碩士</option>
+                                                        <option value="G">G:博士</option>
+                                                        <option value="H">H:無</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="table-responsive Spouse">
+                                    <div class="table-responsive OtherRealPr">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                                </tr>
-                                                <tr hidden>
-                                                    <td><span>徵提資料ID</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="id"
-                                                            value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶現居地址-郵遞區號</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseCurAddrZip"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶現居地址-郵遞區號名稱</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseCurAddrZipName"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶現居地址-非郵遞地址資料</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseCurlAddress"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶連絡電話-區碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseTelAreaCode"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶連絡電話-電話號碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseTelNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶連絡電話-分機碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseTelExt"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶連絡行動電話</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="SpouseMobileNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶是否擔任本案保證人</span></td>
-                                                    <td>
-                                                        <select name="IsPrSpouseGu" class="table-input sk-input form-control">
-                                                            <option value="A">1:是</option>
-                                                            <option value="B">2:否</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</span></td>
-                                                    <td>
-                                                        <select name="OthRealPrRelWithPr" class="table-input sk-input form-control">
-                                                            <option value="A">A:配偶</option>
-                                                            <option value="B">B:血親</option>
-                                                            <option value="C">C:姻親</option>
-                                                            <option value="D">D:股東</option>
-                                                            <option value="E">E:朋友</option>
-                                                            <option value="F">F:本人</option>
-                                                            <option value="G">G:其他</option>
-                                                            <option value="H">H:與經營有關之借戶職員</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_從事本行業年度</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrStartYear"
-                                                            placeholder="格式:YYYY"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_擔任本公司職務</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrTitle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_持股比率%</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrSHRatio"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
+                                            <tr style="text-align: center;">
+                                                <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際負責人是否等於登記負責人</span></td>
+                                                <td>
+                                                    <select name="isPrRegister" class="table-input sk-input form-control">
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際負責人與借戶、負責人之關係</span></td>
+                                                <td>
+                                                    <select name="prRelationship" class="table-input sk-input form-control">
+                                                        <option value="A">A:配偶</option>
+                                                        <option value="B">B:血親</option>
+                                                        <option value="C">C:姻親</option>
+                                                        <option value="D">D:股東</option>
+                                                        <option value="E">E:朋友</option>
+                                                        <option value="F">F:本人</option>
+                                                        <option value="G">G:其他</option>
+                                                        <option value="H">H:與經營有關之借戶職員</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>其他實際負責人從事本行業年度</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="othRealPrStartYear"
+                                                           placeholder="格式:YYY"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>其他實際負責人擔任公司職務</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="othRealPrTitle"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>其他實際負責人持股比率(%)</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="othRealPrSHRatio"
+                                                           placeholder="請輸入數字部分即可"></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="table-responsive GuOne">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                                </tr>
-                                                <tr hidden>
-                                                    <td><span>徵提資料ID</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="id"
-                                                            value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲現居地址-郵遞區號</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneCurAddrZip"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲現居地址-郵遞區號名稱</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneCurAddrZipName"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲現居地址-非郵遞地址資料</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneCurlAddress"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲連絡電話-區碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneTelAreaCode"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲連絡電話-電話號碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneTelNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲連絡電話-分機碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneTelExt"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲連絡行動電話</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuOneMobileNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲_任職公司</span></td>
-                                                    <td>
-                                                        <select name="GuOneCompany" class="table-input sk-input form-control">
-                                                            <option value="A">A:公家機關</option>
-                                                            <option value="B">B:上市櫃公司</option>
-                                                            <option value="C">C:專業人士</option>
-                                                            <option value="D">D:借戶</option>
-                                                            <option value="E">E:其他民營企業</option>
-                                                            <option value="F">F:無</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人甲_與借戶負責人之關係</span></td>
-                                                    <td>
-                                                        <select name="GuOneRelWithPr" class="table-input sk-input form-control">
-                                                            <option value="A">A:配偶</option>
-                                                            <option value="B">B:血親</option>
-                                                            <option value="C">C:姻親</option>
-                                                            <option value="D">D:股東</option>
-                                                            <option value="E">E:朋友</option>
-                                                            <option value="F">F:本人</option>
-                                                            <option value="G">G:其他</option>
-                                                            <option value="H">H:與經營有關之借戶職員</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</span></td>
-                                                    <td>
-                                                        <select name="OthRealPrRelWithPr" class="table-input sk-input form-control">
-                                                            <option value="A">A:配偶</option>
-                                                            <option value="B">B:血親</option>
-                                                            <option value="C">C:姻親</option>
-                                                            <option value="D">D:股東</option>
-                                                            <option value="E">E:朋友</option>
-                                                            <option value="F">F:本人</option>
-                                                            <option value="G">G:其他</option>
-                                                            <option value="H">H:與經營有關之借戶職員</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_從事本行業年度</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrStartYear"
-                                                            placeholder="格式:YYYY"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_擔任本公司職務</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrTitle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>實際負責(經營)人_其他實際負責經營人_持股比率%</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="OthRealPrSHRatio"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="table-responsive GuTwo">
-                                        <table class="table table-striped table-bordered table-hover dataTable">
-                                            <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                                </tr>
-                                                <tr hidden>
-                                                    <td><span>徵提資料ID</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="id"
-                                                            value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙現居地址-郵遞區號</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoCurAddrZip"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙現居地址-郵遞區號名稱</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoCurAddrZipName"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙現居地址-非郵遞地址資料</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoCurlAddress"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙連絡電話-區碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoTelAreaCode"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙連絡電話-電話號碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoTelNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙連絡電話-分機碼</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoTelExt"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙連絡行動電話</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="GuTwoMobileNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙_任職公司</span></td>
-                                                    <td>
-                                                        <select name="GuTwoCompany" class="table-input sk-input form-control">
-                                                            <option value="A">A:公家機關</option>
-                                                            <option value="B">B:上市櫃公司</option>
-                                                            <option value="C">C:專業人士</option>
-                                                            <option value="D">D:借戶</option>
-                                                            <option value="E">E:其他民營企業</option>
-                                                            <option value="F">F:無</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>保證人乙_與借戶負責人之關係</span></td>
-                                                    <td>
-                                                        <select name="GuTwoRelWithPr" class="table-input sk-input form-control">
-                                                            <option value="A">A:配偶</option>
-                                                            <option value="B">B:血親</option>
-                                                            <option value="C">C:姻親</option>
-                                                            <option value="D">D:股東</option>
-                                                            <option value="E">E:朋友</option>
-                                                            <option value="F">F:本人</option>
-                                                            <option value="G">G:其他</option>
-                                                            <option value="H">H:與經營有關之借戶職員</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
+                                            <tr style="text-align: center;">
+                                                <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>是否有徵提保證人</span></td>
+                                                <td>
+                                                    <select name="hasGuarantor" class="table-input sk-input form-control">
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>配偶是否擔任保證人</span></td>
+                                                <td>
+                                                    <select name="isPrSpouseGu" class="table-input sk-input form-control">
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>保證人與借戶、負責人之關係</span></td>
+                                                <td>
+                                                    <select name="guOneRelWithPr" class="table-input sk-input form-control">
+                                                        <option value="A">A:配偶</option>
+                                                        <option value="B">B:血親</option>
+                                                        <option value="C">C:姻親</option>
+                                                        <option value="D">D:股東</option>
+                                                        <option value="E">E:朋友</option>
+                                                        <option value="F">F:本人</option>
+                                                        <option value="G">G:其他</option>
+                                                        <option value="H">H:與經營有關之借戶職員</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>保證人任職公司</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="guCompany"></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -797,49 +414,18 @@
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
-                    PrCurAddrZip: '',
-                    PrCurAddrZipName: '',
-                    PrCurlAddress: '',
-                    PrTelAreaCode: '',
-                    PrTelNo: '',
-                    PrTelExt: '',
-                    PrMobileNo: '',
-                    PrStartYear: '',
-                    PrEduLevel: '',
-                    SpouseCurAddrZip: '',
-                    SpouseCurAddrZipName: '',
-                    SpouseCurlAddress: '',
-                    SpouseTelAreaCode: '',
-                    SpouseTelNo: '',
-                    SpouseTelExt: '',
-                    SpouseMobileNo: '',
-                    IsPrSpouseGu: '',
-                    OthRealPrRelWithPr: '',
-                    OthRealPrStartYear: '',
-                    OthRealPrTitle: '',
-                    OthRealPrSHRatio: '',
-                    GuOneCurAddrZip: '',
-                    GuOneCurAddrZipName: '',
-                    GuOneCurlAddress: '',
-                    GuOneTelAreaCode: '',
-                    GuOneTelNo: '',
-                    GuOneTelExt: '',
-                    GuOneMobileNo: '',
-                    GuOneCompany: '',
-                    GuOneRelWithPr: '',
-                    OthRealPrRelWithPr: '',
-                    OthRealPrStartYear: '',
-                    OthRealPrTitle: '',
-                    OthRealPrSHRatio: '',
-                    GuTwoCurAddrZip: '',
-                    GuTwoCurAddrZipName: '',
-                    GuTwoCurlAddress: '',
-                    GuTwoTelAreaCode: '',
-                    GuTwoTelNo: '',
-                    GuTwoTelExt: '',
-                    GuTwoMobileNo: '',
-                    GuTwoCompany: '',
-                    GuTwoRelWithPr: '',
+                    prInChargeYear: '',
+                    prStartYear: '',
+                    prEduLevel: '',
+                    isPrRegister: '',
+                    prRelationship: '',
+                    othRealPrStartYear: '',
+                    othRealPrTitle: '',
+                    othRealPrSHRatio: '',
+                    hasGuarantor: '',
+                    isPrSpouseGu: '',
+                    guOneRelWithPr: '',
+                    guCompany: '',
                     tab2Input: '',
                     tab3Input: '',
                 }

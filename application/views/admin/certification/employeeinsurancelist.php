@@ -58,99 +58,99 @@
                                         </tr>
                                         <tr>
                                             <td><span>公司近01個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM1" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM1" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近01個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured1"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured1"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近02個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM2" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM2" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近02個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured2"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured2"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近03個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM3" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM3" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近03個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured3"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured3"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近04個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM4" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM4" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近04個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured4"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured4"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近05個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM5" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM5" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近05個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured5"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured5"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近06個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM6" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM6" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近06個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured6"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured6"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近07個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM7" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM7" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近07個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured7"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured7"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近08個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM8" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM8" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近08個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured8"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured8"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近09個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM9" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM9" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近09個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured9"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured9"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近10個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM10" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM10" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近10個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured10"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured10"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近11個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM11" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM11" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近11個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured11"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured11"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近12個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM12" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM12" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近12個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured12"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured12"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -165,99 +165,99 @@
                                         </tr>
                                         <tr>
                                             <td><span>公司近01個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM1" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM1" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近01個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured1"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured1"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近02個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM2" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM2" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近02個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured2"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured2"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近03個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM3" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM3" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近03個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured3"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured3"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近04個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM4" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM4" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近04個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured4"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured4"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近05個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM5" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM5" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近05個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured5"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured5"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近06個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM6" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM6" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近06個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured6"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured6"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近07個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM7" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM7" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近07個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured7"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured7"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近08個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM8" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM8" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近08個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured8"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured8"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近09個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM9" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM9" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近09個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured9"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured9"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近10個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM10" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM10" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近10個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured10"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured10"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近11個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM11" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM11" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近11個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured11"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured11"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近12個月投保人數-年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsuredYM12" placeholder="格式:YYYYMM"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsuredYM12" placeholder="格式:YYYYMM"></td>
                                         </tr>
                                         <tr>
                                             <td><span>公司近12個月投保人數-人數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.NumOfInsured12"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.numOfInsured12"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -367,30 +367,30 @@
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
-                    NumOfInsuredYM1: '',
-                    NumOfInsured1: '',
-                    NumOfInsuredYM2: '',
-                    NumOfInsured2: '',
-                    NumOfInsuredYM3: '',
-                    NumOfInsured3: '',
-                    NumOfInsuredYM4: '',
-                    NumOfInsured4: '',
-                    NumOfInsuredYM5: '',
-                    NumOfInsured5: '',
-                    NumOfInsuredYM6: '',
-                    NumOfInsured6: '',
-                    NumOfInsuredYM7: '',
-                    NumOfInsured7: '',
-                    NumOfInsuredYM8: '',
-                    NumOfInsured8: '',
-                    NumOfInsuredYM9: '',
-                    NumOfInsured9: '',
-                    NumOfInsuredYM10: '',
-                    NumOfInsured10: '',
-                    NumOfInsuredYM11: '',
-                    NumOfInsured11: '',
-                    NumOfInsuredYM12: '',
-                    NumOfInsured12: '',
+                    numOfInsuredYM1: '',
+                    numOfInsured1: '',
+                    numOfInsuredYM2: '',
+                    numOfInsured2: '',
+                    numOfInsuredYM3: '',
+                    numOfInsured3: '',
+                    numOfInsuredYM4: '',
+                    numOfInsured4: '',
+                    numOfInsuredYM5: '',
+                    numOfInsured5: '',
+                    numOfInsuredYM6: '',
+                    numOfInsured6: '',
+                    numOfInsuredYM7: '',
+                    numOfInsured7: '',
+                    numOfInsuredYM8: '',
+                    numOfInsured8: '',
+                    numOfInsuredYM9: '',
+                    numOfInsured9: '',
+                    numOfInsuredYM10: '',
+                    numOfInsured10: '',
+                    numOfInsuredYM11: '',
+                    numOfInsured11: '',
+                    numOfInsuredYM12: '',
+                    numOfInsured12: '',
                     customTab2:'',
                     customTab3:''
                 }
