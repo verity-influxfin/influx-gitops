@@ -420,7 +420,7 @@ class Scraper extends MY_Admin_Controller
 
         if ( ! empty($response['school'] && ! empty($response['sip_account'])))
         {
-            $url = $this->sip_lib->getUniversityUrl($response['school'], $response['sip_account']);
+            $url = $this->sip_lib->getUniversityModel($response['school'], $response['sip_account']);
             if (isset($url['response']['url']) && ! empty($url['response']['url']))
             {
                 $response['url'] = $url['response']['url'];
@@ -451,6 +451,12 @@ class Scraper extends MY_Admin_Controller
             $response = isset($response) ? $response['response'] : ['message' => 'sip not response'];
             $this->json_output->setStatusCode(401)->setResponse($response)->send();
         }
+		
+		$school_status = $this->sip_lib->getUniversityModel($input['university'], $input['account']);
+		if (isset($school_status['response']))
+		{
+			$response['response']['school_status'] = $school_status['response']; 
+		}
 
         $this->json_output->setStatusCode(200)->setResponse($response['response'])->send();
     }

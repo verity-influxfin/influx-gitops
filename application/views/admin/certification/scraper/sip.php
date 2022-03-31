@@ -130,7 +130,7 @@
                     return false;
                 }
                 sipData = response.response;
-                fillSipData(sipData.university, sipData.result);
+                fillSipData(sipData.university, sipData.result, sipData.school_status);
                 console.log(sipData.result.semesterGrades);
                 fillSipScore(sipData.result.semesterGrades);
             },
@@ -165,23 +165,50 @@
         $('#email').text(sqlResponse.email);
     }
 
-    function fillSipData(university, dataResponse) {
+    function fillSipData(university, dataResponse, school_status) {
         if (!university || !dataResponse) {
             return false;
         }
         // console.log(dataResponse);
-        $('#name-scraper').text(dataResponse.name);
-        $('#id-scraper').text(dataResponse.idNumber);
-        $('#university').text(university);
-        $('#department-scraper').text(dataResponse.department);
-        $('#school-status').text(dataResponse.schoolStatus);
-        $('#student-phone').text(dataResponse.studentPhone);
-        $('#home-phone').text(dataResponse.homePhone);
-        $('#guardian').text(dataResponse.guardian);
-        $('#guardian-phone').text(dataResponse.guardianPhone);
-        $('#communication-address').text(dataResponse.communicationAddress);
-        $('#household-address').text(dataResponse.householdAddress);
-        $('#latest-grades').text(dataResponse.latestGrades);
+		const status = (st)=>{
+			if(st){
+				return `
+					<button type="button" class="btn btn-success btn-circle">
+						<i class="fa fa-check"></i>
+					</button>
+				`
+			}
+			return `
+				<button type="button" class="btn btn-danger btn-circle">
+					<i class="fa fa-times"></i>
+				</button>
+			`
+		}
+		const universityStatus = (st) => {
+			switch (st) {
+				case 0: return '驗證碼問題'
+				case 1: return '正常狀態'
+				case 2: return '黑名單學校'
+				case 3: return 'server問題'
+				case 4: return 'VPN相關問題'
+				case 5: return '要求改密碼'
+				case 6: return '問卷問題'
+				case 7: return '不穩定 有時有未知異常'
+				default: return 'unKnown Error'
+			}
+		}
+        $('#name-scraper').html(dataResponse.name + status(school_status.deep_scrape_enabled.name));
+        $('#id-scraper').html(dataResponse.idNumber + status(school_status.deep_scrape_enabled.idNumber));
+        $('#university').text(university + ' - ' + universityStatus(school_status.status));
+        $('#department-scraper').html(dataResponse.department + status(school_status.deep_scrape_enabled.department));
+        $('#school-status').html(dataResponse.schoolStatus + status(school_status.deep_scrape_enabled.schoolStatus));
+        $('#student-phone').html(dataResponse.studentPhone + status(school_status.deep_scrape_enabled.studentPhone));
+        $('#home-phone').html(dataResponse.homePhone + status(school_status.deep_scrape_enabled.homePhone));
+        $('#guardian').html(dataResponse.guardian + status(school_status.deep_scrape_enabled.guardian));
+        $('#guardian-phone').html(dataResponse.guardianPhone + status(school_status.deep_scrape_enabled.guardianPhone));
+        $('#communication-address').html(dataResponse.communicationAddress + status(school_status.deep_scrape_enabled.communicationAddress));
+        $('#household-address').html(dataResponse.householdAddress + status(school_status.deep_scrape_enabled.householdAddress));
+        $('#latest-grades').html(dataResponse.latestGrades + status(school_status.deep_scrape_enabled.latestGrades));
     }
 
     function fillSipScore(dataResponse) {

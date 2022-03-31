@@ -117,7 +117,7 @@ class Sip_lib
         return $response;
     }
 
-    public function getUniversityUrl($university, $account)
+    public function getUniversityModel($university, $account)
     {
         if ( ! $university || ! $account)
         {
@@ -126,7 +126,7 @@ class Sip_lib
 
         $response = [];
         $encodedUni = urlencode($university);
-        $url = $this->scraperUrl . "{$encodedUni}/university-url?account={$account}";
+        $url = $this->scraperUrl . "{$encodedUni}/university-model?account={$account}";
 
         $result = curl_get($url);
         if ( ! empty($result))
