@@ -137,7 +137,7 @@
             </tr>
             <?
             unset($data['account_payable_interest'][array_key_last($data['account_payable_interest'])]);
-            foreach ($data['account_payable_interest'] as $i => $info) {
+            foreach ($data['account_payable_interest'] as $i => $info) {    
                 $idx = $data['start_row']['account_payable_interest'] + $i + 1;
                 ?>
                 <tr>

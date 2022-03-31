@@ -16,6 +16,31 @@ class Website extends REST_Controller {
         $this->load->library('Transfer_lib');
     }
 
+    private function _check_visit_freq($token_data, $freq=3, $interval=10)
+    {
+        $this->load->model('log/log_request_model');
+        $rs = $this->log_request_model->get_many_by([
+            'user_id' => $token_data->id,
+            'investor' => $token_data->investor,
+            'url' => $this->uri->uri_string(),
+            'created_at >= ' => time() - $interval
+        ]);
+        if (count($rs) >= $freq)
+        {
+            return FALSE;
+        }
+        else
+        {
+            $this->log_request_model->insert([
+                'method' => $this->request->method,
+                'url' => $this->uri->uri_string(),
+                'investor' => $token_data->investor,
+                'user_id' => $token_data->id,
+                'agent' => $token_data->agent,
+            ]);
+            return TRUE;
+        }
+    }
     private function _check_jwt_token($token) {
         if ( ! app_access())
         {
@@ -933,6 +958,10 @@ class Website extends REST_Controller {
 
         $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
         $token_data = $this->_check_jwt_token($token);
+        if ( ! $this->_check_visit_freq($token_data))
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 503);
+        }
 
         $this->load->library('user_lib');
         $report_data = $this->user_lib->get_investor_report($token_data->id, [], date('Y-m-d'));
@@ -949,6 +978,11 @@ class Website extends REST_Controller {
 
         $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
         $token_data = $this->_check_jwt_token($token);
+        if ( ! $this->_check_visit_freq($token_data))
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 503);
+        }
+
 
         $this->load->library('user_lib');
         $this->load->library('spreadsheet_lib');
