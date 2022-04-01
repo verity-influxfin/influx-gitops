@@ -1326,4 +1326,66 @@ class Transaction_lib{
     {
         return $this->CI->transaction_model->getDelayUserList();
     }
+
+    /**
+     * 外部慈善捐款的金流另外處理
+     **/
+    public function charity_recharge($payment, $user_id)
+    {
+        $this->CI->load->model('transaction/payment_model');
+
+        if ($payment->status != '1' &&
+            $payment->amount > 0 &&
+            ! empty($payment->virtual_account))
+        {
+            $rs = $this->CI->payment_model->update($payment->id, ['status' => 1]);
+            if ($rs)
+            {
+                $bank = bankaccount_substr($payment->bank_acc);
+                // 寫入 transaction
+                $transactions = [
+                    'source' => SOURCE_CHARITY,
+                    'entering_date' => get_entering_date(),
+                    'user_from' => 0,
+                    'bank_account_from' => $bank['bank_account'],
+                    'amount' => (int) $payment->amount,
+                    'user_to' => $user_id,
+                    'bank_account_to' => $payment->virtual_account,
+                    'status' => TRANSACTION_STATUS_PAID_OFF,
+                ];
+
+                $transaction_id = $this->transaction_model->insert($transactions);
+                // 寫入虛擬存摺
+                if ($transaction_id)
+                {
+                    $virtual_passbook = $this->CI->passbook_lib->enter_account($transaction_id, $payment->tx_datetime);
+
+                    // 以下針對 慈善捐款 新增項
+                    $this->CI->load->model('transaction/anonymous_donate_model');
+                    $this->CI->load->model('user/charity_anonymous_model');
+                    $data = [
+                        'payment_id' => $payment->id,
+                        'transaction_id' => $transaction_id,
+                        'last5' => substr($bank['bank_account'], -5),
+                        'amount' => (int) $payment->amount,
+                    ];
+                    $donate_id = $this->CI->anonymous_donate_model->insert($data);
+
+                    // 回 `p2p_user`.`charity_anonymous` 反查金額
+                    $record = $this->CI->charity_anonymous_model->get_by(['amount' => $payment->amount]);
+                    if ($record)
+                    {
+                        // 如果有找到相同的金額，將 donate_id 調整狀態
+                        $this->CI->anonymous_donate_model->update($donate_id, [
+                            'match_status' => anonymous_donate_model::MATCH_STATUS_AMOUNT,
+                        ]);
+                    }
+
+                    return TRUE;
+                }
+            }
+        }
+
+        return FALSE;
+    }
 }
