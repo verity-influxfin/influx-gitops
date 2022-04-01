@@ -220,10 +220,12 @@ class Payment_lib{
 
                     // 取得慈善機構的虛擬帳號，檢查是否為匿名慈善捐款的金流
                     $institutions = $this->CI->config->item('charity_alias_virtual_account');
-                    if ($value->virtual_account == $institutions['NTUH'])
+                    foreach ($institutions as $alias => $institution_virtual_account)
                     {
-                        $this->CI->transaction_lib->charity_recharge($value, $virtual_account->user_id);
-                        return true;
+                        if ($value->virtual_account == $institution_virtual_account)
+                        {
+                            return $this->CI->transaction_lib->charity_recharge($value, $virtual_account->user_id, $alias);
+                        }
                     }
 				}
 			}

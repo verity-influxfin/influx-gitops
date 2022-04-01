@@ -2441,7 +2441,6 @@ END:
                     if ($anonymous_id != 0)
                     {
                         $this->anonymous_donate_model->update($donate['id'], [
-                            'match_status' => anonymous_donate_model::MATCH_STATUS_SEARCH,
                             'charity_anonymous_id' => $anonymous_id,
                         ]);
                         if ($input['name'] !== '')

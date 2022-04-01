@@ -1330,7 +1330,7 @@ class Transaction_lib{
     /**
      * 外部慈善捐款的金流另外處理
      **/
-    public function charity_recharge($payment, $user_id)
+    public function charity_recharge($payment, $user_id, $charity_institution_alias)
     {
         $this->CI->load->model('transaction/payment_model');
 
@@ -1366,22 +1366,15 @@ class Transaction_lib{
                     $data = [
                         'payment_id' => $payment->id,
                         'transaction_id' => $transaction_id,
+                        'charity_institution_alias' => $charity_institution_alias,
                         'last5' => substr($bank['bank_account'], -5),
                         'amount' => (int) $payment->amount,
                     ];
                     $donate_id = $this->CI->anonymous_donate_model->insert($data);
-
-                    // 回 `p2p_user`.`charity_anonymous` 反查金額
-                    $record = $this->CI->charity_anonymous_model->get_by(['amount' => $payment->amount]);
-                    if ($record)
+                    if ($virtual_passbook && $donate_id)
                     {
-                        // 如果有找到相同的金額，將 donate_id 調整狀態
-                        $this->CI->anonymous_donate_model->update($donate_id, [
-                            'match_status' => anonymous_donate_model::MATCH_STATUS_AMOUNT,
-                        ]);
+                        return TRUE;
                     }
-
-                    return TRUE;
                 }
             }
         }

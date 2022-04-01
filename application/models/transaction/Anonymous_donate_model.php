@@ -6,10 +6,6 @@ class Anonymous_donate_model extends MY_Model
     public $before_create = ['before_data_c'];
     public $before_update = ['before_data_u'];
 
-    const MATCH_STATUS_DEFAULT = 0;
-    const MATCH_STATUS_AMOUNT = 1;
-    const MATCH_STATUS_SEARCH = 2;
-
     public function __construct()
     {
         parent::__construct();
