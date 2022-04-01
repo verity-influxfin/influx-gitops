@@ -138,6 +138,8 @@ defined('COOPERATION_NOT_EXIST')  		OR define('COOPERATION_NOT_EXIST'		, 315); /
 defined('COOPERATION_TYPE_ERROR')  		OR define('COOPERATION_TYPE_ERROR'		, 316); //經銷商類別錯誤
 defined('SMS_SEND_FAIL')                OR define('SMS_SEND_FAIL'               , 317); //簡訊驗證碼SMS發送失敗
 defined('CHARITY_INVALID_AMOUNT')       OR define('CHARITY_INVALID_AMOUNT'      , 318); //無效的慈善捐款金額
+defined('CHARITY_ILLEGAL_AMOUNT')       OR define('CHARITY_ILLEGAL_AMOUNT'      , 319); // 因AMC防制法規定：捐款金額超過500,000元請洽客服。
+defined('CHARITY_RECORD_NOT_FOUND')     OR define('CHARITY_RECORD_NOT_FOUND'    , 320); // 捐款紀錄不存在
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
