@@ -268,25 +268,37 @@
 												<label>審核狀態</label>
 												<p class="form-control-static"><?= isset($data->sys_check) && $data->sys_check == 0 ? "人工" : "系統" ?></p>
 											</div>
-											<div class="form-group">
-												<label>備註</label>
+                                            <div class="form-group">
+                                                <label>驗證結果</label>
                                                 <?php
-                                                if ($remark)
+                                                if ($remark && isset($remark['verify_result']) && is_array($remark['verify_result']))
                                                 {
-                                                    if (isset($remark["verify_result"]) && $remark["verify_result"])
+                                                    foreach ($remark['verify_result'] as $verify_result)
                                                     {
-                                                        foreach ($remark["verify_result"] as $verify_result)
-                                                        {
-                                                            echo '<p style="color:red;" class="form-control-static">失敗原因：' . $verify_result . '</p>';
-                                                        }
-                                                    }
-                                                    else if (isset($remark["fail"]) && $remark["fail"])
-                                                    {
-                                                        echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+                                                        echo '<p style="color:red;">' . $verify_result . '</p>';
                                                     }
                                                 }
                                                 ?>
-											</div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>備註</label>
+                                                <?php
+                                                if ($remark)
+                                                {
+                                                    if (isset($remark["fail"]) && $remark["fail"] && ! is_array($remark['fail']))
+                                                    {
+                                                        echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+                                                    }
+                                                    if (isset($remark["fail"]) && $remark["fail"] && is_array($remark['fail']))
+                                                    {
+                                                        foreach ($remark['fail'] as $fail_result)
+                                                        {
+                                                            echo '<p style="color:red;">' . $fail_result . '</p>';
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
                                             <div class="form-group">
                                                 <label>系統審核</label>
                                                 <?php
