@@ -2631,6 +2631,7 @@ class Product extends REST_Controller {
         if ($insert) {
 
             $target = $this->target_model->get_by(['id' => $insert]);
+            $this->load->helper('product');
             if (is_judicial_product($target->product_id) === FALSE && $target->status == TARGET_WAITING_SIGNING)
             {
                 // 該產品有未使用額度

@@ -89,6 +89,8 @@ abstract class Certification_base implements Certification_definition
 
         $this->config_cert_list = $this->CI->config->item('certifications');
         $this->config_cert = $this->config_cert_list[$this->certification_id] ?? [];
+
+        $this->CI->load->helper('product');
     }
 
     /**
