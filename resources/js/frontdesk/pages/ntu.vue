@@ -34,10 +34,6 @@
           <div class="yt-top-icon"></div>
           <div class="yt-top-text">台大兒童健康基金會</div>
         </div>
-        <div class="d-flex yt-top d-md-none d-flex">
-          <button class="btn donate-function-button">我要捐款</button>
-          <button class="btn btn-primary">捐款查詢</button>
-        </div>
         <p>
           孩子愈來愈少了，<br />
           我們未來主人翁的健康好重要 <br />
@@ -54,6 +50,14 @@
           我們比好多生病的孩子幸福好多，<br />
           我們擁有健康，擁有福氣
         </p>
+        <div class="d-sm-none d-block">
+          <button class="btn donate-function-button" @click="openDonate">
+            我要捐款
+          </button>
+          <button class="btn donate-query-button" @click="openDonateQuery">
+            捐款查詢
+          </button>
+        </div>
       </div>
       <div class="col-auto">
         <div class="yt-top d-none d-md-flex">
@@ -179,11 +183,15 @@
               可回來普匯金融科技<br />
               查詢捐款狀態
             </p>
-            <button type="button" class="btn submit-donate" @click="reset">
+            <button
+              type="button"
+              class="btn submit-donate d-block"
+              @click="reset"
+            >
               返回
             </button>
           </div>
-          <div v-show="step === 'donate-error'">
+          <div v-show="step === 'donate-error'" class="donate-error">
             <div class="donate-title mb-4">我要捐款</div>
             <div class="donate-info mx-auto">
               {{ donateErrorMsg }}
@@ -482,44 +490,46 @@
           </div>
           <form class="m-3 query-form" @submit.prevent="querySubmit">
             <div class="row no-gutters mb-2">
-              <div class="col-5 text-right form-info form-require">
+              <div class="col-sm-5 text-right form-info col-auto form-require">
                 捐款金額：
               </div>
               <input
                 type="text"
-                class="form-control col-7"
+                class="form-control col-sm-7"
                 placeholder="輸入捐款金額"
                 v-model="queryForm.amount"
                 required
               />
             </div>
             <div class="row no-gutters mb-2">
-              <div class="col-5 text-right form-info">署名/抬頭：</div>
+              <div class="col-sm-5 text-right form-info col-auto">
+                署名/抬頭：
+              </div>
               <input
                 type="text"
-                class="form-control col-7"
+                class="form-control col-sm-7"
                 placeholder="輸入署名/抬頭"
                 v-model="queryForm.name"
               />
             </div>
             <div class="row no-gutters mb-2">
-              <div class="col-5 text-right form-info">
+              <div class="col-sm-5 text-right form-info col-auto">
                 身分證字號/統一編號：
               </div>
               <input
                 type="text"
-                class="form-control col-7"
+                class="form-control col-sm-7"
                 placeholder="輸入身分證字號/統一編號"
                 v-model="queryForm.number"
               />
             </div>
             <div class="row no-gutters">
-              <div class="col-5 text-right form-info form-require">
+              <div class="col-sm-5 text-right form-info form-require col-auto">
                 匯款帳戶末五碼：
               </div>
               <input
                 type="text"
-                class="form-control col-7"
+                class="form-control col-sm-7"
                 v-model="queryForm.last5"
                 required
                 placeholder="輸入匯款帳戶末五碼"
@@ -611,6 +621,10 @@ export default {
       }
     },
     doDonate() {
+      if (isNaN(Number(this.donateForm.amount))) {
+        alert('捐款金額需為數字')
+        return
+      }
       axios
         .post('/charity/donate/anonymous', {
           ...this.donateForm
@@ -631,10 +645,18 @@ export default {
         })
         .catch(err => {
           this.step = 'donate-error'
-          this.donateErrorMsg = err.msg || 'test'
+          this.donateErrorMsg = err.msg || '發生錯誤，如持續發生錯誤請洽客服'
         })
     },
     querySubmit() {
+      if (isNaN(Number(this.queryForm.amount))) {
+        alert('捐款金額需為數字')
+        return
+      }
+      if (this.queryForm.last5.length !== 5) {
+        alert('請輸入正確的末五碼')
+        return
+      }
       axios
         .get('/charity/donate/anonymous', {
           params: {
@@ -645,12 +667,7 @@ export default {
           $('#modal-query').modal('hide')
           this.showDonate = 'query'
           this.haveQueryResult = true
-          this.queryResponse = {
-            tx_datetime: '2022-03-30',
-            amount: 300,
-            donator_name: '123',
-            donator_sex: '小姐'
-          }
+          this.queryResponse = data.data
         })
         .catch(err => {
           $('#modal-query').modal('hide')
@@ -666,6 +683,7 @@ export default {
       html2canvas(document.querySelector('#cert')).then(canvas => {
         const img = document.createElement('img')
         img.src = canvas.toDataURL()
+        img.style.maxWidth = '100%'
         document.querySelector('#cert-img').appendChild(img)
         $('#modal-cert').modal('show')
         this.genCert = true
@@ -793,6 +811,11 @@ export default {
   }
   .donate-form {
     display: flex;
+    flex-direction: column;
+  }
+  .donate-error {
+    display: flex;
+    align-items: center;
     flex-direction: column;
   }
   .share-btn {
@@ -1272,6 +1295,47 @@ export default {
   }
   .page-title-1 {
     margin-right: 0;
+  }
+  .donate-function-button {
+    padding: 6px 16px;
+    font-size: 20px;
+  }
+  .donate-query-button {
+    padding: 6px 16px;
+    font-size: 20px;
+  }
+  .donate-function-page {
+    width: fit-content;
+    margin: 15px auto;
+    padding: 15px;
+    .donate-title {
+      font-size: 18px;
+    }
+    .donate-info {
+      font-size: 16px;
+    }
+    .donate-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      .money-button {
+        font-size: 16px;
+      }
+    }
+    .share-btn {
+      font-size: 16px;
+      padding: 8px 50px;
+    }
+    .donate-input {
+      margin-bottom: 5px;
+      border-radius: 8px;
+      font-size: 16px;
+      padding: 4px 8px;
+    }
+    .submit-donate {
+      padding: 6px 12px;
+      font-size: 16px;
+      margin: 10px auto;
+    }
   }
   .yt-iframe {
     width: 95vw;

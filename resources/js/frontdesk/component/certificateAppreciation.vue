@@ -16,7 +16,7 @@
     </div>
     <div class="cert-info">感謝您的贊助，因為有您，</div>
     <div class="cert-info">孩子們擁有不一樣的精彩</div>
-    <div class="pictures mt-3">
+    <div class="pictures mt-3 position-relative">
       <img class="logo" src="~images/status-logo-bottom.png" alt="" />
       <img class="whale" src="~images/NTUCHwhale.png" alt="" />
       <img class="dinosaurs" src="~images/dinosaurs.png" alt="" />
@@ -118,6 +118,61 @@ export default {
     width: 150px;
     left: -10px;
     top: -40px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .cert {
+    padding: 15px;
+    display: flex;
+    .cert-title {
+      font-size: 30px;
+    }
+    .cert-solgan {
+      font-size: 20px;
+    }
+    .cert-info {
+      font-size: 16px;
+    }
+    .pictures {
+      width: 100%;
+    }
+    .bird {
+      position: relative;
+      width: 80px;
+      left: 30px;
+    }
+    .ballon {
+      margin-left: 60px;
+      width: 80px;
+    }
+    .rocket {
+      position: relative;
+      width: 40px;
+      left: 80%;
+      top: -20px;
+    }
+    .logo {
+      width: 225px;
+      left: 40px;
+    }
+    .whale {
+      position: relative;
+      top: 27px;
+      left: 27px;
+      width: 100px;
+    }
+    .animals {
+      position: relative;
+      top: 5px;
+      left: 40px;
+      width: 200px;
+    }
+    .dinosaurs {
+      position: relative;
+      width: 150px;
+      left: 31px;
+      top: 0px;
+    }
   }
 }
 </style>
