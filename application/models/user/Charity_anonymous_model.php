@@ -13,7 +13,7 @@ class Charity_anonymous_model extends MY_Model
 
     protected function before_data_c($data)
     {
-        $data['created_at'] = time();
+        $data['created_at'] = date('Y-m-d H:i:s', time());
         $data['created_ip'] = get_ip();
         return $data;
     }
@@ -32,7 +32,7 @@ class Charity_anonymous_model extends MY_Model
             'source' => $data['source'] ?? 0,
         ];
 
-        return $this->_database->insert($insert_data);
+        return $this->insert($insert_data);
     }
 
     /**

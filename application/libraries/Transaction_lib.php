@@ -1354,7 +1354,7 @@ class Transaction_lib{
                     'status' => TRANSACTION_STATUS_PAID_OFF,
                 ];
 
-                $transaction_id = $this->transaction_model->insert($transactions);
+                $transaction_id = $this->CI->transaction_model->insert($transactions);
                 // 寫入虛擬存摺
                 if ($transaction_id)
                 {
@@ -1362,7 +1362,6 @@ class Transaction_lib{
 
                     // 以下針對 慈善捐款 新增項
                     $this->CI->load->model('transaction/anonymous_donate_model');
-                    $this->CI->load->model('user/charity_anonymous_model');
                     $data = [
                         'payment_id' => $payment->id,
                         'transaction_id' => $transaction_id,
