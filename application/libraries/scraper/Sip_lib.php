@@ -26,15 +26,9 @@ class Sip_lib
 
         $data = ["account" => $account, "password" => $password];
 
-        $result = curl_get($url, $data);
-        $response = json_decode($result, TRUE);
+        $response = curl_get_statuscode($url, $data);
 
-        if ( ! $result || ! isset($response['status']) || $response['status'] != 200)
-        {
-            return FALSE;
-        }
-
-        return TRUE;
+        return $response;
     }
 
     public function requestDeep($university, $account, $password)
@@ -52,12 +46,12 @@ class Sip_lib
         $result = curl_get($url, $data);
         $response = json_decode($result, TRUE);
 
-        if ( ! $result || ! isset($response['status']) || $response['status'] != 200)
+        if ( ! $result || ! isset($response['status']))
         {
             return FALSE;
         }
 
-        return TRUE;
+        return $response;
     }
 
     public function getLoginLog($university, $account)
@@ -123,7 +117,7 @@ class Sip_lib
         return $response;
     }
 
-    public function getUniversityUrl($university, $account)
+    public function getUniversityModel($university, $account)
     {
         if ( ! $university || ! $account)
         {
@@ -132,7 +126,7 @@ class Sip_lib
 
         $response = [];
         $encodedUni = urlencode($university);
-        $url = $this->scraperUrl . "{$encodedUni}/university-url?account={$account}";
+        $url = $this->scraperUrl . "{$encodedUni}/university-model?account={$account}";
 
         $result = curl_get($url);
         if ( ! empty($result))
@@ -140,5 +134,4 @@ class Sip_lib
 
         return $response;
     }
-
 }
