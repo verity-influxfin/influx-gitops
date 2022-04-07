@@ -135,10 +135,7 @@ class CharityController extends Controller
         try {
             $client = new Client();
             $res = $client->request('POST', env('API_URL') . 'user/donate_anonymous', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                ],
-                'body' => json_encode($inputs),
+                'form_params' => $inputs,
             ]);
         }
         catch (Exception $e)
