@@ -59,16 +59,6 @@
                                             placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastTwoYear"
-                                            placeholder="格式:YYY"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>近三年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastThreeYear"
-                                            placeholder="格式:YYY"></td>
-                                    </tr>
-                                    <tr>
                                         <td><span>近一年申報營業稅01~02月開立發票金額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM1M2"></td>
                                     </tr>
@@ -93,6 +83,11 @@
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
+                                        <td><span>近二年申報營業稅年份</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastTwoYear"
+                                                   placeholder="格式:YYY"></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>近二年申報營業稅01~02月開立發票金額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM1M2"></td>
                                     </tr>
@@ -115,6 +110,11 @@
                                     <tr>
                                         <td><span>近二年申報營業稅11~12月開立發票金額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM11M12"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近三年申報營業稅年份</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastThreeYear"
+                                                   placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅01~02月開立發票金額</span></td>
@@ -156,16 +156,6 @@
                                                    placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastTwoYear"
-                                                   placeholder="格式:YYY"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>近三年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastThreeYear"
-                                                   placeholder="格式:YYY"></td>
-                                    </tr>
-                                    <tr>
                                         <td><span>近一年申報營業稅01~02月開立發票金額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM1M2"></td>
                                     </tr>
@@ -190,6 +180,11 @@
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
+                                        <td><span>近二年申報營業稅年份</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastTwoYear"
+                                                   placeholder="格式:YYY"></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>近二年申報營業稅01~02月開立發票金額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM1M2"></td>
                                     </tr>
@@ -212,6 +207,11 @@
                                     <tr>
                                         <td><span>近二年申報營業稅11~12月開立發票金額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM11M12"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近三年申報營業稅年份</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastThreeYear"
+                                                   placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅01~02月開立發票金額</span></td>
@@ -296,15 +296,42 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <h1>圖片</h1>
-                                <fieldset disabled>
+                                <fieldset>
                                     <div class="form-group">
-                                        <label>近三年401/403/405表</label><br>
-                                        <? isset($content['business_tax_image']) && !is_array($content['business_tax_image']) ? $content['business_tax_image'] = array($content['business_tax_image']) : '';
-                                        foreach ($content['business_tax_image'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a>
-                                        <? } ?>
+                                        <?php if (isset($images))
+                                        {
+                                            foreach ($images as $key => $value)
+                                            {
+                                                $this_block_html = '';
+                                                if ( ! empty($value['name']))
+                                                {
+                                                    $this_block_html .= "<label>{$value['name']}</label><br/>";
+                                                }
+                                                if ( ! empty($value['url']))
+                                                {
+                                                    if (is_array($value['url']))
+                                                    {
+                                                        array_map(function ($item) use (&$this_block_html) {
+                                                            if ( ! empty($item))
+                                                            {
+                                                                $this_block_html .= '<a href="' . $item . '" data-fancybox="images"><img alt="" src="' . $item . '" style="width: 30%; max-width:400px"></a>';
+                                                            }
+                                                        }, $value['url']);
+                                                    }
+                                                    else
+                                                    {
+                                                        $this_block_html .= '<a href="' . $value['url'] . '" data-fancybox="images"><img alt="" src="' . $value['url'] . '" style="width: 30%; max-width:400px"></a>';
+                                                    }
+                                                }
+                                                $this_block_html = "<div class='form-group'>{$this_block_html}</div>";
+
+                                                if ( ! empty($value['upload']))
+                                                {
+                                                    $this_block_html .= '<div class="form-group" style="background:#f5f5f5;border-style:double;">' . $value['upload'] . '</div>';
+                                                }
+                                                echo "<div>{$this_block_html}</div>";
+                                            }
+                                        } ?>
                                     </div>
                                 </fieldset>
                             </div>

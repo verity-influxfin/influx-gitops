@@ -2951,56 +2951,100 @@ class Certification extends REST_Controller {
             $investor 	= $this->user_info->investor;
             $content	= [];
 
-            //是否驗證過
+            // 是否驗證過
             $this->was_verify($certification_id);
 
-            $yearly = ['nearly_1year', 'nearly_2year', 'nearly_3year'];
-            foreach ($yearly as $this_year)
+            // 年份
+            $year_fields = [
+                'businessTaxLastOneYear',
+                'businessTaxLastTwoYear',
+                'businessTaxLastThreeYear'
+            ];
+            foreach ($year_fields as $year)
             {
-                if (empty($input[$this_year]))
+                if (empty($input[$year]) || ! strtotime($input[$year]))
                 {
                     $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
                 }
+                $content['skbank_form'][$year] = (int) $input[$year] - 1911;
+            }
 
-                // 必填欄位
-                $fields = ['business_tax_image', 'timespan', 'amount'];
-                foreach ($fields as $field)
+            // 金額
+            $amount_fields = [
+                'lastOneYearInvoiceAmountM1M2',
+                'lastOneYearInvoiceAmountM3M4',
+                'lastOneYearInvoiceAmountM5M6',
+                'lastOneYearInvoiceAmountM7M8',
+                'lastOneYearInvoiceAmountM9M10',
+                'lastOneYearInvoiceAmountM11M12',
+                'lastTwoYearInvoiceAmountM1M2',
+                'lastTwoYearInvoiceAmountM3M4',
+                'lastTwoYearInvoiceAmountM5M6',
+                'lastTwoYearInvoiceAmountM7M8',
+                'lastTwoYearInvoiceAmountM9M10',
+                'lastTwoYearInvoiceAmountM11M12',
+                'lastThreeYearInvoiceAmountM1M2',
+                'lastThreeYearInvoiceAmountM3M4',
+                'lastThreeYearInvoiceAmountM5M6',
+                'lastThreeYearInvoiceAmountM7M8',
+                'lastThreeYearInvoiceAmountM9M10',
+                'lastThreeYearInvoiceAmountM11M12'
+            ];
+            foreach($amount_fields as $amount)
+            {
+                if (empty($input[$amount]))
                 {
-                    if (empty($input[$this_year][$field]))
-                    {
-                        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-                    }
-                    else
-                    {
-                        $content[$this_year][$field] = explode(';', $input[$this_year][$field]);
-                        if (count($content[$this_year][$field]) !== 6)
-                        {
-                            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-                        }
-                    }
+                    $content['skbank_form'][$amount] = 0;
+                    continue;
                 }
+                $content['skbank_form'][$amount] = (int) $input[$amount];
+            }
 
-                $file_fields = ['business_tax_image'];
-                // 多個檔案欄位
-                foreach ($file_fields as $field)
+            // 照片
+            $pic_fields = [
+                'lastOneYearInvoiceImageM1M2',
+                'lastOneYearInvoiceImageM3M4',
+                'lastOneYearInvoiceImageM5M6',
+                'lastOneYearInvoiceImageM7M8',
+                'lastOneYearInvoiceImageM9M10',
+                'lastOneYearInvoiceImageM11M12',
+                'lastTwoYearInvoiceImageM1M2',
+                'lastTwoYearInvoiceImageM3M4',
+                'lastTwoYearInvoiceImageM5M6',
+                'lastTwoYearInvoiceImageM7M8',
+                'lastTwoYearInvoiceImageM9M10',
+                'lastTwoYearInvoiceImageM11M12',
+                'lastThreeYearInvoiceImageM1M2',
+                'lastThreeYearInvoiceImageM3M4',
+                'lastThreeYearInvoiceImageM5M6',
+                'lastThreeYearInvoiceImageM7M8',
+                'lastThreeYearInvoiceImageM9M10',
+                'lastThreeYearInvoiceImageM11M12'
+            ];
+            $pic_ids = [];
+            foreach ($pic_fields as $pic)
+            {
+                if (empty($input[$pic]))
                 {
-                    $image_ids = array_filter(explode(';', $input[$this_year][$field]));
-                    if (empty($image_ids)) continue;
-                    $list = $this->log_image_model->get_many_by([
-                        'id' => $image_ids,
-                        'user_id' => $user_id,
-                    ]);
-
-                    if (empty($list) || count($list) !== count($image_ids))
-                    {
-                        $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
-                    }
-                    foreach ($list as $v)
-                    {
-                        $key = array_search($v->id, $content[$this_year][$field]);
-                        $content[$this_year][$field][$key] = $v->url;
-                    }
+                    $content[$pic] = '';
+                    continue;
                 }
+                $content[$pic] = $pic_ids[$pic] = (int) $input[$pic];
+            }
+            if ( ! empty($pic_ids))
+            {
+                $list = $this->log_image_model->get_many_by([
+                    'id' => $pic_ids,
+                    'user_id' => $user_id,
+                ]);
+                if (count($list) !== count($pic_ids))
+                {
+                    $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+                }
+                array_walk($list, function ($item) use ($pic_ids, &$content) {
+                    $key = array_search($item->id, $pic_ids);
+                    $content[$key] = $item->url;
+                });
             }
 
             $param		= [

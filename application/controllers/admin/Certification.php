@@ -99,6 +99,7 @@ class Certification extends MY_Admin_Controller {
 					$page_data['data'] = $info;
 					$page_data['content'] = json_decode($info->content, true);
 				}
+                $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
 				if($cid == CERTIFICATION_CERCREDITJUDICIAL || $info->certification_id == CERTIFICATION_CERCREDITJUDICIAL){
 					$selltype = isset($get['selltype'])?$get['selltype']:0;
 					$user_id = isset($get['user_id'])?$get['user_id']:0;
@@ -212,23 +213,48 @@ class Certification extends MY_Admin_Controller {
                     $page_data['certification_type'] = $certification['name'];
                     $page_data['status'] = $info->status;
                 }
+                elseif ($info->certification_id == CERTIFICATION_BUSINESSTAX)
+                {
+                    $years = ['lastOneYearInvoiceImage' => '近一年', 'lastTwoYearInvoiceImage' => '近二年', 'lastThreeYearInvoiceImage' => '近三年'];
+                    $months = ['M1M2', 'M3M4', 'M5M6', 'M7M8', 'M9M10', 'M11M12'];
+                    foreach ($years as $year_key => $year_val)
+                    {
+                        $page_data['images'][$year_key] = [
+                            'name' => $year_val,
+                            'url' => [],
+                            'upload' => ''
+                        ];
+                        for ($i = 0; $i < count($months); $i++)
+                        {
+                            $page_data['images'][$year_key]['url'][$months[$i]] = $certification_content[$year_key . $months[$i]] ?? '';
+                        }
+                        if ($this->_can_upload_pic_by_status($info->status))
+                        {
+                            $page_data['images'][$year_key]['upload'] = $this->_upload_page($info, ['image_key' => $year_key . 'Others']);
+                        }
+                        if ( ! empty($certification_content[$year_key . 'Others']))
+                        {
+                            $page_data['images'][$year_key]['url'] = array_merge($page_data['images'][$year_key]['url'], $certification_content[$year_key . 'Others']);
+                        }
+                    }
+                    if ( ! empty($certification_content['others_image']))
+                    {
+                        $page_data['images']['others']['url'] = $certification_content['others_image'];
+                    }
+                }
 				// 獲取 ocr 相關資料
 				// to do : ocr table 需優化 index 與 clinet table view
 				$this->load->library('mapping/user/Certification_table');
 
-                $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
                 if(in_array($info->certification_id,['1007','1017','1002','1003','12'])){
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 
                 if(in_array($info->certification_id,['1003','9','12','501','1018', '500', '1004'])) {
                     // 上傳檔案功能
-                    if ($info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE ||
-                        $info->status == CERTIFICATION_STATUS_PENDING_TO_REVIEW ||
-                        $info->status == CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE)
+                    if ($this->_can_upload_pic_by_status($info->status))
                     {
-                        $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*,.heic,.heif','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
-						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
+                        $page_data['ocr']['upload_page'] = $this->_upload_page($info);
                     }
                     $return_config = [
                         '1003' => [
@@ -577,6 +603,41 @@ class Certification extends MY_Admin_Controller {
 		}
 	}
 
+    /**
+     * 上傳檔案功能
+     * @param $certification_info : 使用者徵信項(Table user_certification)
+     * @param array $extra_info
+     * @return mixed
+     */
+    private function _upload_page($certification_info, array $extra_info = [])
+    {
+        return $this->load->view('admin/certification/component/media_upload', ['data' => [
+            'upload_location' => 'Certification/media_upload',
+            'file_type' => 'image/*,.heic,.heif',
+            'is_multiple' => 1,
+            'extra_info' => array_merge([
+                'user_certification_id' => $certification_info->id,
+                'user_id' => $certification_info->user_id,
+                'certification_id' => $certification_info->certification_id
+            ], $extra_info)
+        ]], TRUE);
+    }
+
+    /**
+     * 以徵信項狀態確認，是否可由後台上傳圖片
+     * @param int $cert_status : 徵信項狀態 (user_certification.status)
+     * @return bool
+     */
+    private function _can_upload_pic_by_status(int $cert_status): bool
+    {
+        if ($cert_status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE ||
+            $cert_status == CERTIFICATION_STATUS_PENDING_TO_REVIEW ||
+            $cert_status == CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE)
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
 
 	public function user_bankaccount_list(){
 		$page_data 			= array('type'=>'list','list'=>array());
@@ -1371,6 +1432,10 @@ class Certification extends MY_Admin_Controller {
                     if ($post['certification_id'] == 1004)
                     {
                         $image_name = 'passbook_image';
+                    }
+                    if ($post['certification_id'] == CERTIFICATION_BUSINESSTAX)
+                    {
+                        $image_name = $post['image_key'] ?? 'others_image';
                     }
 
                     if(isset($certification_content[$image_name])){

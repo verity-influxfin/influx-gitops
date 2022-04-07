@@ -89,7 +89,6 @@ define({
     "PostCertificationCondensedIncomeStatement",
     "PostCertificationPurchaseSalesVendorList",
     "PostCertificationEmployeeinsuranceList",
-    "PostCertificationBusinessTax",
     "Judicialperson",
     "PostJudicialpersonApply",
     "GetJudicialpersonList",
