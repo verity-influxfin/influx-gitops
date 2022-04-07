@@ -64,8 +64,8 @@
                 processData: false,
                 contentType : false,
                 beforeSend: function (XMLHttpRequest){
-                    $(this).text(`檔案上傳中...`);
-                    $(this).attr("disabled", "disabled");
+                    selector.text(`檔案上傳中...`);
+                    selector.attr("disabled", "disabled");
                 },
                 success: function (response) {
                    if (response.status.code == 200) {

@@ -250,7 +250,7 @@ class Certification extends MY_Admin_Controller {
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 
-                if(in_array($info->certification_id,['1003','9','12','501','1018', '500', '1004'])) {
+                if(in_array($info->certification_id,['1003','9','12','501','1018', '500', '1004', CERTIFICATION_GOVERNMENTAUTHORITIES])) {
                     // 上傳檔案功能
                     if ($this->_can_upload_pic_by_status($info->status))
                     {

@@ -3810,30 +3810,13 @@ class Certification extends REST_Controller {
                 }
             }
 
-			// 寫入使用者手填資料
-			$content['skbank_form'] = [
-			  'CompId' => isset($input['CompId']) ? $input['CompId'] : '',
-			  'CompName' => isset($input['CompName']) ? $input['CompName'] : '',
-			  'CompCapital' => isset($input['CompCapital']) ? $input['CompCapital'] : '',
-			  'CompRegAddress' => isset($input['CompRegAddress']) ? $input['CompRegAddress'] : '',
-			  'PrName' => isset($input['PrName']) ? $input['PrName'] : '',
-			  'PrincipalId' => isset($inout['PrincipalId']) ? $inout['PrincipalId'] : ''
-			];
-
-			// 董監事
-			$count_array =[
-				'1' => 'A',
-				'2' => 'B',
-				'3' => 'C',
-				'4' => 'D',
-				'5' => 'E',
-				'6' => 'F',
-				'7' => 'G',
-			];
-			for($i=1;$i<=7;$i++){
-				$content['skbank_form']["Director{$count_array[$i]}Id"] = isset($input["Director{$count_array[$i]}Id"]) ? $input["Director{$count_array[$i]}Id"] : '';
-				$content['skbank_form']["Director{$count_array[$i]}Name"] = isset($input["Director{$count_array[$i]}Name"]) ? $input["Director{$count_array[$i]}Name"] : '';
-			}
+            // 寫入使用者手填資料
+            $content['skbank_form'] = [
+                'compName' => $input['compName'] ?? '',
+                'compId' => $input['compId'] ?? '',
+                'stampDate' => $input['stampDate'] ?? '',
+                'prName' => $input['prName'] ?? '',
+            ];
 
             // 商業司爬蟲
             $company_user_info = $this->user_model->get_by(array( 'id' => $this->user_info->id ));

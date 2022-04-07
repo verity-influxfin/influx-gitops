@@ -42,7 +42,7 @@
                                     <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                                 </a>
                             </div>
-                            <form class="form-group" @submit.prevent="doSubmit">
+                            <form id="app1" class="form-group" @submit.prevent="doSubmit">
                                 <ul class="nav nav-tabs">
                                     <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
                                     <li role="presentation" :class="{'active': tab ==='tab-kgibank'}"><a @click="changeTab('tab-kgibank')">凱基</a></li>
@@ -51,6 +51,22 @@
                                     <tbody>
                                         <tr style="text-align: center;">
                                             <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司名稱</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>統一編號</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>戳章日期</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.stampDate"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>負責人姓名</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.prName"></td>
                                         </tr>
                                         <tr>
                                             <td><span>組織類型</span></td>
@@ -146,6 +162,22 @@
                                     <tbody>
                                     <tr style="text-align: center;">
                                         <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司名稱</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>統一編號</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compId"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>戳章日期</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.stampDate"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>負責人姓名</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.prName"></td>
                                     </tr>
                                     <tr>
                                         <td><span>組織類型</span></td>
@@ -309,6 +341,13 @@
                                     }?>
                                 </div>
                             </fieldset>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page']; ?>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->
@@ -324,12 +363,16 @@
 <!-- /#page-wrapper -->
 <script>
     const v = new Vue({
-        el: '#page-wrapper',
+        el: '#app1',
         data() {
             return {
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
+                    compName: '',
+                    compId: '',
+                    stampDate: '',
+                    prName: '',
                     organizationType: '',
                     compSetDate: '',
                     registerType: '',
