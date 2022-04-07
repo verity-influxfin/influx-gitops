@@ -224,7 +224,10 @@ class Payment_lib{
                     {
                         if ($value->virtual_account == $institution_virtual_account)
                         {
-                            return $this->CI->transaction_lib->charity_recharge($value, $virtual_account->user_id, $alias);
+                            $charity = $this->CI->transaction_lib->charity_recharge($value, $virtual_account->user_id, $alias);
+                            if ($charity) {
+                            	return TRUE;
+                            }
                         }
                     }
 				}
