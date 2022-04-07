@@ -947,6 +947,7 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATIONJUDICIAL,
             CERTIFICATION_BUSINESSTAX,
             CERTIFICATION_COMPANYEMAIL,
+            CERTIFICATION_INVESTIGATIONA11
         ],
         // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [

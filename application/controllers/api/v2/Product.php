@@ -2458,7 +2458,7 @@ class Product extends REST_Controller {
                 {
                     $this->user_certification->update($cert_a11_info->id, [
                         'user_id' => $userId, // 配偶user_id
-                        'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE // 待驗證
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW // 待驗證
                     ]);
                 }
                 else
@@ -2468,7 +2468,7 @@ class Product extends REST_Controller {
                         'certification_id' => CERTIFICATION_INVESTIGATIONA11,
                         'investor' => BORROWER,
                         'content' => json_encode([]),
-                        'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE // 待驗證
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW // 待驗證
                     ]);
                 }
             }

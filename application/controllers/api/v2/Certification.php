@@ -3285,15 +3285,6 @@ class Certification extends REST_Controller {
             ];
             $insert = $this->user_certification_model->insert($param);
             if($insert){
-                if (isset($input['target_id']))
-                {
-                    $a11_param = $this->_get_investigationa11($input['target_id']);
-                    if ( $a11_param && ! $this->user_certification_model->insert_many($a11_param))
-                    {
-                        $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
-                    }
-                }
-
                 $this->response(['result' => 'SUCCESS']);
             }else{
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
@@ -3396,7 +3387,7 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['return_type','person_mq_image'];
+            $fields 	= ['return_type'];
             foreach ($fields as $field) {
                 if (empty($input[$field]) && $input[$field] != 0) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -3405,10 +3396,11 @@ class Certification extends REST_Controller {
                 }
             }
 
-            $file_fields = ['person_mq_image'];
+            $file_fields = ['legal_person_mq_image','postal_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
-                $image_ids = explode(',',$content[$field]);
+                if (empty($input[$field])) continue;
+                $image_ids = explode(',', $input[$field]);
                 if(count($image_ids)>15){
                     $image_ids = array_slice($image_ids,0,15);
                 }
@@ -3423,33 +3415,79 @@ class Certification extends REST_Controller {
                         $content[$field][] = $v->url;
                     }
 					$content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
-					$content['mail_file_status'] = 1;
                 }else{
                     $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
                 }
             }
 
-            // 如果從發人端登入上傳則將資料上傳位置更換為自然人ID
-            if($this->user_info->company_status == 1){
-                $user_id = '';
-                $this->user_info = $this->user_model->get_by(array( 'phone' => $this->user_info->phone, 'company_status' => 0, 'status' => 1, 'block_status' => 0));
-
-                if(!empty($this->user_info)){
-                    $user_id = $this->user_info->id;
+            // 如果從法人端登入上傳則將資料上傳位置更換為自然人ID
+            if ($this->user_info->company_status == 1)
+            {
+                $natural_user = $this->user_model->get_by(array('phone' => $this->user_info->phone, 'company_status' => 0, 'status' => 1, 'block_status' => 0));
+                if (empty($natural_user))
+                {
+                    $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
                 }
+                $user_id = $natural_user->id;
+            }
+            else
+            {
+                $user_id = $this->user_info->id;
             }
 
             if(empty($user_id)){
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
             }
 
-            $param		= [
-                'user_id'			=> $user_id,
-                'certification_id'	=> $certification_id,
-                'investor'			=> 0,
-                'content'			=> json_encode($content),
+            $param = [
+                [
+                    'user_id' => $user_id,
+                    'certification_id' => $certification_id,
+                    'investor' => BORROWER,
+                    'content' => json_encode($content),
+                    'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+                ]
             ];
-            $insert = $this->user_certification_model->insert($param);
+
+            if (isset($input['target_id']))
+            {
+                $this->load->model('loan/target_associate_model');
+                $target_associates = $this->target_associate_model->get_by([
+                    'target_id' => $input['target_id'],
+                    'character' => ASSOCIATES_CHARACTER_SPOUSE,
+                    'status' => [ASSOCIATES_STATUS_WAITTING_APPROVE, ASSOCIATES_STATUS_APPROVED]
+                ]);
+
+                if ( ! empty($target_associates))
+                {
+                    if ( ! $target_associates->user_id)
+                    { // 不知道是誰
+                        if ($this->user_certification_model->get_by(['user_id' => $user_id, 'status' => CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE, 'certification_id' => $certification_id]))
+                        {
+                            return $param;
+                        }
+                        $param[] = [
+                            'user_id' => $user_id, // 暫時用負責人ID
+                            'certification_id' => $certification_id,
+                            'investor' => BORROWER,
+                            'content' => json_encode($content),
+                            'status' => CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE // 待配偶歸戶
+                        ];
+                    }
+                    elseif ( ! $this->certification_lib->get_certification_info($target_associates->user_id, $certification_id))
+                    { // 知道是誰，且該配偶名下無此徵信項
+                        $param[] = [
+                            'user_id' => $target_associates->user_id,
+                            'certification_id' => $certification_id,
+                            'investor' => BORROWER,
+                            'content' => json_encode($content),
+                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+                        ];
+                    }
+                }
+            }
+
+            $insert = $this->user_certification_model->insert_many($param);
             if($insert){
                 $this->response(['result' => 'SUCCESS']);
             }else{

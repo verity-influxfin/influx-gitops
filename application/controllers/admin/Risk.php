@@ -751,6 +751,7 @@ class Risk extends MY_Admin_Controller {
 			}
 			//									$associate_certification_ids = [1,3,6,11,501,9,7];
 			$associates_list = $this->target_lib->get_associates_user_data($target->id, 'all', [0, 1], false);
+            $this->load->model('user/user_certification_model');
 			foreach ($associates_list as $associate) {
 				$status = 1;
 				$lastUpdate = 0;
@@ -783,6 +784,11 @@ class Risk extends MY_Admin_Controller {
 					}
 //					$associate->bank_account_verify == 1 && $status == 1 ? $status = 2 : '';
 				}else{
+                    if ($associate->character == ASSOCIATES_CHARACTER_SPOUSE)
+                    {
+                        $cert_info = $this->user_certification_model->get_spouse_last_certification_info($input['target_id'], CERTIFICATION_INVESTIGATIONA11, BORROWER);
+                        $associate->certification[CERTIFICATION_INVESTIGATIONA11] = $cert_info;
+                    }
 					$status=0;
 				}
 				$associate->lastUpdate = $lastUpdate;
