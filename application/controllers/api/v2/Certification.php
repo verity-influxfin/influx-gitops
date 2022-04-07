@@ -1888,7 +1888,7 @@ class Certification extends REST_Controller {
                 case "instagram":
                     $this->load->library('scraper/instagram_lib');
                     $log_status = $this->instagram_lib->getLogStatus($user_id, $input['access_token']);
-                    $info['username'] = $input['access_token'];
+                    $info['username'] = preg_replace('/\s+/', '', $input['access_token']);
                     $info['link'] = 'https://www.instagram.com/' . $input['access_token'];
                     $info['info'] = [];
                     $time = isset($log_status['response']['result']['updatedAt']) ? $log_status['response']['result']['updatedAt'] : 0;
