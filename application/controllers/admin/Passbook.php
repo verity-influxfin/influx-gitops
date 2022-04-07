@@ -54,8 +54,6 @@ class Passbook extends MY_Admin_Controller {
 			$virtual_account->virtual_account = $id;
 			$virtual_account->user_id 		= 0;
 			$virtual_account->investor 		= 0;
-            // 平台因推薦獎金入帳為不明資金，不會出現在明細表，故需移除推薦獎金的明細
-            $exclude_sources = [SOURCE_PROMOTE_REWARD];
 		}else{
 			$virtual_account 	= $this->virtual_account_model->get($id);
 		}
