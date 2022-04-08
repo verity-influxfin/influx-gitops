@@ -68,7 +68,7 @@ class Certification_lib{
             == count($certificationsStageList[$stage]));
     }
 
-	public function get_certification_info($user_id,$certification_id,$investor=0,$get_fail=false){
+	public function get_certification_info($user_id,$certification_id,$investor=0,$get_fail=false, $get_expired = FALSE){
 		if($user_id && $certification_id){
 			$param = array(
 				'user_id'			=> $user_id,
@@ -80,7 +80,7 @@ class Certification_lib{
                 CERTIFICATION_STATUS_NOT_COMPLETED, CERTIFICATION_STATUS_AUTHENTICATED] : '';
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
-			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
+			    if($get_expired == FALSE && $certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
                     return false;
                 }
 			    else{
@@ -3541,7 +3541,7 @@ class Certification_lib{
         return FALSE;
     }
 
-    public function get_status($user_id,$investor=0,$company=0,$get_fail=false,$target=false,$product=false){
+    public function get_status($user_id,$investor=0,$company=0,$get_fail=false,$target=false,$product=false, $get_expired = FALSE){
 		if($user_id){
 			$certification = array();
             $naturalPerson = false;
@@ -3566,7 +3566,7 @@ class Certification_lib{
                             CERTIFICATION_PROFILE
                         ]))
                         {
-                            $user_certification = $this->get_certification_info($naturalPerson->id, $value, 0);
+                            $user_certification = $this->get_certification_info($naturalPerson->id, $value, 0, $get_fail, $get_expired);
                             if ($user_certification) {
                                 $data['user_status'] = intval($user_certification->status);
                                 $data['certification_id'] = intval($user_certification->id);
@@ -3664,7 +3664,7 @@ class Certification_lib{
 				if($company){
                     $userId = $key < CERTIFICATION_FOR_JUDICIAL ? $naturalPerson->id : $user_id;
                 }
-                $user_certification = $this->get_certification_info($userId,$key,$investor,$get_fail);
+                $user_certification = $this->get_certification_info($userId,$key,$investor,$get_fail, $get_expired);
                 if($user_certification){
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
