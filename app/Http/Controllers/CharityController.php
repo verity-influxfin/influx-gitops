@@ -132,6 +132,12 @@ class CharityController extends Controller
         $inputs = $request->all();
         $inputs['source'] = 1; // 捐款來源為官網
 
+        $cacheKey = $request->ip() ?? '127.0.0.1';
+        if ($this->_isVisitorLimited($cacheKey))
+        {
+            return response()->json([], 500);
+        }
+
         try {
             $client = new Client();
             $res = $client->request('POST', env('API_URL') . 'user/donate_anonymous', [
@@ -140,12 +146,29 @@ class CharityController extends Controller
         }
         catch (Exception $e)
         {
-            $code = $e->getResponse()->getStatusCode();
-            $body = $e->getResponse()->getBody();
-            return response()->json(json_decode($body, TRUE), $code);
+            return response()->json([], 500);
         }
 
-        return response()->json(json_decode($res->getBody(), TRUE), 200);
+        $deus_data = json_decode($res->getBody(), TRUE);
+
+        if ($deus_data['result'] == 'SUCCESS'
+            && ! isset($deus_data['error']))
+        {
+            return response()->json([
+                'data' => $deus_data['data'],
+            ], 200);
+        }
+        elseif (isset($deus_data['error']))
+        {
+            return response()->json([
+                'error' => $deus_data['error'],
+                'msg' => $deus_data['data']['msg'],
+            ], 400);
+        }
+        else
+        {
+            return response()->json([], 500);
+        }
     }
 
     // 查詢捐款紀錄
@@ -159,18 +182,10 @@ class CharityController extends Controller
         $inputs = $request->all();
 
         $cacheKey = $request->ip() ?? '127.0.0.1';
-        if ( ! Cache::has($cacheKey))
-        {
-            Cache::put($cacheKey, 0, 180);
-        }
-
-        $value = Cache::get($cacheKey, 0);
-        if ($value > 10)
+        if ($this->_isVisitorLimited($cacheKey))
         {
             return response()->json([], 500);
         }
-
-        Cache::increment($cacheKey);
 
         try {
             $client = new Client();
@@ -180,11 +195,45 @@ class CharityController extends Controller
         }
         catch (Exception $e)
         {
-            $code = $e->getResponse()->getStatusCode();
-            $body = $e->getResponse()->getBody();
-            return response()->json(json_decode($body, TRUE), $code);
+            return response()->json([], 500);
         }
 
-        return response()->json(json_decode($res->getBody(), TRUE), 200);
+        $deus_data = json_decode($res->getBody(), TRUE);
+
+        if ($deus_data['result'] == 'SUCCESS'
+            && ! isset($deus_data['error']))
+        {
+            return response()->json([
+                'data' => $deus_data['data'],
+            ], 200);
+        }
+        elseif (isset($deus_data['error']))
+        {
+            return response()->json([
+                'error' => $deus_data['error'],
+                'msg' => $deus_data['data']['msg'],
+            ], 400);
+        }
+        else
+        {
+            return response()->json([], 500);
+        }
+    }
+
+    private function _isVisitorLimited($cacheKey)
+    {
+        if ( ! Cache::has($cacheKey))
+        {
+            Cache::put($cacheKey, 1, 180);
+        }
+
+        $value = Cache::get($cacheKey, 1);
+        if ($value > 5)
+        {
+            return TRUE;
+        }
+
+        Cache::increment($cacheKey);
+        return FALSE;
     }
 }
