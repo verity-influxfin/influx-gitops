@@ -2395,7 +2395,7 @@ END:
             ! preg_match('/[0-9]{5}/', $input['last5']))
         {
             $this->response([
-                'result' => 'ERROR',
+                'result' => 'SUCCESS',
                 'error' => INPUT_NOT_CORRECT,
                 'data' => [
                     'msg' => $error_msg[INPUT_NOT_CORRECT],
@@ -2408,7 +2408,7 @@ END:
         if (empty($donate_list))
         {
             $this->response([
-                'result' => 'ERROR',
+                'result' => 'SUCCESS',
                 'error' => CHARITY_RECORD_NOT_FOUND,
                 'data' => [
                     'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
@@ -2492,7 +2492,7 @@ END:
         if ( ! is_numeric($input['amount']) || $input['amount'] <= 0)
         {
             $this->response([
-                'result' => 'ERROR',
+                'result' => 'SUCCESS',
                 'error' => CHARITY_INVALID_AMOUNT,
                 'data' => [
                     'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
@@ -2502,7 +2502,7 @@ END:
         elseif ($input['amount'] >= 500000)
         {
             $this->response([
-                'result' => 'ERROR',
+                'result' => 'SUCCESS',
                 'error' => CHARITY_ILLEGAL_AMOUNT,
                 'data' => [
                     'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
