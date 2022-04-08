@@ -2395,9 +2395,12 @@ END:
             ! preg_match('/[0-9]{5}/', $input['last5']))
         {
             $this->response([
+                'result' => 'ERROR',
                 'error' => INPUT_NOT_CORRECT,
-                'msg' => $error_msg[INPUT_NOT_CORRECT],
-            ], 400);
+                'data' => [
+                    'msg' => $error_msg[INPUT_NOT_CORRECT],
+                ],
+            ]);
         }
 
         $this->load->model('transaction/anonymous_donate_model');
@@ -2405,9 +2408,12 @@ END:
         if (empty($donate_list))
         {
             $this->response([
+                'result' => 'ERROR',
                 'error' => CHARITY_RECORD_NOT_FOUND,
-                'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
-            ], 400);
+                'data' => [
+                    'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
+                ],
+            ]);
         }
 
         $return_data = [
@@ -2418,7 +2424,7 @@ END:
         ];
 
         // 如果用戶有填入身份證號的話才有辦法檢查與末五碼的關聯
-        if ($input['number'] != '' || $input['name'] != '')
+        if ( ! empty($input['number']) || ! empty($input['name']))
         {
             $this->load->model('user/charity_anonymous_model');
             foreach ($donate_list as $key => $donate)
@@ -2454,7 +2460,10 @@ END:
             }
         }
 
-        $this->response(['data' => $return_data], 200);
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $return_data,
+        ]);
     }
 
     /**
@@ -2468,7 +2477,7 @@ END:
      * @param integer $receipt  是否要紙本收據 0:否, 1:是
      * @param string  $address  收件地址
      * @param integer *$source  捐款來源 1:官網, 2:借款app, 3:投資app
-     * 
+     *
      * @return void
      **/
     public function donate_anonymous_post()
@@ -2483,16 +2492,22 @@ END:
         if ( ! is_numeric($input['amount']) || $input['amount'] <= 0)
         {
             $this->response([
+                'result' => 'ERROR',
                 'error' => CHARITY_INVALID_AMOUNT,
-                'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
-            ], 400);
+                'data' => [
+                    'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
+                ],
+            ]);
         }
         elseif ($input['amount'] >= 500000)
         {
             $this->response([
+                'result' => 'ERROR',
                 'error' => CHARITY_ILLEGAL_AMOUNT,
-                'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
-            ], 400);
+                'data' => [
+                    'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
+                ],
+            ]);
         }
 
         $this->load->model('user/charity_anonymous_model');
@@ -2509,17 +2524,25 @@ END:
 
         if ($anonymous_id && $institution)
         {
-            $this->response(['data' =>
+            $this->response([
+                'result' => 'SUCCESS',
+                'data' =>
                 [
                     'bank_code' => CATHAY_BANK_CODE,
                     'bank_account' => $institution['virtual_account'],
                     'charity_title' => $institution['name'],
                 ],
-            ], 200);
+            ]);
         }
         else
         {
-            $this->response(['error' => EXIT_ERROR], 400);
+            $this->response([
+                'result' => 'ERROR',
+                'error' => EXIT_ERROR,
+                'data' => [
+                    'msg' => 'generic error',
+                ],
+            ]);
         }
     }
 }
