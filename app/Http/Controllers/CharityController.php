@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Http;
 
 class CharityController extends Controller
 {
+
+    private $routerDonateAnonymous = 'user/donate_anonymous';
+
     /**
      * 取得捐款資料
      */
@@ -138,37 +141,8 @@ class CharityController extends Controller
             return response()->json([], 503);
         }
 
-        try {
-            $client = new Client();
-            $res = $client->request('POST', env('API_URL') . 'user/donate_anonymous', [
-                'form_params' => $inputs,
-            ]);
-        }
-        catch (Exception $e)
-        {
-            return response()->json([], 500);
-        }
-
-        $deus_data = json_decode($res->getBody(), TRUE);
-
-        if ($deus_data['result'] == 'SUCCESS'
-            && ! isset($deus_data['error']))
-        {
-            return response()->json([
-                'data' => $deus_data['data'],
-            ], 200);
-        }
-        elseif (isset($deus_data['error']))
-        {
-            return response()->json([
-                'error' => $deus_data['error'],
-                'msg' => $deus_data['data']['msg'],
-            ], 400);
-        }
-        else
-        {
-            return response()->json([], 500);
-        }
+        $return = $this->_connectDeus('POST', $this->routerDonateAnonymous, $inputs);
+        return response()->json($return['data'], $return['status']);
     }
 
     // 查詢捐款紀錄
@@ -187,37 +161,70 @@ class CharityController extends Controller
             return response()->json([], 503);
         }
 
+        $return = $this->_connectDeus('GET', $this->routerDonateAnonymous, $inputs);
+        return response()->json($return['data'], $return['status']);
+    }
+
+    private function _connectDeus($method, $router, $inputs)
+    {
         try {
             $client = new Client();
-            $res = $client->request('GET', env('API_URL') . 'user/donate_anonymous', [
-                'query' => $inputs,
-            ]);
+            $res = $client->request(
+                $method,
+                env('API_URL') . $router,
+                $this->_parseRequestPayload($method, $inputs)
+            );
         }
         catch (Exception $e)
         {
-            return response()->json([], 500);
+            return ['status' => 500, 'data' => []];
         }
 
-        $deus_data = json_decode($res->getBody(), TRUE);
+        return $this->_parseDeusResponse(json_decode($res->getBody(), TRUE));
+    }
 
-        if ($deus_data['result'] == 'SUCCESS'
-            && ! isset($deus_data['error']))
+    private function _parseRequestPayload($method, $inputs)
+    {
+        switch ($method)
         {
-            return response()->json([
-                'data' => $deus_data['data'],
-            ], 200);
+        case 'GET':
+            $payload = ['query' => $inputs];
+            break;
+        case 'POST':
+            $payload = ['form_params' => $inputs];
+            break;
+        default:
+            $payload = [];
+            break;
         }
-        elseif (isset($deus_data['error']))
+
+        return $payload;
+    }
+
+    private function _parseDeusResponse($responseData)
+    {
+        $returnData = [
+            'status' => 500,
+            'data' => [],
+        ];
+
+        if (isset($responseData['result']) &&
+            ! isset($responseData['error']) &&
+            $responseData['result'] === 'SUCCESS')
         {
-            return response()->json([
-                'error' => $deus_data['error'],
-                'msg' => $deus_data['data']['msg'],
-            ], 400);
+            $returnData['status'] = 200;
+            $returnData['data'] = $responseData['data'];
         }
-        else
+        elseif (isset($responseData['error']))
         {
-            return response()->json([], 500);
+            $returnData['status'] = 400;
+            $returnData['data'] = [
+                'error' => $responseData['error'],
+                'msg' => $responseData['data']['msg'],
+            ];
         }
+
+        return $returnData;
     }
 
     private function _isVisitorLimited($cacheKey)
