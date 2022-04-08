@@ -144,6 +144,20 @@ class Certification extends REST_Controller {
                     $new_list[$value] = $certification_list[$value];
                 }
             }
+
+            // 有法人聯徵者，順便撈取個人聯徵A11
+            if ( $company == USER_IS_COMPANY && ! empty($new_list[CERTIFICATION_INVESTIGATIONJUDICIAL]['certification_id']))
+            {
+                $this->load->library('judicialperson_lib');
+                $natural_person = $this->judicialperson_lib->getNaturalPerson($user_id);
+                $cert_info_a11 = $this->certification_lib->get_certification_info($natural_person->id, CERTIFICATION_INVESTIGATIONA11, $investor);
+                if ($cert_info_a11)
+                {
+                    $new_list[CERTIFICATION_INVESTIGATIONJUDICIAL]['user_status'] = $new_list[CERTIFICATION_INVESTIGATIONJUDICIAL]['user_status'] & $cert_info_a11->status;
+                    $new_list[CERTIFICATION_INVESTIGATIONJUDICIAL]['content_natural_person'] = $cert_info_a11->content ?? [];
+                }
+            }
+
 			$list = $new_list;
 		}
 
