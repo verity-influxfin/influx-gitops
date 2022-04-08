@@ -135,7 +135,7 @@ class CharityController extends Controller
         $cacheKey = $request->ip() ?? '127.0.0.1';
         if ($this->_isVisitorLimited($cacheKey))
         {
-            return response()->json([], 500);
+            return response()->json([], 503);
         }
 
         try {
@@ -184,7 +184,7 @@ class CharityController extends Controller
         $cacheKey = $request->ip() ?? '127.0.0.1';
         if ($this->_isVisitorLimited($cacheKey))
         {
-            return response()->json([], 500);
+            return response()->json([], 503);
         }
 
         try {
