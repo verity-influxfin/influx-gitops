@@ -983,19 +983,6 @@ class Certification_lib{
                 $verifiedResult->addMessage('預計畢業時間格式錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
             }
 
-            // OCR辨識結果(含手填)是否為黑名單學校
-            $this->CI->config->load('school_points', TRUE);
-            $school_config = $this->CI->config->item('school_points');
-            $this->CI->load->library('student_card_recognition_lib');
-            $result = $this->CI->student_card_recognition_lib->get_student_card_identification($reference);
-            if ($result['status'] == 1)
-            {
-                if(in_array($result['university'] ,$school_config['lock_school']))
-                {
-                    $verifiedResult->addMessage('經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
-                }
-            }
-
             $status                  = $verifiedResult->getStatus();
             $remark                  = is_array(json_decode($info->remark, TRUE)) ? json_decode($info->remark, TRUE) : [];
             $remark['verify_result'] = isset($remark['verify_result']) ? $remark['verify_result'] : [];
