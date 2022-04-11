@@ -3,6 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Payment_lib{
+    private $charity_virtual_account = [];
 
 	public function __construct()
     {
@@ -10,6 +11,10 @@ class Payment_lib{
 		$this->CI->load->model('transaction/payment_model');
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->library('Transaction_lib');
+
+        $this->load->model('user/charity_institution_model');
+        $charity_institution_info = $this->charity_institution_model->get_many_by(['status' => 1]);
+        $this->charity_virtual_account = array_column($charity_institution_info, 'virtual_account', 'alias');
     }
 	public function script_get_taishin_info($data){
 		$insert_param = array();
@@ -218,16 +223,13 @@ class Payment_lib{
 						return true;
 					}
 
-                    // 取得慈善機構的虛擬帳號，檢查是否為匿名慈善捐款的金流
-                    $institutions = $this->CI->config->item('charity_alias_virtual_account');
-                    foreach ($institutions as $alias => $institution_virtual_account)
+                    // 檢查是否為匯入慈善機構的金流
+                    if (in_array($value->virtual_account, $this->charity_virtual_account))
                     {
-                        if ($value->virtual_account == $institution_virtual_account)
-                        {
-                            $charity = $this->CI->transaction_lib->charity_recharge($value, $virtual_account->user_id, $alias);
-                            if ($charity) {
-                            	return TRUE;
-                            }
+                    	$alias = array_flip($this->charity_virtual_account)[$value->virtual_account];
+                        $charity = $this->CI->transaction_lib->charity_recharge($value, $virtual_account->user_id, $alias);
+                        if ($charity) {
+                        	return TRUE;
                         }
                     }
 				}

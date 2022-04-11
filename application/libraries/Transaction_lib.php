@@ -1338,6 +1338,7 @@ class Transaction_lib{
             $payment->amount > 0 &&
             ! empty($payment->virtual_account))
         {
+        	$this->CI->db->trans_start();
             $rs = $this->CI->payment_model->update($payment->id, ['status' => 1]);
             if ($rs)
             {
@@ -1355,27 +1356,27 @@ class Transaction_lib{
                 ];
 
                 $transaction_id = $this->CI->transaction_model->insert($transactions);
-                // 寫入虛擬存摺
-                if ($transaction_id)
-                {
-                    $virtual_passbook = $this->CI->passbook_lib->enter_account($transaction_id, $payment->tx_datetime);
 
-                    // 以下針對 慈善捐款 新增項
-                    $this->CI->load->model('transaction/anonymous_donate_model');
-                    $data = [
-                        'payment_id' => $payment->id,
-                        'transaction_id' => $transaction_id,
-                        'charity_institution_alias' => $charity_institution_alias,
-                        'last5' => substr($bank['bank_account'], -5),
-                        'amount' => (int) $payment->amount,
-                    ];
-                    $donate_id = $this->CI->anonymous_donate_model->insert($data);
-                    if ($virtual_passbook && $donate_id)
-                    {
-                        return TRUE;
-                    }
-                }
+                // 寫入虛擬存摺
+                $virtual_passbook = $this->CI->passbook_lib->enter_account($transaction_id, $payment->tx_datetime);
+
+                // 以下針對 慈善捐款 新增項
+                $this->CI->load->model('transaction/anonymous_donate_model');
+                $data = [
+                    'payment_id' => $payment->id,
+                    'transaction_id' => $transaction_id,
+                    'charity_institution_alias' => $charity_institution_alias,
+                    'last5' => substr($bank['bank_account'], -5),
+                    'amount' => (int) $payment->amount,
+                ];
+                $donate_id = $this->CI->anonymous_donate_model->insert($data);
             }
+            $this->CI->db->trans_complete();
+        }
+
+        if ($virtual_passbook && $donate_id)
+        {
+            return TRUE;
         }
 
         return FALSE;

@@ -2414,6 +2414,3 @@ $config['famous_school_list'] = [
     'NTPU' => '國立臺北大學',
     'NTUT' => '國立臺北科技大學',
 ];
-
-// 慈善機構虛擬帳號
-$config['charity_alias_virtual_account'] = ['NTUH' => '56639042524726'];

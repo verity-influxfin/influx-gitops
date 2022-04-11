@@ -2483,6 +2483,7 @@ END:
     public function donate_anonymous_post()
     {
         $input = $this->input->post(NULL, TRUE);
+        $alias = $input['alias'] ?? 'NTUH';
 
         $error_msg = [
             CHARITY_INVALID_AMOUNT => '無效的慈善捐款金額。',
@@ -2518,7 +2519,7 @@ END:
         $institution = $this->charity_institution_model
             ->as_array()
             ->get_by([
-                'alias' => 'NTUH',
+                'alias' => $alias,
                 'status' => 1,
             ]);
 

@@ -1,6 +1,6 @@
 CREATE TABLE `p2p_user`.`charity_anonymous` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(15) DEFAULT '' COMMENT '姓名|公司抬頭',
+  `name` varchar(25) DEFAULT '' COMMENT '姓名|公司抬頭',
   `number` varchar(10) DEFAULT '' COMMENT '身份證字號|公司統編',
   `amount` int(11) NOT NULL COMMENT '捐款金額',
   `phone` varchar(15) DEFAULT '',
