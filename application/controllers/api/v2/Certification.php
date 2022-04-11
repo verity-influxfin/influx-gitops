@@ -218,7 +218,7 @@ class Certification extends REST_Controller {
             //     $user_id = $judicial_person->user_id;
             // }
 
-			$rs	= $this->certification_lib->get_certification_info($user_id,$certification['id'],$investor);
+            $rs = $this->certification_lib->get_certification_info($user_id, $certification['id'], $investor, FALSE, TRUE);
             if($rs){
 				$data = array(
 					'alias'				=> $alias,
