@@ -14,7 +14,7 @@ class Payment_lib{
 
         $this->CI->load->model('user/charity_institution_model');
         $charity_institution_info = $this->CI->charity_institution_model->get_many_by(['status' => 1]);
-        $this->charity_virtual_account = array_column($charity_institution_info, 'virtual_account', 'alias');
+        $this->charity_virtual_account = array_column($charity_institution_info, 'virtual_account', 'id');
     }
 	public function script_get_taishin_info($data){
 		$insert_param = array();
@@ -226,8 +226,8 @@ class Payment_lib{
                     // 檢查是否為匯入慈善機構的金流
                     if (in_array($value->virtual_account, $this->charity_virtual_account))
                     {
-                    	$alias = array_flip($this->charity_virtual_account)[$value->virtual_account];
-                        $charity = $this->CI->transaction_lib->charity_recharge($value, $virtual_account->user_id, $alias);
+                    	$id = array_flip($this->charity_virtual_account)[$value->virtual_account];
+                        $charity = $this->CI->transaction_lib->charity_recharge($value, $virtual_account->user_id, $id);
                         if ($charity) {
                         	return TRUE;
                         }

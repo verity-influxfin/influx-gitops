@@ -22,7 +22,7 @@ CREATE TABLE `p2p_transaction`.`anonymous_donate` (
   `transaction_id` int(11) NOT NULL,
   `last5` varchar(5) COMMENT '帳號末五碼',
   `amount` int(11) NOT NULL COMMENT '轉入金額',
-  `charity_institution_alias` varchar(45) DEFAULT '' COMMENT '慈善機構別名',
+  `charity_institution_id` int(11) DEFAULT 0,
   `charity_anonymous_id` int(11) DEFAULT 0 COMMENT '成功對應的匿名捐款紀錄',
   `created_at` timestamp NOT NULL,
   `created_ip` varchar(15) NOT NULL,

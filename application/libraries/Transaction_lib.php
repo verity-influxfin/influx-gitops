@@ -1330,7 +1330,7 @@ class Transaction_lib{
     /**
      * 外部慈善捐款的金流另外處理
      **/
-    public function charity_recharge($payment, $user_id, $charity_institution_alias)
+    public function charity_recharge($payment, $user_id, $charity_institution_id)
     {
         if ($payment->status != '1' &&
             $payment->amount > 0 &&
@@ -1364,7 +1364,7 @@ class Transaction_lib{
             $donate_data = [
                 'payment_id' => $payment->id,
                 'transaction_id' => $transaction_id,
-                'charity_institution_alias' => $charity_institution_alias,
+                'charity_institution_id' => $charity_institution_id,
                 'last5' => substr($bank['bank_account'], -5),
                 'amount' => (int) $payment->amount,
                 'created_at' => date('Y-m-d H:i:s'),
