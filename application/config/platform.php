@@ -1270,7 +1270,7 @@ $config['sub_product_list'] = [
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                 ],
-                'certification_verify_stage' => [
+                'certifications_stage' => [
                     [
                         CERTIFICATION_IDENTITY,
                         CERTIFICATION_STUDENT,
@@ -1323,7 +1323,7 @@ $config['sub_product_list'] = [
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                 ],
-                'certification_verify_stage' => [
+                'certifications_stage' => [
                     [
                         CERTIFICATION_IDENTITY,
                         CERTIFICATION_DEBITCARD,
@@ -1601,7 +1601,7 @@ $config['sub_product_list'] = [
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                 ],
-                'certification_verify_stage' => [
+                'certifications_stage' => [
                     [
                         CERTIFICATION_IDENTITY,
                         CERTIFICATION_STUDENT,
