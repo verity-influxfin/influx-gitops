@@ -883,7 +883,8 @@ class User_lib {
         // -- start row of every part for the layout
         $data['start_row']['realized_rate_of_return'] = 12;
         $data['start_row']['account_payable_interest'] = $data['start_row']['realized_rate_of_return'] + count($data['realized_rate_of_return'] ?? []) + 6;;
-        $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest'] + count($data['account_payable_interest'] ?? []) + 3;
+        $account_payable_cnt = count($data['account_payable_interest'] ?? []);
+        $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest'] + ($account_payable_cnt != 0 ? $account_payable_cnt : 1) + 3;
 
         return $data;
     }

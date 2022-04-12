@@ -194,8 +194,8 @@ class Spreadsheet_lib
 
         $width_list = [['column' => 'A', 'width' => 18.33], ['column' => 'B', 'width' => 11.17], ['column' => 'C', 'width' => 8.5],
             ['column' => 'D', 'width' => 11.17], ['column' => 'E', 'width' => 12.3], ['column' => 'F', 'width' => 6.67],
-            ['column' => 'G', 'width' => 6.67], ['column' => 'H', 'width' => 8.5], ['column' => 'I', 'width' => 7.17],
-            ['column' => 'J', 'width' => 10.4]];
+            ['column' => 'G', 'width' => 6.67], ['column' => 'H', 'width' => 8.5], ['column' => 'I', 'width' => 7.3],
+            ['column' => 'J', 'width' => 12]];
         foreach ($width_list as $info)
         {
             $spreadsheet->getActiveSheet()->getStyle($info['column'])->getAlignment()->setHorizontal('center');

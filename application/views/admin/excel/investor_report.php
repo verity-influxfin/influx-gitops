@@ -81,15 +81,15 @@
                 <th>(二)已實現收益率</th>
             </tr>
             <tr>
-                <th colspan="2">投資年資：<?= $data['invest_performance']['years'] ?></th>
+                <th colspan="2">投資年資：<?= $data['invest_performance']['years'] < 1 ? ($data['invest_performance']['years']/12) .'月' : $data['invest_performance']['years'] .'年' ?></th>
                 <th colspan="5">收入</th>
                 <th>支出</th>
-                <th rowspan="2">總收益</th>
-                <th rowspan="2">年化報酬率</th>
+                <th rowspan="2">總收益(1)</th>
+                <th rowspan="2">年化報酬率(2)</th>
             </tr>
             <tr>
                 <th>期間</th>
-                <th>本金均額</th>
+                <th>本金均額(3)</th>
                 <th>利息收入</th>
                 <th>提還利息</th>
                 <th>逾期償還利息</th>
