@@ -451,12 +451,12 @@ class Scraper extends MY_Admin_Controller
             $response = isset($response) ? $response['response'] : ['message' => 'sip not response'];
             $this->json_output->setStatusCode(401)->setResponse($response)->send();
         }
-		
-		$school_status = $this->sip_lib->getUniversityModel($input['university'], $input['account']);
-		if (isset($school_status['response']))
-		{
-			$response['response']['school_status'] = $school_status['response']; 
-		}
+        
+        $school_status = $this->sip_lib->getUniversityModel($input['university'], $input['account']);
+        if (isset($school_status['response']))
+        {
+            $response['response']['school_status'] = $school_status['response']; 
+        }
 
         $this->json_output->setStatusCode(200)->setResponse($response['response'])->send();
     }

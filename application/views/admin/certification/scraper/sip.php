@@ -170,33 +170,33 @@
             return false;
         }
         // console.log(dataResponse);
-		const status = (st)=>{
-			if(st){
-				return `
-					<button type="button" class="btn btn-success btn-circle">
-						<i class="fa fa-check"></i>
-					</button>
-				`
-			}
-			return `
-				<button type="button" class="btn btn-danger btn-circle">
-					<i class="fa fa-times"></i>
-				</button>
-			`
-		}
-		const universityStatus = (st) => {
-			switch (st) {
-				case 0: return '驗證碼問題'
-				case 1: return '正常狀態'
-				case 2: return '黑名單學校'
-				case 3: return 'server問題'
-				case 4: return 'VPN相關問題'
-				case 5: return '要求改密碼'
-				case 6: return '問卷問題'
-				case 7: return '不穩定 有時有未知異常'
-				default: return 'unKnown Error'
-			}
-		}
+        const status = (st)=>{
+            if(st){
+                return `
+                    <button type="button" class="btn btn-success btn-circle">
+                        <i class="fa fa-check"></i>
+                    </button>
+                `
+            }
+            return `
+                <button type="button" class="btn btn-danger btn-circle">
+                    <i class="fa fa-times"></i>
+                </button>
+            `
+        }
+        const universityStatus = (st) => {
+            switch (st) {
+                case 0: return '驗證碼問題'
+                case 1: return '正常狀態'
+                case 2: return '黑名單學校'
+                case 3: return 'server問題'
+                case 4: return 'VPN相關問題'
+                case 5: return '要求改密碼'
+                case 6: return '問卷問題'
+                case 7: return '不穩定 有時有未知異常'
+                default: return 'unKnown Error'
+            }
+        }
         $('#name-scraper').html(dataResponse.name + status(school_status.deep_scrape_enabled.name));
         $('#id-scraper').html(dataResponse.idNumber + status(school_status.deep_scrape_enabled.idNumber));
         $('#university').text(university + ' - ' + universityStatus(school_status.status));
@@ -221,29 +221,29 @@
             const semester_class = dataResponse[semester]['class'] ?? []
             semester_class.forEach((item) => {
                 html = `
-				<tr>
-					<td>${item.name ?? ''}</td>
-					<td>${item.credit ?? ''}</td>
-					<td>${item.score ?? ''}</td>
-				</tr>`
+                <tr>
+                    <td>${item.name ?? ''}</td>
+                    <td>${item.credit ?? ''}</td>
+                    <td>${item.score ?? ''}</td>
+                </tr>`
                 htmls += html;
             })
             table = `
-					<table class="table">
-						<tbody>
-							<tr>
-								<th>學年期/學期總平均</th>
-								<td>${semester}</th>
-								<td>${dataResponse[semester].totalAvg}</td>
-							</tr>
-							<tr>
-								<th>課程名稱</th>
-								<th>學分</th>
-								<th>分數</th>
-							</tr>
-							${htmls}
-						</tbody>
-					</table>`
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>學年期/學期總平均</th>
+                                <td>${semester}</th>
+                                <td>${dataResponse[semester].totalAvg}</td>
+                            </tr>
+                            <tr>
+                                <th>課程名稱</th>
+                                <th>學分</th>
+                                <th>分數</th>
+                            </tr>
+                            ${htmls}
+                        </tbody>
+                    </table>`
             $('#content').append(table);
         })
     }
