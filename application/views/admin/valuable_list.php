@@ -76,6 +76,7 @@
                                             <th>申貸紀錄</th>
                                             <th>信用額度</th>
                                             <th>通過實名</th>
+                                            <th>通過學生認證</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -93,6 +94,7 @@
                                             <td><?= $value['apply_status']??'' ?></td>
                                             <td><?= $value['credit_status']??'' ?></td>
                                             <td><?= $value['identity']??'' ?></td>
+                                            <td><?= $value['student']??'' ?></td>
                                         </tr>
 									<?php
 									}}
