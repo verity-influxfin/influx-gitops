@@ -12,8 +12,8 @@ class Payment_lib{
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->library('Transaction_lib');
 
-        $this->load->model('user/charity_institution_model');
-        $charity_institution_info = $this->charity_institution_model->get_many_by(['status' => 1]);
+        $this->CI->load->model('user/charity_institution_model');
+        $charity_institution_info = $this->CI->charity_institution_model->get_many_by(['status' => 1]);
         $this->charity_virtual_account = array_column($charity_institution_info, 'virtual_account', 'alias');
     }
 	public function script_get_taishin_info($data){
