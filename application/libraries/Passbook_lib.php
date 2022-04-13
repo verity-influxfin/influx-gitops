@@ -87,7 +87,7 @@ class Passbook_lib{
 	}
 
 	//取得資金資料
-    public function get_passbook_list($virtual_account = '', $limit = FALSE, array $exclude_sources = [])
+    public function get_passbook_list($virtual_account = '', $limit = FALSE, array $exclude_sources = [], array $where = [], int $total = 0)
     {
 		$list = [];
 		if($virtual_account){
@@ -97,9 +97,9 @@ class Passbook_lib{
                 {
                     $this->CI->virtual_passbook_model->limit($limit);
                 }
-                $virtual_passbook = $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at', 'asc')->get_many_by([
-                    'virtual_account' => $virtual_account
-                ]);
+                $virtual_passbook = $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at', 'asc')->get_many_by(
+                    array_merge(['virtual_account' => $virtual_account], $where)
+                );
             }
             else
             {
@@ -107,7 +107,6 @@ class Passbook_lib{
             }
 
 			if($virtual_passbook){
-				$total 	= 0;
 				foreach($virtual_passbook as $key => $value){
 					$total	+= intval($value->amount);
 					$list[] = array(
