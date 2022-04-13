@@ -115,7 +115,7 @@
               <input
                 type="text"
                 class="form-control donate-input"
-                placeholder="300"
+                placeholder="請輸入金額"
                 v-model.number="donateForm.amount"
                 required
               />
@@ -225,7 +225,7 @@
               :donate-data="queryResponse"
             />
             <div class="text-center mt-2">
-              <button class="btn share-btn" @click="doShare">分享</button>
+              <button class="btn share-btn" @click="doShare" :disabled="canvasDrawing">分享</button>
             </div>
             <div class="donate-info mx-auto">感謝您的愛心捐款</div>
             <div class="donate-info mx-auto">亦歡迎使用更多普匯服務</div>
@@ -525,6 +525,7 @@
                 class="form-control col-sm-7"
                 placeholder="輸入署名/抬頭"
                 v-model="queryForm.name"
+                :required="Boolean(queryForm.number)"
               />
             </div>
             <div class="row no-gutters mb-2">
@@ -536,6 +537,7 @@
                 class="form-control col-sm-7"
                 placeholder="輸入身分證字號/統一編號"
                 v-model="queryForm.number"
+                :required="Boolean(queryForm.name)"
               />
             </div>
             <div class="row no-gutters">
@@ -604,6 +606,7 @@ export default {
         donator_sex: ''
       },
       donateErrorMsg: '',
+      canvasDrawing:false,
       paperTicket: false
     }
   },
@@ -710,6 +713,7 @@ export default {
         $('#modal-cert').modal('show')
         return
       }
+      this.canvasDrawing = true
       html2canvas(document.querySelector('#cert')).then(canvas => {
         const img = document.createElement('img')
         img.src = canvas.toDataURL()
@@ -717,6 +721,7 @@ export default {
         document.querySelector('#cert-img').appendChild(img)
         $('#modal-cert').modal('show')
         this.genCert = true
+        this.canvasDrawing = false
       })
     }
   },
@@ -724,7 +729,7 @@ export default {
     checkDonateForm() {
       const { name, number, phone, email } = this.donateForm
       return Boolean(name) && Boolean(number) && Boolean(phone) && Boolean(email)
-    }
+    },
   },
 }
 </script>
