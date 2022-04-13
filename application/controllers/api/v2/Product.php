@@ -1213,7 +1213,7 @@ class Product extends REST_Controller {
             }
 
             $certification		= [];
-            $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, false, $target, $product);
+            $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, false, $target, $product, TRUE);
             $completeness_level = 100 / count($certification_list);
             if(count($cer_group) > 0){
                 $completeness_level = 100 / (count($certification_list) + count($cer_group));
