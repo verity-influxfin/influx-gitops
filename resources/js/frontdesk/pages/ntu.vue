@@ -34,11 +34,6 @@
           <div class="yt-top-icon"></div>
           <div class="yt-top-text">台大兒童健康基金會</div>
         </div>
-        <div class="d-flex yt-top d-md-none d-flex">
-          <router-link to="/investLink" target="_blank">
-            <button class="btn btn-outlined yt-top-donate">捐款去</button>
-          </router-link>
-        </div>
         <p>
           孩子愈來愈少了，<br />
           我們未來主人翁的健康好重要 <br />
@@ -55,16 +50,27 @@
           我們比好多生病的孩子幸福好多，<br />
           我們擁有健康，擁有福氣
         </p>
+        <div class="d-sm-none d-block">
+          <button class="btn donate-function-button" @click="openDonate">
+            我要捐款
+          </button>
+          <button class="btn donate-query-button" @click="openDonateQuery">
+            捐款查詢
+          </button>
+        </div>
       </div>
       <div class="col-auto">
         <div class="yt-top d-none d-md-flex">
           <div class="yt-top-icon"></div>
           <div class="yt-top-text">台大兒童健康基金會</div>
-          <router-link to="/investLink" target="_blank">
-            <button class="btn btn-outlined yt-top-donate">捐款去</button>
-          </router-link>
+          <button class="btn donate-function-button" @click="openDonate">
+            我要捐款
+          </button>
+          <button class="btn donate-query-button" @click="openDonateQuery">
+            捐款查詢
+          </button>
         </div>
-        <div class="yt-iframe">
+        <div class="yt-iframe" v-show="showDonate === 'yt'">
           <div class="video-container">
             <iframe
               width="560"
@@ -75,6 +81,147 @@
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
             ></iframe>
+          </div>
+        </div>
+        <div class="donate-function-page" v-show="showDonate === 'donate'">
+          <div v-show="step === 'form'">
+            <div class="donate-title">我要捐款</div>
+            <p class="donate-info">
+              普匯金融科技網頁僅提供非實名（具名，匿名）捐款功能，<br />
+              若需實名捐款，請至普匯APP<br />
+              因AML防制法捐款金額若大於50萬，請洽客服
+            </p>
+            <div class="donate-group">
+              <button class="btn money-button" @click="donateForm.amount = 300">
+                300元
+              </button>
+              <button class="btn money-button" @click="donateForm.amount = 500">
+                500元
+              </button>
+              <button
+                class="btn money-button"
+                @click="donateForm.amount = 1000"
+              >
+                1000元
+              </button>
+              <button
+                class="btn money-button"
+                @click="donateForm.amount = 3000"
+              >
+                3000元
+              </button>
+            </div>
+            <form class="donate-form" @submit.prevent="doDonate">
+              <input
+                type="text"
+                class="form-control donate-input"
+                placeholder="300"
+                v-model.number="donateForm.amount"
+                required
+              />
+              <div>捐款身份資訊（選填）</div>
+              <input
+                type="text"
+                class="form-control donate-input"
+                v-model="donateForm.name"
+                placeholder="姓名/公司抬頭"
+              />
+              <input
+                type="text"
+                class="form-control donate-input"
+                v-model="donateForm.number"
+                placeholder="身分證字號/統一編號"
+              />
+              <input
+                type="text"
+                class="form-control donate-input"
+                v-model="donateForm.phone"
+                placeholder="聯絡手機"
+              />
+              <input
+                type="email"
+                class="form-control donate-input"
+                v-model="donateForm.email"
+                placeholder="Email"
+              />
+              <label>
+                <input type="checkbox" v-model="donateForm.upload" />
+                捐款收據代上傳國稅局
+              </label>
+              <label>
+                <input type="checkbox" v-model="donateForm.receipt" />
+                索取紙本收據
+              </label>
+              <input
+                type="text"
+                class="form-control donate-input"
+                v-model="donateForm.address"
+                placeholder="收據寄送地址"
+                :disabled="!donateForm.receipt"
+                :required="donateForm.receipt"
+              />
+              <button type="submit" class="btn submit-donate">
+                取得匯款帳戶
+              </button>
+            </form>
+          </div>
+          <div v-show="step === 'account'">
+            <div class="donate-title">捐款帳號</div>
+            <p class="donate-info">您可於48小時內匯款至以下代收代付帳戶</p>
+            <p class="donate-info info-blue">
+              戶名： {{ bankData.charity_title }}
+            </p>
+            <p class="donate-info info-blue">
+              銀行代碼： {{ bankData.bank_code }}
+            </p>
+            <p class="donate-info info-blue">
+              捐款帳號： {{ bankData.bank_account }}
+            </p>
+            <p class="donate-info">
+              感謝您的愛心 <br />
+              待您匯款完成後<br />
+              可回來普匯金融科技<br />
+              查詢捐款狀態
+            </p>
+            <button
+              type="button"
+              class="btn submit-donate d-block"
+              @click="reset"
+            >
+              返回
+            </button>
+          </div>
+          <div v-show="step === 'donate-error'" class="donate-error">
+            <div class="donate-title mb-4">我要捐款</div>
+            <div class="donate-info mx-auto">
+              {{ donateErrorMsg }}
+            </div>
+            <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank">
+              <button type="button" class="btn submit-donate">聯繫客服</button>
+            </a>
+          </div>
+        </div>
+        <div class="donate-function-page" v-show="showDonate === 'query'">
+          <div class="donate-title mb-4">捐款查詢</div>
+          <div v-if="haveQueryResult">
+            <certificate-appreciation
+              class="mx-auto"
+              id="cert"
+              :donate-data="queryResponse"
+            />
+            <div class="text-center mt-2">
+              <button class="btn share-btn" @click="doShare">分享</button>
+            </div>
+            <div class="donate-info mx-auto">感謝您的愛心捐款</div>
+            <div class="donate-info mx-auto">亦歡迎使用更多普匯服務</div>
+          </div>
+          <div v-else>
+            <div class="donate-info mx-auto">感謝您的熱心參與</div>
+            <div class="donate-info mx-auto">
+              款項可能因銀行端作業時間而尚未入帳
+            </div>
+            <div class="donate-info mx-auto">請稍候嘗試</div>
+            <div class="donate-info mx-auto">有任何捐款問題請洽客服</div>
           </div>
         </div>
       </div>
@@ -309,14 +456,251 @@
         />
       </div>
     </div>
+    <div class="modal" id="modal-cert" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">下載您的感謝狀</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div id="cert-img" class="mx-auto my-2"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="modal-query" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="active-title">捐款查詢</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form class="m-3 query-form" @submit.prevent="querySubmit">
+            <div class="row no-gutters mb-2">
+              <div class="col-sm-5 text-right form-info col-auto form-require">
+                捐款金額：
+              </div>
+              <input
+                type="text"
+                class="form-control col-sm-7"
+                placeholder="輸入捐款金額"
+                v-model="queryForm.amount"
+                required
+              />
+            </div>
+            <div class="row no-gutters mb-2">
+              <div class="col-sm-5 text-right form-info col-auto">
+                署名/抬頭：
+              </div>
+              <input
+                type="text"
+                class="form-control col-sm-7"
+                placeholder="輸入署名/抬頭"
+                v-model="queryForm.name"
+              />
+            </div>
+            <div class="row no-gutters mb-2">
+              <div class="col-sm-5 text-right form-info col-auto">
+                身分證字號/統一編號：
+              </div>
+              <input
+                type="text"
+                class="form-control col-sm-7"
+                placeholder="輸入身分證字號/統一編號"
+                v-model="queryForm.number"
+              />
+            </div>
+            <div class="row no-gutters">
+              <div class="col-sm-5 text-right form-info form-require col-auto">
+                匯款帳戶末五碼：
+              </div>
+              <input
+                type="text"
+                class="form-control col-sm-7"
+                v-model="queryForm.last5"
+                required
+                placeholder="輸入匯款帳戶末五碼"
+              />
+            </div>
+            <div class="text-center mt-2">
+              <button type="submit" class="query-donate-btn btn">
+                捐款查詢
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-export default {};
+import certificateAppreciation from '@/component/certificateAppreciation'
+import html2canvas from 'html2canvas'
+import axios from 'axios'
+export default {
+  components: {
+    certificateAppreciation
+  },
+  data() {
+    return {
+      showDonate: 'yt',
+      step: 'form',
+      haveQueryResult: false,
+      genCert: false,
+      donateForm: {
+        amount: null,
+        name: '',
+        number: '',
+        phone: '',
+        email: '',
+        upload: 0,
+        receipt: 0,
+        address: ''
+      },
+      bankData: {
+        bank_code: '',
+        bank_account: '',
+        charity_title: ''
+      },
+      queryForm: {
+        last5: null,
+        amount: null,
+        name: null,
+        number: null
+      },
+      queryResponse: {
+        tx_datetime: '',
+        amout: '',
+        donator_name: '',
+        donator_sex: ''
+      },
+      donateErrorMsg: '',
+      paperTicket: false
+    }
+  },
+  methods: {
+    openDonate() {
+      this.reset()
+      this.showDonate = 'donate'
+      //   this.step = 'form'
+    },
+    openDonateQuery() {
+      $('#modal-query').modal('show')
+    },
+    reset() {
+      this.showDonate = 'yt'
+      this.step = 'form'
+      this.bankData = {
+        bank_code: '',
+        bank_account: '',
+        charity_title: ''
+      }
+      this.donateForm = {
+        amount: null,
+        name: '',
+        number: '',
+        phone: '',
+        email: '',
+        upload: 0,
+        receipt: 0,
+        address: ''
+      }
+    },
+    doDonate() {
+      if (isNaN(Number(this.donateForm.amount))) {
+        alert('捐款金額需為數字')
+        return
+      }
+      axios
+        .post('/charity/donate/anonymous', {
+          ...this.donateForm
+        })
+        .then(({ data }) => {
+          this.bankData = data.data
+          this.step = 'account'
+          this.donateForm = {
+            amount: null,
+            name: '',
+            number: '',
+            phone: '',
+            email: '',
+            upload: 0,
+            receipt: 0,
+            address: ''
+          }
+        })
+        .catch(err => {
+          this.step = 'donate-error'
+          this.donateErrorMsg = err.msg || '發生錯誤，如持續發生錯誤請洽客服'
+        })
+    },
+    querySubmit() {
+      if (isNaN(Number(this.queryForm.amount))) {
+        alert('捐款金額需為數字')
+        return
+      }
+      if (this.queryForm.last5.length !== 5) {
+        alert('請輸入正確的末五碼')
+        return
+      }
+      axios
+        .get('/charity/donate/anonymous', {
+          params: {
+            ...this.queryForm
+          }
+        })
+        .then(({ data }) => {
+          $('#modal-query').modal('hide')
+          this.showDonate = 'query'
+          this.haveQueryResult = true
+          this.queryResponse = data.data
+        })
+        .catch(err => {
+          $('#modal-query').modal('hide')
+          this.showDonate = 'query'
+          this.haveQueryResult = false
+        })
+    },
+    doShare() {
+      if (this.genCert) {
+        $('#modal-cert').modal('show')
+        return
+      }
+      html2canvas(document.querySelector('#cert')).then(canvas => {
+        const img = document.createElement('img')
+        img.src = canvas.toDataURL()
+        img.style.maxWidth = '100%'
+        document.querySelector('#cert-img').appendChild(img)
+        $('#modal-cert').modal('show')
+        this.genCert = true
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
+.form-require::before {
+  content: '*';
+  color: red;
+  display: inline-block;
+  font-size: 16px;
+  margin: 0 2px;
+}
 .main-content {
   background-image: url('../asset/images/ntu-bg.jpg');
   padding-bottom: 50px;
@@ -370,6 +754,95 @@ export default {};
   letter-spacing: 1.2px;
   text-align: left;
   color: #7d7d7d;
+}
+.donate-function-button {
+  margin-right: 12px;
+  background-color: #036eb7;
+  color: #fff;
+  border-radius: 30px;
+  padding: 8px 24px;
+  font-size: 24px;
+}
+.donate-query-button {
+  background: transparent;
+  color: #036eb7;
+  border-radius: 30px;
+  padding: 8px 24px;
+  font-size: 24px;
+  border: 3px solid #036eb7;
+  &:hover {
+    color: #fff;
+    background-color: #036eb7;
+  }
+}
+.donate-function-page {
+  width: fit-content;
+  margin: 15px auto;
+  padding: 15px;
+  .donate-title {
+    color: #0085c4;
+    font-size: 28px;
+    line-height: 1.4;
+    text-align: center;
+  }
+  .donate-info {
+    color: #7d7d7d;
+    font-size: 20px;
+    line-height: 1.4;
+    width: fit-content;
+    text-align: initial;
+    &.info-blue {
+      color: #0085c4;
+    }
+  }
+  .donate-group {
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    .money-button {
+      flex: 1 0 20%;
+      background-color: #036eb7;
+      color: #fff;
+      border-radius: 12px;
+      // padding: 8px 24px;
+      font-size: 20px;
+    }
+  }
+  .donate-form {
+    display: flex;
+    flex-direction: column;
+  }
+  .donate-error {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .share-btn {
+    font-size: 24px;
+    line-height: 1.5;
+    border: 3px #0085c4 solid;
+    border-radius: 24px;
+    padding: 8px 50px;
+    &:hover {
+      color: #fff;
+      background-color: #0085c4;
+    }
+  }
+  .donate-input {
+    margin-bottom: 5px;
+    border-radius: 8px;
+    font-size: 20px;
+    padding: 8px 12px;
+  }
+  .submit-donate {
+    background-color: #036eb7;
+    color: #fff;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 20px;
+    margin: 10px auto;
+  }
 }
 .yt-top {
   display: flex;
@@ -773,6 +1246,23 @@ export default {};
 .footer-img {
   max-width: 100%;
 }
+.query-donate-btn {
+  font-size: 20px;
+  line-height: 1.5;
+  border: 3px #0085c4 solid;
+  border-radius: 24px;
+  padding: 4px 24px;
+  color: #036eb7;
+  &:hover {
+    color: #fff;
+    background-color: #0085c4;
+  }
+}
+.query-form {
+  .form-info {
+    padding: 6px;
+  }
+}
 @media screen and (max-width: 1300px) {
   .img-whale {
     width: 200px;
@@ -805,6 +1295,47 @@ export default {};
   }
   .page-title-1 {
     margin-right: 0;
+  }
+  .donate-function-button {
+    padding: 6px 16px;
+    font-size: 20px;
+  }
+  .donate-query-button {
+    padding: 6px 16px;
+    font-size: 20px;
+  }
+  .donate-function-page {
+    width: fit-content;
+    margin: 15px auto;
+    padding: 15px;
+    .donate-title {
+      font-size: 18px;
+    }
+    .donate-info {
+      font-size: 16px;
+    }
+    .donate-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      .money-button {
+        font-size: 16px;
+      }
+    }
+    .share-btn {
+      font-size: 16px;
+      padding: 8px 50px;
+    }
+    .donate-input {
+      margin-bottom: 5px;
+      border-radius: 8px;
+      font-size: 16px;
+      padding: 4px 8px;
+    }
+    .submit-donate {
+      padding: 6px 12px;
+      font-size: 16px;
+      margin: 10px auto;
+    }
   }
   .yt-iframe {
     width: 95vw;
