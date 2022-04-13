@@ -59,7 +59,7 @@ class Charity extends MY_Admin_Controller
         // $judicial_person->user_id
         $this->load->model('user/user_bankaccount_model');
         $user_bankaccount = $this->user_bankaccount_model->get_by([
-            'user_id' => $judicial_person->user_id,
+            'user_id' => $judicial_person->company_user_id,
             'status' => 1,
             'verify' => 1,
         ]);
