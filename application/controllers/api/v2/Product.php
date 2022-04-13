@@ -1267,7 +1267,16 @@ class Product extends REST_Controller {
             }
 
             $certification		= [];
-            $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, false, $target, $product);
+
+            if (isset($target->certificate_status) && $target->certificate_status == 0)
+            {
+                $get_fail = TRUE;
+            }
+            else
+            {
+                $get_fail = FALSE;
+            }
+            $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, $get_fail, $target, $product, TRUE);
             $completeness_level = 100 / count($certification_list);
             if(count($cer_group) > 0){
                 $completeness_level = 100 / (count($certification_list) + count($cer_group));
