@@ -14,8 +14,6 @@ class Certification_btn_factory
 
         switch ($certification['certification_id'])
         {
-            case CERTIFICATION_DEBITCARD:
-                return new Cert_btn_debitcard($certification);
             default:
                 return new Cert_btn_default($certification);
         }
