@@ -213,7 +213,9 @@ class CharityController extends Controller
             $responseData['result'] === 'SUCCESS')
         {
             $returnData['status'] = 200;
-            $returnData['data'] = $responseData['data'];
+            $returnData['data'] = [
+                'data' => $responseData['data']
+            ];
         }
         elseif (isset($responseData['error']))
         {
