@@ -130,26 +130,41 @@
                 type="text"
                 class="form-control donate-input"
                 v-model="donateForm.number"
+                :required="Boolean(donateForm.name)"
                 placeholder="身分證字號/統一編號"
               />
               <input
                 type="text"
                 class="form-control donate-input"
                 v-model="donateForm.phone"
+                :required="Boolean(donateForm.number)"
                 placeholder="聯絡手機"
               />
               <input
                 type="email"
                 class="form-control donate-input"
                 v-model="donateForm.email"
+                :required="Boolean(donateForm.phone)"
                 placeholder="Email"
               />
               <label>
-                <input type="checkbox" v-model="donateForm.upload" />
+                <input
+                  type="radio"
+                  name="ticket"
+                  v-model="donateForm.ticket"
+                  :disabled="!checkDonateForm"
+                  value="upload"
+                />
                 捐款收據代上傳國稅局
               </label>
               <label>
-                <input type="checkbox" v-model="donateForm.receipt" />
+                <input
+                  type="radio"
+                  name="ticket"
+                  v-model="donateForm.ticket"
+                  :disabled="!checkDonateForm"
+                  value="receipt"
+                />
                 索取紙本收據
               </label>
               <input
@@ -157,8 +172,8 @@
                 class="form-control donate-input"
                 v-model="donateForm.address"
                 placeholder="收據寄送地址"
-                :disabled="!donateForm.receipt"
-                :required="donateForm.receipt"
+                :disabled="donateForm.ticket !== 'receipt'"
+                :required="donateForm.ticket === 'receipt'"
               />
               <button type="submit" class="btn submit-donate">
                 取得匯款帳戶
@@ -617,6 +632,7 @@ export default {
         email: '',
         upload: 0,
         receipt: 0,
+        ticket: '',
         address: ''
       }
     },
@@ -625,9 +641,23 @@ export default {
         alert('捐款金額需為數字')
         return
       }
+      const { ticket, ...other } = this.donateForm
+      switch (ticket) {
+        case 'receipt':
+          other.receipt = 1
+          break
+        case 'upload':
+          other.upload = 1
+          break
+      }
+      if (!this.checkDonateForm) {
+        other.receipt = 0
+        other.upload = 0
+        other.address = ''
+      }
       axios
         .post('/charity/donate/anonymous', {
-          ...this.donateForm
+          ...other
         })
         .then(({ data }) => {
           this.bankData = data.data
@@ -689,7 +719,13 @@ export default {
         this.genCert = true
       })
     }
-  }
+  },
+  computed: {
+    checkDonateForm() {
+      const { name, number, phone, email } = this.donateForm
+      return Boolean(name) && Boolean(number) && Boolean(phone) && Boolean(email)
+    }
+  },
 }
 </script>
 
