@@ -805,7 +805,7 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 			$this->load->library('certification_lib');
 
-			$borrowerVerifications = $this->certification_lib->get_last_status($userId, BORROWER, $user->company_status,$target,$target->productTargetData);
+            $borrowerVerifications = $this->certification_lib->get_last_status($userId, BORROWER, $user->company_status, $target, $target->productTargetData, TRUE, TRUE);
 			$investorVerifications = $this->certification_lib->get_last_status($userId, INVESTOR, $user->company_status);
 			$verificationInput = ["borrower" => $borrowerVerifications, "investor" => $investorVerifications];
 			$this->load->library('output/user/verifications_output', $verificationInput);
