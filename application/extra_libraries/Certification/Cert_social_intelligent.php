@@ -167,7 +167,7 @@ class Cert_social_intelligent extends Certification_base
                                     $this->result->addMessage('IG非活躍帳號', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                 }
                             }
-                            $content['instagram'] = [
+                            $this->content['instagram'] = [
                                 'username' => $ig_username,
                                 'usernameExist' => $usernameExist,
                                 'info' => [
@@ -179,7 +179,7 @@ class Cert_social_intelligent extends Certification_base
                                     'allFollowingCount' => $allFollowingCount
                                 ]
                             ];
-                            $content['meta'] = [
+                            $this->content['meta'] = [
                                 'follow_count' => $allFollowerCount,
                                 'posts_in_3months' => $postsIn3Months,
                                 'key_word' => $postsWithKeyWords
