@@ -25,6 +25,8 @@ define({
     "PostUserContact",
     "GetUserPromote",
     "PostUserCredittest",
+    "PostUserDonateAnonymous",
+    "GetUserDonateAnonymous",
     "Notification",
     "GetNotificationList",
     "GetNotificationInfoId",
