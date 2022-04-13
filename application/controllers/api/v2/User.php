@@ -2546,4 +2546,22 @@ END:
             ]);
         }
     }
+
+    public function user_bankaccount_get()
+    {
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $this->load->model('user/user_bankaccount_model');
+        $bank_account = $this->user_bankaccount_model->get_by([
+            'user_id' => $user_id,
+            'investor' => $investor,
+            'status' => 1,
+            'verify' => 1,
+        ]);
+
+        $this->response(['result' => 'SUCCESS', 'data' => [
+            'verify' => (int) ($bank_account->verify ?? 0),
+            'status' => (int) ($bank_account->status ?? 0),
+        ]]);
+    }
 }
