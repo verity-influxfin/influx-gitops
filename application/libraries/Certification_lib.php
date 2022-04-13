@@ -3696,7 +3696,7 @@ class Certification_lib{
         return false;
     }
 
-    public function get_last_status($user_id, $investor = 0, $company = 0, $target = false, $product_info = false)
+    public function get_last_status($user_id, $investor = 0, $company = 0, $target = false, $product_info = false, $target_get_failed = FALSE, $target_get_expired = FALSE)
     {
 		if($user_id){
 			$certification = [];
@@ -3751,7 +3751,7 @@ class Certification_lib{
                     {
                         $get_failed = FALSE;
                     }
-                    $user_certification = $this->get_certification_info($ruser_id, $key, $investor, $get_failed);
+                    $user_certification = $this->get_certification_info($ruser_id, $key, $investor, $get_failed || $target_get_failed, $target_get_expired);
                 }else {
                     // 沒有過期判斷
                     $user_certification = $this->get_last_certification_info($ruser_id,$key,$investor);

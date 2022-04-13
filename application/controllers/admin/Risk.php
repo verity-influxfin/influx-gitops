@@ -110,7 +110,7 @@ class Risk extends MY_Admin_Controller {
 				}
 
 				$status = $company ? $value : false;
-				!isset($cer_list[$value->user_id]) ? $cer_list[$value->user_id] = $this->certification_lib->get_last_status($value->user_id, 0, 0, $status) : '';
+				!isset($cer_list[$value->user_id]) ? $cer_list[$value->user_id] = $this->certification_lib->get_last_status($value->user_id, 0, 0, $status, FALSE, FALSE, TRUE) : '';
 				$value->certification = $cer_list[$value->user_id];
 				if(isset($value->certification[3]['certification_id'])){
 					$bank_account 	= $this->user_bankaccount_model->get_by(array(
