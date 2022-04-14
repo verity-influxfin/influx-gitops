@@ -1713,7 +1713,7 @@ class Target_lib
                             $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
                             $company = $value->product_id >= 1000 ? 1 : 0;
 
-                            $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, false, $value);
+                            $certifications = $this->CI->certification_lib->get_status($value->user_id, BORROWER, $company, false, $value, FALSE, TRUE);
 
                             $finish = true;
                             $finish_stage_cer = [];
