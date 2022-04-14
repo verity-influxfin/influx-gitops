@@ -227,30 +227,30 @@
             <input type="text" v-model="apiInfo.basicInfo.industryName" />
           </div>
           <div class="col-6 col-item d-flex justify-content-between p-2">
-			<div>營業種類:</div>
-			<div class="col d-flex align-items-center justify-content-end">
-				<input 
-					type="radio" 
-					name="business-type" 
-					v-model="apiInfo.enterpriseInvestigation.business.type" 
-					value="1" 
-				/>
-				<label>製造</label>
-				<input 
-					type="radio" 
-					name="business-type" 
-					v-model="apiInfo.enterpriseInvestigation.business.type" 
-					value="2" 
-				/>
-				<label>買賣</label>
-				<input 
-					type="radio" 
-					name="business-type" 
-					v-model="apiInfo.enterpriseInvestigation.business.type" 
-					value="3" 
-				/>
-				<label>其他</label>
-			</div>
+            <div>營業種類:</div>
+            <div class="col d-flex align-items-center justify-content-end">
+                <input 
+                    type="radio" 
+                    name="business-type" 
+                    v-model="apiInfo.enterpriseInvestigation.business.type" 
+                    value="1" 
+                />
+                <label>製造</label>
+                <input 
+                    type="radio" 
+                    name="business-type" 
+                    v-model="apiInfo.enterpriseInvestigation.business.type" 
+                    value="2" 
+                />
+                <label>買賣</label>
+                <input 
+                    type="radio" 
+                    name="business-type" 
+                    v-model="apiInfo.enterpriseInvestigation.business.type" 
+                    value="3" 
+                />
+                <label>其他</label>
+            </div>
           </div>
         </div>
         <div class="row-title row no-gutters my-2">
@@ -494,7 +494,7 @@
             <div class="item-1">主要業務：</div>
             <input
               type="text"
-			  class="w-100"
+              class="w-100"
               v-model="apiInfo.enterpriseInvestigation.business.mainBusiness"
             />
           </div>
@@ -606,27 +606,27 @@
             <input type="text" class="tiny-input" v-model="item.bankNum" />
           </div>
         </div>
-		<div class="row no-gutters">
-			<div class="col-12 col-item d-flex justify-content-between p-2">
-				<div class="item-1">票債信是否有異常紀錄</div>
-				<div class="col d-flex align-items-center justify-content-end">
-					<input 
-						type="radio" 
-						name="place-self" 
-						v-model="apiInfo.enterpriseInvestigation.companyFinance.badRecord" 
-						value="true" 
-					/>
-					<label>是</label>
-					<input 
-						type="radio" 
-						name="place-self"
-						v-model="apiInfo.enterpriseInvestigation.companyFinance.badRecord" 
-						value="false" 
-					/>
-					<label>否</label>
-				</div>
-			</div>
-		</div>
+        <div class="row no-gutters">
+            <div class="col-12 col-item d-flex justify-content-between p-2">
+                <div class="item-1">票債信是否有異常紀錄</div>
+                <div class="col d-flex align-items-center justify-content-end">
+                    <input 
+                        type="radio" 
+                        name="place-self" 
+                        v-model="apiInfo.enterpriseInvestigation.companyFinance.badRecord" 
+                        value="true" 
+                    />
+                    <label>是</label>
+                    <input 
+                        type="radio" 
+                        name="place-self"
+                        v-model="apiInfo.enterpriseInvestigation.companyFinance.badRecord" 
+                        value="false" 
+                    />
+                    <label>否</label>
+                </div>
+            </div>
+        </div>
         <div class="row no-gutters col-item">
           <div class="col p-2 item-1">企業信用評分</div>
           <div class="col-4 p-2 d-flex">
@@ -638,106 +638,106 @@
             <label for="">分</label>
           </div>
         </div>
-		<div class="row-title-2  row no-gutters my-2">(1) 獲利能力</div>
-		<div class="row no-gutters">
-			<div class="col-4 col-item p-2 text-center">
-				<div>年度 ***</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<div>淨營業收入 ***</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<div>毛利率 ***</div>
-			</div>
-		</div>
-		<div class="row no-gutters" v-for="(item, index) in apiInfo.enterpriseInvestigation.companyFinance.profitability">
-			<div class="col-4 col-item d-flex p-2 justify-content-center">
-				<input type="text" class="tiny-input" v-model="item.year" />
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<input type="text" v-model="item.income">
-			</div>
-			<div class="col col-item d-flex p-2 justify-content-center">
-				<input type="text" v-model="item.grossMargin" />
-				<div class="ml-3">
-					<button class="btn btn-1 btn-primary" v-on:click="apiInfo.enterpriseInvestigation.companyFinance.profitability.splice(index,1)">
-						-
-					</button>
-					<button class="btn btn-1 btn-secondary"
-						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.profitability.splice(index+1,0,{...templates.profitability})">
-						+
-					</button>
-				</div>
-			</div>
-		</div>
-		<div class="row-title-2 row no-gutters my-2">(2) 經營能力</div>
-		<div class="row no-gutters">
-			<div class="col-4 col-item p-2 text-center">
-				<div>年度</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<div>存貨週轉率</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<div>淨營業週轉天數</div>
-			</div>
-		</div>
-		<div class="row no-gutters" v-for="(item, index) in apiInfo.enterpriseInvestigation.companyFinance.operationCapacity">
-			<div class="col-4 col-item d-flex p-2 justify-content-center">
-				<input type="text" class="tiny-input" v-model="item.year" />
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<input type="text" v-model="item.rate">
-			</div>
-			<div class="col col-item d-flex p-2 justify-content-center">
-				<input type="text" v-model="item.day" />
-				<div class="ml-2">天</div>	
-				<div class="ml-2">
-					<button class="btn btn-1 btn-primary"
-						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.operationCapacity.splice(index,1)">
-						-
-					</button>
-					<button class="btn btn-1 btn-secondary"
-						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.operationCapacity.splice(index+1,0,{...templates.profitability})">
-						+
-					</button>
-				</div>
-			</div>
-		</div>
-		<div class="row-title-2  row no-gutters my-2">(3) 資本結構</div>
-		<div class="row no-gutters">
-			<div class="col-4 col-item p-2 text-center">
-				<div>年度</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<div>營收比</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<div>負債比</div>
-			</div>
-		</div>
-		<div class="row no-gutters" v-for="(item, index) in apiInfo.enterpriseInvestigation.companyFinance.capitalStructure">
-			<div class="col-4 col-item d-flex p-2 justify-content-center">
-				<input type="text" class="tiny-input" v-model="item.year" />
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<input type="text" v-model="item.psr">
-			</div>
-			<div class="col col-item d-flex p-2 justify-content-center">
-				<input type="text" v-model="item.debtRatio" />
-				<div class="ml-2">天</div>
-				<div class="ml-2">
-					<button class="btn btn-1 btn-primary"
-						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.capitalStructure.splice(index,1)">
-						-
-					</button>
-					<button class="btn btn-1 btn-secondary"
-						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.capitalStructure.splice(index+1,0,{...templates.profitability})">
-						+
-					</button>
-				</div>
-			</div>
-		</div>
+        <div class="row-title-2  row no-gutters my-2">(1) 獲利能力</div>
+        <div class="row no-gutters">
+            <div class="col-4 col-item p-2 text-center">
+                <div>年度 ***</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <div>淨營業收入 ***</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <div>毛利率 ***</div>
+            </div>
+        </div>
+        <div class="row no-gutters" v-for="(item, index) in apiInfo.enterpriseInvestigation.companyFinance.profitability">
+            <div class="col-4 col-item d-flex p-2 justify-content-center">
+                <input type="text" class="tiny-input" v-model="item.year" />
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <input type="text" v-model="item.income">
+            </div>
+            <div class="col col-item d-flex p-2 justify-content-center">
+                <input type="text" v-model="item.grossMargin" />
+                <div class="ml-3">
+                    <button class="btn btn-1 btn-primary" v-on:click="apiInfo.enterpriseInvestigation.companyFinance.profitability.splice(index,1)">
+                        -
+                    </button>
+                    <button class="btn btn-1 btn-secondary"
+                        v-on:click="apiInfo.enterpriseInvestigation.companyFinance.profitability.splice(index+1,0,{...templates.profitability})">
+                        +
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row-title-2 row no-gutters my-2">(2) 經營能力</div>
+        <div class="row no-gutters">
+            <div class="col-4 col-item p-2 text-center">
+                <div>年度</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <div>存貨週轉率</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <div>淨營業週轉天數</div>
+            </div>
+        </div>
+        <div class="row no-gutters" v-for="(item, index) in apiInfo.enterpriseInvestigation.companyFinance.operationCapacity">
+            <div class="col-4 col-item d-flex p-2 justify-content-center">
+                <input type="text" class="tiny-input" v-model="item.year" />
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <input type="text" v-model="item.rate">
+            </div>
+            <div class="col col-item d-flex p-2 justify-content-center">
+                <input type="text" v-model="item.day" />
+                <div class="ml-2">天</div>	
+                <div class="ml-2">
+                    <button class="btn btn-1 btn-primary"
+                        v-on:click="apiInfo.enterpriseInvestigation.companyFinance.operationCapacity.splice(index,1)">
+                        -
+                    </button>
+                    <button class="btn btn-1 btn-secondary"
+                        v-on:click="apiInfo.enterpriseInvestigation.companyFinance.operationCapacity.splice(index+1,0,{...templates.profitability})">
+                        +
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row-title-2  row no-gutters my-2">(3) 資本結構</div>
+        <div class="row no-gutters">
+            <div class="col-4 col-item p-2 text-center">
+                <div>年度</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <div>營收比</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <div>負債比</div>
+            </div>
+        </div>
+        <div class="row no-gutters" v-for="(item, index) in apiInfo.enterpriseInvestigation.companyFinance.capitalStructure">
+            <div class="col-4 col-item d-flex p-2 justify-content-center">
+                <input type="text" class="tiny-input" v-model="item.year" />
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <input type="text" v-model="item.psr">
+            </div>
+            <div class="col col-item d-flex p-2 justify-content-center">
+                <input type="text" v-model="item.debtRatio" />
+                <div class="ml-2">天</div>
+                <div class="ml-2">
+                    <button class="btn btn-1 btn-primary"
+                        v-on:click="apiInfo.enterpriseInvestigation.companyFinance.capitalStructure.splice(index,1)">
+                        -
+                    </button>
+                    <button class="btn btn-1 btn-secondary"
+                        v-on:click="apiInfo.enterpriseInvestigation.companyFinance.capitalStructure.splice(index+1,0,{...templates.profitability})">
+                        +
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="row-title row no-gutters my-2">負責人財務狀況：</div>
         <div class="row no-gutters">
           <div class="col-4 col-item p-2 text-center">
@@ -760,34 +760,34 @@
             <input type="text" class="tiny-input" v-model="item.month" />
             <label class="px-1">月</label>
           </div>
-		  <div class="col-4 col-item p-2 text-center">
-			<input type="text" v-model="item.balance">
-		  </div>
+          <div class="col-4 col-item p-2 text-center">
+            <input type="text" v-model="item.balance">
+          </div>
           <div class="col-4 col-item d-flex p-2 justify-content-center">
             <input type="text" v-model="item.cardBalance" />
           </div>
         </div>
-		<div class="row no-gutters">
-			<div class="col-12 col-item d-flex justify-content-between p-2">
-				<div class="item-1">票債信是否有異常紀錄</div>
-				<div class="col d-flex align-items-center justify-content-end">
-					<input 
-					    type="radio" 
-					    name="place-self" 
-					    v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.badRecord" 
-					    value="true" 
-					/>
-					<label>是</label>
-					<input 
-					    type="radio" 
-					    name="place-self" 
-					    v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.badRecord" 
-					    value="false" 
-					/>
-					<label>否</label>
-				</div>
-			</div>
-		</div>
+        <div class="row no-gutters">
+            <div class="col-12 col-item d-flex justify-content-between p-2">
+                <div class="item-1">票債信是否有異常紀錄</div>
+                <div class="col d-flex align-items-center justify-content-end">
+                    <input 
+                        type="radio" 
+                        name="place-self" 
+                        v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.badRecord" 
+                        value="true" 
+                    />
+                    <label>是</label>
+                    <input 
+                        type="radio" 
+                        name="place-self" 
+                        v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.badRecord" 
+                        value="false" 
+                    />
+                    <label>否</label>
+                </div>
+            </div>
+        </div>
         <div class="row no-gutters col-item">
           <div class="col p-2 item-1">個人信用評分</div>
           <div class="col-4 p-2 d-flex">
@@ -933,15 +933,15 @@
           </div>
         </div>
         <div class="row no-gutters mt-3">
-			<div class="col-4 col-item p-2 text-center">
-			  <div>聯徵資料年月</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-			  <div>授信總餘額</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-			  <div>信用卡餘額總計</div>
-			</div>
+            <div class="col-4 col-item p-2 text-center">
+              <div>聯徵資料年月</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+              <div>授信總餘額</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+              <div>信用卡餘額總計</div>
+            </div>
         </div>
         <div
           class="row no-gutters"
@@ -953,22 +953,22 @@
             <input type="text" class="tiny-input" v-model="item.month" />
             <label class="px-1">月</label>
           </div>
-		  <div class="col-4 col-item p-2 text-center">
-			<input type="text" v-model="item.balance">
-		  </div>
+          <div class="col-4 col-item p-2 text-center">
+            <input type="text" v-model="item.balance">
+          </div>
           <div class="col-4 col-item d-flex p-2 justify-content-center">
             <input type="text" v-model="item.cardBalance" />
           </div>
         </div>
-		<div class="row no-gutters">
-			<div class="col-12 col-item d-flex justify-content-between p-2">
-				<div class="item-1">票債信是否有異常紀錄</div>
-				<div class="col d-flex align-items-center justify-content-end">
-					<input type="radio" name="place-self" v-model="apiInfo.enterpriseAssociates.spouse.badRecord" value="true" /><label for="">是</label>
-					<input type="radio" name="place-self" v-model="apiInfo.enterpriseAssociates.spouse.badRecord" value="false" /><label for="">否</label>
-				</div>
-			</div>
-		</div>
+        <div class="row no-gutters">
+            <div class="col-12 col-item d-flex justify-content-between p-2">
+                <div class="item-1">票債信是否有異常紀錄</div>
+                <div class="col d-flex align-items-center justify-content-end">
+                    <input type="radio" name="place-self" v-model="apiInfo.enterpriseAssociates.spouse.badRecord" value="true" /><label for="">是</label>
+                    <input type="radio" name="place-self" v-model="apiInfo.enterpriseAssociates.spouse.badRecord" value="false" /><label for="">否</label>
+                </div>
+            </div>
+        </div>
         <div class="row no-gutters col-item">
           <div class="col p-2 item-1">個人信用評分</div>
           <div class="col-4 p-2 d-flex">
@@ -1157,15 +1157,15 @@
               </div>
             </div>
             <div class="row no-gutters mt-3">
-			<div class="col-4 col-item p-2 text-center">
-				<div>聯徵資料年月</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<div>授信總餘額</div>
-			</div>
-			<div class="col-4 col-item p-2 text-center">
-				<div>信用卡餘額總計</div>
-			</div>
+            <div class="col-4 col-item p-2 text-center">
+                <div>聯徵資料年月</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <div>授信總餘額</div>
+            </div>
+            <div class="col-4 col-item p-2 text-center">
+                <div>信用卡餘額總計</div>
+            </div>
             </div>
             <div class="row no-gutters" v-for="x in item.loanList">
               <div class="col-4 col-item d-flex p-2 justify-content-center">
@@ -1181,15 +1181,15 @@
                 <input type="text" v-model="x.cardBalance" />
               </div>
             </div>
-			<div class="row no-gutters">
-				<div class="col-12 col-item d-flex justify-content-between p-2">
-					<div class="item-1">票債信是否有異常紀錄</div>
-					<div class="col d-flex align-items-center justify-content-end">
-						<input type="radio" name="place-self" v-model="item.badRecord" value="true" /><label for="">是</label>
-						<input type="radio" name="place-self" v-model="item.badRecord" value="false" /><label for="">否</label>
-					</div>
-				</div>
-			</div>
+            <div class="row no-gutters">
+                <div class="col-12 col-item d-flex justify-content-between p-2">
+                    <div class="item-1">票債信是否有異常紀錄</div>
+                    <div class="col d-flex align-items-center justify-content-end">
+                        <input type="radio" name="place-self" v-model="item.badRecord" value="true" /><label for="">是</label>
+                        <input type="radio" name="place-self" v-model="item.badRecord" value="false" /><label for="">否</label>
+                    </div>
+                </div>
+            </div>
             <div class="row no-gutters col-item">
               <div class="col p-2 item-1">個人信用評分</div>
               <div class="col-4 p-2 d-flex">
@@ -1263,12 +1263,12 @@
       font-size: 24px;
       font-weight: bold;
     }
-	
-	.row-title-2{
-		font-weight: bold;
-		font-size: 20px;
-		color: darkblue;
-	}
+    
+    .row-title-2{
+        font-weight: bold;
+        font-size: 20px;
+        color: darkblue;
+    }
 
     .row-title-tip {
       margin-left: 4px;
@@ -1384,21 +1384,21 @@
             ownerShip: 0,
             inCompanyType: 0,
           },
-		  profitability:{
-			   year: '',
-			  income: '',
-			  grossMargin: ''
-		  },
-		  operationCapacity:{
-			  year:'',
-			  rate:'',
-			  day:''
-		  },
-		  capitalStructure:{
-			year: '',
-			psr: '',
-			debtRatio: ''
-		  }
+          profitability:{
+               year: '',
+              income: '',
+              grossMargin: ''
+          },
+          operationCapacity:{
+              year:'',
+              rate:'',
+              day:''
+          },
+          capitalStructure:{
+            year: '',
+            psr: '',
+            debtRatio: ''
+          }
         },
         apiInfo: {
           targetNo: '',
@@ -1483,27 +1483,27 @@
                   bankNum:''
                 },
               ],
-			  profitability:[
-				  {
-					  year:'',
-					  income:'',
-					  grossMargin:''
-				  }
-			  ],
-			  operationCapacity:[
-				{
-					year: '',
-					rate: '',
-					day: ''
-				}
-			  ],
-			  capitalStructure:[
-				{
-					year:'',
-					psr:'',
-					debtRatio:''
-				}
-			  ],
+              profitability:[
+                  {
+                      year:'',
+                      income:'',
+                      grossMargin:''
+                  }
+              ],
+              operationCapacity:[
+                {
+                    year: '',
+                    rate: '',
+                    day: ''
+                }
+              ],
+              capitalStructure:[
+                {
+                    year:'',
+                    psr:'',
+                    debtRatio:''
+                }
+              ],
               netOperatingRevenue: [
                 {
                   year: '',
@@ -1578,9 +1578,9 @@
                 loanList: [
                   {
                     year: '',
-                  	month: '',
-                  	balance: '',
-                  	cardBalance: '',
+                      month: '',
+                      balance: '',
+                      cardBalance: '',
                   },
                 ],
                 badRecord:false,
