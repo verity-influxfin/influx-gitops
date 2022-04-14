@@ -223,12 +223,34 @@
         </div>
         <div class="row no-gutters">
           <div class="col-6 col-item d-flex justify-content-between p-2">
-            <div class="item-1">行業別名稱</div>
+            <div class="item-1">產業別名稱 (主計處)</div>
             <input type="text" v-model="apiInfo.basicInfo.industryName" />
           </div>
           <div class="col-6 col-item d-flex justify-content-between p-2">
-            <div>公司產業別</div>
-            <input type="text" v-model="apiInfo.basicInfo.industryCode" />
+			<div>營業種類:</div>
+			<div class="col d-flex align-items-center justify-content-end">
+				<input 
+					type="radio" 
+					name="business-type" 
+					v-model="apiInfo.enterpriseInvestigation.business.type" 
+					value="1" 
+				/>
+				<label>製造</label>
+				<input 
+					type="radio" 
+					name="business-type" 
+					v-model="apiInfo.enterpriseInvestigation.business.type" 
+					value="2" 
+				/>
+				<label>買賣</label>
+				<input 
+					type="radio" 
+					name="business-type" 
+					v-model="apiInfo.enterpriseInvestigation.business.type" 
+					value="3" 
+				/>
+				<label>其他</label>
+			</div>
           </div>
         </div>
         <div class="row-title row no-gutters my-2">
@@ -468,35 +490,13 @@
       <div class="main" v-show="activeSec === 'sec-2'">
         <div class="row-title row no-gutters my-2">營業現況：</div>
         <div class="row no-gutters">
-          <div class="col-6 col-item d-flex justify-content-between p-2">
+          <div class="col-12 col-item d-flex justify-content-between p-2">
             <div class="item-1">主要業務：</div>
             <input
               type="text"
+			  class="w-100"
               v-model="apiInfo.enterpriseInvestigation.business.mainBusiness"
             />
-          </div>
-          <div class="col-6 col-item d-flex justify-content-between p-2">
-            <div>營業種類:</div>
-            <div class="col d-flex align-items-center justify-content-end">
-              <input
-                type="radio"
-                name="business-type"
-                v-model="apiInfo.enterpriseInvestigation.business.type"
-                value="1"
-              /><label for="">製造</label>
-              <input
-                type="radio"
-                name="business-type"
-                v-model="apiInfo.enterpriseInvestigation.business.type"
-                value="2"
-              /><label for="">買賣</label>
-              <input
-                type="radio"
-                name="business-type"
-                v-model="apiInfo.enterpriseInvestigation.business.type"
-                value="3"
-              /><label for="">其他</label>
-            </div>
           </div>
         </div>
         <div class="row no-gutters">
@@ -580,13 +580,13 @@
         <div class="row-title row no-gutters my-2">企業財務狀況：</div>
         <div class="row no-gutters">
           <div class="col-4 col-item p-2 text-center">
-            <div>聯徵日期</div>
+            <div>聯徵日期年月 ***</div>
           </div>
           <div class="col-4 col-item p-2 text-center">
-            <div>科目</div>
+            <div>授信總餘額 ***</div>
           </div>
           <div class="col-4 col-item p-2 text-center">
-            <div>餘額</div>
+            <div>往來銀行家數 ***</div>
           </div>
         </div>
         <div
@@ -600,13 +600,33 @@
             <label class="px-1">月</label>
           </div>
           <div class="col-4 col-item p-2 text-center">
-            <div>{{item.subjectName}}</div>
+            <input type="text" v-model="item.amount">
           </div>
           <div class="col-4 col-item d-flex p-2 justify-content-center">
-            <input type="text" class="tiny-input" v-model="item.amount" />
-            <label>仟元</label>
+            <input type="text" class="tiny-input" v-model="item.bankNum" />
           </div>
         </div>
+		<div class="row no-gutters">
+			<div class="col-12 col-item d-flex justify-content-between p-2">
+				<div class="item-1">票債信是否有異常紀錄</div>
+				<div class="col d-flex align-items-center justify-content-end">
+					<input 
+						type="radio" 
+						name="place-self" 
+						v-model="apiInfo.enterpriseInvestigation.companyFinance.badRecord" 
+						value="true" 
+					/>
+					<label>是</label>
+					<input 
+						type="radio" 
+						name="place-self"
+						v-model="apiInfo.enterpriseInvestigation.companyFinance.badRecord" 
+						value="false" 
+					/>
+					<label>否</label>
+				</div>
+			</div>
+		</div>
         <div class="row no-gutters col-item">
           <div class="col p-2 item-1">企業信用評分</div>
           <div class="col-4 p-2 d-flex">
@@ -618,81 +638,116 @@
             <label for="">分</label>
           </div>
         </div>
-        <div class="row no-gutters mt-3 nest-row">
-          <div class="col-4 text-center">
-            <div class="p-2 col-item">年度</div>
-            <div
-              v-for="item in apiInfo.enterpriseInvestigation.companyFinance.netOperatingRevenue"
-            >
-              <div class="row no-gutters col-item p-2 justify-content-center">
-                <input type="text" class="tiny-input" v-model="item.year" />
-              </div>
-            </div>
-          </div>
-          <div class="col-4 text-center">
-            <div class="p-2 col-item">淨營業收入</div>
-            <div
-              v-for="item in apiInfo.enterpriseInvestigation.companyFinance.netOperatingRevenue"
-            >
-              <div class="row no-gutters col-item p-2">
-                <input type="text" v-model="item.amount" /><label>仟元</label>
-              </div>
-            </div>
-          </div>
-          <div class="col-4 col-item p-2 text-center">
-            <div class="pb-3">營業稅申報方式：</div>
-            <div class="d-flex pb-2" style="margin: 0 -10px">
-              <div class="col-auto">
-                <input
-                  type="radio"
-                  name="declare-way"
-                  v-model="apiInfo.enterpriseInvestigation.companyFinance.businessTaxApplyType"
-                  value="1"
-                />
-                <label for="">使用統一發票</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  name="declare-way"
-                  v-model="apiInfo.enterpriseInvestigation.companyFinance.businessTaxApplyType"
-                  value="2"
-                />
-                <label for="">未達課稅起徵點</label>
-              </div>
-            </div>
-            <div class="d-flex" style="margin: 0 -10px">
-              <div class="col-auto">
-                <input
-                  type="radio"
-                  name="declare-way"
-                  v-model="apiInfo.enterpriseInvestigation.companyFinance.businessTaxApplyType"
-                  value="3"
-                />
-                <label for="">免用統一發票</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  name="declare-way"
-                  v-model="apiInfo.enterpriseInvestigation.companyFinance.businessTaxApplyType"
-                  value="4"
-                />
-                <label for="">免徵營業稅</label>
-              </div>
-            </div>
-          </div>
-        </div>
+		<div class="row-title-2  row no-gutters my-2">(1) 獲利能力</div>
+		<div class="row no-gutters">
+			<div class="col-4 col-item p-2 text-center">
+				<div>年度 ***</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<div>淨營業收入 ***</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<div>毛利率 ***</div>
+			</div>
+		</div>
+		<div class="row no-gutters" v-for="(item, index) in apiInfo.enterpriseInvestigation.companyFinance.profitability">
+			<div class="col-4 col-item d-flex p-2 justify-content-center">
+				<input type="text" class="tiny-input" v-model="item.year" />
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<input type="text" v-model="item.income">
+			</div>
+			<div class="col col-item d-flex p-2 justify-content-center">
+				<input type="text" v-model="item.grossMargin" />
+				<div class="ml-3">
+					<button class="btn btn-1 btn-primary" v-on:click="apiInfo.enterpriseInvestigation.companyFinance.profitability.splice(index,1)">
+						-
+					</button>
+					<button class="btn btn-1 btn-secondary"
+						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.profitability.splice(index+1,0,{...templates.profitability})">
+						+
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="row-title-2 row no-gutters my-2">(2) 經營能力</div>
+		<div class="row no-gutters">
+			<div class="col-4 col-item p-2 text-center">
+				<div>年度</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<div>存貨週轉率</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<div>淨營業週轉天數</div>
+			</div>
+		</div>
+		<div class="row no-gutters" v-for="(item, index) in apiInfo.enterpriseInvestigation.companyFinance.operationCapacity">
+			<div class="col-4 col-item d-flex p-2 justify-content-center">
+				<input type="text" class="tiny-input" v-model="item.year" />
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<input type="text" v-model="item.rate">
+			</div>
+			<div class="col col-item d-flex p-2 justify-content-center">
+				<input type="text" v-model="item.day" />
+				<div class="ml-2">天</div>	
+				<div class="ml-2">
+					<button class="btn btn-1 btn-primary"
+						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.operationCapacity.splice(index,1)">
+						-
+					</button>
+					<button class="btn btn-1 btn-secondary"
+						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.operationCapacity.splice(index+1,0,{...templates.profitability})">
+						+
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="row-title-2  row no-gutters my-2">(3) 資本結構</div>
+		<div class="row no-gutters">
+			<div class="col-4 col-item p-2 text-center">
+				<div>年度</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<div>營收比</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<div>負債比</div>
+			</div>
+		</div>
+		<div class="row no-gutters" v-for="(item, index) in apiInfo.enterpriseInvestigation.companyFinance.capitalStructure">
+			<div class="col-4 col-item d-flex p-2 justify-content-center">
+				<input type="text" class="tiny-input" v-model="item.year" />
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<input type="text" v-model="item.psr">
+			</div>
+			<div class="col col-item d-flex p-2 justify-content-center">
+				<input type="text" v-model="item.debtRatio" />
+				<div class="ml-2">天</div>
+				<div class="ml-2">
+					<button class="btn btn-1 btn-primary"
+						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.capitalStructure.splice(index,1)">
+						-
+					</button>
+					<button class="btn btn-1 btn-secondary"
+						v-on:click="apiInfo.enterpriseInvestigation.companyFinance.capitalStructure.splice(index+1,0,{...templates.profitability})">
+						+
+					</button>
+				</div>
+			</div>
+		</div>
         <div class="row-title row no-gutters my-2">負責人財務狀況：</div>
         <div class="row no-gutters">
           <div class="col-4 col-item p-2 text-center">
-            <div>聯徵日期</div>
+            <div>聯徵資料年月</div>
           </div>
           <div class="col-4 col-item p-2 text-center">
-            <div>科目</div>
+            <div>授信總餘額</div>
           </div>
           <div class="col-4 col-item p-2 text-center">
-            <div>餘額</div>
+            <div>信用卡餘額總計</div>
           </div>
         </div>
         <div
@@ -705,14 +760,34 @@
             <input type="text" class="tiny-input" v-model="item.month" />
             <label class="px-1">月</label>
           </div>
-          <div class="col-4 col-item p-2 text-center">
-            <div>{{item.subjectName}}</div>
-          </div>
+		  <div class="col-4 col-item p-2 text-center">
+			<input type="text" v-model="item.balance">
+		  </div>
           <div class="col-4 col-item d-flex p-2 justify-content-center">
-            <input type="text" class="tiny-input" v-model="item.amount" />
-            <label>仟元</label>
+            <input type="text" v-model="item.cardBalance" />
           </div>
         </div>
+		<div class="row no-gutters">
+			<div class="col-12 col-item d-flex justify-content-between p-2">
+				<div class="item-1">票債信是否有異常紀錄</div>
+				<div class="col d-flex align-items-center justify-content-end">
+					<input 
+					    type="radio" 
+					    name="place-self" 
+					    v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.badRecord" 
+					    value="true" 
+					/>
+					<label>是</label>
+					<input 
+					    type="radio" 
+					    name="place-self" 
+					    v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.badRecord" 
+					    value="false" 
+					/>
+					<label>否</label>
+				</div>
+			</div>
+		</div>
         <div class="row no-gutters col-item">
           <div class="col p-2 item-1">個人信用評分</div>
           <div class="col-4 p-2 d-flex">
@@ -721,46 +796,7 @@
               class="w-100"
               v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.creditScore"
             />
-            <label for="">分</label>
-          </div>
-        </div>
-        <div class="row no-gutters mt-3">
-          <div class="col-4 col-item p-2 text-center">
-            <div>查詢日期</div>
-          </div>
-          <div class="col-4 col-item p-2 text-center">
-            <div>勞保薪資（月）</div>
-          </div>
-        </div>
-        <div class="row no-gutters">
-          <div class="col-4 col-item p-2 text-center">
-            <div class="d-flex justify-content-center">
-              <input
-                type="text"
-                class="tiny-input"
-                v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.insurance.year"
-              />
-              <div class="px-1">年</div>
-              <input
-                type="text"
-                class="tiny-input"
-                v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.insurance.month"
-              />
-              <div class="px-1">月</div>
-              <input
-                type="text"
-                class="tiny-input"
-                v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.insurance.day"
-              />
-              <div class="px-1">日</div>
-            </div>
-          </div>
-          <div class="col-4 col-item d-flex p-2 justify-content-center">
-            <input
-              type="text"
-              v-model="apiInfo.enterpriseInvestigation.companyOwnerFinance.insurance.amount"
-            />
-            <label>元</label>
+            <label>分</label>
           </div>
         </div>
       </div>
@@ -897,15 +933,15 @@
           </div>
         </div>
         <div class="row no-gutters mt-3">
-          <div class="col-4 col-item p-2 text-center">
-            <div>聯徵日期</div>
-          </div>
-          <div class="col-4 col-item p-2 text-center">
-            <div>科目</div>
-          </div>
-          <div class="col-4 col-item p-2 text-center">
-            <div>餘額</div>
-          </div>
+			<div class="col-4 col-item p-2 text-center">
+			  <div>聯徵資料年月</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+			  <div>授信總餘額</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+			  <div>信用卡餘額總計</div>
+			</div>
         </div>
         <div
           class="row no-gutters"
@@ -917,14 +953,22 @@
             <input type="text" class="tiny-input" v-model="item.month" />
             <label class="px-1">月</label>
           </div>
-          <div class="col-4 col-item p-2 text-center">
-            <div>{{item.subjectName}}</div>
-          </div>
+		  <div class="col-4 col-item p-2 text-center">
+			<input type="text" v-model="item.balance">
+		  </div>
           <div class="col-4 col-item d-flex p-2 justify-content-center">
-            <input type="text" class="tiny-input" v-model="item.amount" />
-            <label>仟元</label>
+            <input type="text" v-model="item.cardBalance" />
           </div>
         </div>
+		<div class="row no-gutters">
+			<div class="col-12 col-item d-flex justify-content-between p-2">
+				<div class="item-1">票債信是否有異常紀錄</div>
+				<div class="col d-flex align-items-center justify-content-end">
+					<input type="radio" name="place-self" v-model="apiInfo.enterpriseAssociates.spouse.badRecord" value="true" /><label for="">是</label>
+					<input type="radio" name="place-self" v-model="apiInfo.enterpriseAssociates.spouse.badRecord" value="false" /><label for="">否</label>
+				</div>
+			</div>
+		</div>
         <div class="row no-gutters col-item">
           <div class="col p-2 item-1">個人信用評分</div>
           <div class="col-4 p-2 d-flex">
@@ -1113,15 +1157,15 @@
               </div>
             </div>
             <div class="row no-gutters mt-3">
-              <div class="col-4 col-item p-2 text-center">
-                <div>聯徵日期</div>
-              </div>
-              <div class="col-4 col-item p-2 text-center">
-                <div>科目</div>
-              </div>
-              <div class="col-4 col-item p-2 text-center">
-                <div>餘額</div>
-              </div>
+			<div class="col-4 col-item p-2 text-center">
+				<div>聯徵資料年月</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<div>授信總餘額</div>
+			</div>
+			<div class="col-4 col-item p-2 text-center">
+				<div>信用卡餘額總計</div>
+			</div>
             </div>
             <div class="row no-gutters" v-for="x in item.loanList">
               <div class="col-4 col-item d-flex p-2 justify-content-center">
@@ -1131,13 +1175,21 @@
                 <label class="px-1">月</label>
               </div>
               <div class="col-4 col-item p-2 text-center">
-                <div>{{x.subjectName}}</div>
+                <input type="text" v-model="x.balance" />
               </div>
               <div class="col-4 col-item d-flex p-2 justify-content-center">
-                <input type="text" class="tiny-input" v-model="x.amount" />
-                <label>仟元</label>
+                <input type="text" v-model="x.cardBalance" />
               </div>
             </div>
+			<div class="row no-gutters">
+				<div class="col-12 col-item d-flex justify-content-between p-2">
+					<div class="item-1">票債信是否有異常紀錄</div>
+					<div class="col d-flex align-items-center justify-content-end">
+						<input type="radio" name="place-self" v-model="item.badRecord" value="true" /><label for="">是</label>
+						<input type="radio" name="place-self" v-model="item.badRecord" value="false" /><label for="">否</label>
+					</div>
+				</div>
+			</div>
             <div class="row no-gutters col-item">
               <div class="col p-2 item-1">個人信用評分</div>
               <div class="col-4 p-2 d-flex">
@@ -1211,6 +1263,12 @@
       font-size: 24px;
       font-weight: bold;
     }
+	
+	.row-title-2{
+		font-weight: bold;
+		font-size: 20px;
+		color: darkblue;
+	}
 
     .row-title-tip {
       margin-left: 4px;
@@ -1321,10 +1379,26 @@
                 amount: '',
               },
             ],
+            badRecord:false,
             creditScore: 0,
             ownerShip: 0,
             inCompanyType: 0,
           },
+		  profitability:{
+			   year: '',
+			  income: '',
+			  grossMargin: ''
+		  },
+		  operationCapacity:{
+			  year:'',
+			  rate:'',
+			  day:''
+		  },
+		  capitalStructure:{
+			year: '',
+			psr: '',
+			debtRatio: ''
+		  }
         },
         apiInfo: {
           targetNo: '',
@@ -1400,44 +1474,36 @@
             },
             companyFinance: {
               creditScore: '',
+                  badRecord:false,
               loanList: [
                 {
                   year: '',
                   month: '',
-                  subjectName: '短期放款',
                   amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '中期放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '長期放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '短期擔保放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '中期擔保放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '長期擔保放款',
-                  amount: '',
+                  bankNum:''
                 },
               ],
+			  profitability:[
+				  {
+					  year:'',
+					  income:'',
+					  grossMargin:''
+				  }
+			  ],
+			  operationCapacity:[
+				{
+					year: '',
+					rate: '',
+					day: ''
+				}
+			  ],
+			  capitalStructure:[
+				{
+					year:'',
+					psr:'',
+					debtRatio:''
+				}
+			  ],
               netOperatingRevenue: [
                 {
                   year: '',
@@ -1456,50 +1522,15 @@
             },
             companyOwnerFinance: {
               creditScore: '',
+              badRecord:false,
               loanList: [
                 {
                   year: '',
                   month: '',
-                  subjectName: '短期放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '中期放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '長期放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '短期擔保放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '中期擔保放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '長期擔保放款',
-                  amount: '',
+                  balance: '',
+                  cardBalance: '',
                 },
               ],
-              insurance: {
-                year: '',
-                month: '',
-                day: '',
-                amount: '',
-              },
             },
           },
           enterpriseAssociates: {
@@ -1525,40 +1556,11 @@
                 {
                   year: '',
                   month: '',
-                  subjectName: '短期放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '中期放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '長期放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '短期擔保放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '中期擔保放款',
-                  amount: '',
-                },
-                {
-                  year: '',
-                  month: '',
-                  subjectName: '長期擔保放款',
-                  amount: '',
+                  balance: '',
+                  cardBalance: '',
                 },
               ],
+              badRecord:false,
               creditScore: '',
             },
             guarantorList: [
@@ -1576,41 +1578,12 @@
                 loanList: [
                   {
                     year: '',
-                    month: '',
-                    subjectName: '短期放款',
-                    amount: '',
-                  },
-                  {
-                    year: '',
-                    month: '',
-                    subjectName: '中期放款',
-                    amount: '',
-                  },
-                  {
-                    year: '',
-                    month: '',
-                    subjectName: '長期放款',
-                    amount: '',
-                  },
-                  {
-                    year: '',
-                    month: '',
-                    subjectName: '短期擔保放款',
-                    amount: '',
-                  },
-                  {
-                    year: '',
-                    month: '',
-                    subjectName: '中期擔保放款',
-                    amount: '',
-                  },
-                  {
-                    year: '',
-                    month: '',
-                    subjectName: '長期擔保放款',
-                    amount: '',
+                  	month: '',
+                  	balance: '',
+                  	cardBalance: '',
                   },
                 ],
+                badRecord:false,
                 creditScore: '',
                 ownerShip: 0,
                 inCompanyType: 0,
