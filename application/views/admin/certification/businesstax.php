@@ -141,6 +141,35 @@
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
+                                        <td><span>近四年申報營業稅年份</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastFourYear"
+                                                   placeholder="格式:YYY"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅01~02月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM1M2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅03~04月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM3M4"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅05~06月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM5M6"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅07~08月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM7M8"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅09~10月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM9M10"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅11~12月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM11M12"></td>
+                                    </tr>
+                                    <tr>
                                         <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
                                     </tr>
                                     </tbody>
@@ -236,6 +265,35 @@
                                     <tr>
                                         <td><span>近三年申報營業稅11~12月開立發票金額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM11M12"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅年份</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastFourYear"
+                                                   placeholder="格式:YYY"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅01~02月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM1M2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅03~04月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM3M4"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅05~06月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM5M6"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅07~08月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM7M8"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅09~10月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM9M10"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近四年申報營業稅11~12月開立發票金額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -359,6 +417,7 @@
                     businessTaxLastOneYear:'',
                     businessTaxLastTwoYear:'',
                     businessTaxLastThreeYear:'',
+                    businessTaxLastFourYear:'',
                     lastOneYearInvoiceAmountM1M2:'',
                     lastOneYearInvoiceAmountM3M4:'',
                     lastOneYearInvoiceAmountM5M6:'',
@@ -377,6 +436,12 @@
                     lastThreeYearInvoiceAmountM7M8:'',
                     lastThreeYearInvoiceAmountM9M10:'',
                     lastThreeYearInvoiceAmountM11M12:'',
+                    lastFourYearInvoiceAmountM1M2:'',
+                    lastFourYearInvoiceAmountM3M4:'',
+                    lastFourYearInvoiceAmountM5M6:'',
+                    lastFourYearInvoiceAmountM7M8:'',
+                    lastFourYearInvoiceAmountM9M10:'',
+                    lastFourYearInvoiceAmountM11M12:'',
                 }
             }
         },

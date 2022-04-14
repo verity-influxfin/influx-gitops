@@ -3555,7 +3555,7 @@ define({
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "businessTaxLastOneYear",
                             "description": "<p>近一年申報營業稅年份，年份為西元年YYYY</p>"
                         }, {
@@ -3633,7 +3633,7 @@ define({
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "businessTaxLastTwoYear",
                             "description": "<p>近二年申報營業稅年份，年份為西元年YYYY</p>"
                         }, {
@@ -3646,7 +3646,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM1M2",
+                            "field": "lastTwoYearInvoiceImageM1M2",
                             "description": "<p>近二年申報營業稅01~02月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3658,7 +3658,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM3M4",
+                            "field": "lastTwoYearInvoiceImageM3M4",
                             "description": "<p>近二年申報營業稅03~04月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3670,7 +3670,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM5M6",
+                            "field": "lastTwoYearInvoiceImageM5M6",
                             "description": "<p>近二年申報營業稅05~06月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3682,7 +3682,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM7M8",
+                            "field": "lastTwoYearInvoiceImageM7M8",
                             "description": "<p>近二年申報營業稅07~08月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3694,7 +3694,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM9M10",
+                            "field": "lastTwoYearInvoiceImageM9M10",
                             "description": "<p>近二年申報營業稅09~10月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3706,12 +3706,12 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM11M12",
+                            "field": "lastTwoYearInvoiceImageM11M12",
                             "description": "<p>近二年申報營業稅11~12月照片ID</p>"
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "businessTaxLastThreeYear",
                             "description": "<p>近三年申報營業稅年份，年份為西元年YYYY</p>"
                         }, {
@@ -3724,7 +3724,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM1M2",
+                            "field": "lastThreeYearInvoiceImageM1M2",
                             "description": "<p>近三年申報營業稅01~02月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3736,7 +3736,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM3M4",
+                            "field": "lastThreeYearInvoiceImageM3M4",
                             "description": "<p>近三年申報營業稅03~04月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3748,7 +3748,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM5M6",
+                            "field": "lastThreeYearInvoiceImageM5M6",
                             "description": "<p>近三年申報營業稅05~06月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3760,7 +3760,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM7M8",
+                            "field": "lastThreeYearInvoiceImageM7M8",
                             "description": "<p>近三年申報營業稅07~08月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3772,7 +3772,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM9M10",
+                            "field": "lastThreeYearInvoiceImageM9M10",
                             "description": "<p>近三年申報營業稅09~10月照片ID</p>"
                         }, {
                             "group": "Parameter",
@@ -3784,8 +3784,86 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
-                            "field": "lastOneYearInvoiceImageM11M12",
+                            "field": "lastThreeYearInvoiceImageM11M12",
                             "description": "<p>近三年申報營業稅11~12月照片ID</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "businessTaxLastFourYear",
+                            "description": "<p>近四年申報營業稅年份，年份為西元年YYYY</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceAmountM1M2",
+                            "description": "<p>近四年申報營業稅01~02月開立發票金額</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceImageM1M2",
+                            "description": "<p>近四年申報營業稅01~02月照片ID</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceAmountM3M4",
+                            "description": "<p>近四年申報營業稅03~04月開立發票金額</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceImageM3M4",
+                            "description": "<p>近四年申報營業稅03~04月照片ID</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceAmountM5M6",
+                            "description": "<p>近四年申報營業稅05~06月開立發票金額</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceImageM5M6",
+                            "description": "<p>近四年申報營業稅05~06月照片ID</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceAmountM7M8",
+                            "description": "<p>近四年申報營業稅07~08月開立發票金額</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceImageM7M8",
+                            "description": "<p>近四年申報營業稅07~08月照片ID</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceAmountM9M10",
+                            "description": "<p>近四年申報營業稅09~10月開立發票金額</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceImageM9M10",
+                            "description": "<p>近四年申報營業稅09~10月照片ID</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceAmountM11M12",
+                            "description": "<p>近四年申報營業稅11~12月開立發票金額</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "lastFourYearInvoiceImageM11M12",
+                            "description": "<p>近四年申報營業稅11~12月照片ID</p>"
                         },
                     ]
                 },

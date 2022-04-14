@@ -2972,13 +2972,14 @@ class Certification extends REST_Controller {
             $year_fields = [
                 'businessTaxLastOneYear',
                 'businessTaxLastTwoYear',
-                'businessTaxLastThreeYear'
+                'businessTaxLastThreeYear',
+                'businessTaxLastFourYear'
             ];
             foreach ($year_fields as $year)
             {
                 if (empty($input[$year]) || ! strtotime($input[$year]))
                 {
-                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                    continue;
                 }
                 $content['skbank_form'][$year] = (int) $input[$year] - 1911;
             }
@@ -3002,7 +3003,13 @@ class Certification extends REST_Controller {
                 'lastThreeYearInvoiceAmountM5M6',
                 'lastThreeYearInvoiceAmountM7M8',
                 'lastThreeYearInvoiceAmountM9M10',
-                'lastThreeYearInvoiceAmountM11M12'
+                'lastThreeYearInvoiceAmountM11M12',
+                'lastFourYearInvoiceAmountM1M2',
+                'lastFourYearInvoiceAmountM3M4',
+                'lastFourYearInvoiceAmountM5M6',
+                'lastFourYearInvoiceAmountM7M8',
+                'lastFourYearInvoiceAmountM9M10',
+                'lastFourYearInvoiceAmountM11M12'
             ];
             foreach($amount_fields as $amount)
             {
@@ -3033,7 +3040,13 @@ class Certification extends REST_Controller {
                 'lastThreeYearInvoiceImageM5M6',
                 'lastThreeYearInvoiceImageM7M8',
                 'lastThreeYearInvoiceImageM9M10',
-                'lastThreeYearInvoiceImageM11M12'
+                'lastThreeYearInvoiceImageM11M12',
+                'lastFourYearInvoiceImageM1M2',
+                'lastFourYearInvoiceImageM3M4',
+                'lastFourYearInvoiceImageM5M6',
+                'lastFourYearInvoiceImageM7M8',
+                'lastFourYearInvoiceImageM9M10',
+                'lastFourYearInvoiceImageM11M12'
             ];
             $pic_ids = [];
             foreach ($pic_fields as $pic)
