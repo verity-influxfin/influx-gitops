@@ -828,18 +828,18 @@ class Certification_lib{
             $verifiedResult = new StudentCertificationResult(CERTIFICATION_STATUS_SUCCEED);
             $sys_check = SYSTEM_CHECK;
             $reference = $content['front_image_id'] . '-' . $content['back_image_id'];
-            $content['meta'] = isset($content['meta']) ? $content['meta'] : [];
+            $content['meta'] ?? [];
 
             $this->CI->load->library('scraper/sip_lib');
             if ( ! empty($content['school']) && ! empty($content['sip_account']) && ! empty($content['sip_password']))
             {
-                // 爬蟲執行結果
                 $sip_log = $this->CI->sip_lib->getLoginLog($content['school'], $content['sip_account']);
-                if ($sip_log && isset($sip_log['status']) && isset($sip_log['response']['status']))
+                // 判斷login_log是否有回應
+                if ($sip_log && isset($sip_log['status']))
                 {
                     if ($sip_log['status'] == SCRAPER_STATUS_SUCCESS)
                     {
-                        // SIP 爬蟲任務完成
+                        // login執行完成
                         if ($sip_log['response']['status'] == 'finished')
                         {
                             // 判斷 SIP 帳號密碼是否正確
@@ -848,35 +848,58 @@ class Certification_lib{
                                 // 判斷 SIP 是否成功登入
                                 if (isset($sip_log['response']['isLogin']) && $sip_log['response']['isLogin'] == TRUE)
                                 {
-                                    $sip_data                      = $this->CI->sip_lib->getDeepData($content['school'], $content['sip_account']);
-                                    $content['sip_data']           = isset($sip_data['response']) ? $sip_data['response'] : [];
-                                    $content['meta']['last_grade'] = isset($sip_data['response']['result']['latestGrades']) ? $sip_data['response']['result']['latestGrades'] : '';
-                                    $user_info = ! empty($user_certification->content) ? $user_certification->content : [];
-                                    if ($sip_data && isset($sip_data['response']['result']))
+                                    // 判斷deep_log是否有回應
+                                    $deep_log = $this->CI->sip_lib->getDeepLog($content['school'], $content['sip_account']);
+                                    if ($deep_log && isset($deep_log['status']) && isset($deep_log['response']['status']))
                                     {
-                                        if (isset($user_info['name']) && isset($user_info['id_number']) && isset($sip_data['response']['result']['name']) && isset($sip_data['response']['result']['idNumber']))
+                                        if ($deep_log['status'] == SCRAPER_STATUS_SUCCESS)
                                         {
-                                            if ($user_info['name'] != $sip_data['response']['result']['name'])
+                                            // 深度爬蟲任務完成
+                                            if ($deep_log['response']['status'] == 'finished')
                                             {
-                                                $verifiedResult->addMessage("SIP姓名與實名認證資訊不同:1.實名認證姓名=\"{$user_info['name']}\"2.SIP姓名=\"{$sip_data['response']['result']['name']}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                $sip_data                      = $this->CI->sip_lib->getDeepData($content['school'], $content['sip_account']);
+                                                $content['sip_data']           = $sip_data['response'] ?? [];
+                                                $content['meta']['last_grade'] = $sip_data['response']['result']['latestGrades'] ?? '';
+                                                $user_info = ! empty($user_certification->content) ? $user_certification->content : [];
+                                                // 判斷是否有資料
+                                                if ($sip_data && isset($sip_data['response']['result']))
+                                                {   
+                                                    $name = $name ?? '';
+                                                    $id_number = $user_info['id_number'] ?? '';
+                                                    $sip_name = $sip_data['response']['result']['name'] ?? '';
+                                                    $sip_id_number = $sip_data['response']['result']['idNumber'] ?? '';
+                                                    if ($name != $sip_name)
+                                                    {
+                                                        $verifiedResult->addMessage("SIP姓名與實名認證資訊不同:1.實名認證姓名=\"{$name}\"2.SIP姓名=\"{$sip_name}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                    }
+                                                    if ($id_number != $sip_id_number)
+                                                    {
+                                                        $verifiedResult->addMessage("SIP身分證與實名認證資訊不同1.實名認證身分證=\"{$id_number}\"2.SIP身分證=\"{$sip_id_number}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    $verifiedResult->addMessage('SIP爬蟲DeepScraper沒有資料，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                }
                                             }
-                                            if ($user_info['id_number'] != $sip_data['response']['result']['idNumber'])
+                                            else if ($deep_log['response']['status'] == 'failure')
                                             {
-                                                $verifiedResult->addMessage("SIP身分證與實名認證資訊不同1.實名認證身分證=\"{$user_info['id_number']}\"2.SIP身分證=\"{$sip_data['response']['result']['idNumber']}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                $verifiedResult->addMessage('SIP爬蟲DeepScraper失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                            }
+                                            else if ($deep_log['response']['status'] == 'deep scraping' || $deep_log['response']['status'] == 'logging in')
+                                            {
+                                                return FALSE;
+                                            }
+                                            else
+                                            {
+                                                $verifiedResult->addMessage('SIP爬蟲DeepLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                             }
                                         }
-                                        else
+                                        else if ($deep_log['status'] == SCRAPER_STATUS_NO_CONTENT)
                                         {
-                                            isset($user_info['name']) ? $user_info['name'] : $user_info['name'] = '';
-                                            isset($user_info['id_number']) ? $user_info['id_number'] : $user_info['id_number'] = '';
-                                            isset($sip_data['response']['result']['name']) ? $sip_data['response']['result']['name'] : $sip_data['response']['result']['name'] = '';
-                                            isset($sip_data['response']['result']['idNumber']) ? $sip_data['response']['result']['idNumber'] : $sip_data['response']['result']['idNumber'] = '';
-                                            $verifiedResult->addMessage("SIP身分證與實名認證資訊不同:1.實名認證姓名=\"{$user_info['name']}\"2.實名認證身分證=\"{$user_info['id_number']}\"3.SIP姓名=\"{$sip_data['response']['result']['name']}\"4.SIP身分證=\"{$sip_data['response']['result']['idNumber']}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                            $this->CI->sip_lib->requestDeep($content['school'], $content['sip_account'], $content['sip_password']);
+                                            return FALSE;
                                         }
-                                    }
-                                    else
-                                    {
-                                        $verifiedResult->addMessage('SIP DeepScraper沒有資料，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                     }
                                 }
                                 else
@@ -887,31 +910,24 @@ class Certification_lib{
                             }
                             else
                             {
-                                if (isset($sip_log['response']['universityStatus']) && $sip_log['response']['universityStatus'] != SCRAPER_SIP_NORMALLY)
-                                {
-                                    $status_mapping = [
-                                        SCRAPER_SIP_RECAPTCHA => '驗證碼問題',
-                                        SCRAPER_SIP_NORMALLY => '正常狀態',
-                                        SCRAPER_SIP_BLOCK => '黑名單學校',
-                                        SCRAPER_SIP_SERVER_ERROR => 'server問題',
-                                        SCRAPER_SIP_VPN => 'VPN相關問題',
-                                        SCRAPER_SIP_CHANGE_PWD => '要求改密碼',
-                                        SCRAPER_SIP_FILL_QUEST => '問卷問題',
-                                        SCRAPER_SIP_UNSTABLE => '不穩定 有時有未知異常',
-                                    ];
-                                    $verifiedResult->addMessage('SIP登入失敗，學校狀態: ' .
-                                        $status_mapping[$sip_log['response']['universityStatus']] .
-                                        '，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
-                                }
-                                else
-                                {
-                                    $verifiedResult->addMessage('SIP登入失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
-                                }
+                                $status_mapping = [
+                                    SCRAPER_SIP_RECAPTCHA => '驗證碼問題',
+                                    SCRAPER_SIP_NORMALLY => '正常狀態',
+                                    SCRAPER_SIP_BLOCK => '黑名單學校',
+                                    SCRAPER_SIP_SERVER_ERROR => 'server問題',
+                                    SCRAPER_SIP_VPN => 'VPN相關問題',
+                                    SCRAPER_SIP_CHANGE_PWD => '要求改密碼',
+                                    SCRAPER_SIP_FILL_QUEST => '問卷問題',
+                                    SCRAPER_SIP_UNSTABLE => '不穩定 有時有未知異常',
+                                ];
+                                $verifiedResult->addMessage('SIP登入失敗，學校狀態: ' .
+                                    $status_mapping[$sip_log['response']['universityStatus']] .
+                                    '，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                             }
                         }
                         else if ($sip_log['response']['status'] == 'failure')
                         {
-                            $verifiedResult->addMessage('SIP爬蟲執行失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('SIP登入執行失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                         }
                         else if ($sip_log['response']['status'] == 'university_not_found')
                         {
@@ -928,12 +944,12 @@ class Certification_lib{
                         }
                         else
                         {
-                            $verifiedResult->addMessage('SIP爬蟲回應status非預期，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('SIP爬蟲LoginLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                         }
                     }
                     else if ($sip_log['status'] == SCRAPER_STATUS_NO_CONTENT)
                     {
-                        $this->sip_lib->requestDeep($content['school'], $content['sip_account'], $content['sip_password']);
+                        $this->CI->sip_lib->requestDeep($content['school'], $content['sip_account'], $content['sip_password']);
                         return FALSE;
                     }
                     else if ($sip_log['status'] == SCRAPER_STATUS_CREATED)
@@ -942,12 +958,12 @@ class Certification_lib{
                     }
                     else
                     {
-                        $verifiedResult->addMessage('SIP爬蟲http回應狀態非預期，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                        $verifiedResult->addMessage('SIP爬蟲LoginLog http回應: ' . $sip_log['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                     }
                 }
                 else
                 {
-                    $verifiedResult->addMessage('SIP LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                    $verifiedResult->addMessage('SIP爬蟲LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                 }
             }
             else
