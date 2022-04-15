@@ -93,6 +93,7 @@ class Certification_lib{
                     $certification->investor 			= intval($certification->investor);
                     $certification->status 				= intval($certification->status);
                     $certification->certification_id 	= intval($certification->certification_id);
+                    $certification->certificate_status = (int) $certification->certificate_status;
                     $certification->created_at 			= intval($certification->created_at);
                     $certification->updated_at 			= intval($certification->updated_at);
                     $certification->content = json_decode($certification->content,true);
@@ -117,6 +118,7 @@ class Certification_lib{
 				$certification->investor 			= intval($certification->investor);
 				$certification->status 				= intval($certification->status);
 				$certification->certification_id 	= intval($certification->certification_id);
+                $certification->certificate_status = (int) $certification->certificate_status;
 				$certification->expire_time 		= intval($certification->expire_time);
 				$certification->created_at 			= intval($certification->created_at);
 				$certification->updated_at 			= intval($certification->updated_at);
@@ -2877,6 +2879,7 @@ class Certification_lib{
 					// 回傳認證資料
 					$value['content'] 		       = $user_certification->content;
                     $value['remark']		       = $user_certification->remark;
+                    $value['certificate_status'] = $user_certification->certificate_status;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
 				}else{
@@ -2987,7 +2990,6 @@ class Certification_lib{
 
     public function verify_certifications($target, $stage): bool
     {
-        $date		            = get_entering_date();
         $productList = $this->CI->config->item('product_list');
 
         $certificationsStageList = isset($target->product_id) &&
@@ -3008,41 +3010,75 @@ class Certification_lib{
         if(!isset($target) || !isset($certificationsStageList[$stage]))
             return FALSE;
 
-        $userCertifications 	= $this->CI->user_certification_model->order_by('certification_id','ASC')
-            ->order_by('created_at','DESC')->get_many_by([
-                'status'				=> [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
-                'user_id'               => $target->user_id,
-            ]);
-        if(!empty($userCertifications)) {
-            $validateCertificationList = call_user_func_array('array_merge', $certificationsStageList);
-            $validateCertificationList = array_diff($validateCertificationList, $option_cert);
-            $doneCertifications = array_reduce($userCertifications, function ($list, $item) {
-                if(!isset($list[$item->certification_id]))
-                    $list[$item->certification_id] = $item;
-                return $list;
-            }, []);
+        $this->CI->load->helper('product');
+        if (isset($target->certificate_status) && $target->certificate_status != TARGET_CERTIFICATE_SUBMITTED && ! is_judicial_product($target->product_id))
+        { // todo: 目前僅適用於個金產品
+            $userCertifications = $this->CI->user_certification_model->order_by('certification_id', 'ASC')
+                ->order_by('created_at', 'DESC')->get_many_by([
+                    'status' => [
+                        CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+                        CERTIFICATION_STATUS_SUCCEED,
+                        CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                        CERTIFICATION_STATUS_AUTHENTICATED,
+                        CERTIFICATION_STATUS_FAILED
+                    ],
+                    'user_id' => $target->user_id,
+                ]);
+            $cert_can_pending_status = [CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_FAILED];
+        }
+        else
+        {
+            $userCertifications = $this->CI->user_certification_model->order_by('certification_id', 'ASC')
+                ->order_by('created_at', 'DESC')->get_many_by([
+                    'status' => [
+                        CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+                        CERTIFICATION_STATUS_SUCCEED,
+                        CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                        CERTIFICATION_STATUS_AUTHENTICATED
+                    ],
+                    'user_id' => $target->user_id,
+                ]);
+            $cert_can_pending_status = [CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_PENDING_TO_REVIEW];
+        }
 
-            // 待驗證或是已通過的認證徵信項目數量需一致
-            $pendingCertifications = array_filter($doneCertifications,
-                function ($x) use ($validateCertificationList) { return in_array($x->certification_id, $validateCertificationList) &&
-                    ($this->canVerify($x->status) || $x->status == CERTIFICATION_STATUS_SUCCEED || $x->status == CERTIFICATION_STATUS_PENDING_TO_REVIEW); });
-
-            if (count(array_intersect_key(array_flip($validateCertificationList), $pendingCertifications))
-                != count($validateCertificationList)) {
-                return FALSE;
-            }
-
-            $targetData = json_decode($target->target_data, true);
-            $targetData['verify_cetification_list'] = json_encode(array_column($pendingCertifications, 'id'));
-
-            $this->CI->target_model->update_by([
-                'id' => $target->id
-            ], ['target_data' => json_encode($targetData, JSON_INVALID_UTF8_IGNORE)]);
-
-        }else {
-            // 空的認證徵信列表
+        // 空的認證徵信列表
+        if (empty($userCertifications))
+        {
             return FALSE;
         }
+
+        $validateCertificationList = call_user_func_array('array_merge', $certificationsStageList);
+        $validateCertificationList = array_diff($validateCertificationList, $option_cert);
+        $doneCertifications = array_reduce($userCertifications, function ($list, $item) {
+            if ( ! isset($list[$item->certification_id]))
+                $list[$item->certification_id] = $item;
+            return $list;
+        }, []);
+
+        // 待驗證或是已通過的認證徵信項目數量需一致
+        $pendingCertifications = array_filter($doneCertifications,
+            function ($x) use ($validateCertificationList, $cert_can_pending_status) {
+                return in_array($x->certification_id, $validateCertificationList) &&
+                    ($this->canVerify($x->status) || in_array($x->status, $cert_can_pending_status));
+            });
+
+        if (count(array_intersect_key(array_flip($validateCertificationList), $pendingCertifications))
+            != count($validateCertificationList))
+        {
+            return FALSE;
+        }
+
+        $targetData = json_decode($target->target_data, TRUE);
+        $verify_cert_ids = array_column($pendingCertifications, 'id');
+        $targetData['verify_cetification_list'] = json_encode($verify_cert_ids);
+
+        $this->CI->target_model->update_by([
+            'id' => $target->id
+        ], ['target_data' => json_encode($targetData, JSON_INVALID_UTF8_IGNORE)]);
+
+        $this->CI->user_certification_model->update_by(['id' => $verify_cert_ids], [
+            'certificate_status' => 1
+        ]);
         return TRUE;
     }
 

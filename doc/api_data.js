@@ -49513,6 +49513,56 @@ define({
                     "url": "/api/v2/product/update"
                 }
             ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/product/re_submit",
+            "title": "借款方 審核失敗，重新提交徵信項",
+            "version": "0.2.0",
+            "name": "PostProductReSubmit",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    \"result\":\"SUCCESS\"\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/re_submit"
+                }
+            ]
         }
     ]
 });

@@ -1268,15 +1268,7 @@ class Product extends REST_Controller {
 
             $certification		= [];
 
-            if (isset($target->certificate_status) && $target->certificate_status == 0)
-            {
-                $get_fail = TRUE;
-            }
-            else
-            {
-                $get_fail = FALSE;
-            }
-            $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, $get_fail, $target, $product, TRUE);
+            $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, TRUE, $target, $product, TRUE);
             $completeness_level = 100 / count($certification_list);
             if(count($cer_group) > 0){
                 $completeness_level = 100 / (count($certification_list) + count($cer_group));
@@ -1327,6 +1319,19 @@ class Product extends REST_Controller {
 					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
+                        if ($value['user_status'] == CERTIFICATION_STATUS_FAILED &&
+                            isset($target->certificate_status) &&
+                            (
+                                ($target->certificate_status != TARGET_CERTIFICATE_DEFAULT && $target->certificate_status != TARGET_CERTIFICATE_SUBMITTED) ||
+                                ($target->certificate_status == TARGET_CERTIFICATE_DEFAULT && isset($value['certificate_status']) && $value['certificate_status'] == 1)
+                            )
+                        )
+                        {
+                            $value['user_status'] = NULL;
+                            $value['certification_id'] = NULL;
+                            $value['remark'] = NULL;
+                            $content_array_data = [];
+                        }
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
                         $value['completeness'] = ceil($value['user_status'] == 1?$completeness_level:0);
@@ -3408,7 +3413,7 @@ class Product extends REST_Controller {
             $this->load->model('user_certification_model');
             $cert_list = $this->config->item('certifications');
             $failed_cert_reason = [];
-            if ($value['status'] == TARGET_WAITING_APPROVE && $value['certificate_status'] == 1)
+            if ($value['status'] == TARGET_WAITING_APPROVE && $value['certificate_status'] == TARGET_CERTIFICATE_SUBMITTED)
             {
                 foreach ($need_chk_cert as $certification_id)
                 {
@@ -3546,5 +3551,30 @@ class Product extends REST_Controller {
         );
 
         $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => (int) $input['target_id']]]);
+    }
+
+    public function re_submit_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        if (empty($input['target_id']))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $target = $this->target_model->get_by([
+            'id' => $input['target_id'],
+            'user_id' => $this->user_info->id
+        ]);
+        if (empty($target))
+        {
+            $this->response(['result' => 'ERROR', 'error' => TARGET_NOT_EXIST]);
+        }
+
+        $this->target_model->update(
+            $input['target_id'], [
+                'certificate_status' => TARGET_CERTIFICATE_RE_SUBMITTING
+            ]
+        );
+        $this->response(['result' => 'SUCCESS']);
     }
 }

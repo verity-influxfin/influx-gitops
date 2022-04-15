@@ -183,21 +183,23 @@ class Risk extends MY_Admin_Controller {
             $additional_btn = [];
             if ($stage == 0 )
             {
-                if ($user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['this_success_status'] || $target->certificate_status == '1')
+                if ($user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['this_success_status'] ||
+                    $target->certificate_status == TARGET_CERTIFICATE_SUBMITTED)
                 {
                     continue;
                 }
             }
             elseif ($stage == 1)
             {
-                if ( ! $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['prev_success_status'] || $target->certificate_status == '1')
+                if ( ! $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['prev_success_status'] ||
+                    $target->certificate_status == TARGET_CERTIFICATE_SUBMITTED)
                 {
                     continue;
                 }
             }
             else
             {
-                if ( $target->certificate_status != '1')
+                if ( $target->certificate_status != TARGET_CERTIFICATE_SUBMITTED)
                 {
                     continue;
                 }

@@ -613,7 +613,7 @@ class Target_model extends MY_Model
                 ->where('status', TARGET_FAIL)
                 ->or_group_start()
                     ->where('status', TARGET_WAITING_APPROVE)
-                    ->where('certificate_status', 1)
+                    ->where('certificate_status', TARGET_CERTIFICATE_SUBMITTED)
                 ->group_end()
             ->group_end()
             ->group_by('product_id')
