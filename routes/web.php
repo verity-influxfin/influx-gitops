@@ -346,3 +346,8 @@ Route::prefix('api/v1')->group(function() {
 
 // 捐款動畫 SSE API
 Route::get('/event/charity/donation', 'CharityController@getDonation');
+
+// 遊客捐款 & 查詢捐款 API
+Route::post('/charity/donate/anonymous', 'CharityController@visitorDonate');
+Route::get('/charity/donate/anonymous', 'CharityController@visitorSearch');
+
