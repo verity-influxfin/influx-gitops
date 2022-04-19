@@ -16,7 +16,7 @@ class CreateBorrowReportTable extends Migration
         if (! Schema::hasTable('borrow_report')) {
             Schema::create('borrow_report', function (Blueprint $table) {
                 $table->id();
-                $table->integer('identity', 11)->comment('身份 1:學生,2:上班族');
+                $table->integer('identity')->comment('身份 1:學生,2:上班族');
                 $table->string('name', 20)->comment('姓名');
                 $table->string('educational_level', 125)->nullable()->comment('教育程度(上班族必填)');
                 $table->string('is_top_enterprises', 125)->nullable()->comment('是否為上市櫃或金融機構、公家機關(上班族必填)');

@@ -6,7 +6,7 @@ export default [
         image  : "/images/alesis-student-rotate.svg",
         targets: [
             "大學、碩博士在學生",
-            "20-35歲中華民國國民"
+            "20歲以上中華民國國民"
         ],
         action  : "開始試算",
         features: [
@@ -24,7 +24,7 @@ export default [
         image  : "/images/alesis-work-rotate.svg",
         targets: [
             "社會新鮮人、金融小白",
-            "20-35歲中華民國國民"
+            "20-45歲中華民國國民"
         ],
         action  : "開始試算",
         features: [
@@ -39,21 +39,18 @@ export default [
         header  : "中小企業融資",
         unready : false,
         image   : "/images/alesis-companies-rotate.svg",
-        link    : null,
-        targets : [],
-        action  : "敬請期待",
+        link    : '/business-loan',
+        targets: [
+            '新創微型企業、電子商務、中小企業(主)',
+            '有統編皆可申請'
+        ],
+        action  : "立即申請",
         features: [
-            "信保微企貸",
-            "申請速度最快，核准機率最高",
+            "微企e秒貸：\r\n✓ 額度100萬2天內核准\r\n✓ 銀行撥款、信保基金保證",
+            "信保融資專案：\r\ncoming soon...",
+            "一般中小企業融資：\r\ncoming soon...",
+            "一支手機全線上申請",
+            "申請媒合服務完全免費"
         ]
     },
-    {
-        header  : "車輛融資",
-        unready : true,
-        image   : "/images/alesis-car-rotate.svg",
-        link    : null,
-        targets : [],
-        action  : "敬請期待",
-        features: []
-    }
 ]

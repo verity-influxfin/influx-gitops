@@ -79,7 +79,9 @@ $(() => {
             timer: null,
             counter: 180,
             loginTime: 0,
-            currentTime: 0
+            currentTime: 0,
+            inputing:false,
+            searchText:'',
         },
         computed: {
             isInvestor() {
@@ -91,6 +93,10 @@ $(() => {
             userData() {
                 return sessionStorage.getItem("userData") ? JSON.parse(sessionStorage.getItem("userData")) : {}
             },
+            isSearchTextEmpty(){
+                const s = this.searchText
+                return s.length<1
+            }
         },
         created() {
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
@@ -328,6 +334,25 @@ $(() => {
                         alert('連線逾時，請重新登入');
                     }
                 }
+            },
+            doClear(){
+                if(this.isSearchTextEmpty){
+                    this.inputing = false
+                }else{
+                    this.searchText = ''
+                }
+            },
+            doSearch(){
+                this.$router.push({name:'search',query:{q:this.searchText}})
+                this.searchText = ''
+                this.inputing = false
+                // console.log('s',this.searchText)
+            },
+            clickSearch(){
+                this.inputing = true
+                this.$nextTick(()=>{
+                    this.$refs.search.focus()
+                })
             }
         }
     });

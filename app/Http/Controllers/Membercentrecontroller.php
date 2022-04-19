@@ -161,6 +161,14 @@ class Membercentrecontroller extends BaseController
         return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
     }
 
+    public function getPromoteCode(Request $request)
+    {
+        $curlScrapedPage = shell_exec('curl -k -X GET "' . $this->apiGetway . 'user/promote_code" -H "' . "request_token:" . Session::get('token') . '"');
+        $data = json_decode($curlScrapedPage, true);
+
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
+
     public function downloadInvestReport(Request $request){
         $client = new Client();
         $res = $client->request('GET', $this->apiGetway.'website/download_investor_report', [

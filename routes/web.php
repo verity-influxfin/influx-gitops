@@ -20,6 +20,10 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::fallback(function () {
+    return view('index');
+});
+
 Route::post('/getListData', 'Controller@getListData');
 
 Route::post('/getIndexBanner', 'Controller@getIndexBanner');
@@ -87,7 +91,6 @@ Route::post('/resetPassword', 'Accountcontroller@resetPassword');
 
 Route::post('/doRegister', 'Accountcontroller@doRegister');
 
-
 //Membercentre
 
 
@@ -119,6 +122,7 @@ Route::post('/getInvestReport', 'Membercentrecontroller@getInvestReport');
 
 Route::get('/downloadInvestReport', 'Membercentrecontroller@downloadInvestReport');
 
+Route::get('/getPromoteCode', 'Membercentrecontroller@getPromoteCode');
 // backstage
 
 
@@ -293,7 +297,6 @@ Route::get('/borrowLink', function () {
     return view('borrow');
 });
 
-
 //NewYear card Game
 
 Route::get('/cardgame', function () {
@@ -304,9 +307,6 @@ Route::post('getData','Cardgamecontroller@getData');
 Route::post('setGamePrize','Cardgamecontroller@setGamePrize');
 
 Route::view('/cardgame/{path?}', 'cardgame');
-
-
-Route::view('/{path?}', 'index');
 
 Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
 
@@ -324,3 +324,25 @@ Route::get('/campaign/{name}/{path?}', function (string $name, string $path='ind
     }
     throw new NotFoundHttpException();
 });
+
+Route::view('/{path?}', 'index');
+
+
+// API v1
+Route::prefix('api/v1')->group(function() {
+
+    // 全站搜尋
+    Route::get('search', 'SearchController@page');
+
+    // 立即申辦表單
+    Route::post('saveApplyForm', 'SmeFormController@saveApplyForm');
+
+    // 我要諮詢表單
+    Route::post('saveConsultForm', 'SmeFormController@saveConsultForm');
+
+    // 統一編號取公司名稱
+    Route::get('getCompanyName', 'SmeFormController@getCompanyName');
+});
+
+// 捐款動畫 SSE API
+Route::get('/event/charity/donation', 'CharityController@getDonation');
