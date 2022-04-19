@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use GuzzleHttp\Client;
 
 class Membercentrecontroller extends BaseController
 {
@@ -153,11 +154,38 @@ class Membercentrecontroller extends BaseController
         return Excel::download(new StatementExport($data), '對帳單.xlsx');
     }
 
+    public function getInvestReport(Request $request){
+        $curlScrapedPage = shell_exec('curl -k -X GET "' . $this->apiGetway . 'website/get_investor_report" -H "' . "request_token:" . Session::get('token') . '"');
+        $data = json_decode($curlScrapedPage, true);
+
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
+
     public function getPromoteCode(Request $request)
     {
         $curlScrapedPage = shell_exec('curl -k -X GET "' . $this->apiGetway . 'user/promote_code" -H "' . "request_token:" . Session::get('token') . '"');
         $data = json_decode($curlScrapedPage, true);
 
         return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
+
+    public function downloadInvestReport(Request $request){
+        $client = new Client();
+        $res = $client->request('GET', $this->apiGetway.'website/download_investor_report', [
+            'headers' => [
+                'request_token' => Session::get('token')
+              ],
+            'decode_content' => FALSE,
+            'http_errors' => FALSE,
+        ]);
+        $body = $res->getBody();
+        $body_string = (string) $body;
+        if($res->getStatusCode()!=200)
+        {
+            // 503
+            return response()->json(json_decode($body_string,TRUE), 400);
+        }
+        echo $body_string;
+        die();
     }
 }
