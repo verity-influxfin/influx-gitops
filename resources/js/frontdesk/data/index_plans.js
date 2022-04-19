@@ -24,7 +24,7 @@ export default [
         image  : "/images/alesis-work-rotate.svg",
         targets: [
             "社會新鮮人、金融小白",
-            "20-55歲中華民國國民"
+            "20-45歲中華民國國民"
         ],
         action  : "開始試算",
         features: [
