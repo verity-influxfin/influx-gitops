@@ -27,9 +27,9 @@
     </div>
     <div class="report-main" v-if="!loading && invest_report.basic_info">
       <div class="report-date">
-        <button class="btn btn-excel-download" @click="downloadExcel">
+        <!-- <button class="btn btn-excel-download" @click="downloadExcel">
           Excel下載
-        </button>
+        </button> -->
         <div>製表日期 {{ invest_report.basic_info.export_date }}</div>
       </div>
       <div class="row no-gutters report-intro mx-auto">
