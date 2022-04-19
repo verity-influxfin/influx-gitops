@@ -10,7 +10,7 @@ class User extends REST_Controller {
     {
         parent::__construct();
         $method 		= $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior'];
+        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -2370,5 +2370,198 @@ END:
         {
             $this->response(array('result' => 'ERROR', 'error' => $errorCode));
         }
+    }
+
+    /**
+     * 慈善匿名捐款 - 查詢捐款紀錄
+     * @param string  *$last5  帳號末五碼
+     * @param integer *$amount 捐款金額
+     * @param string  $name    捐款人|公司抬頭
+     * @param string  $number  身份證字號|公司統編
+     * 
+     * @return void
+     **/
+    public function donate_anonymous_get()
+    {
+        $input = $this->input->get(NULL, TRUE);
+
+        $error_msg = [
+            INPUT_NOT_CORRECT => '輸入不正確資料。',
+            CHARITY_RECORD_NOT_FOUND => '捐款紀錄不存在。',
+        ];
+
+        if ( ! isset($input['last5']) || ! isset($input['amount']) ||
+            ! is_numeric($input['amount']) || $input['amount'] <= 0 ||
+            ! preg_match('/[0-9]{5}/', $input['last5']))
+        {
+            $this->response([
+                'result' => 'SUCCESS',
+                'error' => INPUT_NOT_CORRECT,
+                'data' => [
+                    'msg' => $error_msg[INPUT_NOT_CORRECT],
+                ],
+            ]);
+        }
+
+        $this->load->model('transaction/anonymous_donate_model');
+        $donate_list = $this->anonymous_donate_model->get_donates($input);
+        if (empty($donate_list))
+        {
+            $this->response([
+                'result' => 'SUCCESS',
+                'error' => CHARITY_RECORD_NOT_FOUND,
+                'data' => [
+                    'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
+                ],
+            ]);
+        }
+
+        $return_data = [
+            'tx_datetime' => date('Y-m-d', time()),
+            'amount' => $input['amount'],
+            'donator_name' => '',
+            'donator_sex' => '',
+        ];
+
+        // 如果用戶有填入身份證號的話才有辦法檢查與末五碼的關聯
+        if ( ! empty($input['number']) || ! empty($input['name']))
+        {
+            $this->load->model('user/charity_anonymous_model');
+            foreach ($donate_list as $key => $donate)
+            {
+                if ($donate['charity_anonymous_id'] != 0)
+                {
+                    $anonymous = $this->charity_anonymous_model->as_array()->get($donate['charity_anonymous_id']);
+                    if ($input['name'] == $anonymous['name'] &&
+                        $input['number'] == $anonymous['number'] &&
+                        $input['name'] !== '')
+                    {
+                        $return_data['donator_name'] = $input['name'];
+                        $return_data['donator_sex'] = '先生/小姐';
+                        break;
+                    }
+                }
+                else
+                {
+                    $anonymous_id = $this->charity_anonymous_model->get_anonymous($input);
+                    if ($anonymous_id != 0)
+                    {
+                        $this->anonymous_donate_model->update($donate['id'], [
+                            'charity_anonymous_id' => $anonymous_id,
+                        ]);
+                        if ($input['name'] !== '')
+                        {
+                            $return_data['donator_name'] = $input['name'];
+                            $return_data['donator_sex'] = '先生/小姐';
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $return_data,
+        ]);
+    }
+
+    /**
+     * 慈善匿名捐款 - 遊客捐款
+     * @param integer *$amount  捐款金額
+     * @param string  $name     捐款人|公司抬頭
+     * @param string  $number   身份證字號|公司統編
+     * @param string  $phone    電話
+     * @param string  $email    信箱
+     * @param integer $upload   是否上傳國稅局 0:否, 1:是
+     * @param integer $receipt  是否要紙本收據 0:否, 1:是
+     * @param string  $address  收件地址
+     * @param integer *$source  捐款來源 1:官網, 2:借款app, 3:投資app
+     *
+     * @return void
+     **/
+    public function donate_anonymous_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $alias = $input['alias'] ?? 'NTUH';
+
+        $error_msg = [
+            CHARITY_INVALID_AMOUNT => '無效的慈善捐款金額。',
+            CHARITY_ILLEGAL_AMOUNT => '因AMC防制法規定：捐款金額 超過500,000元 請洽客服。',
+        ];
+
+        if ( ! is_numeric($input['amount']) || $input['amount'] <= 0)
+        {
+            $this->response([
+                'result' => 'SUCCESS',
+                'error' => CHARITY_INVALID_AMOUNT,
+                'data' => [
+                    'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
+                ],
+            ]);
+        }
+        elseif ($input['amount'] >= 500000)
+        {
+            $this->response([
+                'result' => 'SUCCESS',
+                'error' => CHARITY_ILLEGAL_AMOUNT,
+                'data' => [
+                    'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
+                ],
+            ]);
+        }
+
+        $this->load->model('user/charity_anonymous_model');
+        $anonymous_id = $this->charity_anonymous_model->anonymous_insert($input);
+
+        // 取得慈善機構的虛擬帳戶
+        $this->load->model('user/charity_institution_model');
+        $institution = $this->charity_institution_model
+            ->as_array()
+            ->get_by([
+                'alias' => $alias,
+                'status' => 1,
+            ]);
+
+        if ($anonymous_id && $institution)
+        {
+            $this->response([
+                'result' => 'SUCCESS',
+                'data' =>
+                [
+                    'bank_code' => CATHAY_BANK_CODE,
+                    'bank_account' => $institution['virtual_account'],
+                    'charity_title' => $institution['name'],
+                ],
+            ]);
+        }
+        else
+        {
+            $this->response([
+                'result' => 'ERROR',
+                'error' => EXIT_ERROR,
+                'data' => [
+                    'msg' => 'generic error',
+                ],
+            ]);
+        }
+    }
+
+    public function user_bankaccount_get()
+    {
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $this->load->model('user/user_bankaccount_model');
+        $bank_account = $this->user_bankaccount_model->get_by([
+            'user_id' => $user_id,
+            'investor' => $investor,
+            'status' => 1,
+            'verify' => 1,
+        ]);
+
+        $this->response(['result' => 'SUCCESS', 'data' => [
+            'verify' => (int) ($bank_account->verify ?? 0),
+            'status' => (int) ($bank_account->status ?? 0),
+        ]]);
     }
 }
