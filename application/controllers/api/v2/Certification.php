@@ -4603,20 +4603,8 @@ class Certification extends REST_Controller {
                 $this->was_verify($certification_id);
             }
 
-            $cer_profilejudicial = $this->config->item('cer_profilejudicial');
-
             // 選填欄位
-            $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting','DocTypeA03',
-
-                // 員工人數
-                'EmployeeNum',
-
-                // 股東人數
-                'ShareholderNum',
-
-                // 公司產業別
-                'CompDuType'
-            ];
+            $fields = $this->_get_profilejudicial_field();
             foreach ($fields as $field) {
                 if (isset($input[$field])) {
                     $content[$field] = $input[$field];
@@ -4624,37 +4612,11 @@ class Certification extends REST_Controller {
             }
             $content['skbank_form'] = $input;
 
-            $file_fields = ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03'];
-            //多個檔案欄位
-            foreach ($file_fields as $field) {
-                if(isset($input[$field]) && !empty($input[$field])){
-                    $image_ids = explode(',',$input[$field]);
-                    if(count($image_ids)>15){
-                        $image_ids = array_slice($image_ids,0,15);
-                    }
-                    $list = $this->log_image_model->get_many_by([
-                        'id'		=> $image_ids,
-                        'user_id'	=> $user_id,
-                    ]);
-
-                    if($list && count($list)==count($image_ids)){
-                        $content[$field] = [];
-                        foreach($list as $k => $v){
-                            $content[$field][] = $v->url;
-                        }
-                    }else{
-                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
-                    }
-                }
-            }
-
-            $res = $content;
-
             $param = [
                 'user_id' => $user_id,
                 'certification_id' => $certification_id,
                 'investor' => $investor,
-                'content' => json_encode($res),
+                'content' => json_encode($content),
             ];
             if ($cer_exists) {
                 $param['status'] = 0;
@@ -4669,6 +4631,41 @@ class Certification extends REST_Controller {
             }
         }
         $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+    }
+
+    private function _get_profilejudicial_field(): array
+    {
+        return [
+            'compContactName',          // 企業聯絡人姓名
+            'compContactTel',           // 企業聯絡人電話
+            'compContactExt',           // 企業聯絡人分機
+            'compContact',              // 企業聯絡人職稱
+            'compEmail',                // 企業Email
+            'financialOfficerName',     // 企業財務主管姓名
+            'financialOfficerExt',      // 企業財務主管分機
+            'employeeNum',              // 目前員工數
+            'hasForeignInvestment',     // 是否有海外投資
+            'isCovidAffected',          // 受嚴重特殊傳染性肺炎影響之企業
+            'isBizAddrEqToBizRegAddr',  // 實際營業地址是否等於營業登記地址
+            'realBizAddress',           // 實際營業地址
+            'realBizRegAddressOwner',   // 營業登記地址是否自有
+            'bizRegAddrOwner',          // 營業登記地址所有權
+            'realBizAddressOwner',      // 實際營業地址是否自有
+            'realBizAddrOwner',         // 實際營業地址所有權
+            'hasRelatedCompany',        // 是否有關係企業
+            'relatedCompAName',         // 關係企業(A)名稱
+            'relatedCompAGuiNumber',    // 關係企業(A)統一編號
+            'relatedCompAType',         // 關係企業(A)組織型態
+            'relatedCompARelationship', // 關係企業(A)與借戶之關係
+            'relatedCompBName',         // 關係企業(B)名稱
+            'relatedCompBGuiNumber',    // 關係企業(B)統一編號
+            'relatedCompBType',         // 關係企業(B)組織型態
+            'relatedCompBRelationship', // 關係企業(B)與借戶之關係
+            'relatedCompCName',         // 關係企業(C)名稱
+            'relatedCompCGuiNumber',    // 關係企業(C)統一編號
+            'relatedCompCType',         // 關係企業(C)組織型態
+            'relatedCompCRelationship', // 關係企業(C)與借戶之關係
+        ];
     }
 
     private function was_verify($certification_id = 0, $need_output = TRUE)

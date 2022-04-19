@@ -1419,8 +1419,8 @@ class Certification extends MY_Admin_Controller {
                     if($post['certification_id'] == 9){
                         $image_name = 'postal_image';
                     }
-                    if($post['certification_id'] == 1018){
-                        $image_name = 'RealLandOwnership';
+                    if($post['certification_id'] == CERTIFICATION_PROFILEJUDICIAL){
+                        $image_name = 'others_image';
                     }
                     if($post['certification_id'] == 501){
                         $image_name = 'labor_image';

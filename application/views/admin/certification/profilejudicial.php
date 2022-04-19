@@ -53,7 +53,190 @@
                                     <tr style="text-align: center;">
                                         <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                     </tr>
-
+                                    <tr>
+                                        <td><span>企業聯絡人姓名</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業聯絡人電話</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactTel"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業聯絡人分機</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactExt"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業聯絡人職稱</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContact"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業Email</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compEmail"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業財務主管姓名</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業財務主管分機</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerExt"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>目前員工人數</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.employeeNum"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>是否有海外投資</span></td>
+                                        <td><select v-model="formData.hasForeignInvestment" class="table-input sk-input form-control">
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>受嚴重特殊傳染性肺炎影響之企業</span></td>
+                                        <td><select v-model="formData.isCovidAffected" class="table-input sk-input form-control">
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址是否等於營業登記地址</span></td>
+                                        <td><select v-model="formData.isBizAddrEqToBizRegAddr" class="table-input sk-input form-control">
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddress"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址是否自有</span></td>
+                                        <td><select v-model="formData.realBizRegAddressOwner" class="table-input sk-input form-control">
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址所有權</span></td>
+                                        <td><select v-model="formData.bizRegAddrOwner" class="table-input sk-input form-control">
+                                                <option :value="'A'">A:負責人</option>
+                                                <option :value="'B'">B:負責人配偶</option>
+                                                <option :value="'C'">C:企業</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址是否自有</span></td>
+                                        <td><select v-model="formData.realBizAddressOwner" class="table-input sk-input form-control">
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址所有權</span></td>
+                                        <td><select v-model="formData.realBizAddrOwner" class="table-input sk-input form-control">
+                                                <option :value="'A'">A:負責人</option>
+                                                <option :value="'B'">B:負責人配偶</option>
+                                                <option :value="'C'">C:企業</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>是否有關係企業</span></td>
+                                        <td><select v-model="formData.hasRelatedCompany" class="table-input sk-input form-control">
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(A)名稱</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(A)統一編號</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAGuiNumber"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(A)組織型態</span></td>
+                                        <td><select v-model="formData.relatedCompAType" class="table-input sk-input form-control">
+                                                <option :value="'A'">A:獨資</option>
+                                                <option :value="'B'">B:合夥</option>
+                                                <option :value="'C'">C:有限公司</option>
+                                                <option :value="'D'">D:股份有限公司</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(A)與借戶之關係</span></td>
+                                        <td><select v-model="formData.relatedCompARelationship" class="table-input sk-input form-control">
+                                                <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
+                                                <option :value="'B'">B:相同股東出資額均>=40%</option>
+                                                <option :value="'C'">C:轉投資之投資額>=40%</option>
+                                                <option :value="'D'">D:營業場所相同</option>
+                                                <option :value="'E'">E:營業場所有租賃關係</option>
+                                                <option :value="'F'">F:相同總經理</option>
+                                                <option :value="'G'">G:相同財務主管</option>
+                                                <option :value="'H'">H:其他</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(B)名稱</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompBGuiNumber"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(B)統一編號</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompBName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(B)組織型態</span></td>
+                                        <td><select v-model="formData.relatedCompBType" class="table-input sk-input form-control">
+                                                <option :value="'A'">A:獨資</option>
+                                                <option :value="'B'">B:合夥</option>
+                                                <option :value="'C'">C:有限公司</option>
+                                                <option :value="'D'">D:股份有限公司</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(B)與借戶之關係</span></td>
+                                        <td><select v-model="formData.relatedCompBRelationship" class="table-input sk-input form-control">
+                                                <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
+                                                <option :value="'B'">B:相同股東出資額均>=40%</option>
+                                                <option :value="'C'">C:轉投資之投資額>=40%</option>
+                                                <option :value="'D'">D:營業場所相同</option>
+                                                <option :value="'E'">E:營業場所有租賃關係</option>
+                                                <option :value="'F'">F:相同總經理</option>
+                                                <option :value="'G'">G:相同財務主管</option>
+                                                <option :value="'H'">H:其他</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(C)名稱</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompCName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(C)統一編號</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompCGuiNumber"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(C)組織型態</span></td>
+                                        <td><select v-model="formData.relatedCompCType" class="table-input sk-input form-control">
+                                                <option :value="'A'">A:獨資</option>
+                                                <option :value="'B'">B:合夥</option>
+                                                <option :value="'C'">C:有限公司</option>
+                                                <option :value="'D'">D:股份有限公司</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>關係企業(C)與借戶之關係</span></td>
+                                        <td><select v-model="formData.relatedCompCRelationship" class="table-input sk-input form-control">
+                                                <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
+                                                <option :value="'B'">B:相同股東出資額均>=40%</option>
+                                                <option :value="'C'">C:轉投資之投資額>=40%</option>
+                                                <option :value="'D'">D:營業場所相同</option>
+                                                <option :value="'E'">E:營業場所有租賃關係</option>
+                                                <option :value="'F'">F:相同總經理</option>
+                                                <option :value="'G'">G:相同財務主管</option>
+                                                <option :value="'H'">H:其他</option>
+                                            </select></td>
+                                    </tr>
                                     <tr>
                                         <td><span>公司產業別</span></td>
                                         <td><select v-model="formData.compDuType" class="table-input sk-input form-control">
@@ -155,175 +338,12 @@
                                             </select></td>
                                     </tr>
                                     <tr>
-                                        <td><span>受嚴重特殊傳染性肺炎影響之企業</span></td>
-                                        <td><select v-model="formData.isCovidAffected" class="table-input sk-input form-control">
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>營業登記地址是否自有</span></td>
-                                        <td><select v-model="formData.realBizRegAddressOwner" class="table-input sk-input form-control">
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>營業登記地址自有-所有權</span></td>
-                                        <td><select v-model="formData.bizRegAddrOwner" class="table-input sk-input form-control">
-                                                <option :value="'A'">A:負責人</option>
-                                                <option :value="'B'">B:負責人配偶</option>
-                                                <option :value="'C'">C:企業</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>實際營業地址是否等於營業登記地址</span></td>
-                                        <td><select v-model="formData.isBizAddrEqToBizRegAddr" class="table-input sk-input form-control">
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>實際營業地址</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddress"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>實際營業地址是否自有</span></td>
-                                        <td><select v-model="formData.realBizAddressOwner" class="table-input sk-input form-control">
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>實際營業地址自有-所有權</span></td>
-                                        <td><select v-model="formData.realBizAddrOwner" class="table-input sk-input form-control">
-                                                <option :value="'A'">A:負責人</option>
-                                                <option :value="'B'">B:負責人配偶</option>
-                                                <option :value="'C'">C:企業</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>企業聯絡電話</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactTel"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>企業聯絡人姓名</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactName"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>企業聯絡人職稱</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContact"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>企業聯絡人分機</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactExt"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>公司財務主管姓名</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerName"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>公司財務主管分機</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerExt"></td>
-                                    </tr>
-                                    <tr>
                                         <td><span>負責人行動電話</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.prMobileNo"></td>
                                     </tr>
                                     <tr>
                                         <td><span>負責人Email</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.prEmail"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>企業Email</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compEmail"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>目前員工數</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.employeeNum"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>是否有海外投資</span></td>
-                                        <td><select v-model="formData.hasForeignInvestment" class="table-input sk-input form-control">
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>是否有關係企業</span></td>
-                                        <td><select v-model="formData.hasRelatedCompany" class="table-input sk-input form-control">
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(A)統一編號</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAGuiNumber"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(A)名稱</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAName"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(A)組織型態</span></td>
-                                        <td><select v-model="formData.relatedCompAType" class="table-input sk-input form-control">
-                                                <option :value="'A'">A:獨資</option>
-                                                <option :value="'B'">B:合夥</option>
-                                                <option :value="'C'">C:有限公司</option>
-                                                <option :value="'D'">D:股份有限公司</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(A)與借戶之關係</span></td>
-                                        <td><select v-model="formData.relatedCompARelationship" class="table-input sk-input form-control">
-                                                <option :value="'A'">A:未知（選項另外給）</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(B)統一編號</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompBName"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(B)名稱</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompBGuiNumber"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(B)組織型態</span></td>
-                                        <td><select v-model="formData.relatedCompBType" class="table-input sk-input form-control">
-                                                <option :value="'A'">A:獨資</option>
-                                                <option :value="'B'">B:合夥</option>
-                                                <option :value="'C'">C:有限公司</option>
-                                                <option :value="'D'">D:股份有限公司</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(B)與借戶之關係</span></td>
-                                        <td><select v-model="formData.relatedCompBRelationship" class="table-input sk-input form-control">
-                                                <option :value="'A'">A:未知（選項另外給）</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(C)統一編號</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompCGuiNumber"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(C)名稱</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompCName"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(C)組織型態</span></td>
-                                        <td><select v-model="formData.relatedCompCType" class="table-input sk-input form-control">
-                                                <option :value="'A'">A:獨資</option>
-                                                <option :value="'B'">B:合夥</option>
-                                                <option :value="'C'">C:有限公司</option>
-                                                <option :value="'D'">D:股份有限公司</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>關係企業(C)與借戶之關係</span></td>
-                                        <td><select v-model="formData.relatedCompCRelationship" class="table-input sk-input form-control">
-                                                <option :value="'A'">A:未知（選項另外給）</option>
-                                            </select></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -335,7 +355,190 @@
                                         <tr style="text-align: center;">
                                             <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
                                         </tr>
-
+                                        <tr>
+                                            <td><span>企業聯絡人姓名</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compContactName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業聯絡人電話</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compContactTel"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業聯絡人分機</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compContactExt"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業聯絡人職稱</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compContact"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業Email</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compEmail"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業財務主管姓名</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業財務主管分機</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerExt"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>目前員工人數</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.employeeNum"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>是否有海外投資</span></td>
+                                            <td><select v-model="formData.hasForeignInvestment" class="table-input sk-input form-control">
+                                                    <option :value="'1'">1:是</option>
+                                                    <option :value="'0'">0:否</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>受嚴重特殊傳染性肺炎影響之企業</span></td>
+                                            <td><select v-model="formData.isCovidAffected" class="table-input sk-input form-control">
+                                                    <option :value="'1'">1:是</option>
+                                                    <option :value="'0'">0:否</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>實際營業地址是否等於營業登記地址</span></td>
+                                            <td><select v-model="formData.isBizAddrEqToBizRegAddr" class="table-input sk-input form-control">
+                                                    <option :value="'1'">1:是</option>
+                                                    <option :value="'0'">0:否</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>實際營業地址</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddress"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址是否自有</span></td>
+                                            <td><select v-model="formData.realBizRegAddressOwner" class="table-input sk-input form-control">
+                                                    <option :value="'1'">1:是</option>
+                                                    <option :value="'0'">0:否</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址所有權</span></td>
+                                            <td><select v-model="formData.bizRegAddrOwner" class="table-input sk-input form-control">
+                                                    <option :value="'A'">A:負責人</option>
+                                                    <option :value="'B'">B:負責人配偶</option>
+                                                    <option :value="'C'">C:企業</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>實際營業地址是否自有</span></td>
+                                            <td><select v-model="formData.realBizAddressOwner" class="table-input sk-input form-control">
+                                                    <option :value="'1'">1:是</option>
+                                                    <option :value="'0'">0:否</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>實際營業地址所有權</span></td>
+                                            <td><select v-model="formData.realBizAddrOwner" class="table-input sk-input form-control">
+                                                    <option :value="'A'">A:負責人</option>
+                                                    <option :value="'B'">B:負責人配偶</option>
+                                                    <option :value="'C'">C:企業</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>是否有關係企業</span></td>
+                                            <td><select v-model="formData.hasRelatedCompany" class="table-input sk-input form-control">
+                                                    <option :value="'1'">1:是</option>
+                                                    <option :value="'0'">0:否</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(A)名稱</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(A)統一編號</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAGuiNumber"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(A)組織型態</span></td>
+                                            <td><select v-model="formData.relatedCompAType" class="table-input sk-input form-control">
+                                                    <option :value="'A'">A:獨資</option>
+                                                    <option :value="'B'">B:合夥</option>
+                                                    <option :value="'C'">C:有限公司</option>
+                                                    <option :value="'D'">D:股份有限公司</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(A)與借戶之關係</span></td>
+                                            <td><select v-model="formData.relatedCompARelationship" class="table-input sk-input form-control">
+                                                    <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
+                                                    <option :value="'B'">B:相同股東出資額均>=40%</option>
+                                                    <option :value="'C'">C:轉投資之投資額>=40%</option>
+                                                    <option :value="'D'">D:營業場所相同</option>
+                                                    <option :value="'E'">E:營業場所有租賃關係</option>
+                                                    <option :value="'F'">F:相同總經理</option>
+                                                    <option :value="'G'">G:相同財務主管</option>
+                                                    <option :value="'H'">H:其他</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(B)名稱</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompBGuiNumber"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(B)統一編號</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompBName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(B)組織型態</span></td>
+                                            <td><select v-model="formData.relatedCompBType" class="table-input sk-input form-control">
+                                                    <option :value="'A'">A:獨資</option>
+                                                    <option :value="'B'">B:合夥</option>
+                                                    <option :value="'C'">C:有限公司</option>
+                                                    <option :value="'D'">D:股份有限公司</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(B)與借戶之關係</span></td>
+                                            <td><select v-model="formData.relatedCompBRelationship" class="table-input sk-input form-control">
+                                                    <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
+                                                    <option :value="'B'">B:相同股東出資額均>=40%</option>
+                                                    <option :value="'C'">C:轉投資之投資額>=40%</option>
+                                                    <option :value="'D'">D:營業場所相同</option>
+                                                    <option :value="'E'">E:營業場所有租賃關係</option>
+                                                    <option :value="'F'">F:相同總經理</option>
+                                                    <option :value="'G'">G:相同財務主管</option>
+                                                    <option :value="'H'">H:其他</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(C)名稱</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompCName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(C)統一編號</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompCGuiNumber"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(C)組織型態</span></td>
+                                            <td><select v-model="formData.relatedCompCType" class="table-input sk-input form-control">
+                                                    <option :value="'A'">A:獨資</option>
+                                                    <option :value="'B'">B:合夥</option>
+                                                    <option :value="'C'">C:有限公司</option>
+                                                    <option :value="'D'">D:股份有限公司</option>
+                                                </select></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>關係企業(C)與借戶之關係</span></td>
+                                            <td><select v-model="formData.relatedCompCRelationship" class="table-input sk-input form-control">
+                                                    <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
+                                                    <option :value="'B'">B:相同股東出資額均>=40%</option>
+                                                    <option :value="'C'">C:轉投資之投資額>=40%</option>
+                                                    <option :value="'D'">D:營業場所相同</option>
+                                                    <option :value="'E'">E:營業場所有租賃關係</option>
+                                                    <option :value="'F'">F:相同總經理</option>
+                                                    <option :value="'G'">G:相同財務主管</option>
+                                                    <option :value="'H'">H:其他</option>
+                                                </select></td>
+                                        </tr>
                                         <tr>
                                             <td><span>公司產業別</span></td>
                                             <td><select v-model="formData.compDuType" class="table-input sk-input form-control">
@@ -437,175 +640,12 @@
                                                 </select></td>
                                         </tr>
                                         <tr>
-                                            <td><span>受嚴重特殊傳染性肺炎影響之企業</span></td>
-                                            <td><select v-model="formData.isCovidAffected" class="table-input sk-input form-control">
-                                                    <option :value="'1'">1:是</option>
-                                                    <option :value="'0'">0:否</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>營業登記地址是否自有</span></td>
-                                            <td><select v-model="formData.realBizRegAddressOwner" class="table-input sk-input form-control">
-                                                    <option :value="'1'">1:是</option>
-                                                    <option :value="'0'">0:否</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>營業登記地址自有-所有權</span></td>
-                                            <td><select v-model="formData.bizRegAddrOwner" class="table-input sk-input form-control">
-                                                    <option :value="'A'">A:負責人</option>
-                                                    <option :value="'B'">B:負責人配偶</option>
-                                                    <option :value="'C'">C:企業</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>實際營業地址是否等於營業登記地址</span></td>
-                                            <td><select v-model="formData.isBizAddrEqToBizRegAddr" class="table-input sk-input form-control">
-                                                    <option :value="'1'">1:是</option>
-                                                    <option :value="'0'">0:否</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>實際營業地址</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddress"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>實際營業地址是否自有</span></td>
-                                            <td><select v-model="formData.realBizAddressOwner" class="table-input sk-input form-control">
-                                                    <option :value="'1'">1:是</option>
-                                                    <option :value="'0'">0:否</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>實際營業地址自有-所有權</span></td>
-                                            <td><select v-model="formData.realBizAddrOwner" class="table-input sk-input form-control">
-                                                    <option :value="'A'">A:負責人</option>
-                                                    <option :value="'B'">B:負責人配偶</option>
-                                                    <option :value="'C'">C:企業</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>企業聯絡電話</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.compContactTel"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>企業聯絡人姓名</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.compContactName"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>企業聯絡人職稱</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.compContact"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>企業聯絡人分機</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.compContactExt"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司財務主管姓名</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerName"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司財務主管分機</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerExt"></td>
-                                        </tr>
-                                        <tr>
                                             <td><span>負責人行動電話</span></td>
                                             <td><input class="sk-input form-control" type="text" v-model="formData.prMobileNo"></td>
                                         </tr>
                                         <tr>
                                             <td><span>負責人Email</span></td>
                                             <td><input class="sk-input form-control" type="text" v-model="formData.prEmail"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>企業Email</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.compEmail"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>目前員工數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.employeeNum"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>是否有海外投資</span></td>
-                                            <td><select v-model="formData.hasForeignInvestment" class="table-input sk-input form-control">
-                                                    <option :value="'1'">1:是</option>
-                                                    <option :value="'0'">0:否</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>是否有關係企業</span></td>
-                                            <td><select v-model="formData.hasRelatedCompany" class="table-input sk-input form-control">
-                                                    <option :value="'1'">1:是</option>
-                                                    <option :value="'0'">0:否</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(A)統一編號</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAGuiNumber"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(A)名稱</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAName"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(A)組織型態</span></td>
-                                            <td><select v-model="formData.relatedCompAType" class="table-input sk-input form-control">
-                                                    <option :value="'A'">A:獨資</option>
-                                                    <option :value="'B'">B:合夥</option>
-                                                    <option :value="'C'">C:有限公司</option>
-                                                    <option :value="'D'">D:股份有限公司</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(A)與借戶之關係</span></td>
-                                            <td><select v-model="formData.relatedCompARelationship" class="table-input sk-input form-control">
-                                                    <option :value="'A'">A:未知（選項另外給）</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(B)統一編號</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompBName"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(B)名稱</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompBGuiNumber"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(B)組織型態</span></td>
-                                            <td><select v-model="formData.relatedCompBType" class="table-input sk-input form-control">
-                                                    <option :value="'A'">A:獨資</option>
-                                                    <option :value="'B'">B:合夥</option>
-                                                    <option :value="'C'">C:有限公司</option>
-                                                    <option :value="'D'">D:股份有限公司</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(B)與借戶之關係</span></td>
-                                            <td><select v-model="formData.relatedCompBRelationship" class="table-input sk-input form-control">
-                                                    <option :value="'A'">A:未知（選項另外給）</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(C)統一編號</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompCGuiNumber"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(C)名稱</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompCName"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(C)組織型態</span></td>
-                                            <td><select v-model="formData.relatedCompCType" class="table-input sk-input form-control">
-                                                    <option :value="'A'">A:獨資</option>
-                                                    <option :value="'B'">B:合夥</option>
-                                                    <option :value="'C'">C:有限公司</option>
-                                                    <option :value="'D'">D:股份有限公司</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>關係企業(C)與借戶之關係</span></td>
-                                            <td><select v-model="formData.relatedCompCRelationship" class="table-input sk-input form-control">
-                                                    <option :value="'A'">A:未知（選項另外給）</option>
-                                                </select></td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -659,49 +699,26 @@
                             <h1>圖片</h1>
                             <fieldset disabled>
                                 <div class="form-group">
-                                    <label>土地所有權狀</label><br>
-                                    <? isset($content['BizLandOwnership']) && !is_array($content['BizLandOwnership']) ? $content['BizLandOwnership'] = array($content['BizLandOwnership']) : '';
-                                        if(!empty($content['BizLandOwnership'])){
-                                            foreach ($content['BizLandOwnership'] as $key => $value) { ?>
-                                                <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                    <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                                </a><br>
-                                            <? }
-                                        }?>
-                                    <label>建物所有權狀</label><br>
-                                    <? isset($content['BizHouseOwnership']) && !is_array($content['BizHouseOwnership']) ? $content['BizHouseOwnership'] = array($content['BizHouseOwnership']) : '';
-                                    if(!empty($content['BizHouseOwnership'])){
-                                        foreach ($content['BizHouseOwnership'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a><br>
-                                        <?}
-                                    }?>
-                                    <label>實際土地所有權狀</label><br>
-                                    <? isset($content['RealLandOwnership']) && !is_array($content['RealLandOwnership']) ? $content['RealLandOwnership'] = array($content['RealLandOwnership']) : '';
-                                    if(!empty($content['RealLandOwnership'])){
-                                        foreach ($content['RealLandOwnership'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a><br>
-                                        <? }
-                                    }?>
-                                    <label>實際建物所有權狀</label><br>
-                                    <? isset($content['RealHouseOwnership']) && !is_array($content['RealHouseOwnership']) ? $content['RealHouseOwnership'] = array($content['RealHouseOwnership']) : '';
-                                    if(!empty($content['RealHouseOwnership'])){
-                                        foreach ($content['RealHouseOwnership'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a><br>
-                                        <? }
-                                    }?>
+                                    <?php if ( ! empty($content['others_image']))
+                                    {
+                                        if ( ! is_array($content['others_image']))
+                                        {
+                                            $content['others_image'] = array($content['others_image']);
+                                        }
+                                        foreach ($content['others_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?? '' ?>" data-fancybox="images">
+                                                <img alt="" src="<?= $value ?: '' ?>" style="width:30%; max-width:400px;">
+                                            </a>
+                                        <?php }
+                                    } ?>
                                 </div>
                             </fieldset>
-                            <? if( $data->certification_id == 1018 && isset($ocr['upload_page']) ){ ?>
-                            <div class="form-group" style="background:#f5f5f5;border-style:double;">
-                              <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
-                            </div>
-                            <? } ?>
+                            <?php if ($data->certification_id == CERTIFICATION_PROFILEJUDICIAL && isset($ocr['upload_page'])) { ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page'] ?>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

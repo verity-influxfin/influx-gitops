@@ -59,7 +59,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: `<?= admin_url( isset($data['upload_location']) ? $data['upload_location'] : '' ) ?>`,
+                url: `<?= admin_url($data['upload_location'] ?? '') ?>`,
                 data:formData,
                 processData: false,
                 contentType : false,
