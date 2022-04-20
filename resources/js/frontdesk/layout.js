@@ -3,6 +3,7 @@ import state from './store/state';
 import getters from './store/getters';
 import actions from './store/actions';
 import mutations from './store/mutations';
+import enterprise from './store/module/enterprise'
 //vue router
 import routers from './router/router';
 //import Vue from 'vue'
@@ -47,6 +48,9 @@ $(() => {
     });
 
     const store = new Vuex.Store({
+        modules: {
+            enterprise
+        },
         state,
         getters,
         actions,

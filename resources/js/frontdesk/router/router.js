@@ -51,7 +51,10 @@ import businessEnd from '../pages/BusinessLoan/end'
 import smeIndex from '../pages/BusinessLoan/smeLoan'
 import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
-
+import enterpriseUpload from '../pages/enterpriseUpload/index'
+import enterpriseOverviewIndex from '../pages/enterpriseUpload/overview/index'
+import enterpriseOverviewPrincipal from '../pages/enterpriseUpload/overview/principal'
+import enterpriseOverviewCompany from '../pages/enterpriseUpload/overview/company'
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -149,7 +152,25 @@ let routers = [
     { path: '/obank', component: obank },
     {path:'/charitable',component:ntu},
     { path: '/charitable-status', component: charitableStatus},
-    { path: '/search',name:'search', component: search }
+    { path: '/search',name:'search', component: search },
+    {
+        path: '/enterprise-upload', component: enterpriseUpload, children: [
+            {
+                path: 'overview',
+                component: enterpriseOverviewIndex,
+                children: [
+                    {
+                        path: 'principal',
+                        component: enterpriseOverviewPrincipal
+                    },
+                    {
+                        path: 'company',
+                        component: enterpriseOverviewCompany
+                    }
+                ]
+            }
+        ]
+    }
 ];
 
 export default routers;
