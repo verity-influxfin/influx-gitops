@@ -26,7 +26,7 @@
                             <!-- Slides -->
                             <div class="swiper-slide" v-for="(item,index) in renderList" :key="index">
                                 <a @click="current_risk_month = x.month" href="javascript:;" class="項目" v-for="x in item" :key="x.month">
-                                    <alesis-button>2021年{{String(x.month).padStart(2, '0')}}月</alesis-button>
+                                    <alesis-button>{{x.month}}</alesis-button>
                                 </a>
                             </div>
                         </div>
@@ -92,31 +92,39 @@ export default {
     },
     data: () => {
         return {
-            current_risk_month : 12,
+            current_risk_month : '2022年02月',
             report_list: [
                 {
-                    month:7,
+                    month:'2021年07月',
                     image:'/images/risk07-report.jpg',
                 },
                 {
-                    month:8,
+                    month:'2021年08月',
                     image:'/images/risk08-report.jpg',
                 },
                 {
-                    month:9,
+                    month:'2021年09月',
                     image:'/images/risk09-report.jpg',
                 },
                 {
-                    month:10,
+                    month:'2021年10月',
                     image:require('../asset/images/risk/risk10-report.jpg'),
                 },
                 {
-                    month:11,
+                    month:'2021年11月',
                     image:require('../asset/images/risk/risk11-report.jpg'),
                 },
                 {
-                    month:12,
+                    month:'2021年12月',
                     image:require('../asset/images/risk/risk12-report.jpg'),
+                },
+                {
+                    month:'2022年01月',
+                    image:require('../asset/images/risk/risk-2201.jpg'),
+                },
+                {
+                    month:'2022年02月',
+                    image:require('../asset/images/risk/risk-2202.jpg'),
                 },
             ]
         }
