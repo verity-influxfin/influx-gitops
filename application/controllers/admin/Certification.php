@@ -536,7 +536,7 @@ class Certification extends MY_Admin_Controller {
                         {
                             if (isset($cert))
                             {
-                                $rs = $cert->set_failure(FALSE);
+                                $rs = $cert->set_failure(FALSE, $fail);
                             }
                             else
                             {
