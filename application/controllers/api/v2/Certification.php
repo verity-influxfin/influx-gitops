@@ -2894,59 +2894,39 @@ class Certification extends REST_Controller {
             $time = time();
             $content	= [];
 
-            $cer_profilejudicial = $this->config->item('cer_profile');
-            //選填欄位
-            // $fields 	= ['PrCurAddrZip','PrCurAddrZipName','PrCurlAddress','PrTelAreaCode','PrTelNo','PrTelExt','PrMobileNo','RealPr','IsPrSpouseGu','PrStartYear','PrEduLevel','OthRealPrRelWithPr','OthRealPrName','OthRealPrId','OthRealPrBirth','OthRealPrStartYear','OthRealPrTitle','OthRealPrSHRatio','GuOneRelWithPr','GuOneCompany','GuTwoRelWithPr','GuTwoCompany','SpouseCurAddrZip','SpouseCurAddrZipName','SpouseCurlAddress','SpouseMobileNo','SpouseTelAreaCode','SpouseTelNo','SpouseTelExt','GuOneCurAddrZip','GuOneCurAddrZipName','GuOneCurlAddress','GuOneTelAreaCode','GuOneTelNo','GuOneTelExt','GuOneMobileNo','GuTwoCurAddrZip','GuTwoCurAddrZipName','GuTwoCurlAddress','GuTwoTelAreaCode','GuTwoTelNo','GuTwoTelExt','GuTwoMobileNo','CompType','EmployeeNum','ShareholderNum'];
-            // foreach ($fields as $field) {
-            //     if (isset($input[$field])) {
-            //         $content[$field] = $input[$field];
-            //     }
-            // }
-            $content = $input;
-            $content['skbank_form'] = $input;
-
-            // 個人資料表加入歸戶關係
-            if(isset($input['target_id'])){
-                $this->load->model('loan/target_associate_model');
-                $associate_info = $this->target_associate_model->order_by('id', 'desc')->get_by(array(
-                    'user_id' => $user_id,
-                    'status' => 1,
-                    'target_id' => $input['target_id'],
-                    'is_applicant' => 0
-                ));
-                if($associate_info){
-                    // 與負責人關係轉為新光代號
-                    $associate_mapping = [
-                        '0' => 'A',
-                        '1' => 'B',
-                        '2' => 'C',
-                        '3' => 'D',
-                        '4' => 'E',
-                        '5' => 'F',
-                        '6' => 'G',
-                        '7' => 'H',
-                    ];
-                    $relationship = $associate_info->relationship;
-                    if(isset($associate_mapping[$relationship])){
-                        $associate_value = $associate_mapping[$relationship];
-                        $content['skbank_form']['OthRealPrRelWithPr'] = $associate_value;
-                        $content['skbank_form']['GuOneRelWithPr'] = $associate_value;
-                        $content['skbank_form']['GuTwoRelWithPr'] = $associate_value;
-                    }
+            // 必填欄位
+            $fields = ['prMobileNo', 'prEmail', 'prInChargeYear', 'prStartYear', 'prEduLevel'];
+            foreach ($fields as $field)
+            {
+                if (empty($input[$field]))
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                }
+                else
+                {
+                    $content['skbank_form'][$field] = $input[$field];
                 }
             }
 
-            $res = $content;
+            // 年份
+            $year_fields = ['prInChargeYear', 'prInChargeYearEnd', 'prStartYear', 'prEndYear'];
+            foreach ($year_fields as $year)
+            {
+                if (empty($input[$year]) || ! strtotime($input[$year]))
+                {
+                    continue;
+                }
+                $content['skbank_form'][$year] = (int) $input[$year] - 1911;
+            }
 
             $param = [
                 'user_id' => $user_id,
                 'certification_id' => $certification_id,
                 'investor' => $investor,
-                'content' => json_encode($res),
+                'content' => json_encode($content),
             ];
             $insert = $this->user_certification_model->insert($param);
             if ($insert) {
-                // $this->certification_lib->set_success($insert);
                 $this->response(['result' => 'SUCCESS']);
             } else {
                 $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);

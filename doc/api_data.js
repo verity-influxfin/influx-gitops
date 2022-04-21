@@ -6332,261 +6332,46 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": false,
-                            "field": "PrCurAddrZip",
-                            "description": "<p>負責人現居地址-郵遞區號</p>"
-                        },{
+                            "field": "prMobileNo",
+                            "description": "<p>負責人行動電話</p>"
+                        }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": false,
-                            "field": "PrCurAddrZipName",
-                            "description": "<p>負責人現居地址-名稱</p>"
-                        },{
+                            "field": "prEmail",
+                            "description": "<p>負責人Email</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "prInChargeYear",
+                            "description": "<p>負責人擔任本企業負責人年度-起始，年份為西元年YYYY</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "prInChargeYearEnd",
+                            "description": "<p>負責人擔任本企業負責人年度-結束，年份為西元年YYYY</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "prStartYear",
+                            "description": "<p>負責人從事本行業年度-起始，年份為西元年YYYY</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "prEndYear",
+                            "description": "<p>負責人從事本行業年度-結束，年份為西元年YYYY</p>"
+                        }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": false,
-                            "field": "PrCurlAddress",
-                            "description": "<p>負責人現居地址-地址</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "PrTelAreaCode",
-                            "description": "<p>負責人聯絡電話-區碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "PrTelNo",
-                            "description": "<p>負責人聯絡電話-電話號碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "PrTelExt",
-                            "description": "<p>負責人聯絡電話-分機碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "PrMobileNo",
-                            "description": "<p>負責人連絡行動電話</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "RealPr",
-                            "description": "<p>本公司實際負責人 1:實際負責人 2:配偶 3:甲保證人  4:乙保證人</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "IsPrSpouseGu",
-                            "description": "<p>配偶是否擔任本案保證人 1:是 0:否</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "PrStartYear",
-                            "description": "<p>負責人從事本行業年度 格式:YYYY</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "PrEduLevel",
-                            "description": "<p>負責人學歷 A:國小 B:國中 C:高中職 D:專科 E: 大學 F:碩士 G:博士 H:無</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "OthRealPrRelWithPr",
-                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 與借戶負責人之關係 A:配偶 B:血親 C:姻親 D:股東 E:朋 友 F:本人 G:其他 H:與經營有關之借 戶職員</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "OthRealPrName",
-                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 姓名</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "OthRealPrId",
-                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 身分證字號</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "OthRealPrBirth",
-                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 出生日期 格式:YYYYMMDD</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "OthRealPrStartYear",
-                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 從事本行業年度 格式:YYYY</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "OthRealPrTitle",
-                            "description": "<p>實際負責(經營)人_其他實際負責經營人_擔任本公司職務</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "OthRealPrSHRatio",
-                            "description": "<p>實際負責(經營)人_其他實際負責經營人_持股比率%</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuOneRelWithPr",
-                            "description": "<p>保證人甲_與借戶負責人之關係 A:配偶 B:血親 C:姻親 D:股東 E:朋 友 G:其他 H:與經營有關之借戶職員</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuOneCompany",
-                            "description": "<p>保證人甲_任職公司 A:公家機關 B:上市櫃公司 C:專業人士  D:借戶 E:其他民營企業 F:無</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuTwoRelWithPr",
-                            "description": "<p>保證人乙_與借戶負責人之關係 A:配偶 B:血親 C:姻親 D:股東 E:朋 友 G:其他 H:與經營有關之借戶職員</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuTwoCompany",
-                            "description": "<p>保證人乙_任職公司 A:公家機關 B:上市櫃公司 C:專業人士 D:借戶 E:其他民營企業 F:無</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "SpouseCurAddrZip",
-                            "description": "<p>配偶現居地址-郵遞區號</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "SpouseCurAddrZipName",
-                            "description": "<p>配偶現居地址-郵遞區號名稱</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "SpouseCurlAddress",
-                            "description": "<p>配偶現居地址-地址</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "SpouseMobileNo",
-                            "description": "<p>配偶連絡行動電話</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "SpouseTelAreaCode",
-                            "description": "<p>配偶連絡電話-區碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "SpouseTelNo",
-                            "description": "<p>配偶連絡電話-電話號碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "SpouseTelExt",
-                            "description": "<p>配偶連絡電話-分機碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuOneCurAddrZip",
-                            "description": "<p>甲保證人現居地址-郵遞區號</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuOneCurAddrZipName",
-                            "description": "<p>甲保證人現居地址-名稱</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuOneCurlAddress",
-                            "description": "<p>甲保證人現居地址-地址</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuOneTelAreaCode",
-                            "description": "<p>甲保證人連絡電話-區碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuOneTelNo",
-                            "description": "<p>甲保證人連絡電話-電話號碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuOneTelExt",
-                            "description": "<p>甲保證人連絡電話-分機碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuOneMobileNo",
-                            "description": "<p>甲保證人聯絡行動電話</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuTwoCurAddrZip",
-                            "description": "<p>乙保證人現居地址-郵遞區號</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuTwoCurAddrZipName",
-                            "description": "<p>乙保證人現居地址-名稱</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuTwoCurlAddress",
-                            "description": "<p>乙保證人現居地址-地址</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuTwoTelAreaCode",
-                            "description": "<p>乙保證人連絡電話-區碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuTwoTelNo",
-                            "description": "<p>乙保證人連絡電話-電話號碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuTwoTelExt",
-                            "description": "<p>乙保證人連絡電話-分機碼</p>"
-                        },{
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "GuTwoMobileNo",
-                            "description": "<p>乙保證人聯絡行動電話</p>"
-                        },
+                            "field": "prEduLevel",
+                            "description": "<p>負責人學歷<br/>A:國小 B:國中 C:高中職 D:專科 E:大學 F:碩士 G:博士 H:無</p>",
+                            "allowedValues": ["A", "B", "C", "D", "E", "F", "G", "H"]
+                        }
                     ]
                 }
             },
@@ -6606,16 +6391,7 @@ define({
                     {
                         "title": "SUCCESS",
                         "content": "{\n" +
-                            "    \"result\": \"SUCCESS\",\n" +
-                            "    \"data\": {\n" +
-                            "        \"alias\": \"salesdetail\",\n" +
-                            "        \"certification_id\": 2000,\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"expire_time\": \"1586861828\",\n" +
-                            "        \"created_at\": 1571050628,\n" +
-                            "        \"updated_at\": 1571050628,\n" +
-                            "        \"return_type\": \"2\"\n" +
-                            "    }\n" +
+                            "    \"result\": \"SUCCESS\"\n" +
                             "}",
                         "type": "Object"
                     }
@@ -6627,48 +6403,60 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "502",
+                            "description": "<p>已提交驗證</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "501",
                             "description": "<p>此驗證尚未啟用</p>"
-                        },
-                        {
+                        }, {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "503",
-                            "description": "<p>尚未驗證過</p>"
-                        },
-                        {
+                            "field": "201",
+                            "description": "<p>資料新增失敗</p>"
+                        }, {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        }, {
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "101",
                             "description": "<p>帳戶已黑名單</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    }, {
                         "title": "501",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
                         "type": "Object"
-                    },
-                    {
-                        "title": "503",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                    }, {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
                         "type": "Object"
-                    },
-                    {
-                        "title": "100",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                    }, {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
                         "type": "Object"
-                    },
-                    {
+                    }, {
                         "title": "101",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
                         "type": "Object"
                     }
                 ]

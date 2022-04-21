@@ -42,7 +42,7 @@
                                     <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                                 </a>
                             </div>
-                            <form class="form-group" @submit.prevent="doSubmit">
+                            <form id="app1" class="form-group" @submit.prevent="doSubmit">
                                 <ul class="nav nav-tabs nav-justified mb-1">
                                     <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
                                     <li role="presentation" :class="{'active': tab ==='tab-kgibank'}"><a @click="changeTab('tab-kgibank')">凱基</a></li>
@@ -66,27 +66,45 @@
                                                     <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span>負責人擔任本企業負責人年度</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="prInChargeYear"
+                                                    <td><span>負責人行動電話</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prMobileNo"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人Email</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prEmail"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人擔任本企業負責人年度-起始</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYear"
                                                         placeholder="格式:YYY"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span>負責人從事本行業年度</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="prStartYear"
+                                                    <td><span>負責人擔任本企業負責人年度-結束</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYearEnd"
+                                                        placeholder="格式:YYY"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人從事本行業年度-起始</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prStartYear"
+                                                        placeholder="格式:YYY"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人從事本行業年度-結束</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prEndYear"
                                                         placeholder="格式:YYY"></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span>負責人學歷</span></td>
                                                     <td>
-                                                        <select name="prEduLevel" class="table-input form-control">
-                                                            <option value="A">A:國小</option>
-                                                            <option value="B">B:國中</option>
-                                                            <option value="C">C:高中職</option>
-                                                            <option value="D">D:專科</option>
-                                                            <option value="E">E:大學</option>
-                                                            <option value="F">F:碩士</option>
-                                                            <option value="G">G:博士</option>
-                                                            <option value="H">H:無</option>
+                                                        <select v-model="formData.prEduLevel" class="table-input form-control">
+                                                            <option :value="'A'">A:國小</option>
+                                                            <option :value="'B'">B:國中</option>
+                                                            <option :value="'C'">C:高中職</option>
+                                                            <option :value="'D'">D:專科</option>
+                                                            <option :value="'E'">E:大學</option>
+                                                            <option :value="'F'">F:碩士</option>
+                                                            <option :value="'G'">G:博士</option>
+                                                            <option :value="'H'">H:無</option>
                                                         </select>
                                                     </td>
                                                 </tr>
@@ -106,39 +124,39 @@
                                                 <tr>
                                                     <td><span>實際負責人是否等於登記負責人</span></td>
                                                     <td>
-                                                        <select name="isPrRegister" class="table-input sk-input form-control">
-                                                            <option value="1">1:是</option>
-                                                            <option value="0">0:否</option>
+                                                        <select v-model="formData.isPrRegister" class="table-input sk-input form-control">
+                                                            <option :value="1">1:是</option>
+                                                            <option :value="0">0:否</option>
                                                         </select>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><span>實際負責人與借戶、負責人之關係</span></td>
                                                     <td>
-                                                        <select name="prRelationship" class="table-input sk-input form-control">
-                                                            <option value="A">A:配偶</option>
-                                                            <option value="B">B:血親</option>
-                                                            <option value="C">C:姻親</option>
-                                                            <option value="D">D:股東</option>
-                                                            <option value="E">E:朋友</option>
-                                                            <option value="F">F:本人</option>
-                                                            <option value="G">G:其他</option>
-                                                            <option value="H">H:與經營有關之借戶職員</option>
+                                                        <select v-model="formData.prRelationship" class="table-input sk-input form-control">
+                                                            <option :value="'A'">A:配偶</option>
+                                                            <option :value="'B'">B:血親</option>
+                                                            <option :value="'C'">C:姻親</option>
+                                                            <option :value="'D'">D:股東</option>
+                                                            <option :value="'E'">E:朋友</option>
+                                                            <option :value="'F'">F:本人</option>
+                                                            <option :value="'G'">G:其他</option>
+                                                            <option :value="'H'">H:與經營有關之借戶職員</option>
                                                         </select>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><span>其他實際負責人從事本行業年度</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="othRealPrStartYear"
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrStartYear"
                                                                placeholder="格式:YYY"></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span>其他實際負責人擔任公司職務</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="othRealPrTitle"></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrTitle"></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span>其他實際負責人持股比率(%)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="othRealPrSHRatio"
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrSHRatio"
                                                         placeholder="請輸入數字部分即可"></td>
                                                 </tr>
                                                 <tr>
@@ -157,33 +175,33 @@
                                                 <tr>
                                                     <td><span>是否有徵提保證人</span></td>
                                                     <td>
-                                                        <select name="hasGuarantor" class="table-input sk-input form-control">
-                                                            <option value="1">1:是</option>
-                                                            <option value="0">0:否</option>
+                                                        <select v-model="formData.hasGuarantor" class="table-input sk-input form-control">
+                                                            <option :value="1">1:是</option>
+                                                            <option :value="0">0:否</option>
                                                         </select>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><span>配偶是否擔任保證人</span></td>
                                                     <td>
-                                                        <select name="isPrSpouseGu" class="table-input sk-input form-control">
-                                                            <option value="1">1:是</option>
-                                                            <option value="0">0:否</option>
+                                                        <select v-model="formData.isPrSpouseGu" class="table-input sk-input form-control">
+                                                            <option :value="1">1:是</option>
+                                                            <option :value="0">0:否</option>
                                                         </select>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><span>保證人與借戶、負責人之關係</span></td>
                                                     <td>
-                                                        <select name="guOneRelWithPr" class="table-input sk-input form-control">
-                                                            <option value="A">A:配偶</option>
-                                                            <option value="B">B:血親</option>
-                                                            <option value="C">C:姻親</option>
-                                                            <option value="D">D:股東</option>
-                                                            <option value="E">E:朋友</option>
-                                                            <option value="F">F:本人</option>
-                                                            <option value="G">G:其他</option>
-                                                            <option value="H">H:與經營有關之借戶職員</option>
+                                                        <select v-model="formData.guOneRelWithPr" class="table-input sk-input form-control">
+                                                            <option :value="'A'">A:配偶</option>
+                                                            <option :value="'B'">B:血親</option>
+                                                            <option :value="'C'">C:姻親</option>
+                                                            <option :value="'D'">D:股東</option>
+                                                            <option :value="'E'">E:朋友</option>
+                                                            <option :value="'F'">F:本人</option>
+                                                            <option :value="'G'">G:其他</option>
+                                                            <option :value="'H'">H:與經營有關之借戶職員</option>
                                                         </select>
                                                     </td>
                                                 </tr>
@@ -215,30 +233,48 @@
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
                                             <tr style="text-align: center;">
-                                                <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                                <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
                                             </tr>
                                             <tr>
-                                                <td><span>負責人擔任本企業負責人年度</span></td>
-                                                <td><input class="sk-input form-control" type="text" name="prInChargeYear"
+                                                <td><span>負責人行動電話</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prMobileNo"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人Email</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prEmail"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人擔任本企業負責人年度-起始</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYear"
                                                            placeholder="格式:YYY"></td>
                                             </tr>
                                             <tr>
-                                                <td><span>負責人從事本行業年度</span></td>
-                                                <td><input class="sk-input form-control" type="text" name="prStartYear"
+                                                <td><span>負責人擔任本企業負責人年度-結束</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYearEnd"
+                                                           placeholder="格式:YYY"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人從事本行業年度-起始</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prStartYear"
+                                                           placeholder="格式:YYY"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人從事本行業年度-結束</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prEndYear"
                                                            placeholder="格式:YYY"></td>
                                             </tr>
                                             <tr>
                                                 <td><span>負責人學歷</span></td>
                                                 <td>
-                                                    <select name="prEduLevel" class="table-input form-control">
-                                                        <option value="A">A:國小</option>
-                                                        <option value="B">B:國中</option>
-                                                        <option value="C">C:高中職</option>
-                                                        <option value="D">D:專科</option>
-                                                        <option value="E">E:大學</option>
-                                                        <option value="F">F:碩士</option>
-                                                        <option value="G">G:博士</option>
-                                                        <option value="H">H:無</option>
+                                                    <select v-model="formData.prEduLevel" class="table-input form-control">
+                                                        <option :value="'A'">A:國小</option>
+                                                        <option :value="'B'">B:國中</option>
+                                                        <option :value="'C'">C:高中職</option>
+                                                        <option :value="'D'">D:專科</option>
+                                                        <option :value="'E'">E:大學</option>
+                                                        <option :value="'F'">F:碩士</option>
+                                                        <option :value="'G'">G:博士</option>
+                                                        <option :value="'H'">H:無</option>
                                                     </select>
                                                 </td>
                                             </tr>
@@ -258,39 +294,39 @@
                                             <tr>
                                                 <td><span>實際負責人是否等於登記負責人</span></td>
                                                 <td>
-                                                    <select name="isPrRegister" class="table-input sk-input form-control">
-                                                        <option value="1">1:是</option>
-                                                        <option value="0">0:否</option>
+                                                    <select v-model="formData.isPrRegister" class="table-input sk-input form-control">
+                                                        <option :value="1">1:是</option>
+                                                        <option :value="0">0:否</option>
                                                     </select>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><span>實際負責人與借戶、負責人之關係</span></td>
                                                 <td>
-                                                    <select name="prRelationship" class="table-input sk-input form-control">
-                                                        <option value="A">A:配偶</option>
-                                                        <option value="B">B:血親</option>
-                                                        <option value="C">C:姻親</option>
-                                                        <option value="D">D:股東</option>
-                                                        <option value="E">E:朋友</option>
-                                                        <option value="F">F:本人</option>
-                                                        <option value="G">G:其他</option>
-                                                        <option value="H">H:與經營有關之借戶職員</option>
+                                                    <select v-model="formData.prRelationship" class="table-input sk-input form-control">
+                                                        <option :value="'A'">A:配偶</option>
+                                                        <option :value="'B'">B:血親</option>
+                                                        <option :value="'C'">C:姻親</option>
+                                                        <option :value="'D'">D:股東</option>
+                                                        <option :value="'E'">E:朋友</option>
+                                                        <option :value="'F'">F:本人</option>
+                                                        <option :value="'G'">G:其他</option>
+                                                        <option :value="'H'">H:與經營有關之借戶職員</option>
                                                     </select>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><span>其他實際負責人從事本行業年度</span></td>
-                                                <td><input class="sk-input form-control" type="text" name="othRealPrStartYear"
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrStartYear"
                                                            placeholder="格式:YYY"></td>
                                             </tr>
                                             <tr>
                                                 <td><span>其他實際負責人擔任公司職務</span></td>
-                                                <td><input class="sk-input form-control" type="text" name="othRealPrTitle"></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrTitle"></td>
                                             </tr>
                                             <tr>
                                                 <td><span>其他實際負責人持股比率(%)</span></td>
-                                                <td><input class="sk-input form-control" type="text" name="othRealPrSHRatio"
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrSHRatio"
                                                            placeholder="請輸入數字部分即可"></td>
                                             </tr>
                                             <tr>
@@ -304,38 +340,38 @@
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
                                             <tr style="text-align: center;">
-                                                <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                                <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
                                             </tr>
                                             <tr>
                                                 <td><span>是否有徵提保證人</span></td>
                                                 <td>
-                                                    <select name="hasGuarantor" class="table-input sk-input form-control">
-                                                        <option value="1">1:是</option>
-                                                        <option value="0">0:否</option>
+                                                    <select v-model="formData.hasGuarantor" class="table-input sk-input form-control">
+                                                        <option :value="1">1:是</option>
+                                                        <option :value="0">0:否</option>
                                                     </select>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><span>配偶是否擔任保證人</span></td>
                                                 <td>
-                                                    <select name="isPrSpouseGu" class="table-input sk-input form-control">
-                                                        <option value="1">1:是</option>
-                                                        <option value="0">0:否</option>
+                                                    <select v-model="formData.isPrSpouseGu" class="table-input sk-input form-control">
+                                                        <option :value="1">1:是</option>
+                                                        <option :value="0">0:否</option>
                                                     </select>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><span>保證人與借戶、負責人之關係</span></td>
                                                 <td>
-                                                    <select name="guOneRelWithPr" class="table-input sk-input form-control">
-                                                        <option value="A">A:配偶</option>
-                                                        <option value="B">B:血親</option>
-                                                        <option value="C">C:姻親</option>
-                                                        <option value="D">D:股東</option>
-                                                        <option value="E">E:朋友</option>
-                                                        <option value="F">F:本人</option>
-                                                        <option value="G">G:其他</option>
-                                                        <option value="H">H:與經營有關之借戶職員</option>
+                                                    <select v-model="formData.guOneRelWithPr" class="table-input sk-input form-control">
+                                                        <option :value="'A'">A:配偶</option>
+                                                        <option :value="'B'">B:血親</option>
+                                                        <option :value="'C'">C:姻親</option>
+                                                        <option :value="'D'">D:股東</option>
+                                                        <option :value="'E'">E:朋友</option>
+                                                        <option :value="'F'">F:本人</option>
+                                                        <option :value="'G'">G:其他</option>
+                                                        <option :value="'H'">H:與經營有關之借戶職員</option>
                                                     </select>
                                                 </td>
                                             </tr>
@@ -408,14 +444,18 @@
 <!-- /#page-wrapper -->
 <script>
     const v = new Vue({
-        el: '#page-wrapper',
+        el: '#app1',
         data() {
             return {
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
+                    prMobileNo: '',
+                    prEmail: '',
                     prInChargeYear: '',
+                    prInChargeYearEnd: '',
                     prStartYear: '',
+                    prEndYear: '',
                     prEduLevel: '',
                     isPrRegister: '',
                     prRelationship: '',
@@ -447,6 +487,7 @@
                 $(`#${this.tab} .${show_id}`).show()
             },
             doSubmit() {
+                $("#app1").find('button').attr('disabled', true);
                 return axios.post('/admin/certification/save_company_cert', {
                     ...this.formData,
                     id: this.pageId
