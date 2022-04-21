@@ -71,8 +71,16 @@
             </button>
           </router-link>
           <div class="row no-gutters">
-            <button class="btn btn-notification col mr-3">查看通知</button>
-            <button class="btn btn-logout col-auto">登出</button>
+            <button
+              class="btn btn-notification col mr-3"
+              data-toggle="modal"
+              data-target="#notificationModal"
+            >
+              查看通知
+            </button>
+            <button class="btn btn-logout col-auto" @click="logout">
+              登出
+            </button>
           </div>
         </div>
       </div>
@@ -164,17 +172,51 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="notificationModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div
+              class="notification-item"
+              v-for="item in notifications"
+              @click="read(item.id, item.status)"
+            >
+              <div class="row no-gutters">
+                <div class="unread-dot" v-if="item.status === 1"></div>
+                <div class="col notification-item-date">
+                  {{ new Date(item.created_at * 1000).toLocaleString() }}
+                </div>
+              </div>
+              <div class="row no-gutters notification-item-title">
+                <span>{{ item.title }}</span>
+                <span v-html="item.content"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
+  beforeRouteEnter(to, from, next) {
+    if (sessionStorage.length === 0 || sessionStorage.flag === 'logout') {
+      next('/index')
+      // next();
+    } else {
+      next()
+    }
+  },
   mounted() {
     this.getMyRepayment()
+    this.getNotification()
   },
   data() {
     return {
       myRepayment: {},
+      notifications: [],
       repaymentDate: '',
       repaymentAmount: '',
       funds: 0,
@@ -201,8 +243,8 @@ export default {
       }
       return `${text} ${this.userData.name}`;
     },
-    caseStatus(){
-        return 'case-repayment'
+    caseStatus() {
+      return 'case-repayment'
     }
   },
   methods: {
@@ -233,12 +275,46 @@ export default {
           }
         });
     },
+    getNotification() {
+      axios.post(`/getNotification`).then((res) => {
+        this.notifications = res.data.data.list
+      })
+        .catch((error) => {
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入")
+            this.logout()
+          } else {
+            console.log("getNotification 發生錯誤，請稍後再試");
+          }
+        });
+    },
+    read(id, status) {
+      if (status == 1) {
+        axios.post(`/read`, { id }).then((res) => {
+          this.getNotification()
+        });
+      }
+    },
+    logout() {
+      axios.post(`/logout`).then((res) => {
+        this.$store.commit('mutationUserData', {})
+        location.reload()
+      })
+    },
   },
 
 }
 </script>
 
 <style lang="scss" scoped>
+.modal-content {
+  border-radius: 20px;
+}
+.modal-body {
+  padding: 34px 30px;
+  max-height: 600px;
+  overflow: scroll;
+}
 .enterprise-home {
   .nameplate {
     background-image: url('~images/enterpriseUpload/home-header.png');
@@ -380,14 +456,14 @@ export default {
           color: #707070;
           border-radius: 50%;
           border: 4px solid #f3f3f3;
-          &.case-offer{
+          &.case-offer {
             border-color: #f3f3f3;
           }
-          &.case-repayment{
-              border-color: #007DDC;
+          &.case-repayment {
+            border-color: #007ddc;
           }
-          &.case-finished{
-              border-color: #30BA3E;
+          &.case-finished {
+            border-color: #30ba3e;
           }
         }
         .text {
@@ -459,6 +535,39 @@ export default {
         background: #30ba3e;
         border-radius: 10px;
       }
+    }
+  }
+  .notification-item {
+    cursor: pointer;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f3f3f3;
+    margin-bottom: 15px;
+    &:hover {
+      background-color: #f3f3f3;
+    }
+    .unread-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #f29600;
+      border-radius: 50%;
+      margin-top: 8px;
+      margin-right: 4px;
+    }
+    .notification-item-date {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 23px;
+      color: #393939;
+      margin-bottom: 6px;
+    }
+    .notification-item-title {
+      padding-left: 12px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 23px;
+      color: #707070;
     }
   }
 }
