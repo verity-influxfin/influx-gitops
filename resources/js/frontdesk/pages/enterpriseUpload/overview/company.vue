@@ -37,37 +37,114 @@
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/company-3.svg')"
             icon-text="公司基本資料"
-          ></cert-item>
+          >
+            <template v-slot:content>
+              <div class="row no-gutters w-100 h-100">
+                <div class="col d-flex align-items-center cert-content-text">
+                  1.公司基本資料
+                </div>
+                <div class="col-auto d-flex align-items-end">
+                  <button class="btn btn-next-page">發送驗證信件</button>
+                </div>
+              </div>
+            </template>
+          </cert-item>
         </div>
         <div class="mt-3">
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/company-4.svg')"
             icon-text="近六個月公司往來<br>存摺封面 + 內頁"
-          ></cert-item>
+          >
+            <template v-slot:content>
+              <div class="row no-gutters w-100 h-100">
+                <div class="col d-flex align-items-center cert-content-text">
+                  1.近六個月主要帳戶存摺封面<br />
+                  2.近六個月主要帳戶存摺內頁
+                </div>
+                <div class="col-auto d-flex align-items-end">
+                  <button class="btn btn-next-page">提供更新</button>
+                </div>
+              </div>
+            </template>
+          </cert-item>
         </div>
         <div class="mt-3">
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/company-5.svg')"
             icon-text="近三年<br>401/403/405"
-          ></cert-item>
+          >
+            <template v-slot:content>
+              <div class="row no-gutters w-100 h-100">
+                <div class="col d-flex align-items-center cert-content-text">
+                  1.近三年401/403/405表
+                </div>
+                <div class="col-auto d-flex align-items-end">
+                  <button class="btn btn-next-page">提供更新</button>
+                </div>
+              </div>
+            </template>
+          </cert-item>
         </div>
         <div class="mt-3">
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/company-6.svg')"
             icon-text="近12個月員工投保<br>人數資料"
-          ></cert-item>
+          >
+            <template v-slot:content>
+              <div class="row no-gutters w-100 h-100">
+                <div class="col d-flex align-items-center cert-content-text">
+                  1.近12個月員工投保單位人數資料<br />
+                  2.具結書(若無需成立投保單位)
+                </div>
+                <div class="col-auto d-flex align-items-end">
+                  <button class="btn btn-next-page">提供更新</button>
+                </div>
+              </div>
+            </template>
+          </cert-item>
         </div>
         <div class="mt-3">
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/company-7.svg')"
             icon-text="近三年所得稅<br>結算申報書"
-          ></cert-item>
+          >
+            <template v-slot:content>
+              <div class="row no-gutters w-100 h-100">
+                <div class="col d-flex align-items-center cert-content-text">
+                  1.近三年稅簽-損益表<br />
+                  2.近三年稅簽-資產負債表
+                </div>
+                <div class="col-auto d-flex align-items-end">
+                  <button class="btn btn-next-page">提供更新</button>
+                </div>
+              </div>
+            </template>
+          </cert-item>
         </div>
         <div class="mt-3">
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/company-8.svg')"
             icon-text="聯合徵信報告＋Ａ13<br>第二聯"
-          ></cert-item>
+          >
+            <template v-slot:content>
+              <div class="row no-gutters w-100 h-100">
+                <div class="col cert-content-text">
+                  1.公司聯徵報告 <br />
+                  2.加查 「<span style="color: red">A13、J21、G27、B06</span>」
+                  <br />
+                  3.請上傳「申請信用報告收執聯」<br />
+                  4.郵寄至：<br />
+                  <small>
+                    10486台北市中山區松江路111號11樓之1
+                    <br />普匯金融科技股份有限公司
+                  </small>
+                </div>
+                <div class="col-auto d-flex align-items-end">
+                  <button class="btn btn-next-page">提供更新</button>
+                </div>
+              </div>
+            </template>
+          </cert-item>
         </div>
       </div>
     </div>
@@ -133,6 +210,23 @@ export default {
       line-height: 20px;
       color: #036eb7;
     }
+  }
+  .cert-content-text {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #393939;
+  }
+  .btn-next-page {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #ffffff;
+    padding: 4px 22px;
+    background: #036eb7;
+    border-radius: 6px;
   }
 }
 </style>

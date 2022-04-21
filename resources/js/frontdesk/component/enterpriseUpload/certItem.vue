@@ -4,8 +4,10 @@
       <img :src="icon" class="icon-img" />
       <span class="text-center" v-html="iconText"></span>
     </div>
-    <div class="v-divider"></div>
-    <div class="content-block col">
+    <div class="d-flex align-items-center">
+        <div class="v-divider"></div>
+    </div>
+    <div class="content-block col p-0">
       <slot name="content">
         <div class="default-success">
           已完成提供，通過驗證
