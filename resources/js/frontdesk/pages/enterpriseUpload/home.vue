@@ -1,0 +1,465 @@
+<template>
+  <div class="enterprise-home">
+    <div class="nameplate">
+      <div class="row nameplate-content">
+        <div class="col-auto">
+          <img src="@/asset/images/enterpriseUpload/portrait.svg" />
+        </div>
+        <div class="col content-text">
+          <div>{{ regards }}</div>
+          <div>我的使用者編號：{{ userData.id }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="home-content">
+      <div>
+        <div class="white-block">
+          <div class="block-title">親愛的 {{ userData.name }} 之負責人</div>
+          <div class="block-info row no-gutters bb">
+            <div class="col-auto">代收代付帳戶餘額</div>
+            <div class="col"></div>
+            <div class="col-auto num">${{ format(funds) }}</div>
+          </div>
+          <div class="block-info row no-gutters bb">
+            <div class="col-auto">待放款金額</div>
+            <div class="col"></div>
+            <div class="col-auto num">${{ format(frozen) }}</div>
+          </div>
+          <div class="block-info row no-gutters bb">
+            <div class="col-auto">現欠本金餘額</div>
+            <div class="col"></div>
+            <div class="col-auto num">${{ format(principal) }}</div>
+          </div>
+          <div class="block-info row no-gutters bb">
+            <div class="col-auto">本期應收本息</div>
+            <div class="col"></div>
+            <div class="col-auto num">${{ format(repaymentAmount) }}</div>
+          </div>
+        </div>
+        <div class="white-block function-buttons">
+          <button class="btn tab-btn active">
+            <span class="btn-icon">
+              <img
+                src="@/asset/images/enterpriseUpload/doc.svg"
+                class="icon-active"
+              />
+            </span>
+            <span>我的案件</span>
+          </button>
+          <router-link to="/myrepayment">
+            <button class="btn tab-btn">
+              <span class="btn-icon">
+                <img src="@/asset/images/enterpriseUpload/dollar-square.svg" />
+              </span>
+              <span>帳戶餘額</span>
+            </button>
+          </router-link>
+          <router-link to="/userTerms">
+            <button class="btn tab-btn">
+              <span class="btn-icon">
+                <img src="@/asset/images/enterpriseUpload/task-square.svg" />
+              </span>
+              <span>平台條約</span>
+            </button>
+          </router-link>
+          <router-link to="/promoteCode">
+            <button class="btn tab-btn">
+              <span class="btn-icon">
+                <img src="@/asset/images/enterpriseUpload/like.svg" />
+              </span>
+              <span>推薦有賞</span>
+            </button>
+          </router-link>
+          <div class="row no-gutters">
+            <button class="btn btn-notification col mr-3">查看通知</button>
+            <button class="btn btn-logout col-auto">登出</button>
+          </div>
+        </div>
+      </div>
+      <div class="white-block">
+        <div class="block-title">我的案件</div>
+        <div class="case-tabs row no-gutters">
+          <div class="col">
+            <button
+              class="btn case-tab"
+              :class="{ active: caseType === 1 }"
+              @click="showCase(1)"
+            >
+              申貸中 (1)
+            </button>
+          </div>
+          <div class="col">
+            <button
+              class="btn case-tab"
+              :class="{ active: caseType === 2 }"
+              @click="showCase(2)"
+            >
+              還款中 (0)
+            </button>
+          </div>
+          <div class="col">
+            <button
+              class="btn case-tab"
+              :class="{ active: caseType === 3 }"
+              @click="showCase(3)"
+            >
+              已結案 (0)
+            </button>
+          </div>
+        </div>
+        <div>
+          <div class="item-info row no-gutters">
+            <div class="installment col-auto">
+              <div class="num" :class="caseStatus">36</div>
+              <div class="text">期</div>
+            </div>
+            <div class="col">
+              <div class="item-title">信保專案融資 - SSM000000000</div>
+              <div class="row no-gutters my-2">
+                <div class="col-6">
+                  <div class="item-info-title">申貸額度</div>
+                  <div class="item-info-text">$6,000,000</div>
+                </div>
+                <div class="col">
+                  <div class="item-info-title">申貸日期</div>
+                  <div class="item-info-text">$6,000,000</div>
+                </div>
+              </div>
+              <div class="row no-gutters justify-content-end">
+                <!-- 申貸中 -->
+                <router-link to="overview/principal?case-id=SSM000000000">
+                  <button class="btn col-auto btn-offer">線上資料提供</button>
+                </router-link>
+                <!-- 還款中 -->
+                <button class="btn col-auto btn-repayment w-100">
+                  媒合成功
+                </button>
+                <!-- 已結案 -->
+                <button class="btn col-auto btn-finished w-100">已完成</button>
+              </div>
+            </div>
+          </div>
+          <div class="item-info row no-gutters">
+            <div class="installment col-auto">
+              <div class="num">36</div>
+              <div class="text">期</div>
+            </div>
+            <div class="col">
+              <div class="item-title">信保專案融資 - SSM000000000</div>
+              <div class="row no-gutters my-2">
+                <div class="col-6">
+                  <div class="item-info-title">申貸額度</div>
+                  <div class="item-info-text">$6,000,000</div>
+                </div>
+                <div class="col">
+                  <div class="item-info-title">申貸日期</div>
+                  <div class="item-info-text">$6,000,000</div>
+                </div>
+              </div>
+              <div class="row no-gutters justify-content-end">
+                <button class="btn col-auto btn-offer">線上資料提供</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  mounted() {
+    this.getMyRepayment()
+  },
+  data() {
+    return {
+      myRepayment: {},
+      repaymentDate: '',
+      repaymentAmount: '',
+      funds: 0,
+      frozen: 0,
+      principal: 0,
+      caseType: 1
+    }
+  },
+  computed: {
+    userData() {
+      return JSON.parse(sessionStorage.getItem('userData'))
+    },
+    regards() {
+      let time = parseInt(new Date().getHours());
+      let text = "";
+      if (0 <= time && time < 5) {
+        text = "晚安";
+      } else if (5 <= time && time < 11) {
+        text = "早安";
+      } else if (11 <= time && time < 17) {
+        text = "午安";
+      } else if (17 <= time && time < 23) {
+        text = "晚安";
+      }
+      return `${text} ${this.userData.name}`;
+    },
+    caseStatus(){
+        return 'case-repayment'
+    }
+  },
+  methods: {
+    format(data) {
+      let l10nEN = new Intl.NumberFormat("en-US");
+      return l10nEN.format(data.toFixed(0));
+    },
+    showCase(type) {
+      this.caseType = type
+    },
+    getMyRepayment() {
+      axios
+        .get("/getMyRepayment")
+        .then((res) => {
+          this.myRepayment = res.data.data;
+          this.funds = res.data.data.funds.total;
+          this.frozen = res.data.data.funds.frozen;
+          this.principal = res.data.data.accounts_payable.principal;
+          this.repaymentAmount = res.data.data.next_repayment.amount;
+          this.repaymentDate = res.data.data.next_repayment.date;
+        })
+        .catch((error) => {
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入");
+            this.$root.logout();
+          } else {
+            console.error("getMyRepayment 發生錯誤，請稍後再試");
+          }
+        });
+    },
+  },
+
+}
+</script>
+
+<style lang="scss" scoped>
+.enterprise-home {
+  .nameplate {
+    background-image: url('~images/enterpriseUpload/home-header.png');
+    height: 200px;
+    border-radius: 20px;
+    margin-bottom: 50px;
+    .nameplate-content {
+      padding: 40px;
+      .content-text {
+        padding: 15px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 35px;
+        color: #ffffff;
+      }
+    }
+  }
+  .home-content {
+    display: grid;
+    grid-template-columns: 3fr 4fr;
+    gap: 50px;
+    .white-block {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 30px 30px 15px;
+      .block-title {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 35px;
+        color: #393939;
+        margin-bottom: 30px;
+      }
+      .block-info {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 26px;
+        color: #707070;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        .num {
+          color: #036eb7;
+        }
+        &.bb {
+          border-bottom: 1.5px solid #f3f3f3;
+        }
+      }
+    }
+    .function-buttons {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      .tab-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        padding: 7px auto;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 20px;
+        text-align: center;
+        color: #707070;
+        border: 1.5px solid #f3f3f3;
+        border-radius: 10px;
+        &.active {
+          color: #036eb7;
+          border-color: #036eb7;
+        }
+      }
+      .btn-notification {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        color: #ffffff;
+        background: #036eb7;
+        border-radius: 10px;
+      }
+      .btn-logout {
+        padding: 7px 40px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        color: #ffffff;
+        background: #f29600;
+        border-radius: 10px;
+      }
+    }
+    .case-tabs {
+      gap: 30px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #f3f3f3;
+      margin-bottom: 16px;
+      .case-tab {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        padding: 7px auto;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        color: #707070;
+        border: 1.5px solid #f3f3f3;
+        border-radius: 10px;
+        &.active {
+          color: #036eb7;
+          border-color: #036eb7;
+        }
+      }
+    }
+    .item-info {
+      display: flex;
+      padding: 15px 30px;
+      border: 1.5px solid #f3f3f3;
+      box-sizing: border-box;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      .installment {
+        margin-right: 28px;
+        .num {
+          padding: 22px;
+          font-family: 'Arial';
+          font-style: italic;
+          font-weight: 700;
+          font-size: 48px;
+          line-height: 55px;
+          text-align: center;
+          color: #707070;
+          border-radius: 50%;
+          border: 4px solid #f3f3f3;
+          &.case-offer{
+            border-color: #f3f3f3;
+          }
+          &.case-repayment{
+              border-color: #007DDC;
+          }
+          &.case-finished{
+              border-color: #30BA3E;
+          }
+        }
+        .text {
+          margin-top: 7px;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 26px;
+          text-align: center;
+          color: #393939;
+        }
+      }
+      .item-title {
+        padding: 0 0 8px 30px;
+        margin-bottom: 8px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 26px;
+        color: #393939;
+        border-bottom: 2px solid #f3f3f3;
+      }
+      .item-info-title {
+        padding-left: 30px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        color: #797979;
+      }
+      .item-info-text {
+        padding-left: 30px;
+        margin-top: 4px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        color: #036eb7;
+      }
+      .btn-offer {
+        padding: 7px 31px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        color: #ffffff;
+        background: #036eb7;
+        border-radius: 10px;
+      }
+      .btn-repayment {
+        padding: 7px 0;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        color: #ffffff;
+        background: #f29600;
+        border-radius: 10px;
+      }
+      .btn-finished {
+        padding: 7px 0;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        color: #ffffff;
+        background: #30ba3e;
+        border-radius: 10px;
+      }
+    }
+  }
+}
+</style>

@@ -52,6 +52,7 @@ import smeIndex from '../pages/BusinessLoan/smeLoan'
 import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
 import enterpriseUpload from '../pages/enterpriseUpload/index'
+import enterpriseHome from '../pages/enterpriseUpload/home'
 import enterpriseOverviewIndex from '../pages/enterpriseUpload/overview/index'
 import enterpriseOverviewPrincipal from '../pages/enterpriseUpload/overview/principal'
 import enterpriseOverviewCompany from '../pages/enterpriseUpload/overview/company'
@@ -155,6 +156,10 @@ let routers = [
     { path: '/search',name:'search', component: search },
     {
         path: '/enterprise-upload', component: enterpriseUpload, children: [
+            {
+                path: 'home',
+                component: enterpriseHome,
+            },
             {
                 path: 'overview',
                 component: enterpriseOverviewIndex,

@@ -120,7 +120,7 @@
     <noscript>
         please turn on your jacascript
     </noscript>
-    <div id="web_index" @mousemove="clicked">
+    <div id="web_index" @mousemove="">
         <div class="alesis-header">
             <div class="logo">
                 <a href="/index"><img src="/images/logo_new.png" class="image"></a>

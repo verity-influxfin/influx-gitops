@@ -8,7 +8,7 @@
         <progressOverview />
       </div>
       <div>
-        <button class="ml-3 btn btn-return">返回</button>
+        <button class="ml-3 btn btn-return" @click="$router.back()">返回</button>
       </div>
     </div>
     <div class="right">
