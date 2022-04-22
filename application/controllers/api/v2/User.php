@@ -2698,26 +2698,24 @@ END:
             {
                 foreach ($reward_list as $reward_info)
                 {
-                    $data_rows[] = [
-                        'alias' => empty($reward_info['alias']) ? $reward_info['registered_id'] : $reward_info['alias'],
-                        'student' => $reward_info['student']['count'],
-                        'salary_man' => $reward_info['salary_man']['count'],
-                        'small_enterprise' => $reward_info['small_enterprise']['count'],
-                        'month' => $month,
-                    ];
+                    if (empty($reward_info['list']))
+                    {
+                        continue;
+                    }
+                    $data_rows = array_merge($data_rows, $reward_info['list']);
                 }
             }
+            rsort($data_rows);
 
             $product_list = $this->config->item('product_list');
             $student_name = $product_list[PRODUCT_ID_STUDENT]['name'] ?? '';
             $salary_man_name = $product_list[PRODUCT_ID_SALARY_MAN]['name'] ?? '';
             $small_enterprise_name = $product_list[PRODUCT_SK_MILLION_SMEG]['name'] ?? '';
             $title_rows = [
-                'month' => ['name' => '統計月份', 'width' => 8,'alignment' => ['h' => 'center','v' => 'center']],
-                'alias' => ['name' => '暱稱別名', 'width' => 15, 'alignment' => ['h' => 'center','v' => 'center']],
-                'student' => ['name' => "{$student_name}數量", 'width' => 10, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC, 'alignment' => ['h' => 'center','v' => 'center']],
-                'salary_man' => ['name' => "{$salary_man_name}數量", 'width' => 12, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC, 'alignment' => ['h' => 'center','v' => 'center']],
-                'small_enterprise' => ['name' => "{$small_enterprise_name}數量", 'width' => 15, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC, 'alignment' => ['h' => 'center','v' => 'center']]
+                'alias' => ['name' => '經銷商', 'width' => 15, 'alignment' => ['h' => 'center','v' => 'center']],
+                'category' => ['name' => '產品', 'width' => 10,'alignment' => ['h' => 'center','v' => 'center']],
+                'loan_date' => ['name' => '成交日期', 'width' => 10,'alignment' => ['h' => 'center','v' => 'center']],
+                'reward' => ['name' => '獎金', 'width' => 8, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC, 'alignment' => ['h' => 'center','v' => 'center']]
             ];
 
             $user = $this->user_model->get($user_id);

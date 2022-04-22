@@ -809,6 +809,12 @@ class Qrcode_lib
             }
 
             // 處理各個產品
+            $categories_name = $this->CI->user_lib->categoriesName;
+            $categories_reward = [
+                'student' => $user_qrcode['info']['settings']['reward']['collaboration_person']['amount'],
+                'salary_man' => $user_qrcode['info']['settings']['reward']['collaboration_person']['amount'],
+                'small_enterprise' => $user_qrcode['info']['settings']['reward']['collaboration_enterprise']['amount'],
+            ];
             foreach (array_keys($this->CI->user_lib->rewardCategories) as $category)
             {
                 if ( ! isset($user_qrcode[$category]) || empty($user_qrcode[$category]))
@@ -820,6 +826,12 @@ class Qrcode_lib
                 {
                     $formattedMonth = date("Y-m", strtotime($value['loan_date']));
                     $list[$formattedMonth][$user_qrcode_id][$category]['count'] += 1;
+                    $list[$formattedMonth][$user_qrcode_id]['list'][] = [
+                        'loan_date' => $value['loan_date'],
+                        'alias' => $user_subcode_list[$user_qrcode_id]['alias'],
+                        'category' => $categories_name[$category] ?? '',
+                        'reward' => $categories_reward[$category]
+                    ];
                 }
             }
 
