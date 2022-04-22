@@ -2,7 +2,6 @@
 
 class Sale_goals_model_test extends TestCase
 {
-
     public function setUp(): void
     {
         $this->resetInstance();
@@ -37,16 +36,16 @@ class Sale_goals_model_test extends TestCase
 
     public function test_get_goals_number_at_this_month()
     {
-    	$expected_type = 14;
-    	$expected_keys = ['id', 'number'];
+        $expected_type = 14;
+        $expected_keys = ['id', 'number'];
 
-    	$goals_number = $this->obj->get_goals_number_at_this_month();
-    	$this->assertEquals($expected_type, count($goals_number));
+        $goals_number = $this->obj->get_goals_number_at_this_month();
+        $this->assertEquals($expected_type, count($goals_number));
 
-    	foreach ($goals_number as $key => $value) {
-    		$this->assertArrayHasKey($expected_keys[0], $value);
-    		$this->assertArrayHasKey($expected_keys[1], $value);
-    	}
+        foreach ($goals_number as $key => $value)
+        {
+            $this->assertArrayHasKey($expected_keys[0], $value);
+            $this->assertArrayHasKey($expected_keys[1], $value);
+        }
     }
-
 }

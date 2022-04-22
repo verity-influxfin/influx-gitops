@@ -20,39 +20,15 @@ class Page extends CI_Controller
         $ga_amounts = $this->_get_report($analytics, $today->modify('-1 day')->format('Y-m-d'));
 
         // 更新官網流量到 db
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), Sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS, $ga_amounts);
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), Sale_dashboard_model::TARGET_WEB_TRAFFIC, $ga_amounts);
 
         // 更新 iOS 下載量 - 前天的
         $ios_amounts = $this->_get_ios_sales_summary_data($today->modify('-2 day')->format('Y-m-d'));
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-2 day'), Sale_dashboard_model::PLATFORM_TYPE_IOS, $ios_amounts);
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-2 day'), Sale_dashboard_model::TARGET_DOWNLOAD_IOS, $ios_amounts);
 
         // 更新 Android 下載量 - 四天前的才有數據(google 報表更新怎麼比 apple 還慢?)
         $android_amounts = $this->_get_android_install_report($today->modify('-4 day'));
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-4 day'), Sale_dashboard_model::PLATFORM_TYPE_ANDROID, $android_amounts);
-        echo 'ok';
-    }
-
-    // 首次上線後，跑這隻更新最近七天的數據資料
-    public function init_eboard_info()
-    {
-        $today = (new DateTimeImmutable(date('Y-m-d')));
-        $this->load->model('user/sale_dashboard_model');
-
-        // ga init
-        $analytics = $this->_initialize_analytics();
-
-        for ($i = 1; $i <= 7; $i++)
-        {
-            // update ga infos
-            $ga_amounts = $this->_get_report($analytics, $today->modify("- {$i} day")->format('Y-m-d'));
-            $this->sale_dashboard_model->set_amounts_at($today->modify("- {$i} day"), sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS, $ga_amounts);
-
-            // update ios downloads
-            $j = $i + 1;
-            $ios_amounts = $this->_get_ios_sales_summary_data($today->modify("- {$j} day")->format('Y-m-d'));
-            $this->sale_dashboard_model->set_amounts_at($today->modify("- {$j} day"), sale_dashboard_model::PLATFORM_TYPE_IOS, $ios_amounts);
-        }
-
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-4 day'), Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID, $android_amounts);
         echo 'ok';
     }
 
@@ -73,7 +49,7 @@ class Page extends CI_Controller
         for ($i = 0; $i < 7; $i++)
         {
             $date = $i > 0 ? $first_day->modify("+ {$i} day") : $first_day;
-            $amounts_ga = $this->sale_dashboard_model->get_amounts_at($date);
+            $amounts_ga = $this->sale_dashboard_model->get_amounts_at($date, [Sale_dashboard_model::TARGET_WEB_TRAFFIC]);
 
             $retval[] = [
 
@@ -81,7 +57,7 @@ class Page extends CI_Controller
                 'date' => $tx_date = $date->format('Y/m/d'),
 
                 // 官網流量
-                'official_site_trends' => $amounts_ga[Sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
+                'official_site_trends' => $amounts_ga[Sale_dashboard_model::TARGET_WEB_TRAFFIC] ?? 0,
 
                 // 新增會員
                 'new_member' => $this->_get_new_member($date),
@@ -101,8 +77,8 @@ class Page extends CI_Controller
             $amounts_app = $this->sale_dashboard_model->get_amounts_at($download_date);
             $download[] = [
                 'date' => $download_date->format('Y/m/d'),
-                'android_downloads' => $amounts_app[Sale_dashboard_model::PLATFORM_TYPE_ANDROID] ?? 0,
-                'ios_downloads' => $amounts_app[Sale_dashboard_model::PLATFORM_TYPE_IOS] ?? 0,
+                'android_downloads' => $amounts_app[Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID] ?? 0,
+                'ios_downloads' => $amounts_app[Sale_dashboard_model::TARGET_DOWNLOAD_IOS] ?? 0,
             ];
         }
         $qr = $this->_get_total_qrcode_apply();
@@ -300,7 +276,6 @@ class Page extends CI_Controller
             return ($a['full_member_count'] > $b['full_member_count']) ? -1 : 1;
         });
 
-
         return [
             'insider' => $insider,
             'outsider' => array_slice($outsider, 0, 20)
@@ -413,10 +388,10 @@ class Page extends CI_Controller
         $request = new Google_Service_AnalyticsReporting_ReportRequest();
         $request->setViewId($VIEW_ID);
         $request->setDateRanges($dateRange);
-        $request->setMetrics(array($users));
+        $request->setMetrics([$users]);
 
         $body = new Google_Service_AnalyticsReporting_GetReportsRequest();
-        $body->setReportRequests(array($request));
+        $body->setReportRequests([$request]);
         $reports = $analytics->reports->batchGet($body);
         return $reports[0]->getData()->getRows()[0]->getMetrics()[0]->getValues()[0];
     }
@@ -453,11 +428,12 @@ class Page extends CI_Controller
         return $amounts;
     }
 
-    private function _get_today_weather(){
+    private function _get_today_weather()
+    {
         $url = 'https://www.metaweather.com/api/location/2306179/';
         $res = curl_get($url);
-        $json = json_decode($res,true);
-        return $json['consolidated_weather'][0]['weather_state_abbr'] ?? ['weather_state_abbr'=>''];
+        $json = json_decode($res, true);
+        return $json['consolidated_weather'][0]['weather_state_abbr'] ?? ['weather_state_abbr' => ''];
     }
 
     private function _get_loan_distribution(): array
