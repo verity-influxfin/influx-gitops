@@ -39,18 +39,19 @@
                 <div class="row no-gutters cert-content-text">
                   請輸入常用Email：
                 </div>
-                <div class="row no-gutters mt-2">
+                <form class="row no-gutters mt-2" @submit.prevent>
                   <div class="col mr-4">
                     <input
                       type="email"
                       class="input-mail w-100"
+                      required
                       placeholder="請輸入"
                     />
                   </div>
                   <div class="col-auto">
                     <button class="btn btn-next-page">發送驗證信件</button>
                   </div>
-                </div>
+                </form>
               </div>
             </template>
           </cert-item>
@@ -67,7 +68,14 @@
                   2.個人不動產使用情形
                 </div>
                 <div class="col-auto d-flex align-items-end">
+                    <router-link
+                    :to="
+                      '/enterprise-upload/form/principal-basic-info?case-id=' +
+                      caseId
+                    "
+                  >
                   <button class="btn btn-next-page">提供更新</button>
+                    </router-link>
                 </div>
               </div>
             </template>
@@ -85,7 +93,14 @@
                   2.近六個月主要帳戶存摺內頁
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                  <button class="btn btn-next-page">提供更新</button>
+                  <router-link
+                    :to="
+                      '/enterprise-upload/form/principal-passbook?case-id=' +
+                      caseId
+                    "
+                  >
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -105,7 +120,14 @@
                   (3擇1)
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                  <button class="btn btn-next-page">提供更新</button>
+                  <router-link
+                    :to="
+                      '/enterprise-upload/form/principal-income-info?case-id=' +
+                      caseId
+                    "
+                  >
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -129,7 +151,14 @@
                   </small>
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                  <button class="btn btn-next-page">提供更新</button>
+                  <router-link
+                    :to="
+                      '/enterprise-upload/form/principal-credit-info?case-id=' +
+                      caseId
+                    "
+                  >
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -150,12 +179,9 @@ export default {
     progressOverview,
     certItem
   },
-  data() {
-    return {
-      companyData: {
-        icon: require('@/asset/images/enterpriseUpload/company-1.svg'),
-        iconText: '12'
-      }
+  computed: {
+    caseId() {
+      return this.$route.query['case-id'] ?? ''
     }
   },
 }

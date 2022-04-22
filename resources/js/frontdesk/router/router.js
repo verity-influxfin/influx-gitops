@@ -56,6 +56,11 @@ import enterpriseHome from '../pages/enterpriseUpload/home'
 import enterpriseOverviewIndex from '../pages/enterpriseUpload/overview/index'
 import enterpriseOverviewPrincipal from '../pages/enterpriseUpload/overview/principal'
 import enterpriseOverviewCompany from '../pages/enterpriseUpload/overview/company'
+import enterpriseForm from '../pages/enterpriseUpload/forms/index'
+import principalPassbook from '../pages/enterpriseUpload/forms/principalPassbook'
+import principalIncomeInfo from '../pages/enterpriseUpload/forms/principalIncomeInfo'
+import principalCreditInfo from '../pages/enterpriseUpload/forms/principalCreditInfo'
+import principalBasicInfo from '../pages/enterpriseUpload/forms/principalBasicInfo'
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -159,6 +164,28 @@ let routers = [
             {
                 path: 'home',
                 component: enterpriseHome,
+            },
+            {
+                path: 'form',
+                component: enterpriseForm,
+                children: [
+                    {
+                        path: 'principal-basic-info',
+                        component: principalBasicInfo
+                    },
+                    {
+                        path: 'principal-passbook',
+                        component:principalPassbook
+                    },
+                    {
+                        path: 'principal-income-info',
+                        component: principalIncomeInfo
+                    },
+                    {
+                        path: 'principal-credit-info',
+                        component: principalCreditInfo
+                    }
+                ]
             },
             {
                 path: 'overview',
