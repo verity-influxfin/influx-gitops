@@ -101,7 +101,8 @@ $config['admin_menu'] = [
         'loan_overview' => '申貸總覽',
         'valuable_report' => '高價值用戶報表',
         'promote_list'  => '推薦有賞',
-        'promote_reward_list'  => '推薦有賞放款'
+        'promote_reward_list'  => '推薦有賞放款',
+        'sales_report' => '績效統計表',
     ],
     'Account' => [
         'parent_name' => '財務作業',

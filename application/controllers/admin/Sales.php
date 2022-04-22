@@ -1167,8 +1167,44 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_title', $this->menu);
         $this->load->view('admin/valuable_list', $page_data);
         $this->load->view('admin/_footer');
+    }
 
+    public function sales_report()
+    {
+        $this->load->model('user/sale_goals_model');
+
+        $page_data = [
+            'goal_month' => date('m'),
+            'goal_items' => $this->sale_goals_model->type_name_mapping(),
+            'goal_number' => $this->sale_goals_model->get_goals_number_at_this_month(),
+        ];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/sales_target_setting', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    public function set_sale_goals()
+    {
+        $this->load->model('user/sale_goals_model');
+
+        $input = $this->input->post(NULL, TRUE);
+        foreach ($input as $key => $value)
+        {
+            $this->sale_goals_model->update($key, ['number' => $value]);
+        }
+
+        redirect('/admin/Sales/sales_report', 'refresh');
+    }
+
+    public function goals_export()
+    {
+        $this->load->model('user/sale_goals_model');	
+
+        $input = $this->input->post(NULL, TRUE);
+        $export_month = $input['month'];
+
+        // TODO
     }
 }
-
-?>
