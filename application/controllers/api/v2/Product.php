@@ -2361,7 +2361,8 @@ class Product extends REST_Controller {
         $character = $content['character'];
         $characters = $this->config->item('character');
 
-        if($character == 3){
+        if ($character == ASSOCIATES_CHARACTER_SPOUSE)
+        {
             if(!isset($input['guarantor'])){
                 $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
             }
@@ -2402,7 +2403,7 @@ class Product extends REST_Controller {
         //取得歸戶資料
         $user = $this->user_model->get_by(['id_number' => strval($content['id_number'])]);
 
-        $userId = isset($user->id) ? $user->id : null;
+        $userId = $user->id ?? NULL;
         if ($this->user_info->id == $userId ) {
             $this->response(['result' => 'ERROR','error' => TARGET_SAME_USER]);
         }
@@ -2425,11 +2426,15 @@ class Product extends REST_Controller {
         $this->load->model('loan/target_associate_model');
 
         $associates = $this->target_lib->get_associates_user_data($targetId, 'all', 0, false);
-        foreach ($associates as $key => $value) {
-            if ($character == 1 && $value->character == 1) {
-                return $this->response(['result' => 'ERROR','error' => TARGET_OWNER_EXIST]);
-            }elseif ($content['id_number'] == $value->id_number){
-                return $this->response(['result' => 'ERROR','error' => TARGET_AGITATE_EXIST]);
+        foreach ($associates as $value)
+        {
+            if ($character == ASSOCIATES_CHARACTER_OWNER && $value->character == ASSOCIATES_CHARACTER_OWNER)
+            {
+                $this->response(['result' => 'ERROR', 'error' => TARGET_OWNER_EXIST]);
+            }
+            elseif ($content['id_number'] == $value->id_number)
+            {
+                $this->response(['result' => 'ERROR', 'error' => TARGET_AGITATE_EXIST]);
             }
         }
 
@@ -2439,38 +2444,119 @@ class Product extends REST_Controller {
             $this->response(['result' => 'EXIT_ERROR']);
         }
 
-        if ($userId && $character == ASSOCIATES_CHARACTER_SPOUSE)
+        if ($userId)
         {
-            // [前提] 提交個人及公司「聯徵」時，會幫公司、負責人、負責人配偶(若有)新增一條 user_certification
-            // 若新增當下配偶未歸戶者，會將配偶的 user_certification 掛在負責人名下
-            // [現] 要將暫時掛在負責人名下的「聯徵A11」，轉到配偶名下，條件：
-            // 1. user_id = 負責人user_id
-            // 2. status = CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE
+            $relationship_mapping = [
+                'A', // 配偶
+                'B', // 血親
+                'C', // 姻親
+                'D', // 股東
+                'E', // 朋友
+                'F', // 本人
+                'G', // 其他
+                'H', // 經營有關之借戶職員
+            ];
 
-            $cert_a11_info = $this->user_certification->get_many_by([
-                'user_id' => $this->user_info->id, //負責人user_id
-                'status NOT' => [CERTIFICATION_STATUS_FAILED]
-            ]);
-
-            if ( ! empty($cert_a11_info))
+            $year_fields = ['StartYear', 'EndYear'];
+            foreach ($year_fields as $year)
             {
-                if ($cert_a11_info->status == CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE)
+                if (empty($input[$year]) || ! strtotime($input[$year]))
                 {
-                    $this->user_certification->update($cert_a11_info->id, [
-                        'user_id' => $userId, // 配偶user_id
-                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW // 待驗證
-                    ]);
+                    $input[$year] = '';
+                    continue;
                 }
-                else
-                {
-                    $this->user_certification->insert([
-                        'user_id' => $userId, // 配偶user_id
-                        'certification_id' => CERTIFICATION_INVESTIGATIONA11,
+                $input[$year] = (int) $input[$year] - 1911;
+            }
+
+            $this->load->model('user/user_certification_model');
+            switch ($character)
+            {
+                case ASSOCIATES_CHARACTER_REAL_OWNER: // 實際負責人
+                    $uc_id = $this->user_certification_model->insert([
+                        'user_id' => $userId,
+                        'certification_id' => CERTIFICATION_PROFILE,
                         'investor' => BORROWER,
-                        'content' => json_encode([]),
-                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW // 待驗證
+                        'content' => json_encode([
+                            'skbank_form' => [
+                                'prRelationship' => $relationship_mapping[$content['relationship']] ?? '',
+                                'othRealPrStartYear' => $input['StartYear'],
+                                'othRealPrEndYear' => $input['EndYear'],
+                                'othRealPrSHRatio' => (int) ($input['SHRatio'] ?? 0),
+                                'othRealPrTitle' => $input['PrTitle'] ?? '',
+                            ]
+                        ]),
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
                     ]);
-                }
+                    if ( ! $uc_id)
+                    {
+                        break;
+                    }
+                    $this->user_certification_model->update_by([
+                        'user_id' => $userId,
+                        'investor' => BORROWER,
+                        'certification_id' => CERTIFICATION_PROFILE,
+                        'id !=' => $uc_id
+                    ], ['status' => CERTIFICATION_STATUS_FAILED]);
+                    break;
+                case ASSOCIATES_CHARACTER_SPOUSE: // 配偶
+
+                    // [前提] 提交個人及公司「聯徵」時，會幫公司、負責人、負責人配偶(若有)新增一條 user_certification
+                    // 若新增當下配偶未歸戶者，會將配偶的 user_certification 掛在負責人名下
+                    // [現] 要將暫時掛在負責人名下的「聯徵A11」，轉到配偶名下，條件：
+                    // 1. user_id = 負責人user_id
+                    // 2. status = CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE
+
+                    $cert_a11_info = $this->user_certification_model->get_by([
+                        'user_id' => $this->user_info->naturalPerson->id, // 負責人user_id
+                        'certification_id' => CERTIFICATION_INVESTIGATIONA11,
+                        'investor' => $this->user_info->investor,
+                        'status' => CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE
+                    ]);
+                    if ( ! empty($cert_a11_info))
+                    {
+                        $this->user_certification_model->update($cert_a11_info->id, [
+                            'user_id' => $userId, // 配偶user_id
+                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW // 待驗證
+                        ]);
+                    }
+                    else
+                    {
+                        $this->user_certification_model->insert([
+                            'user_id' => $userId, // 配偶user_id
+                            'certification_id' => CERTIFICATION_INVESTIGATIONA11,
+                            'investor' => BORROWER,
+                            'content' => json_encode([]),
+                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW // 待驗證
+                        ]);
+                    }
+                    break;
+                case ASSOCIATES_CHARACTER_GUARANTOR_A: // 保證人
+                    $uc_id = $this->user_certification_model->insert([
+                        'user_id' => $userId,
+                        'certification_id' => CERTIFICATION_PROFILE,
+                        'investor' => BORROWER,
+                        'content' => json_encode([
+                            'skbank_form' => [
+                                'guOneRelWithPr' => $relationship_mapping[$content['relationship']] ?? '',
+                                'guOneStartYear' => $input['StartYear'],
+                                'guOneEndYear' => $input['EndYear'],
+                                'guOneSHRatio' => (int) ($input['SHRatio'] ?? 0),
+                                'guOneTitle' => $input['PrTitle'] ?? '',
+                            ]
+                        ]),
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                    ]);
+                    if ( ! $uc_id)
+                    {
+                        break;
+                    }
+                    $this->user_certification_model->update_by([
+                        'user_id' => $userId,
+                        'investor' => BORROWER,
+                        'certification_id' => CERTIFICATION_PROFILE,
+                        'id !=' => $uc_id
+                    ], ['status' => CERTIFICATION_STATUS_FAILED]);
+                    break;
             }
         }
 

@@ -146,8 +146,13 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span>其他實際負責人從事本行業年度</span></td>
+                                                    <td><span>其他實際負責人從事本行業年度-起始</span></td>
                                                     <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrStartYear"
+                                                               placeholder="格式:YYY"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>其他實際負責人從事本行業年度-結束</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrEndYear"
                                                                placeholder="格式:YYY"></td>
                                                 </tr>
                                                 <tr>
@@ -207,7 +212,26 @@
                                                 </tr>
                                                 <tr>
                                                     <td><span>保證人任職公司</span></td>
-                                                    <td><input class="sk-input form-control" type="text" name="guCompany"></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.guCompany"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>保證人從事本行業年度-起始</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.guOneStartYear"
+                                                               placeholder="格式:YYY"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>保證人從事本行業年度-結束</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.guOneEndYear"
+                                                               placeholder="格式:YYY"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>保證人擔任公司職務</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.guOneTitle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>保證人持股比率(%)</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.guOneSHRatio"
+                                                               placeholder="請輸入數字部分即可"></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
@@ -321,6 +345,11 @@
                                                            placeholder="格式:YYY"></td>
                                             </tr>
                                             <tr>
+                                                <td><span>其他實際負責人從事本行業年度-結束</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrEndYear"
+                                                           placeholder="格式:YYY"></td>
+                                            </tr>
+                                            <tr>
                                                 <td><span>其他實際負責人擔任公司職務</span></td>
                                                 <td><input class="sk-input form-control" type="text" v-model="formData.othRealPrTitle"></td>
                                             </tr>
@@ -377,7 +406,26 @@
                                             </tr>
                                             <tr>
                                                 <td><span>保證人任職公司</span></td>
-                                                <td><input class="sk-input form-control" type="text" name="guCompany"></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.guCompany"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>保證人從事本行業年度-起始</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.guOneStartYear"
+                                                           placeholder="格式:YYY"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>保證人從事本行業年度-結束</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.guOneEndYear"
+                                                           placeholder="格式:YYY"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>保證人擔任公司職務</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.guOneTitle"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>保證人持股比率(%)</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.guOneSHRatio"
+                                                           placeholder="請輸入數字部分即可"></td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
@@ -460,12 +508,17 @@
                     isPrRegister: '',
                     prRelationship: '',
                     othRealPrStartYear: '',
+                    othRealPrEndYear: '',
                     othRealPrTitle: '',
                     othRealPrSHRatio: '',
                     hasGuarantor: '',
                     isPrSpouseGu: '',
                     guOneRelWithPr: '',
                     guCompany: '',
+                    guOneStartYear: '',
+                    guOneEndYear: '',
+                    guOneSHRatio: '',
+                    guOneTitle: '',
                     tab2Input: '',
                     tab3Input: '',
                 }

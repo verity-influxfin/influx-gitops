@@ -22602,14 +22602,16 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "character",
-                            "description": "<p>2:實際負責人 3:配偶 4:保證人甲 5:保證人乙</p>"
+                            "description": "<p>角色<br/>2:實際負責人 3:配偶 4:保證人</p>",
+                            "allowedValues": [2, 3, 4]
                         },
                         {
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
                             "field": "relationship",
-                            "description": "<p>與負責人關係 0:配偶 1:血親 2:姻親 3:股東 4:朋友 5:本人 6:其他 7:經營有關之借戶職員</p>"
+                            "description": "<p>與負責人關係<br/>0:配偶 1:血親 2:姻親 3:股東 4:朋友 5:本人 6:其他 7:經營有關之借戶職員</p>",
+                            "allowedValues": [0, 1, 2, 3, 4, 5, 6, 7]
                         },
                         {
                             "group": "Success 200",
@@ -22617,6 +22619,30 @@ define({
                             "optional": true,
                             "field": "guarantor",
                             "description": "<p>是否為保證人 0:否 1:是(預設)</p>"
+                        }, {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "StartYear",
+                            "description": "<p>從事本行業年度-起始，年份為西元年YYYY</p>"
+                        }, {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "EndYear",
+                            "description": "<p>從事本行業年度-結束，年份為西元年YYYY</p>"
+                        }, {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "PrTitle",
+                            "description": "<p>擔任公司職務</p>"
+                        }, {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "SHRatio",
+                            "description": "<p>持股比率(%)</p>"
                         }
                     ]
                 }
