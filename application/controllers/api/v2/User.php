@@ -2303,8 +2303,8 @@ END:
             $promote_code = $userQrcodeInfo['promote_code'];
             $url = 'https://event.influxfin.com/R/url?p=' . $promote_code;
             $qrcode = get_qrcode($url);
-            $contract = "";
 
+            $contract = "";
             if ($userQrcodeInfo['status'] == PROMOTE_STATUS_AVAILABLE)
             {
                 $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id']);
@@ -2478,33 +2478,12 @@ END:
 
         $user_id = $this->user_info->id;
 
-        $input = $this->input->post(NULL, TRUE);
-        $registered_id = isset($input['registered_id']) ? trim($input['registered_id']) : '';
-        if (empty($registered_id))
-        {
-            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '不能輸入空的身分證字號'));
-        }
-        $id_check = check_cardid($registered_id);
-        if ( ! $id_check)
-        {
-            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_IDNUMBER_ERROR, 'msg' => '錯誤格式的身分證字號'));
-        }
-
         $master_user_qrcode = $this->user_qrcode_model->get_by(['user_id' => $user_id, 'status' => PROMOTE_STATUS_AVAILABLE]);
         if ( ! isset($master_user_qrcode))
         {
             $this->response(array('result' => 'ERROR', 'error' => PROMOTE_CODE_NOT_EXIST, 'msg' => '找不到合法的推薦主碼紀錄'));
         }
-
-        $subcode_list = $this->qrcode_lib->get_subcode_list($user_id, ['registered_id' => $registered_id],
-            ['status' => PROMOTE_STATUS_AVAILABLE]);
-        if ( ! empty($subcode_list))
-        {
-            $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST, 'msg' => '已有該手機號碼的申請紀錄'));
-        }
-
         $this->load->library('qrcode_lib');
-        $identity = $this->qrcode_lib->get_user_identity($registered_id);
 
         $this->load->library('user_lib');
         $promote_code = $this->user_lib->get_promote_code(8, 'SUB');
@@ -2518,8 +2497,12 @@ END:
 
         try
         {
+            $record_num = $this->user_subcode_model->count_by([
+                'master_user_qrcode_id' => $master_user_qrcode->id,
+            ]);
+
             $new_qrcode_id = $this->user_qrcode_model->insert([
-                'user_id' => $identity->user_id ?? 0,
+                'user_id' => 0,
                 'alias' => $master_user_qrcode->alias,
                 'promote_code' => $promote_code,
                 'status' => PROMOTE_STATUS_AVAILABLE,
@@ -2531,7 +2514,8 @@ END:
             ]);
 
             $user_subcode_id = $this->user_subcode_model->insert([
-                'registered_id' => $registered_id,
+                'alias' => "經銷商".($record_num+1),
+                'registered_id' => 0,
                 'master_user_qrcode_id' => $master_user_qrcode->id,
                 'user_qrcode_id' => (int) $new_qrcode_id,
             ]);
@@ -2647,13 +2631,8 @@ END:
 
             $data['subcode_id'] = (int)$user_subcode['id'];
             $data['status'] = (int)$data['status'];
-            // TODO: subcode 接收者的實名跳轉 url
             $data['promote_url'] = 'https://event.influxfin.com/R/url?identity=subcode';
             $data['promote_qrcode'] = get_qrcode('https://event.influxfin.com/R/url?p='.$data['promote_code']);
-
-            $this->load->library('qrcode_lib');
-            $identity = $this->qrcode_lib->get_user_identity($user_subcode['registered_id']);
-            $data['identity'] = $identity !== FALSE;
             $list[] = $data;
         }
 

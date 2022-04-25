@@ -44776,19 +44776,6 @@ define({
                     ]
                 }
             },
-            "parameter": {
-                "fields": {
-                    "Parameter": [
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "registered_id",
-                            "description": "<p>欲申請之註冊身分證字號</p>"
-                        }
-                    ]
-                }
-            },
             "success": {
                 "fields": {
                     "Success 200": [
@@ -45087,13 +45074,6 @@ define({
                             "optional": false,
                             "field": "status",
                             "description": "<p>狀態(0:失效,1:啟用)</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "Boolean",
-                            "optional": false,
-                            "field": "identity",
-                            "description": "<p>實名是否有通過</p>"
                         }
                     ]
                 },
@@ -45102,7 +45082,7 @@ define({
                         "title": "SUCCESS",
                         "content": "{\n" +
                             "    \"result\": \"SUCCESS\",\n" +
-                            "    \"data\": [\n        {\n            \"alias\": \"阿強水電工\",\n            \"registered_id\": \"S124599064\",\n            \"promote_code\": \"SUBV8R64IIM\",\n            \"status\": 1,\n            \"start_time\": \"2022-01-13 12:23:23\",\n            \"end_time\": \"2022-12-29 11:52:51\",\n            \"subcode_id\": 5,\n            \"promote_url\": \"https://event.influxfin.com/R/url?p=SUBV8R64IIM\",\n            \"promote_qrcode\": \"https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=https%3A%2F%2Fevent.influxfin.com%2FR%2Furl%3Fp%3DSUBV8R64IIM&chs=500x500\",\n            \"identity\": true\n        },\n        {\n            \"alias\": \"\",\n            \"registered_id\": \"A118161077\",\n            \"promote_code\": \"SUBIHH7R1ID\",\n            \"status\": 1,\n            \"start_time\": \"2022-01-13 12:24:16\",\n            \"end_time\": \"2022-12-29 11:52:51\",\n            \"subcode_id\": 6,\n            \"promote_url\": \"https://event.influxfin.com/R/url?p=SUBIHH7R1ID\",\n            \"promote_qrcode\": \"https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=https%3A%2F%2Fevent.influxfin.com%2FR%2Furl%3Fp%3DSUBIHH7R1ID&chs=500x500\",\n            \"identity\": false\n        }\n    ]\n"+
+                            "    \"data\": [\n        {\n            \"alias\": \"阿強水電工\",\n            \"registered_id\": \"S124599064\",\n            \"promote_code\": \"SUBV8R64IIM\",\n            \"status\": 1,\n            \"start_time\": \"2022-01-13 12:23:23\",\n            \"end_time\": \"2022-12-29 11:52:51\",\n            \"subcode_id\": 5,\n            \"promote_url\": \"https://event.influxfin.com/R/url?p=SUBV8R64IIM\",\n            \"promote_qrcode\": \"https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=https%3A%2F%2Fevent.influxfin.com%2FR%2Furl%3Fp%3DSUBV8R64IIM&chs=500x500\",\n        },\n        {\n            \"alias\": \"\",\n            \"registered_id\": \"A118161077\",\n            \"promote_code\": \"SUBIHH7R1ID\",\n            \"status\": 1,\n            \"start_time\": \"2022-01-13 12:24:16\",\n            \"end_time\": \"2022-12-29 11:52:51\",\n            \"subcode_id\": 6,\n            \"promote_url\": \"https://event.influxfin.com/R/url?p=SUBIHH7R1ID\",\n            \"promote_qrcode\": \"https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=https%3A%2F%2Fevent.influxfin.com%2FR%2Furl%3Fp%3DSUBIHH7R1ID&chs=500x500\",\n        }\n    ]\n"+
                             "}",
                         "type": "Object"
                     }
