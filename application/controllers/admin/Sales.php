@@ -1206,5 +1206,11 @@ class Sales extends MY_Admin_Controller {
         $export_month = $input['month'];
 
         // TODO
+        // 取出該月目標
+        // 四捨五入成每日目標
+        // 取出該月資料
+        // 根據日期整理資料列
+        // 計算每天的達成率
+        // 整理成匯出內容格式
     }
 }

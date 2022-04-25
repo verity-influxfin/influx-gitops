@@ -99,4 +99,24 @@ class Sale_dashboard_model extends MY_Model
             $this->db->update('p2p_user.sale_dashboard', $update);
         }
     }
+
+    public function get_loan_mapping_eboard_key_2_type()
+    {
+        return [
+            'SMART_STUDENT' => self::TARGET_LOAN_SMART_STUDENT,
+            'STUDENT' => self::TARGET_LOAN_STUDENT,
+            'SALARY_MAN' => self::TARGET_LOAN_SALARY_MAN,
+            'SK_MILLION' => self::TARGET_LOAN_SK_MILLION_SMEG, // 微企貸沒有出現在 匯出的 excel 裡面
+        ];
+    }
+
+    public function get_deal_mapping_eboard_key_2_type()
+    {
+        return [
+            'SMART_STUDENT' => self::TARGET_DEAL_SMART_STUDENT,
+            'STUDENT' => self::TARGET_DEAL_STUDENT,
+            'SALARY_MAN' => self::TARGET_DEAL_SALARY_MAN,
+            'SK_MILLION' => self::TARGET_DEAL_SK_MILLION_SMEG, // 微企貸沒有出現在 匯出的 excel 裡面
+        ];
+    }
 }

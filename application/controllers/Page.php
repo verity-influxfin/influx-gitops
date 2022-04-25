@@ -29,6 +29,17 @@ class Page extends CI_Controller
         // 更新 Android 下載量 - 四天前的才有數據(google 報表更新怎麼比 apple 還慢?)
         $android_amounts = $this->_get_android_install_report($today->modify('-4 day'));
         $this->sale_dashboard_model->set_amounts_at($today->modify('-4 day'), Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID, $android_amounts);
+
+        // TODO 更新昨日新會員數量
+        $new_member = $this->_get_new_member($today->modify('-1 day'));
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), Sale_dashboard_model::TARGET_USER_REGISTER, $new_member);
+
+        // TODO 更新昨日各產品申貸案
+        $loan_targets = $this->_get_product_bids($today->modify('-1 day'));
+
+        // TODO 更新昨日各產品成交案件
+        $deal_targets = $this->_get_deals($today->modify('-1 day'));
+
         echo 'ok';
     }
 
@@ -105,7 +116,7 @@ class Page extends CI_Controller
 
     private function _get_product_bids(DateTimeInterface $date)
     {
-        
+
         $this->load->model('loan/target_model');
         return $this->target_model->get_loan_targets_at_day($date);
 
@@ -193,14 +204,19 @@ class Page extends CI_Controller
                 'salary_man_count' => $value['loanedCount']['salary_man'] ?? 0,
             ];
         }
-        usort($outsider, function ($a, $b) {
-            if ($a['full_member_count'] == $b['full_member_count']) return 0;
+        usort($outsider, function ($a, $b)
+        {
+            if ($a['full_member_count'] == $b['full_member_count'])
+            {
+                return 0;
+            }
+
             return ($a['full_member_count'] > $b['full_member_count']) ? -1 : 1;
         });
 
         return [
             'insider' => $insider,
-            'outsider' => array_slice($outsider, 0, 20)
+            'outsider' => array_slice($outsider, 0, 20),
         ];
     }
 
