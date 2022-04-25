@@ -6,7 +6,12 @@
         :class="{
           active: $route.path === '/enterprise-upload/overview/principal',
         }"
-        @click="changeTab($route.path, '/enterprise-upload/overview/principal')"
+        @click="
+          changeTab(
+            $route.path,
+            '/enterprise-upload/overview/principal?case-id=' + caseId
+          )
+        "
       >
         負責人資料更新
       </div>
@@ -15,7 +20,12 @@
         :class="{
           active: $route.path === '/enterprise-upload/overview/company',
         }"
-        @click="changeTab($route.path, '/enterprise-upload/overview/company')"
+        @click="
+          changeTab(
+            $route.path,
+            '/enterprise-upload/overview/company?case-id=' + caseId
+          )
+        "
       >
         公司資料更新
       </div>
@@ -35,6 +45,11 @@ export default {
       }
     }
   },
+  computed: {
+    caseId() {
+      return this.$route.query['case-id'] ?? ''
+    }
+  }
 }
 </script>
 

@@ -61,6 +61,12 @@ import principalPassbook from '../pages/enterpriseUpload/forms/principalPassbook
 import principalIncomeInfo from '../pages/enterpriseUpload/forms/principalIncomeInfo'
 import principalCreditInfo from '../pages/enterpriseUpload/forms/principalCreditInfo'
 import principalBasicInfo from '../pages/enterpriseUpload/forms/principalBasicInfo'
+import companyBasicinfo from '../pages/enterpriseUpload/forms/companyBasicinfo'
+import companyPassBook from '../pages/enterpriseUpload/forms/companyPassBook'
+import companySalesInfo from '../pages/enterpriseUpload/forms/companySalesInfo'
+import companyInsuranceInfo from '../pages/enterpriseUpload/forms/companyInsuranceInfo'
+import companyIncomeInfo from '../pages/enterpriseUpload/forms/companyIncomeInfo'
+import companyCreditInfo from '../pages/enterpriseUpload/forms/companyCreditInfo'
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -184,6 +190,30 @@ let routers = [
                     {
                         path: 'principal-credit-info',
                         component: principalCreditInfo
+                    },
+                    {
+                        path: 'company-basic-info',
+                        component: companyBasicinfo
+                    },
+                    {
+                        path: 'company-passbook',
+                        component: companyPassBook
+                    },
+                    {
+                        path: 'company-sales-info',
+                        component: companySalesInfo
+                    },
+                    {
+                        path: 'company-insurance-info',
+                        component: companyInsuranceInfo
+                    },
+                    {
+                        path: 'company-income-info',
+                        component: companyIncomeInfo
+                    },
+                    {
+                        path: 'company-credit-info',
+                        component: companyCreditInfo
                     }
                 ]
             },

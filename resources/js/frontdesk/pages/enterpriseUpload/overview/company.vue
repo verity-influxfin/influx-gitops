@@ -8,7 +8,9 @@
         <progressOverview />
       </div>
       <div>
-        <button class="ml-3 btn btn-return" @click="$router.back()">返回</button>
+        <button class="ml-3 btn btn-return" @click="$router.back()">
+          返回
+        </button>
       </div>
     </div>
     <div class="right">
@@ -44,7 +46,14 @@
                   1.公司基本資料
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                  <button class="btn btn-next-page">發送驗證信件</button>
+                  <router-link
+                    :to="
+                      '/enterprise-upload/form/company-basic-info?case-id=' +
+                      caseId
+                    "
+                  >
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -62,7 +71,14 @@
                   2.近六個月主要帳戶存摺內頁
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                  <button class="btn btn-next-page">提供更新</button>
+                  <router-link
+                    :to="
+                      '/enterprise-upload/form/company-passbook?case-id=' +
+                      caseId
+                    "
+                  >
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -79,7 +95,14 @@
                   1.近三年401/403/405表
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                  <button class="btn btn-next-page">提供更新</button>
+                  <router-link
+                    :to="
+                      '/enterprise-upload/form/company-sales-info?case-id=' +
+                      caseId
+                    "
+                  >
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -97,7 +120,14 @@
                   2.具結書(若無需成立投保單位)
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                  <button class="btn btn-next-page">提供更新</button>
+                  <router-link
+                    :to="
+                      '/enterprise-upload/form/company-insurance-info?case-id=' +
+                      caseId
+                    "
+                  >
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -115,7 +145,14 @@
                   2.近三年稅簽-資產負債表
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                  <button class="btn btn-next-page">提供更新</button>
+                  <router-link
+                    :to="
+                      '/enterprise-upload/form/company-income-info?case-id=' +
+                      caseId
+                    "
+                  >
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -124,7 +161,7 @@
         <div class="mt-3">
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/company-8.svg')"
-            icon-text="聯合徵信報告＋Ａ13<br>第二聯"
+            icon-text="聯合徵信報告＋A13<br>第二聯"
           >
             <template v-slot:content>
               <div class="row no-gutters w-100 h-100">
@@ -140,7 +177,14 @@
                   </small>
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                  <button class="btn btn-next-page">提供更新</button>
+                  <router-link
+                    :to="
+                      '/enterprise-upload/form/company-credit-info?case-id=' +
+                      caseId
+                    "
+                  >
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -161,12 +205,9 @@ export default {
     progressOverview,
     certItem
   },
-  data() {
-    return {
-      companyData: {
-        icon: require('@/asset/images/enterpriseUpload/company-1.svg'),
-        iconText: '12'
-      }
+  computed: {
+    caseId() {
+      return this.$route.query['case-id'] ?? ''
     }
   },
 }

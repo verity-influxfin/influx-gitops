@@ -1,7 +1,6 @@
 <template>
   <div class="uploadform-index">
     <div class="header">
-      <img src="@/asset/images/enterpriseUploadBanner.png" />
     </div>
     <div class="uploadform-content">
       <div class="left">
@@ -88,6 +87,10 @@ export default {
 .uploadform-index {
   .header {
     margin-bottom: 50px;
+    width: 100%;
+    height: 200px;
+    background-image: url('~images/enterpriseUploadBanner.png');
+    border-radius: 10px;
   }
   .uploadform-content {
     display: grid;

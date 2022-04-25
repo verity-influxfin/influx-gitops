@@ -13,16 +13,16 @@ const state = () => ({
             title: '負責人資料更新',
             process: {
                 now: 1,
-                all: 4,
-                percentage: '25%'
+                all: 6,
+                percentage: '16%'
             }
         },
         company: {
             title: '公司資料更新',
             process: {
                 now: 4,
-                all: 10,
-                percentage: '40%'
+                all: 8,
+                percentage: '50%'
             }
         },
         guarantor: {
