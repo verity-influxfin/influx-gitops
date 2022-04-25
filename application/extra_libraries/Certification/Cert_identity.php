@@ -102,6 +102,10 @@ class Cert_identity extends Certification_base
                 $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
             }
         }
+        else
+        {
+            $this->result->addMessage('OCR無回應，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+        }
 
         return TRUE;
     }
