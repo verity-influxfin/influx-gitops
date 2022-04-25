@@ -640,4 +640,92 @@ class Target_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
+    // 取得指定日子申貸的案件數量
+    public function get_loan_targets_at_day(DateTimeInterface $date)
+    {
+        $month_ini = $date->modify('first day of this month');
+        $month_end = $date->modify('first day of next month');
+        $month_ini = $month_ini->setTime(0, 0, 0)->getTimestamp();
+        $month_end = $month_end->setTime(0, 0, 0)->getTimestamp();
+
+        $sub_query = "SELECT
+            t.`user_id`,
+            t.`product_id`,
+            t.`sub_product_id`,
+            min(t.`created_at`) as `first_target_at`
+            FROM `p2p_loan`.`targets` t LEFT JOIN `p2p_loan`.`subloan` s ON s.`new_target_id` = t.`id`
+            WHERE s.id is NULL
+            AND t.`created_at` >= {$month_ini}
+            AND t.`created_at` < {$month_end}
+            GROUP BY t.`user_id`";
+
+        $this->load->model('loan/target_model');
+        $query = $this->target_model->db->select([
+            'user_id',
+            'product_id',
+            'sub_product_id',
+            'first_target_at',
+        ])->from("({$sub_query}) as r")
+            ->where([
+                'first_target_at >=' => $date->getTimestamp(),
+                'first_target_at <' => $date->modify('+1 day')->getTimestamp(),
+            ])
+            ->get()
+            ->result_array();
+
+        return $this->_list_products_at_targets($loan_targets);
+    }
+
+    // 取得指定日子成交的案件數量 - TODO 這只是總數，但應該要針對各案件分別取得數量
+    public function get_deal_targets_at_day(DateTimeInterface $date)
+    {
+        $this->db->select('id, product_id, sub_product_id');
+        $this->db->from('p2p_loan.targets');
+        $this->db->where_in('status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED]);
+        $this->db->where([
+            'loan_status' => 1,
+            'loan_date' => $date->format('Y-m-d'),
+        ]);
+
+        $deal_targets = $this->db->get()->result_array();
+        // 目前的電子看板是直接丟全部的成交案，後面需要區分成不同種類的貸款案件
+        // return $this->_list_products_at_targets($deal_targets);
+        return count($deal_targets);
+    }
+
+    // 統計各種案件數量，針對申貸&成交都可以用
+    private function _list_products_at_targets($targets)
+    {
+        $result = [
+            'SMART_STUDENT' => 0,
+            'STUDENT' => 0,
+            'SALARY_MAN' => 0,
+            'SK_MILLION' => 0, // 微企貸沒有出現在 匯出的 excel 裡面
+        ];
+
+        foreach ($targets as $target)
+        {
+            switch (TRUE)
+            {
+            case $target['product_id'] == PRODUCT_ID_STUDENT && $target['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT:
+                $result['SMART_STUDENT'] += 1;
+                break;
+
+            case $target['product_id'] == PRODUCT_ID_STUDENT:
+                $result['STUDENT'] += 1;
+                break;
+
+            case $target['product_id'] == PRODUCT_ID_SALARY_MAN:
+                $result['SALARY_MAN'] += 1;
+                break;
+
+            case $target['product_id'] == PRODUCT_SK_MILLION_SMEG:
+                $result['SK_MILLION'] += 1;
+                break;
+            }
+        }
+
+        return $result;
+    }
 }

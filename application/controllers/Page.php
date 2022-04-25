@@ -98,91 +98,25 @@ class Page extends CI_Controller
                     'weather' => $weather,
                     'loan_distribution' => $this->_get_loan_distribution(),
                     'loan_statistic' => $this->_get_loan_statistic(strtotime('-7 days'), time()),
-                    'platform_statistic' => $this->_get_platform_statistic()
+                    'platform_statistic' => $this->_get_platform_statistic(),
                 ],
             ]));
     }
 
     private function _get_product_bids(DateTimeInterface $date)
     {
-        $month_ini = $date->modify('first day of this month');
-        $month_end = $date->modify('first day of next month');
-        $month_ini = $month_ini->setTime(0, 0, 0)->getTimestamp();
-        $month_end = $month_end->setTime(0, 0, 0)->getTimestamp();
-
-        $sub_query = "SELECT
-            t.`user_id`,
-            t.`product_id`,
-            t.`sub_product_id`,
-            min(t.`created_at`) as `first_target_at`
-            FROM `p2p_loan`.`targets` t LEFT JOIN `p2p_loan`.`subloan` s ON s.`new_target_id` = t.`id`
-            WHERE s.id is NULL
-            AND t.`created_at` >= {$month_ini}
-            AND t.`created_at` < {$month_end}
-            GROUP BY t.`user_id`";
-
+        
         $this->load->model('loan/target_model');
-        $query = $this->target_model->db->select([
-            'user_id',
-            'product_id',
-            'sub_product_id',
-            'first_target_at',
-        ])->from("({$sub_query}) as r")
-            ->where([
-                'first_target_at >=' => $date->getTimestamp(),
-                'first_target_at <' => $date->modify('+1 day')->getTimestamp(),
-            ])
-            ->get()
-            ->result_array();
+        return $this->target_model->get_loan_targets_at_day($date);
 
-        $result = [
-            'SMART_STUDENT' => 0,
-            'STUDENT' => 0,
-            'SALARY_MAN' => 0,
-            'SK_MILLION' => 0,
-        ];
-
-        foreach ($query as $data)
-        {
-            switch (TRUE)
-            {
-            case $data['product_id'] == PRODUCT_ID_STUDENT AND $data['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT:
-                $result['SMART_STUDENT'] += 1;
-                break;
-
-            case $data['product_id'] == PRODUCT_ID_STUDENT:
-                $result['STUDENT'] += 1;
-                break;
-
-            case $data['product_id'] == PRODUCT_ID_SALARY_MAN:
-                $result['SALARY_MAN'] += 1;
-                break;
-
-            case $data['product_id'] == PRODUCT_SK_MILLION_SMEG:
-                $result['SK_MILLION'] += 1;
-                break;
-            }
-        }
-
-        return $result;
     }
 
     private function _get_deals(DateTimeInterface $date)
     {
+
         $this->load->model('loan/target_model');
-        $query = $this->target_model->db->select([
-            'COUNT(*) AS amount',
-            'loan_date',
-        ])->from('p2p_loan.targets')
-            ->where_in('status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED])
-            ->where([
-                'loan_status' => 1,
-                'loan_date' => $date->format('Y-m-d'),
-            ])
-            ->group_by('loan_date')
-            ->get()
-            ->first_row('array');
-        return $query['amount'] ?? 0;
+        return $this->target_model->get_deal_targets_at_day($date);
+
     }
 
     private function _get_total_member(DateTimeInterface $date)
@@ -208,20 +142,8 @@ class Page extends CI_Controller
     {
 
         $this->load->model('user/user_model');
+        return $this->user_model->get_new_members_at_day($date);
 
-        $unixtime_query = sprintf('FROM_UNIXTIME(created_at, \'%s\')', $date->format('Y m d'));
-
-        $query = $this->user_model->db->select('COUNT(id) AS amount')
-            ->select($unixtime_query . ' AS date')
-            ->from('p2p_user.users')
-            ->where([
-                'created_at >=' => $date->getTimestamp(),
-                'created_at <' => $date->modify('+1 day')->getTimestamp(),
-            ])
-            ->group_by($unixtime_query)
-            ->get()
-            ->first_row('array');
-        return $query['amount'] ?? 0;
     }
 
     /**

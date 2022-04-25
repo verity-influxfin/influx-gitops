@@ -18,6 +18,9 @@ class Sale_dashboard_model extends MY_Model
     const TARGET_DEAL_CREDIT_INSURANCE = 12;
     const TARGET_DEAL_SME = 13;
 
+    const TARGET_LOAN_SK_MILLION_SMEG = 14; // 微企貸，沒有匯出在報表中
+    const TARGET_DEAL_SK_MILLION_SMEG = 15;
+
     public $_table = 'sale_dashboard';
     public $before_create = ['before_data_c'];
     public $before_update = ['before_data_u'];

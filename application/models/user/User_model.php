@@ -165,4 +165,23 @@ class User_model extends MY_Model
 
         return (int) ($result['member_count'] ?? 0);
     }
+
+    // 取得指定日子加入的新會員
+    public function get_new_members_at_day(DateTimeInterface $date)
+    {
+        $unixtime_query = sprintf('FROM_UNIXTIME(created_at, \'%s\')', $date->format('Y-m-d'));
+
+        $query = $this->db->select('COUNT(id) AS amount')
+            ->select($unixtime_query . ' AS date')
+            ->from('p2p_user.users')
+            ->where([
+                'created_at >=' => $date->getTimestamp(),
+                'created_at <' => $date->modify('+1 day')->getTimestamp(),
+            ])
+            ->group_by($unixtime_query)
+            ->get()
+            ->first_row('array');
+
+        return $query['amount'] ?? 0;
+    }
 }
