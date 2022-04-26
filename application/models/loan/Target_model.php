@@ -661,7 +661,7 @@ class Target_model extends MY_Model
             GROUP BY t.`user_id`";
 
         $this->load->model('loan/target_model');
-        $query = $this->target_model->db->select([
+        $loan_targets = $this->target_model->db->select([
             'user_id',
             'product_id',
             'sub_product_id',
@@ -689,9 +689,8 @@ class Target_model extends MY_Model
         ]);
 
         $deal_targets = $this->db->get()->result_array();
-        // 目前的電子看板是直接丟全部的成交案，後面需要區分成不同種類的貸款案件
-        // return $this->_list_products_at_targets($deal_targets);
-        return count($deal_targets);
+
+        return $this->_list_products_at_targets($deal_targets);
     }
 
     // 統計各種案件數量，針對申貸&成交都可以用

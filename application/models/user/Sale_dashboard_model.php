@@ -100,7 +100,7 @@ class Sale_dashboard_model extends MY_Model
         }
     }
 
-    public function get_loan_mapping_eboard_key_2_type()
+    public function get_loan_mapping_eboard_key_to_type()
     {
         return [
             'SMART_STUDENT' => self::TARGET_LOAN_SMART_STUDENT,
@@ -110,7 +110,7 @@ class Sale_dashboard_model extends MY_Model
         ];
     }
 
-    public function get_deal_mapping_eboard_key_2_type()
+    public function get_deal_mapping_eboard_key_to_type()
     {
         return [
             'SMART_STUDENT' => self::TARGET_DEAL_SMART_STUDENT,
