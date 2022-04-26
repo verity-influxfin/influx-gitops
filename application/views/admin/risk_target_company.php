@@ -288,6 +288,8 @@
                                         echo $printHtml;
                                         ?>
                                         <?if(isset($input['investor']) && $input['investor'] == 0){
+                                            ?>
+                                            <th>DD查核</th><?php
                                             if($isExternalCoop){
                                                 if(!isset($input['target_id'])){
                                                     echo '<th>授信審核表</th>';
@@ -416,6 +418,11 @@
                                                             echo '</td>';
                                                         }
                                                     }
+                                                    ?>
+                                                    <td><a target="_blank"
+                                                           href="/admin/target/meta?id=<?= $value->id ?>"
+                                                           class="btn btn-default btn-md nhide">驗證</a>
+                                                    </td><?php
                                                     if(isset($input['company']) && $input['company'] == 1){ ?>
                                                     <? if($isExternalCoop){ ?>
                                                             <? if(!isset($input['target_id'])){ ?>

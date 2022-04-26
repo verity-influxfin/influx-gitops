@@ -1588,6 +1588,7 @@ class Target extends MY_Admin_Controller {
 	public function finished(){
 		$page_data 					= ['type'=>'list'];
 		$input 						= $this->input->get(NULL, TRUE);
+		$list 						= $this->target_model->get_many_by(['status'=>TARGET_REPAYMENTED]);
 		$school_list 				= [];
 		$user_list 					= [];
 		$amortization_table 		= [];
@@ -2277,6 +2278,82 @@ class Target extends MY_Admin_Controller {
             $response[$image_type] = [];
             if (!empty($image_url[$image_type])) {
                 $response[$image_type] = $this->s3_lib->imagesToPdf($images,$target_info->user_id,$image_type,'skbank_raw_data');
+            }
+        }
+
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
+    }
+
+    // 渲染「DD查核」頁面
+    public function meta()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/target/dd_edit');
+        $this->load->view('admin/_footer');
+    }
+
+    // 取得「DD查核」資料
+    public function get_meta_info()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+        $response = [];
+
+        if (empty($get['id']))
+        {
+            $this->json_output->setStatusCode(204)->setErrorCode(INPUT_NOT_CORRECT)->setErrorMessage('缺少參數，查無資料，請洽工程師')->send();
+        }
+
+        $user_info = $this->target_model->get($get['id']);
+        if (empty($user_info->user_id))
+        {
+            $this->json_output->setStatusCode(204)->setErrorCode(INPUT_NOT_CORRECT)->setErrorMessage('查無使用者資料')->send();
+        }
+
+        $this->load->model('loan/target_meta_model');
+        $meta_info = $this->target_meta_model->get_many_by([
+            'target_id' => $get['id']
+        ]);
+        $response['data'] = [
+            'user_id' => $user_info->user_id,
+            'meta_info' => array_column($meta_info, 'meta_value', 'meta_key')
+        ];
+
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
+    }
+
+    // 儲存「DD查核」資料
+    public function save_meta_info()
+    {
+        $post = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
+        $this->load->library('output/json_output');
+        $response = [];
+
+        if (empty($post['meta']) || empty($post['id']))
+        {
+            $this->json_output->setStatusCode(204)->setErrorCode(INPUT_NOT_CORRECT)->setErrorMessage('缺少參數，資料更新失敗，請洽工程師')->send();
+        }
+
+        $this->load->model('loan/target_meta_model');
+        foreach ($post['meta'] as $key => $value)
+        {
+            $value = is_array($value) ? json_encode($value) : $value;
+            $exist = $this->target_meta_model->get_by(array('target_id' => $post['id'], 'meta_key' => $key));
+            if ($exist)
+            {
+                $this->target_meta_model->update_by([
+                    'target_id' => $post['id'],
+                    'meta_key' => $key], array('meta_value' => $value)
+                );
+            }
+            else
+            {
+                $this->target_meta_model->insert([
+                    'target_id' => $post['id'],
+                    'meta_key' => $key,
+                    'meta_value' => $value
+                ]);
             }
         }
 
