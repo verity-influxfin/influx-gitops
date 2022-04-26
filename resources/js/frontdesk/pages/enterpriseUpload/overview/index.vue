@@ -38,11 +38,17 @@
 
 <script>
 export default {
+  mounted() {
+    this.getApplyInfo()
+  },
   methods: {
     changeTab(from, tab) {
       if (from !== tab) {
         this.$router.push(tab)
       }
+    },
+    getApplyInfo() {
+      this.$store.dispatch('enterprise/updateCaseOverview', { id: this.caseId })
     }
   },
   computed: {

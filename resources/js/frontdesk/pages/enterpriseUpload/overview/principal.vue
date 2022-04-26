@@ -8,7 +8,7 @@
         <progressOverview />
       </div>
       <div>
-        <button class="ml-3 btn btn-return" @click="$router.back()">
+        <button class="ml-3 btn btn-return" @click="$router.push('/enterprise-upload/home')">
           返回
         </button>
       </div>
@@ -24,6 +24,7 @@
             <cert-item
               :icon="require('@/asset/images/enterpriseUpload/principal-1.svg')"
               icon-text="個人實名認證"
+              :certification="certification.idcard"
             />
           </div>
         </div>
@@ -33,8 +34,12 @@
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/principal-2.svg')"
             icon-text="常用電子信箱"
+            :certification="certification.email"
           >
-            <template v-slot:content>
+            <template
+              v-slot:content
+              v-if="certification.email.user_status === null"
+            >
               <div class="w-100">
                 <div class="row no-gutters cert-content-text">
                   請輸入常用Email：
@@ -60,22 +65,26 @@
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/principal-3.svg')"
             icon-text="個人基本資料"
+            :certification="certification.profile"
           >
-            <template v-slot:content>
+            <template
+              v-slot:content
+              v-if="certification.profile.user_status === null"
+            >
               <div class="row no-gutters w-100 h-100">
                 <div class="col d-flex align-items-center cert-content-text">
                   1.個人基本資料<br />
                   2.個人不動產使用情形
                 </div>
                 <div class="col-auto d-flex align-items-end">
-                    <router-link
+                  <router-link
                     :to="
                       '/enterprise-upload/form/principal-basic-info?case-id=' +
                       caseId
                     "
                   >
-                  <button class="btn btn-next-page">提供更新</button>
-                    </router-link>
+                    <button class="btn btn-next-page">提供更新</button>
+                  </router-link>
                 </div>
               </div>
             </template>
@@ -85,8 +94,12 @@
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/principal-4.svg')"
             icon-text="存摺"
+            :certification="certification.simplificationfinancial"
           >
-            <template v-slot:content>
+            <template
+              v-slot:content
+              v-if="certification.simplificationfinancial.user_status === null"
+            >
               <div class="row no-gutters w-100 h-100">
                 <div class="col d-flex align-items-center cert-content-text">
                   1.近六個月主要帳戶存摺封面<br />
@@ -110,8 +123,12 @@
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/principal-5.svg')"
             icon-text="個人所得資料"
+            :certification="certification.simplificationjob"
           >
-            <template v-slot:content>
+            <template
+              v-slot:content
+              v-if="certification.simplificationjob.user_status === null"
+            >
               <div class="row no-gutters w-100 h-100">
                 <div class="col d-flex align-items-center cert-content-text">
                   1.勞保異動明細<br />
@@ -137,9 +154,13 @@
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/principal-6.svg')"
             icon-text="聯合徵信報告＋Ａ11<br>第二聯"
+            :certification="certification.investigationa11"
           >
             <template v-slot:content>
-              <div class="row no-gutters w-100 h-100">
+              <div
+                class="row no-gutters w-100 h-100"
+                v-if="certification.investigationa11.user_status === null"
+              >
                 <div class="col cert-content-text">
                   1.負責人聯徵報告<br />
                   2.加查「<span style="color: red">A11、J10、J03</span>」<br />
@@ -182,7 +203,10 @@ export default {
   computed: {
     caseId() {
       return this.$route.query['case-id'] ?? ''
-    }
+    },
+    certification() {
+      return this.$store.state.enterprise.certifications
+    },
   },
 }
 </script>

@@ -9,7 +9,17 @@
     </div>
     <div class="content-block col p-0">
       <slot name="content">
-        <div class="default-success">
+        <div v-if="userStatus === 0 || userStatus === 3">
+            <div class="row no-gutters">
+                <div class="col-12">已完成提供，系統審核中</div>
+                <div class="col-auto text-danger"><small>狀態：系統驗證中</small></div>
+                <div class="col"></div>
+                <div class="col-auto">
+                    <button class="btn btn-secondary" disabled>審核中</button>
+                </div>
+            </div>
+        </div>
+        <div class="default-success" v-if="userStatus === 1">
           已完成提供，通過驗證
           <img src="@/asset/images/enterpriseUpload/success-check.svg" class="ml-1" />
         </div>
@@ -29,6 +39,17 @@ export default {
       type: String,
       default: ''
     },
+    certification:{
+        type:Object,
+        default: {
+            user_status:null
+        },
+    }
+  },
+  computed: {
+      userStatus() {
+          return this.certification.user_status ?? null
+      }
   },
 }
 </script>

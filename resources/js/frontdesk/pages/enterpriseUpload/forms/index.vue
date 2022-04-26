@@ -1,7 +1,6 @@
 <template>
   <div class="uploadform-index">
-    <div class="header">
-    </div>
+    <div class="header"></div>
     <div class="uploadform-content">
       <div class="left">
         <div>
@@ -30,6 +29,9 @@ export default {
     progressOverview,
     certItem
   },
+  mounted() {
+    this.getApplyInfo()
+  },
   data() {
     return {
       companyData: {
@@ -38,6 +40,16 @@ export default {
       }
     }
   },
+  methods: {
+    getApplyInfo() {
+      this.$store.dispatch('enterprise/updateCaseOverview', { id: this.caseId })
+    }
+  },
+  computed: {
+    caseId() {
+      return this.$route.query['case-id'] ?? ''
+    }
+  }
 }
 </script>
 <style lang="scss">

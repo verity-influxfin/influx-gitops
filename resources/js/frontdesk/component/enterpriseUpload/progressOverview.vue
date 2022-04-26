@@ -20,7 +20,10 @@
             class="bar-dot"
             v-show="progressOverview.principal.process.now > 0"
           ></span>
-          <span class="bar-right col"></span>
+          <span
+            class="bar-right"
+            :class="{ col: progressOverview.principal.process.now !== 6 }"
+          ></span>
         </div>
         <div class="item-progress-text col-auto">
           {{ progressOverview.principal.process.now }} /
@@ -45,7 +48,10 @@
             class="bar-dot"
             v-show="progressOverview.company.process.now > 0"
           ></span>
-          <span class="bar-right col"></span>
+          <span
+            class="bar-right"
+            :class="{ col: progressOverview.company.process.now !== 8 }"
+          ></span>
         </div>
         <div class="item-progress-text col-auto">
           {{ progressOverview.company.process.now }} /
@@ -70,7 +76,7 @@
             class="bar-dot"
             v-show="progressOverview.guarantor.process.now > 0"
           ></span>
-          <span class="bar-right col"></span>
+          <span class="bar-right w-100"></span>
         </div>
         <div class="item-progress-text col-auto">
           {{ progressOverview.guarantor.process.now }} /

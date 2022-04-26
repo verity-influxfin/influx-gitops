@@ -90,82 +90,87 @@
           <div class="col">
             <button
               class="btn case-tab"
-              :class="{ active: caseType === 1 }"
-              @click="showCase(1)"
+              :class="{ active: caseType === null }"
+              @click="showCase(null)"
             >
-              申貸中 (1)
+              申貸中 ({{ caseNums.offer }})
             </button>
           </div>
           <div class="col">
             <button
               class="btn case-tab"
-              :class="{ active: caseType === 2 }"
-              @click="showCase(2)"
+              :class="{ active: caseType === 5 }"
+              @click="showCase(5)"
             >
-              還款中 (0)
+              還款中 ({{ caseNums.repayment }})
             </button>
           </div>
           <div class="col">
             <button
               class="btn case-tab"
-              :class="{ active: caseType === 3 }"
-              @click="showCase(3)"
+              :class="{ active: caseType === 10 }"
+              @click="showCase(10)"
             >
-              已結案 (0)
+              已結案 ({{ caseNums.finished }})
             </button>
           </div>
         </div>
         <div>
-          <div class="item-info row no-gutters">
+          <div class="item-info row no-gutters" v-for="item in renderApplyList">
             <div class="installment col-auto">
-              <div class="num" :class="caseStatus">36</div>
+              <div class="num" :class="caseStatus(item.status)">
+                {{ item.instalment }}
+              </div>
               <div class="text">期</div>
             </div>
             <div class="col">
-              <div class="item-title">信保專案融資 - SSM000000000</div>
+              <div class="item-title">
+                {{ item.product_name }} - {{ item.target_no }}
+              </div>
               <div class="row no-gutters my-2">
                 <div class="col-6">
                   <div class="item-info-title">申貸額度</div>
-                  <div class="item-info-text">$6,000,000</div>
+                  <div class="item-info-text">${{ format(item.amount) }}</div>
                 </div>
                 <div class="col">
                   <div class="item-info-title">申貸日期</div>
-                  <div class="item-info-text">$6,000,000</div>
+                  <div class="item-info-text">
+                    {{ dateTime(item.created_at) }}
+                  </div>
                 </div>
               </div>
               <div class="row no-gutters justify-content-end">
                 <!-- 申貸中 -->
-                <router-link to="overview/principal?case-id=SSM000000000">
-                  <button class="btn col-auto btn-offer">線上資料提供</button>
-                </router-link>
+
                 <!-- 還款中 -->
-                <button class="btn col-auto btn-repayment w-100">
+                <button
+                  class="btn col-auto btn-repayment w-100"
+                  v-if="item.status === 5"
+                >
                   媒合成功
                 </button>
                 <!-- 已結案 -->
-                <button class="btn col-auto btn-finished w-100">已完成</button>
-              </div>
-            </div>
-          </div>
-          <div class="item-info row no-gutters">
-            <div class="installment col-auto">
-              <div class="num">36</div>
-              <div class="text">期</div>
-            </div>
-            <div class="col">
-              <div class="item-title">信保專案融資 - SSM000000000</div>
-              <div class="row no-gutters my-2">
-                <div class="col-6">
-                  <div class="item-info-title">申貸額度</div>
-                  <div class="item-info-text">$6,000,000</div>
+                <button
+                  class="btn col-auto btn-finished w-100"
+                  v-else-if="item.status === 10"
+                >
+                  已完成
+                </button>
+                <div class="d-flex no-gutters" v-else>
+                  <button class="btn col-auto btn-status">
+                    {{ statusText(item.status) }}
+                  </button>
+                  <router-link
+                    :to="`overview/principal?case-id=${item.id}`"
+                  >
+                    <button
+                      class="btn col-auto btn-offer"
+                      :disabled="item.status !== 0"
+                    >
+                      線上資料提供
+                    </button>
+                  </router-link>
                 </div>
-                <div class="col">
-                  <div class="item-info-title">申貸日期</div>
-                  <div class="item-info-text">$6,000,000</div>
-                </div>
-              </div>
-              <div class="row no-gutters justify-content-end">
-                <button class="btn col-auto btn-offer">線上資料提供</button>
               </div>
             </div>
           </div>
@@ -212,9 +217,16 @@ export default {
   mounted() {
     this.getMyRepayment()
     this.getNotification()
+    this.getApplyList()
   },
   data() {
     return {
+      applyList: [],
+      caseNums: {
+        offer: 0,
+        repayment: 0,
+        finished: 0
+      },
       myRepayment: {},
       notifications: [],
       repaymentDate: '',
@@ -222,10 +234,21 @@ export default {
       funds: 0,
       frozen: 0,
       principal: 0,
-      caseType: 1
+      caseType: null
     }
   },
   computed: {
+    renderApplyList() {
+      return this.applyList.filter(x => {
+        if (this.caseType) {
+          return x.status === this.caseType
+        } else {
+          // 申貸中 0~4
+          //   return Number(x.status < 5)
+          return true
+        }
+      })
+    },
     userData() {
       return JSON.parse(sessionStorage.getItem('userData'))
     },
@@ -243,14 +266,40 @@ export default {
       }
       return `${text} ${this.userData.name}`;
     },
-    caseStatus() {
-      return 'case-repayment'
-    }
   },
   methods: {
+    dateTime(d) {
+      return new Date(d * 1000).toLocaleString().split(' ')[0]
+    },
     format(data) {
       let l10nEN = new Intl.NumberFormat("en-US");
-      return l10nEN.format(data.toFixed(0));
+      return l10nEN.format(Number(data).toFixed(0));
+    },
+    caseStatus(status) {
+      switch (Number(status)) {
+        case 5:
+          return 'case-repayment'
+        case 10:
+          return 'case-finished'
+        default:
+          return 'case-offer'
+      }
+    },
+    statusText(status) {
+      switch (Number(status)) {
+        case 0:
+          return '待核可'
+        case 1:
+          return '待簽約'
+        case 2:
+          return '待驗證'
+        case 3:
+          return '待出借'
+        case 4:
+          return '待放款'
+        default:
+          return ''
+      }
     },
     showCase(type) {
       this.caseType = type
@@ -287,6 +336,28 @@ export default {
             console.log("getNotification 發生錯誤，請稍後再試");
           }
         });
+    },
+    getApplyList() {
+      this.caseNums = {
+        offer: 0,
+        repayment: 0,
+        finished: 0
+      }
+      axios.get('/api/v1/product/applylist').then(({ data }) => {
+        const ans = data.data.list
+        this.applyList = ans
+        ans.forEach(x => {
+          if (Number(x.status) < 5) {
+            this.caseNums.offer += 1
+          }
+          if (Number(x.status) === 5) {
+            this.caseNums.repayment += 1
+          }
+          if (Number(x.status) === 10) {
+            this.finished += 1
+          }
+        })
+      })
     },
     read(id, status) {
       if (status == 1) {
@@ -502,6 +573,17 @@ export default {
         line-height: 20px;
         color: #036eb7;
       }
+      .btn-status {
+        padding: 7px 31px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        color: #ffffff;
+        background: #c4c4c4;
+        border-radius: 10px;
+      }
       .btn-offer {
         padding: 7px 31px;
         font-style: normal;
@@ -512,6 +594,7 @@ export default {
         color: #ffffff;
         background: #036eb7;
         border-radius: 10px;
+        margin-left: 30px;
       }
       .btn-repayment {
         padding: 7px 0;
