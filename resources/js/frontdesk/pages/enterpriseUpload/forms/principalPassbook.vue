@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="col d-flex align-items-center justify-content-center pl-4">
-        <file-upload-input @change="onFileChange" multiple />
+        <file-upload-input @change="onFileChange" accept=".jpg,.png,.pdf" />
       </div>
     </div>
     <div class="row no-gutters mt-3 justify-content-end">
@@ -31,10 +31,16 @@
 
 <script>
 import fileUploadInput from '@/component/enterpriseUpload/fileUploadInput'
+import Axios from 'axios'
 
 export default {
   components: {
     fileUploadInput,
+  },
+  data() {
+    return {
+      file: new File([], ''),
+    }
   },
   computed: {
     caseId() {
@@ -44,10 +50,38 @@ export default {
   methods: {
     onFileChange(files) {
       for (const file of files) {
-        console.log(file)
+        this.file = file
       }
     },
-    onSubmit() {
+    async onSubmit() {
+      const formData = new FormData()
+      if (this.file.type.includes('pdf')) {
+        formData.append('pdf', this.file)
+        const { data } = await Axios({
+          method: 'POST',
+          url: '/api/v1/user/upload_pdf',
+          data: formData,
+          mimeType: 'multipart/form-data',
+        })
+        await Axios.post('/api/v1/certification/judicial_file_upload', {
+          // passbookcashflow
+          certification_id: '1004',
+          file_list: data.pdf_id
+        })
+      } else {
+        formData.append('image', this.file)
+        const { data } = await Axios({
+          method: 'POST',
+          url: '/api/v1/user/upload',
+          data: formData,
+          mimeType: 'multipart/form-data',
+        })
+        await Axios.post('/api/v1/certification/judicial_file_upload', {
+          // passbookcashflow
+          certification_id: '1004',
+          file_list: data.pdf_id
+        })
+      }
       this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
     }
   },

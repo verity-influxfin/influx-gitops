@@ -29,24 +29,13 @@ class ProductController extends Controller
         return response()->json($return['data'], $return['status']);
     }
 
-    // 查詢捐款紀錄
-    public function visitorSearch(Request $request)
+    public function postUploadPdf()
     {
-        $this->validate($request, [
-            'amount' => 'required|integer',
-            'last5' => 'required|size:5',
-        ]);
-
-        $inputs = $request->all();
-
-        $cacheKey = $request->ip() ?? '127.0.0.1';
-        if ($this->_isVisitorLimited($cacheKey)) {
-            return response()->json([], 503);
-        }
-
-        $return = $this->_connectDeus('GET', $this->routerDonateAnonymous, $inputs);
+        $return = $this->_uploadFile('user/upload_pdf', $_FILES);
         return response()->json($return['data'], $return['status']);
     }
+
+
 
     private function _connectDeus($method, $router, $inputs)
     {
@@ -66,6 +55,27 @@ class ProductController extends Controller
             return ['status' => 500, 'data' => []];
         }
 
+        return $this->_parseDeusResponse(json_decode($res->getBody(), TRUE));
+    }
+
+    private function _uploadFile($path, $file)
+    {
+        try {
+            $client = new Client();
+            $res = $client->request('POST', env('API_URL') . $path,[
+                // 'headers' => [
+                //     'request_token' => Session::get('token')
+                // ],
+                'multipart' => [
+                    [
+                        'name'     => 'pdf',
+                        'contents' => fopen($file['pdf']['tmp_name'],'r'),
+                    ],
+                ]
+            ]);
+        } catch (Exception $e) {
+            return ['status' => 500, 'data' => []];
+        }
         return $this->_parseDeusResponse(json_decode($res->getBody(), TRUE));
     }
 

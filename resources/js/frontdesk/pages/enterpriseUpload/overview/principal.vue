@@ -96,9 +96,9 @@
             icon-text="存摺"
             :certification="certification.simplificationfinancial"
           >
+            <!-- v-if="certification.simplificationfinancial.user_status === null" -->
             <template
               v-slot:content
-              v-if="certification.simplificationfinancial.user_status === null"
             >
               <div class="row no-gutters w-100 h-100">
                 <div class="col d-flex align-items-center cert-content-text">

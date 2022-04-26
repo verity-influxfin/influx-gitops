@@ -346,6 +346,8 @@ Route::prefix('api/v1')->group(function() {
     // 企業
     Route::get('product/applylist', 'ProductController@getApplyList');
     Route::get('/product/applyinfo', 'ProductController@getApplyInfo');
+    Route::post('/user/upload_pdf', 'ProductController@postUploadPdf');
+    Route::get('/user/upload', 'ProductController@postUpload');
 
 });
 
