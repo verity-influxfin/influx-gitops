@@ -14,13 +14,13 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="col-lg-12">
-                            <h3>xxx 股份有限公司</h3>
+                            <h3><?=$name?></h3>
                             <hr style="border:1px solid gray;"/>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" style="font-weight:bold;font-size:16px;" width="100%">
-                                    <tr><td>產業類別</td><td>製造業</td></tr>
+                                    <tr><td>產業類別</td><td><?=$type?></td></tr>
                                 </table>
                                 <table class="table table-bordered table-hover" width="100%">
                                     <thead>
@@ -32,73 +32,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>產業要素</td>
-                                            <td>產業生命週期</td>
-                                            <td>成長期</td>
-                                            <td>10</td>
-                                        </tr>
-                                        <tr>
-                                            <td>借戶要素</td>
-                                            <td>企業經營資歷 經濟部公司設立年資</td>
-                                            <td>2年</td>
-                                            <td>6</td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td>實收資本額(經濟部登記資訊)</td>
-                                            <td>7,500,000</td>
-                                            <td>4</td>
-                                        </tr>
-                                        <tr>
-                                            <td>經營效能</td>
-                                            <td>...</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td>...</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td>...</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td>...</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>財務要素</td>
-                                            <td>...</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>保證要素</td>
-                                            <td>...</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>DD查核</td>
-                                            <td>...</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
+                                    	<?php foreach ($details as $detail) { ?>
+                                    		<tr>
+                                                <td><?=$detail['item']?></td>
+                                                <td><?=$detail['subitem']?></td>
+                                                <td><?=$detail['options']?></td>
+                                                <td><?=$detail['score']?></td>
+                                            </tr>
+                                        <?php }?>
                                     </tbody>
                                 </table>
-
                                 <table class="table table-bordered" style="font-weight:bold;font-size:16px;" width="100%">
-                                    <tr><td>總分</td><td>999999</td></tr>
+                                    <tr><td>總分</td><td><?=$total?></td></tr>
                                 </table>
-
                             </div>
                         </div>
                         <!-- /.panel-body -->
