@@ -81,7 +81,7 @@
                 <th>(二)已實現收益率</th>
             </tr>
             <tr>
-                <th colspan="2">投資年資：<?= $data['invest_performance']['years'] < 1 ? round($data['invest_performance']['years']/12, 2) .'月' : $data['invest_performance']['years'] .'年' ?></th>
+                <th colspan="2">投資年資：<?= $data['invest_performance']['years'] < 1 ? round($data['invest_performance']['years']*12, 2) .'月' : $data['invest_performance']['years'] .'年' ?></th>
                 <th colspan="5">收入</th>
                 <th>支出</th>
                 <th rowspan="2">總收益(1)</th>
