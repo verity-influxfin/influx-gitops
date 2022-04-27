@@ -9,6 +9,7 @@
         　　　　　皆可申請！"
         :image="require('@/asset/images/workloan-product-banner.jpg')"
         :image-phone="require('@/asset/images/workloan-product-banner-phone.jpg')"
+        :img-phone-style="{backgroundPosition:'center -175px'}"
         ></alesis-loan-header>
         <!-- 標頭 -->
 
