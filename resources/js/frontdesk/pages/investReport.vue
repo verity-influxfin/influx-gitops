@@ -27,9 +27,9 @@
     </div>
     <div class="report-main" v-if="!loading && invest_report.basic_info">
       <div class="report-date">
-        <!-- <button class="btn btn-excel-download" @click="downloadExcel">
+        <button class="btn btn-excel-download" @click="downloadExcel">
           Excel下載
-        </button> -->
+        </button>
         <div>製表日期 {{ invest_report.basic_info.export_date }}</div>
       </div>
       <div class="row no-gutters report-intro mx-auto">
@@ -114,7 +114,7 @@
         </div>
         <div class="realized-table">
           <div class="header-item full-income">總收益(※1)</div>
-          <div class="header-sub-item item-rate">報酬率(※2)</div>
+          <div class="header-sub-item item-rate">年化報酬率(※2)</div>
           <div class="test1">
             <div class="item-1 header-item b-right">
               投資年資：{{ invest_report.invest_performance.years }} (年)
@@ -155,7 +155,7 @@
           ※1.總收益=(利息收入+提還利息+逾期償還利息+延滯息+補貼息)-回款手收
         </div>
         <div class="">※2.年化報酬率=當期(總收益/本金均額)/期間月數*12</div>
-        <div class="">※3.本金均額=年度每月底本金餘額加總/天數</div>
+        <div class="">※3.本金均額=年度每日本金餘額加總/天數</div>
       </div>
       <div class="row no-gutters justify-content-center mt-2">
         <div class="wait-for-realized">
@@ -668,7 +668,7 @@ export default {
     }
     .realized-table {
       display: grid;
-      grid-template-columns: 100px 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 100px 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 105px;
       grid-template-rows: 42px auto;
       gap: 0px 0px;
       grid-auto-flow: row;
