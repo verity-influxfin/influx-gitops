@@ -2902,11 +2902,8 @@ class Certification extends REST_Controller {
                 {
                     $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
                 }
-                else
-                {
-                    $content['skbank_form'][$field] = $input[$field];
-                }
             }
+            $content['skbank_form'] = $input;
 
             // 年份
             $year_fields = ['prInChargeYear', 'prInChargeYearEnd', 'prStartYear', 'prEndYear'];

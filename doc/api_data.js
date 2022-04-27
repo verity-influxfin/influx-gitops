@@ -6619,6 +6619,32 @@ define({
                             "field": "prEduLevel",
                             "description": "<p>負責人學歷<br/>A:國小 B:國中 C:高中職 D:專科 E:大學 F:碩士 G:博士 H:無</p>",
                             "allowedValues": ["A", "B", "C", "D", "E", "F", "G", "H"]
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "realEstateOwner",
+                            "description": "<p>個人不動產持有人名稱</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "realEstateAddress",
+                            "description": "<p>個人不動產地址</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "realEstateUsage",
+                            "description": "<p>個人不動產使用狀況<br/>1:自用 2:出租 3:閒置</p>",
+                            "allowedValues": [1, 2, 3]
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "realEstateMortgage",
+                            "description": "<p>個人不動產設定情形<br/>1:有 0:無</p>",
+                            "allowedValues": [1, 0]
                         }
                     ]
                 }
