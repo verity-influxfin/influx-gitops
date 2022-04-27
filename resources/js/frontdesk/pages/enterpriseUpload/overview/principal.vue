@@ -54,11 +54,12 @@
                 <div class="row no-gutters cert-content-text">
                   請輸入常用Email：
                 </div>
-                <form class="row no-gutters mt-2" @submit.prevent>
+                <form class="row no-gutters mt-2" @submit.prevent="submitEmail">
                   <div class="col mr-4">
                     <input
                       type="email"
                       class="input-mail w-100"
+                      v-model="email"
                       required
                       placeholder="請輸入"
                     />
@@ -204,11 +205,25 @@
 import caseOverview from '@/component/enterpriseUpload/caseOverview'
 import progressOverview from '@/component/enterpriseUpload/progressOverview'
 import certItem from '@/component/enterpriseUpload/certItem'
+import Axios from 'axios'
 export default {
   components: {
     caseOverview,
     progressOverview,
     certItem
+  },
+  data() {
+    return {
+      email: ''
+    }
+  },
+  methods: {
+    submitEmail() {
+      Axios.post('/api/v1/certification/email', { email: this.email }).then(() => {
+        alert('已發送驗證信至您的信箱')
+        this.$store.dispatch('enterprise/updateCaseOverview', { id: this.caseId })
+      })
+    }
   },
   computed: {
     caseId() {
@@ -242,6 +257,7 @@ export default {
     border-radius: 6px;
   }
   .white-block {
+    position: relative;
     background: #ffffff;
     border-radius: 20px;
     padding: 30px 30px 15px;

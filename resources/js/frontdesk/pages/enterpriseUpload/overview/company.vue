@@ -274,6 +274,7 @@
 import caseOverview from '@/component/enterpriseUpload/caseOverview'
 import progressOverview from '@/component/enterpriseUpload/progressOverview'
 import certItem from '@/component/enterpriseUpload/certItem'
+
 export default {
   components: {
     caseOverview,

@@ -33,7 +33,39 @@ class ProductController extends Controller
     public function postCertFileUpload(Request $request)
     {
         $inputs = $request->all();
-        $return = $this->_connectDeus('GET', 'certification/judicial_file_upload', $inputs);
+        $return = $this->_connectDeus('POST', 'certification/judicial_file_upload', $inputs);
+        return response()->json($return['data'], $return['status']);
+    }
+
+    // certification/judicial_file_upload
+    public function postNaturalFileUpload(Request $request)
+    {
+        $inputs = $request->all();
+        $return = $this->_connectDeus('POST', 'certification/natural_file_upload', $inputs);
+        return response()->json($return['data'], $return['status']);
+    }
+
+    // certification/profile
+    public function postCertificationProfile(Request $request)
+    {
+        $inputs = $request->all();
+        $return = $this->_connectDeus('POST', 'certification/profile', $inputs);
+        return response()->json($return['data'], $return['status']);
+    }
+
+    // certification/email
+    public function postCertificationEmail(Request $request)
+    {
+        $inputs = $request->all();
+        $return = $this->_connectDeus('POST', 'certification/email', $inputs);
+        return response()->json($return['data'], $return['status']);
+    }
+
+    // certification/profilejudicial
+    public function postCertificationProfilejudicial(Request $request)
+    {
+        $inputs = $request->all();
+        $return = $this->_connectDeus('POST', 'certification/profilejudicial', $inputs);
         return response()->json($return['data'], $return['status']);
     }
 
@@ -90,6 +122,7 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return ['status' => 500, 'data' => []];
         }
+
         return $this->_parseDeusResponse(json_decode($res->getBody(), TRUE));
     }
 

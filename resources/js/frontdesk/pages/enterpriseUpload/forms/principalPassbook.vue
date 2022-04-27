@@ -67,7 +67,7 @@ export default {
           data: formData,
           mimeType: 'multipart/form-data',
         })
-        await Axios.post('/api/v1/certification/judicial_file_upload', {
+        await Axios.post('/api/v1/certification/natural_file_upload', {
           // simplificationfinancial
           certification_id: '500',
           file_list: data.pdf_id
@@ -82,7 +82,7 @@ export default {
             data: formData,
             mimeType: 'multipart/form-data',
           })
-          await Axios.post('/api/v1/certification/judicial_file_upload', {
+          await Axios.post('/api/v1/certification/natural_file_upload', {
             // passbookcashflow
             certification_id: '500',
             file_list: data.image_id

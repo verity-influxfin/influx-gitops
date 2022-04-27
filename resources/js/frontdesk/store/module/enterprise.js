@@ -154,9 +154,10 @@ const mutations = {
             return times
         }
         progess.principal.process.now = principalProcess(state.certifications)
-        progess.principal.process.percentage = String(Math.floor(progess.principal.process.now / state.progressOverview.principal.process.all) * 100) + '%'
+        progess.principal.process.percentage = String(Math.floor(progess.principal.process.now / progess.principal.process.all * 100) ) + '%'
         progess.company.process.now = companyProcess(state.certifications)
-        progess.company.process.percentage = String(Math.floor(progess.company.process.now / progess.company.process.all) * 100) + '%'
+        progess.company.process.percentage = String(Math.floor(progess.company.process.now / progess.company.process.all * 100)) + '%'
+        console.log(state.certifications)
         state.progressOverview = progess
     },
 }

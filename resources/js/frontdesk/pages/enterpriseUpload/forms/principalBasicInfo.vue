@@ -35,39 +35,39 @@
             <label>
               <input
                 type="radio"
-                v-model="formData.edu"
-                value="1"
+                v-model="formData.prEduLevel"
+                value="A"
                 name="edu"
                 required
               />
               小學
             </label>
             <label class="mx-2">
-              <input type="radio" v-model="formData.edu" value="2" name="edu" />
+              <input type="radio" v-model="formData.edu" value="B" name="edu" />
               國中
             </label>
             <label>
-              <input type="radio" v-model="formData.edu" value="3" name="edu" />
+              <input type="radio" v-model="formData.edu" value="C" name="edu" />
               高中職
             </label>
             <label class="mx-2">
-              <input type="radio" v-model="formData.edu" value="4" name="edu" />
+              <input type="radio" v-model="formData.edu" value="D" name="edu" />
               專科
             </label>
             <label>
-              <input type="radio" v-model="formData.edu" value="5" name="edu" />
+              <input type="radio" v-model="formData.edu" value="E" name="edu" />
               大學
             </label>
             <label class="mx-2">
-              <input type="radio" v-model="formData.edu" value="6" name="edu" />
+              <input type="radio" v-model="formData.edu" value="F" name="edu" />
               碩士
             </label>
             <label>
-              <input type="radio" v-model="formData.edu" value="7" name="edu" />
+              <input type="radio" v-model="formData.edu" value="G" name="edu" />
               博士
             </label>
             <label class="mx-2">
-              <input type="radio" v-model="formData.edu" value="8" name="edu" />
+              <input type="radio" v-model="formData.edu" value="H" name="edu" />
               無
             </label>
           </div>
@@ -75,25 +75,48 @@
         <div class="mb-3">
           <div class="form-item-title">(2)*負責人擔任本企業負責人年度：</div>
           <div>
-            <input type="text" class="form-control w-50" required />
+            <input
+              type="text"
+              class="form-control w-50"
+              v-model.number="formData.prInChargeYear"
+              required
+            />
           </div>
         </div>
         <div class="mb-3">
           <div class="form-item-title">(3)*負責人從事本行業年度：</div>
           <div class="d-flex">
-            <input type="text" class="form-control w-50" required />
+            <input
+              type="text"
+              class="form-control w-50"
+              v-model.number="formData.prStartYear"
+              required
+            />
           </div>
         </div>
         <div class="mb-3">
           <div class="form-item-title">(4)*負責人行動電話：</div>
           <div class="d-flex">
-            <input type="text" class="form-control w-50" placeholder="請輸入行動電話" required />
+            <input
+              type="text"
+              class="form-control w-50"
+              v-model.number="formData.prMobileNo"
+              maxlength="10"
+              placeholder="請輸入行動電話"
+              required
+            />
           </div>
         </div>
         <div class="pb-3">
           <div class="form-item-title">(5)*負責人Email：</div>
           <div class="d-flex">
-            <input type="email" class="form-control w-50" placeholder="請輸入Email" required />
+            <input
+              type="email"
+              class="form-control w-50"
+              v-model="formData.prEmail"
+              placeholder="請輸入Email"
+              required
+            />
           </div>
         </div>
         <button type="submit" ref="submit1" hidden></button>
@@ -109,28 +132,48 @@
         <div class="mb-3">
           <div class="form-item-title">(1)持有人名稱：</div>
           <div>
-            <input type="text" class="form-control w-50" />
+            <input
+              type="text"
+              class="form-control w-50"
+              v-model="formData.realEstateOwner"
+            />
           </div>
         </div>
         <div class="mb-3">
           <div class="form-item-title">(2)地址名稱：</div>
           <div>
-            <input type="text" class="form-control w-50" />
+            <input
+              type="text"
+              class="form-control w-50"
+              v-model="formData.realEstateAddress"
+            />
           </div>
         </div>
         <div class="mb-3">
           <div class="form-item-title">(3)使用狀況：</div>
           <div class="d-flex">
             <label>
-              <input type="radio" />
+              <input
+                type="radio"
+                value="1"
+                v-model="formData.realEstateUsage"
+              />
               自用
             </label>
             <label class="mx-2">
-              <input type="radio" />
+              <input
+                type="radio"
+                value="2"
+                v-model="formData.realEstateUsage"
+              />
               出租
             </label>
             <label>
-              <input type="radio" />
+              <input
+                type="radio"
+                value="3"
+                v-model="formData.realEstateUsage"
+              />
               閒置
             </label>
           </div>
@@ -139,11 +182,19 @@
           <div class="form-item-title">(4)不動產設定情形：</div>
           <div class="d-flex">
             <label>
-              <input type="radio" />
+              <input
+                type="radio"
+                v-model="formData.realEstateMortgage"
+                value="1"
+              />
               有
             </label>
             <label class="mx-2">
-              <input type="radio" />
+              <input
+                type="radio"
+                v-model="formData.realEstateMortgage"
+                value="0"
+              />
               無
             </label>
           </div>
@@ -171,6 +222,7 @@
 
 <script>
 import fileUploadInput from '@/component/enterpriseUpload/fileUploadInput'
+import Axios from 'axios'
 
 export default {
   components: {
@@ -180,7 +232,15 @@ export default {
     return {
       tab: 1,
       formData: {
-        edu: 0
+        prEduLevel: '',
+        prInChargeYear: null,
+        prStartYear: null,
+        prMobileNo: null,
+        prEmail: '',
+        realEstateOwner: '',
+        realEstateAddress: '',
+        realEstateUsage: null,
+        realEstateMortgage: null
       }
     }
   },
@@ -190,11 +250,6 @@ export default {
     }
   },
   methods: {
-    onFileChange(files) {
-      for (const file of files) {
-        console.log(file)
-      }
-    },
     changeTab(tab) {
       if (tab === 2) {
         this.$refs.submit1.click()
@@ -203,7 +258,9 @@ export default {
       this.tab = 1
     },
     onSubmit() {
-      this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
+      Axios.post('/api/v1/certification/profile', { ...this.formData }).then(() => {
+        this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
+      })
     }
   },
 }
