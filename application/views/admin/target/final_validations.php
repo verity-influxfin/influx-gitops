@@ -952,7 +952,7 @@
 	</div>
 	<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content" id="blockUserForm">
+            <div class="modal-content" id="blockUserForm">
 				<div class="modal-header">
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -1014,9 +1014,9 @@
 				</div>
 				<div class="d-flex justify-between mx-5 mb-5">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-					<button type="submit" class="btn btn-info">新增</button>
+                    <button type="button" id="submitBtn" class="btn btn-info">新增</button>
 				</div>
-			</form>
+            </div>
 		</div>
 	</div>
 	<!-- /.row -->
@@ -1219,7 +1219,8 @@
 			})
 	}
 
-	document.querySelector('#blockUserForm').addEventListener('submit', async (e) => {
+    $(document).ready(function () {
+        document.querySelector('#submitBtn').addEventListener('click', async (e) => {
 		e.preventDefault()
 		const data = await blockUserAdd()
 		if (data.status !== 200) {
@@ -1234,9 +1235,8 @@
 
 		$('#newModal').modal('hide')
 		location.reload()
-	})
+        })
 
-	$(document).ready(function () {
 		var urlString = window.location.href;
 		var url = new URL(urlString);
 		var caseId = url.searchParams.get("id");
