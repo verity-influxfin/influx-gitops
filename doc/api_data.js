@@ -4460,6 +4460,130 @@ define({
         },
         {
             "type": "post",
+            "url": "/post/certification/judicial_file_upload",
+            "title": "認證 法人檔案上傳",
+            "version": "0.2.0",
+            "name": "PostCertificationJudicialFileUpload",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "certification_id",
+                            "description": "<p>徵信項ID</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "file_list",
+                            "description": "<p>檔案IDs，以逗號隔開，最多15個</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\"\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "502",
+                            "description": "<p>已提交驗證</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>資料新增失敗</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "502",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"502\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "501",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"501\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "201",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"201\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "101",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "100",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"100\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/judicial_file_upload"
+                }
+            ]
+        },
+        {
+            "type": "post",
             "url": "/post/certification/passbookcashflow",
             "title": "認證 金流證明(法人)",
             "version": "0.2.0",
@@ -48454,6 +48578,125 @@ define({
                     {
                         "title": "101",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        }, {
+            "type": "post",
+            "url": "/v2/user/upload_pdf",
+            "title": "會員 上傳PDF檔案",
+            "version": "0.2.0",
+            "name": "PostUserUploadPdf",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "file",
+                            "allowedValues": ["\"*.pdf\""],
+                            "optional": false,
+                            "field": "pdf",
+                            "description": "<p>PDF檔</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "pdf_id",
+                            "description": "<p>PDF檔ID</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"pdf_id\": 191\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/upload_pdf"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "199",
+                            "description": "<p>檔案大小為0</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"200\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "199",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"199\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "101",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "100",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"100\"\n}",
                         "type": "Object"
                     }
                 ]

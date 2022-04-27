@@ -1750,6 +1750,38 @@ END:
 		$this->response(['result' => 'SUCCESS','data' => $data]);
     }
 
+    public function upload_pdf_post()
+    {
+        $user_id = $this->user_info->id;
+        $data = [];
+        // 上傳檔案欄位
+        if (isset($_FILES['pdf']) && ! empty($_FILES['pdf']))
+        {
+            // 確認不是空檔案
+            if ($_FILES['pdf']['size'] == 0)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => FILE_IS_EMPTY));
+            }
+
+            $this->load->library('S3_upload');
+            $pdf = $this->s3_upload->pdf($_FILES, 'pdf', $user_id, 'user_upload/' . $user_id);
+            if ($pdf)
+            {
+                $data['pdf_id'] = $pdf;
+            }
+            else
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => $data]);
+    }
+
 	private function get_promote_code(){
 		$code = make_promote_code();
 		$result = $this->user_model->get_by('my_promote_code',$code);

@@ -4914,4 +4914,78 @@ class Certification extends REST_Controller {
 		$face8_person_face = $this->papago_lib->detect($image_info->url, $user_id);
         $this->response(array('result' => 'SUCCESS','data' => $face8_person_face ));
     }
+
+    public function judicial_file_upload_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        if (empty($input['certification_id']))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+        $certification_id = $input['certification_id'];
+        if (empty($this->certification[$certification_id]))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $content = [];
+
+        // 是否驗證過
+        $this->was_verify($certification_id);
+
+        // 必填欄位
+        $fields = ['file_list'];
+        foreach ($fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+            }
+        }
+
+        $file_fields = ['file_list'];
+        // 多個檔案欄位
+        foreach ($file_fields as $field)
+        {
+            $file_ids = explode(',', $content[$field]);
+            if (count($file_ids) > 15)
+            {
+                $file_ids = array_slice($file_ids, 0, 15);
+            }
+            $list = $this->log_image_model->get_many_by([
+                'id' => $file_ids,
+                'user_id' => $user_id,
+            ]);
+
+            if ($list && count($list) == count($file_ids))
+            {
+                $content[$field] = [];
+                foreach ($list as $k => $v)
+                {
+                    $content[$field][] = $v->url;
+                }
+            }
+            else
+            {
+                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+            }
+        }
+
+        $insert = $this->user_certification_model->insert([
+            'user_id' => $user_id,
+            'certification_id' => $certification_id,
+            'investor' => $investor,
+            'content' => json_encode($content),
+        ]);
+        if ($insert)
+        {
+            $this->response(['result' => 'SUCCESS']);
+        }
+        else
+        {
+            $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
+        }
+    }
 }
