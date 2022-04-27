@@ -8,7 +8,10 @@
         <progressOverview />
       </div>
       <div>
-        <button class="ml-3 btn btn-return" @click="$router.push('/enterprise-upload/home')">
+        <button
+          class="ml-3 btn btn-return"
+          @click="$router.push('/enterprise-upload/home')"
+        >
           返回
         </button>
       </div>
@@ -30,6 +33,13 @@
         </div>
       </div>
       <div class="mt-5 white-block">
+        <div
+          class="mask"
+          v-if="
+            certification.governmentauthorities.user_status === null ||
+            certification.judicialguarantee.user_status === null
+          "
+        ></div>
         <div>
           <cert-item
             :icon="require('@/asset/images/enterpriseUpload/principal-2.svg')"
@@ -96,9 +106,9 @@
             icon-text="存摺"
             :certification="certification.simplificationfinancial"
           >
-            <!-- v-if="certification.simplificationfinancial.user_status === null" -->
             <template
               v-slot:content
+              v-if="certification.simplificationfinancial.user_status === null"
             >
               <div class="row no-gutters w-100 h-100">
                 <div class="col d-flex align-items-center cert-content-text">
@@ -248,6 +258,16 @@ export default {
       font-size: 14px;
       line-height: 20px;
       color: #036eb7;
+    }
+    .mask {
+      position: absolute;
+      background: rgba(15, 15, 15, 0.25);
+      border-radius: 20px;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
   }
   .cert-content-text {

@@ -18,7 +18,7 @@
             <div>聯合徵信報告＋A13</div>
             <div>第二聯</div>
           </div>
-          <file-upload-input @change="onFileChange" multiple />
+          <file-upload-input @change="onFileChange" accept=".jpg,.png,.pdf" />
         </div>
       </div>
       <div class="col d-flex align-items-center">
@@ -42,7 +42,11 @@
       </div>
     </div>
     <div class="row no-gutters mt-3 justify-content-end">
-      <button class="btn uploadform-btn-primary" @click="onSubmit">
+      <button
+        class="btn uploadform-btn-primary"
+        @click="onSubmit"
+        :disabled="file.size === 0"
+      >
         確認儲存
       </button>
     </div>
@@ -51,10 +55,16 @@
 
 <script>
 import fileUploadInput from '@/component/enterpriseUpload/fileUploadInput'
+import Axios from 'axios'
 
 export default {
   components: {
     fileUploadInput,
+  },
+  data() {
+    return {
+      file: new File([], ''),
+    }
   },
   computed: {
     caseId() {
@@ -64,11 +74,44 @@ export default {
   methods: {
     onFileChange(files) {
       for (const file of files) {
-        console.log(file)
+        this.file = file
       }
     },
-    onSubmit() {
-      this.$router.push('/enterprise-upload/overview/company?case-id=' + this.caseId)
+    async onSubmit() {
+      const formData = new FormData()
+      if (this.file.type.includes('pdf')) {
+        formData.append('pdf', this.file)
+        const { data } = await Axios({
+          method: 'POST',
+          url: '/api/v1/user/upload_pdf',
+          data: formData,
+          mimeType: 'multipart/form-data',
+        })
+        await Axios.post('/api/v1/certification/judicial_file_upload', {
+          // investigationjudicial
+          certification_id: '1003',
+          file_list: data.pdf_id
+        })
+        this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
+      } else {
+        formData.append('image', this.file)
+        try {
+          const { data } = await Axios({
+            method: 'POST',
+            url: '/api/v1/user/upload',
+            data: formData,
+            mimeType: 'multipart/form-data',
+          })
+          await Axios.post('/api/v1/certification/judicial_file_upload', {
+            // investigationjudicial
+            certification_id: '1003',
+            file_list: data.image_id
+          })
+          this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
+        } catch (error) {
+          console.error(error)
+        }
+      }
     }
   },
 }

@@ -22,7 +22,11 @@
       </div>
     </div>
     <div class="row no-gutters mt-3 justify-content-end">
-      <button class="btn uploadform-btn-primary" @click="onSubmit">
+      <button
+        class="btn uploadform-btn-primary"
+        @click="onSubmit"
+        :disabled="file.size === 0"
+      >
         確認儲存
       </button>
     </div>
@@ -64,25 +68,30 @@ export default {
           mimeType: 'multipart/form-data',
         })
         await Axios.post('/api/v1/certification/judicial_file_upload', {
-          // passbookcashflow
-          certification_id: '1004',
+          // simplificationfinancial
+          certification_id: '500',
           file_list: data.pdf_id
         })
+        this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
       } else {
         formData.append('image', this.file)
-        const { data } = await Axios({
-          method: 'POST',
-          url: '/api/v1/user/upload',
-          data: formData,
-          mimeType: 'multipart/form-data',
-        })
-        await Axios.post('/api/v1/certification/judicial_file_upload', {
-          // passbookcashflow
-          certification_id: '1004',
-          file_list: data.pdf_id
-        })
+        try {
+          const { data } = await Axios({
+            method: 'POST',
+            url: '/api/v1/user/upload',
+            data: formData,
+            mimeType: 'multipart/form-data',
+          })
+          await Axios.post('/api/v1/certification/judicial_file_upload', {
+            // passbookcashflow
+            certification_id: '500',
+            file_list: data.image_id
+          })
+          this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
+        } catch (error) {
+          console.error(error)
+        }
       }
-      this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
     }
   },
 }
