@@ -1,7 +1,12 @@
 <template>
     <div>
         <!-- 標頭 -->
-        <alesis-loan-header header="學生貸" content="快速、安全、隱私、簡單<br>最受學生信賴的線上借貸平台！<br>最高額度 15 萬、最低利率 5%<br>幫助年輕人完成夢想！" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg"></alesis-loan-header>
+        <alesis-loan-header
+            header="學生貸"
+            content="快速、安全、隱私、簡單<br>最受學生信賴的線上借貸平台！<br>最高額度 15 萬、最低利率 5%<br>幫助年輕人完成夢想！"
+            :image="require('@/asset/images/student-product-banner.png')"
+        >
+        </alesis-loan-header>
         <!-- 標頭 -->
 
         <alesis-space size="medium"></alesis-space>
