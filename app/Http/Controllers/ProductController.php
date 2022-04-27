@@ -25,13 +25,27 @@ class ProductController extends Controller
     {
         $inputs = $request->all();
         // echo Session::get('token');
-        $return = $this->_connectDeus('GET', 'product/applyinfo/'.$inputs['id'], []);
+        $return = $this->_connectDeus('GET', 'product/applyinfo/' . $inputs['id'], []);
+        return response()->json($return['data'], $return['status']);
+    }
+
+    // certification/judicial_file_upload
+    public function postCertFileUpload(Request $request)
+    {
+        $inputs = $request->all();
+        $return = $this->_connectDeus('GET', 'certification/judicial_file_upload', $inputs);
         return response()->json($return['data'], $return['status']);
     }
 
     public function postUploadPdf()
     {
-        $return = $this->_uploadFile('user/upload_pdf', $_FILES);
+        $return = $this->_uploadFile('user/upload_pdf', $_FILES, 'pdf');
+        return response()->json($return['data'], $return['status']);
+    }
+
+    public function postUpload()
+    {
+        $return = $this->_uploadFile('user/upload', $_FILES, 'image');
         return response()->json($return['data'], $return['status']);
     }
 
@@ -58,18 +72,18 @@ class ProductController extends Controller
         return $this->_parseDeusResponse(json_decode($res->getBody(), TRUE));
     }
 
-    private function _uploadFile($path, $file)
+    private function _uploadFile($path, $file, $type)
     {
         try {
             $client = new Client();
-            $res = $client->request('POST', env('API_URL') . $path,[
-                // 'headers' => [
-                //     'request_token' => Session::get('token')
-                // ],
+            $res = $client->request('POST', env('API_URL') . $path, [
+                'headers' => [
+                    'request_token' => Session::get('token')
+                ],
                 'multipart' => [
                     [
-                        'name'     => 'pdf',
-                        'contents' => fopen($file['pdf']['tmp_name'],'r'),
+                        'name'     => $type,
+                        'contents' => fopen($file[$type]['tmp_name'], 'r'),
                     ],
                 ]
             ]);
@@ -121,5 +135,4 @@ class ProductController extends Controller
 
         return $returnData;
     }
-
 }
