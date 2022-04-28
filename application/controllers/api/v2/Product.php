@@ -586,11 +586,11 @@ class Product extends REST_Controller {
      *       'error': '410'
      *     }
      *
-     * @apiError 424 黑名單禁止申貸錯誤
-     * @apiErrorExample {Object} 424
+     * @apiError 426 黑名單禁止申貸錯誤
+     * @apiErrorExample {Object} 426
      *     {
      *       'result': 'ERROR',
-     *       'error': '424',
+     *       'error': '426',
      *       'data': {
      *              'text': 'App端禁止申貸呈現文字'
      *          }
