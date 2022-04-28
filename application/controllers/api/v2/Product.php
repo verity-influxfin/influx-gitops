@@ -1286,7 +1286,7 @@ class Product extends REST_Controller {
             }
 
             $certification		= [];
-            $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, false, $target, $product);
+            $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, false, $target, $product, TRUE);
             $completeness_level = 100 / count($certification_list);
             if(count($cer_group) > 0){
                 $completeness_level = 100 / (count($certification_list) + count($cer_group));
@@ -1321,7 +1321,8 @@ class Product extends REST_Controller {
 					}
 					$user_certification = $this->user_certification_model->get_by(['id'=>$value['certification_id']]);
 					$content_array_data = [];
-					$content_key = ['labor_type','return_type','mail_file_status'];
+                    // email欄位待new新版app上線後刪除
+					$content_key = ['labor_type','return_type','mail_file_status', 'email'];
 					if(isset($user_certification->content) && $user_certification->content != '' ){
 						$user_certification = json_decode($user_certification->content,true);
 						foreach($content_key as $key_name){
@@ -2890,15 +2891,6 @@ class Product extends REST_Controller {
 
     private function type1_signing($param,$product,$input,$target){
         $user_id 	= $target->user_id;
-
-        $stage_option_cer = $this->config->item('stage_option_cer');
-
-        $certification_list	= $this->certification_lib->get_status($user_id,0);
-        foreach($certification_list as $key => $value){
-            if(in_array($key,$product['certifications']) && $value['user_status']!=1 && !in_array($key,$stage_option_cer)){
-                $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-            }
-        }
 
         //檢查金融卡綁定 NO_BANK_ACCOUNT
         $bank_account = $this->user_bankaccount_model->get_by([

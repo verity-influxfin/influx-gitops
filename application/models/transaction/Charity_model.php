@@ -3,12 +3,17 @@
 class Charity_model extends MY_Model
 {
     public $_table = 'charity';
-    public $before_create = array('before_data_c');
-    public $before_update = array('before_data_u');
-    public $status_list = array(
+    public $before_create = ['before_data_c'];
+    public $before_update = ['before_data_u'];
+    public $status_list = [
         0 => '停用',
-        1 => '有效'
-    );
+        1 => '有效',
+    ];
+
+    public $recipient_type = [
+        0 => '單筆收據',
+        1 => '不寄收據',
+    ];
 
     public function __construct()
     {
@@ -35,7 +40,9 @@ class Charity_model extends MY_Model
         $this->_database->select('*')
             ->from("`p2p_transaction`.`charity`");
         if ( ! empty($where))
+        {
             $this->_set_where([$where]);
+        }
 
         $subquery = $this->_database->get_compiled_select('', TRUE);
         $this->_database
@@ -63,5 +70,84 @@ class Charity_model extends MY_Model
             ->order_by('id');
 
         return $this->_database->get()->result_array();
+    }
+
+    public function get_donor_list($sdate, $edate)
+    {
+        $this->_database->select('ch.tx_datetime, ch.user_id, us.id_number AS id_number, us.name AS name, ch.receipt_type, ch.amount, ch.data')
+            ->from('`p2p_transaction`.`charity` AS ch')
+            ->join('`p2p_user`.`users` AS us', 'ch.user_id=us.id');
+        if ( ! empty($sdate))
+        {
+            $this->_database->where("ch.created_at >= ", "{$sdate} 00:00:00");
+        }
+        if ( ! empty($edate))
+        {
+            $this->_database->where("ch.created_at <= ", "{$edate} 23:59:59");
+        }
+        $donate_list = $this->_database->get()->result_array();
+
+        foreach ($donate_list as $key => $donate)
+        {
+            $address_info = json_decode($donate['data'], TRUE)['receipt_address'] ?? '';
+            if ($address_info === '由基金會代上傳國稅局' || empty($address_info))
+            {
+                $donate_list[$key]['receipt_type'] = $this->recipient_type[1];
+            }
+            else
+            {
+                $donate_list[$key]['receipt_type'] = $this->recipient_type[0];
+            }
+        }
+
+        return $donate_list;
+    }
+
+    public function get_download_info($sdate, $edate)
+    {
+        $this->_database->select('us.name AS name, us.id_number AS id_number, us.phone AS phone, ch.tx_datetime, ch.amount, ch.user_id, ch.receipt_type, ch.data')
+            ->from('`p2p_transaction`.`charity` AS ch')
+            ->join('`p2p_user`.`users` AS us', 'ch.user_id=us.id');
+        if ( ! empty($sdate))
+        {
+            $this->_database->where("ch.created_at >= ", "{$sdate} 00:00:00");
+        }
+        if ( ! empty($edate))
+        {
+            $this->_database->where("ch.created_at <= ", "{$edate} 23:59:59");
+        }
+        $donate_list = $this->_database->get()->result_array();
+
+        foreach ($donate_list as $key => $donate)
+        {
+            // 用戶自填的資料
+            $donor_info = json_decode($donate['data'], TRUE);
+            $donate_list[$key]['email'] = $donor_info['email'] ?? '';
+            $address_info = $donor_info['receipt_address'] ?? '';
+
+            if ($address_info === '由基金會代上傳國稅局')
+            {
+                $donate_list[$key]['upload'] = '是';
+                $donate_list[$key]['receipt_type'] = $this->recipient_type[1];
+            }
+            else
+            {
+                $donate_list[$key]['upload'] = '否';
+                if (empty($address_info))
+                {
+                    $donate_list[$key]['receipt_type'] = $this->recipient_type[1];
+                }
+                else
+                {
+                    $donate_list[$key]['receipt_type'] = $this->recipient_type[0];
+                    $donate_list[$key]['address_data'] = $address_info;
+                }
+            }
+
+            // 整理一下捐款日
+            $donate_list[$key]['donate_day'] = str_replace('-', '', explode(' ', $donate['tx_datetime'])[0]);
+        }
+
+        return $donate_list;
     }
 }

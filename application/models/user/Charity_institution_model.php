@@ -39,7 +39,7 @@ class Charity_institution_model extends MY_Model
     public function get_withdraw_list()
     {
         $this->db
-            ->select('jp.user_id')
+            ->select('jp.company_user_id')
             ->select('ci.virtual_account')
             ->from("p2p_user.{$this->_table} ci")
             ->join('p2p_user.judicial_person jp', 'jp.id=ci.judicial_person_id')

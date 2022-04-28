@@ -16,6 +16,51 @@ class Website extends REST_Controller {
         $this->load->library('Transfer_lib');
     }
 
+    private function _check_visit_freq($token_data, $freq=3, $interval=10)
+    {
+        $this->load->model('log/log_request_model');
+        $rs = $this->log_request_model->get_many_by([
+            'user_id' => $token_data->id,
+            'investor' => $token_data->investor,
+            'url' => $this->uri->uri_string(),
+            'created_at >= ' => time() - $interval
+        ]);
+        if (count($rs) >= $freq)
+        {
+            return FALSE;
+        }
+        else
+        {
+            $this->log_request_model->insert([
+                'method' => $this->request->method,
+                'url' => $this->uri->uri_string(),
+                'investor' => $token_data->investor,
+                'user_id' => $token_data->id,
+                'agent' => $token_data->agent,
+            ]);
+            return TRUE;
+        }
+    }
+    private function _check_jwt_token($token) {
+        if ( ! app_access())
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 401);
+        }
+
+        $tokenData = AUTHORIZATION::getUserInfoByToken($token);
+        if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time < time())
+        {
+            $this->response(array('result' => 'ERROR', 'error' => TOKEN_NOT_CORRECT));
+        }
+
+        $this->user_info = $this->user_model->get($tokenData->id);
+        if ($tokenData->auth_otp != $this->user_info->auth_otp)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => TOKEN_NOT_CORRECT));
+        }
+        return $tokenData;
+    }
+
 	/**
      * @api {get} /v2/target/list 出借方 取得標的列表
 	 * @apiVersion 0.2.0
@@ -867,7 +912,7 @@ class Website extends REST_Controller {
      *          "transaction_id": "2352866",
      *          "tx_datetime": "2021-11-11 15:15:30",
      *          "receipt_type": "0",
-     *          "data": "{"name\": \"王韋翔\", "email\": \"fmww5418@gmail.com\", "phone\": \"0988912157\", "receipt_address\": \"高雄市喔喔喔喔耶\", "receipt_id_number\": \"S124599064\"}",
+     *          "data": "{"name\": \"User姓名\", "email\": \"test@gmail.com\", "phone\": \"09123456789\", "receipt_address\": \"地址XXX\", "receipt_id_number\": \"A123456789\"}",
      *          "created_at": "2021-11-11 15:15:30",
      *          "created_ip": "172.18.0.1",
      *          "updated_at": "2021-11-11 15:15:30",
@@ -902,5 +947,50 @@ class Website extends REST_Controller {
             'result' => 'SUCCESS',
             'data' => $data,
         ]);
+    }
+
+    public function get_investor_report_get()
+    {
+        if ( ! app_access())
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 401);
+        }
+
+        $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
+        $token_data = $this->_check_jwt_token($token);
+        if ( ! $this->_check_visit_freq($token_data))
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 503);
+        }
+
+        $this->load->library('user_lib');
+        $report_data = $this->user_lib->get_investor_report($token_data->id, [], date('Y-m-d'));
+
+        $this->response(array('result' => 'SUCCESS', 'data' => $report_data));
+    }
+
+    public function download_investor_report_get()
+    {
+        if ( ! app_access())
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 401);
+        }
+
+        $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
+        $token_data = $this->_check_jwt_token($token);
+        if ( ! $this->_check_visit_freq($token_data))
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 503);
+        }
+
+
+        $this->load->library('user_lib');
+        $this->load->library('spreadsheet_lib');
+
+        $report_data = $this->user_lib->get_investor_report($token_data->id, [], date('Y-m-d'));
+        $html = $this->load->view('admin/excel/investor_report', ['data' => $report_data], TRUE);
+        $spreadsheet = $this->spreadsheet_lib->get_investor_report_from_html($html, $report_data);
+        $this->spreadsheet_lib->download('投資人報告書.xlsx', $spreadsheet);
+        exit(1);
     }
 }

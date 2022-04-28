@@ -100,4 +100,40 @@ class Investment_model extends MY_Model
 
 		return $this->db->get()->result();
 	}
+
+    public function get_principle_list($user_id_list = [], $product_id_list = [], $is_group=TRUE)
+    {
+        $this->db
+            ->select('investment_id, entering_date')
+            ->from('`p2p_transaction`.`transactions`')
+            ->where('source', SOURCE_AR_PRINCIPAL)
+            ->group_by('investment_id');
+        $transaction_query = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('tra.entering_date AS tx_date')
+            ->from('`p2p_loan`.`investments` AS i')
+            ->join('`p2p_loan`.`targets` AS t', 't.id = i.target_id')
+            ->join("({$transaction_query}) AS tra", 'tra.investment_id = i.id')
+            ->where_in('i.status', [INVESTMENT_STATUS_REPAYING, INVESTMENT_STATUS_PAID_OFF]);
+
+        if ($is_group)
+        {
+            $this->db->select('SUM(i.loan_amount) AS amount')
+                ->group_by('tra.entering_date');
+        }
+        else
+        {
+            $this->db->select('i.loan_amount AS amount');
+        }
+        if ( ! empty($user_id_list))
+        {
+            $this->db->where_in('i.user_id', $user_id_list);
+        }
+        if ( ! empty($product_id_list))
+        {
+            $this->db->where_in('t.product_id', $product_id_list);
+        }
+
+        return $this->db->get()->result_array();
+    }
 }

@@ -14,7 +14,6 @@ class Scraper extends MY_Admin_Controller
         $this->load->library('scraper/findbiz_lib');
         $this->load->library('scraper/business_registration_lib');
         $this->load->library('scraper/google_lib');
-        $this->load->library('scraper/ptt_lib');
         $this->load->library('scraper/instagram_lib');
     }
 

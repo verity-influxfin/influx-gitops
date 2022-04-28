@@ -97,63 +97,174 @@
                     fetchSipLogin(university, account)
                 }
 
-                function getLoginStatusMapping() {
-                    return {
-                        'false' : '登入失敗',
-                        'true' : '登入成功',
-                        'started' : '爬蟲正在執行中',
-                        'requested' : '爬蟲尚未開始',
-                        'university_not_found' : '不支援此學校',
-                        'request_not_found' : '請求未被收到',
-                        'response_not_json' : 'Server回傳資料非json格式'
+            var sipResult = $("#sip-login-info").text();
+            if (sipResult == '登入成功') {
+                alert('已成功登入');
+            }
+
+            requestSipLogin(university, account, password);
+        });
+
+        function requestSipLogin(university, account, password) {
+            var data = {
+                'university': university,
+                'account': account,
+                'password': password
+            }
+
+            var url = '/admin/certification/sip_login'
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function (response) {
+                    if (!response) {
+                        alert('登入請求未成功送出');
+                        return;
                     }
-                }
-
-                $("#request-sip-login").click(function(e) {
-                    var university = $("#university").text();
-                    var account = $("#account").text();
-                    var password = $("#password").text();
-
-                    var sipResult = $("#sip-login-info").text();
-                    if (sipResult == '登入成功') {
-                        alert('已成功登入');
+                    if (response.status.code == 400) {
+                        alert('參數錯誤，登入請求未成功送出');
+                        return;
                     }
 
-                    requestSipLogin(university, account, password);
-                });
-
-                function requestSipLogin(university, account, password) {
-                    var data = {
-                        'university' : university,
-                        'account' : account,
-                        'password' : password
-                    }
-
-                    var url = '/admin/certification/sip_login'
-
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        data: data,
-                        success: function(response) {
-                            if (!response) {
-                                alert('登入請求未成功送出');
-                                return;
-                            }
-                            if (response.status.code == 400) {
-                                alert('參數錯誤，登入請求未成功送出');
-                                return;
-                            }
-
-                            alert('登入請求已經送出');
-                            fillSipLogin('requested');
-                        },
-                        error: function() {
-                            alert('登入請求未成功送出');
-                        }
-                    });
+                    alert('登入請求已經送出');
+                    fillSipLogin('requested');
+                },
+                error: function () {
+                    alert('登入請求未成功送出');
                 }
             });
+        }
+
+        function fetchSipRisk(){
+            $.ajax({
+                type: "GET",
+                url: `/admin/certification/getMeta?id=<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>`,
+                dataType: "json",
+                success: function (response) {
+                    if (response.status.code == 200 && response.response != '') {
+                        Object.keys(response.response).forEach(function (key) {
+                            if ($(`[name='${key}']`).length) {
+                                if ($(`[name='${key}']`).is("input")) {
+                                    $(`[name='${key}']`).val(response.response[key]);
+                                } else {
+                                    let $select = $(`[name='${key}']`).selectize();
+                                    let selectize = $select[0].selectize;
+                                    selectize.setValue(selectize.search(response.response[key]).items[0].id);
+                                }
+                            }
+                        })
+                    } else {
+                        console.log(response);
+                    }
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        }
+
+</script>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"><?= isset($data->certification_id) ? $certification_list[$data->certification_id] : ""; ?></h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <?= isset($data->certification_id) ? $certification_list[$data->certification_id] : ""; ?>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>會員 ID</label>
+                                <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->user_id) ?>">
+                                    <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
+                                </a>
+                            </div>
+                            <div class="form-group">
+                                <label>學校名稱</label>
+                                <p id="university"
+                                   class="form-control-static"><?= isset($content['school']) ? $content['school'] : "" ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>學制</label>
+                                <p class="form-control-static"><?= isset($school_system[$content['system']]) ? $school_system[$content['system']] : $content['system'] ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>學門</label>
+                                <p class="form-control-static"><?= isset($content['major']) ? $content['major'] : "" ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>系所</label>
+                                <p class="form-control-static"><?= isset($content['department']) ? $content['department'] : "" ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>年級</label>
+                                <p class="form-control-static"><?= isset($content['grade']) ? $content['grade'] : "" ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>學號</label>
+                                <p class="form-control-static"><?= isset($content['student_id']) ? $content['student_id'] : "" ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>校內電子信箱</label>
+                                <p class="form-control-static"><?= isset($content['email']) ? $content['email'] : "" ?></p>
+                                <p class="form-control-static">驗證狀態:
+                                    <?php
+                                    if (isset($content['email']) && ! empty($content['email']))
+                                    {
+                                        if (isset($content['email_verify_status']) && $content['email_verify_status'] == TRUE)
+                                        {
+                                            echo '已驗證信箱';
+                                        }
+                                        else
+                                        {
+                                            echo '尚未驗證信箱';
+                                        }
+                                    }
+                                    else
+                                    {
+                                        echo '不進行驗證';
+                                    }
+                                    ?>
+                                </p>
+                                <p class="form-control-static">驗證時間:
+                                    <?php
+                                    if (isset($content['email']) && ! empty($content['email']))
+                                    {
+                                        if (isset($content['email_verify_time']) && is_numeric($content['email_verify_time']))
+                                        {
+                                            echo date('Y-m-d H:i:s', $content['email_verify_time']);
+                                        }
+                                        else
+                                        {
+                                            echo '';
+                                        }
+                                    }
+                                    else
+                                    {
+                                        echo '不進行驗證';
+                                    }
+                                    ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>SIP帳號</label>
+                                <p id="account"
+                                   class="form-control-static"><?= isset($content['sip_account']) ? $content['sip_account'] : "" ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>SIP密碼</label>
+                                <p id="password"
+                                   class="form-control-static"><?= isset($content['sip_password']) ? $content['sip_password'] : "" ?></p>
+                            </div>
 
         </script>
         <div id="page-wrapper">
@@ -272,32 +383,29 @@
                                     </div>
                                     <form role="form" method="post">
                                         <div class="form-group">
-                                            <label>專業證書加分 (最高4級)</label>
-                                            <? if($data->status==1){?>
-                                                <p><?=isset($content['license_level'])&&$content['license_level']>0?$content['license_level']."級":"專業證書不加分"?></p>
-                                            <?}else{?>
-                                                <select name="license_level" class="form-control">
-                                                    <option value="0" <?=isset($content['license_level'])&&$content['license_level']==0?"selected":""?>>不加分</option>
-                                                    <option value="1" <?=isset($content['license_level'])&&$content['license_level']==1?"selected":""?>>1級</option>
-                                                    <option value="2" <?=isset($content['license_level'])&&$content['license_level']==2?"selected":""?>>2級</option>
-                                                    <option value="3" <?=isset($content['license_level'])&&$content['license_level']==3?"selected":""?>>3級</option>
-                                                    <option value="4" <?=isset($content['license_level'])&&$content['license_level']==4?"selected":""?>>4級</option>
-                                                </select>
-                                            <?}?>
+                                            <select id="status" name="status" class="form-control"
+                                                    onchange="check_fail();">
+                                                <?php foreach ($status_list as $key => $value) { ?>
+                                                    <option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
+                                                <?php } ?>
+                                            </select>
+                                            <input type="hidden" name="id"
+                                                   value="<?= isset($data->id) ? $data->id : ""; ?>">
+                                            <input type="hidden" name="from" value="<?= isset($from) ? $from : ""; ?>">
                                         </div>
-                                        <div class="form-group">
-                                            <label>競賽作品加分 (最高4級)</label>
-                                            <? if($data->status==1){?>
-                                                <p><?=isset($content['game_work_level'])&&$content['game_work_level']>0?$content['game_work_level']."級":"競賽作品不加分"?></p>
-                                            <?}else{?>
-                                                <select name="game_work_level" class="form-control">
-                                                    <option value="0" <?=isset($content['game_work_level'])&&$content['game_work_level']==0?"selected":""?>>不加分</option>
-                                                    <option value="1" <?=isset($content['game_work_level'])&&$content['game_work_level']==1?"selected":""?>>1級</option>
-                                                    <option value="2" <?=isset($content['game_work_level'])&&$content['game_work_level']==2?"selected":""?>>2級</option>
-                                                    <option value="3" <?=isset($content['game_work_level'])&&$content['game_work_level']==3?"selected":""?>>3級</option>
-                                                    <option value="4" <?=isset($content['game_work_level'])&&$content['game_work_level']==4?"selected":""?>>4級</option>
-                                                </select>
-                                            <?}?>
+                                        <div class="form-group" id="fail_div" style="display:none">
+                                            <label>失敗原因</label>
+                                            <select id="fail" name="fail" class="form-control">
+                                                <option value="" disabled selected>選擇回覆內容</option>
+                                                <?php foreach ($certifications_msg[2] as $key => $value) { ?>
+                                                    <option <?= $data->status == $value ? "selected" : "" ?>><?= $value ?></option>
+                                                <?php } ?>
+                                                <option value="other">其它</option>
+                                            </select>
+                                            <input type="text" class="form-control" id="fail" name="fail"
+                                                   value="<?= $remark && isset($remark["fail"]) && ! is_array($remark["fail"]) ? $remark["fail"] : ""; ?>"
+                                                   style="background-color:white!important;display:none"
+                                                   disabled="false">
                                         </div>
                                         <div class="form-group">
                                             <label>專家調整 (最高3級)</label>
@@ -357,6 +465,15 @@
                                         </fieldset>
                                     </form>
 
+                        </div>
+                        <div class="col-lg-6">
+                            <h1>圖片</h1>
+                            <fieldset disabled>
+                                <div class="form-group">
+                                    <label>學生證正面照</label><br>
+                                    <a href="<?= $content['front_image'] ?>" data-fancybox="images">
+                                        <img src="<?= $content['front_image'] ?>" style='width:30%;max-width:400px'>
+                                    </a>
                                 </div>
                                 <div class="col-lg-6">
                                     <h1>圖片</h1>
@@ -394,28 +511,32 @@
                                                     echo '程式語言(自填)：'.implode('、',$other_lang);
                                                 }
 
-                                                echo '</div>';
-                                            }
-                                            if (isset($content['pro_certificate_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect"><h4>專業證書</h4></label><br>';
-                                                $arr_pro_certificate = explode(',',$content['pro_certificate']);
-                                                foreach($content['pro_certificate_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
-                                                    echo '圖片說明：'.(isset($arr_pro_certificate[$key])&&!empty($arr_pro_certificate[$key])?$arr_pro_certificate[$key]:'未填寫說明')."<br><br>";
-                                                }
-                                                echo '</div><br />';
-                                            }
-                                            if (isset($content['game_work_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect"><h4>競賽作品</h4></label><br>';
-                                                $arr_game_work = explode(',',$content['game_work']);
-                                                foreach($content['game_work_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
-                                                    echo '圖片說明：'.(isset($arr_game_work[$key])&&!empty($arr_game_work[$key])?$arr_game_work[$key]:'未填寫說明')."<br><br>";
-                                                }
-                                                echo '</div>';
-                                            }
-                                            echo '<br /><br /><br />';
-                                        }?>
+                                        echo '</div>';
+                                    }
+                                    if (isset($content['pro_certificate_image']))
+                                    {
+                                        echo '<div class="form-group"><label for="disabledSelect"><h4>專業證書</h4></label><br>';
+                                        $arr_pro_certificate = explode(',', $content['pro_certificate']);
+                                        foreach ($content['pro_certificate_image'] as $key => $value)
+                                        {
+                                            echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:30%;max-width:400px"></a><br>';
+                                            echo '圖片說明：' . (isset($arr_pro_certificate[$key]) && ! empty($arr_pro_certificate[$key]) ? $arr_pro_certificate[$key] : '未填寫說明') . "<br><br>";
+                                        }
+                                        echo '</div><br />';
+                                    }
+                                    if (isset($content['game_work_image']))
+                                    {
+                                        echo '<div class="form-group"><label for="disabledSelect"><h4>競賽作品</h4></label><br>';
+                                        $arr_game_work = explode(',', $content['game_work']);
+                                        foreach ($content['game_work_image'] as $key => $value)
+                                        {
+                                            echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:30%;max-width:400px"></a><br>';
+                                            echo '圖片說明：' . (isset($arr_game_work[$key]) && ! empty($arr_game_work[$key]) ? $arr_game_work[$key] : '未填寫說明') . "<br><br>";
+                                        }
+                                        echo '</div>';
+                                    }
+                                    echo '<br /><br /><br />';
+                                } ?>
 
                                     </fieldset>
                                 </div>

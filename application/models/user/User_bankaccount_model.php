@@ -46,4 +46,31 @@ class User_bankaccount_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+
+    /**
+     * 取得用戶實體銀行帳戶
+     *
+     * @param      int     $user_id   用戶 ID
+     * @param      int     $investor  投資人 (0:借款|1:投資)
+     * @return     array              實體帳戶資訊
+     *
+     * @created_at                    2022-03-04
+     * @created_by                    Jack
+     */
+    public function get_bank_account_by_user(int $user_id, int $investor)
+    {
+        return $this->db
+            ->select([
+                'ub.bank_code',
+                'ub.bank_account',
+            ])
+            ->from('user_bankaccount AS ub')
+            ->where([
+                'ub.user_id'  => $user_id,
+                'ub.investor' => $investor,
+                'ub.status'   => 1
+            ])
+            ->get()
+            ->first_row('array');
+    }
 }
