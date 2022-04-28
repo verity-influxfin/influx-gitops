@@ -677,7 +677,7 @@ class Target_model extends MY_Model
         return $this->_list_products_at_targets($loan_targets);
     }
 
-    // 取得指定日子成交的案件數量 - TODO 這只是總數，但應該要針對各案件分別取得數量
+    // 取得指定日子成交的案件數量
     public function get_deal_targets_at_day(DateTimeInterface $date)
     {
         $this->db->select('id, product_id, sub_product_id');

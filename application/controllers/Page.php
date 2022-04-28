@@ -119,7 +119,12 @@ class Page extends CI_Controller
 
             // APP下載的時間區間要提前，所以api分開放
             $download_date = $date->modify("-3 day");
-            $amounts_app = $this->sale_dashboard_model->get_amounts_at($download_date);
+            $amounts_app = $this->sale_dashboard_model->get_amounts_at(
+                $download_date,
+                [
+                    Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID,
+                    Sale_dashboard_model::TARGET_DOWNLOAD_IOS,
+                ]);
             $download[] = [
                 'date' => $download_date->format('Y/m/d'),
                 'android_downloads' => $amounts_app[Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID] ?? 0,

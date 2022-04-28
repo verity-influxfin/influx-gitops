@@ -1,7 +1,10 @@
-<?php
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
+
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Sales extends MY_Admin_Controller {
 	
@@ -1172,11 +1175,43 @@ class Sales extends MY_Admin_Controller {
     public function sales_report()
     {
         $this->load->model('user/sale_goals_model');
+        $this->load->model('user/sale_dashboard_model');
+        
+        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
+        $at_month = str_replace('-','', $goal_ym);
+
+        // 檢查如果是 新的月份 有沒有設定過目標了?
+        $ggg = $this->sale_goals_model->get_goals_number_at_this_month();
+        
+        // 把大部分的東西都改寫到 library 裡面
+        $this->load->library('Sales_lib', ['at_month' => $at_month]);
+        
+        // 處理日期列
+        $days_info = $this->sales_lib->get_days();
+        $title_dates = $this->_parse_day_week_for_admin_dashboard($days_info);
+        array_unshift($title_dates, '總和');
+        $trtd_date = $this->_parse_array_to_trtd_string($title_dates);
+        
+        $return_trtd_datas = []; 
+        
+        // 取得此月份的績效相關資料
+        $datas = $this->sales_lib->calculate();
+        
+        // 取得各目標的 id 才能組成新分頁的連結
+        $goals_id = $this->sales_lib->get_goals_id();
+        
+        // 將資料做轉換處理 array -> string
+        foreach ($datas as $key => $value) {
+            $value['goal'][0] = $this->_parse_goal_number_add_href($goals_id[$key], $value['goal'][0]);
+            $return_trtd_datas[$key]['goal'] = $this->_parse_array_to_trtd_string($value['goal']);
+            $return_trtd_datas[$key]['real'] = $this->_parse_array_to_trtd_string($value['real']);
+            $return_trtd_datas[$key]['rate'] = $this->_parse_array_to_trtd_string($value['rate']);
+        }
 
         $page_data = [
-            'goal_month' => date('m'),
-            'goal_items' => $this->sale_goals_model->type_name_mapping(),
-            'goal_number' => $this->sale_goals_model->get_goals_number_at_this_month(),
+            'trtd_date' => $trtd_date,
+            'goal_ym' => $goal_ym,
+            'datas' => $return_trtd_datas,
         ];
 
         $this->load->view('admin/_header');
@@ -1185,32 +1220,222 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 
-    public function set_sale_goals()
+    // 將 月日 跟 星期 結合 => X月Y日(六) 呈現在 後台的樣式跟報表不一樣
+    private function _parse_day_week_for_admin_dashboard($days_info){
+        $data = [];
+        for ($i=0; $i < count($days_info['date']); $i++) { 
+            array_push($data, $days_info['date'][$i].'('.$days_info['week'][$i].')');
+        }
+
+        return $data;
+    }
+
+    // 將陣列資料掛上 td 標籤組成可以直接塞回 html table 的字串
+    private function _parse_array_to_trtd_string($datas){
+        return '<td>'. implode('</td><td>', $datas).'</td>';
+    }
+
+    // 業績目標的數字在上 td 標籤之前要檢查可不可以包新分頁連結
+    private function _parse_goal_number_add_href($id, $number){
+    	return "<a href='/admin/Sales/goal_edit/{$id}' target='_blank'>{$number}</a>";
+    }
+
+    public function goal_edit($id)
+    {
+    	$this->load->model('user/sale_goals_model');
+    	$goal_info = $this->sale_goals_model->as_array()->get($id);
+
+    	// 檢查只有當月的績效目標才可以修改
+    	$at_month = date('Ym');
+
+    	if (empty($goal_info) ||
+    		$goal_info['at_month'] < $at_month) {
+    		// 直接回傳 alert
+    		echo "<script>alert('請勿更新本月以前的目標');parent.location.href='/admin/AdminDashboard';</script>";
+    	}
+
+    	$page_data['id'] = $goal_info['id'];
+    	$page_data['name'] = $this->sale_goals_model->type_name_mapping()[$goal_info['type']];
+    	$page_data['number'] = $goal_info['number'];
+
+    	$this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/sales_goal_edit', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    // 改成另一個查看單一目標的頁面
+    public function set_goals($goal_id)
     {
         $this->load->model('user/sale_goals_model');
 
-        $input = $this->input->post(NULL, TRUE);
-        foreach ($input as $key => $value)
-        {
-            $this->sale_goals_model->update($key, ['number' => $value]);
+        $number = $this->input->get('number');
+        if (is_numeric($number)) {
+        	$this->sale_goals_model->update($goal_id, ['number' => $number]);
+        	echo "<script>alert('更新成功');parent.location.href='/admin/Sales/sales_report';</script>";
         }
 
-        redirect('/admin/Sales/sales_report', 'refresh');
+        echo "<script>alert('績效請勿亂填');parent.location.href='/admin/AdminDashboard';</script>";
     }
 
     public function goals_export()
     {
-        $this->load->model('user/sale_goals_model');	
+        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
+        $at_month = str_replace('-','', $goal_ym);
 
-        $input = $this->input->post(NULL, TRUE);
-        $export_month = $input['month'];
+        $this->load->library('Sales_lib', ['at_month' => $at_month]);
+        $days_info= $this->sales_lib->get_days();
 
-        // TODO
         // 取出該月目標
-        // 四捨五入成每日目標
+        // $goals_info = $this->sales_lib->get_goals();
+
         // 取出該月資料
         // 根據日期整理資料列
         // 計算每天的達成率
         // 整理成匯出內容格式
+        $first_row = $days_info['date'];
+        array_unshift($first_row, '日期');
+        $second_row = $days_info['week'];
+        array_unshift($second_row, '總和');
+
+        // 測試一下合併儲存格的匯出
+        $excel_contents = [
+            [
+                'sheet' => '貸前指標',
+                'first_row' => $first_row,
+                'second_row'=> $second_row,
+                'content' => [],
+            ],
+            [
+                'sheet' => '貸中指標',
+                'first_row' => $first_row,
+                'second_row'=> $second_row,
+                'content' => [],
+            ],
+        ];
+        $sheet_highlight = 'KPI指標-' . $days_info['int_month'] . '月';
+        // Create new Spreadsheet object
+        $spreadsheet = new Spreadsheet();
+
+        // Set document properties
+        $spreadsheet->getProperties()->setTitle('績效統計表');
+
+        foreach ($excel_contents as $sheet => $contents)
+        {
+            $sheet > 0 ? $spreadsheet->createSheet() : '';
+            $row = 1;
+
+            // 前幾行合併儲存格的項目處理完
+            if (empty($sheet)) {
+            	$spreadsheet->getActiveSheet()->mergeCells('A1:C2');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
+                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+                $spreadsheet->getActiveSheet()->mergeCells('A3:A14');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A3', '業務推廣');
+                $spreadsheet->getActiveSheet()->mergeCells('B3:B5');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B3', '官網流量');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C3', '目標流量');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C4', '實際流量');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C5', '達成率');
+                $spreadsheet->getActiveSheet()->mergeCells('B6:B8');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B6', '會員註冊');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C6', '目標會員數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C7', '實際總會員數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C8', '達成率');
+                $spreadsheet->getActiveSheet()->mergeCells('B9:B11');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B9', 'APP下載');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C9', '目標下載數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C10', '實際下載數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C11', '達成率');
+                $spreadsheet->getActiveSheet()->mergeCells('B12:B14');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B12', '申貸總計');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C12', '目標申貸戶數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C13', '實際完成申貸戶數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C14', '達成率');
+            }else{
+                // 這邊反過來是因為要先設定 Sheet 不然會合併到前一個的格子
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
+                $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
+                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+                
+                $spreadsheet->getActiveSheet()->mergeCells('A3:A17');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A3', '申貸指標');
+                $spreadsheet->getActiveSheet()->mergeCells('B3:B5');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B3', '上班族貸');
+                $spreadsheet->getActiveSheet()->mergeCells('B6:B8');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B6', '學生貸');
+                $spreadsheet->getActiveSheet()->mergeCells('B9:B11');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B9', '3S名校貸');
+                $spreadsheet->getActiveSheet()->mergeCells('B12:B14');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B12', '信保專案');
+                $spreadsheet->getActiveSheet()->mergeCells('B15:B17');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B15', '中小企業');
+
+                $spreadsheet->getActiveSheet()->mergeCells('A18:A33');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A18', '成交指標');
+                $spreadsheet->getActiveSheet()->mergeCells('B18:B20');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B18', '上班族貸');
+                $spreadsheet->getActiveSheet()->mergeCells('B21:B23');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B21', '學生貸');
+                $spreadsheet->getActiveSheet()->mergeCells('B24:B26');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B24', '3S名校貸');
+                $spreadsheet->getActiveSheet()->mergeCells('B27:B29');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B27', '信保專案');
+                $spreadsheet->getActiveSheet()->mergeCells('B30:B32');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B30', '中小企業');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B33', '總數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C33', '總成交數');
+                $kpi_loan=['目標申貸戶數', '實際申貸戶數', '達成率'];
+                $kpi_deal=['目標成交筆數', '實際成交筆數', '達成率'];
+                for ($i=3; $i < 33; $i++) { 
+                    if ($i<=17) {
+                        $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C'.$i, $kpi_loan[$i%3]);
+                    }else{
+                        $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C'.$i, $kpi_deal[$i%3]);
+                    }
+                }
+            }
+            
+
+            // 行數從 D 開始跑此月份的績效統計 前兩行應該可以合併到數字計算裡面
+            foreach ($contents['first_row'] as $row_index => $mon_day)
+            {
+                $column = Coordinate::stringFromColumnIndex($row_index + 4); // A = 1
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $mon_day);
+                $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
+            }
+            $row++;
+            foreach ($contents['second_row'] as $row_index => $week)
+            {
+                $column = Coordinate::stringFromColumnIndex($row_index + 4); // A = 1
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $week);
+                $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
+            }
+            $row++;
+
+            // foreach ($contents['content'] as $key => $row_content)
+            // {
+            //     foreach ($row_content as $content_index => $value)
+            //     {
+            //         $column = Coordinate::stringFromColumnIndex($content_index + 1); // A = 1
+            //         $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $value);
+            //         $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
+            //     }
+            //     $row++;
+            // }
+
+            $spreadsheet->setActiveSheetIndex($sheet)->setTitle($contents['sheet']);
+            // $spreadsheet->getActiveSheet($sheet)->getDefaultColumnDimension()->setWidth(20);
+        }
+        $spreadsheet->setActiveSheetIndex(0);
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=' . 'testMergeCell' . '.xlsx');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
     }
 }

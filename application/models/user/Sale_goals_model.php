@@ -127,4 +127,20 @@ class Sale_goals_model extends MY_Model
 
         return $data;
     }
+
+    public function add_year_to_export_month(String $export_month)
+    {
+        if (date('Y') . $export_month > date('Ym'))
+        {
+            return date('Y') - 1 . $export_month;
+        }
+
+        return date('Y') . $export_month;
+    }
+
+    public function get_goals_at_month(String $at_month)
+    {
+        $goals = $this->as_array()->get_many_by(['at_month' => $at_month]);
+        return array_column($goals, 'number', 'type');
+    }
 }

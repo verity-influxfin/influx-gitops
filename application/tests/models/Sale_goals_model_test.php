@@ -48,4 +48,25 @@ class Sale_goals_model_test extends TestCase
             $this->assertArrayHasKey($expected_keys[1], $value);
         }
     }
+
+    public function test_add_year_to_export_month()
+    {
+        $expected1 = '202201'; // 用戶選取過去的月份
+        $expected2 = '202112'; // 用戶選取未來的月份
+
+        $at_month1 = $this->obj->add_year_to_export_month('01');
+        $this->assertEquals($expected1, $at_month1);
+
+        $at_month2 = $this->obj->add_year_to_export_month('12');
+        $this->assertEquals($expected2, $at_month2);
+    }
+
+
+    public function test_get_goals_at_month()
+    {
+        $expected_type_count = 14;
+        
+        $goals = $this->obj->get_goals_at_month('202204');
+        $this->assertEquals($expected_type_count, count($goals));
+    }
 }

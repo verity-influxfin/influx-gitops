@@ -46,13 +46,33 @@ class Sale_dashboard_model extends MY_Model
         return $data;
     }
 
+    private function _get_consts()
+    {
+        // WARNING:
+        // 這邊的常數並沒有完全 MATCH Sale_goals_model 的常數
+        return [
+            self::TARGET_WEB_TRAFFIC => 0, // 官網
+            self::TARGET_DOWNLOAD_ANDROID => 0, // android 下載 兩個下載數要合併!!
+            self::TARGET_DOWNLOAD_IOS => 0, // ios 下載 兩個下載數要合併!!
+            self::TARGET_USER_REGISTER => 0,
+            self::TARGET_LOAN_SALARY_MAN => 0,
+            self::TARGET_LOAN_STUDENT => 0,
+            self::TARGET_LOAN_SMART_STUDENT => 0,
+            self::TARGET_DEAL_SALARY_MAN => 0,
+            self::TARGET_DEAL_STUDENT => 0,
+            self::TARGET_DEAL_SMART_STUDENT => 0,
+            self::TARGET_LOAN_CREDIT_INSURANCE => 0,
+            self::TARGET_LOAN_SME => 0,
+            self::TARGET_DEAL_CREDIT_INSURANCE => 0,
+            self::TARGET_DEAL_SME => 0,
+            self::TARGET_LOAN_SK_MILLION_SMEG => 0,
+            self::TARGET_DEAL_SK_MILLION_SMEG => 0,
+        ];
+    }
+
     public function get_amounts_at($date, $types = [])
     {
-        $result = [
-            self::TARGET_WEB_TRAFFIC => 0,
-            self::TARGET_DOWNLOAD_ANDROID => 0,
-            self::TARGET_DOWNLOAD_IOS => 0,
-        ];
+        $consts = $this->_get_consts();
 
         $this->db->select('type, amounts');
         $this->db->from('sale_dashboard');
@@ -66,10 +86,12 @@ class Sale_dashboard_model extends MY_Model
 
         if (empty($daily_amounts))
         {
-            return $result;
+            return $consts;
         }
 
-        return array_column($daily_amounts, 'amounts', 'type');
+        // 好像從db取出來的 type 會是 String, 跟 $consts 相加後有些 key 是 string, 有些變 int, 感覺要注意一下
+        $return_type = array_column($daily_amounts, 'amounts', 'type');
+        return $return_type + $consts;
     }
 
     public function set_amounts_at($date, $type, $amounts)
@@ -118,5 +140,33 @@ class Sale_dashboard_model extends MY_Model
             'SALARY_MAN' => self::TARGET_DEAL_SALARY_MAN,
             'SK_MILLION' => self::TARGET_DEAL_SK_MILLION_SMEG, // 微企貸沒有出現在 匯出的 excel 裡面
         ];
+    }
+
+    public function get_amounts_by_month($at_month)
+    {
+        $date = new DateTimeImmutable(date($at_month . '01'));
+
+        $this->db->select('data_at, type, amounts');
+        $this->db->from('sale_dashboard');
+        $this->db->where('data_at >=', $date->format('Y-m-d'));
+        $this->db->where('data_at <', $date->modify('+1 month')->format('Y-m-d'));
+        $datas = $this->db->get()->result_array();
+
+        return $this->_parse_monthly_data($datas);
+    }
+
+    private function _parse_monthly_data($datas)
+    {
+        $consts = $this->_get_consts();
+        $default_value = array_fill(0, count($consts), []);
+
+        $type_collect = array_combine(array_keys($consts), $default_value);
+
+        array_map(function ($data) use (&$type_collect)
+        {
+            array_push($type_collect[$data['type']], $data);
+        }, $datas);
+
+        return $type_collect;
     }
 }
