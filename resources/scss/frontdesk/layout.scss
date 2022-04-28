@@ -663,6 +663,8 @@ $ci-color: #153a71;
 
 .alesis-footer {
     background: #153a71;
+    width: 100%;
+    max-width: 1400px;
     padding: 0.5rem 0;
     color: #fff;
     position: relative;
@@ -674,18 +676,12 @@ $ci-color: #153a71;
     > .line {
         height: 1px;
         background: #2f95cb;
-        max-width: 95%;
         margin: 1rem auto;
     }
 
     > .main {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        margin: 1rem auto 0;
-        max-width: 1280px;
-        gap: 3rem;
-        display: grid;
-        grid-template-columns: 1fr 2fr;
+        display: flex;
+        flex-direction: column;
 
         @include rwd {
             display: flex;
@@ -695,6 +691,10 @@ $ci-color: #153a71;
         }
 
         > .introduction {
+            display: grid;
+            margin-bottom: 35px;
+            gap: 50px;
+            grid-template-columns: 1fr 3fr 3fr;
             > .brand {
                 display: flex;
                 align-items: center;
@@ -722,11 +722,12 @@ $ci-color: #153a71;
         }
 
         > .information {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 3rem;
             font-size: 0.9rem;
-
+            margin-top: 10px;
             @include rwd {
                 grid-template-columns: 1fr 1fr;
                 grid-template-areas:
@@ -828,9 +829,10 @@ $ci-color: #153a71;
     }
 
     > .secondary {
-        margin: 4rem auto 1rem;
-        max-width: 1280px;
+        margin: 20px auto;
+        max-width: 1400px;
         display: flex;
+        justify-content: center;
         align-items: flex-end;
 
         @include rwd {
