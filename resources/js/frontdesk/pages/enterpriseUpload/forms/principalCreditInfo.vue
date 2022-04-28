@@ -74,7 +74,7 @@ export default {
         await Axios.post('/api/v1/certification/natural_file_upload', {
           // simplificationfinancial
           certification_id: '500',
-          file_list: data.pdf_id
+          file_list: data.data.pdf_id
         })
         this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
       } else {
@@ -89,7 +89,7 @@ export default {
           await Axios.post('/api/v1/certification/natural_file_upload', {
             // passbookcashflow
             certification_id: '1004',
-            file_list: data.image_id
+            file_list: data.data.image_id
           })
           this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
         } catch (error) {

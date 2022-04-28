@@ -90,7 +90,7 @@ export default {
         await Axios.post('/api/v1/certification/judicial_file_upload', {
           // investigationjudicial
           certification_id: '1003',
-          file_list: data.pdf_id
+          file_list: data.data.pdf_id
         })
         this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
       } else {
@@ -105,7 +105,7 @@ export default {
           await Axios.post('/api/v1/certification/judicial_file_upload', {
             // investigationjudicial
             certification_id: '1003',
-            file_list: data.image_id
+            file_list: data.data.image_id
           })
           this.$router.push('/enterprise-upload/overview/principal?case-id=' + this.caseId)
         } catch (error) {
