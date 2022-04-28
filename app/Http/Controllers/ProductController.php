@@ -88,16 +88,18 @@ class ProductController extends Controller
     {
         try {
             $client = new Client();
-            $res = $client->request(
-                $method,
-                env('API_URL') . $router,
-                [
-                    'headers' => [
-                        'request_token' => Session::get('token')
-                    ]
+
+            $payload = [];
+            array_walk($inputs, function (&$item, $key) use (&$payload) {
+                $payload[] = ['name' => $key, 'contents' => $item];
+            });
+
+            $res = $client->request($method, env('API_URL').$router, [
+                'headers' => [
+                    'request_token' => Session::get('token')
                 ],
-                $this->_parseRequestPayload($method, $inputs)
-            );
+                'multipart' => $payload
+            ]);
         } catch (Exception $e) {
             return ['status' => 500, 'data' => []];
         }
@@ -164,7 +166,7 @@ class ProductController extends Controller
         ) {
             $returnData['status'] = 200;
             $returnData['data'] = [
-                'data' => $responseData['data']
+                'data' => $responseData['result']
             ];
         } elseif (isset($responseData['error'])) {
             $returnData['status'] = 400;
