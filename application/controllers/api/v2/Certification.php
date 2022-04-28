@@ -4925,15 +4925,7 @@ class Certification extends REST_Controller {
         {
             $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
         }
-
-        if ($this->user_info->company)
-        {
-            $user_id = $this->user_info->naturalPerson->id;
-        }
-        else
-        {
-            $user_id = $this->user_info->id;
-        }
+        $user_id = $this->user_info->id;
         $investor = $this->user_info->investor;
         $content = [];
 
@@ -4947,6 +4939,10 @@ class Certification extends REST_Controller {
             if (empty($input[$field]))
             {
                 $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+            }
+            else
+            {
+                $content[$field] = $input[$field];
             }
         }
 
@@ -4967,7 +4963,7 @@ class Certification extends REST_Controller {
             if ($list && count($list) == count($file_ids))
             {
                 $content[$field] = [];
-                foreach ($list as $k => $v)
+                foreach ($list as $v)
                 {
                     $content[$field][] = $v->url;
                 }
@@ -4978,6 +4974,10 @@ class Certification extends REST_Controller {
             }
         }
 
+        if ($this->user_info->company_status == 1)
+        {
+            $user_id = $this->user_info->naturalPerson->id;
+        }
         $insert = $this->user_certification_model->insert([
             'user_id' => $user_id,
             'certification_id' => $certification_id,
@@ -5022,6 +5022,10 @@ class Certification extends REST_Controller {
             if (empty($input[$field]))
             {
                 $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+            }
+            else
+            {
+                $content[$field] = $input[$field];
             }
         }
 

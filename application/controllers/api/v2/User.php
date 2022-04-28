@@ -1762,9 +1762,24 @@ END:
             {
                 $this->response(array('result' => 'ERROR', 'error' => FILE_IS_EMPTY));
             }
+            // 確認檔案格式
+            if ( ! is_pdf($_FILES['pdf']['type']))
+            {
+                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '格式錯誤']);
+            }
+            if ( ! is_uploaded_file($_FILES['pdf']['tmp_name']))
+            {
+                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '非用戶上傳檔案']);
+            }
 
             $this->load->library('S3_upload');
-            $pdf = $this->s3_upload->pdf($_FILES, 'pdf', $user_id, 'user_upload/' . $user_id);
+            $file_data = file_get_contents($_FILES['pdf']['tmp_name']);
+            $pdf = $this->s3_upload->pdf_id(
+                $file_data,
+                round(microtime(TRUE) * 1000) . rand(1, 99) . '.pdf',
+                $user_id,
+                'user_upload/' . $user_id
+            );
             if ($pdf)
             {
                 $data['pdf_id'] = $pdf;
