@@ -635,7 +635,7 @@ class Target extends MY_Admin_Controller {
                 : false;
             $level = $certificationStatus ? 3 : 4 ;
         }
-        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment);
+        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment, $target);
         $credit["amount"] = $newCredits["amount"];
         $credit["points"] = $newCredits["points"];
         $credit["level"] = $newCredits["level"];
@@ -701,7 +701,7 @@ class Target extends MY_Admin_Controller {
                 $level = $certificationStatus ? 3 : 4 ;
             }
             $this->load->library('credit_lib');
-            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment);
+            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment, $target);
         }
 
         $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);

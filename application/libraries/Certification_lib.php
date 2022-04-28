@@ -3868,4 +3868,16 @@ class Certification_lib{
             2
         );
     }
+
+    public function get_content($user_id, $investor, $certification_id_list) {
+        $certs_content = [];
+        $this->CI->load->model('user/user_certification_model');
+        $certs_rs = $this->CI->user_certification_model->as_array()->get_many_by(['user_id' => $user_id, 'investor' => $investor, 'status' => CERTIFICATION_STATUS_SUCCEED,
+            'certification_id' => $certification_id_list]);
+        foreach ($certs_rs as $v) {
+            $v['content'] = json_decode($v['content'], TRUE);
+            $certs_content[$v['certification_id']] = $v['content'];
+        }
+        return $certs_content;
+    }
 }

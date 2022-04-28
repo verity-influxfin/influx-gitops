@@ -2432,3 +2432,23 @@ $config['famous_school_list'] = [
     'NTPU' => '國立臺北大學',
     'NTUT' => '國立臺北科技大學',
 ];
+
+$config['business_type_list'] = [
+    ['code' => 'A', 'range' => [1, 3]],
+    ['code' => 'B', 'range' => [5, 6]],
+    ['code' => 'C', 'range' => [8, 34]],
+    ['code' => 'D', 'range' => [35, 35]],
+    ['code' => 'E', 'range' => [36, 39]],
+    ['code' => 'F', 'range' => [41, 43]],
+    ['code' => 'G', 'range' => [45, 48]],
+    ['code' => 'H', 'range' => [49, 54]],
+    ['code' => 'I', 'range' => [55, 56]],
+    ['code' => 'J', 'range' => [58, 63]],
+    ['code' => 'L', 'range' => [67, 68]],
+    ['code' => 'M', 'range' => [69, 76]],
+    ['code' => 'N', 'range' => [77, 82]],
+    ['code' => 'P', 'range' => [85, 85]],
+    ['code' => 'Q', 'range' => [86, 88]],
+    ['code' => 'R', 'range' => [90, 93]],
+    ['code' => 'S', 'range' => [94, 96]]
+];

@@ -11,46 +11,6 @@
         margin: 16px 0 5px 0;
         height: 243px;
     }
-    #opinion{
-        width: 100%;
-    }
-    #opinion td br {
-        display: block;
-        padding: 3px 0;
-        content: "";
-    }
-    #opinion td {
-        padding: 13px 0px 13px 10px;
-        height: 60px;
-        border-bottom: 1px solid #bdbdbd;
-    }
-    #opinion td.icon{
-        width: 40px;
-        text-align: center;
-    }
-    #opinion td.title{
-        width: 120px!important;
-    }
-    #opinion td.input{
-        padding-left: 0px;
-    }
-    #opinion td input[type="text"]{
-        width: 100%;
-    }
-    #opinion td input[type="number"]{
-        width: 50px;
-    }
-    #opinion td.updatedTime{
-        width: 220px;
-    }
-    #opinion td.button{
-        text-align: right;
-        width: 430px;
-    }
-    #opinion td.button button{
-        width: 150px;
-        margin: 0 0px 0 12px;
-    }
     .targetAction{
         width: 100%;
         text-align: center;
@@ -58,7 +18,66 @@
     .targetAction button{
         width: 200px;
     }
+    .opinion_item {
+        display: flex;
+        margin: 10px;
+        border-bottom-style: ridge;
+        position: relative;
+    }
+    .opinion_item div {
+        margin: 0 10px;
+    }
+    .opinion_status {
+        display: flex;
+        width: 10%;
+        justify-content: center;
+        align-items: center;
+    }
+    .opinion_description {
+        display: flex;
+        width: 10%;
+        justify-content: center;
+        align-items: center;
+    }
+    .opinion_info {
+        width: 70%;
+    }
+    .opinion_info input{
+        width: 100%;
+    }
+    .opinion_info textarea{
+        width: 100%;
+        height: 70px;
+        resize : none;
+        word-break:keep-all;
+    }
+    .opinion_info div{
+        display: flex;
+    }
+    .opinion_button {
+        display: flex;
+        width: 10%;
+        justify-content: center;
+        align-items: center;
+    }
+    .mask {
+        z-index: 10;
+        background-color: gray;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 50px;
+        font-weight:bold;
+        letter-spacing: 25px;
+    }
 </style>
+<script type="text/javascript" src="<?php echo base_url();?>assets/admin/js/common/datetime.js" ></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/loan/credit.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         var caseId = <?=isset($targetInfo)?$targetInfo->id:''?>;
@@ -671,6 +690,187 @@
 
         skbank_text_get(caseId, 1);
         kgibank_text_get(caseId, 2);
+
+        // 取得案件核貸資料
+        case_aprove_item = get_default_item(caseId);
+        // 最高核貸層級
+        let last_mask = 4;
+        if(case_aprove_item && case_aprove_item.hasOwnProperty(`basicInfo`) && case_aprove_item.basicInfo.hasOwnProperty(`finalReviewedLevel`)){
+            last_mask = case_aprove_item.basicInfo.finalReviewedLevel;
+            for(i=1;i<=last_mask;i++){
+                $(`#${i}_opinion_mask`).css("display","none");
+                if(case_aprove_item.basicInfo.hasOwnProperty(`reviewedLevelList`) && case_aprove_item.basicInfo.reviewedLevelList.hasOwnProperty(`${i-1}`)){
+                    let reviewer_name = case_aprove_item.basicInfo.reviewedLevelList[i-1];
+                    $(`#${i}_opinion_mask`).text(`${reviewer_name}意見未送出`);
+                }
+            }
+        }
+        // 專家調整分數
+        if(case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("scoringMin") && case_aprove_item.creditLineInfo.hasOwnProperty("scoringMax")){
+            $(`.score_range`).text(`${case_aprove_item.creditLineInfo.scoringMin}~${case_aprove_item.creditLineInfo.scoringMax}`);
+            $(`#1_score`).attr({
+                "max" : case_aprove_item.creditLineInfo.scoringMax,
+                "min" : case_aprove_item.creditLineInfo.scoringMin,
+                "oninput" : `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+            });
+            $(`#2_score`).attr({
+                "max" : case_aprove_item.creditLineInfo.scoringMax,
+                "min" : case_aprove_item.creditLineInfo.scoringMin,
+                "oninput" : `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+            });
+            $(`#3_score`).attr({
+                "max" : case_aprove_item.creditLineInfo.scoringMax,
+                "min" : case_aprove_item.creditLineInfo.scoringMin,
+                "oninput" : `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+            });
+            $(`#4_score`).attr({
+                "max" : case_aprove_item.creditLineInfo.scoringMax,
+                "min" : case_aprove_item.creditLineInfo.scoringMin,
+                "oninput" : `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+            });
+        }
+
+        function changeReevaluationLoading(display = true) {
+            if (!display) {
+                $(".table-reevaluation p").css('background', 'white');
+                $(".table-reevaluation p").css('animation-play-state', 'paused');
+            } else {
+                $(".table-reevaluation p").css('animation-play-state', 'running');
+                $(".table-reevaluation p").css('background', 'linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%)');
+                $(".table-reevaluation p").css('animation-duration', '1.25s');
+                $(".table-reevaluation p").css('background-size', '800px 104px');
+            }
+        }
+
+        function clearCreditInfo(isReEvaluated = false) {
+            var prefix = '';
+            if (isReEvaluated) prefix = "new-";
+            $("#" + prefix + "product-name").text('');
+            $("#" + prefix + "credit-level").text('');
+            $("#" + prefix + "credit-amount").text('');
+            $("#" + prefix + "credit-points").text('');
+            $("#" + prefix + "credit-created-at").text('');
+            $("#" + prefix + "credit-expired-at").text('');
+        }
+
+        function fillCreditInfo(credit, isReEvaluated = false) {
+            var prefix = '';
+            if(credit.product.id == 1 && credit.product.sub_product_id == 9999){
+                $('#credit-evaluation button').attr('disabled',false);
+                $('#evaluation-complete [type=submit]').text('通過');
+                $('#evaluation-complete [type=submit]').removeClass('btn-warning').addClass('btn-success');
+                $('.changeCredit').hide();
+            }
+            if (isReEvaluated) prefix = "new-";
+            $("#" + prefix + "product-name").text(credit.product.name);
+            $("#" + prefix + "credit-level").text(credit.level);
+            $("#" + prefix + "credit-amount").text(convertNumberSplitedByThousands(credit.amount));
+            $("#" + prefix + "credit-points").text(credit.points);
+            $("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
+            $("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
+        }
+
+        // 取得案件核貸資料
+        case_aprove_data = get_report_data(caseId);
+        if(case_aprove_data){
+            Object.keys(case_aprove_data).forEach(function (area_name) {
+                Object.keys(case_aprove_data[area_name]).forEach(function (input_title) {
+                    if(input_title == 'reviewedInfoList'){
+                        stop_flag = false;
+                        let total_score = 0;
+                        // 資料寫入
+                        Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
+                            $(`#${list_key}_name`).text(case_aprove_data[area_name][input_title][list_key]['name']);
+                            $(`#${list_key}_apporvedTime`).text(case_aprove_data[area_name][input_title][list_key]['approvedTime']);
+                            $(`#${list_key}_opinion`).val(case_aprove_data[area_name][input_title][list_key]['opinion']);
+                            let score = case_aprove_data[area_name][input_title][list_key]['score'] && case_aprove_data[area_name][input_title][list_key]['score'] != '' ? parseInt(case_aprove_data[area_name][input_title][list_key]['score']) : 0;
+                            total_score += score;
+                            $(`#${list_key}_score`).val(score);
+                        })
+                        $('#credit_test').val(total_score);
+                        // 顯示更改,核可層級解鎖
+                        Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
+                            status_html = get_status_icon('success');
+                            $(`#${list_key}_opinion_status`).html(status_html);
+
+                            // 前級審核未通過
+                            if(stop_flag && case_aprove_data[area_name][input_title][list_key]['name'] == '' && case_aprove_data[area_name][input_title][list_key]['opinion'] == '' && case_aprove_data[area_name][input_title][list_key]['score'] == ''){
+                                status_html = get_status_icon('pending');
+                                $(`#${list_key}_opinion_status`).html(status_html);
+                                $(`#${list_key}_opinion_mask`).show();
+                            }
+
+                            // 當前審核層級解鎖
+                            if(!stop_flag && case_aprove_data[area_name][input_title][list_key]['name'] == '' && case_aprove_data[area_name][input_title][list_key]['opinion'] == '' && case_aprove_data[area_name][input_title][list_key]['score'] == ''){
+                                status_html = get_status_icon('pending');
+                                $(`#${list_key}_opinion_status`).html(status_html);
+                                $(`#${list_key}_opinion`).prop('disabled', false);
+                                $(`#${list_key}_score`).prop('disabled', false);
+                                $(`#${list_key}_opinion_button`).prop('disabled', false);
+                                stop_flag = true;
+                            }
+                        })
+                    }
+                })
+            })
+        }
+
+        $( "#1_score,#2_score,#3_score,#4_score" ).change(function() {
+            let score_vue = 0;
+            for(i=1;i<=last_mask;i++){
+                score_vue += parseInt($(`#${i}_score`).val());
+            }
+            $('#credit_test').val(score_vue);
+        });
+
+        function convertNumberSplitedByThousands(value) {
+            var convertedNumbers = value;
+            try {
+                convertedNumbers = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            } catch(err) {
+
+            }
+            return convertedNumbers;
+        }
+
+        $("#credit-evaluation").submit(function(e) {
+            e.preventDefault();
+            console.log('tt');
+            $('#credit-evaluation button').attr('disabled',true);
+            if (relatedUserAjaxLock || targetInfoAjaxLock) {
+                alert("請等待資料載入完成後，再行試算。");
+                $('#credit-evaluation button').attr('disabled',false);
+                return;
+            }
+
+            var form = $(this);
+            var url = form.attr('action');
+            var points = form.find('input[name="score"]').val();
+            var remark = form.find('input[name="description"]').val();
+            console.log('url',url + "?id=" + caseId + "&points=" + points);
+            $.ajax({
+                type: "GET",
+                url: url + "?id=" + caseId + "&points=" + points,
+                beforeSend: function () {
+                    changeReevaluationLoading(true);
+                    clearCreditInfo(true);
+                },
+                complete: function () {
+                    changeReevaluationLoading(false);
+                },
+                success: function (response) {
+                    if (response.status.code != 200) {
+                        return;
+                    }
+
+                    let creditJson = response.response.credits;
+                    credit = new Credit(creditJson);
+                    fillCreditInfo(credit, true);
+                    modifiedPoints = points;
+                    $('#credit-evaluation button').attr('disabled',false);
+                }
+            });
+        });
     });
 
     // 取得新光收件檢核表成功紀錄
@@ -736,6 +936,91 @@
             }
         });
     }
+
+
+    // 授審表評分意見送出
+    function send_opinion(target_id = '', group_id = ''){
+        let score = $(`#${group_id}_score`).val();
+        let opinion = $(`#${group_id}_opinion`).val();
+        if(group_id && target_id){
+            $.ajax({
+                type: "POST",
+                url: `/admin/creditmanagement/approve`,
+                data: {
+                    'target_id' : target_id,
+                    'score' : score,
+                    'opinion' : opinion,
+                    'group' : group_id,
+                    'type' : 'person',
+                },
+                async: false,
+                success: function (response) {
+                    alert(`${response.response.msg}`);
+                },
+                error: function(error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+
+    // 取得授審表設定檔資料
+    function get_default_item(target_id,type){
+        let report_item = {};
+        $.ajax({
+            type: "GET",
+            url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=company`,
+            async: false,
+            success: function (response) {
+                report_item = response.response;
+            },
+            error: function(error) {
+                alert(error);
+            }
+        });
+        return report_item;
+    }
+
+    // 取得授審表案件核貸資料
+    function get_report_data(target_id){
+        let report_data = {};
+        $.ajax({
+            type: "GET",
+            url: `/admin/creditmanagement/get_reviewed_list?target_id=${target_id}&type=company`,
+            async: false,
+            success: function (response) {
+                report_data = response.response;
+            },
+            error: function(error) {
+                alert(error);
+            }
+        });
+        return report_data;
+    }
+
+    // 取得狀態icon
+    function get_status_icon(status = 'default'){
+        let status_icon = '';
+        switch (status) {
+            // 成功
+            case 'success':
+                status_icon = `<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i></button>`;
+                break;
+            // 等待中
+            case 'pending':
+                status_icon = `<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>`;
+                break;
+            // 失敗
+            case 'fail':
+                status_icon = `<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>`;
+                break;
+            // 未啟用
+            default:
+                status_icon = `<button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>`;
+        }
+        return status_icon;
+    }
+
 </script>
 <div id="page-wrapper">
     <div class="row">
@@ -842,112 +1127,156 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="panel panel-default">
-                            <div class="panel-heading">
-                                審批
-                            </div>
-                            <?
-                            $target_data = json_decode($targetInfo->target_data);
-
-                            //二審意見
-                            $reinspection_opinion = 'reinspection_opinion';
-                            $reinspectionOpinion = isset($target_data->reinspection->$reinspection_opinion) ? $target_data->reinspection->$reinspection_opinion : '';
-                            $reinspectionStatus = $reinspectionOpinion ? 'success' : 'warning';
-                            $reinspectionStatusColor = $reinspectionOpinion ? 'check' : 'refresh';
-                            //風控長意見
-                            $CRO_opinion = 'CRO_opinion';
-                            $CROOpinion = isset($target_data->reinspection->$CRO_opinion) ? $target_data->reinspection->$CRO_opinion : '';
-                            $CROOpinionStatus = $CROOpinion ? 'success' : 'warning';
-                            $CROOpinionStatusColor = $CROOpinion ? 'check' : 'refresh';
-                            //總經理意見
-                            $general_manager_opinion = 'general_manager_opinion';
-                            $generalManagerOpinion = isset($target_data->reinspection->$general_manager_opinion) ? $target_data->reinspection->$general_manager_opinion : '';
-                            $generalManageStatus = $generalManagerOpinion ? 'success' : 'warning';
-                            $generalManageStatusColor = $generalManagerOpinion ? 'check' : 'refresh';
-                            $active = $targetInfo->status == TARGET_WAITING_VERIFY && $targetInfo->sub_status ==TARGET_SUBSTATUS_SECOND_INSTANCE;
-                            ?>
+                            <div class="panel-heading">額度試算</div>
                             <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <table id="opinion">
-                                            <tr>
-                                                <td class="icon">
-                                                    <button type="button" class="btn btn-<?=$reinspectionStatus?> btn-circle"><i
-                                                                class="fa fa-<?=$reinspectionStatusColor?>"></i></button>
-                                                </td>
-                                                <td class="title">二審意見：</td>
-                                                <td><input id="<?= $reinspection_opinion ?>"
-                                                           type="text"
-                                                           placeholder="請輸入..."
-                                                           value="<?= isset($reinspectionOpinion->comment) ? end($reinspectionOpinion->comment) : ""; ?>"<?=!$active?' disabled':''?>/>
-                                                </td>
-                                                <td class="updatedTime">
-                                                    <?= isset($reinspectionOpinion->comment) ? '更新時間：'.date('Y/m/d H:i:s', key($reinspectionOpinion->comment)) : ""; ?></td>
-                                                <td class="button">
-                                                    <? if($active){ ?>
-                                                    <button id="<?= $reinspection_opinion ?>" class="btn btn-primary btn-success submit comment" onclick=""><?echo isset($reinspectionOpinion->comment) ? '更新' : "送出"; ?>意見
-                                                    </button>
-                                                    <? } ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="icon">
-                                                    <button type="button" class="btn btn-<?=$CROOpinionStatus?> btn-circle"><i
-                                                                class="fa fa-<?=$CROOpinionStatusColor?>"></i></button>
-                                                </td>
-                                                <td class="title">風控長意見：<br/>專業調整分數：</td>
-                                                <td><input id="<?= $CRO_opinion ?>"
-                                                           type="text"
-                                                           placeholder="請輸入..."
-                                                           value="<?= isset($CROOpinion->comment) ? end($CROOpinion->comment) : ""; ?>"<?=!$active?' disabled':''?> /><br/>
-                                                    <input id="<?= $CRO_opinion ?>"
-                                                           type="number"
-                                                           value="<?= isset($CROOpinion->score) ? end($CROOpinion->score) : ""; ?>"
-                                                           min="0"
-                                                           step="1" max="10"<?=!$active?' disabled':''?> />
-                                                </td>
-                                                <td class="updatedTime">
-                                                    <?= isset($CROOpinion->comment) ? '更新時間：'.date('Y/m/d H:i:s', key($CROOpinion->comment)) : ""; ?>
-                                                    <br/><?= isset($CROOpinion->score) ? '更新時間：'.date('Y/m/d H:i:s', key($CROOpinion->score)) : ""; ?>
-                                                </td>
-                                                <td class="button">
-                                                    <? if($active){ ?>
-                                                    <button id="<?= $CRO_opinion ?>" class="btn btn-primary btn-info score" onclick=""><?echo isset($CROOpinion->score) ? '更新' : "送出"; ?>評分
-                                                    </button>
-                                                    <button id="<?= $CRO_opinion ?>" class="btn btn-primary btn-success comment" onclick=""><?echo isset($CROOpinion->comment) ? '更新' : "送出"; ?>意見
-                                                    </button>
-                                                    <? } ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="icon">
-                                                    <button type="button" class="btn btn-<?=$generalManageStatus?> btn-circle"><i
-                                                                class="fa fa-<?=$generalManageStatusColor?>"></i></button>
-                                                </td>
-                                                <td class="title">總經理意見：<br/>專業調整分數：</td>
-                                                <td class="input"><input id="<?= $general_manager_opinion ?>"
-                                                                         type="text"
-                                                                         placeholder="請輸入..."
-                                                                         value="<?= isset($generalManagerOpinion->comment) ? end($generalManagerOpinion->comment) : ""; ?>"<?=!$active?' disabled':''?> /><br/>
-                                                    <input id="<?= $general_manager_opinion ?>"
-                                                           type="number"
-                                                           value="<?= isset($generalManagerOpinion->score) ? end($generalManagerOpinion->score) : ""; ?>"
-                                                           min="0"
-                                                           step="1" max="10"<?=!$active?' disabled':''?> />
-                                                </td>
-                                                <td class="updatedTime">
-                                                    <?= isset($generalManagerOpinion->comment) ? '更新時間：'.date('Y/m/d H:i:s', key($generalManagerOpinion->comment)) : ""; ?>
-                                                    <br/><?= isset($generalManagerOpinion->score) ? '更新時間：'.date('Y/m/d H:i:s', key($generalManagerOpinion->score)) : ""; ?>
-                                                </td>
-                                                <td class="button">
-                                                    <? if($active){ ?>
-                                                    <button id="<?= $general_manager_opinion ?>" class="btn btn-primary btn-info submit score" onclick=""><?echo isset($generalManagerOpinion->score) ? '修改' : "更新"; ?>評分
-                                                    </button>
-                                                    <button id="<?= $general_manager_opinion ?>" class="btn btn-primary btn-success submit comment" onclick=""><?echo isset($generalManagerOpinion->comment) ? '修改' : "更新"; ?>意見
-                                                    </button>
-                                                    <? } ?>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td class="table-field center-text"><p>產品</p></td>
+                                            <td class="center-text table-reevaluation">
+                                                <p id="new-product-name"></p>
+                                            </td>
+                                            <td class="table-field center-text"><p>信用等級</p></td>
+                                            <td class="center-text table-reevaluation">
+                                                <p id="new-credit-level"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-field center-text"><p>信用評分</p></td>
+                                            <td class="center-text table-reevaluation">
+                                                <p id="new-credit-points"></p>
+                                            </td>
+                                            <td class="table-field center-text"><p>信用額度</p></td>
+                                            <td class="center-text table-reevaluation">
+                                                <p id="new-credit-amount"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-field center-text"><p>核准時間</p></td>
+                                            <td class="center-text table-reevaluation">
+                                                <p id="new-credit-created-at"></p>
+                                            </td>
+                                            <td class="table-field center-text"><p>有效時間</p></td>
+                                            <td class="center-text table-reevaluation">
+                                                <p id="new-credit-expired-at"></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <form id="credit-evaluation" method="POST" action="/admin/Target/credits">
+                                    <div class="col-lg-12 text-center">
+                                        <input id="credit_test" type="text" name="score" value="0"/ disabled>
+                                        <button class="btn btn-warning" type="submit">額度試算</button>
+                                        <a href="" target="_blank"><button class="btn btn-info">查看評分表</button></a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">審批</div>
+                            <div class="panel-body" id="opinion">
+                                <div class="opinion_item">
+                                    <div id="1_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
+                                    <div id="1_opinion_status" class="opinion_status">
+                                        <button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <div class="opinion_info">
+                                        <div>
+                                            <span style="width:30%;display:flex;align-items:center;">一審結果：</span>
+                                            <span style="width:70%;"><textarea id="1_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea></span>
+                                        </div>
+                                        <div>
+                                <span style="width:30%;">
+                                    <span>分數調整</span>
+                                    <span class="score_range"></span>
+                                    <span>：</span>
+                                </span>
+                                            <span style="width:70%;"><input id="1_score" type="number" value="0" min="0" step="1" disabled></span>
+                                        </div>
+                                        <div><span style="width:30%;">姓名：</span><span id="1_name"></span></div>
+                                        <div><span style="width:30%;">時間：</span><span id="1_approvedTime"></span></div>
+                                    </div>
+                                    <div class="opinion_button">
+                                        <button id="1_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['target_id']?>,1)" disabled>送出</button>
+                                    </div>
+                                </div>
+                                <div class="opinion_item">
+                                    <div id="2_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
+                                    <div id="2_opinion_status" class="opinion_status">
+                                        <button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <div class="opinion_info">
+                                        <div>
+                                            <span style="width:30%;display:flex;align-items:center;">二審意見：</span>
+                                            <span style="width:70%;"><textarea id="2_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea></span>
+                                        </div>
+                                        <div>
+                                <span style="width:30%;">
+                                    <span>分數調整</span>
+                                    <span class="score_range"></span>
+                                    <span>：</span>
+                                </span>
+                                            <span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1" disabled></span>
+                                        </div>
+                                        <div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
+                                        <div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
+                                    </div>
+                                    <div class="opinion_button">
+                                        <button id="2_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['target_id']?>,2)" disabled>送出</button>
+                                    </div>
+                                </div>
+                                <div class="opinion_item">
+                                    <div id="3_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
+                                    <div id="3_opinion_status" class="opinion_status">
+                                        <button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <div class="opinion_info">
+                                        <div>
+                                            <span style="width:30%;display:flex;align-items:center;">風控長意見：</span>
+                                            <span style="width:70%;"><textarea id="3_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea></span>
+                                        </div>
+                                        <div>
+                                <span style="width:30%;">
+                                    <span>分數調整</span>
+                                    <span class="score_range"></span>
+                                    <span>：</span>
+                                </span>
+                                            <span style="width:70%;"><input id="3_score" type="number" value="0" min="0" step="1" disabled></span>
+                                        </div>
+                                        <div><span style="width:30%;">姓名：</span><span id="3_name"></span></div>
+                                        <div><span style="width:30%;">時間：</span><span id="3_approvedTime"></span></div>
+                                    </div>
+                                    <div class="opinion_button">
+                                        <button id="3_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['target_id']?>,3)" disabled>送出</button>
+                                    </div>
+                                </div>
+                                <div class="opinion_item">
+                                    <div id="4_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
+                                    <div id="4_opinion_status" class="opinion_status">
+                                        <button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <div class="opinion_info">
+                                        <div>
+                                            <span style="width:30%;display:flex;align-items:center;">總經理意見：</span>
+                                            <span style="width:70%;"><textarea id="4_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea></span>
+                                        </div>
+                                        <div>
+                                <span style="width:30%;">
+                                    <span>分數調整</span>
+                                    <span class="score_range"></span>
+                                    <span>：</span>
+                                </span>
+                                            <span style="width:70%;"><input id="4_score" type="number" value="0" min="0" step="1" disabled></span>
+                                        </div>
+                                        <div><span style="width:30%;">姓名：</span><span id="4_name"></span></div>
+                                        <div><span style="width:30%;">時間：</span><span id="4_approvedTime"></span></div>
+                                    </div>
+                                    <div class="opinion_button">
+                                        <button id="4_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['target_id']?>,4)" disabled>送出</button>
                                     </div>
                                 </div>
                             </div>

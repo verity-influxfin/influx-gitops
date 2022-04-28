@@ -53,6 +53,40 @@
                                             <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                         </tr>
                                         <tr>
+                                            <td><span>產業別</span></td>
+                                            <td>
+                                                <select v-model="formData.businessTypeCode" class="table-input sk-input form-control">
+                                                    <option value="1">1:製造業 (08~34)</option>
+                                                    <option value="2">2:買賣業 (45~48)</option>
+                                                    <option value="3">3:服務業 (49~56/58~63/69~76/77~82/86~88/90~93/94~96)</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>產業週期</span></td>
+                                            <td>
+                                                <select v-model="formData.businessCycleCode" class="table-input sk-input form-control">
+                                                    <option value="A">A (01~03)</option>
+                                                    <option value="B">B (05~06)</option>
+                                                    <option value="C">C (08~34)</option>
+                                                    <option value="D">D (35)</option>
+                                                    <option value="E">E (36~39)</option>
+                                                    <option value="F">F (41~43)</option>
+                                                    <option value="G">G (45~48)</option>
+                                                    <option value="H">H (49~54)</option>
+                                                    <option value="I">I (55~56)</option>
+                                                    <option value="J">J (58~63)</option>
+                                                    <option value="L">L (67~68)</option>
+                                                    <option value="M">M (69~76)</option>
+                                                    <option value="N">N (77~82)</option>
+                                                    <option value="P">P (85)</option>
+                                                    <option value="Q">Q (86~88)</option>
+                                                    <option value="R">R (90~93)</option>
+                                                    <option value="S">S (94~96)</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td><span>公司名稱</span></td>
                                             <td><input class="sk-input form-control" type="text" v-model="formData.compName"></td>
                                         </tr>
@@ -162,6 +196,40 @@
                                     <tbody>
                                     <tr style="text-align: center;">
                                         <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>產業別</span></td>
+                                        <td>
+                                            <select v-model="formData.businessTypeCode" class="table-input sk-input form-control">
+                                                <option value="1">1:製造業 (08~34)</option>
+                                                <option value="2">2:買賣業 (45~48)</option>
+                                                <option value="3">3:服務業 (49~56/58~63/69~76/77~82/86~88/90~93/94~96)</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>產業週期</span></td>
+                                        <td>
+                                            <select v-model="formData.businessCycleCode" class="table-input sk-input form-control">
+                                                <option value="A">A (01~03)</option>
+                                                <option value="B">B (05~06)</option>
+                                                <option value="C">C (08~34)</option>
+                                                <option value="D">D (35)</option>
+                                                <option value="E">E (36~39)</option>
+                                                <option value="F">F (41~43)</option>
+                                                <option value="G">G (45~48)</option>
+                                                <option value="H">H (49~54)</option>
+                                                <option value="I">I (55~56)</option>
+                                                <option value="J">J (58~63)</option>
+                                                <option value="L">L (67~68)</option>
+                                                <option value="M">M (69~76)</option>
+                                                <option value="N">N (77~82)</option>
+                                                <option value="P">P (85)</option>
+                                                <option value="Q">Q (86~88)</option>
+                                                <option value="R">R (90~93)</option>
+                                                <option value="S">S (94~96)</option>
+                                            </select>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><span>公司名稱</span></td>

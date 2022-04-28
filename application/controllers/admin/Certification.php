@@ -1529,7 +1529,7 @@ class Certification extends MY_Admin_Controller {
 
         $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
         unset($post['id']);
-        $content['skbank_form'] = $post;
+        $content = array_replace_recursive($content, $post);
         $this->user_certification_model->update_by(
             ['id'  => $certification_info->id],
             ['content' => json_encode($content)]
@@ -1567,8 +1567,8 @@ class Certification extends MY_Admin_Controller {
             $response_data = $replace_content;
         }
 
-        if(isset($content['skbank_form']) && !empty($content['skbank_form'])){
-            $response_data = $content['skbank_form'];
+        if(isset($content) && !empty($content)){
+            $response_data = $content;
         }
         $this->json_output->setStatusCode(200)->setResponse($response_data)->send();
     }

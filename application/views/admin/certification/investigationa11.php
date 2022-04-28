@@ -178,6 +178,14 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <td><span>配偶聯徵-授信總餘額</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.spouseCreditTotalAmount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>配偶聯徵-信用卡餘額合計</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.spouseCreditCardTotalBalance"></td>
+                                                </tr>
+                                                <tr>
                                                     <td><span>配偶聯徵-擔任其他企業負責人之企業統編</span></td>
                                                     <td><input class="sk-input form-control" type="text" v-model="formData.spouseBeingOthCompPrId">
                                                     </td>

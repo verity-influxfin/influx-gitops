@@ -297,12 +297,12 @@ class Target_lib
                 if(isset($product['checkOwner']) && $product['checkOwner'] == true){
                     $mix_credit = $this->get_associates_user_data($target->id, 'all', [0 ,1], true);
                     foreach ($mix_credit as $value) {
-                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true, $target->instalment);
+                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true, $target->instalment, $target);
                     }
                     $total_point = array_sum($credit_score);
                     $rs = $this->CI->credit_lib->approve_associates_credit($target, $total_point);
                 }else{
-                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit, false, $target->instalment);
+                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit, false, $target->instalment, $target);
                 }
                 if ($rs) {
                     $credit = $this->CI->credit_lib->get_credit($user_id, $product_id, $sub_product_id, $target);
@@ -1885,6 +1885,8 @@ class Target_lib
                                     }
 
                                     $this->CI->target_model->update($value->id, $param);
+                                    $creditSheet = CreditSheetFactory::getInstance($value->id);
+                                    $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
                                 }else{
                                     $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia, $second_instance_check);
                                 }
@@ -2529,9 +2531,9 @@ class Target_lib
     {
         switch ($tabname)
         {
-            case 'enterprise':
+            case PRODUCT_TAB_ENTERPRISE:
                 return $this->get_enterprise_product_ids();
-            case 'individual':
+            case PRODUCT_TAB_INDIVIDUAL:
             default:
                 return $this->get_individual_product_ids();
         }

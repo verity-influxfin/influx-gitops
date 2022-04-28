@@ -3863,14 +3863,14 @@
                                     </td>
 
                                     <td class="bold-right-border">前一年度營業額</td>
-                                    <td colspan="3"><input name="LastYearRevenue_content" type="text"
+                                    <td colspan="3"><input name="lastOneYearRevenue_content" type="text"
                                             class="table-input" disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                onclick="edit_click('LastYearRevenue_content')" value="Edit">
+                                                onclick="edit_click('lastOneYearRevenue_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -6215,7 +6215,7 @@
     ];
     // 送出時為數字欄位
     let is_int_array = ['CompCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'IsPrMarried', 'IsBizRegAddrSelfOwn', 'IsBizAddrEqToBizRegAddr', 'IsRealBizAddrSelfOwn', 'OthRealPrSHRatio',
-        'HasJuridicalInvest', 'IsManufacturing', 'LastYearRevenue', 'DailyWorkingCapital', 'OperatingCycle', 'LiabilitiesAmount', 'EquityAmount', 'IsCovidAffected', 'EmployeeNum', 'HasForeignInvestment', 'HasRelatedCompany', 'BusinessTaxLastOneYear', 'BusinessTaxLastTwoYear', 'BusinessTaxLastThreeYear',
+        'HasJuridicalInvest', 'IsManufacturing', 'lastOneYearRevenue', 'DailyWorkingCapital', 'OperatingCycle', 'LiabilitiesAmount', 'EquityAmount', 'IsCovidAffected', 'EmployeeNum', 'HasForeignInvestment', 'HasRelatedCompany', 'BusinessTaxLastOneYear', 'BusinessTaxLastTwoYear', 'BusinessTaxLastThreeYear',
         'LastOneYearInvoiceAmountM1M2', 'LastOneYearInvoiceAmountM3M4'];
     function edit_click(id_content) {
         $(`[name=${id_content}]`).each((i, e) => { $(e).prop('disabled', function (i, v) { return !v; }) })

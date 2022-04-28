@@ -16,6 +16,7 @@ class CreditSheetFactory {
         $CI = &get_instance();
         $CI->load->model('user/user_model');
         $CI->load->model('loan/credit_sheet_model');
+        $CI->load->library('target_lib');
 
         $target = $CI->target_model->get_by(['id'=>$targetId]);
         $user = $CI->user_model->get_by(['id'=> $target->user_id ?? 0]);
@@ -23,15 +24,11 @@ class CreditSheetFactory {
 
         // 判斷類型
         $call_type = '';
-        if (in_array($target->product_id, [PRODUCT_SK_MILLION_SMEG]))
+        if (in_array($target->product_id, $CI->target_lib->get_product_id_by_tab(PRODUCT_TAB_ENTERPRISE)))
         {
             $call_type = USER_IS_COMPANY;
         }
-        elseif (in_array($target->product_id, [
-            PRODUCT_ID_STUDENT,
-            PRODUCT_ID_STUDENT_ORDER,
-            PRODUCT_ID_SALARY_MAN,
-            PRODUCT_ID_SALARY_MAN_ORDER]))
+        elseif (in_array($target->product_id, $CI->target_lib->get_product_id_by_tab(PRODUCT_TAB_INDIVIDUAL)))
         {
             $call_type = USER_NOT_COMPANY;
         }

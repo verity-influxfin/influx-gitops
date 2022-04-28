@@ -54,8 +54,16 @@
                                             <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                         </tr>
                                         <tr>
-                                            <td><span>前一年度營業額</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastYearRevenue"></td>
+                                            <td><span>近一年度營業額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearRevenue"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近二年度營業額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearRevenue"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近三年度營業額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearRevenue"></td>
                                         </tr>
                                         <tr>
                                             <td><span>每日營運資金需求量</span></td>
@@ -71,7 +79,97 @@
                                         </tr>
                                         <tr>
                                             <td><span>權益總額</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.equityAmount" placeholder="格式:YYYYMMDD">
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.equityAmount">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近一年銷貨成本</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearCostOfGoodsSold">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近二年銷貨成本</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearCostOfGoodsSold">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近三年銷貨成本</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearCostOfGoodsSold">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近一年毛利率</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearGrossMargin">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近二年毛利率</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearGrossMargin">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近三年毛利率</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearGrossMargin">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近一年資產負債表之應收帳款</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearTradeReceivable">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近二年資產負債表之應收帳款</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearTradeReceivable">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近三年資產負債表之應收帳款</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearTradeReceivable">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近一年資產負債表之存貨</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInventory">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近二年資產負債表之存貨</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInventory">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近三年資產負債表之存貨</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInventory">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近一年固定成本</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearFixedCost">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近二年固定成本</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearFixedCost">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近三年固定成本</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearFixedCost">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近一年變動成本</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearVariableCost">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近二年變動成本</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearVariableCost">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>近三年變動成本</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearVariableCost">
                                             </td>
                                         </tr>
                                         <tr>
@@ -86,7 +184,7 @@
                                     </tr>
                                     <tr>
                                         <td><span>前一年度營業額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastYearRevenue"></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearRevenue"></td>
                                     </tr>
                                     <tr>
                                         <td><span>每日營運資金需求量</span></td>
@@ -205,7 +303,7 @@
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
-                    lastYearRevenue: '',
+                    lastOneYearRevenue: '',
                     dailyWorkingCapital: '',
                     operatingCycle: '',
                     liabilitiesAmount: '',

@@ -25,8 +25,8 @@ class CompanyCreditSheet extends CreditSheetBase {
     protected $finalReviewerLevel = self::REVIEWER_CHIEF_EXECUTIVE_OFFICER;
 
     // 可評分範圍
-    protected $scoringMin = -500;
-    protected $scoringMax = 500;
+    protected $scoringMin = -20;
+    protected $scoringMax = 20;
 
     // 還款中案件
     public $repayableTargets;
@@ -229,7 +229,7 @@ class CompanyCreditSheet extends CreditSheetBase {
 
             $estimatedCredit = $this->CI->credit_lib->approve_credit($this->user->id,
                 $this->target->product_id, $this->target->sub_product_id,
-                $this->CI->approvalextra, $level, false, false, $this->target->instalment);
+                $this->CI->approvalextra, $level, false, false, $this->target->instalment, $this->target);
         }
 
         $separator = ', ';
@@ -305,13 +305,6 @@ class CompanyCreditSheet extends CreditSheetBase {
      * @return bool
      */
     public function hasCreditLine() : bool {
-        $credit = $this->CI->credit_sheet_model->getLastAvailableCredit($this->user->id, $this::ALLOW_PRODUCT_LIST);
-        if(!empty($credit)) {
-            $credit = reset($credit);
-            // 授信類行為增貸且申貸期數相同時
-            return in_array($this->basicInfo->getCreditCategory(), [$this::CREDIT_CATEGORY_INCREMENTAL_LOAN]) &&
-                $credit->instalment == $this->target->instalment;
-        }
         return FALSE;
     }
 }
