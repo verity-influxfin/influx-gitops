@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -108,6 +109,11 @@ class ProductController extends Controller
     {
         try {
             $client = new Client();
+
+            if ($file[$type]['type'] != 'application/pdf') {
+                return ['status' => 400, 'data' => ['error' => 200, 'msg' => '格式錯誤']];
+            }
+
             $res = $client->request('POST', env('API_URL') . $path, [
                 'headers' => [
                     'request_token' => Session::get('token')
@@ -115,7 +121,8 @@ class ProductController extends Controller
                 'multipart' => [
                     [
                         'name'     => $type,
-                        'contents' => fopen($file[$type]['tmp_name'], 'r'),
+                        'contents' => Psr7\Utils::tryFopen($file[$type]['tmp_name'], 'r'),
+                        'filename' => $file[$type]['name']
                     ],
                 ]
             ]);
