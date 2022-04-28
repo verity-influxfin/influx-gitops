@@ -2218,30 +2218,6 @@ class Target_lib
         return $stage_cer;
     }
 
-//    private function judicialyuan($user_id){
-//        $this->CI->load->library('scraper/judicial_yuan_lib.php');
-//        $verdictsStatuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($user_id);
-//        if(isset($verdictsStatuses['status'])){
-//            if($verdictsStatuses['status'] == 204){
-//                $this->CI->load->model('user/user_model');
-//                $user_info = $this->CI->user_model->get_by([
-//                    "id"		=> $user_id,
-//                    "name !="	=> '',
-//                    "id_card_place !="	=> '',
-//                ]);
-//                if($user_info){
-//                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($user_info->name, $user_info->address, $user_info->id);
-//                }
-//                return false;
-//            }elseif($verdictsStatuses['status'] == 200){
-//                if( ! isset($verdictsStatuses['response']['status']) || $verdictsStatuses['response']['status'] != '爬蟲執行完成'){
-//                    return false;
-//                }
-//            }
-//        }
-//        return true;
-//    }
-
     public function get_associates($user_id){
         $this->CI->load->model('loan/target_associate_model');
         $params = [
