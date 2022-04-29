@@ -1,67 +1,107 @@
 <template>
     <div class="index-wrapper">
-        <div class="swiper-container 標頭幻燈片">
-            <div class="swiper-wrapper">
-                <!-- 微企e秒貸 -->
-                <div class="swiper-slide">
-                    <a href="/business-loan/sme">
-                        <img :data-src="require('@/asset/images/sme-index-banner.gif')" class="旗幟圖片 swiper-lazy">
-                        <img :data-src="require('@/asset/images/sme-index-banner-phone.gif')" class="旗幟圖片 旗幟圖片_手機的 swiper-lazy">
-                    </a>
-                </div>
-                <!-- 學生貸 -->
-                <div class="swiper-slide">
-                    <a href="/collegeLoan">
-                        <img src="/images/普匯 你的手機ATM (學生貸) Banner.gif" class="旗幟圖片">
-                        <img src="/images/普匯-你的手機ATM-(學生貸)手機版.gif" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
-                </div>
-                <!-- 上班族 -->
-                <div class="swiper-slide">
-                    <a href="/workLoan">
-                        <img src="/images/普匯-你的手機ATM-(上班族)-Banner.gif" class="旗幟圖片">
-                        <img src="/images/普匯-你的手機ATM-(上班族)手機版.gif" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
-                </div>
-                <!-- 普匯‧你的手機ATM -->
-                <div class="swiper-slide">
-                    <div class="banner">
-                        <div class="puhey-banner">
-                            <img src="/images/首頁BANNER.png" class="hidden-desktop img-fluid" />
-                            <img src="/images/index-banner-m.jpg" class="hidden-phone img-fluid" />
-                            <img src="/images/diagram-d.svg" class="diagram hidden-desktop" />
-                            <img src="/images/diagram-m.svg" class="diagram hidden-phone" />
-
-                            <div class="content hidden-desktop">
-                                <div class="box">
-                                    <a class="loan" href="/investLink">
-                                        <img src="/images/home_banner_button_bg_blue.svg" class="img-fluid" />
-                                        <div class="text">我想投資 <i class="fa fa-angle-double-right"></i></div>
-                                    </a>
-                                    <a class="borrow" href="/borrowLink">
-                                        <img src="/images/home_banner_button_bg_grey.svg" class="img-fluid" />
-                                        <div class="text">我想借款 <i class="fa fa-angle-double-right"></i></div>
-                                    </a>
+        <div class="index-intro">
+            <div class="row no-gutters block-content intro-content">
+                <div class="intro-products">
+                    <div class="product-item">
+                        <div class="card">
+                            <div class="card-title">學生貸</div>
+                            <div class="card-content p1">
+                                <div class="card-subtitle">額度最高15萬</div>
+                                <div class="card-image p1"></div>
+                                <router-link to="/collegeLoan" class="card-link">
+                                    了解更多
+                                </router-link>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="card">
+                            <div class="card-title">3S名校貸</div>
+                            <div class="card-content">
+                                <div class="card-subtitle">額度最高18萬</div>
+                                <div class="card-image p2"></div>
+                               <router-link to="/3s-college-loan" class="card-link">
+                                    了解更多
+                                </router-link>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="card">
+                            <div class="card-title">資訊工程師貸</div>
+                            <div class="card-content">
+                                <div class="card-subtitle">額度最高30萬</div>
+                                <div class="card-image p3"></div>
+                                <router-link to="/engineerLoan" class="card-link">
+                                    了解更多
+                                </router-link>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="card">
+                            <div class="card-title">上班族貸</div>
+                            <div class="card-content">
+                                <div class="card-subtitle">額度最高30萬</div>
+                                <div class="card-image p4"></div>
+                                <router-link to="/workLoan" class="card-link">
+                                    了解更多
+                                </router-link>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="card">
+                            <div class="card-title">企業主速貸</div>
+                            <div class="card-content">
+                                <div class="card-subtitle">額度最高100萬</div>
+                                <div class="card-image p5"></div>
+                                <div class="card-link">
+                                    <a>了解更多</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- 後台設定 -->
-                <div class="swiper-slide" v-for="item in swiperItems" :key="item.desktop">
-                    <a :href="item.link">
-                        <img :src="item.desktop" class="旗幟圖片">
-                        <img :src="item.mobile" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
+                    <div class="product-item">
+                        <div class="card">
+                            <div class="card-title">信保專案(銀行)</div>
+                            <div class="card-content">
+                                <div class="card-subtitle">額度最高600萬</div>
+                                <div class="card-image p6"></div>
+                                <div class="card-link">
+                                    <a>了解更多</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="card">
+                            <div class="card-title">企業貸款</div>
+                            <div class="card-content">
+                                <div class="card-subtitle">額度最高2000萬</div>
+                                <div class="card-image p7"></div>
+                                <div class="card-link">
+                                    <a>了解更多</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="card">
+                            <div class="card-title">慈善公益</div>
+                            <div class="card-content">
+                                <div class="card-subtitle">台大兒醫</div>
+                                <div class="card-image p8"></div>
+                                <router-link to="/charitable" class="card-link">
+                                    了解更多
+                                </router-link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- 導覽按鈕 -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-            <!-- / 導覽按鈕 -->
         </div>
-
         <!-- 計數器 -->
         <div class="計數器">
             <alesis-space size="small"></alesis-space>
@@ -249,7 +289,7 @@
         <!-- / 分期計算機 -->
 
         <div class="user-experience">
-            <div class="block-content mx-auto">
+            <div class="block-content">
                 <div class="row no-gutters">
                     <div class="col-12">
                         <div class="block-title">用戶體驗</div>
@@ -1872,12 +1912,126 @@ export default {
         }
     }
 }
+.index-intro{
+    background-image: url('~images/index/index-header-bg.png');
+    background-position: center;
+    padding: 30px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 750px;
+    .intro-content{
+        height: 100%;
+        background-image: url('~images/index/index-header-bg-2.png');
+        background-size: cover;
+        background-position: center -40px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        .intro-products{
+            display: grid;
+            grid-template-rows: 160px 160px;
+            gap: 20px;
+            grid-template-columns: repeat(4, 230px);
+        }
+        .product-item{
+            .card{
+                padding: 12px;
+                border-radius: 4px;
+            }
+            .card-title{
+                font-weight: 700;
+                font-size: 24px;
+                line-height: 35px;
+                color: #393939;
+            }
+            .card-content{
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 60px 30px;
+                grid-template-areas:
+                "subtitle image"
+                "link image";
+                .card-subtitle{
+                    grid-area: subtitle;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 20px;
+                    color: #707070;
+                }
+                .card-link{
+                    grid-area: link;
+                    font-size: 15px;
+                    line-height: 22px;
+                    text-decoration-line: underline;
+                    color: #036EB7;
+                }
+                .card-image{
+                    grid-area: image;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    background-position: center;
+                    &.p1{
+                        background-image: url('~images/index/backpack1.svg');
+                        &:hover,&:focus-within{
+                            background-image: url('~images/index/backpack.gif');
+                        }
+                    }
+                    &.p2{
+                        background-image: url('~images/index/mortarboard1.png');
+                        &:hover,&:focus-within{
+                            background-image: url('~images/index/mortarboard.gif');
+                        }
+                    }
+                    &.p3{
+                        background-image: url('~images/index/computer1.png');
+                        &:hover,&:focus-within{
+                            background-image: url('~images/index/computer.gif');
+                        }
+                    }
+                    &.p4{
+                        background-image: url('~images/index/id1.png');
+                        &:hover,&:focus-within{
+                            background-image: url('~images/index/id.gif');
+                        }
+                    }
+                    &.p5{
+                        background-image: url('~images/index/handshake1.png');
+                        &:hover,&:focus-within{
+                            background-image: url('~images/index/handshake.gif');
+                        }
+                    }
+                    &.p6{
+                        background-image: url('~images/index/university1.png');
+                        &:hover,&:focus-within{
+                            background-image: url('~images/index/university.gif');
+                        }
+                    }
+                    &.p7{
+                        background-image: url('~images/index/building1.png');
+                        &:hover,&:focus-within{
+                            background-image: url('~images/index/building.gif');
+                        }
+                    }
+                    &.p8{
+                        background-image: url('~images/index/love1.png');
+                        &:hover,&:focus-within{
+                            background-image: url('~images/index/love.gif');
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
 /**
     user experience
 */
 .block-content{
     width: 100%;
     max-width: 1400px;
+    margin: 0 auto;
 }
 .user-experience{
     position: relative;
@@ -1886,6 +2040,7 @@ export default {
     background-repeat: no-repeat;
     background-position: 0 top;
     height: 820px;
+
     .block-title{
         margin-top: 36px;
         font-size: 56px;
