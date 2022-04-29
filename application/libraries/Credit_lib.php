@@ -659,7 +659,8 @@ class Credit_lib{
             'sub_product_id' => $sub_product_id,
             'user_id' => $user_id,
             'amount' => 0,
-            'instalment' => $instalment
+            'instalment' => $instalment,
+            'type_code' => 0
         ];
 
         $this->CI->config->load('credit', TRUE);
@@ -691,6 +692,7 @@ class Credit_lib{
         $credit_list = [];
         if (isset($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]['businessTypeCode']))
         {
+            $param['type_code'] = $certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]['businessTypeCode'];
             switch ($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]['businessTypeCode'])
             {
                 case INDUSTRY_CODE_MANUFACTURING:

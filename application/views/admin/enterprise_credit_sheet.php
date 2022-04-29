@@ -36,7 +36,7 @@
                                     		<tr>
                                                 <td><?=$detail['item']?></td>
                                                 <td><?=$detail['subitem']?></td>
-                                                <td><?=$detail['options']?></td>
+                                                <td><?=$detail['option']?></td>
                                                 <td><?=$detail['score']?></td>
                                             </tr>
                                         <?php }?>

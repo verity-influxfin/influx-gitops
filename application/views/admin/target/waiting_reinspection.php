@@ -1169,7 +1169,7 @@
                                     <div class="col-lg-12 text-center">
                                         <input id="credit_test" type="text" name="score" value="0"/ disabled>
                                         <button class="btn btn-warning" type="submit">額度試算</button>
-                                        <a href="" target="_blank"><button class="btn btn-info">查看評分表</button></a>
+                                        <button class="btn btn-info"  onclick="window.open('/admin/Enterprise/credit_sheet/<?=isset($targetInfo)?$targetInfo->id:0?>', '_blank')">查看評分表</button>
                                     </div>
                                 </form>
                             </div>
