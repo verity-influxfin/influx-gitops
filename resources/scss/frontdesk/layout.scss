@@ -252,6 +252,7 @@ $ci-color: #153a71;
                 padding-bottom: 15px;
                 margin-bottom: 15px;
                 border-bottom: 2px solid #fff;
+                color: #fff;
             }
             .link-item{
                 padding-bottom: 15px;
@@ -260,6 +261,13 @@ $ci-color: #153a71;
                 font-weight: 500;
                 font-size: 20px;
                 line-height: 29px;
+                .link-text{
+                    color: #e6e6e6;
+                }
+                .link-coming-soon{
+                    font-size: 14px;
+                    line-height: 1;
+                }
             }
             &.charitable{
                 justify-content: center;
@@ -282,9 +290,6 @@ $ci-color: #153a71;
         }
     }
 }
-
-
-
 .alesis-header {
     color: #393939;
     display: flex;

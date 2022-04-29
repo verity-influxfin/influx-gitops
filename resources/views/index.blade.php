@@ -164,48 +164,66 @@
                                             <div class="function-list-items">
                                                 <div class="link-title">個人金融</div>
                                                 <div class="link-item">
-                                                    <a href="/collegeLoan" class="text-white">學生貸</a>
+                                                    <a href="/collegeLoan" class="link-text">學生貸</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/3s-college-loan" class="text-white">3s名校貸</a>
+                                                    <a href="/3s-college-loan" class="link-text">3s名校貸</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/workLoan" class="text-white">上班族貸</a>
+                                                    <a href="/workLoan" class="link-text">上班族貸</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/engineerLoan" class="text-white">資訊工程師貸</a>
+                                                    <a href="/engineerLoan" class="link-text">資訊工程師貸</a>
                                                 </div>
                                             </div>
                                             <div class="function-list-items">
                                                 <div class="link-title">企業金融</div>
                                                 <div class="link-item">
-                                                    <a href="/business-loan/sme" class="text-white">微企e秒貸</a>
+                                                    <a href="/business-loan/sme" class="link-text">微企e秒貸</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <div class="text-white">信保專案融資 (coming soon)</div>
+                                                    <div class="link-text">
+                                                        <div>信保專案融資</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
                                                 </div>
                                                 <div class="link-item">
-                                                    <div class="text-white">一般企業融資 (coming soon)</div>
+                                                    <div class="link-text">
+                                                        <div>一般企業融資</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <!-- <div class="function-list-items">
+                                            <div class="function-list-items">
                                                 <div class="link-title">汽車貸款</div>
                                                 <div class="link-item">
-                                                    <a href="" class="text-white">我是消費者</a>
+                                                    <div class="link-text">
+                                                        <div>我是消費者</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="" class="text-white">我是車商</a>
+                                                    <div class="link-text">
+                                                        <div>我是車商</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="function-list-items">
                                                 <div class="link-title">分享QR</div>
                                                 <div class="link-item">
-                                                    <a href="" class="text-white">我是推薦者</a>
+                                                    <div class="link-text">
+                                                        <div>我是推薦者</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="" class="text-white">我是特約商</a>
+                                                    <div class="link-text">
+                                                        <div>我是特約商</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
                                                 </div>
-                                            </div> -->
+                                            </div>
                                         </div>
                                         <div class="col"></div>
                                     </div>
@@ -222,7 +240,7 @@
                                             <div class="function-list-items">
                                                 <div class="link-title">慈善捐款</div>
                                                 <div class="link-item">
-                                                    <a href="/charitable" class="text-white">台大兒醫</a>
+                                                    <a href="/charitable" class="link-text">台大兒醫</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -242,16 +260,16 @@
                                                 <div class="link-title">投資專區</div>
                                                 <div class="d-flex justify-content-between">
                                                     <div class="link-item">
-                                                        <a href="/investment" class="text-white">債權投資</a>
+                                                        <a href="/investment" class="link-text">債權投資</a>
                                                     </div>
                                                     <div class="link-item">
-                                                        <a href="/transfer" class="text-white">債權轉讓</a>
+                                                        <a href="/transfer" class="link-text">債權轉讓</a>
                                                     </div>
                                                     <div class="link-item">
-                                                        <a href="/risk" class="text-white">風險報告書</a>
+                                                        <a href="/risk" class="link-text">風險報告書</a>
                                                     </div>
                                                     <div class="link-item">
-                                                        <a href="/projects" class="text-white">查看案件</a>
+                                                        <a href="/projects" class="link-text">查看案件</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -271,43 +289,43 @@
                                             <div class="function-list-items">
                                                 <div class="link-title">關於我們</div>
                                                 <div class="link-item">
-                                                    <a href="/company" class="text-white">公司介紹</a>
+                                                    <a href="/company" class="link-text">公司介紹</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/index#company-intro" class="text-white">公司歷程</a>
+                                                    <a href="/index#company-intro" class="link-text">公司歷程</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/news" class="text-white">最新消息</a>
+                                                    <a href="/news" class="link-text">最新消息</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/blog" class="text-white">AI金融科技新知</a>
-                                                </div>
-                                                <!-- <div class="link-item">
-                                                    <a href="" class="text-white">合作夥伴</a>
+                                                    <a href="/blog" class="link-text">AI金融科技新知</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="" class="text-white">媒體消息</a>
-                                                </div> -->
+                                                    <a href="" class="link-text">合作夥伴</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="" class="link-text">媒體消息</a>
+                                                </div>
                                             </div>
                                             <div class="function-list-items">
                                                 <div class="link-title">服務項目</div>
                                                 <div class="link-item">
-                                                    <a href="/news" class="text-white">最新消息</a>
+                                                    <a href="/news" class="link-text">最新消息</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/faq" class="text-white">常見問題</a>
+                                                    <a href="/faq" class="link-text">常見問題</a>
                                                 </div>
                                             </div>
                                             <div class="function-list-items">
                                                 <div class="link-title">合作洽談</div>
                                                 <div class="link-item">
-                                                    <a href="/recruiting" class="text-white">普匯徵才</a>
+                                                    <a href="/recruiting" class="link-text">普匯徵才</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/clubcooperation" class="text-white">社團贊助</a>
+                                                    <a href="/clubcooperation" class="link-text">社團贊助</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/companycooperation" class="text-white">業務合作</a>
+                                                    <a href="/companycooperation" class="link-text">業務合作</a>
                                                 </div>
                                             </div>
                                         </div>
