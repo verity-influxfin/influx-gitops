@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="col d-flex align-items-center justify-content-center pl-4">
-        <file-upload-input @change="onFileChange" multiple />
+        <file-upload-input @change="onFileChange" accept=".jpg,.png,.pdf" />
       </div>
     </div>
     <div class="row no-gutters mt-3 justify-content-end">

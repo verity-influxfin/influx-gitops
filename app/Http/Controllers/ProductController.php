@@ -103,7 +103,6 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return ['status' => 500, 'data' => []];
         }
-
         return $this->_parseDeusResponse(json_decode($res->getBody(), TRUE));
     }
 
@@ -111,8 +110,7 @@ class ProductController extends Controller
     {
         try {
             $client = new Client();
-
-            if ($file[$type]['type'] != 'application/pdf') {
+            if ($file[$type]['type'] != 'application/pdf' && !str_contains($file[$type]['type'],'image')) {
                 return ['status' => 400, 'data' => ['error' => 200, 'msg' => '格式錯誤']];
             }
 
@@ -166,7 +164,7 @@ class ProductController extends Controller
         ) {
             $returnData['status'] = 200;
             $returnData['data'] = [
-                'data' => $responseData['result']
+                'data' => $responseData['data'] ?? ''
             ];
         } elseif (isset($responseData['error'])) {
             $returnData['status'] = 400;
