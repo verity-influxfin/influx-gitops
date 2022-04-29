@@ -345,7 +345,7 @@
                                 <div class="clear-icon" @click="doClear">x</div>
                             </div>
                             <div class="item ml-3 d-flex align-items-center">
-                                <button @click="openLoginModal" class="login-btn btn d-none" :class="{'d-block':!flag || flag === 'logout'}">Login</button>
+                                <button @click="openLoginModal" class="login-btn btn d-none" :class="{'d-block':!flag || flag === 'logout'}">我的/Login</button>
                                 <div class="nav-item dropdown d-none" :class="{'d-block':Object.keys(userData).length !== 0}">
                                     <a class="nav-link dropdown-toggle" style="color: #036EB7;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                                     <ul class="dropdown-menu" style="min-width: 5rem;">
