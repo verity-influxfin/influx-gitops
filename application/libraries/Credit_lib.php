@@ -462,18 +462,17 @@ class Credit_lib{
             }
         }
 
+        if ($stage_cer)
+        {
+            $tmp_msg = '--- 原始風控計算: ' . $total;
+            $total = min($total, $this->credit['credit_level_3'][10]['end']);
+            $this->scoreHistory[] = "{$tmp_msg}; 因階段上架調整為: {$total} ---";
+        }
+
         if ($approvalExtra && $approvalExtra->getExtraPoints()) {
             $extra_point = $approvalExtra->getExtraPoints();
             $total += $extra_point;
             $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
-        }
-
-        if ($stage_cer)
-        {
-            $total = 100;
-            $this->scoreHistory = [
-                '階段上架: 100'
-            ];
         }
 
         $param['points'] = (int) $total;
