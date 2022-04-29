@@ -10,7 +10,6 @@
         <div class="panel-heading">
             <div class="d-flex">
                 <div class="search-btn">
-
                     <div>
                         KPI 指標&nbsp;&nbsp;
                         <input type="month" id="yearmonth" value="<?=$goal_ym?>" />
@@ -96,6 +95,8 @@
                                 <tr><td rowspan="3">中小企業</td><td>目標成交筆數</td><?=$datas[13]['goal']?></tr>
                                 <tr><td>實際成交筆數</td><?=$datas[13]['real']?></tr>
                                 <tr><td>達成率</td><?=$datas[13]['rate']?></tr>
+
+                                <tr><td>總數</td><td>總成交數</td><?=$total_deals?></tr>
                             </tbody>
                         </table>
                     </div>

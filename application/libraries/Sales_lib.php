@@ -2,8 +2,9 @@
 
 class Sales_lib
 {
-    private $at_month = '';
-    private $days_in_month = 0;
+    private $at_month = ''; // '202204'
+    private $days_in_month = 0; // 30
+    private $total_deals = []; // 成交總數
 
     // [
     //     Sale_goals_model::GOAL_WEB_TRAFFIC => [
@@ -42,11 +43,14 @@ class Sales_lib
         $this->CI->load->model('user/sale_goals_model');
         $this->CI->load->model('user/sale_dashboard_model');
 
-        $this->at_month = $params['at_month']; // '202204'
-        $this->days_in_month = $this->get_days_in_month($params['at_month']); // 30
+        $this->at_month = $params['at_month'];
+        $this->days_in_month = $this->_get_days_in_month($params['at_month']);
+
+        // 檢查 at_month 是否有設定過目標
+        // $this->is_goals_exist_at_month();
     }
 
-    private function get_days_in_month($at_month)
+    private function _get_days_in_month($at_month)
     {
         return (int) date('t', strtotime(date($at_month . '01')));
     }
@@ -54,8 +58,9 @@ class Sales_lib
     public function calculate()
     {
         $return_data = [];
+        $this->_init_total_deals();
 
-        // 取得本月的各項目標
+        // 取得本月的各項目標 BUT 但這邊如果選了別的月份可能會沒有目標 TODO
         $goals = $this->get_goals();
 
         // 取得本月的各項績效資料
@@ -71,8 +76,22 @@ class Sales_lib
             $return_data[$key] = $this->_data_parser(
                 $key, $goals, $datas[$key]);
         }
+        
+        $this->_sum_total_deals_and_put_at_head();
+        $return_data['total_deals'] = $this->total_deals;
 
         return $return_data;
+    }
+
+    private function _init_total_deals()
+    {
+        $this->total_deals = array_fill(0, $this->days_in_month, 0);
+    }
+
+    private function _sum_total_deals_and_put_at_head()
+    {
+        $total = array_sum($this->total_deals);
+        array_unshift($this->total_deals, $total);
     }
 
     private function _parse_dashboard_key_to_goal_key($datas)
@@ -108,15 +127,21 @@ class Sales_lib
 
         foreach ($type_datas as $value)
         {
-            $day_key = explode('-', $value['data_at'])[2] - 1;
+            $day2key = explode('-', $value['data_at'])[2] - 1;
             $real_a_month += $value['amounts'];
 
             // 計算達成率 real/goal 取百分比
-            $real[$day_key] = $value['amounts'];
-            $rate[$day_key] = $this->_caculate_rate($value['amounts'], $goal_per_day);
+            $real[$day2key] = $value['amounts'];
+            $rate[$day2key] = $this->_caculate_rate($value['amounts'], $goal_per_day);
+
+            // 檢查是否要累積成交數
+            if (in_array($type, $this->_total_deal_content_type()))
+            {
+                $this->total_deals[$day2key] += $value['amounts'];
+            }
         }
 
-        // 計算第一行的總和
+        // 將總和資料塞進第一行
         array_unshift($goal, $goal_a_month);
         array_unshift($real, $real_a_month);
         array_unshift($rate, $this->_caculate_rate($real_a_month, $goal_a_month));
@@ -131,6 +156,17 @@ class Sales_lib
     private function _caculate_rate($real, $goal): String
     {
         return round($real / $goal * 100) . '%';
+    }
+
+    private function _total_deal_content_type()
+    {
+        return [
+            sale_dashboard_model::TARGET_DEAL_SALARY_MAN,
+            sale_dashboard_model::TARGET_DEAL_STUDENT,
+            sale_dashboard_model::TARGET_DEAL_SMART_STUDENT,
+            sale_dashboard_model::TARGET_DEAL_CREDIT_INSURANCE,
+            sale_dashboard_model::TARGET_DEAL_SME,
+        ];
     }
 
     public function get_goals()
