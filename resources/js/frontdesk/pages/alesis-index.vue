@@ -248,8 +248,181 @@
         </div>
         <!-- / 分期計算機 -->
 
+        <div class="user-experience">
+            <div class="block-content mx-auto">
+                <div class="row no-gutters">
+                    <div class="col-12">
+                        <div class="block-title">用戶體驗</div>
+                        <div class="block-info">我們提供最溫暖的金融科技服務</div>
+                    </div>
+                </div>
+                <div class="row no-gutters swiper-container user-experience-back">
+                   <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                           <div class="row no-gutters user-comment">
+                               <div class="col-auto">
+                                   <div class="card comment-card">
+                                       <div class="card-body">
+                                           <div class="card-title star">
+                                               <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                                           </div>
+                                           <div class="card-text">
+                                               很棒的平台，是一個不錯的投資管道，創造穩定的現金流，不用怕被股市震盪影響心情。
+                                           </div>
+                                           <div class="mt-2 d-flex align-items-center">
+                                               <div class="portrait mr-2">
+                                                   <img src="@/asset/images/ue-1.png" alt="">
+                                               </div>
+                                               <span>
+                                                  王先生
+                                               </span>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="col-auto mx-5">
+                                   <div class="card comment-card">
+                                       <div class="card-body">
+                                           <div class="card-title star">
+                                               <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                                           </div>
+                                           <div class="card-text">
+                                               很棒的新創公司，雖然成立時間不長，但是在選校園大使期間，也感受到這間公司的氛圍是很棒的，是歡樂的。
+                                           </div>
+                                           <div class="mt-2 d-flex align-items-center">
+                                               <div class="portrait mr-2">
+                                                   <img src="@/asset/images/ue-2.png" alt="">
+                                               </div>
+                                               <span>
+                                                  陳小姐
+                                               </span>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="col-auto">
+                                   <div class="card comment-card">
+                                       <div class="card-body">
+                                           <div class="card-title star">
+                                               <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                                           </div>
+                                           <div class="card-text">
+                                               對於實習生培訓企劃用心且真誠，老闆會針對提案親自給予回饋，在乎並深耕於教育與人才養成
+                                           </div>
+                                           <div class="mt-2 d-flex align-items-center">
+                                               <div class="portrait mr-2">
+                                                   <img src="@/asset/images/ue-3.png" alt="">
+                                               </div>
+                                               <span>
+                                                  林先生
+                                               </span>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                        </div>
+                        <div class="swiper-slide">
+                           <div class="row no-gutters user-comment">
+                               <div class="col-auto">
+                                    <iframe
+                                        width="360"
+                                        height="230px"
+                                        src="https://www.youtube.com/embed/VTJB7c1fS-4"
+                                        title="YouTube video player"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen
+                                    >
+                                   </iframe>
+                               </div>
+                               <div class="col-auto mx-5">
+                                    <iframe
+                                        width="360"
+                                        height="230"
+                                        src="https://www.youtube.com/embed/YkZyp5iSgxs"
+                                        title="YouTube video player"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen
+                                    >
+                                   </iframe>
+                               </div>
+                               <div class="col-auto">
+                                    <iframe
+                                        width="360"
+                                        height="230"
+                                        src="https://www.youtube.com/embed/ewEoWAjkbGs"
+                                        title="YouTube video player"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen
+                                    >
+                                   </iframe>
+                               </div>
+                           </div>
+                        </div>
+                    </div>
+                    <!-- 導覽按鈕 -->
+                    <div class="swiper-button-prev ue-prev"></div>
+                    <div class="swiper-button-next ue-next"></div>
+                </div>
+            </div>
+            <div class="row align-items-center media">
+                <div class="col">
+                    <a class="項目" href="https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html" target="_blank">
+                        <img class="圖片" src="/images/media/a645f762048f5f425d0f0a8486f34612.png" alt="Yahoo!新聞">
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="項目" href="http://n.yam.com/Article/20180803346949" target="_blank">
+                        <img class="圖片" src="/images/media/1JHY1QOLYPF0.png" alt="蕃薯藤">
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="項目" href="https://www.nownews.com/news/20180807/2798010/" target="_blank">
+                        <img class="圖片" src="/images/media/Now_News_logo.png" alt="今日新聞">
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="項目" href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv" target="_blank">
+                        <img class="圖片" src="/images/media/logo-chinatimes2019.png" alt="中時電子報">
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="項目" href="https://www.wealth.com.tw/home/articles/20567" target="_blank">
+                        <img class="圖片" src="/images/media/logo-red.png" alt="財訊">
+                    </a>
+                </div>
+                 <div class="col">
+                    <a class="項目" href="https://news.cnyes.com/news/id/4267004" target="_blank">
+                        <img class="圖片" src="/images/media/logo-cn-yes-1.png" alt="鉅亨網">
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="項目" href="https://www.gvm.com.tw/article/71426" target="_blank">
+                        <img class="圖片" src="/images/media/logo_gvm.svg" alt="遠見">
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="項目" href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198" target="_blank">
+                        <img class="圖片" src="/images/media/logo300_90.png" alt="工商時報">
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="項目" href="https://www.setn.com/News.aspx?NewsID=792990" target="_blank">
+                        <img class="圖片" src="/images/media/logo_setn.png" alt="三立新聞網">
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="項目" href="https://www.cna.com.tw/postwrite/detail/279030" target="_blank">
+                        <img class="圖片" src="/images/media/logo_cna.png" alt="中央通訊社">
+                    </a>
+                    </div>
+            </div>
+        </div>
         <!-- 人物推薦 -->
-        <div class="人物推薦">
+        <!-- <div class="人物推薦">
             <alesis-header>
                 <div class="標題">看看他們怎麼說</div>
             </alesis-header>
@@ -258,11 +431,11 @@
                 <alesis-suggestion-reviews type="index"></alesis-suggestion-reviews>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
-        </div>
+        </div> -->
         <!-- / 人物推薦 -->
 
         <!-- 媒體報導 -->
-        <div class="媒體報導">
+        <!-- <div class="媒體報導">
             <alesis-header class="區塊標題_拖尾的">
                 <div class="標題 標題_外框線的">媒體報導支持</div>
             </alesis-header>
@@ -384,7 +557,7 @@
                 </div>
                 <alesis-space size="tiny"></alesis-space>
             </div>
-        </div>
+        </div> -->
         <!-- / 媒體報導 -->
 
         <float />
@@ -520,6 +693,14 @@ export default {
                 });
              }, 100)
         })
+        // 用戶體驗
+        SwiperCore.use([Navigation]);
+        new Swiper('.swiper-container.user-experience-back', {
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
 
         // 管理與財經
         this.workCategories.n = this.workCategories.n.map(v => {
@@ -1689,6 +1870,64 @@ export default {
                 pointer-events: none;
             }
         }
+    }
+}
+/**
+    user experience
+*/
+.block-content{
+    width: 100%;
+    max-width: 1400px;
+}
+.user-experience{
+    position: relative;
+    background-image: url('~images/user_experence_cover.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 0 top;
+    height: 820px;
+    .block-title{
+        margin-top: 36px;
+        font-size: 56px;
+        line-height: 81px;
+        text-align: center;
+        letter-spacing: 0.2px;
+        color: #fff;
+    }
+    .block-info{
+        font-size: 24px;
+        line-height: 35px;
+        text-align: center;
+        color: #393939;
+    }
+    .user-comment{
+        margin-top: 100px;
+        justify-content: center;
+        .comment-card{
+            width: 360px;
+            padding: 10px;
+            .star{
+                color: #F3CD03;
+            }
+            .portrait{
+                width: 56px;
+                border-radius: 50%;
+            }
+        }
+    }
+    .media{
+        position: absolute;
+        padding: 20px;
+        bottom: 0;
+        width: 101%;
+        left: 15px;
+        background: rgba($color: #8C97AF, $alpha: 0.5);
+        .圖片{
+            height: 65px;
+        }
+    }
+    .ue-prev,.ue-next{
+        top: 215px;
     }
 }
 </style>
