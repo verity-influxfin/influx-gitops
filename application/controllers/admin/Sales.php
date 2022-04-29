@@ -1210,7 +1210,6 @@ class Sales extends MY_Admin_Controller {
                 $return_trtd_datas[$key]['real'] = $this->_parse_array_to_trtd_string($value['real']);
                 $return_trtd_datas[$key]['rate'] = $this->_parse_array_to_trtd_string($value['rate']);
             }
-
         }
 
         $page_data = [
@@ -1226,7 +1225,7 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 
-     // 將 月日 跟 星期 結合 => X月Y日(六) ，呈現在後台的樣式跟報表不一樣應該沒差吧
+    // 將 月日 跟 星期 結合 => X月Y日(六) ，呈現在後台的樣式跟報表不一樣應該沒差吧
     private function _parse_day_week_for_admin_dashboard($days_info)
     {
         $data = [];
@@ -1300,38 +1299,58 @@ class Sales extends MY_Admin_Controller {
         $this->load->library('Sales_lib', ['at_month' => $at_month]);
         $days_info = $this->sales_lib->get_days();
 
-        // 取出該月目標
-        // $goals_info = $this->sales_lib->get_goals();
-
-        // 取出該月資料
-        // 根據日期整理資料列
-        // 計算每天的達成率
-        // 整理成匯出內容格式
+        // 整理日期的匯出格式
         $first_row = $days_info['date'];
         array_unshift($first_row, '日期');
         $second_row = $days_info['week'];
         array_unshift($second_row, '總和');
 
-        // 測試一下合併儲存格的匯出
+        $content1 = [];
+        $content2 = [];
+
+        $content1[] = $first_row;
+        $content1[] = $second_row;
+        $content2[] = $first_row;
+        $content2[] = $second_row;
+
+        // 取出該月資料
+        $datas = $this->sales_lib->calculate();
+
+        // 依照 excel 需要的匯出順序塞入 content
+        $sort1 = [0, 3, 1, 2];
+        foreach ($sort1 as $value)
+        {
+            $content1[] = $datas[$value]['goal'];
+            $content1[] = $datas[$value]['real'];
+            $content1[] = $datas[$value]['rate'];
+        }
+
+        // 第二頁
+        $sort2 = [4, 5, 6, 10, 11, 7, 8, 9, 12, 13];
+        foreach ($sort2 as $value)
+        {
+            $content2[] = $datas[$value]['goal'];
+            $content2[] = $datas[$value]['real'];
+            $content2[] = $datas[$value]['rate'];
+        }
+
+        // 最後補上 成交總計
+        $content2[] = $datas['total_deals'];
+
+        // 匯出資料內容
         $excel_contents = [
             [
                 'sheet' => '貸前指標',
-                'first_row' => $first_row,
-                'second_row' => $second_row,
-                'content' => [],
+                'content' => $content1,
             ],
             [
                 'sheet' => '貸中指標',
-                'first_row' => $first_row,
-                'second_row' => $second_row,
-                'content' => [],
+                'content' => $content2,
             ],
         ];
         $sheet_highlight = 'KPI指標-' . $days_info['int_month'] . '月';
-        // Create new Spreadsheet object
-        $spreadsheet = new Spreadsheet();
 
-        // Set document properties
+        $spreadsheet = new Spreadsheet();
         $spreadsheet->getProperties()->setTitle('績效統計表');
 
         foreach ($excel_contents as $sheet => $contents)
@@ -1417,35 +1436,18 @@ class Sales extends MY_Admin_Controller {
                 }
             }
 
-            // 行數從 D 開始跑此月份的績效統計 前兩行應該可以合併到數字計算裡面
-            foreach ($contents['first_row'] as $row_index => $mon_day)
+            foreach ($contents['content'] as $key => $row_content)
             {
-                $column = Coordinate::stringFromColumnIndex($row_index + 4); // A = 1
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $mon_day);
-                $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
+                foreach ($row_content as $content_index => $value)
+                {
+                    $column = Coordinate::stringFromColumnIndex($content_index + 4); // A = 1
+                    $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $value);
+                    $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
+                }
+                $row++;
             }
-            $row++;
-            foreach ($contents['second_row'] as $row_index => $week)
-            {
-                $column = Coordinate::stringFromColumnIndex($row_index + 4); // A = 1
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $week);
-                $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
-            }
-            $row++;
-
-            // foreach ($contents['content'] as $key => $row_content)
-            // {
-            //     foreach ($row_content as $content_index => $value)
-            //     {
-            //         $column = Coordinate::stringFromColumnIndex($content_index + 1); // A = 1
-            //         $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $value);
-            //         $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
-            //     }
-            //     $row++;
-            // }
 
             $spreadsheet->setActiveSheetIndex($sheet)->setTitle($contents['sheet']);
-            // $spreadsheet->getActiveSheet($sheet)->getDefaultColumnDimension()->setWidth(20);
         }
         $spreadsheet->setActiveSheetIndex(0);
 

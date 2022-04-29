@@ -76,7 +76,7 @@ class Sales_lib
             $return_data[$key] = $this->_data_parser(
                 $key, $goals, $datas[$key]);
         }
-        
+
         $this->_sum_total_deals_and_put_at_head();
         $return_data['total_deals'] = $this->total_deals;
 
@@ -206,8 +206,8 @@ class Sales_lib
     public function get_days()
     {
         $int_month = (int) substr($this->at_month, -2);
-        $month_day = []; // 原始資料不放 '日期'
-        $week_chinese = []; // 原始資料不放 '總和'
+        $month_day = [];
+        $week_chinese = [];
         $week_name = ['日', '一', '二', '三', '四', '五', '六'];
         for ($i = 1; $i <= $this->days_in_month; $i++)
         {
