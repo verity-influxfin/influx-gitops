@@ -152,7 +152,6 @@ export default {
   },
   created () {
     this.$store.dispatch("getRepaymentList");
-    this.$router.push("/loannotification");
 
     this.getMyRepayment();
 
