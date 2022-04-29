@@ -110,29 +110,32 @@ class Transaction_model extends MY_Model
         return $this->db->get()->result();
     }
 
-	public function getDelayedTargetInfoList($transaction_where, $target_where){
-		$transactions = $this->db->select('MIN(`limit_date`) as `min_limit_date`, `target_id`')
-			->from("`p2p_transaction`.`transactions`")
-			->where($transaction_where)
-			->group_by('target_id');
-		$subquery = $this->db->get_compiled_select('', TRUE);
-		$this->db
-			->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.target_no, ta.delay_days, ta.script_status, t.*')
-			->from('`p2p_loan`.`targets` AS `ta`')
-			->where($target_where)
-			->join("($subquery) as `t`", "`ta`.`id` = `t`.`target_id`");
-		$subquery2 = $this->db->get_compiled_select('', TRUE);
-		$this->db
-			->select('i.target_id, i.user_id as investor_userid, r.user_id, r.loan_date, r.product_id, r.sub_product_id, r.target_no, r.min_limit_date, r.delay_days, r.script_status')
-			->from('`p2p_loan`.`investments` AS `i`')
-			->where('status', 3)
-			->where('transfer_status <', '2')
-			->join("($subquery2) as `r`", "`i`.`target_id` = `r`.`target_id`")
-			->order_by('i.target_id', 'ASC');
+    public function getDelayedTargetInfoList($transaction_where, $target_where)
+    {
+        $this->_database->select('MIN(`limit_date`) as `min_limit_date`, `target_id`')
+            ->from("`p2p_transaction`.`transactions`")
+            ->where($transaction_where)
+            ->group_by('target_id');
+        $subquery = $this->_database->get_compiled_select('', TRUE);
 
-		$query = $this->db->get();
-		return $query->result();
-	}
+        $this->_database
+            ->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.target_no, ta.delay_days, ta.script_status, t.*')
+            ->from('`p2p_loan`.`targets` AS `ta`')
+            ->join("($subquery) as `t`", "`ta`.`id` = `t`.`target_id`");
+        $this->_set_where([0 => $target_where]);
+        $subquery2 = $this->_database->get_compiled_select('', TRUE);
+
+        $this->_database
+            ->select('i.target_id, i.user_id as investor_userid, r.user_id, r.loan_date, r.product_id, r.sub_product_id, r.target_no, r.min_limit_date, r.delay_days, r.script_status')
+            ->from('`p2p_loan`.`investments` AS `i`')
+            ->where('status', 3)
+            ->where('transfer_status <', '2')
+            ->join("($subquery2) as `r`", "`i`.`target_id` = `r`.`target_id`")
+            ->order_by('i.target_id', 'ASC');
+
+        $query = $this->_database->get();
+        return $query->result();
+    }
 
     // 新增內帳交易紀錄，並回傳ID
     public function insert_get_id($data)
