@@ -14,6 +14,12 @@ use Credit\Credit_debit_ratio;
 use Credit\Credit_break_even_point;
 use Credit\Credit_revenue_stability;
 use Credit\Credit_smec_qualification;
+use Credit\due_diligence\Credit_asset;
+use Credit\due_diligence\Credit_background;
+use Credit\due_diligence\Credit_guarantor;
+use Credit\due_diligence\Credit_human_resource;
+use Credit\due_diligence\Credit_job_seniority;
+use Credit\due_diligence\Credit_team_seniority;
 
 
 class Credit_lib{
@@ -676,6 +682,12 @@ class Credit_lib{
             $spouse_certs_content = $this->CI->certification_lib->get_content($associate_list[ASSOCIATES_CHARACTER_SPOUSE]['user_id'], USER_BORROWER, [CERTIFICATION_INVESTIGATIONA11]);
         }
 
+        $this->CI->load->model('loan/target_meta_model');
+        $meta_info = $this->CI->target_meta_model->as_array()->get_many_by([
+            'target_id' => $target->id
+        ]);
+        $target_meta_list = array_column($meta_info, 'meta_value', 'meta_key');
+
         $credit_list = [];
         if (isset($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]['businessTypeCode']))
         {
@@ -695,6 +707,12 @@ class Credit_lib{
                         new Credit_break_even_point($certs_content[CERTIFICATION_INCOMESTATEMENT]),
                         new Credit_revenue_stability($certs_content[CERTIFICATION_INCOMESTATEMENT]),
                         new Credit_smec_qualification(json_decode(json_encode($target), TRUE)),
+                        new Credit_asset($target_meta_list),
+                        new Credit_background($target_meta_list),
+                        new Credit_guarantor($target_meta_list),
+                        new Credit_human_resource($target_meta_list),
+                        new Credit_job_seniority($target_meta_list),
+                        new Credit_team_seniority($target_meta_list),
                     ];
                     break;
                 case INDUSTRY_CODE_MERCHANDISING_SECTOR:
@@ -718,6 +736,12 @@ class Credit_lib{
                         new Credit_break_even_point($certs_content[CERTIFICATION_INCOMESTATEMENT]),
                         new Credit_revenue_stability($certs_content[CERTIFICATION_INCOMESTATEMENT]),
                         new Credit_smec_qualification(json_decode(json_encode($target), TRUE)),
+                        new Credit_asset($target_meta_list),
+                        new Credit_background($target_meta_list),
+                        new Credit_guarantor($target_meta_list),
+                        new Credit_human_resource($target_meta_list),
+                        new Credit_job_seniority($target_meta_list),
+                        new Credit_team_seniority($target_meta_list),
                     ];
                     break;
             }
@@ -742,6 +766,7 @@ class Credit_lib{
             $total += $approvalExtra->getExtraPoints();
         }
         $param['points'] = intval($total);
+        $param['score_list'] = json_encode($score_list);
 
         if ($mix_credit)
         {
