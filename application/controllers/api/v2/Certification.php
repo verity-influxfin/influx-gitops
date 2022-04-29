@@ -4965,7 +4965,15 @@ class Certification extends REST_Controller {
                 $content[$field] = [];
                 foreach ($list as $v)
                 {
-                    $content[$field][] = $v->url;
+                    if (empty($v->exif))
+                    {
+                        $type = 'file';
+                    }
+                    else
+                    {
+                        $type = 'image';
+                    }
+                    $content[$field][$type][] = ['url' => $v->url, 'file_name' => $v->file_name];
                 }
             }
             else
@@ -5046,9 +5054,17 @@ class Certification extends REST_Controller {
             if ($list && count($list) == count($file_ids))
             {
                 $content[$field] = [];
-                foreach ($list as $k => $v)
+                foreach ($list as $v)
                 {
-                    $content[$field][] = $v->url;
+                    if (empty($v->exif))
+                    {
+                        $type = 'file';
+                    }
+                    else
+                    {
+                        $type = 'image';
+                    }
+                    $content[$field][$type][] = ['url' => $v->url, 'file_name' => $v->file_name];
                 }
             }
             else

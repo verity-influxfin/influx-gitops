@@ -59,95 +59,97 @@
                                     ?>
                                 </p>
                             </div>
-                            <form class="form-group" @submit.prevent="doSubmit">
+                            <form id="app1" class="form-group" @submit.prevent="doSubmit">
                                 <ul class="nav nav-tabs">
                                     <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
                                     <li role="presentation" :class="{'active': tab ==='tab-kgibank'}"><a @click="changeTab('tab-kgibank')">凱基</a></li>
                                 </ul>
                                 <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-skbank'">
                                     <tbody>
-                                        <tr style="text-align: center;">
-                                            <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-票債信情形是否異常</span></td>
-                                            <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
-                                                    <option :value="'1'">1:是</option>
-                                                    <option :value="'0'">0:否</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-聯徵中心資料日期</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompDataDate"
-                                                    placeholder="格式:YYYYMMDD"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-聯徵J02資料年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompJ02YM"
-                                                    placeholder="格式:YYYYMM"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-企業信用評分</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditScore"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-授信總餘額</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditAmount"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-往來銀行家數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompBankDealingNum"></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
-                                        </tr>
+                                    <tr style="text-align: center;">
+                                        <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-票債信情形是否異常</span></td>
+                                        <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
+                                                <option :value="''">請選擇</option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-聯徵中心資料日期</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompDataDate"
+                                                   placeholder="格式:YYYYMMDD"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-聯徵J02資料年月</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompJ02YM"
+                                                   placeholder="格式:YYYYMM"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-企業信用評分</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditScore"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-授信總餘額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-往來銀行家數</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompBankDealingNum"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                                 <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-kgibank'">
                                     <tbody>
-                                        <tr style="text-align: center;">
-                                            <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-票債信情形是否異常</span></td>
-                                            <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
-                                                    <option :value="'1'">1:是</option>
-                                                    <option :value="'0'">0:否</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-聯徵中心資料日期</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompDataDate"
-                                                       placeholder="格式:YYYYMMDD"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-聯徵J02資料年月</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompJ02YM"
-                                                       placeholder="格式:YYYYMM"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-企業信用評分</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditScore"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-授信總餘額</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditAmount"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span>公司聯徵-往來銀行家數</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.jcCompBankDealingNum"></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
-                                        </tr>
+                                    <tr style="text-align: center;">
+                                        <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-票債信情形是否異常</span></td>
+                                        <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
+                                                <option :value="''">請選擇</option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-聯徵中心資料日期</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompDataDate"
+                                                   placeholder="格式:YYYYMMDD"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-聯徵J02資料年月</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompJ02YM"
+                                                   placeholder="格式:YYYYMM"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-企業信用評分</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditScore"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-授信總餘額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-往來銀行家數</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompBankDealingNum"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </form>
                             <div class="form-group">
-                              <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
-                              foreach ($ocr['url'] as $key => $value) { ?>
-                                  <label><a href="<?= isset($value) ? $value : ''; ?>" target="_blank">前往編輯頁面</a></label>
-                              <? } ?>
+                                <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
+                                foreach ($ocr['url'] as $key => $value) { ?>
+                                    <label><a href="<?= isset($value) ? $value : ''; ?>" target="_blank">前往編輯頁面</a></label>
+                                <? } ?>
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
@@ -174,7 +176,7 @@
                                         <select id="status" name="status" class="form-control" onchange="check_fail();">
                                             <? foreach ($status_list as $key => $value) { ?>
                                                 <option value="<?= $key ?>"
-                                                        <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
+                                                    <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
                                             <? } ?>
                                         </select>
                                         <input type="hidden" name="id"
@@ -200,10 +202,9 @@
                             </form>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片</h1>
+                            <h1>圖片/文件</h1>
                             <fieldset disabled>
                                 <div class="form-group">
-                                    <label>法人聯徵資料</label><br>
                                     <? isset($content['legal_person_mq_image']) && !is_array($content['legal_person_mq_image']) ? $content['legal_person_mq_image'] = array($content['legal_person_mq_image']) : [];
                                     if(!empty($content['legal_person_mq_image'])){
                                         foreach ($content['legal_person_mq_image'] as $key => $value) { ?>
@@ -220,7 +221,8 @@
                                             </a>
                                         <? }
                                     }?>
-
+                                </div>
+                                <div class="form-group">
                                     <?php
                                     $content['receipt_postal_image'] = isset($content['receipt_postal_image'])
                                         ? ! is_array($content['receipt_postal_image'])
@@ -239,13 +241,37 @@
                                             <img src="<?= $value; ?>" alt="" style='width:30%;max-width:400px'>
                                         </a>
                                     <?php } ?>
+                                </div>
+                                <div class="form-group">
+                                    <?php
+                                    if (empty($content['file_list'])) goto end_file_list;
+                                    $file_list = $content['file_list'];
 
+                                    if (empty($file_list['image'])) goto end_file_list_img;
+                                    foreach ($file_list['image'] as $key => $value)
+                                    {
+                                        if (empty($value['url'])) continue; ?>
+                                        <a href="<?= $value['url'] ?>" data-fancybox="images">
+                                            <img src="<?= $value['url'] ?>" style='width:30%;max-width:400px'>
+                                        </a>
+                                    <?php }
+                                    end_file_list_img:
+
+                                    if (empty($file_list['file'])) goto end_file_list;
+                                    foreach ($file_list['file'] as $key => $value)
+                                    {
+                                        if (empty($value['url'])) continue; ?>
+                                        <a href="<?= $value['url'] ?>">
+                                            <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
+                                        </a>
+                                    <?php }
+                                    end_file_list : ?>
                                 </div>
                             </fieldset>
                             <? if( ($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12) && isset($ocr['upload_page']) ){ ?>
-                            <div class="form-group" style="background:#f5f5f5;border-style:double;">
-                              <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
-                            </div>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
+                                </div>
                             <? } ?>
                         </div>
                     </div>
@@ -263,7 +289,7 @@
 
 <script>
     const v = new Vue({
-        el: '#page-wrapper',
+        el: '#app1',
         data() {
             return {
                 tab: 'tab-skbank',
@@ -288,6 +314,8 @@
                 this.tab = tab
             },
             doSubmit() {
+                let selector = this.$el;
+                $(selector).find('button').attr('disabled', true);
                 return axios.post('/admin/certification/save_company_cert', {
                     ...this.formData,
                     id: this.pageId

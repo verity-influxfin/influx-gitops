@@ -143,7 +143,8 @@ class Certification extends MY_Admin_Controller {
 					$page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
 					//加入SIP網址--
 
-				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
+				}
+                elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 					$content = json_decode($info->content);
 					$page_data['report_page'] = '';
 

@@ -1,7 +1,6 @@
 <script type="text/javascript">
     function check_fail() {
-        var status = $('#status :selected').val();
-        if (status == 2) {
+        if ($('#status :selected').val() === '2') {
             $('#fail_div').show();
         } else {
             $('#fail_div').hide();
@@ -9,9 +8,11 @@
     }
 
     $(document).off("change", "select#fail").on("change", "select#fail", function () {
-        var sel = $(this).find(':selected');
-        $('input#fail').css('display', sel.attr('value') == 'other' ? 'block' : 'none');
-        $('input#fail').attr('disabled', sel.attr('value') == 'other' ? false : true);
+        if ($(this).find(':selected') === 'other') {
+            $('input#fail').css('display', 'block').attr('disabled', false);
+        } else {
+            $('input#fail').css('display', 'none').attr('disabled', true);
+        }
     });
 </script>
 <div id="page-wrapper">
@@ -39,11 +40,9 @@
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
-                                <?
-                                if ($remark) {
-                                    if (isset($remark["fail"]) && $remark["fail"]) {
-                                        echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
-                                    }
+                                <?php
+                                if ( ! empty($remark['fail'])) {
+                                    echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark['fail'] . '</p>';
                                 }
                                 ?>
                             </div>
@@ -88,16 +87,48 @@
                             </form>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片</h1>
+                            <h1>圖片/文件</h1>
                             <fieldset disabled>
                                 <div class="form-group">
                                     <label>金流證明</label><br>
-                                    <? isset($content['passbook_image']) && !is_array($content['passbook_image']) ? $content['passbook_image'] = array($content['passbook_image']) : '';
-                                    foreach ($content['passbook_image'] as $key => $value) { ?>
-                                        <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                            <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                        </a>
-                                    <? } ?>
+                                    <?php
+                                    if ( ! empty($content['passbook_image']))
+                                    {
+                                        $content['passbook_image'] = ! is_array($content['passbook_image']) ? array($content['passbook_image']) : $content['passbook_image'];
+                                        foreach ($content['passbook_image'] as $key => $value)
+                                        {
+                                            if (empty($value)) continue; ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                    } ?>
+                                </div>
+                                <div class='form-group'>
+                                    <label>其他</label><br>
+                                    <?php
+                                    if ( ! empty($content['file_list']['image']))
+                                    { // 擴大信保【後】的Web上傳圖片
+                                        foreach ($content['file_list']['image'] as $key => $value)
+                                        {
+                                            if (empty($value['url'])) continue; ?>
+                                            <a href="<?= $value['url'] ?>" data-fancybox="images">
+                                                <img src="<?= $value['url'] ?>"
+                                                     style='width:30%;max-width:400px'>
+                                            </a>
+                                            <?php
+                                        }
+                                    }
+                                    if ( ! empty($content['file_list']['file']))
+                                    { // 擴大信保【後】的Web上傳PDF
+                                        foreach ($content['file_list']['file'] as $key => $value)
+                                        {
+                                            if (empty($value['url'])) continue; ?>
+                                            <a href="<?= $value['url'] ?>">
+                                                <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
+                                            </a>
+                                        <?php }
+                                    } ?>
                                 </div>
                             </fieldset>
                             <? if($data->certification_id == 1004 && isset($ocr['upload_page']) ){ ?>

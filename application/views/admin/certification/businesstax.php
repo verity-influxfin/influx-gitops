@@ -56,7 +56,7 @@
                                     <tr>
                                         <td><span>近一年申報營業稅年份</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastOneYear"
-                                            placeholder="格式:YYY"></td>
+                                                   placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅01~02月開立發票金額</span></td>
@@ -326,7 +326,7 @@
                                         <select id="status" name="status" class="form-control" onchange="check_fail();">
                                             <? foreach ($status_list as $key => $value) { ?>
                                                 <option value="<?= $key ?>"
-                                                        <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
+                                                    <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
                                             <? } ?>
                                         </select>
                                         <input type="hidden" name="id"
@@ -353,11 +353,12 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <h1>圖片</h1>
-                                <fieldset>
+                                <h1>圖片/文件</h1>
+                                <fieldset disabled>
                                     <div class="form-group">
-                                        <?php if (isset($images))
-                                        {
+                                        <?php
+                                        if (isset($images))
+                                        { // 擴大信保【後】的APP上傳圖片，分成近1/2/3/4年
                                             foreach ($images as $key => $value)
                                             {
                                                 $this_block_html = '';
@@ -383,12 +384,51 @@
                                                 }
                                                 $this_block_html = "<div class='form-group'>{$this_block_html}</div>";
 
-                                                if ( ! empty($value['upload']))
+                                                // todo: 修！圖片upload
+                                                /*if ( ! empty($value['upload']))
                                                 {
+                                                    $flag=true;
                                                     $this_block_html .= '<div class="form-group" style="background:#f5f5f5;border-style:double;">' . $value['upload'] . '</div>';
-                                                }
+                                                }*/
                                                 echo "<div>{$this_block_html}</div>";
                                             }
+                                        }
+                                        if (isset($content['business_tax_image']))
+                                        { // 擴大信保【前】的APP上傳圖片
+                                            $content['business_tax_image'] = ! is_array($content['business_tax_image'])
+                                                ? array($content['business_tax_image'])
+                                                : $content['business_tax_image'];
+                                            foreach ($content['business_tax_image'] as $key => $value)
+                                            {
+                                                if (empty($value)) continue; ?>
+                                                <a href="<?= $value ?>" data-fancybox="images">
+                                                    <img src="<?= $value ?>"
+                                                         style='width:30%;max-width:400px'>
+                                                </a>
+                                            <?php }
+                                        }
+                                        echo '<label>其他</label><br/>';
+                                        if ( ! empty($content['file_list']['image']))
+                                        { // 擴大信保【後】的Web上傳圖片
+                                            foreach ($content['file_list']['image'] as $key => $value)
+                                            {
+                                                if (empty($value['url'])) continue; ?>
+                                                <a href="<?= $value['url'] ?>" data-fancybox="images">
+                                                    <img src="<?= $value['url'] ?>"
+                                                         style='width:30%;max-width:400px'>
+                                                </a>
+                                                <?php
+                                            }
+                                        }
+                                        if ( ! empty($content['file_list']['file']))
+                                        { // 擴大信保【後】的Web上傳PDF
+                                            foreach ($content['file_list']['file'] as $key => $value)
+                                            {
+                                                if (empty($value['url'])) continue; ?>
+                                                <a href="<?= $value['url'] ?>">
+                                                    <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
+                                                </a>
+                                            <?php }
                                         } ?>
                                     </div>
                                 </fieldset>
@@ -455,6 +495,8 @@
                 this.tab = tab
             },
             doSubmit(){
+                let selector = this.$el;
+                $(selector).find('button').attr('disabled', true);
                 return axios.post('/admin/certification/save_company_cert',{
                     ...this.formData,
                     id: this.pageId
