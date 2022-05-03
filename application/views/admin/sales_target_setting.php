@@ -15,7 +15,7 @@
                         <input type="month" id="yearmonth" value="<?=$goal_ym?>" />&nbsp;&nbsp;
                         <button class="btn btn-primary" onclick="get_goals()">查詢</button>&nbsp;&nbsp;
                         <button class="btn btn-primary" onclick="report_export()">下載</button>&nbsp;&nbsp;
-                        <button class="btn btn-primary" onclick="set_goals()">更新目標</button>
+                        <button class="btn btn-primary" onclick="set_goals()">設定目標</button>
                     </div>
                 </div>
             </div>

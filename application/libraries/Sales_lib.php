@@ -2,38 +2,25 @@
 
 class Sales_lib
 {
+    /**
+     * 如果需要增加新的目標：
+     * 1.
+     * Sale_goals_model::GOAL_NEW_ONE 設定新的常數
+     * 2.
+     * Sale_goals_model->type_name_mapping 設定中文名稱
+     * 3.
+     * $this->_parse_dashboard_key_to_goal_key() 設定資料來源
+     * $datas[sale_goals_model::GOAL_NEW_ONE] = ...
+     * 因為後面的數字肯定跟 sale_dashboard 的 const 對應不起來
+     * 4.
+     * 後台呈現跟匯出 excel 的地方要調整：
+     * view:admin/sales_target_setting 決定呈現的資料排列位置
+     * controller:admin/Sales@goals_export 決定匯出的資料排列
+     **/
+
     private $at_month = ''; // '202204'
     private $days_in_month = 0; // 30
     private $total_deals = []; // 成交總數
-
-    // [
-    //     Sale_goals_model::GOAL_WEB_TRAFFIC => [
-    //         'goal' => [],
-    //         'real' => [],
-    //         'rate' => []
-    //     ],
-    //     Sale_goals_model::GOAL_USER_REGISTER => [...],
-    //     Sale_goals_model::GOAL_APP_DOWNLOAD => [...],
-    //     Sale_goals_model::GOAL_LOAN_TOTAL => [...],
-    //     Sale_goals_model::GOAL_LOAN_SALARY_MAN => [
-    //         'goal' => [],
-    //         'real' => [],
-    //         'rate' => []
-    //     ],
-    //     Sale_goals_model::GOAL_LOAN_STUDENT => [...],
-    //     Sale_goals_model::GOAL_LOAN_SMART_STUDENT => [...],
-    //     Sale_goals_model::GOAL_LOAN_CREDIT_INSURANCE => [...],
-    //     Sale_goals_model::GOAL_LOAN_SME => [...],
-    //     Sale_goals_model::GOAL_DEAL_SALARY_MAN => [
-    //         'goal' => [],
-    //         'real' => [],
-    //         'rate' => []
-    //     ],
-    //     Sale_goals_model::GOAL_DEAL_STUDENT => [...],
-    //     Sale_goals_model::GOAL_DEAL_SMART_STUDENT => [...],
-    //     Sale_goals_model::GOAL_DEAL_CREDIT_INSURANCE => [...],
-    //     Sale_goals_model::GOAL_DEAL_SME => [...],
-    // ]
 
     public function __construct($params)
     {
@@ -150,6 +137,11 @@ class Sales_lib
 
     private function _caculate_rate($real, $goal): String
     {
+        if ($real == 0 || $goal == 0)
+        {
+            return '0%';
+        }
+
         return round($real / $goal * 100) . '%';
     }
 

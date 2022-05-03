@@ -15,6 +15,7 @@ class Sales extends MY_Admin_Controller {
 		$this->load->model('user/user_meta_model');
 		$this->load->model('admin/partner_model');
 		$this->load->model('admin/partner_type_model');
+		$this->load->model('user/sale_goals_model');
  	}
 	
 	public function index(){
@@ -1246,7 +1247,6 @@ class Sales extends MY_Admin_Controller {
     // 載入更新單一目標頁
     public function goal_edit($id)
     {
-        $this->load->model('user/sale_goals_model');
         $goal_info = $this->sale_goals_model->as_array()->get($id);
 
         // 檢查只有當月的績效目標才可以修改
@@ -1273,8 +1273,6 @@ class Sales extends MY_Admin_Controller {
     // 更新單一目標
     public function set_goal($goal_id)
     {
-        $this->load->model('user/sale_goals_model');
-
         $number = $this->input->get('number');
         if (is_numeric($number))
         {
@@ -1292,7 +1290,6 @@ class Sales extends MY_Admin_Controller {
         $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
         $at_month = str_replace('-', '', $goal_ym);
 
-        $this->load->model('user/sale_goals_model');
         $goals = $this->sale_goals_model->get_goals_number_at_this_month();
 
         $page_data = [
@@ -1324,8 +1321,6 @@ class Sales extends MY_Admin_Controller {
 
     public function set_monthly_goals()
     {
-        $this->load->model('user/sale_goals_model');
-
         $input = $this->input->post(NULL, TRUE);
         foreach ($input as $key => $value)
         {
@@ -1352,6 +1347,7 @@ class Sales extends MY_Admin_Controller {
         $content1 = [];
         $content2 = [];
 
+        // 內容先塞月日星期
         $content1[] = $first_row;
         $content1[] = $second_row;
         $content2[] = $first_row;
@@ -1361,7 +1357,12 @@ class Sales extends MY_Admin_Controller {
         $datas = $this->sales_lib->calculate();
 
         // 依照 excel 需要的匯出順序塞入 content
-        $sort1 = [0, 3, 1, 2];
+        $sort1 = [
+            sale_goals_model::GOAL_WEB_TRAFFIC,
+            sale_goals_model::GOAL_USER_REGISTER,
+            sale_goals_model::GOAL_APP_DOWNLOAD,
+            sale_goals_model::GOAL_LOAN_TOTAL,
+        ];
         foreach ($sort1 as $value)
         {
             $content1[] = $datas[$value]['goal'];
@@ -1370,7 +1371,18 @@ class Sales extends MY_Admin_Controller {
         }
 
         // 第二頁
-        $sort2 = [4, 5, 6, 10, 11, 7, 8, 9, 12, 13];
+        $sort2 = [
+            sale_goals_model::GOAL_LOAN_SALARY_MAN,
+            sale_goals_model::GOAL_LOAN_STUDENT,
+            sale_goals_model::GOAL_LOAN_SMART_STUDENT,
+            sale_goals_model::GOAL_LOAN_CREDIT_INSURANCE,
+            sale_goals_model::GOAL_LOAN_SME,
+            sale_goals_model::GOAL_DEAL_SALARY_MAN,
+            sale_goals_model::GOAL_DEAL_STUDENT,
+            sale_goals_model::GOAL_DEAL_SMART_STUDENT,
+            sale_goals_model::GOAL_DEAL_CREDIT_INSURANCE,
+            sale_goals_model::GOAL_DEAL_SME,
+        ];
         foreach ($sort2 as $value)
         {
             $content2[] = $datas[$value]['goal'];
@@ -1402,7 +1414,7 @@ class Sales extends MY_Admin_Controller {
             $sheet > 0 ? $spreadsheet->createSheet() : '';
             $row = 1;
 
-            // 前幾行合併儲存格的項目處理完
+            // 前幾行合併儲存格的項目先處理
             if (empty($sheet))
             {
                 $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
@@ -1433,7 +1445,7 @@ class Sales extends MY_Admin_Controller {
             }
             else
             {
-                // 這邊反過來是因為要先設定 Sheet 不然會合併到前一個的格子
+                // 這邊反過來是因為要先設定 Sheet 不然會合併到前一個 sheet 的格子
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
                 $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
                 $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
@@ -1465,6 +1477,8 @@ class Sales extends MY_Admin_Controller {
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B30', '中小企業');
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B33', '總數');
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C33', '總成交數');
+
+                // 蔡蔡表示此文案是老闆寫的，必須要一模且一樣
                 $kpi_loan = ['目標申貸戶數', '實際申貸戶數', '達成率'];
                 $kpi_deal = ['目標成交筆數', '實際成交筆數', '達成率'];
                 for ($i = 3; $i < 33; $i++)
@@ -1480,6 +1494,7 @@ class Sales extends MY_Admin_Controller {
                 }
             }
 
+            // 從 D 行開始塞入上面整理的內容
             foreach ($contents['content'] as $key => $row_content)
             {
                 foreach ($row_content as $content_index => $value)
@@ -1494,7 +1509,6 @@ class Sales extends MY_Admin_Controller {
             $spreadsheet->setActiveSheetIndex($sheet)->setTitle($contents['sheet']);
         }
         $spreadsheet->setActiveSheetIndex(0);
-
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
