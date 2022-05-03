@@ -1635,7 +1635,7 @@ $config['sub_product_list'] = [
                 'checkOwner' => FALSE,
             ]
         ],
-        'status' => 1
+        'status' => 0
     ],
     5000 => [
         'visul_id' => 'LS1',
@@ -1916,7 +1916,7 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['NSL1', 'LS1', 'NS1', 'LF1', 'DS2'],
+    'nature' => ['LS1', 'NS1', 'LF1', 'DS2'],
     'company' => ['DS2','LJ2'],
 ];
 

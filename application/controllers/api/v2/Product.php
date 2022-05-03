@@ -180,6 +180,10 @@ class Product extends REST_Controller {
 
         if(!empty($cproduct_list)){
             foreach($cproduct_list as $key => $value) {
+                if (isset($value['status']) && $value['status'] == 0)
+                { // 產品關閉
+                    continue;
+                }
                 $certification = [];
                 if (isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor == 0) {
                     $targets = $this->target_model->get_many_by(array(
@@ -299,6 +303,10 @@ class Product extends REST_Controller {
                             if (count($t3['sub_product']) > 0) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
                                     if(isset($sub_product_list[$t4]) && !in_array($t4, $hiddenList) && !in_array($sub_product_list[$t4]['visul_id'], $showed_list)){
+                                        if (isset($sub_product_list[$t4]['status']) && $sub_product_list[$t4]['status'] == 0)
+                                        { // 產品關閉
+                                            continue;
+                                        }
                                         $allow_visul_list[] = $showed_list[] = $sub_product_list[$t4]['visul_id'];
                                         $sub_product_list[$t4]['name'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['name'];
                                         $sub_product_list[$t4]['description'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['description'];
