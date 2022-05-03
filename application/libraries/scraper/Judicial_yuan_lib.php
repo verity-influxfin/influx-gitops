@@ -3,125 +3,169 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Judicial_yuan_lib
 {
-    function __construct($params=[])
+
+    function __construct($params = [])
     {
         $this->CI = &get_instance();
-        $judicialYuanServerPort = '9998';
-        $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":{$judicialYuanServerPort}/scraper/api/v1.0/";
-        if(isset($params['ip'])){
-          $this->scraperUrl = "http://{$params['ip']}/scraper/api/v1.0/";
+        if (empty(getenv('GRACULA_IP')) || empty(getenv('GRACULA_PORT')))
+        {
+            throw new Exception('can not get Judicial_yuan ip or port');
+        }
+        $end_point = 'verdicts';
+        $this->scraper_url = 'http://' . getenv('GRACULA_IP') . ':' . getenv('GRACULA_PORT') . '/scraper/api/v1.0/' . $end_point;
+        if (isset($params['ip']))
+        {
+            $this->scraper_url = "http://{$params['ip']}/scraper/api/v1.0/" . $end_point;
         }
     }
 
-    public function mappingAddressAndScraperAddress($address)
-    {
-        $address = preg_replace('/\(|\).*/',"",$address);
+    public function requestJudicialYuanVerdicts($query, $address)
+    {   
+        if ( ! $query || ! $address)
+        {
+            return FALSE;
+        }
 
-        $reference = [
-          '宜縣' => '宜蘭', '竹縣' => '新竹', '苗縣' => '苗栗', '中縣' => '臺中', '彰縣' => '彰化', '投縣' => '南投', '雲縣' => '雲林', '嘉縣' => '嘉義',
-          '南縣' => '臺南', '高縣' => '高雄', '屏縣' => '屏東', '東縣' => '臺東', '花縣' => '花蓮', '澎縣' => '澎湖', '基市' => '基隆', '竹市' => '新竹',
-          '嘉市' => '嘉義', '連江' => '連江', '金門' => '金門', '北市' => '臺北', '高市' => '高雄', '新北市'=> '新北', '中市' => '臺中', '南市' => '臺南',
-          '桃市' => '桃園'
+        $url = $this->scraper_url . '/data';
+
+        $data = [
+            'query' => $query,
+            'address' => $address
         ];
 
-        if( isset($reference[$address]) ){
-          return $reference[$address];
-        }
+        $response = curl_get_statuscode($url, $data);
 
-        if(strlen($address) > 20 && (strpos($address,'市')|| strpos($address,'縣')) ){
-          if(strpos($address,'市')){
-            return substr($address, 0, strpos($address,'市'));
-          }
-          if(strpos($address,'縣')){
-            return substr($address, 0, strpos($address,'縣'));
-          }
-        }
-
-        return $address;
+        return $response;
     }
 
-    public function mappingStatusToChinese($status)
-    {
-        $statusName = [
-          'finished' => '爬蟲執行完成', 'requested' => '爬蟲尚未開始', 'started' => '爬蟲正在執行中', 'fail' => '爬蟲執行失敗'
+    // 用於司法院 instagram 帳號爬蟲
+    public function requestJudicialYuanAllCityVerdicts($query)
+    {   
+        if ( ! $query)
+        {
+            return FALSE;
+        }
+
+        $url = $this->scraper_url . '/all_city_data';
+
+        $data = [
+            'query' => $query,
         ];
 
-        if( isset($statusName[$status]) ){
-          return $statusName[$status];
-        }
+        $response = curl_get_statuscode($url, $data);
 
-        return $status;
+        return $response;
     }
 
-    public function requestJudicialYuanVerdicts($name, $address, $reference)
+    public function requestJudicialYuanVerdictsStatuses($query, $address='')
     {
-        if(!$name || !$address || !$reference) {
-            return false;
+        if ( ! $query)
+        {
+            return FALSE;
         }
-        $response = [];
-        $url = $this->scraperUrl  . "verdicts";
+        $query = urlencode($query);
 
-        $address = $this->mappingAddressAndScraperAddress($address);
+        if($address)
+        {
+            $url = $this->scraper_url . '/status?query=' . $query;
+        }
+        else
+        {
+            $url = $this->scraper_url . '/status?query=' . $query . '&address=' . $address;
+        }
 
-        $data = ["query" => $name, "location" => $address, "reference" => $reference];
+        $result = curl_get($url);
+        $response = json_decode($result, TRUE);
 
-        $result = curl_get($url, $data);
-        if($result){
-            $response = json_decode($result,true);
-        }else{
-            return false;
+        if ( ! $result || ! isset($response['status']))
+        {
+            return FALSE;
         }
 
         return $response;
     }
 
-    public function requestJudicialYuanVerdictsStatuses($reference){
-      if(!$reference){
-        return;
-      }
-      $response = [];
-      $url = $this->scraperUrl  . "verdicts/{$reference}/statuses";
+    public function requestJudicialYuanVerdictsCount($query, $address='')
+    {
+        if ( ! $query)
+        {
+            return FALSE;
+        }
+        $query = urlencode($query);
 
-      $result = curl_get($url);
+        if($address)
+        {
+            $url = $this->scraper_url . '/count?query=' . $query;
+        }
+        else
+        {
+            $url = $this->scraper_url . '/count?query=' . $query . '&address=' . $address;
+        }
 
-      if($result){
-        $response = json_decode($result, true);
-      }
+        $result = curl_get($url);
+        $response = json_decode($result, TRUE);
 
-      if(isset($response['response']['status'])){
-        $response['response']['status'] = $this->mappingStatusToChinese($response['response']['status']);
-      }
+        if ( ! $result || ! isset($response['status']))
+        {
+            return FALSE;
+        }
 
-      return $response;
+        return $response;
     }
 
-    public function requestJudicialYuanVerdictsCount($name){
-      if(!$name){
-        return;
-      }
-      $response = [];
-      $url = $this->scraperUrl  . "verdicts/{$name}/count";
+    public function requestJudicialYuanVerdictsCase($query, $case, $address='')
+    {
+        if ( ! $query|| ! $case)
+        {
+            return FALSE;
+        }
+        $query = urlencode($query);
+        $case = urlencode($case);
 
-      $result = curl_get($url);
+        if($address)
+        {
+            $url = $this->scraper_url . '/case?query=' . $query . '&case=' . $case;
+        }
+        else
+        {
+            $url = $this->scraper_url . '/case?query=' . $query . '&case=' . $case . '&address=' . $address;
+        }
 
-      $response = json_decode($result, true);
+        $result = curl_get($url);
+        $response = json_decode($result, TRUE);
 
-      return $response;
+        if ( ! $result || ! isset($response['status']))
+        {
+            return FALSE;
+        }
+
+        return $response;
     }
 
-    public function requestJudicialYuanVerdictsCase($name, $case, $page){
-      if(!$name || !$case || !$page){
-        return;
-      }
-      $response = [];
-      $url = $this->scraperUrl  . "verdicts/{$name}/case?type={$case}&page={$page}";
+    public function requestJudicialYuanVerdictsResult($query, $address='')
+    {
+        if ( ! $query)
+        {
+            return FALSE;
+        }
+        $query = urlencode($query);
 
-      $result = curl_get($url);
+        if($address)
+        {
+            $url = $this->scraper_url . '/result?query=' . $query;
+        }
+        else
+        {
+            $url = $this->scraper_url . '/result?query=' . $query . '&address=' . $address;
+        }
+        $result = curl_get($url);
+        $response = json_decode($result, TRUE);
 
-      if($result){
-          $response = json_decode($result, true);
-      }
+        if ( ! $result || ! isset($response['status']))
+        {
+            return FALSE;
+        }
 
-      return $response;
+        return $response;
     }
 }
