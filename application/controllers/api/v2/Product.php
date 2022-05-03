@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH.'/libraries/REST_Controller.php');
+require_once(APPPATH.'/libraries/REST_Controller.php');
 
 use Certification\Certification_factory;
 
@@ -514,6 +514,48 @@ class Product extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
     }
 
+    public function blackList_get()
+    {
+        $input 		= $this->input->get(NULL, TRUE);
+        $user_id = $this->user_info->id;
+
+        $fields = ['product_id', 'sub_product_id'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field])) {
+                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+            }
+        }
+
+        // 確認黑名單結果是否禁止申貸
+        $this->load->library('brookesia/black_list_lib');
+        $is_user_blocked = $this->black_list_lib->check_user($user_id, CHECK_APPLY_PRODUCT);
+
+        // 子系統若無回應不處理
+        if (isset($is_user_blocked['isUserBlocked']) && $is_user_blocked['isUserBlocked'])
+        {
+            $this->black_list_lib->add_block_log($is_user_blocked);
+            $this->response(
+                [
+                    'result'   => 'SUCCESS',
+                    'data'     => [
+                        'valid'  => FALSE,
+                        'text'   => $this->black_list_lib->get_black_list_text($user_id, $input['product_id'], $input['sub_product_id'])
+                    ]
+                ]
+            );
+        }
+
+        $this->response(
+            [
+                'result'   => 'SUCCESS',
+                'data'     => [
+                    'valid'  => TRUE
+                ]
+            ]
+        );
+
+    }
+
     /**
      * @api {post} /v2/product/apply 借款方 申請借款
      * @apiVersion 0.2.0
@@ -585,6 +627,15 @@ class Product extends REST_Controller {
      *     {
      *       'result': 'ERROR',
      *       'error': '424'
+     *
+     * @apiError 426 黑名單禁止申貸錯誤
+     * @apiErrorExample {Object} 426
+     *     {
+     *       'result': 'ERROR',
+     *       'error': '426',
+     *       'data': {
+     *              'text': 'App端禁止申貸呈現文字'
+     *          }
      *     }
      *
      */
@@ -598,7 +649,28 @@ class Product extends REST_Controller {
         $sub_product_list = $this->config->item('sub_product_list');
         $exp_product  = explode(':',$input['product_id']);
         $product = isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
+        $product_id = $product['id'];
         $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
+
+        // 確認黑名單結果是否禁止申貸
+        $this->load->library('brookesia/black_list_lib');
+        $is_user_blocked = $this->black_list_lib->check_user($user_id, CHECK_APPLY_PRODUCT);
+
+        // 子系統若無回應不處理
+        if (isset($is_user_blocked['isUserBlocked']) && $is_user_blocked['isUserBlocked'])
+        {
+            $this->black_list_lib->add_block_log($is_user_blocked);
+            $this->response(
+                [
+                    'result'   => 'ERROR',
+                    'error'    => BLACK_LIST_APPLY_PRODUCT,
+                    'data'     => [
+                        'text' => $this->black_list_lib->get_black_list_text($user_id, $product_id, $sub_product_id)
+                    ]
+                ]
+            );
+        }
+
         if ($product) {
 
             // 申請名校貸者，先檢查是否已提交學生驗證、且符合名校資格
@@ -2588,23 +2660,6 @@ class Product extends REST_Controller {
 
             if ($exist) {
                 $this->response(['result' => 'ERROR', 'error' => APPLY_EXIST]);
-            }
-        }
-
-        // 司法紀錄檢查
-        $this->load->library('scraper/judicial_yuan_lib.php');
-        $verdictsStatuses = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($param['user_id']);
-        if(isset($verdictsStatuses['status'])){
-            if($verdictsStatuses['status'] == 204){
-                $this->load->model('user/user_model');
-                $user_info = $this->user_model->get_by([
-                    "id"		=> $param['user_id'],
-                    "name !="	=> '',
-                    "id_card_place !="	=> '',
-                ]);
-                if($user_info){
-                    $this->judicial_yuan_lib->requestJudicialYuanVerdicts($user_info->name, $user_info->address, $user_info->id);
-                }
             }
         }
 

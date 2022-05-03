@@ -841,6 +841,14 @@ class Risk extends MY_Admin_Controller {
         return $product;
     }
 
+    public function black_list(){
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/black_list');
+        $this->load->view('admin/_footer');
+
+    }
+
 	// 授信審核表
 	// public function credit_management(){
 	//

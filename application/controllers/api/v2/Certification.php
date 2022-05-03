@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH.'/libraries/REST_Controller.php');
+require_once(APPPATH.'/libraries/REST_Controller.php');
 
 use Certification\Certification_factory;
 
@@ -545,15 +545,9 @@ class Certification extends REST_Controller {
                 'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
-			if($insert){
-				$this->load->library('scraper/judicial_yuan_lib.php');
-	      $this->judicial_yuan_lib->requestJudicialYuanVerdicts(
-				    $input['name'],
-				    $content['id_card_place'],
-				    $user_id
-				);
-
-				$this->response(array('result' => 'SUCCESS'));
+			if($insert)
+            {
+                $this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}

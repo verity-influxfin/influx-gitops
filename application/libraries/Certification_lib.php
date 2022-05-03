@@ -1949,6 +1949,47 @@ class Certification_lib{
 				'health_card_front'	=> $content['healthcard_image'],
 			);
 
+            // 通過實名認證時觸發本人、父、母、配偶，google、司法院爬蟲
+            $this->CI->load->library('scraper/judicial_yuan_lib.php');
+            $this->CI->load->library('scraper/google_lib.php');
+            $remark = json_decode($info->remark, TRUE);
+
+            $names = [
+                $content['name'],
+                $remark['OCR']['father'] ?? '',
+                $remark['OCR']['mother'] ?? '',
+                $remark['OCR']['spouse'] ?? ''
+            ];
+
+            foreach ($names as $name)
+            {
+                if (!$name)
+                {
+                    continue;
+                }
+
+                $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name);
+                if(isset($verdicts_statuses['status']))
+                {
+                    if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
+                        || $verdicts_statuses['status'] == 204)
+                    {
+                        $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($name);
+                    }
+                }
+
+                $google_statuses = $this->CI->google_lib->get_google_status($name);
+                if (isset($google_statuses['status']))
+                {
+                    if (($google_statuses['status'] == 200 && $google_statuses['response']['updatedAt'] < strtotime('- 1 week'))
+                        || $google_statuses['status'] == 204)
+                    {
+                        $this->CI->google_lib->request_google($name);
+                    }
+                }
+            }
+
+
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
                 $birthday 	= trim($content["birthday"]);
@@ -2058,8 +2099,6 @@ class Certification_lib{
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
-                $this->CI->load->library('brookesia/brookesia_lib');
-                $this->CI->brookesia_lib->userCheckAllRules($info->user_id);
                 return $this->fail_other_cer($info);
 			}
 		}
@@ -2297,7 +2336,17 @@ class Certification_lib{
                 isset($content['meta']['posts_in_3months']) ? $data['posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
                 isset($content['meta']['key_word']) ? $data['key_word'] = $content['meta']['key_word'] : '';
             }
-
+            
+            // 社交認證完成，觸發 ig 司法院爬蟲
+            $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($data['ig_username']);
+            if(isset($verdicts_statuses['status']))
+            {
+                if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
+                    || $verdicts_statuses['status'] == 204)
+                {
+                    $this->CI->judicial_yuan_lib->requestJudicialYuanAllCityVerdicts($data['ig_username']);
+                }
+            }
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
@@ -2333,6 +2382,17 @@ class Certification_lib{
                 isset($content['meta']['follow_count']) ? $data['follow_count'] = $content['meta']['follow_count'] : '';
                 isset($content['meta']['posts_in_3months']) ? $data['posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
                 isset($content['meta']['key_word']) ? $data['key_word'] = $content['meta']['key_word'] : '';
+            }
+
+            // 社交認證完成，觸發 ig 司法院爬蟲
+            $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($data['ig_username']);
+            if(isset($verdicts_statuses['status']))
+            {
+                if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
+                    || $verdicts_statuses['status'] == 204)
+                {
+                    $this->CI->judicial_yuan_lib->requestJudicialYuanAllCityVerdicts($data['ig_username']);
+                }
             }
 
             $rs = $this->user_meta_progress($data, $info);

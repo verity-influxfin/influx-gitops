@@ -872,8 +872,9 @@ class Target extends MY_Admin_Controller {
 
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
+        $use_vuejs = true;
 
-		$this->load->view('admin/_header');
+        $this->load->view('admin/_header', $data = ['use_vuejs' => true]);
 		$this->load->view('admin/_title', $this->menu);
 		$this->load->view('admin/target/final_validations');
 		$this->load->view('admin/_footer');

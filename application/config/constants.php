@@ -163,6 +163,7 @@ defined('M_ORDER_STATUS_ERROR')  		OR define('M_ORDER_STATUS_ERROR'		, 421);
 defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);
 defined('PICTURE_NOT_EXIST')  		OR define('PICTURE_NOT_EXIST'		, 423);
 defined('PRODUCT_HAS_NO_CREDIT') or define('PRODUCT_HAS_NO_CREDIT', 424); // 該產品已無額度，不起新案
+defined('BLACK_LIST_APPLY_PRODUCT') OR define('BLACK_LIST_APPLY_PRODUCT', 426);
 
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501);
@@ -703,3 +704,10 @@ defined('ASSOCIATES_CHARACTER_GUARANTOR_B') or define('ASSOCIATES_CHARACTER_GUAR
 // charity_institution_model table status
 defined('CHARITY_INSTITUTION_STATUS_BLOCK') or define('CHARITY_INSTITUTION_STATUS_BLOCK', 0); // 停用
 defined('CHARITY_INSTITUTION_STATUS_AVAILABLE') or define('CHARITY_INSTITUTION_STATUS_AVAILABLE', 1); // 啟用
+// 預設狀態代碼 (0: 停用 1: 啟用)
+defined('STATUS_INACTIVE') OR define('STATUS_INACTIVE', 0);
+defined('STATUS_ACTIVE')   OR define('STATUS_ACTIVE', 1);
+
+// 黑名單檢查類型代碼 (0: 禁止申貸 1: 轉二審)
+defined('CHECK_APPLY_PRODUCT') OR define('CHECK_APPLY_PRODUCT', 0);
+defined('CHECK_SECOND_INSTANCE')   OR define('CHECK_SECOND_INSTANCE', 1);

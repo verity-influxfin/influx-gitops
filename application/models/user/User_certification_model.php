@@ -134,6 +134,51 @@ class User_certification_model extends MY_Model
         return $list;
     }
 
+	public function get_content($userId, $certification_id, $limit = 1, $offset = 0)
+    {
+        $query = $this->db
+            ->select('content')
+            ->from('p2p_user.user_certification')
+            ->where('user_id', $userId)
+            ->where('status', 1)
+            ->where('certification_id', $certification_id)
+            ->limit($limit, $offset)
+            ->get();
+
+        return $query->result();
+
+    }
+
+    public function get_ocr($userId, $limit = 1, $offset = 0)
+    {
+        $query = $this->db
+            ->select('json_extract(remark, "$.OCR") as ocr')
+            ->from('p2p_user.user_certification')
+            ->where('user_id', $userId)
+            ->where('remark !=', '')
+            ->where('status', 1)
+            ->where('certification_id', 1)
+            ->limit($limit, $offset)
+            ->get();
+
+        return $query->result();
+    }
+
+    public function get_household_info($userId, $limit = 1, $offset = 0)
+    {
+        $query = $this->db
+            ->select('json_extract(content, "$.id_card_api") as id_card_api')
+            ->from('p2p_user.user_certification')
+            ->where('user_id', $userId)
+            ->where('content !=', '')
+            ->where('status', 1)
+            ->where('certification_id', 1)
+            ->limit($limit, $offset)
+            ->get();
+
+        return $query->result();
+    }
+
 	//將黑名單學校的學生認證退回重審
 	public function get_certifications_return()
 	{

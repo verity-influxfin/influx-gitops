@@ -1165,6 +1165,7 @@ class Certification extends MY_Admin_Controller {
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
 
+        # 目前只有實名認證的頁面會 call 這
 		public function verdict(){
 			$input = $this->input->get(NULL, TRUE);
 			$name = isset($input['name']) ? $input['name'] : '';
