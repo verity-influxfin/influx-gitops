@@ -14,7 +14,7 @@
                     <div>
                         <?=$name?>&nbsp;&nbsp;目標：
                         <input type="number" id="goal_id" value="<?=$number?>" />
-                        <button class="btn btn-primary" onclick="set_goals()">更新</button>
+                        <button class="btn btn-primary" onclick="set_goal()">更新</button>
                     </div>
                     
                 </div>
@@ -23,8 +23,8 @@
     </div>
 </div>
 <script type="text/javascript">
-    function set_goals(){
-        top.location = "<?=base_url();?>"+'admin/Sales/set_goals/'+<?=$id?>+'?number='+$('#goal_id').val();
+    function set_goal(){
+        top.location = "<?=base_url();?>"+'admin/Sales/set_goal/'+<?=$id?>+'?number='+$('#goal_id').val();
     }
 </script>
 <style>

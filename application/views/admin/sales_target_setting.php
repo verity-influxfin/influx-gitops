@@ -12,9 +12,10 @@
                 <div class="search-btn">
                     <div>
                         KPI 指標&nbsp;&nbsp;
-                        <input type="month" id="yearmonth" value="<?=$goal_ym?>" />
-                        <button class="btn btn-primary" onclick="get_goals()">查詢</button>
-                        <button class="btn btn-primary" onclick="report_export()">下載</button>
+                        <input type="month" id="yearmonth" value="<?=$goal_ym?>" />&nbsp;&nbsp;
+                        <button class="btn btn-primary" onclick="get_goals()">查詢</button>&nbsp;&nbsp;
+                        <button class="btn btn-primary" onclick="report_export()">下載</button>&nbsp;&nbsp;
+                        <button class="btn btn-primary" onclick="set_goals()">更新目標</button>
                     </div>
                 </div>
             </div>
@@ -111,6 +112,9 @@
     }
     function report_export(){
         top.location = "<?=base_url();?>"+'admin/Sales/goals_export?goal_ym='+$('#yearmonth').val();
+    }
+    function set_goals(){
+        top.location = "<?=base_url();?>"+'admin/Sales/monthly_goals_edit?goal_ym='+$('#yearmonth').val();
     }
 </script>
 <style>

@@ -1174,14 +1174,8 @@ class Sales extends MY_Admin_Controller {
 
     public function sales_report()
     {
-        $this->load->model('user/sale_goals_model');
-        // $this->load->model('user/sale_dashboard_model');
-
         $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
         $at_month = str_replace('-', '', $goal_ym);
-
-        // 檢查如果是新的月份有沒有設定過目標了 - 好像可以直接用別的功能 TODO
-        $new_goals = $this->sale_goals_model->get_goals_number_at_this_month();
 
         // 把大部分的東西都改寫到 library 裡面
         $this->load->library('Sales_lib', ['at_month' => $at_month]);
@@ -1225,7 +1219,7 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 
-    // 將 月日 跟 星期 結合 => X月Y日(六) ，呈現在後台的樣式跟報表不一樣應該沒差吧
+    // 將 月日 跟 星期 結合 => X月Y日(六) ，呈現在後台的樣式跟報表不一樣
     private function _parse_day_week_for_admin_dashboard($days_info)
     {
         $data = [];
@@ -1249,6 +1243,7 @@ class Sales extends MY_Admin_Controller {
         return "<a href='/admin/Sales/goal_edit/{$id}' target='_blank'>{$number}</a>";
     }
 
+    // 載入更新單一目標頁
     public function goal_edit($id)
     {
         $this->load->model('user/sale_goals_model');
@@ -1275,8 +1270,8 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 
-    // 改成另一個查看單一目標的頁面
-    public function set_goals($goal_id)
+    // 更新單一目標
+    public function set_goal($goal_id)
     {
         $this->load->model('user/sale_goals_model');
 
@@ -1289,6 +1284,54 @@ class Sales extends MY_Admin_Controller {
         }
 
         echo "<script>alert('績效請勿亂填');parent.location.href='/admin/AdminDashboard';</script>";
+    }
+
+    // 載入更新整月目標頁
+    public function monthly_goals_edit(){
+    	$goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
+        $at_month = str_replace('-', '', $goal_ym);
+
+        $this->load->model('user/sale_goals_model');
+        $goals= $this->sale_goals_model->get_goals_number_at_this_month();
+
+        $page_data = [
+            'goal_at' => $goal_ym,
+            'goal_items' => $this->sale_goals_model->type_name_mapping(),
+            'goal_number' => $this->_parse_goal_struct($goals),
+        ];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/sales_monthly_goals_edit', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    private function _parse_goal_struct($goals)
+    {
+        $data = [];
+        foreach ($goals as $value)
+        {
+            $struct = [
+                'id' => $value['id'],
+                'number' => $value['number'],
+            ];
+            $data[$value['type']] = $struct;
+        }
+
+        return $data;
+    }
+
+    public function set_monthly_goals()
+    {
+        $this->load->model('user/sale_goals_model');
+
+        $input = $this->input->post(NULL, TRUE);
+        foreach ($input as $key => $value)
+        {
+            $this->sale_goals_model->update($key, ['number' => $value]);
+        }
+
+        redirect('/admin/Sales/sales_report', 'refresh');
     }
 
     public function goals_export()

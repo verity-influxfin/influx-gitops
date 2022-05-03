@@ -15,7 +15,6 @@ class Sales_lib
     //     Sale_goals_model::GOAL_USER_REGISTER => [...],
     //     Sale_goals_model::GOAL_APP_DOWNLOAD => [...],
     //     Sale_goals_model::GOAL_LOAN_TOTAL => [...],
-
     //     Sale_goals_model::GOAL_LOAN_SALARY_MAN => [
     //         'goal' => [],
     //         'real' => [],
@@ -25,7 +24,6 @@ class Sales_lib
     //     Sale_goals_model::GOAL_LOAN_SMART_STUDENT => [...],
     //     Sale_goals_model::GOAL_LOAN_CREDIT_INSURANCE => [...],
     //     Sale_goals_model::GOAL_LOAN_SME => [...],
-
     //     Sale_goals_model::GOAL_DEAL_SALARY_MAN => [
     //         'goal' => [],
     //         'real' => [],
@@ -45,9 +43,6 @@ class Sales_lib
 
         $this->at_month = $params['at_month'];
         $this->days_in_month = $this->_get_days_in_month($params['at_month']);
-
-        // 檢查 at_month 是否有設定過目標
-        // $this->is_goals_exist_at_month();
     }
 
     private function _get_days_in_month($at_month)
@@ -171,7 +166,7 @@ class Sales_lib
 
     public function get_goals()
     {
-        $goals = $this->_get_sale_goals_info();
+        $goals = $this->CI->sale_goals_model->get_goals_number_at_this_month($this->at_month);
 
         $goal_a_month = array_column($goals, 'number', 'type');
         $goal_per_day = array_map(
@@ -190,17 +185,8 @@ class Sales_lib
 
     public function get_goals_id()
     {
-        $goals = $this->_get_sale_goals_info();
+        $goals = $this->CI->sale_goals_model->get_goals_number_at_this_month($this->at_month);
         return array_column($goals, 'id', 'type');
-    }
-
-    private function _get_sale_goals_info()
-    {
-        return $this->CI->sale_goals_model
-            ->as_array()
-            ->get_many_by([
-                'at_month' => $this->at_month,
-            ]);
     }
 
     public function get_days()

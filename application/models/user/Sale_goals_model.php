@@ -66,17 +66,18 @@ class Sale_goals_model extends MY_Model
         ];
     }
 
-    public function get_goals_number_at_this_month()
+    public function get_goals_number_at_this_month($at_month = '')
     {
-        $at_month = date('Ym');
+        $at_month = empty($at_month) ? date('Ym') : $at_month;
         $goals = $this->_goals_at($at_month);
 
         if (empty($goals))
         {
+            // 如果指定的月份首次開啟時會沒有目標，所以先複製上個月的資料
             $goals = $this->_create_new_month_goals($at_month);
         }
 
-        return $this->_parse_goal_struct($goals);
+        return $goals;
     }
 
     private function _goals_at($at_month)
@@ -90,6 +91,7 @@ class Sale_goals_model extends MY_Model
 
     private function _create_new_month_goals($at_month)
     {
+        // MEMO 固定用今天的上個月目標來複製一份
         $pre_month = date('Ym', strtotime('-1 month'));
         $pre_goals = $this->_goals_at($pre_month);
 
@@ -111,36 +113,5 @@ class Sale_goals_model extends MY_Model
         }
 
         return $goals;
-    }
-
-    private function _parse_goal_struct($goals)
-    {
-        $data = [];
-        foreach ($goals as $value)
-        {
-            $struct = [
-                'id' => $value['id'],
-                'number' => $value['number'],
-            ];
-            $data[$value['type']] = $struct;
-        }
-
-        return $data;
-    }
-
-    public function add_year_to_export_month(String $export_month)
-    {
-        if (date('Y') . $export_month > date('Ym'))
-        {
-            return date('Y') - 1 . $export_month;
-        }
-
-        return date('Y') . $export_month;
-    }
-
-    public function get_goals_at_month(String $at_month)
-    {
-        $goals = $this->as_array()->get_many_by(['at_month' => $at_month]);
-        return array_column($goals, 'number', 'type');
     }
 }
