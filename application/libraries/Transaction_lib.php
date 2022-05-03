@@ -1326,4 +1326,86 @@ class Transaction_lib{
     {
         return $this->CI->transaction_model->getDelayUserList();
     }
+
+    /**
+     * 外部慈善捐款的金流另外處理
+     **/
+    public function charity_recharge($payment, $user_id, $charity_institution_id)
+    {
+        if ($payment->status != '1' &&
+            $payment->amount > 0 &&
+            ! empty($payment->virtual_account))
+        {
+            $bank = bankaccount_substr($payment->bank_acc);
+
+            $trans_db = $this->CI->load->database('transaction', TRUE);
+            $trans_db->trans_begin();
+
+            // 寫入 transaction
+            $transactions = [
+                'source' => SOURCE_CHARITY,
+                'entering_date' => get_entering_date(),
+                'user_from' => 0,
+                'bank_account_from' => $bank['bank_account'],
+                'amount' => (int) $payment->amount,
+                'user_to' => $user_id,
+                'bank_account_to' => $payment->virtual_account,
+                'status' => TRANSACTION_STATUS_PAID_OFF,
+                'passbook_status' => 1, // passbook 成功寫入後會紀錄 1
+                'created_at' => time(),
+                'created_ip' => get_ip(),
+                'updated_at' => time(),
+                'updated_ip' => get_ip(),
+            ];
+            $trans_db->insert('transactions', $transactions);
+            $transaction_id = $trans_db->insert_id();
+
+            // 新增慈善捐款紀錄
+            $donate_data = [
+                'payment_id' => $payment->id,
+                'transaction_id' => $transaction_id,
+                'charity_institution_id' => $charity_institution_id,
+                'last5' => substr($bank['bank_account'], -5),
+                'amount' => (int) $payment->amount,
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_ip' => get_ip(),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'updated_ip' => get_ip(),
+            ];
+            $trans_db->insert('anonymous_donate', $donate_data);
+            $donate_id = $trans_db->insert_id();
+
+            // 寫入 virtual_passbook
+            $passbook_record = [
+                'virtual_account' => $payment->virtual_account,
+                'transaction_id' => $transaction_id,
+                'amount' => (int) $payment->amount,
+                'remark' => json_encode([
+                    'source' => SOURCE_CHARITY,
+                    'target_id' => 0,
+                ]),
+                'tx_datetime' => $payment->tx_datetime,
+                'created_at' => time(),
+                'created_ip' => get_ip(),
+            ];
+            $trans_db->insert('virtual_passbook', $passbook_record);
+
+            // 更新 payment 處理狀態
+            $trans_db->where('id', $payment->id);
+            $trans_db->update('payments', ['status' => 1]);
+
+            if ($trans_db->trans_status() === FALSE)
+            {
+                $trans_db->trans_rollback();
+                return FALSE;
+            }
+            else
+            {
+                $trans_db->trans_commit();
+                return $donate_id;
+            }
+        }
+
+        return FALSE;
+    }
 }

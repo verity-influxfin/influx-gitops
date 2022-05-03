@@ -79,4 +79,17 @@ class Virtual_passbook_model extends MY_Model
         }
         return $this->db->get()->result();
     }
+
+    public function get_sum_amount($where)
+    {
+        $this->_database->select('SUM(amount) AS amount')->from('p2p_transaction.virtual_passbook');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        $result = $this->_database->get()->first_row('array');
+
+        return $result['amount'] ?? 0;
+    }
 }

@@ -6,47 +6,132 @@ class Sip_lib
     function __construct()
     {
         $this->CI = &get_instance();
-        $sipServerPort = '9998';
-        $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":{$sipServerPort}/scraper/api/v1.0/";
+        if (empty(getenv('GRACULA_IP')) || empty(getenv('GRACULA_PORT')))
+        {
+            throw new Exception('can not get SIP ip or port');
+        }
+        $end_point = 'sips';
+        $this->scraperUrl = 'http://' . getenv('GRACULA_IP') . ':' . getenv('GRACULA_PORT') . '/scraper/api/v1.0/' . $end_point . '/';
     }
 
-    public function requestSipLogin($university, $account, $password)
+    public function requestLogin($university, $account, $password)
     {
-        if(!$university || !$account || !$password) {
-            return false;
+        if ( ! $university || ! $account || ! $password)
+        {
+            return FALSE;
         }
 
         $encodedUni = urlencode($university);
-        $url = $this->scraperUrl  . "sips/{$encodedUni}/login";
+        $url = $this->scraperUrl . "{$encodedUni}/login";
+
+        $data = ["account" => $account, "password" => $password];
+
+        $response = curl_get_statuscode($url, $data);
+
+        return $response;
+    }
+
+    public function requestDeep($university, $account, $password)
+    {
+        if ( ! $university || ! $account || ! $password)
+        {
+            return FALSE;
+        }
+
+        $encodedUni = urlencode($university);
+        $url = $this->scraperUrl . "{$encodedUni}/deep";
 
         $data = ["account" => $account, "password" => $password];
 
         $result = curl_get($url, $data);
-        $response = json_decode($result);
+        $response = json_decode($result, TRUE);
 
-        if (!$result || !isset($response->status) || $response->status != 200) {
-            return false;
+        if ( ! $result || ! isset($response['status']))
+        {
+            return FALSE;
         }
 
-        return true;
+        return $response;
     }
 
-    public function getSipLogin($university, $account)
+    public function getLoginLog($university, $account)
     {
-        if(!$university || !$account) {
-            return;
+        if ( ! $university || ! $account)
+        {
+            return FALSE;
         }
+
+        $response = [];
 
         $encodedUni = urlencode($university);
-        $url = $this->scraperUrl  . "sips/{$encodedUni}/login?account={$account}";
+        $url = $this->scraperUrl . "{$encodedUni}/login-log?account={$account}";
 
         $result = curl_get($url);
-        $response = json_decode($result);
-
-        if (!$result || !isset($response->status) || $response->status != 200) {
-            return;
+        if ( ! empty($result))
+        {
+            $response = json_decode($result, TRUE);
         }
 
-        return $response->response;
+        return $response;
+    }
+
+    public function getDeepLog($university, $account)
+    {
+        if ( ! $university || ! $account)
+        {
+            return FALSE;
+        }
+
+        $response = [];
+
+        $encodedUni = urlencode($university);
+        $url = $this->scraperUrl . "{$encodedUni}/deep-log?account={$account}";
+
+        $result = curl_get($url);
+        if ( ! empty($result))
+        {
+            $response = json_decode($result, TRUE);
+        }
+
+        return $response;
+    }
+
+    public function getDeepData($university, $account)
+    {
+        if ( ! $university || ! $account)
+        {
+            return FALSE;
+        }
+
+        $response = [];
+
+        $encodedUni = urlencode($university);
+        $url = $this->scraperUrl . "{$encodedUni}/deep-sip-data?account={$account}";
+
+        $result = curl_get($url);
+        if ( ! empty($result))
+        {
+            $response = json_decode($result, TRUE);
+        }
+
+        return $response;
+    }
+
+    public function getUniversityModel($university, $account)
+    {
+        if ( ! $university || ! $account)
+        {
+            return FALSE;
+        }
+
+        $response = [];
+        $encodedUni = urlencode($university);
+        $url = $this->scraperUrl . "{$encodedUni}/university-model?account={$account}";
+
+        $result = curl_get($url);
+        if ( ! empty($result))
+            $response = json_decode($result, TRUE);
+
+        return $response;
     }
 }

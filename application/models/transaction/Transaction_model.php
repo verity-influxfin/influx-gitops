@@ -110,29 +110,32 @@ class Transaction_model extends MY_Model
         return $this->db->get()->result();
     }
 
-	public function getDelayedTargetInfoList($transaction_where, $target_where){
-		$transactions = $this->db->select('MIN(`limit_date`) as `min_limit_date`, `target_id`')
-			->from("`p2p_transaction`.`transactions`")
-			->where($transaction_where)
-			->group_by('target_id');
-		$subquery = $this->db->get_compiled_select('', TRUE);
-		$this->db
-			->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.target_no, ta.delay_days, ta.script_status, t.*')
-			->from('`p2p_loan`.`targets` AS `ta`')
-			->where($target_where)
-			->join("($subquery) as `t`", "`ta`.`id` = `t`.`target_id`");
-		$subquery2 = $this->db->get_compiled_select('', TRUE);
-		$this->db
-			->select('i.target_id, i.user_id as investor_userid, r.user_id, r.loan_date, r.product_id, r.sub_product_id, r.target_no, r.min_limit_date, r.delay_days, r.script_status')
-			->from('`p2p_loan`.`investments` AS `i`')
-			->where('status', 3)
-			->where('transfer_status <', '2')
-			->join("($subquery2) as `r`", "`i`.`target_id` = `r`.`target_id`")
-			->order_by('i.target_id', 'ASC');
+    public function getDelayedTargetInfoList($transaction_where, $target_where)
+    {
+        $this->_database->select('MIN(`limit_date`) as `min_limit_date`, `target_id`')
+            ->from("`p2p_transaction`.`transactions`")
+            ->where($transaction_where)
+            ->group_by('target_id');
+        $subquery = $this->_database->get_compiled_select('', TRUE);
 
-		$query = $this->db->get();
-		return $query->result();
-	}
+        $this->_database
+            ->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.target_no, ta.delay_days, ta.script_status, t.*')
+            ->from('`p2p_loan`.`targets` AS `ta`')
+            ->join("($subquery) as `t`", "`ta`.`id` = `t`.`target_id`");
+        $this->_set_where([0 => $target_where]);
+        $subquery2 = $this->_database->get_compiled_select('', TRUE);
+
+        $this->_database
+            ->select('i.target_id, i.user_id as investor_userid, r.user_id, r.loan_date, r.product_id, r.sub_product_id, r.target_no, r.min_limit_date, r.delay_days, r.script_status')
+            ->from('`p2p_loan`.`investments` AS `i`')
+            ->where('status', 3)
+            ->where('transfer_status <', '2')
+            ->join("($subquery2) as `r`", "`i`.`target_id` = `r`.`target_id`")
+            ->order_by('i.target_id', 'ASC');
+
+        $query = $this->_database->get();
+        return $query->result();
+    }
 
     // 新增內帳交易紀錄，並回傳ID
     public function insert_get_id($data)
@@ -145,6 +148,7 @@ class Transaction_model extends MY_Model
      * 依target ID及科目名稱找第N期的還款狀態
      * @param $target_id
      * @param $source : 科目名稱
+     * @param $instalment_no
      * @return mixed
      */
     public function get_repayment_status_by_target_id($target_id, $source, $instalment_no)
@@ -183,4 +187,206 @@ class Transaction_model extends MY_Model
         }
         return $this->db->get()->result_array();
     }
+
+    /**
+     * 取得應付的應付日期和金額
+     * @param $source_list
+     * @param mixed $user_from_list 金額付款來源user
+     * @param mixed $user_to_list 金額付款目標user
+     * @param mixed $product_id_list 欲篩選產品編號
+     * @param bool $is_group 依照科目,交易日群組計算
+     * @return mixed
+     */
+    public function get_account_payable_list($source_list, $user_from_list = [], $user_to_list = [], $product_id_list = [], bool $is_group = TRUE, string $start_date='')
+    {
+        $this->db
+            ->select('tra.source')
+            ->select('tra.limit_date AS tx_date')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join('`p2p_loan`.`targets` AS t', 't.id = tra.target_id')
+            ->where_in('tra.source', $source_list)
+            ->where_in('tra.status', [TRANSACTION_STATUS_TO_BE_PAID]);
+        if ( ! empty($start_date))
+        {
+            $this->db->where('tra.limit_date >= ', $start_date);
+        }
+        if ($is_group)
+        {
+            $this->db->select('SUM(tra.amount) AS amount')
+                ->group_by('tra.source, tra.limit_date');
+        }
+        else
+        {
+            $this->db->select('tra.amount');
+        }
+        if ( ! empty($user_from_list))
+        {
+            $this->db->where_in('tra.user_from', $user_from_list);
+        }
+        if ( ! empty($user_to_list))
+        {
+            $this->db->where_in('tra.user_to', $user_to_list);
+        }
+        if ( ! empty($product_id_list))
+        {
+            $this->db->where_in('t.product_id', $product_id_list);
+        }
+
+        return $this->db->get()->result_array();
+    }
+
+    /**
+     * 取得已結清的交易日期和金額
+     * @param $source_list
+     * @param mixed $user_from_list 金額付款來源user
+     * @param mixed $user_to_list 金額付款目標user
+     * @param mixed $product_id_list 欲篩選產品編號
+     * @param bool $is_group 依照科目,交易日群組計算
+     * @return mixed
+     */
+    public function get_paid_off_list($source_list, $user_from_list = [], $user_to_list = [], $product_id_list = [], $is_group = TRUE)
+    {
+        $this->db
+            ->select('tra.source')
+            ->select('tra.entering_date AS tx_date')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join('`p2p_loan`.`targets` AS t', 't.id = tra.target_id')
+            ->where_in('tra.source', $source_list)
+            ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
+            // 防止撈到借款人的出借手續費等科目
+            ->where('tra.investment_id !=', 0);
+
+        if ($is_group)
+        {
+            $this->db->select('SUM(tra.amount) AS amount')
+                ->group_by('tra.source, tra.entering_date');
+        }
+        else
+        {
+            $this->db->select('tra.amount');
+        }
+        if ( ! empty($user_from_list))
+        {
+            $this->db->where_in('tra.user_from', $user_from_list);
+        }
+        if ( ! empty($user_to_list))
+        {
+            $this->db->where_in('tra.user_to', $user_to_list);
+        }
+        if ( ! empty($product_id_list))
+        {
+            $this->db->where_in('t.product_id', $product_id_list);
+        }
+
+        return $this->db->get()->result_array();
+    }
+
+    /**
+     * 取得提前清償(含)後的結清交易之交易日與金額
+     * @param $source_list
+     * @param mixed $user_to_list 金額付款目標user
+     * @param mixed $product_id_list 欲篩選產品編號
+     * @param bool $is_group 依照科目,交易日群組計算
+     * @return mixed
+     */
+    public function get_prepaid_transactions($source_list, $user_to_list = [], $product_id_list = [], bool $is_group = TRUE)
+    {
+        $this->db
+            ->select('tra.investment_id, tra.entering_date')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join('`p2p_loan`.`targets` AS `t`', 't.id = tra.target_id')
+            ->where_in('tra.source', SOURCE_PREPAYMENT_ALLOWANCE)
+            ->where('tra.status', TRANSACTION_STATUS_PAID_OFF);
+        if ( ! empty($user_to_list))
+        {
+            $this->db->where_in('tra.user_to', $user_to_list);
+        }
+        if ( ! empty($product_id_list))
+        {
+            $this->db->where_in('t.product_id', $product_id_list);
+        }
+        $paid_off_prepayment_query = $this->db->get_compiled_select('', TRUE);
+
+        $this->db
+            ->select('tra.source')
+            ->select('tra.entering_date AS tx_date')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join("({$paid_off_prepayment_query}) AS `r`", 'r.investment_id = tra.investment_id')
+            ->where_in('tra.source', $source_list)
+            ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
+            ->where('tra.entering_date >= r.entering_date', NULL, TRUE);
+
+        if ($is_group)
+        {
+            $this->db->select('SUM(tra.amount) AS amount')
+                ->group_by('tra.source, tra.entering_date');
+        }
+        else
+        {
+            $this->db->select('tra.amount');
+        }
+
+        return $this->db->get()->result_array();
+    }
+
+    public function get_delayed_paid_transaction($source_list, $user_to_list = [], $product_id_list = [], bool $is_group = TRUE): array
+    {
+        return $this->_get_delayed_transaction($source_list, $user_to_list, $product_id_list, $is_group, $status=TRANSACTION_STATUS_PAID_OFF);
+    }
+
+    public function get_delayed_ar_transaction($source_list, $user_to_list = [], $product_id_list = [], bool $is_group = TRUE): array
+    {
+        return $this->_get_delayed_transaction($source_list, $user_to_list, $product_id_list, $is_group, $status=TRANSACTION_STATUS_TO_BE_PAID);
+    }
+
+    /**
+     * 取得逾期(含)後的結清交易之交易日與金額
+     * @param $source_list
+     * @param mixed $user_to_list
+     * @param mixed $product_id_list
+     * @param bool $is_group
+     * @param mixed $status
+     * @return array
+     */
+    public function _get_delayed_transaction($source_list, $user_to_list = [], $product_id_list = [], bool $is_group = TRUE, $status = TRANSACTION_STATUS_PAID_OFF): array
+    {
+        $this->db
+            ->select('tra.investment_id, MIN(tra.entering_date) AS entering_date')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join('`p2p_loan`.`targets` AS `t`', 't.id = tra.target_id')
+            ->where('tra.source', SOURCE_AR_DELAYINTEREST)
+            ->where_in('tra.status', [TRANSACTION_STATUS_TO_BE_PAID, TRANSACTION_STATUS_PAID_OFF])
+            ->group_by('investment_id');
+        if ( ! empty($user_to_list))
+        {
+            $this->db->where_in('tra.user_to', $user_to_list);
+        }
+        if ( ! empty($product_id_list))
+        {
+            $this->db->where_in('t.product_id', $product_id_list);
+        }
+        $delayed_query = $this->db->get_compiled_select('', TRUE);
+
+        $this->db
+            ->select('tra.source')
+            ->select('tra.entering_date AS tx_date')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join("({$delayed_query}) AS `r`", 'r.investment_id = tra.investment_id')
+            ->where_in('tra.source', $source_list)
+            ->where_in('tra.status', $status)
+            ->where('tra.entering_date >= r.entering_date', NULL, TRUE);
+
+        if ($is_group)
+        {
+            $this->db->select('SUM(tra.amount) AS amount')
+                ->group_by('tra.source, tra.entering_date');
+        }
+        else
+        {
+            $this->db->select('tra.amount');
+        }
+
+        return $this->db->get()->result_array();
+    }
+
 }

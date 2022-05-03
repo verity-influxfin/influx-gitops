@@ -1713,7 +1713,7 @@ class Target_lib
                             $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
                             $company = $value->product_id >= 1000 ? 1 : 0;
 
-                            $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, false, $value);
+                            $certifications = $this->CI->certification_lib->get_status($value->user_id, BORROWER, $company, false, $value, FALSE, TRUE);
 
                             $finish = true;
                             $finish_stage_cer = [];
@@ -1896,6 +1896,37 @@ class Target_lib
             }
         }
         return false;
+    }
+
+    public function script_chk_signing()
+    {
+        $this->CI->load->model('loan/credit_model');
+        $target = $this->CI->credit_model->get_expired_signing_list();
+        $target_id = array_column($target, 'target_id');
+        if (empty($target_id))
+        {
+            return 0;
+        }
+
+        $this->CI->target_model->update_by(['id' => $target_id], ['script_status' => 17]);
+        $count = 0;
+        foreach ($target as $value)
+        {
+            $param = [
+                'status' => TARGET_FAIL,
+                'sub_status' => TARGET_SUBSTATUS_NORNAL,
+                'remark' => $value['remark'] . '系統自動取消'
+            ];
+            $this->CI->target_model->update($value['id'], $param);
+            $this->insert_change_log($value['id'], $param);
+            $this->CI->notification_lib->expired_cancel($value['user_id']);
+
+            $count++;
+        }
+
+        $this->CI->target_model->update_by(['id' => $target_id], ['script_status' => 0]);
+
+        return $count;
     }
 
     //使用者觸發架上案件智能投資

@@ -1072,11 +1072,18 @@ class Sales extends MY_Admin_Controller {
                 $loaned_count_list = array_column($this->target_model->getUserStatusByTargetId($target_ids), 'total_count', 'user_id');
                 $principal_list = array_column($this->transaction_model->get_delayed_principle($target_ids, $end_date, 'user_id'), NULL, 'user_id');
 
-                $identity_list = array_column($this->user_certification_model->get_many_by([
+                $cert_passed_list = $this->user_certification_model->as_array()->get_many_by([
                     'user_id' => $user_ids,
                     'status' => CERTIFICATION_STATUS_SUCCEED,
-                    'certification_id' => CERTIFICATION_IDENTITY
-                ]), NULL, 'user_id');
+                    'investor' => USER_BORROWER,
+                    'certification_id' => [CERTIFICATION_IDENTITY, CERTIFICATION_STUDENT]
+                ]);
+
+                $cert_passed_list = array_reduce($cert_passed_list, function ($list, $item) {
+                    $list[$item['user_id']][$item['certification_id']] = $item;
+                    return $list;
+                }, []);
+
                 foreach ($user_ids as $user_id)
                 {
                     // 使用者編號
@@ -1130,7 +1137,8 @@ class Sales extends MY_Admin_Controller {
                         }
                     }
 
-                    $list[$user_id]['identity'] = isset($identity_list[$user_id]) ? '有' : '無';
+                    $list[$user_id]['identity'] = isset($cert_passed_list[$user_id][CERTIFICATION_IDENTITY]) ? '有' : '無';
+                    $list[$user_id]['student'] = isset($cert_passed_list[$user_id][CERTIFICATION_STUDENT]) ? '有' : '無';
                 }
             }
 
@@ -1144,7 +1152,8 @@ class Sales extends MY_Admin_Controller {
                     'banned_flag' => ['name' => '系統拒絕紀錄', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']],
                     'apply_status' => ['name' => '申貸紀錄', 'width' => 10,'alignment' => ['h' => 'center','v' => 'center']],
                     'credit_status' => ['name' => '信用額度', 'width' => 15, 'alignment' => ['h' => 'center','v' => 'center']],
-                    'identity' => ['name' => '通過實名', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']]
+                    'identity' => ['name' => '通過實名', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']],
+                    'student' => ['name' => '通過學生認證', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']]
                 ];
                 $this->spreadsheet_lib->save($title_rows, $list, "{$product_info['name']}_高價值用戶_{$start_date}_{$end_date}.xlsx");
                 return;

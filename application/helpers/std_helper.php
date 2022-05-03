@@ -122,7 +122,7 @@
 
         $result = [
             'code' => $return_code,
-            'response' => $rs
+            'response' => json_decode($rs, TRUE)
         ];
 
         return $result;

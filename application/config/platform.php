@@ -2,6 +2,7 @@
 
 //後台menu
 $config['admin_menu'] = [
+    'Charity' => ['name' => '慈善專區', 'icon' => 'fa-briefcase'],
     'Ntu' => ['name' => '台大慈善', 'icon' => 'fa-briefcase'],
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
 	'AntiFraud' => [
@@ -66,6 +67,10 @@ $config['admin_menu'] = [
         'index' => '認證方式列表',
         'user_certification_list' => '會員認證審核',
         'difficult_word_list' => '銀行困難字管理',
+    ],
+    'Scraper' => [
+        'parent_name' => '爬蟲系統',
+        'index' => '會員爬蟲列表',
     ],
     'Partner' => [
         'parent_name' => '合作夥伴管理',
@@ -474,7 +479,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
-        'allow_age_range' => [20, 55],
+        'allow_age_range' => [20, 45],
         'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000',
         'checkOwner' => false,
     ],
@@ -537,7 +542,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
-        'allow_age_range' => [20, 55],
+        'allow_age_range' => [20, 45],
         'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
         'checkOwner' => false,
     ],
@@ -1347,7 +1352,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 55],
+                'allow_age_range' => [20, 45],
                 'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
                 'checkOwner' => false,
             ]
@@ -1740,8 +1745,8 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 55],
-                'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
+                'allow_age_range' => [20, 45],
+                'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000',
                 'checkOwner' => false,
             ]
         ],
@@ -1901,7 +1906,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 55],
+                'allow_age_range' => [20, 45],
                 'description' => '可申請額度<br>30,000-300,000',
                 'checkOwner' => false,
             ],
