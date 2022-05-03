@@ -91,7 +91,7 @@ class Sale_goals_model extends MY_Model
 
     private function _create_new_month_goals($at_month)
     {
-        // MEMO 固定用今天的上個月目標來複製一份
+        // MEMO 固定用"今天"的上個月目標來複製一份
         $pre_month = date('Ym', strtotime('-1 month'));
         $pre_goals = $this->_goals_at($pre_month);
 

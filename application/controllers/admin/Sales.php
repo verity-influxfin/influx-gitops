@@ -1287,12 +1287,13 @@ class Sales extends MY_Admin_Controller {
     }
 
     // 載入更新整月目標頁
-    public function monthly_goals_edit(){
-    	$goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
+    public function monthly_goals_edit()
+    {
+        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
         $at_month = str_replace('-', '', $goal_ym);
 
         $this->load->model('user/sale_goals_model');
-        $goals= $this->sale_goals_model->get_goals_number_at_this_month();
+        $goals = $this->sale_goals_model->get_goals_number_at_this_month();
 
         $page_data = [
             'goal_at' => $goal_ym,

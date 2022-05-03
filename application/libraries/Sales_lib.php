@@ -55,7 +55,7 @@ class Sales_lib
         $return_data = [];
         $this->_init_total_deals();
 
-        // 取得本月的各項目標 BUT 但這邊如果選了別的月份可能會沒有目標 TODO
+        // 取得本月的各項目
         $goals = $this->get_goals();
 
         // 取得本月的各項績效資料
