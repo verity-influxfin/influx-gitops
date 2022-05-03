@@ -161,6 +161,11 @@ class Target extends MY_Admin_Controller {
                     if($credit){
                         $list[$key]->credit = $credit;
                     }
+
+                    // 可動用額度，需要同產品(product_id)、同期間(instalment)
+                    $this->load->library('credit_lib');
+                    $remain_amount = $this->credit_lib->get_remain_amount($value->user_id, $value->product_id, $value->sub_product_id);
+                    $list[$key]->remain_amount = $remain_amount['instalment'] == $value->instalment ? $remain_amount['remain_amount'] : '-';
                 }
 			}
 		}
@@ -175,7 +180,7 @@ class Target extends MY_Admin_Controller {
             header('Content-Disposition: attachment; filename=All_targets_'.date('Ymd').'.xls');
             $html = '<table><thead>
                     <tr><th>案號</th><th>產品</th><th>會員ID</th><th>新舊戶</th><th>信評</th><th>公司/學校</th>
-                    <th>科系</th><th>是否完成實名驗證</th><th>申請金額</th><th>核准金額</th><th>動用金額</th><th>本金餘額</th>
+                    <th>科系</th><th>是否完成實名驗證</th><th>申請金額</th><th>核准金額</th><th>動用金額</th><th>可動用額度</th><th>本金餘額</th>
                     <th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th>
                     <th>狀態</th><th>借款原因</th><th>申請日期</th><th>申請時間</th><th>核准日期</th><th>核准時間</th>
                     <th>邀請碼</th><th>備註</th></tr>
@@ -194,6 +199,11 @@ class Target extends MY_Admin_Controller {
 
                 $subloan_list = $this->config->item('subloan_list');
                 foreach($list as $key => $value){
+
+                    // 撈取可動用額度
+                    $this->load->library('credit_lib');
+                    $remain_amount = $this->credit_lib->get_remain_amount($value->user_id, $value->product_id, $value->sub_product_id);
+
                     $html .= '<tr>';
                     $html .= '<td>'.$value->target_no.'</td>';
                     $html .= '<td>'.$product_list[$value->product_id]['name'].($value->sub_product_id!=0?'/'.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'').(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
@@ -202,10 +212,11 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$value->credit_level.'</td>';
                     $html .= '<td>'.(isset($value->company)?$value->company:'').(isset($value->company)&&isset($value->school_name)?' / ':'').(isset($value->school_name)?$value->school_name:'').'</td>';
                     $html .= '<td>'.(isset($value->school_department)?$value->school_department:'').'</td>';
-                    $html .= '<td>'.(isset($userCertList[$value->user_id]) && isset($userCertList[$value->user_id][CERTIFICATION_IDCARD]) ? "是" : "否").'</td>';
+                    $html .= '<td>'.(isset($userCertList[$value->user_id]) && isset($userCertList[$value->user_id][CERTIFICATION_IDENTITY]) ? "是" : "否").'</td>';
                     $html .= '<td>'.$value->amount.'</td>';
                     $html .= '<td>'.(isset($value->credit->amount)?$value->credit->amount:'').'</td>';
                     $html .= '<td>'.$value->loan_amount.'</td>';
+                    $html .= '<td>' . $remain_amount['instalment'] == $value->instalment ? $remain_amount['remain_amount'] : '-' . '</td>'; // 可動用額度
                     $html .= '<td>'.$value->remaining_principal.'</td>';
                     $html .= '<td>'.floatval($value->interest_rate).'</td>';
                     $html .= '<td>'.$instalment_list[$value->instalment].'</td>';

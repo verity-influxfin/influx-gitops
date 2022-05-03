@@ -215,9 +215,10 @@ class User_certification_model extends MY_Model
      * 依「使用者ID」撈其所有驗證資料
      * @param int $user_id : 使用者ID
      * @param int $investor : 使用者身份(INVESTOR/BORROWER)
+     * @param int $certification_id
      * @return mixed
      */
-    public function get_certification_data_by_user_id(int $user_id, int $investor)
+    public function get_certification_data_by_user_id(int $user_id, int $investor, int $certification_id = 0)
     {
         $this->db
             ->select('uc.certification_id')
@@ -226,6 +227,11 @@ class User_certification_model extends MY_Model
             ->where('uc.user_id', $user_id)
             ->where('uc.investor', $investor)
             ->where("id IN (SELECT MAX(id) FROM `p2p_user`.`{$this->_table}` WHERE user_id='{$user_id}' AND investor='{$investor}' GROUP BY certification_id)");
+
+        if ($certification_id > 0)
+        {
+            $this->db->where('uc.certification_id', $certification_id);
+        }
 
         return $this->db->get()->result_array();
     }
@@ -244,4 +250,28 @@ class User_certification_model extends MY_Model
         return $this->_database->get()->result_array();
     }
 
+
+    public function get_certification($condition)
+    {
+        $this->_database
+            ->from('`p2p_user`.`user_certification`')
+            ->order_by('created_at', 'DESC');
+
+        if ( ! empty($condition))
+        {
+            $this->_set_where([0 => $condition]);
+        }
+
+        return $this->_database->get()->row_array();
+    }
+
+    public function chk_verifying_by_ids(array $cert_ids)
+    {
+        return $this->db->select('id')
+            ->from('p2p_user.user_certification')
+            ->where_in('id', $cert_ids)
+            ->where_in('status', [CERTIFICATION_STATUS_AUTHENTICATED, CERTIFICATION_STATUS_FAILED])
+            ->get()
+            ->result_array();
+    }
 }

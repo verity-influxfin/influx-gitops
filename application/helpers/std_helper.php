@@ -487,4 +487,13 @@
 		}
 		return $date;
 	}
+
+
+    function log_msg($level, $message)
+    {
+        $backtrace = debug_backtrace();
+        log_message($level, $backtrace[0]['file'] .'(' . $backtrace[0]['line']  . ') :: ' . $message . '\n' .
+            (!empty($backtrace[1]) ? $backtrace[1]['file'] .'(' . $backtrace[1]['line'] : ''));
+    }
+
 ?>

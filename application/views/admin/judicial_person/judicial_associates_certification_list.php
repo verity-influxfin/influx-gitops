@@ -118,7 +118,7 @@
 													echo '<td>';
 													if(isset($value->certification[$cid])){
                                                         $sys_check = $value->certification[$cid]["sys_check"] === 0 ? " btn-circle" : " ";
-                                                        $status = ($value->certification[$cid]['expire_time'] <= time() && !in_array($cid, [CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL]) ? 'danger' : 'success');
+                                                        $status = ($value->certification[$cid]['expire_time'] <= time() && !in_array($cid, [CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL]) ? 'danger' : 'success');
                                                         if($cid==3){
                                                             switch($value->certification[$cid]['user_status']){
                                                                 case '0':

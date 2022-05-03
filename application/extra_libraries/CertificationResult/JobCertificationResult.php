@@ -1,6 +1,8 @@
 <?php
+namespace CertificationResult;
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-class InvestigationCertificationResult extends CertificationResult
+class JobCertificationResult extends CertificationResult
 {
     public static $FAILED_MESSAGE = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。';
 
@@ -13,6 +15,6 @@ class InvestigationCertificationResult extends CertificationResult
 		if($this->banResubmit)
 			return [self::$FAILED_MESSAGE];
 		else
-			return $this->getMessage($status, MassageDisplay::Client);
+			return $this->getMessage($status, MessageDisplay::Client);
 	}
 }

@@ -1076,7 +1076,7 @@ class Sales extends MY_Admin_Controller {
                     'user_id' => $user_ids,
                     'status' => CERTIFICATION_STATUS_SUCCEED,
                     'investor' => USER_BORROWER,
-                    'certification_id' => [CERTIFICATION_IDCARD, CERTIFICATION_STUDENT]
+                    'certification_id' => [CERTIFICATION_IDENTITY, CERTIFICATION_STUDENT]
                 ]);
 
                 $cert_passed_list = array_reduce($cert_passed_list, function ($list, $item) {
@@ -1137,7 +1137,7 @@ class Sales extends MY_Admin_Controller {
                         }
                     }
 
-                    $list[$user_id]['identity'] = isset($cert_passed_list[$user_id][CERTIFICATION_IDCARD]) ? '有' : '無';
+                    $list[$user_id]['identity'] = isset($cert_passed_list[$user_id][CERTIFICATION_IDENTITY]) ? '有' : '無';
                     $list[$user_id]['student'] = isset($cert_passed_list[$user_id][CERTIFICATION_STUDENT]) ? '有' : '無';
                 }
             }
