@@ -136,7 +136,6 @@
                                 </div>
                                 <div>個人金融</div>
                             </div>
-                            <a href="/3s-college-loan" class="item">3S名校貸</a>
                             <a href="/collegeLoan" class="item">學生貸款</a>
                             <a href="/workLoan" class="item">上班族貸款</a>
                             <a href="/engineerLoan" class="item">資訊工程師專案</a>
@@ -230,7 +229,6 @@
                             </div>
                             <div>個人金融</div>
                         </div>
-                        <a href="/3s-college-loan" class="item">3S名校貸</a>
                         <a href="/collegeLoan" class="item">學生貸款</a>
                         <a href="/workLoan" class="item">上班族貸款</a>
                         <a href="/engineerLoan" class="item">資訊工程師專案</a>
@@ -359,7 +357,6 @@
                     <div class="item">
                         <div class="header">我要申貸</div>
                         <div class="list">
-                            <a href="/3s-college-loan">3S名校貸</a>
                             <a href="/collegeLoan">學生貸款</a>
                             <a href="/workLoan">上班族貸款</a>
                             <a href="/engineerLoan">資訊工程師專案</a>
