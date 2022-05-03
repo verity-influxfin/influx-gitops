@@ -342,18 +342,6 @@ Route::prefix('api/v1')->group(function() {
 
     // 統一編號取公司名稱
     Route::get('getCompanyName', 'SmeFormController@getCompanyName');
-
-    // 企業
-    Route::get('product/applylist', 'ProductController@getApplyList');
-    Route::get('/product/applyinfo', 'ProductController@getApplyInfo');
-    Route::post('/certification/judicial_file_upload', 'ProductController@postCertFileUpload');
-    Route::post('/certification/natural_file_upload', 'ProductController@postNaturalFileUpload');
-    Route::post('/certification/profile', 'ProductController@postCertificationProfile');
-    Route::post('/certification/email', 'ProductController@postCertificationEmail');
-    Route::post('/certification/profilejudicial', 'ProductController@postCertificationProfilejudicial');
-    Route::post('/user/upload_pdf', 'ProductController@postUploadPdf');
-    Route::post('/user/upload', 'ProductController@postUpload');
-
 });
 
 // 捐款動畫 SSE API
@@ -362,5 +350,4 @@ Route::get('/event/charity/donation', 'CharityController@getDonation');
 // 遊客捐款 & 查詢捐款 API
 Route::post('/charity/donate/anonymous', 'CharityController@visitorDonate');
 Route::get('/charity/donate/anonymous', 'CharityController@visitorSearch');
-
 

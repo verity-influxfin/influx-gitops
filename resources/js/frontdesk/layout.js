@@ -3,7 +3,6 @@ import state from './store/state';
 import getters from './store/getters';
 import actions from './store/actions';
 import mutations from './store/mutations';
-import enterprise from './store/module/enterprise'
 //vue router
 import routers from './router/router';
 //import Vue from 'vue'
@@ -48,9 +47,6 @@ $(() => {
     });
 
     const store = new Vuex.Store({
-        modules: {
-            enterprise
-        },
         state,
         getters,
         actions,
@@ -213,12 +209,7 @@ $(() => {
                                     if (investor === '1') {
                                         this.$router.push('investnotification');
                                     } else {
-                                        if (this.isCompany) {
-                                            // 法人導到新的首頁
-                                            this.$router.push('enterprise-upload/home')
-                                        } else {
-                                            this.$router.push('loannotification');
-                                        }
+                                        this.$router.push('loannotification');
                                     }
 
                                     if($("#loginModal").attr("data-type") == "cardgame"){
