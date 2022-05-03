@@ -102,7 +102,7 @@
         <alesis-space size="small"></alesis-space>
 
         <!-- 公司簡介 -->
-        <div class="公司簡介" id="company-intro">
+        <div class="公司簡介">
             <alesis-header>
                 <div class="標題">公司簡介</div>
             </alesis-header>

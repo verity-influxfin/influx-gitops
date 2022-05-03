@@ -42,7 +42,6 @@ import projects from '../pages/alesis-projects';
 import workLoan from '../pages/alesis-workLoan';
 import collegeLoan from "../pages/alesis-collegeLoan";
 import investReport from "../pages/investReport"
-import collegeLoan3S from "../pages/3SCollegeLoan"
 import search from "../pages/search.vue";
 import promoteCodeIntro from '../pages/promoteCodeIntro.vue'
 import businessIndex from '../pages/BusinessLoan/index'
@@ -51,22 +50,7 @@ import businessEnd from '../pages/BusinessLoan/end'
 import smeIndex from '../pages/BusinessLoan/smeLoan'
 import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
-import enterpriseUpload from '../pages/enterpriseUpload/index'
-import enterpriseHome from '../pages/enterpriseUpload/home'
-import enterpriseOverviewIndex from '../pages/enterpriseUpload/overview/index'
-import enterpriseOverviewPrincipal from '../pages/enterpriseUpload/overview/principal'
-import enterpriseOverviewCompany from '../pages/enterpriseUpload/overview/company'
-import enterpriseForm from '../pages/enterpriseUpload/forms/index'
-import principalPassbook from '../pages/enterpriseUpload/forms/principalPassbook'
-import principalIncomeInfo from '../pages/enterpriseUpload/forms/principalIncomeInfo'
-import principalCreditInfo from '../pages/enterpriseUpload/forms/principalCreditInfo'
-import principalBasicInfo from '../pages/enterpriseUpload/forms/principalBasicInfo'
-import companyBasicinfo from '../pages/enterpriseUpload/forms/companyBasicinfo'
-import companyPassBook from '../pages/enterpriseUpload/forms/companyPassBook'
-import companySalesInfo from '../pages/enterpriseUpload/forms/companySalesInfo'
-import companyInsuranceInfo from '../pages/enterpriseUpload/forms/companyInsuranceInfo'
-import companyIncomeInfo from '../pages/enterpriseUpload/forms/companyIncomeInfo'
-import companyCreditInfo from '../pages/enterpriseUpload/forms/companyCreditInfo'
+
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -74,7 +58,6 @@ let routers = [
     { path: '/borrow', component: borrow },
     { path: '/workLoan', component: workLoan },
     { path: '/collegeLoan', component: collegeLoan },
-    { path: '/3s-college-loan', component: collegeLoan3S },
     { path: '/faq', component: faq },
     { path: '/risk', component: risk },
     { path: '/projects', component: projects },
@@ -164,75 +147,7 @@ let routers = [
     { path: '/obank', component: obank },
     {path:'/charitable',component:ntu},
     { path: '/charitable-status', component: charitableStatus},
-    { path: '/search',name:'search', component: search },
-    {
-        path: '/enterprise-upload', component: enterpriseUpload, children: [
-            {
-                path: 'home',
-                component: enterpriseHome,
-            },
-            {
-                path: 'form',
-                component: enterpriseForm,
-                children: [
-                    {
-                        path: 'principal-basic-info',
-                        component: principalBasicInfo
-                    },
-                    {
-                        path: 'principal-passbook',
-                        component:principalPassbook
-                    },
-                    {
-                        path: 'principal-income-info',
-                        component: principalIncomeInfo
-                    },
-                    {
-                        path: 'principal-credit-info',
-                        component: principalCreditInfo
-                    },
-                    {
-                        path: 'company-basic-info',
-                        component: companyBasicinfo
-                    },
-                    {
-                        path: 'company-passbook',
-                        component: companyPassBook
-                    },
-                    {
-                        path: 'company-sales-info',
-                        component: companySalesInfo
-                    },
-                    {
-                        path: 'company-insurance-info',
-                        component: companyInsuranceInfo
-                    },
-                    {
-                        path: 'company-income-info',
-                        component: companyIncomeInfo
-                    },
-                    {
-                        path: 'company-credit-info',
-                        component: companyCreditInfo
-                    }
-                ]
-            },
-            {
-                path: 'overview',
-                component: enterpriseOverviewIndex,
-                children: [
-                    {
-                        path: 'principal',
-                        component: enterpriseOverviewPrincipal
-                    },
-                    {
-                        path: 'company',
-                        component: enterpriseOverviewCompany
-                    }
-                ]
-            }
-        ]
-    }
+    { path: '/search',name:'search', component: search }
 ];
 
 export default routers;
