@@ -43,13 +43,13 @@
     }
 
     // 上傳檔案
-    function submitMedia() {
+    function submitMedia(selector) {
         if (Object.keys(imageFormData).length != 0) {
-            var formData = new FormData();
+            let formData = new FormData();
 
             // 上傳檔案需要的參數
             let extraInfoItem = document.querySelectorAll(".extra_info");
-            for (i = 0; i < extraInfoItem.length; i++) {
+            for (let i = 0; i < extraInfoItem.length; i++) {
                 formData.append(extraInfoItem[i].name, $(`[name="${extraInfoItem[i].name}"]`).val());
             }
 

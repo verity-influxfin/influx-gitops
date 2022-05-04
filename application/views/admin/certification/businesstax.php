@@ -5,8 +5,7 @@
 </style>
 <script type="text/javascript">
     function check_fail() {
-        var status = $('#status :selected').val();
-        if (status == 2) {
+        if ($('#status :selected').val() === '2') {
             $('#fail_div').show();
         } else {
             $('#fail_div').hide();
@@ -14,9 +13,11 @@
     }
 
     $(document).off("change", "select#fail").on("change", "select#fail", function () {
-        var sel = $(this).find(':selected');
-        $('input#fail').css('display', sel.attr('value') == 'other' ? 'block' : 'none');
-        $('input#fail').attr('disabled', sel.attr('value') == 'other' ? false : true);
+        if ($(this).find(':selected') === 'other') {
+            $('input#fail').css('display', 'block').attr('disabled', false);
+        } else {
+            $('input#fail').css('display', 'none').attr('disabled', true);
+        }
     });
 </script>
 <div id="page-wrapper">
@@ -55,119 +56,119 @@
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastOneYear"
-                                                   placeholder="格式:YYY"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.businessTaxLastOneYear"
+                                            placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅01~02月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM1M2"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM1M2"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅03~04月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM3M4"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM3M4"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅05~06月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM5M6"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM5M6"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅07~08月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM7M8"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM7M8"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅09~10月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM9M10"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM9M10"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅11~12月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM11M12"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastTwoYear"
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.businessTaxLastTwoYear"
                                                    placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅01~02月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM1M2"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM1M2"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅03~04月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM3M4"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM3M4"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅05~06月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM5M6"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM5M6"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅07~08月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM7M8"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM7M8"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅09~10月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM9M10"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM9M10"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅11~12月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM11M12"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastThreeYear"
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.businessTaxLastThreeYear"
                                                    placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅01~02月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM1M2"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM1M2"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅03~04月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM3M4"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM3M4"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅05~06月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM5M6"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM5M6"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅07~08月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM7M8"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM7M8"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅09~10月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM9M10"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM9M10"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅11~12月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM11M12"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastFourYear"
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.businessTaxLastFourYear"
                                                    placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅01~02月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM1M2"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM1M2"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅03~04月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM3M4"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM3M4"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅05~06月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM5M6"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM5M6"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅07~08月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM7M8"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM7M8"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅09~10月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM9M10"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM9M10"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅11~12月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM11M12"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -181,119 +182,119 @@
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastOneYear"
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.businessTaxLastOneYear"
                                                    placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅01~02月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM1M2"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM1M2"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅03~04月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM3M4"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM3M4"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅05~06月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM5M6"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM5M6"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅07~08月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM7M8"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM7M8"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅09~10月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM9M10"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM9M10"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近一年申報營業稅11~12月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearInvoiceAmountM11M12"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastOneYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastTwoYear"
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.businessTaxLastTwoYear"
                                                    placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅01~02月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM1M2"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM1M2"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅03~04月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM3M4"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM3M4"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅05~06月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM5M6"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM5M6"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅07~08月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM7M8"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM7M8"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅09~10月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM9M10"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM9M10"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近二年申報營業稅11~12月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearInvoiceAmountM11M12"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastTwoYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastThreeYear"
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.businessTaxLastThreeYear"
                                                    placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅01~02月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM1M2"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM1M2"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅03~04月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM3M4"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM3M4"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅05~06月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM5M6"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM5M6"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅07~08月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM7M8"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM7M8"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅09~10月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM9M10"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM9M10"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近三年申報營業稅11~12月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearInvoiceAmountM11M12"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastThreeYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅年份</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.businessTaxLastFourYear"
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.businessTaxLastFourYear"
                                                    placeholder="格式:YYY"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅01~02月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM1M2"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM1M2"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅03~04月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM3M4"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM3M4"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅05~06月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM5M6"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM5M6"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅07~08月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM7M8"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM7M8"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅09~10月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM9M10"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM9M10"></td>
                                     </tr>
                                     <tr>
                                         <td><span>近四年申報營業稅11~12月開立發票金額</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastFourYearInvoiceAmountM11M12"></td>
+                                        <td><input class="sk-input form-control" type="number" v-model="formData.lastFourYearInvoiceAmountM11M12"></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
@@ -354,7 +355,7 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <h1>圖片/文件</h1>
-                                <fieldset disabled>
+                                <fieldset>
                                     <div class="form-group">
                                         <?php
                                         if (isset($images))
@@ -382,15 +383,12 @@
                                                         $this_block_html .= '<a href="' . $value['url'] . '" data-fancybox="images"><img alt="" src="' . $value['url'] . '" style="width: 30%; max-width:400px"></a>';
                                                     }
                                                 }
-                                                $this_block_html = "<div class='form-group'>{$this_block_html}</div>";
-
-                                                // todo: 修！圖片upload
-                                                /*if ( ! empty($value['upload']))
+                                                if ( ! empty($value['upload']))
                                                 {
-                                                    $flag=true;
                                                     $this_block_html .= '<div class="form-group" style="background:#f5f5f5;border-style:double;">' . $value['upload'] . '</div>';
-                                                }*/
+                                                }
                                                 echo "<div>{$this_block_html}</div>";
+                                                echo '<hr/>';
                                             }
                                         }
                                         if (isset($content['business_tax_image']))
@@ -406,8 +404,8 @@
                                                          style='width:30%;max-width:400px'>
                                                 </a>
                                             <?php }
+                                            echo '<hr/>';
                                         }
-                                        echo '<label>其他</label><br/>';
                                         if ( ! empty($content['file_list']['image']))
                                         { // 擴大信保【後】的Web上傳圖片
                                             foreach ($content['file_list']['image'] as $key => $value)
@@ -417,8 +415,8 @@
                                                     <img src="<?= $value['url'] ?>"
                                                          style='width:30%;max-width:400px'>
                                                 </a>
-                                                <?php
-                                            }
+                                            <?php }
+                                            echo '<hr/>';
                                         }
                                         if ( ! empty($content['file_list']['file']))
                                         { // 擴大信保【後】的Web上傳PDF
@@ -429,6 +427,7 @@
                                                     <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
                                                 </a>
                                             <?php }
+                                            echo '<hr/>';
                                         } ?>
                                     </div>
                                 </fieldset>
@@ -496,9 +495,9 @@
             },
             doSubmit(){
                 let selector = this.$el;
-                $(selector).find('button').attr('disabled', true);
+                $(selector).find('button').attr('disabled', true).text('資料更新中...');
                 return axios.post('/admin/certification/save_company_cert',{
-                    ...this.formData,
+                    skbank_form: {...this.formData},
                     id: this.pageId
                 }).then(({data})=>{
                     alert(data.result)
@@ -511,7 +510,7 @@
                         id: this.pageId
                     }
                 }).then(({data})=>{
-                    mergeDeep(this.formData, data.response)
+                    mergeDeep(this.formData, data.response.skbank_form)
                 })
             }
         },

@@ -42,7 +42,7 @@
                                     <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                                 </a>
                             </div>
-                            <form class="form-group" @submit.prevent="doSubmit">
+                            <form id="app1" class="form-group" @submit.prevent="doSubmit">
                                 <!-- navs -->
                                 <ul class="nav nav-tabs">
                                     <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
@@ -364,18 +364,52 @@
                             </form>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片</h1>
+                            <h1>圖片/文件</h1>
                             <fieldset disabled>
                                 <div class="form-group">
-                                    <label>損益表</label><br>
-                                    <? isset($content['income_statement_image']) && !is_array($content['income_statement_image']) ? $content['income_statement_image'] = array($content['income_statement_image']) : '';
-                                    if(!empty($content['income_statement_image'])){
-                                        foreach ($content['income_statement_image'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                    <?php if ( ! empty($content['income_statement_image']))
+                                    {
+                                        echo '<label>損益表</label><br>';
+                                        $content['income_statement_image'] = ! is_array($content['income_statement_image']) ? array($content['income_statement_image']) : $content['income_statement_image'];
+                                        foreach ($content['income_statement_image'] as $key => $value)
+                                        {
+                                            if (empty($value)) continue; ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
                                             </a>
-                                        <? }
-                                    }?>
+                                        <?php }
+                                        echo '<hr/>';
+                                    }
+                                    if ( ! empty($content['file_list']['image']))
+                                    {
+                                        foreach ($content['file_list']['image'] as $key => $value)
+                                        {
+                                            if (empty($value['url']))
+                                            {
+                                                continue;
+                                            } ?>
+                                            <a href="<?= $value['url'] ?>" data-fancybox="images">
+                                                <img src="<?= $value['url'] ?>"
+                                                     style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                        echo '<hr/>';
+                                    }
+                                    if ( ! empty($content['file_list']['file']))
+                                    {
+                                        foreach ($content['file_list']['file'] as $key => $value)
+                                        {
+                                            if (empty($value['url']))
+                                            {
+                                                continue;
+                                            } ?>
+                                            <a href="<?= $value['url'] ?>">
+                                                <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
+                                            </a>
+                                            <?php
+                                        }
+                                        echo '<hr/>';
+                                    } ?>
                                 </div>
                             </fieldset>
                         </div>
@@ -395,18 +429,37 @@
 <!-- /#page-wrapper -->
 <script>
     const v = new Vue({
-        el: '#page-wrapper',
+        el: '#app1',
         data() {
             return {
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
                     lastOneYearRevenue: '',
+                    lastTwoYearRevenue: '',
+                    lastThreeYearRevenue: '',
                     dailyWorkingCapital: '',
                     operatingCycle: '',
                     liabilitiesAmount: '',
                     equityAmount: '',
-                    tab2Input:'',
+                    lastOneYearCostOfGoodsSold: '',
+                    lastTwoYearCostOfGoodsSold: '',
+                    lastThreeYearCostOfGoodsSold: '',
+                    lastOneYearGrossMargin: '',
+                    lastTwoYearGrossMargin: '',
+                    lastThreeYearGrossMargin: '',
+                    lastOneYearTradeReceivable: '',
+                    lastTwoYearTradeReceivable:'',
+                    lastThreeYearTradeReceivable:'',
+                    lastOneYearInventory:'',
+                    lastTwoYearInventory:'',
+                    lastThreeYearInventory:'',
+                    lastOneYearFixedCost:'',
+                    lastTwoYearFixedCost:'',
+                    lastThreeYearFixedCost:'',
+                    lastOneYearVariableCost:'',
+                    lastTwoYearVariableCost:'',
+                    lastThreeYearVariableCost:'',
                     tab3Input:''
                 }
             }
@@ -422,9 +475,9 @@
             },
             doSubmit() {
                 let selector = this.$el;
-                $(selector).find('button').attr('disabled', true);
+                $(selector).find('button').attr('disabled', true).text('資料更新中...');
                 return axios.post('/admin/certification/save_company_cert', {
-                    ...this.formData,
+                    skbank_form: {...this.formData},
                     id: this.pageId
                 }).then(({ data }) => {
                     alert(data.result)
@@ -437,7 +490,7 @@
                         id: this.pageId
                     }
                 }).then(({ data }) => {
-                    mergeDeep(this.formData, data.response)
+                    mergeDeep(this.formData, data.response.skbank_form)
                 })
             }
         },

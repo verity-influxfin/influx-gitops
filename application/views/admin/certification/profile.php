@@ -1,12 +1,11 @@
 <style>
-    .sk-input {
+    .sk-input form-control {
         width : 100%;
     }
 </style>
 <script type="text/javascript">
     function check_fail() {
-        var status = $('#status :selected').val();
-        if (status == 2) {
+        if ($('#status :selected').val() === '2') {
             $('#fail_div').show();
         } else {
             $('#fail_div').hide();
@@ -14,7 +13,7 @@
     }
 
     $(document).off("change", "select#fail").on("change", "select#fail", function () {
-        if ($(this).find(':selected') == 'other') {
+        if ($(this).find(':selected') === 'other') {
             $('input#fail').css('display', 'block').attr('disabled', false);
         } else {
             $('input#fail').css('display', 'none').attr('disabled', true);
@@ -64,86 +63,86 @@
                                     <div class="table-responsive Pr">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                            <tr style="text-align: center;">
-                                                <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人行動電話</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prMobileNo"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人Email</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prEmail"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人擔任本企業負責人年度-起始</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYear"
-                                                           placeholder="格式:YYY"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人擔任本企業負責人年度-結束</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYearEnd"
-                                                           placeholder="格式:YYY"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人從事本行業年度-起始</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prStartYear"
-                                                           placeholder="格式:YYY"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人從事本行業年度-結束</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prEndYear"
-                                                           placeholder="格式:YYY"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人學歷</span></td>
-                                                <td>
-                                                    <select v-model="formData.prEduLevel" class="table-input form-control">
-                                                        <option :value="''">請選擇</option>
-                                                        <option :value="'A'">A:國小</option>
-                                                        <option :value="'B'">B:國中</option>
-                                                        <option :value="'C'">C:高中職</option>
-                                                        <option :value="'D'">D:專科</option>
-                                                        <option :value="'E'">E:大學</option>
-                                                        <option :value="'F'">F:碩士</option>
-                                                        <option :value="'G'">G:博士</option>
-                                                        <option :value="'H'">H:無</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>個人不動產持有人名稱</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.realEstateOwner"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>個人不動產地址</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.realEstateAddress"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>個人不動產使用狀況</span></td>
-                                                <td>
-                                                    <select v-model="formData.realEstateUsage" class="table-input form-control">
-                                                        <option :value="''">請選擇</option>
-                                                        <option :value="'1'">1:自用</option>
-                                                        <option :value="'2'">2:出租</option>
-                                                        <option :value="'3'">3:閒置</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>個人不動產設定情形</span></td>
-                                                <td>
-                                                    <select v-model="formData.realEstateMortgage" class="table-input form-control">
-                                                        <option :value="''">請選擇</option>
-                                                        <option :value="'1'">1:有</option>
-                                                        <option :value="'0'">0:無</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                </td>
-                                            </tr>
+                                                <tr style="text-align: center;">
+                                                    <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人行動電話</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prMobileNo"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人Email</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prEmail"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人擔任本企業負責人年度-起始</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYear"
+                                                        placeholder="格式:YYY"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人擔任本企業負責人年度-結束</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYearEnd"
+                                                        placeholder="格式:YYY"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人從事本行業年度-起始</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prStartYear"
+                                                        placeholder="格式:YYY"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人從事本行業年度-結束</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prEndYear"
+                                                        placeholder="格式:YYY"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人學歷</span></td>
+                                                    <td>
+                                                        <select v-model="formData.prEduLevel" class="table-input form-control">
+                                                            <option :value="''"></option>
+                                                            <option :value="'A'">A:國小</option>
+                                                            <option :value="'B'">B:國中</option>
+                                                            <option :value="'C'">C:高中職</option>
+                                                            <option :value="'D'">D:專科</option>
+                                                            <option :value="'E'">E:大學</option>
+                                                            <option :value="'F'">F:碩士</option>
+                                                            <option :value="'G'">G:博士</option>
+                                                            <option :value="'H'">H:無</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>個人不動產持有人名稱</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.realEstateOwner"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>個人不動產地址</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.realEstateAddress"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>個人不動產使用狀況</span></td>
+                                                    <td>
+                                                        <select v-model="formData.realEstateUsage" class="table-input form-control">
+                                                            <option :value="''"></option>
+                                                            <option :value="'1'">1:自用</option>
+                                                            <option :value="'2'">2:出租</option>
+                                                            <option :value="'3'">3:閒置</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>個人不動產設定情形</span></td>
+                                                    <td>
+                                                        <select v-model="formData.realEstateMortgage" class="table-input form-control">
+                                                            <option :value="''"></option>
+                                                            <option :value="'1'">1:有</option>
+                                                            <option :value="'0'">0:無</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -605,9 +604,9 @@
                 $(`#${this.tab} .${show_id}`).show()
             },
             doSubmit() {
-                $("#app1").find('button').attr('disabled', true);
+                $("#app1").find('button').attr('disabled', true).text('資料更新中...');
                 return axios.post('/admin/certification/save_company_cert', {
-                    ...this.formData,
+                    skbank_form: {...this.formData},
                     id: this.pageId
                 }).then(({ data }) => {
                     alert(data.result)
@@ -620,7 +619,7 @@
                         id: this.pageId
                     }
                 }).then(({ data }) => {
-                    mergeDeep(this.formData, data.response)
+                    mergeDeep(this.formData, data.response.skbank_form)
                 })
             }
         },

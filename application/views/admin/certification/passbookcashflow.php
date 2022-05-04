@@ -116,8 +116,8 @@
                                                 <img src="<?= $value['url'] ?>"
                                                      style='width:30%;max-width:400px'>
                                             </a>
-                                            <?php
-                                        }
+                                        <?php }
+                                        echo '<hr/>';
                                     }
                                     if ( ! empty($content['file_list']['file']))
                                     { // 擴大信保【後】的Web上傳PDF
@@ -128,6 +128,7 @@
                                                 <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
                                             </a>
                                         <?php }
+                                        echo '<hr/>';
                                     } ?>
                                 </div>
                             </fieldset>

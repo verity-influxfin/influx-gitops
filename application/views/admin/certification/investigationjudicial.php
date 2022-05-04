@@ -7,8 +7,7 @@
 </style>
 <script type="text/javascript">
     function check_fail() {
-        var status = $('#status :selected').val();
-        if (status == 2) {
+        if ($('#status :selected').val() === '2') {
             $('#fail_div').show();
         } else {
             $('#fail_div').hide();
@@ -16,9 +15,11 @@
     }
 
     $(document).off("change", "select#fail").on("change", "select#fail", function () {
-        var sel = $(this).find(':selected');
-        $('input#fail').css('display', sel.attr('value') == 'other' ? 'block' : 'none');
-        $('input#fail').attr('disabled', sel.attr('value') == 'other' ? false : true);
+        if ($(this).find(':selected') === 'other') {
+            $('input#fail').css('display', 'block').attr('disabled', false);
+        } else {
+            $('input#fail').css('display', 'none').attr('disabled', true);
+        }
     });
 </script>
 <div id="page-wrapper">
@@ -67,12 +68,12 @@
                                 <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-skbank'">
                                     <tbody>
                                     <tr style="text-align: center;">
-                                        <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
+                                        <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                     </tr>
                                     <tr>
                                         <td><span>公司聯徵-票債信情形是否異常</span></td>
                                         <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
-                                                <option :value="''">請選擇</option>
+                                                <option :value="''"></option>
                                                 <option :value="'1'">1:是</option>
                                                 <option :value="'0'">0:否</option>
                                             </select></td>
@@ -107,12 +108,12 @@
                                 <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-kgibank'">
                                     <tbody>
                                     <tr style="text-align: center;">
-                                        <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                        <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
                                     </tr>
                                     <tr>
                                         <td><span>公司聯徵-票債信情形是否異常</span></td>
                                         <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
-                                                <option :value="''">請選擇</option>
+                                                <option :value="''"></option>
                                                 <option :value="'1'">1:是</option>
                                                 <option :value="'0'">0:否</option>
                                             </select></td>
@@ -244,28 +245,35 @@
                                 </div>
                                 <div class="form-group">
                                     <?php
-                                    if (empty($content['file_list'])) goto end_file_list;
-                                    $file_list = $content['file_list'];
-
-                                    if (empty($file_list['image'])) goto end_file_list_img;
-                                    foreach ($file_list['image'] as $key => $value)
+                                    if ( ! empty($content['file_list']['image']))
                                     {
-                                        if (empty($value['url'])) continue; ?>
-                                        <a href="<?= $value['url'] ?>" data-fancybox="images">
-                                            <img src="<?= $value['url'] ?>" style='width:30%;max-width:400px'>
-                                        </a>
-                                    <?php }
-                                    end_file_list_img:
-
-                                    if (empty($file_list['file'])) goto end_file_list;
-                                    foreach ($file_list['file'] as $key => $value)
+                                        foreach ($content['file_list']['image'] as $key => $value)
+                                        {
+                                            if (empty($value['url']))
+                                            {
+                                                continue;
+                                            } ?>
+                                            <a href="<?= $value['url'] ?>" data-fancybox="images">
+                                                <img src="<?= $value['url'] ?>"
+                                                     style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                        echo '<hr/>';
+                                    }
+                                    if ( ! empty($content['file_list']['file']))
                                     {
-                                        if (empty($value['url'])) continue; ?>
-                                        <a href="<?= $value['url'] ?>">
-                                            <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
-                                        </a>
-                                    <?php }
-                                    end_file_list : ?>
+                                        foreach ($content['file_list']['file'] as $key => $value)
+                                        {
+                                            if (empty($value['url']))
+                                            {
+                                                continue;
+                                            } ?>
+                                            <a href="<?= $value['url'] ?>">
+                                                <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
+                                            </a>
+                                        <?php }
+                                        echo '<hr/>';
+                                    } ?>
                                 </div>
                             </fieldset>
                             <? if( ($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12) && isset($ocr['upload_page']) ){ ?>
@@ -315,9 +323,9 @@
             },
             doSubmit() {
                 let selector = this.$el;
-                $(selector).find('button').attr('disabled', true);
+                $(selector).find('button').attr('disabled', true).text('資料更新中...');
                 return axios.post('/admin/certification/save_company_cert', {
-                    ...this.formData,
+                    skbank_form: {...this.formData},
                     id: this.pageId
                 }).then(({ data }) => {
                     alert(data.result)
@@ -330,7 +338,7 @@
                         id: this.pageId
                     }
                 }).then(({ data }) => {
-                    mergeDeep(this.formData, data.response)
+                    mergeDeep(this.formData, data.response.skbank_form)
                 })
             }
         },

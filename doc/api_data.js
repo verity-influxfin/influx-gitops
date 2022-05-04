@@ -3898,54 +3898,69 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "502",
+                            "description": "<p>已提交驗證</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "501",
                             "description": "<p>此驗證尚未啟用</p>"
-                        },
-                        {
+                        }, {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "502",
-                            "description": "<p>此驗證已通過驗證</p>"
-                        },
-                        {
+                            "field": "221",
+                            "description": "<p>法人需先完成變卡認證</p>"
+                        }, {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "503",
-                            "description": "<p>尚未驗證過</p>"
-                        },
-                        {
+                            "field": "220",
+                            "description": "<p>負責人需先完成實名認證</p>"
+                        }, {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
+                            "field": "201",
+                            "description": "<p>資料新增失敗</p>"
+                        }, {
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "101",
                             "description": "<p>帳戶已黑名單</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    }, {
                         "title": "501",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
                         "type": "Object"
-                    },
-                    {
-                        "title": "503",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                    }, {
+                        "title": "221",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"221\"\n}",
                         "type": "Object"
-                    },
-                    {
-                        "title": "100",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                    }, {
+                        "title": "220",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"220\"\n}",
                         "type": "Object"
-                    },
-                    {
+                    }, {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    }, {
                         "title": "101",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
                         "type": "Object"
                     }
                 ]
@@ -6745,7 +6760,7 @@ define({
         },
         {
             "type": "post",
-            "url": "/V2/certification/profilejudicial",
+            "url": "/v2/certification/profilejudicial",
             "title": "認證 公司資料表",
             "version": "0.2.0",
             "name": "PostCertificationProfileJudicial",
@@ -6786,7 +6801,7 @@ define({
                             "description": "聯絡人電話"
                         }, {
                             "group": "Parameter",
-                            "type": "String",
+                            "type": "string",
                             "optional": false,
                             "field": "compEmail",
                             "description": "Email"
@@ -6800,8 +6815,8 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": false,
-                            "field": "compContactExt",
-                            "description": "聯絡人分機"
+                            "field": "compEmail",
+                            "description": "Email"
                         }, {
                             "group": "Parameter",
                             "type": "String",
@@ -6827,6 +6842,104 @@ define({
                             "optional": true,
                             "field": "changeOwnerYearStart",
                             "description": "變更負責人時間-起始，年份為西元年YYYY"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "changeOwnerYearEnd",
+                            "description": "變更負責人時間-結束，年份為西元年YYYY"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "changeOwnerReason",
+                            "description": "變更負責人原因"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "stockholderNum",
+                            "description": "公司股東人數"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "employeeNum",
+                            "description": "公司員工人數"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "isCovidAffected",
+                            "description": "屬於受嚴重特殊傳染性肺炎影響之企業<br/>1:是 0:否",
+                            "allowedValues": [1, 0]
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "getRelief",
+                            "description": "受上述影響致財務困難，支票存款戶經票據交換所註記為「紓困」<br/>1:是 0:否",
+                            "allowedValues": [1, 0]
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "goPublic",
+                            "description": "是否公開發行<br/>1:是 0:否",
+                            "allowedValues": [1, 0]
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "goPublicPlan",
+                            "description": "有公開發行計畫<br/>1:有 0:無",
+                            "allowedValues": [1, 0]
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "goPublicYear",
+                            "description": "預計公開發行年份，年份為西元年YYYY"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "hasForeignInvestment",
+                            "description": "是否有海外投資<br/>1:是 0:否",
+                            "allowedValues": [1, 0]
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "hasLicence",
+                            "description": "企業專業證照/專利<br/>1:有 0:無",
+                            "allowedValues": [1, 0]
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "licenceName",
+                            "description": "企業專業證照/專利名稱"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "hasOwnBrand",
+                            "description": "企業自有品牌<br/>1:有 0:無",
+                            "allowedValues": [1, 0]
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "ownBrandName",
+                            "description": "企業自有品牌名稱"
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "hasDerivative",
+                            "description": "企業是否從事衍生性金融商品操作<br/>1:是 0:否",
+                            "allowedValues": [1, 0]
                         }, {
                             "group": "Parameter",
                             "type": "Number",
