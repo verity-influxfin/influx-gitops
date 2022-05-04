@@ -8,6 +8,7 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
@@ -15,6 +16,8 @@ use PhpOffice\PhpSpreadsheet\Style\Color;
 
 class Spreadsheet_lib
 {
+
+    private $spreadsheet;
 	/**
 	 * 標題列
 	 * $title_rows = [
@@ -36,9 +39,9 @@ class Spreadsheet_lib
 	 */
 	function save($title_rows, $data_rows, $filename='export2.xlsx')
 	{
-		$spreadsheet = new Spreadsheet();
-		$sheet = $spreadsheet->getActiveSheet();
-		$style = $spreadsheet->getDefaultStyle();
+		$this->spreadsheet = new Spreadsheet();
+		$sheet = $this->spreadsheet->getActiveSheet();
+		$style = $this->spreadsheet->getDefaultStyle();
 		$style->getFont()->setName('微軟正黑體');
 		$style->getFont()->setSize(12);
 		$style->getAlignment()->setWrapText(true);
@@ -46,6 +49,18 @@ class Spreadsheet_lib
 
 		$this->draw_title($sheet, $title_rows);
 		$this->draw_data($sheet, $title_rows, $data_rows);
+	}
+
+    public function save($filename)
+    {
+        $writer = IOFactory::createWriter($this->spreadsheet, 'Xlsx');
+        $writer->save($filename);
+    }
+
+    public function output()
+    {
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="export2.xlsx"');
 
         $this->download($filename, $spreadsheet);
 	}

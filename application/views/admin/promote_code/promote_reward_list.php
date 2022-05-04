@@ -21,7 +21,9 @@
                     $('#select_all').click(function () {
                         allMode = !allMode;
                         $('.promote_code').each(function() {
-                            $(this).attr('checked', allMode);
+                            if($(this).prop('disabled') === false) {
+                                $(this).attr('checked', allMode);
+                            }
                         });
                     });
                 });
@@ -132,8 +134,9 @@
 									?>
                                         <tr class="<?= $count%2==0?"odd":"even"; ?> list <?= $value['id'] ?? '' ?>">
                                             <td>
-                                               <input class="promote_code" type="checkbox" data-id="<?=$value['id']?>" value="<?=$value['id'] ?>" />
+                                               <input class="promote_code" type="checkbox" data-id="<?=$value['id']?>" value="<?=$value['id'] ?>" <?= ($value['has_virtual_account'] ?? FALSE) ? '' : 'disabled'?> />
                                                 &nbsp;<?=$value['id']?>
+                                                <?= ($value['has_virtual_account'] ?? FALSE) ? '' : '(沒有虛擬帳戶)'?>
                                             </td>
                                             <td><?= $value['user_id']??'' ?></td>
                                             <td><?= $value['promote_code']??'' ?></td>

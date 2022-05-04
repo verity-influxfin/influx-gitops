@@ -107,12 +107,13 @@ class Sendemail
 		return false;
 	}
 
-	public function user_notification($user_id=0,$title="",$content="",$type=false,$attach=false,$replay_to=false,$replay_to_name=false){
+    public function user_notification($user_id = 0, $title = "", $content = "", $type = FALSE, $attach = FALSE, $replay_to = FALSE, $replay_to_name = FALSE, $app_icon = TRUE)
+    {
 		if($user_id){
 			$user_info 		= $this->CI->user_model->get($user_id);
 			if($user_info && $user_info->email){
 			    $mail_event = $this->CI->config->item('mail_event');
-				$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> $type , "mail_event"=> $mail_event),TRUE);
+                $content = $this->CI->parser->parse('email/user_notification', array('title' => $title, 'content' => $content, 'type' => $type, 'mail_event' => $mail_event, 'app_icon' => $app_icon), TRUE);
 				if($attach){
                     $this->CI->email->initialize($this->config);
                     $this->CI->email->clear(TRUE);
@@ -148,10 +149,10 @@ class Sendemail
 		return false;
 	}
 
-	public function email_notification($email="",$title="",$content=""){
+	public function email_notification($email="",$title="",$content="",$type='b08'){
 		if($email){
 		    $mail_event = $this->CI->config->item('mail_event');
-			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> 'b08', "mail_event"=> $mail_event),TRUE);
+			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> $type, "mail_event"=> $mail_event),TRUE);
 			return $this->send($email,$title,$content);
 		}
 		return false;
@@ -165,7 +166,7 @@ class Sendemail
 	}
 
 
-	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail="",$investor_status=""){
+	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail="",$investor_status="",$estatment_filename="estatement.pdf",$estatement_detail_filename="estatement_detail.pdf"){
 		if($email){
 		    $mail_event = $this->CI->config->item('mail_event');
 		    $type = $investor_status==1?'i':'b';
@@ -177,10 +178,10 @@ class Sendemail
 			$this->CI->email->subject($title);
 			$this->CI->email->message($content);
 			if($estatement!=""){
-				$this->CI->email->attach($estatement,"","estatement.pdf");
+				$this->CI->email->attach($estatement,"",$estatment_filename);
 			}
 			if($estatement_detail!=""){
-				$this->CI->email->attach($estatement_detail,"","estatement_detail.pdf");
+				$this->CI->email->attach($estatement_detail,"",$estatement_detail_filename);
 			}
 
 			$rs = $this->CI->email->send();

@@ -74,6 +74,58 @@ class Notification_lib{
 		return $rs;
 	}
 
+    public function promote_contract_done($user_id, $investor, $status)
+    {
+        $type = FALSE;
+        $title = "";
+        $content = "";
+
+        if ($status == PROMOTE_REVIEW_STATUS_SUCCESS)
+        {
+            $title = "推薦有賞「特約通路」審核通過";
+            $content = "恭喜您申請成功
+馬上前往普匯APP同意合約
+即可成為特約通路商";
+            $type = 'b08';
+        }
+
+        if ($status == PROMOTE_REVIEW_STATUS_WITHDRAW)
+        {
+            $title = "推薦有賞「特約通路」審核未通過";
+            $content = "很遺憾本次無法成功申請特約通路合作
+非常感謝您的支持";
+            $type = 'b08';
+        }
+
+        $param = array(
+            "user_id" => $user_id,
+            "investor" => $investor,
+            "title" => $title,
+            "content" => $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('sendemail');
+        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), $type, FALSE, FALSE, FALSE, FALSE);
+
+        return $rs;
+    }
+
+    public function promote_contract_review($email, $review_user_id)
+    {
+        $title = "推薦有賞「特約通路」合約待您審閱";
+        $content = "您有一件推薦有賞特約通路合約待審閱
+請點選下方連結進行審核
+謝謝
+
+審核頁面網址：" . base_url(URL_ADMIN . 'sales/qrcode_contracts?user_id=' . $review_user_id);
+        $type = 'b08';
+
+        $this->CI->load->library('sendemail');
+        $rs = $this->CI->sendemail->email_notification($email, $title, nl2br($content), $type);
+
+        return $rs;
+    }
+
 	public function temp_realname_failed($user_id){
 		$title = "普匯系統通知";
 		$content = "親愛的會員您好：

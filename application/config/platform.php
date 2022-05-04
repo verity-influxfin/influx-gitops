@@ -1934,7 +1934,7 @@ $config['subloan_list'] = 'STS|STNS|STIS|FGNS|FGIS';
 $config['product_type'] = [
     1 => '信用貸款',
     2 => '分期付款',
-//	3=> '抵押貸款',
+//    3=> '抵押貸款',
 ];
 
 //產品型態
@@ -2069,7 +2069,7 @@ $config['certifications'] = [
     1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '近6個月封面及內頁公司存摺', 'status' => 1, 'description' => '提供近6個月封面及內頁公司存摺', 'optional' => []],
     1005 => ['id' => CERTIFICATION_INTERVIEW, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '提供親訪報告', 'optional' => []],
     1006 => ['id' => CERTIFICATION_CERCREDITJUDICIAL, 'alias' => 'cercreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '提供信用評估表', 'optional' => []],
-    1007 => ['id' => CERTIFICATION_GOVERNMENTAUTHORITIES, 'alias' => 'governmentauthorities', 'name' => '公司變更事項登記表', 'status' => 1, 'description' => '提供公司變更事項登記表', 'optional' => []],
+    1007 => ['id' => CERTIFICATION_GOVERNMENTAUTHORITIES, 'alias' => 'governmentauthorities', 'name' => '變卡正本拍攝(全頁)', 'status' => 1, 'description' => '提供公司變更事項登記表', 'optional' => []],
     1008 => ['id' => CERTIFICATION_CHARTER, 'alias' => 'charter', 'name' => '公司章程', 'status' => 1, 'description' => '提供公司章程', 'optional' => []],
     1009 => ['id' => CERTIFICATION_REGISTEROFMEMBERS, 'alias' => 'registerofmembers', 'name' => '股東名簿', 'status' => 1, 'description' => '提供股東名簿', 'optional' => []],
     1010 => ['id' => CERTIFICATION_MAINPRODUCTSTATUS, 'alias' => 'mainproductstatus', 'name' => '主要商品銷售情況表', 'status' => 1, 'description' => '提供主要商品銷售情況表', 'optional' => []],
@@ -2083,6 +2083,8 @@ $config['certifications'] = [
     1018 => ['id' => CERTIFICATION_PROFILEJUDICIAL, 'alias' => 'profilejudicial', 'name' => '公司資料表', 'status' => 1, 'description' => '提供公司資料表', 'optional' => []],
     1019 => ['id' => CERTIFICATION_COMPANYEMAIL, 'alias' => 'companyemail', 'name' => '公司電子信箱', 'status' => 1, 'description' => '驗證公司E-Mail位址', 'optional' => []],
     1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '公司授權核實', 'status' => 1, 'description' => '公司授權核實', 'optional' => []],
+
+    1021 => ['id' => CERTIFICATION_PASSBOOK, 'alias' => 'passbook', 'name' => '主要往來存摺', 'status' => 1, 'description' => '提供主要往來存摺', 'optional' => []],
 
     2000 => ['id' => CERTIFICATION_SALESDETAIL, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
@@ -2125,7 +2127,8 @@ $config['certifications_sort'] = [
     CERTIFICATION_SALESDETAIL,
     CERTIFICATION_PROFILEJUDICIAL,
     CERTIFICATION_COMPANYEMAIL,
-    CERTIFICATION_JUDICIALGUARANTEE
+    CERTIFICATION_JUDICIALGUARANTEE,
+    CERTIFICATION_PASSBOOK
 ];
 
 //支援XML銀行列表
@@ -2400,6 +2403,7 @@ $config['cer_profilejudicial'] = [
 
 // 推薦碼需要的徵信項目
 $config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];
+$config['promote_code_certs_company'] = [CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_COMPANYEMAIL, CERTIFICATION_JUDICIALGUARANTEE];
 
 // 捐款案收據方式
 $config['charity_receipt_type_list'] = [CHARITY_RECEIPT_TYPE_SINGLE_PAPER => "單次紙本收據"];

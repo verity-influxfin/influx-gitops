@@ -54,7 +54,8 @@ class Target extends MY_Admin_Controller {
 						'damage' => ['name' => '違約金']
 					];
 					$data_rows = $this->target_model->getDelayedReport($input);
-					$this->spreadsheet_lib->save($title_rows, $data_rows);
+					$this->spreadsheet_lib->load($title_rows, $data_rows);
+					$this->spreadsheet_lib->output();
 					return;
 			}
 		}

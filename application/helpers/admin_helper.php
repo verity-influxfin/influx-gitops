@@ -17,7 +17,7 @@ if ( ! function_exists('check_admin'))
         $admin_info = AUTHORIZATION::getAdminInfoByToken(
             $CI->session->userdata(SESSION_APP_ADMIN_INFO)
         );
-        return empty($admin_info->id) ? false : $admin_info;
+        return empty($admin_info->id) ? FALSE : $admin_info;
     }
 }
 
@@ -33,7 +33,6 @@ if ( ! function_exists('admin_url'))
 {
     function admin_url($url = 'index')
     {
-        // return base_url(URL_ADMIN . $url);
         return URL_ADMIN . $url;
     }
 }
