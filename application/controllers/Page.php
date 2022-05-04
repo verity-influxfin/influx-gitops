@@ -13,12 +13,24 @@ class Page extends CI_Controller
         parent::__construct();
         $this->load->model('user/user_model');
         $this->load->model('user/sale_dashboard_model');
+        $this->load->model('loan/target_model');
     }
 
-    public function update_target_from_4_month()
+    public function update_target_info(String $from)
     {
-        $day_from = new DateTimeImmutable(date('2022-04-01'));
-        for ($i = 0; $i < 50; $i++)
+        $limit = $this->input->get('limit') ?? 1;
+
+        try
+        {
+            $day_from = new DateTimeImmutable(date($from));
+        }
+        catch (Exception $e)
+        {
+            echo $e->getMessage();
+            exit;
+        }
+
+        for ($i = 0; $i < $limit; $i++)
         {
             $this->_update_target_info_at_day($day_from->modify("+$i day"));
         }
@@ -54,10 +66,14 @@ class Page extends CI_Controller
     {
         // 新會員數量
         $new_member = $this->user_model->get_new_members_at_day($date);
-        $this->sale_dashboard_model->set_amounts_at($date, Sale_dashboard_model::TARGET_USER_REGISTER, $new_member);
+        $this->sale_dashboard_model->set_amounts_at(
+            $date,
+            Sale_dashboard_model::TARGET_USER_REGISTER,
+            $new_member
+        );
 
         // 各產品申貸案
-        $loan_targets = $this->_get_product_bids($date);
+        $loan_targets = $this->target_model->get_loan_targets_at_day($date);
         foreach ($loan_targets as $key => $value)
         {
             $this->sale_dashboard_model->set_amounts_at(
@@ -68,7 +84,7 @@ class Page extends CI_Controller
         }
 
         // 各產品成交案件
-        $deal_targets = $this->_get_product_deals($date);
+        $deal_targets = $this->target_model->get_deal_targets_at_day($date);
         foreach ($deal_targets as $key => $value)
         {
             $this->sale_dashboard_model->set_amounts_at(
@@ -111,7 +127,7 @@ class Page extends CI_Controller
                 'total_member' => $this->_get_total_member($date),
 
                 // 各產品每月申貸數
-                'product_bids' => $this->_get_product_bids($date),
+                'product_bids' => $this->target_model->get_loan_targets_at_day($date),
 
                 // 成交
                 'deals' => $this->_get_deals($date),
@@ -153,28 +169,16 @@ class Page extends CI_Controller
             ]));
     }
 
-    private function _get_product_bids(DateTimeInterface $date)
-    {
-        $this->load->model('loan/target_model');
-        return $this->target_model->get_loan_targets_at_day($date);
-    }
-
     private function _get_deals(DateTimeInterface $date)
     {
         $total_deals = 0;
-        $deals = $this->_get_product_deals($date);
+        $deals = $this->target_model->get_deal_targets_at_day($date);
         foreach ($deals as $value)
         {
             $total_deals += $value;
         }
 
         return $total_deals;
-    }
-
-    private function _get_product_deals(DateTimeInterface $date)
-    {
-        $this->load->model('loan/target_model');
-        return $this->target_model->get_deal_targets_at_day($date);
     }
 
     private function _get_total_member(DateTimeInterface $date)
@@ -503,7 +507,6 @@ class Page extends CI_Controller
 
     private function _get_platform_statistic()
     {
-        $this->load->model('loan/target_model');
         $daily_list = $this->target_model->db
             ->select('loan_date, count(1) AS cnt')
             ->from('p2p_loan.targets')
