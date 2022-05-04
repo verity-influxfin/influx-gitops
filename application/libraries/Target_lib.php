@@ -351,10 +351,14 @@ class Target_lib
                     //個人最高歸戶剩餘額度
                     $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
                     if ($user_current_credit_amount >= 1000 || $subloan_status) {
+                        $this->CI->config->load('credit',TRUE);
+                        $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_'.$target->product_id];
+
                         //該產品額度
                         $used_amount = $credit['amount'] - $used_amount;
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount'] = $used_amount > $user_current_credit_amount ? $user_current_credit_amount : $used_amount;
+
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
                         // 金額取整程式，2020/10/30排除產轉
                         $loan_amount = ($loan_amount % 1000 != 0 && $subloan_status == false) ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
@@ -370,16 +374,21 @@ class Target_lib
                                     'status' => 0,
                                 ];
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
-                                if (!$product_info['secondInstance']
+                                if (
+                                    // 命中反詐欺或黑名單，一定要進待二審
+                                    !$matchBrookesia && (
+                                    !$product_info['secondInstance']
                                     && !$second_instance_check
-                                    && !$matchBrookesia
-                                    && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
-                                    && $this->judicialyuan($user_id)
+//                                    && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
+//                                    && $this->judicialyuan($user_id)
                                     && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
+                                    // 依照產品部門需求，上班族暫時全部強制進待二審
+                                    && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
                                     || $subloan_status
                                     || $renew
                                     || $evaluation_status
                                     || $creditSheet->hasCreditLine()
+                                    )
                                 ) {
                                     $param['status'] = TARGET_WAITING_SIGNING;
 
@@ -443,7 +452,6 @@ class Target_lib
                                     $target->amount < 50000 ? $sub_status = TARGET_SUBSTATUS_SECOND_INSTANCE : $allow = false;
                                 }
                                 if (!$matchBrookesia
-                                    && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
                                     && $allow) {
                                     $param = [
                                         'loan_amount' => $loan_amount,
@@ -1707,7 +1715,7 @@ class Target_lib
                             $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
                             $company = $value->product_id >= 1000 ? 1 : 0;
 
-                            $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, false, $value);
+                            $certifications = $this->CI->certification_lib->get_status($value->user_id, BORROWER, $company, false, $value, FALSE, TRUE);
 
                             $finish = true;
                             $finish_stage_cer = [];
@@ -1718,6 +1726,13 @@ class Target_lib
                                 if ($finish && in_array($certification['id'], $product_certification)) {
 
                                     if ($certification['user_status'] != '1') {
+
+                                        // 還款力計算若驗證不通過，會進入待二審
+                                        if ($certification['id'] == CERTIFICATION_REPAYMENT_CAPACITY)
+                                        {
+                                            $second_instance_check = TRUE;
+                                        }
+
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
@@ -1737,18 +1752,55 @@ class Target_lib
                                     $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
                                 }
                             }
-
-                            //反詐欺
-                            $this->CI->load->library('brookesia/brookesia_lib');
-                            $userCheckAllLog = $this->CI->brookesia_lib->userCheckAllLog($value->user_id);
-                            if(isset($userCheckAllLog->response->result)){
-                                $getRuleHitByUserId = $this->CI->brookesia_lib->getRuleHitByUserId($value->user_id);
-                                if(isset($getRuleHitByUserId->response->results)){
-                                    $hit = count($getRuleHitByUserId->response->results);
-                                    $hit > 0 ? $matchBrookesia = true : '';
+                            // 法人產品自然人認證徵信完成判斷
+                            // TODO: 認證徵信個金企金待系統整合
+                            if ($finish && in_array($value->product_id, [PRODUCT_SK_MILLION_SMEG]))
+                            {
+                                // 歸案之自然人資料
+                                $associates_list = $this->CI->target_associate_model->get_many_by([
+                                    'status' => ASSOCIATES_STATUS_APPROVED,
+                                    'target_id' => $value->id
+                                ]);
+                                if ( ! empty($associates_list))
+                                {
+                                    $user_id_list = array_column($associates_list, 'user_id', 'character');
+                                    // 有尚未註冊之自然人
+                                    if(count(array_filter($user_id_list)) != count($user_id_list)){
+                                        $finish = FALSE;
+                                    }
+                                    else
+                                    {
+                                        $associates_certifications_config = $this->CI->config->item('associates_certifications');
+                                        if (isset($associates_certifications_config[$value->product_id]))
+                                        {
+                                            $this->CI->load->model('user/user_certification_model');
+                                            $associates_certifications = $associates_certifications_config[$value->product_id];
+                                            foreach ($associates_list as $associates_info)
+                                            {
+                                                if (isset($associates_certifications[$associates_info->character]))
+                                                {
+                                                    $associates_certifications_list = $this->CI->user_certification_model->get_many_by([
+                                                        'investor' => BORROWER,
+                                                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                                                        'user_id' => $associates_info->user_id,
+                                                        'certification_id' => $associates_certifications[$associates_info->character]
+                                                    ]);
+                                                    // 確認認證徵信是否完成
+                                                    if (count($associates_certifications[$associates_info->character])
+                                                        != count(json_decode(json_encode($associates_certifications_list), TRUE)))
+                                                    {
+                                                        $finish = FALSE;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
-                            }elseif($value->user_id != null){
-                                $this->CI->brookesia_lib->userCheckAllRules($value->user_id);
+                                else
+                                {
+                                    $finish = FALSE;
+                                }
                             }
 
 							if ($finish && $wait_associates) {
@@ -1772,38 +1824,73 @@ class Target_lib
                             }
 
                             if ($finish) {
+                                // 檢查黑名單結果，是否需要處置
+                                $this->CI->load->library('brookesia/black_list_lib');
+                                $is_user_blocked = $this->CI->black_list_lib->check_user($value->user_id, CHECK_APPLY_PRODUCT);
+                                $is_user_second_instance = $this->CI->black_list_lib->check_user($value->user_id, CHECK_SECOND_INSTANCE);
+
+                                // 確認黑名單結果是否需轉二審(子系統回應異常、禁止申貸、轉二審)
+                                if (empty($is_user_blocked) || empty($is_user_second_instance))
+                                {
+                                    $this->CI->black_list_lib->add_block_log(['userId' => $value->user_id]);
+                                    $matchBrookesia = TRUE;
+                                }
+                                else if($is_user_blocked['isUserBlocked'])
+                                {
+                                    $this->CI->black_list_lib->add_block_log($is_user_blocked);
+                                    $matchBrookesia = TRUE;
+                                }
+                                else if($is_user_second_instance['isUserSecondInstance'])
+                                {
+                                    $this->CI->black_list_lib->add_block_log($is_user_second_instance);
+                                    $matchBrookesia = TRUE;
+                                }
+
                                 !is_object($targetData) ? $targetData = (object)($targetData) : $targetData;
                                 $targetData->certification_id = $cer;
                                 $count++;
-								// 判斷是否為普匯微企e秒貸
-								if(in_array($value->product_id, $this->CI->config->item('externalCooperation'))){
-                                        $param = [
-                                            'target_data' => json_encode($targetData),
-                                            'status' => TARGET_WAITING_VERIFY,
-                                        ];
 
-                                        //其一userId match反詐欺>轉待二審
-                                        $matchBrookesia ? $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE : '';
+								// 所有徵信項完成後，確認是否需要觸發反詐欺
+								$this->CI->load->library('brookesia/brookesia_lib');
+								$user_checked = $this->CI->brookesia_lib->is_user_checked($value->user_id);
 
-                                        //信保額度判斷
-                                        //to do : 過件邏輯待串
-                                        $this->CI->load->library('verify/data_verify_lib');
-                                        $allowProductStatus = $this->CI->data_verify_lib->productVerify($product, $value);
-                                        if($allowProductStatus['status_code']){
-                                            //todo信保未過邏輯
-                                            if($allowProductStatus['status_code'] == 2){
-                                                $param['status'] = TARGET_FAIL;
-                                                $param['sub_status'] = TARGET_SUBSTATUS_NORNAL;
-                                                $this->approve_target_fail($value->user_id, $value);
-                                            }elseif($allowProductStatus['status_code'] == 3){
-                                                $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
-                                            }
-                                        }
-
-                                        $this->CI->target_model->update($value->id, $param);
-                                }else{
-									$this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia, $second_instance_check);
+								if (!$user_checked)
+								{
+									$this->CI->brookesia_lib->userCheckAllRules($value->user_id);
 								}
+								else
+								{
+									// 判斷是否為普匯微企e秒貸
+									if(in_array($value->product_id, $this->CI->config->item('externalCooperation'))){
+										$param = [
+											'target_data' => json_encode($targetData),
+											'status' => TARGET_WAITING_VERIFY,
+										];
+
+										//其一userId match反詐欺>轉待二審
+										$matchBrookesia ? $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE : '';
+
+										//信保額度判斷
+										//to do : 過件邏輯待串
+										$this->CI->load->library('verify/data_verify_lib');
+										$allowProductStatus = $this->CI->data_verify_lib->productVerify($product, $value);
+										if($allowProductStatus['status_code']){
+											//todo信保未過邏輯
+											if($allowProductStatus['status_code'] == 2){
+												$param['status'] = TARGET_FAIL;
+												$param['sub_status'] = TARGET_SUBSTATUS_NORNAL;
+												$this->approve_target_fail($value->user_id, $value);
+											}elseif($allowProductStatus['status_code'] == 3){
+												$param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
+											}
+										}
+
+										$this->CI->target_model->update($value->id, $param);
+									}else{
+										$this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia, $second_instance_check);
+									}
+								}
+
                             } else {
                                 //自動取消
                                 $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
@@ -1833,6 +1920,37 @@ class Target_lib
             }
         }
         return false;
+    }
+
+    public function script_chk_signing()
+    {
+        $this->CI->load->model('loan/credit_model');
+        $target = $this->CI->credit_model->get_expired_signing_list();
+        $target_id = array_column($target, 'target_id');
+        if (empty($target_id))
+        {
+            return 0;
+        }
+
+        $this->CI->target_model->update_by(['id' => $target_id], ['script_status' => 17]);
+        $count = 0;
+        foreach ($target as $value)
+        {
+            $param = [
+                'status' => TARGET_FAIL,
+                'sub_status' => TARGET_SUBSTATUS_NORNAL,
+                'remark' => $value['remark'] . '系統自動取消'
+            ];
+            $this->CI->target_model->update($value['id'], $param);
+            $this->insert_change_log($value['id'], $param);
+            $this->CI->notification_lib->expired_cancel($value['user_id']);
+
+            $count++;
+        }
+
+        $this->CI->target_model->update_by(['id' => $target_id], ['script_status' => 0]);
+
+        return $count;
     }
 
     //使用者觸發架上案件智能投資
@@ -2075,7 +2193,7 @@ class Target_lib
         return false;
     }
 
-    private function is_sub_product($product, $sub_product_id)
+    public function is_sub_product($product, $sub_product_id)
     {
         $sub_product_list = $this->CI->config->item('sub_product_list');
         return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product']);
@@ -2131,30 +2249,6 @@ class Target_lib
         return $stage_cer;
     }
 
-    private function judicialyuan($user_id){
-        $this->CI->load->library('scraper/judicial_yuan_lib.php');
-        $verdictsStatuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($user_id);
-        if(isset($verdictsStatuses['status'])){
-            if($verdictsStatuses['status'] == 204){
-                $this->CI->load->model('user/user_model');
-                $user_info = $this->CI->user_model->get_by([
-                    "id"		=> $user_id,
-                    "name !="	=> '',
-                    "id_card_place !="	=> '',
-                ]);
-                if($user_info){
-                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($user_info->name, $user_info->address, $user_info->id);
-                }
-                return false;
-            }elseif($verdictsStatuses['status'] == 200){
-                if( ! isset($verdictsStatuses['response']['status']) || $verdictsStatuses['response']['status'] != '爬蟲執行完成'){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public function get_associates($user_id){
         $this->CI->load->model('loan/target_associate_model');
         $params = [
@@ -2164,7 +2258,7 @@ class Target_lib
         return $this->CI->target_associate_model->get_many_by($params);
     }
 
-    public function get_associates_target_list($user_id, $target_id = false ,$self = false, $status = [0, 1, 500, 501]){
+    public function get_associates_target_list($user_id, $target_id = false ,$self = false, $status = [TARGET_WAITING_APPROVE, TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_BANK_VERIFY, TARGET_BANK_GUARANTEE]){
         $targets = $target_id ? '' : [];
         $get_associates_list = $this->get_associates($user_id);
         if($get_associates_list){

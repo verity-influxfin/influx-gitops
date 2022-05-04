@@ -70,6 +70,7 @@
                                                     <tbody>
                                                         <tr style="text-align: center;"><td colspan="2"><span>風控因子確認</span></td></tr>
                                                         <tr hidden><td><span>徵提資料ID</span></td><td><input class="meta-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                        <tr><td><span>被追蹤數</span></td><td><input class="meta-input" type="text" name="follow_count" placeholder=""></td></tr>
                                                         <tr><td><span>近3個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_3months" placeholder=""></td></tr>
                                                         <tr><td><span>發文關鍵字</span></td><td><input class="meta-input" type="text" name="key_word" placeholder=""></td></tr>
                                                         <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
@@ -255,7 +256,7 @@
                                                         <tbody>
                                                             <tr style="text-align: center;"><td colspan="2"><span>風控因子確認</span></td></tr>
                                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="meta-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                            <tr><td><span>被追蹤數</span></td><td><input class="meta-input" type="text" name="allFollowingCount" placeholder=""></td></tr>
+                                                            <tr><td><span>被追蹤數</span></td><td><input class="meta-input" type="text" name="follow_count" placeholder=""></td></tr>
                                                             <tr><td><span>近3個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_3months" placeholder=""></td></tr>
                                                             <tr><td><span>發文關鍵字</span></td><td><input class="meta-input" type="text" name="key_word" placeholder=""></td></tr>
                                                             <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
@@ -267,25 +268,37 @@
 												<label>審核狀態</label>
 												<p class="form-control-static"><?= isset($data->sys_check) && $data->sys_check == 0 ? "人工" : "系統" ?></p>
 											</div>
-											<div class="form-group">
-												<label>備註</label>
+                                            <div class="form-group">
+                                                <label>驗證結果</label>
                                                 <?php
-                                                if ($remark)
+                                                if ($remark && isset($remark['verify_result']) && is_array($remark['verify_result']))
                                                 {
-                                                    if (isset($remark["verify_result"]) && $remark["verify_result"])
+                                                    foreach ($remark['verify_result'] as $verify_result)
                                                     {
-                                                        foreach ($remark["verify_result"] as $verify_result)
-                                                        {
-                                                            echo '<p style="color:red;" class="form-control-static">失敗原因：' . $verify_result . '</p>';
-                                                        }
-                                                    }
-                                                    else if (isset($remark["fail"]) && $remark["fail"])
-                                                    {
-                                                        echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+                                                        echo '<p style="color:red;">' . $verify_result . '</p>';
                                                     }
                                                 }
                                                 ?>
-											</div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>備註</label>
+                                                <?php
+                                                if ($remark)
+                                                {
+                                                    if (isset($remark["fail"]) && $remark["fail"] && ! is_array($remark['fail']))
+                                                    {
+                                                        echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+                                                    }
+                                                    if (isset($remark["fail"]) && $remark["fail"] && is_array($remark['fail']))
+                                                    {
+                                                        foreach ($remark['fail'] as $fail_result)
+                                                        {
+                                                            echo '<p style="color:red;">' . $fail_result . '</p>';
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
                                             <div class="form-group">
                                                 <label>系統審核</label>
                                                 <?php

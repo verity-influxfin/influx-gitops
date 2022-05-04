@@ -132,7 +132,7 @@ class Report_scan_lib
 
         $this->CI->load->library('utility/http_utility');
         $this->CI->http_utility->setUrl($url);
-        $this->CI->http_utility->setWaitingTime(200);
+        $this->CI->http_utility->setWaitingTime(1000);
         $result = $this->CI->http_utility->get();
 
         $response = json_decode($result);

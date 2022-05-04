@@ -210,6 +210,20 @@ class Notification_lib{
 		return $rs;
 	}
 
+    public function expired_cancel($user_id)
+    {
+        $title = '【借款申請】 您的借款申請已取消';
+        $content = "您好！\n很抱歉的通知，您的借款簽約期效已過，\n非常感謝您的申請，\n我們將會對您的申請信息進行嚴格保密，\n感謝您對普匯的信任。";
+
+        $param = array(
+            'user_id' => $user_id,
+            'investor' => BORROWER,
+            'title' => $title,
+            'content' => $content,
+        );
+        $this->CI->user_notification_model->insert($param);
+    }
+
 	public function bankaccount_verify_failed($user_id,$investor=0){
 		$title = "【驗證失敗】 您的金融驗證未通過";
 		$content = "您好！

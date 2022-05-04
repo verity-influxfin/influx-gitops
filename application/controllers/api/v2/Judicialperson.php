@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH.'/libraries/REST_Controller.php');
+require_once(APPPATH.'/libraries/REST_Controller.php');
 
 class Judicialperson extends REST_Controller {
 
@@ -1168,10 +1168,6 @@ class Judicialperson extends REST_Controller {
 	private function not_incharge(){
 		if($this->user_info->company != 1 ){
 			$this->response(array('result' => 'ERROR','error' => NOT_COMPANY ));
-		}
-
-		if($this->user_info->incharge != 1 && $this->user_info->name != null){
-			$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
 		}
 	}
 

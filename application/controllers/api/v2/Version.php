@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH.'/libraries/REST_Controller.php');
+require_once(APPPATH.'/libraries/REST_Controller.php');
 
 class Version extends REST_Controller {
 
@@ -25,7 +25,7 @@ class Version extends REST_Controller {
             $data = array(
                 'version'     => $version -> version,
                 'description' => $version -> description,
-                'events'      => "linePointBox,stepProduct,oppo,skipFB,jv2,livingvoicecheck"
+                'events'      => "linePointBox,stepProduct,oppo,skipFB,jv2,livingvoicecheck,childDonate"
             );
         }
         $this->response(array('result' => 'SUCCESS','data' => $data ));

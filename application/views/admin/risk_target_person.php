@@ -135,11 +135,18 @@
                                     foreach($certification as $key => $value){
                                         if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
                                             || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
-                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 &&  !in_array($key,[1,2,3,4,5,6,7,8,9,10,14])
+                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 &&  !in_array($key,[1,2,3,4,5,6,7,8,9,10,14, CERTIFICATION_SOCIAL_INTELLIGENT])
                                         ){
                                             unset($certification[$key]);
                                             continue;
                                         }
+
+                                        if ($key == CERTIFICATION_SOCIAL_INTELLIGENT)
+                                        {
+                                            echo '<th>' . ($key == 9 && isset($input['company']) && $input['company'] == 1 ? '自然人' : '') . '名校貸' . $value['name'] . '</th>';
+                                            continue;
+                                        }
+
                                         echo '<th>'.($key==9 && isset($input['company']) && $input['company']==1?'自然人':'').$value['name'].'</th>';
                                     }
                                 }
@@ -289,7 +296,7 @@
                                                 if(in_array($k, $value->certification_stage_list[0] ?? []) && isset($value->certification) && $value->certification[$k]["user_status"]!==null){
                                                     $certification_id 	= $value->certification[$k]["certification_id"];
                                                     $sys_check = $value->certification[$k]["sys_check"]===0?" btn-circle":" ";
-                                                    $status      = ($value->certification[$k]['expire_time']<=time()&&!in_array($v['id'],[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])?'danger':'success');
+                                                    $status      = ($value->certification[$k]['expire_time']<=time()&&!in_array($v['id'],[CERTIFICATION_IDENTITY,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])?'danger':'success');
                                                     $expire_time = date( "Y/m/d", $value->certification[$k]['expire_time']);
                                                     if($k==3){
                                                         switch($value->certification[$k]["user_status"]){
@@ -297,13 +304,22 @@
                                                             case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
                                                             case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
                                                             case CERTIFICATION_STATUS_AUTHENTICATED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_SUCCEED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-'.$status.''.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" ><button type="button" class="btn btn-' . $status . '' . $sys_check . ' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_FAILED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" ><button type="button" class="btn btn-danger' . $sys_check . ' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+                                                                }
                                                                 break;
                                                             default:
                                                                 break;
@@ -362,15 +378,23 @@
                                     foreach($certification as $key => $value){
                                         if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
                                             || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
-                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14])
+                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14, CERTIFICATION_SOCIAL_INTELLIGENT])
                                         ){
                                             unset($certification[$key]);
                                             continue;
                                         }
+
+                                        if ($key == CERTIFICATION_SOCIAL_INTELLIGENT)
+                                        {
+                                            echo '<th>' . ($key == 9 && isset($input['company']) && $input['company'] == 1 ? '自然人' : '') . '名校貸' . $value['name'] . '</th>';
+                                            continue;
+                                        }
+
                                         echo '<th>'.($key==9 && isset($input['company']) && $input['company']==1?'自然人':'').$value['name'].'</th>';
                                     }
                                 }
                                 ?>
+                                <th>授信審核表</th>
                                 <?if(isset($input['investor']) && $input['investor'] != 1){?>
                                     <th>退件</th>
                                 <?}?>
@@ -516,23 +540,35 @@
                                                 if(isset($value->certification) && $value->certification[$k]["user_status"]!==null){
                                                     $certification_id 	= $value->certification[$k]["certification_id"];
                                                     $sys_check = $value->certification[$k]["sys_check"]===0?" btn-circle":" ";
-                                                    $status      = ($value->certification[$k]['expire_time']<=time()&&!in_array($v['id'],[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])?'danger':'success');
+                                                    $status      = ($value->certification[$k]['expire_time']<=time()&&!in_array($v['id'],[CERTIFICATION_IDENTITY,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])?'danger':'success');
                                                     $expire_time = date( "Y/m/d", $value->certification[$k]['expire_time']);
                                                     if($k==3){
                                                         switch($value->certification[$k]["user_status"]){
                                                             case CERTIFICATION_STATUS_PENDING_TO_VALIDATE:
                                                             case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
                                                             case CERTIFICATION_STATUS_AUTHENTICATED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_SUCCEED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-'.$status.''.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" ><button type="button" class="btn btn-' . $status . '' . $sys_check . ' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_FAILED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" ><button type="button" class="btn btn-danger' . $sys_check . ' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                }
                                                                 break;
                                                             default:
                                                                 break;
@@ -562,6 +598,7 @@
                                             }
                                         }
                                         ?>
+                                        <td><a target="_blank" href="<?=admin_url('creditmanagement/report')."?type=person&target_id=".$value->id ?>" class="btn btn-default">查看</a></td>
                                         <? if(isset($input['investor']) && $input['investor'] != 1){?>
                                             <td><button class="btn btn-outline btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>,'<?=isset($value->target_no)?$value->target_no:"" ?>');" >退件</button></td>
                                         <?}?>
@@ -591,11 +628,18 @@
                                     foreach($certification as $key => $value){
                                         if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
                                             || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
-                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14])
+                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14, CERTIFICATION_SOCIAL_INTELLIGENT])
                                         ){
                                             unset($certification[$key]);
                                             continue;
                                         }
+                                        
+                                        if ($key == CERTIFICATION_SOCIAL_INTELLIGENT)
+                                        {
+                                            echo '<th>' . ($key == 9 && isset($input['company']) && $input['company'] == 1 ? '自然人' : '') . '名校貸' . $value['name'] . '</th>';
+                                            continue;
+                                        }
+
                                         echo '<th>'.($key==9 && isset($input['company']) && $input['company']==1?'自然人':'').$value['name'].'</th>';
                                     }
                                 }
@@ -744,7 +788,7 @@
                                                 if(isset($value->certification) && $value->certification[$k]["user_status"]!==null){
                                                     $certification_id 	= $value->certification[$k]["certification_id"];
                                                     $sys_check = $value->certification[$k]["sys_check"]===0?" btn-circle":" ";
-                                                    $status      = ($value->certification[$k]['expire_time']<=time()&&!in_array($v['id'],[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])?'danger':'success');
+                                                    $status      = ($value->certification[$k]['expire_time']<=time()&&!in_array($v['id'],[CERTIFICATION_IDENTITY,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])?'danger':'success');
                                                     $expire_time = date( "Y/m/d", $value->certification[$k]['expire_time']);
                                                     if($k==3){
                                                         switch($value->certification[$k]["user_status"]){

@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH.'/libraries/REST_Controller.php');
+require_once(APPPATH.'/libraries/REST_Controller.php');
 
 class Website extends REST_Controller {
 
@@ -14,6 +14,51 @@ class Website extends REST_Controller {
 		$this->load->model('user/user_meta_model');
 		$this->load->library('Contract_lib');
         $this->load->library('Transfer_lib');
+    }
+
+    private function _check_visit_freq($token_data, $freq=3, $interval=10)
+    {
+        $this->load->model('log/log_request_model');
+        $rs = $this->log_request_model->get_many_by([
+            'user_id' => $token_data->id,
+            'investor' => $token_data->investor,
+            'url' => $this->uri->uri_string(),
+            'created_at >= ' => time() - $interval
+        ]);
+        if (count($rs) >= $freq)
+        {
+            return FALSE;
+        }
+        else
+        {
+            $this->log_request_model->insert([
+                'method' => $this->request->method,
+                'url' => $this->uri->uri_string(),
+                'investor' => $token_data->investor,
+                'user_id' => $token_data->id,
+                'agent' => $token_data->agent,
+            ]);
+            return TRUE;
+        }
+    }
+    private function _check_jwt_token($token) {
+        if ( ! app_access())
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 401);
+        }
+
+        $tokenData = AUTHORIZATION::getUserInfoByToken($token);
+        if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time < time())
+        {
+            $this->response(array('result' => 'ERROR', 'error' => TOKEN_NOT_CORRECT));
+        }
+
+        $this->user_info = $this->user_model->get($tokenData->id);
+        if ($tokenData->auth_otp != $this->user_info->auth_otp)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => TOKEN_NOT_CORRECT));
+        }
+        return $tokenData;
     }
 
 	/**
@@ -848,5 +893,104 @@ class Website extends REST_Controller {
             'result' => 'SUCCESS',
             'data' => $data,
         ]);
+    }
+
+    /**
+     * @api {get} /v2/website/ntu_donation_list 會員 台大慈善捐款名單
+     * @apiVersion 0.2.0
+     * @apiName GetWebsiteNtuDonationList
+     * @apiGroup Website
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *          "id": "1",
+     *          "institution_id": "1",
+     *          "user_id": "47181",
+     *          "investor": "1",
+     *          "amount": "101.000",
+     *          "transaction_id": "2352866",
+     *          "tx_datetime": "2021-11-11 15:15:30",
+     *          "receipt_type": "0",
+     *          "data": "{"name\": \"User姓名\", "email\": \"test@gmail.com\", "phone\": \"09123456789\", "receipt_address\": \"地址XXX\", "receipt_id_number\": \"A123456789\"}",
+     *          "created_at": "2021-11-11 15:15:30",
+     *          "created_ip": "172.18.0.1",
+     *          "updated_at": "2021-11-11 15:15:30",
+     *          "updated_ip": "172.18.0.1",
+     *          "alias": "NTUH",
+     *          "name": "財團法人台大兒童健康基金會",
+     *          "CoA_content": null
+     *      }
+     *    }
+     */
+    public function ntu_donation_list_get()
+    {
+        $max = (int) $this->input->get('max');
+
+        $this->load->model('transaction/charity_model');
+        $data = $this->charity_model->get_ntu_donation_list($max);
+
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+    public function ntu_donation_list_manual_get()
+    {
+        $max = (int) $this->input->get('max');
+
+        $this->load->model('user/ntu_model');
+        $data = $this->ntu_model->get_list_bigger_than($max);
+
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+    public function get_investor_report_get()
+    {
+        if ( ! app_access())
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 401);
+        }
+
+        $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
+        $token_data = $this->_check_jwt_token($token);
+        if ( ! $this->_check_visit_freq($token_data))
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 503);
+        }
+
+        $this->load->library('user_lib');
+        $report_data = $this->user_lib->get_investor_report($token_data->id, [], date('Y-m-d'));
+
+        $this->response(array('result' => 'SUCCESS', 'data' => $report_data));
+    }
+
+    public function download_investor_report_get()
+    {
+        if ( ! app_access())
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 401);
+        }
+
+        $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
+        $token_data = $this->_check_jwt_token($token);
+        if ( ! $this->_check_visit_freq($token_data))
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 503);
+        }
+
+
+        $this->load->library('user_lib');
+        $this->load->library('spreadsheet_lib');
+
+        $report_data = $this->user_lib->get_investor_report($token_data->id, [], date('Y-m-d'));
+        $html = $this->load->view('admin/excel/investor_report', ['data' => $report_data], TRUE);
+        $spreadsheet = $this->spreadsheet_lib->get_investor_report_from_html($html, $report_data);
+        $this->spreadsheet_lib->download('投資人報告書.xlsx', $spreadsheet);
+        exit(1);
     }
 }

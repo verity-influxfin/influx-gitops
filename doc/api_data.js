@@ -1335,10 +1335,10 @@ define({
         },
         {
             "type": "get",
-            "url": "/certification/idcard",
+            "url": "/certification/identity",
             "title": "認證 實名認證資料",
             "version": "0.1.0",
-            "name": "GetCertificationIdcard",
+            "name": "GetCertificationIdentity",
             "group": "Certification",
             "header": {
                 "fields": {
@@ -1506,16 +1506,16 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "/api/certification/idcard"
+                    "url": "/api/certification/identity"
                 }
             ]
         },
         {
             "type": "get",
-            "url": "/v2/certification/idcard",
+            "url": "/v2/certification/identity",
             "title": "取得 實名認證",
             "version": "0.2.0",
-            "name": "GetCertificationIdcard2",
+            "name": "GetCertificationIdentity2",
             "group": "Certification",
             "header": {
                 "fields": {
@@ -1613,7 +1613,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/certification/idcard"
+                    "url": "/api/v2/certification/identity"
                 }
             ]
         },
@@ -5820,9 +5820,16 @@ define({
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "employeeinsurancelist_image",
                             "description": "<p>員工投保人數資料 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "affidavit_image",
+                            "description": "<p>切結書 ( 圖片IDs 以逗號隔開，最多15個)</p>"
                         },
                         {
                             "group": "Parameter",
@@ -10526,10 +10533,10 @@ define({
         },
         {
             "type": "post",
-            "url": "/v2/certification/idcard",
+            "url": "/v2/certification/identity",
             "title": "認證 實名認證",
             "version": "0.2.0",
-            "name": "PostCertificationIdcard",
+            "name": "PostCertificationIdentity",
             "group": "Certification",
             "header": {
                 "fields": {
@@ -10759,16 +10766,16 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/certification/idcard"
+                    "url": "/api/v2/certification/identity"
                 }
             ]
         },
         {
             "type": "post",
-            "url": "/certification/idcard",
+            "url": "/certification/identity",
             "title": "認證 實名認證",
             "version": "0.1.0",
-            "name": "PostCertificationIdcard",
+            "name": "PostCertificationIdentity",
             "group": "Certification",
             "header": {
                 "fields": {
@@ -10981,7 +10988,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "/api/certification/idcard"
+                    "url": "/api/certification/identity"
                 }
             ]
         },
@@ -11942,7 +11949,7 @@ define({
                             "        \"certification\": [\n" +
                             "            {\n" +
                             "                \"id\": 1,\n" +
-                            "                \"alias\": \"idcard\",\n" +
+                            "                \"alias\": \"identity\",\n" +
                             "                \"name\": \"實名認證\",\n" +
                             "                \"status\": 1,\n" +
                             "                \"description\": \"驗證個人身份資訊\",\n" +
@@ -12896,6 +12903,162 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/certification/social"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/certification/social_intelligent",
+            "title": "認證 (名校貸)社交認證",
+            "version": "0.2.0",
+            "name": "PostCertificationSocialIntelligent",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "allowedValues": [
+                                "instagram"
+                            ],
+                            "optional": false,
+                            "field": "type",
+                            "description": "<p>認證類型</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "access_token",
+                            "description": "<p>AccessToken</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "502",
+                            "description": "<p>此驗證已通過驗證</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "216",
+                            "description": "<p>不支援法人帳號使用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/social_intelligent"
                 }
             ]
         },
@@ -14558,356 +14721,6 @@ define({
                 }
             ]
         },
-        // 合併至/v2/user/login
-        // {
-        //     "type": "post",
-        //     "url": "/v2/judicialperson/apply",
-        //     "title": "法人會員 申請法人身份",
-        //     "version": "0.2.0",
-        //     "name": "PostJudicialpersonApply",
-        //     "group": "Judicialperson",
-        //     "header": {
-        //         "fields": {
-        //             "Header": [
-        //                 {
-        //                     "group": "Header",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "request_token",
-        //                     "description": "<p>登入後取得的 Request Token</p>"
-        //                 }
-        //             ]
-        //         }
-        //     },
-        //     "parameter": {
-        //         "fields": {
-        //             "Parameter": [
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "allowedValues": [
-        //                         "1",
-        //                         "2",
-        //                         "3",
-        //                         "4"
-        //                     ],
-        //                     "optional": false,
-        //                     "field": "company_type",
-        //                     "description": "<p>公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "size": "8",
-        //                     "optional": false,
-        //                     "field": "tax_id",
-        //                     "description": "<p>公司統一編號</p>"
-        //                 },
-        //                 {
-        //                     "group": "Success 200",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "bank_code",
-        //                     "description": "<p>銀行代碼三碼</p>"
-        //                 },
-        //                 {
-        //                     "group": "Success 200",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "branch_code",
-        //                     "description": "<p>分支機構代號四碼</p>"
-        //                 },
-        //                 {
-        //                     "group": "Success 200",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "bank_account",
-        //                     "description": "<p>銀行帳號</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "bankbook_image",
-        //                     "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個 )</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "passbook_image",
-        //                     "description": "<p>銀行流水帳內頁( 圖片IDs 以逗號隔開，最多四個 )</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "optional": false,
-        //                     "field": "enterprise_registration_image",
-        //                     "description": "<p>營利事業變更登記表正本( 圖片IDs 以逗號隔開，最多四個 )</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "meeting_date",
-        //                     "description": "<p>對保時間</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "optional": true,
-        //                     "field": "front_image",
-        //                     "description": "<p>銀行流水帳正面( 圖片ID )</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "allowedValues": [
-        //                         "0",
-        //                         "1"
-        //                     ],
-        //                     "optional": true,
-        //                     "field": "cooperation",
-        //                     "defaultValue": "0",
-        //                     "description": "<p>0:法人帳號 1:法人經銷商帳號</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "size": "2..15",
-        //                     "optional": true,
-        //                     "field": "cooperation_contact",
-        //                     "description": "<p>聯絡人</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": true,
-        //                     "field": "cooperation_phone",
-        //                     "description": "<p>電話</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": true,
-        //                     "field": "cooperation_address",
-        //                     "description": "<p>地址/網址</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "optional": true,
-        //                     "field": "business_model",
-        //                     "description": "<p>營運模式 0:線下 1:線上</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "optional": true,
-        //                     "field": "selling_type",
-        //                     "description": "<p>商品類型 0:手機 1:遊學 2:外匯車 999:其它</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "optional": true,
-        //                     "field": "facade_image",
-        //                     "description": "<p>店門正面照(經銷商必填)( 圖片ID )</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": true,
-        //                     "field": "store_image",
-        //                     "description": "<p>店內正面照(經銷商必填)( 圖片IDs 以逗號隔開，最多四個 )</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "optional": true,
-        //                     "field": "store_lease_image",
-        //                     "description": "<p>租約照片(外匯車經銷商必填)( 圖片ID )</p>"
-        //                 },
-        //                 {
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": true,
-        //                     "field": "store_sign_image",
-        //                     "description": "<p>招牌照片(外匯車經銷商必填)( 圖片ID )</p>"
-        //                 }
-        //             ]
-        //         }
-        //     },
-        //     "success": {
-        //         "fields": {
-        //             "Success 200": [
-        //                 {
-        //                     "group": "Success 200",
-        //                     "type": "Object",
-        //                     "optional": false,
-        //                     "field": "result",
-        //                     "description": "<p>SUCCESS</p>"
-        //                 }
-        //             ]
-        //         },
-        //         "examples": [
-        //             {
-        //                 "title": "SUCCESS",
-        //                 "content": "{\n  \"result\": \"SUCCESS\"\n}",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-        //     "error": {
-        //         "fields": {
-        //             "Error 4xx": [
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "100",
-        //                     "description": "<p>Token錯誤</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "101",
-        //                     "description": "<p>帳戶已黑名單</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "200",
-        //                     "description": "<p>參數錯誤</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "201",
-        //                     "description": "<p>新增時發生錯誤</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "202",
-        //                     "description": "<p>未通過所需的驗證(實名驗證)</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "208",
-        //                     "description": "<p>未滿20歲</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "212",
-        //                     "description": "<p>未通過所需的驗證(Email)</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "213",
-        //                     "description": "<p>非法人負責人</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "214",
-        //                     "description": "<p>此公司已申請過</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "216",
-        //                     "description": "<p>不支援法人帳號使用</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "506",
-        //                     "description": "<p>銀行代碼長度錯誤</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "507",
-        //                     "description": "<p>分支機構代號長度錯誤</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "508",
-        //                     "description": "<p>銀行帳號長度錯誤</p>"
-        //                 },
-        //                 {
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "509",
-        //                     "description": "<p>銀行帳號已存在</p>"
-        //                 }
-        //             ]
-        //         },
-        //         "examples": [
-        //             {
-        //                 "title": "202",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-        //                 "title": "208",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-        //                 "title": "212",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-        //                 "title": "214",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"214\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-        //                 "title": "200",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-        //                 "title": "201",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-        //                 "title": "100",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-        //                 "title": "101",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-        //                 "title": "213",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-        //                 "title": "216",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-        //     "filename": "application/controllers/api/v2/Judicialperson.php",
-        //     "groupTitle": "Judicialperson",
-        //     "sampleRequest": [
-        //         {
-        //             "url": "/api/v2/judicialperson/apply"
-        //         }
-        //     ]
-        // },
         {
             "type": "post",
             "url": "/v2/judicialperson/verifymedia",
@@ -17249,7 +17062,7 @@ define({
                             "                    \"certification\": [\n" +
                             "                        {\n" +
                             "                            \"id\": 1,\n" +
-                            "                            \"alias\": \"idcard\",\n" +
+                            "                            \"alias\": \"identity\",\n" +
                             "                            \"name\": \"實名認證\",\n" +
                             "                            \"status\": 1,\n" +
                             "                            \"description\": \"驗證個人身份資訊\",\n" +
@@ -17363,7 +17176,7 @@ define({
                             "                    \"certification\": [\n" +
                             "                        {\n" +
                             "                            \"id\": 1,\n" +
-                            "                            \"alias\": \"idcard\",\n" +
+                            "                            \"alias\": \"identity\",\n" +
                             "                            \"name\": \"實名認證\",\n" +
                             "                            \"status\": 1,\n" +
                             "                            \"description\": \"驗證個人身份資訊\",\n" +
@@ -17491,7 +17304,7 @@ define({
                             "                    },\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -17631,7 +17444,7 @@ define({
                             "            },\n" +
                             "            {\n" +
                             "                \"id\": 1,\n" +
-                            "                \"alias\": \"idcard\",\n" +
+                            "                \"alias\": \"identity\",\n" +
                             "                \"name\": \"實名認證\",\n" +
                             "                \"status\": 1,\n" +
                             "                \"description\": \"驗證個人身份資訊\",\n" +
@@ -19138,11 +18951,24 @@ define({
         },
         {
             "type": "get",
-            "url": "/v2/product/info/:id",
+            "url": "/v2/product/info/:id/:target_id",
             "title": "借款方 取得產品資訊",
             "version": "0.2.0",
             "name": "GetProductInfo",
             "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
             "parameter": {
                 "fields": {
                     "Parameter": [
@@ -19152,6 +18978,13 @@ define({
                             "optional": false,
                             "field": "id",
                             "description": "<p>產品ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
                         }
                     ]
                 }
@@ -19172,6 +19005,13 @@ define({
                             "optional": false,
                             "field": "id",
                             "description": "<p>Product ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "sub_product_id",
+                            "description": "<p>子產品 ID</p>"
                         },
                         {
                             "group": "Success 200",
@@ -19256,13 +19096,27 @@ define({
                             "optional": false,
                             "field": "repayment",
                             "description": "<p>可選計息方式 1:等額本息</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "NULL/Number",
+                            "optional": false,
+                            "field": "remain_amount",
+                            "description": "<p>可用額度</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "NULL/Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>有額度的Targets ID</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n\t\"result\": \"SUCCESS\",\n\t\t\"data\": {\n\t\t\t\"id\": 1,\n\t\t\t\"type\": 1,\n\t\t\t\"identity\": 1,\n\t\t\t\"name\": \"學生貸\",\n\t\t\t\"description\": \"\\r\\n普匯學生貸\\r\\n計畫留學、創業或者實現更多理想嗎？\\r\\n需要資金卻無法向銀行聲請借款嗎？\\r\\n普匯陪你一起實現夢想\",\n\t\t\t\"loan_range_s\": 5000,\n\t\t\t\"loan_range_e\": 120000,\n\t\t\t\"interest_rate_s\": 5,\n\t\t\t\"interest_rate_e\": 20,\n\t\t\t\"charge_platform\": 3,\n\t\t\t\"charge_platform_min\": 500,\n\t\t\t\"instalment\": [\n\t\t\t\t3,\n\t\t\t\t6,\n\t\t\t\t12,\n\t\t\t\t18,\n\t\t\t\t24\n\t\t\t],\n\t\t\t\"repayment\": [\n\t\t\t\t1\n\t\t\t]\n\t\t}\n}",
+                        "content": "{\n\t\"result\": \"SUCCESS\",\n\t\t\"data\": {\n\t\t\t\"id\": 1,\n\t\t\t\"sub_product_id\": 0 ,\n\t\t\t\"type\": 1,\n\t\t\t\"identity\": 1,\n\t\t\t\"name\": \"學生貸\",\n\t\t\t\"description\": \"\\r\\n普匯學生貸\\r\\n計畫留學、創業或者實現更多理想嗎？\\r\\n需要資金卻無法向銀行聲請借款嗎？\\r\\n普匯陪你一起實現夢想\",\n\t\t\t\"loan_range_s\": 5000,\n\t\t\t\"loan_range_e\": 120000,\n\t\t\t\"interest_rate_s\": 5,\n\t\t\t\"interest_rate_e\": 20,\n\t\t\t\"charge_platform\": 3,\n\t\t\t\"charge_platform_min\": 500,\n\t\t\t\"instalment\": [\n\t\t\t\t3,\n\t\t\t\t6,\n\t\t\t\t12,\n\t\t\t\t18,\n\t\t\t\t24\n\t\t\t],\n\t\t\t\"repayment\": [\n\t\t\t\t1\n\t\t\t],\n\t\t\t\"remain_amount\": 10000,\n\t\t\t\"target_id\": 100574\n\t\t}\n}",
                         "type": "Object"
                     }
                 ]
@@ -19270,6 +19124,12 @@ define({
             "error": {
                 "fields": {
                     "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "806",
+                            "description": "<p>申貸案不存在</p>"
+                        },
                         {
                             "group": "Error 4xx",
                             "optional": false,
@@ -19304,6 +19164,11 @@ define({
                 },
                 "examples": [
                     {
+                        "title": "806",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"806\"\n}",
+                        "type": "Object"
+                    },
+                    {
                         "title": "401",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
                         "type": "Object"
@@ -19334,7 +19199,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/product/info/:id"
+                    "url": "/api/v2/product/info/:id/:target_id"
                 }
             ]
         },
@@ -20303,7 +20168,7 @@ define({
                             "                \"certification\": [\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20408,7 +20273,7 @@ define({
                             "                \"certification\": [\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20513,7 +20378,7 @@ define({
                             "                \"certification\": [\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20647,7 +20512,7 @@ define({
                             "                \"certification\": [\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20827,7 +20692,7 @@ define({
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
                             "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
+                            "                                        \"alias\": \"identity\",\n" +
                             "                                        \"name\": \"實名認證\",\n" +
                             "                                        \"status\": 1,\n" +
                             "                                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20940,7 +20805,7 @@ define({
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
                             "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
+                            "                                        \"alias\": \"identity\",\n" +
                             "                                        \"name\": \"實名認證\",\n" +
                             "                                        \"status\": 1,\n" +
                             "                                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -21070,7 +20935,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21177,7 +21042,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21323,7 +21188,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21440,7 +21305,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21596,7 +21461,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21702,7 +21567,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21862,7 +21727,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21968,7 +21833,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -22137,7 +22002,7 @@ define({
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
                             "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
+                            "                                        \"alias\": \"identity\",\n" +
                             "                                        \"name\": \"實名認證\",\n" +
                             "                                        \"status\": 1,\n" +
                             "                                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -22246,7 +22111,7 @@ define({
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
                             "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
+                            "                                        \"alias\": \"identity\",\n" +
                             "                                        \"name\": \"實名認證\",\n" +
                             "                                        \"status\": 1,\n" +
                             "                                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -22679,6 +22544,12 @@ define({
                             "type": "Number",
                             "field": "target_id",
                             "description" : "<p>(普匯微企e秒貸) 創業貸起案ID (同意當保證人，不同意則依照規格呼叫)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "field": "repayment",
+                            "description" : "<p>還款方式<br/>1:本息均攤<br/>2:繳息不還本</p>"
                         }
                     ]
                 }
@@ -22827,6 +22698,12 @@ define({
                             "optional": false,
                             "field": "414",
                             "description": "<p>產品關閉</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "424",
+                            "description": "<p>產品已無額度，不起新案</p>"
                         }
                     ]
                 },
@@ -22854,6 +22731,11 @@ define({
                     {
                         "title": "410",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"410\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "424",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"424\"\n}",
                         "type": "Object"
                     },
                     {
@@ -25900,7 +25782,21 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "legal_collection",
-                            "description": "<p>法催進行中</p>"
+                            "description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "lc_description",
+                            "description": "<p>法催狀態說明</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "lc_handle_time",
+                            "description": "<p>法催狀態最後處理時間 (Y-m-d H:i:s)</p>"
                         }
                     ]
                 },
@@ -25968,6 +25864,8 @@ define({
                             "      }\n" +
                             "    },\n" +
                             "    \"legal_collection\": 0,\n" +
+                            "    \"lc_description\": \"LINE客服\",\n" +
+                            "    \"lc_handle_time\": \"2019-02-16 12:15:05\",\n" +
                             "  }\n" +
                             "}",
                         "type": "Object"
@@ -26345,7 +26243,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "legal_collection",
-                            "description": "<p>法催進行中</p>"
+                            "description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
                         },
                     ]
                 },
@@ -26673,7 +26571,21 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "legal_collection",
-                            "description": "<p>法催進行中</p>"
+                            "description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "lc_description",
+                            "description": "<p>法催狀態說明</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "lc_handle_time",
+                            "description": "<p>法催狀態最後處理時間 (Y-m-d H:i:s)</p>"
                         },
                     ]
                 },
@@ -26709,6 +26621,8 @@ define({
                             "        \"next_repayment\": [],\n" +
                             "        \"accounts_receivable\": []\n" +
                             "        \"legal_collection\": 1,\n" +
+                            "        \"lc_description\": \"LINE客服\",\n" +
+                            "        \"lc_handle_time\": \"2019-02-16 12:15:05\",\n" +
                             "      }\n" +
                             "    ]\n" +
                             "  }\n" +
@@ -29875,7 +29789,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "legal_collection",
-                            "description": "<p>法催進行中</p>"
+                            "description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
                         },
 
                     ]
@@ -33833,7 +33747,7 @@ define({
 							"type": "Number",
 							"optional": false,
 							"field": "legal_collection",
-							"description": "<p>法催中</p>"
+							"description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
 						}
                     ]
                 },
@@ -34018,7 +33932,7 @@ define({
 							"type": "Number",
 							"optional": false,
 							"field": "legal_collection",
-							"description": "<p>法催中</p>"
+							"description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
 						}
                     ]
                 },
@@ -43848,6 +43762,648 @@ define({
         },
         {
             "type": "get",
+            "url": "/v2/user/charity_institutions",
+            "title": "會員 慈善機構列表",
+            "version": "0.2.0",
+            "name": "GetCharityInstitutions",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "list",
+                            "description": "<p>慈善機構列表</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "list.alias",
+                            "description": "<p>慈善機構英文名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "list.name",
+                            "description": "<p>慈善機構中文名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "list.min_amount",
+                            "description": "<p>最小捐款金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "list.max_amount",
+                            "description": "<p>最大捐款金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "list.agreement_title",
+                            "description": "<p>協議書標題</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "list.agreement",
+                            "description": "<p>協議書內容</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"data\": {\n        \"list\": [\n            {\n                \"alias\": \"NTUH\",\n                \"name\": \"財團法人台大兒童健康基金會\",\n                \"min_amount\": 100,\n                \"max_amount\": 100000,\n                \"agreement_title\": \"\"\n                \"agreement\": \"\"\n            }\n        ]\n    }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/charity_institutions"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "get",
+            "url": "/v2/user/donated_list",
+            "title": "會員 慈善捐款列表",
+            "version": "0.2.0",
+            "name": "GetDonateCharity",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "list",
+                            "description": "<p>捐款紀錄列表</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "list.tx_datetime",
+                            "description": "<p>交易時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "list.amount",
+                            "description": "<p>捐款金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "list.donator_name",
+                            "description": "<p>捐款者姓名</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "list.donator_sex",
+                            "description": "<p>捐款者稱謂</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "list.institution_name",
+                            "description": "<p>慈善機構名稱</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{ \n    \"result\": \"SUCCESS\", \n    \"data\": { \n        \"list\": [ \n            { \n                \"tx_datetime\": \"2021-11-11 15:15:30\", \n                \"amount\": 101, \n                \"donator_name\": \"超級CPU\", \n                \"donator_sex\": \"先生\", \n                \"institution_name\": \"財團法人台大兒童健康基金會\" \n            } \n        ] \n    } \n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/donated_list"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "post",
+            "url": "/v2/user/donate_charity",
+            "title": "會員 慈善捐款",
+            "version": "0.2.0",
+            "name": "PostDonateCharity",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String(45)",
+                            "optional": false,
+                            "field": "alias",
+                            "description": "<p>單位英文名稱</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "receipt_id_number",
+                            "description": "<p>捐款者身分證字號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "receipt_address",
+                            "description": "<p>紙本收據地址</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "amount",
+                            "description": "<p>捐款金額</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "1",
+                            "description": "<p>虛擬帳戶使用中，請稍後再試</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "8",
+                            "description": "<p>沒有找到法人資料或DB出現錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "102",
+                            "description": "<p>沒有找到alias對應之慈善單位(DB error)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>輸入參數有誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "211",
+                            "description": "<p>可用餘額不足</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "318",
+                            "description": "<p>捐款金額不在有效範圍內</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/donate_charity"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/user/donate_anonymous",
+            "title": "遊客捐款",
+            "version": "0.2.0",
+            "name": "PostUserDonateAnonymous",
+            "group": "User",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "int",
+                            "optional": false,
+                            "field": "amount",
+                            "description": "<p>捐款金額</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "int",
+                            "optional": false,
+                            "field": "source",
+                            "description": "<p>捐款來源</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "name",
+                            "description": "<p>姓名/公司抬頭</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "number",
+                            "description": "<p>身份證字號/公司統編</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "phone",
+                            "description": "<p>手機</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "email",
+                            "description": "<p>信箱</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "int",
+                            "optional": true,
+                            "field": "upload",
+                            "description": "<p>捐款收據代上傳國稅局</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "int",
+                            "optional": true,
+                            "field": "receipt",
+                            "description": "<p>索取紙本收據</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "address",
+                            "description": "<p>收據寄送地址</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data",
+                            "description": "<p>回傳慈善機構帳戶</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"data\": {\n        \"bank_code\": \"013\",\n        \"bank_account\": \"56639042524726\",\n        \"charity_title\": \"\u53f0\u5927\u5152\u91ab\u6148\u5584\u5c08\u6236\"\n    }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/donate_anonymous"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "318",
+                            "description": "<p>無效的慈善捐款金額。</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "321",
+                            "description": "<p>因AMC防制法規定：捐款金額超過500,000元請洽客服。</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "318",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"error\": 318,\n    \"data\": {\n        \"msg\": \"\u7121\u6548\u7684\u6148\u5584\u6350\u6b3e\u91d1\u984d\u3002\"\n    }\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "321",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"error\": 321,\n    \"data\": {\n        \"msg\": \"\u56e0AMC\u9632\u5236\u6cd5\u898f\u5b9a\uff1a\u6350\u6b3e\u91d1\u984d\u8d85\u904e500,000\u5143\u8acb\u6d3d\u5ba2\u670d\u3002\"\n    }\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "get",
+            "url": "/v2/user/donate_anonymous",
+            "title": "遊客查詢捐款紀錄",
+            "version": "0.2.0",
+            "name": "GetUserDonateAnonymous",
+            "group": "User",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "int",
+                            "optional": false,
+                            "field": "amount",
+                            "description": "<p>捐款金額</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "last5",
+                            "description": "<p>帳號末五碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "name",
+                            "description": "<p>姓名/公司抬頭</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "number",
+                            "description": "<p>身份證字號/公司統編</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data",
+                            "description": "<p>回傳查詢到的捐款紀錄</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"data\": {\n        {\n            \"amout\": 100,\n            \"donator_name\": \"\u8521\u82f1\u6587\",\n            \"donator_sex\": \"\u5148\u751f\/\u5c0f\u59d0\",\n            \"tx_datetime\": \"2022-03-30\"\n        }\n    }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/donate_anonymous"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>輸入不正確資料</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "322",
+                            "description": "<p>捐款紀錄不存在</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"error\": 200,\n    \"data\": {\n        \"msg\": \"\u8f38\u5165\u4e0d\u6b63\u78ba\u8cc7\u6599\u3002\"\n    }\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "322",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"error\": 322,\n    \"data\": {\n        \"msg\": \"\u6350\u6b3e\u7d00\u9304\u4e0d\u5b58\u5728\u3002\"\n    }\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "get",
             "url": "/user/chagetoken",
             "title": "會員 交換Token",
             "version": "0.1.0",
@@ -45424,437 +45980,6 @@ define({
                 ]
             }
         },
-        // {
-
-        //     "type": "post",
-        //     "url": "/v2/user/bind",
-        //     "title": "會員 綁定第三方帳號",
-        //     "version": "0.2.0",
-        //     "name": "PostUserBind",
-        //     "group": "User",
-        //     "header": {
-        //         "fields": {
-        //             "Header": [
-        //                 {
-
-        //                     "group": "Header",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "request_token",
-        //                     "description": "<p>登入後取得的 Request Token</p>"
-        //                 }
-        //             ]
-        //         }
-        //     },
-
-
-
-
-        //     "parameter": {
-        //         "fields": {
-        //             "Parameter": [
-        //                 {
-
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "access_token",
-        //                     "description": "<p>Facebook AccessToken</p>"
-        //                 }
-        //             ]
-        //         }
-        //     },
-
-
-
-
-        //     "success": {
-        //         "fields": {
-        //             "Success 200": [
-        //                 {
-
-        //                     "group": "Success 200",
-        //                     "type": "Object",
-        //                     "optional": false,
-        //                     "field": "result",
-        //                     "description": "<p>SUCCESS</p>"
-        //                 }
-        //             ]
-        //         },
-
-
-
-        //         "examples": [
-        //             {
-
-        //                 "title": "SUCCESS",
-        //                 "content": "{\n  \"result\": \"SUCCESS\"\n}",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-
-
-
-        //     "error": {
-        //         "fields": {
-        //             "Error 4xx": [
-        //                 {
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "305",
-        //                     "description": "<p>access_token錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "306",
-        //                     "description": "<p>已綁定過第三方帳號</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "308",
-        //                     "description": "<p>此FB帳號已綁定過</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "200",
-        //                     "description": "<p>參數錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "100",
-        //                     "description": "<p>Token錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "101",
-        //                     "description": "<p>帳戶已黑名單</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "216",
-        //                     "description": "<p>不支援法人帳號使用</p>"
-        //                 }
-        //             ]
-        //         },
-
-
-
-        //         "examples": [
-        //             {
-
-        //                 "title": "305",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "306",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"306\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "308",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "200",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "100",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "101",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "216",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-
-
-
-        //     "filename": "application/controllers/api/v2/User.php",
-        //     "groupTitle": "User",
-        //     "sampleRequest": [
-        //         {
-
-        //             "url": "/api/v2/user/bind"
-        //         }
-        //     ]
-        // },
-        // {
-
-
-
-
-        //     "type": "post",
-        //     "url": "/user/bind",
-        //     "title": "會員 綁定第三方帳號",
-        //     "version": "0.1.0",
-        //     "name": "PostUserBind",
-        //     "group": "User",
-        //     "header": {
-        //         "fields": {
-        //             "Header": [
-        //                 {
-
-        //                     "group": "Header",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "request_token",
-        //                     "description": "<p>登入後取得的 Request Token</p>"
-        //                 }
-        //             ]
-        //         }
-        //     },
-
-
-
-
-        //     "parameter": {
-        //         "fields": {
-        //             "Parameter": [
-        //                 {
-
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "allowedValues": [
-        //                         "facebook",
-        //                         "instagram"
-        //                     ],
-
-        //                     "optional": false,
-        //                     "field": "type",
-        //                     "description": "<p>登入類型</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "access_token",
-        //                     "description": "<p>access_token</p>"
-        //                 }
-        //             ]
-        //         }
-        //     },
-
-
-
-
-        //     "success": {
-        //         "fields": {
-        //             "Success 200": [
-        //                 {
-
-        //                     "group": "Success 200",
-        //                     "type": "Object",
-        //                     "optional": false,
-        //                     "field": "result",
-        //                     "description": "<p>SUCCESS</p>"
-        //                 }
-        //             ]
-        //         },
-
-
-
-        //         "examples": [
-        //             {
-
-        //                 "title": "SUCCESS",
-        //                 "content": "{\n  \"result\": \"SUCCESS\"\n}",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-
-
-
-        //     "error": {
-        //         "fields": {
-        //             "Error 4xx": [
-        //                 {
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "305",
-        //                     "description": "<p>access_token錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "306",
-        //                     "description": "<p>此種類型已綁定過了</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "308",
-        //                     "description": "<p>此FB帳號已綁定過</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "309",
-        //                     "description": "<p>此IG帳號已綁定過</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "310",
-        //                     "description": "<p>此LINE帳號已綁定過</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "200",
-        //                     "description": "<p>參數錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "100",
-        //                     "description": "<p>Token錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "101",
-        //                     "description": "<p>帳戶已黑名單</p>"
-        //                 }
-        //             ]
-        //         },
-
-
-
-        //         "examples": [
-        //             {
-
-        //                 "title": "305",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "306",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"306\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "308",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "309",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"309\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "310",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"310\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "200",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "100",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "101",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-
-
-
-        //     "filename": "application/controllers/api/User.php",
-        //     "groupTitle": "User",
-        //     "sampleRequest": [
-        //         {
-
-        //             "url": "/api/user/bind"
-        //         }
-        //     ]
-        // },
-
-
-
         {
             "type": "post",
             "url": "/v2/user/contact",
@@ -48435,396 +48560,6 @@ define({
                 }
             ]
         },
-
-        // 未使用
-        // {
-        //     "type": "post",
-        //     "url": "/v2/user/sociallogin",
-        //     "title": "會員 第三方登入",
-        //     "version": "0.2.0",
-        //     "name": "PostUserSociallogin",
-        //     "group": "User",
-        //     "parameter": {
-        //         "fields": {
-        //             "Parameter": [
-        //                 {
-
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "access_token",
-        //                     "description": "<p>AccessToken</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "allowedValues": [
-        //                         "0",
-        //                         "1"
-        //                     ],
-
-        //                     "optional": true,
-        //                     "field": "type",
-        //                     "defaultValue": "0",
-        //                     "description": "<p>0:Facebook 1:Line</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Parameter",
-        //                     "type": "Number",
-        //                     "allowedValues": [
-        //                         "0",
-        //                         "1"
-        //                     ],
-
-        //                     "optional": true,
-        //                     "field": "investor",
-        //                     "defaultValue": "0",
-        //                     "description": "<p>0:借款端 1:投資端</p>"
-        //                 }
-        //             ]
-        //         }
-        //     },
-
-
-
-
-        //     "success": {
-        //         "fields": {
-        //             "Success 200": [
-        //                 {
-
-        //                     "group": "Success 200",
-        //                     "type": "Object",
-        //                     "optional": false,
-        //                     "field": "result",
-        //                     "description": "<p>SUCCESS</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Success 200",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "token",
-        //                     "description": "<p>request_token</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Success 200",
-        //                     "type": "Number",
-        //                     "optional": false,
-        //                     "field": "first_time",
-        //                     "description": "<p>是否首次本端</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Success 200",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "expiry_time",
-        //                     "description": "<p>token時效</p>"
-        //                 }
-        //             ]
-        //         },
-
-
-
-        //         "examples": [
-        //             {
-
-        //                 "title": "SUCCESS",
-        //                 "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\": 1\t\t\n     }\n   }",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-
-
-
-        //     "error": {
-        //         "fields": {
-        //             "Error 4xx": [
-        //                 {
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "302",
-        //                     "description": "<p>會員不存在</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "304",
-        //                     "description": "<p>密碼錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "200",
-        //                     "description": "<p>參數錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "101",
-        //                     "description": "<p>帳戶已黑名單</p>"
-        //                 }
-        //             ]
-        //         },
-
-
-
-        //         "examples": [
-        //             {
-
-        //                 "title": "302",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "304",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "200",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "101",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-
-
-
-        //     "filename": "application/controllers/api/v2/User.php",
-        //     "groupTitle": "User",
-        //     "sampleRequest": [
-        //         {
-
-        //             "url": "/api/v2/user/sociallogin"
-        //         }
-        //     ]
-        // },
-        // {
-
-
-
-
-        //     "type": "post",
-        //     "url": "/user/sociallogin",
-        //     "title": "會員 第三方登入",
-        //     "version": "0.1.0",
-        //     "name": "PostUserSociallogin",
-        //     "group": "User",
-        //     "parameter": {
-        //         "fields": {
-        //             "Parameter": [
-        //                 {
-
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "allowedValues": [
-        //                         "facebook",
-        //                         "instagram"
-        //                     ],
-
-        //                     "optional": false,
-        //                     "field": "type",
-        //                     "description": "<p>登入類型</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Parameter",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "access_token",
-        //                     "description": "<p>access_token</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Parameter",
-        //                     "type": "number",
-        //                     "allowedValues": [
-        //                         "0",
-        //                         "1"
-        //                     ],
-
-        //                     "optional": true,
-        //                     "field": "investor",
-        //                     "defaultValue": "0",
-        //                     "description": "<p>1:投資端 0:借款端</p>"
-        //                 }
-        //             ]
-        //         }
-        //     },
-
-
-
-
-        //     "success": {
-        //         "fields": {
-        //             "Success 200": [
-        //                 {
-
-        //                     "group": "Success 200",
-        //                     "type": "Object",
-        //                     "optional": false,
-        //                     "field": "result",
-        //                     "description": "<p>SUCCESS</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Success 200",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "token",
-        //                     "description": "<p>request_token</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Success 200",
-        //                     "type": "Number",
-        //                     "optional": false,
-        //                     "field": "first_time",
-        //                     "description": "<p>是否首次本端</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Success 200",
-        //                     "type": "String",
-        //                     "optional": false,
-        //                     "field": "expiry_time",
-        //                     "description": "<p>token時效</p>"
-        //                 }
-        //             ]
-        //         },
-
-
-
-        //         "examples": [
-        //             {
-
-        //                 "title": "SUCCESS",
-        //                 "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-
-
-
-        //     "error": {
-        //         "fields": {
-        //             "Error 4xx": [
-        //                 {
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "302",
-        //                     "description": "<p>會員不存在</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "304",
-        //                     "description": "<p>密碼錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "200",
-        //                     "description": "<p>參數錯誤</p>"
-        //                 },
-        //                 {
-
-
-        //                     "group": "Error 4xx",
-        //                     "optional": false,
-        //                     "field": "101",
-        //                     "description": "<p>帳戶已黑名單</p>"
-        //                 }
-        //             ]
-        //         },
-
-
-
-        //         "examples": [
-        //             {
-
-        //                 "title": "302",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "304",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "200",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-        //                 "type": "Object"
-        //             },
-        //             {
-
-
-        //                 "title": "101",
-        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-        //                 "type": "Object"
-        //             }
-        //         ]
-        //     },
-
-
-
-        //     "filename": "application/controllers/api/User.php",
-        //     "groupTitle": "User",
-        //     "sampleRequest": [
-        //         {
-
-        //             "url": "/api/user/sociallogin"
-        //         }
-        //     ]
-        // },
-
-
-
         {
             "type": "post",
             "url": "/v2/user/upload",
@@ -49793,6 +49528,246 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/website/credit_department"
+                }
+            ]
+        },
+        {
+            "type": "get",
+            "url": "/v2/product/chk_famous_school/:school_short_name",
+            "title": "借款方 檢查學校是否符合名校貸資格",
+            "version": "0.2.0",
+            "name": "GetChkFamousSchool",
+            "group": "Product",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "school_short_name",
+                            "description": "<p>學校英文名縮寫</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "chk_result",
+                            "description": "<p>檢查結果</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        \"chk_result\":true\n    }\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Target",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/chk_famous_school/:school_short_name"
+                }
+            ]
+        },
+        {
+            "type": "get",
+            "url": "/v2/product/targetfaillist",
+            "title": "借款方 取得申請失敗列表",
+            "version": "0.2.0",
+            "name": "GetProductTargetfaillist",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": []
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "product_name",
+                            "description": "<p>產品名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "remark",
+                            "description": "<p>備註</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "certifications",
+                            "description": "<p>徵信項驗證失敗的原因</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        \"list\":[\n            {\n                "id": 1000559,\n                "product_name": "3S名校貸",\n                "remark": "",\n                "certifications": {\n                     "1": {},\n                     "2":{\n                         "name":"學生身份認證",\n                         "description":[\n                             "error msg 1",\n                             "error msg 2"\n                         ]\n                     }\n                 }\n            }\n        ]\n    }\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/targetfaillist"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/product/update",
+            "title": "借款方 調整額度",
+            "version": "0.2.0",
+            "name": "PostProductUpdate",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "amount",
+                            "description": "<p>調整後的額度</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        "target_id": 1000576\n    }\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/update"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/product/re_submit",
+            "title": "借款方 審核失敗，重新提交徵信項",
+            "version": "0.2.0",
+            "name": "PostProductReSubmit",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    \"result\":\"SUCCESS\"\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/re_submit"
                 }
             ]
         }

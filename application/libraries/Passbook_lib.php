@@ -25,6 +25,7 @@ class Passbook_lib{
 		SOURCE_INTEREST,
 		SOURCE_DAMAGE,
 		SOURCE_DELAYINTEREST,
+        SOURCE_CHARITY,
 		SOURCE_TRANSFER,
 		SOURCE_VERIFY_FEE,
 		SOURCE_VERIFY_FEE_R,
@@ -84,21 +85,30 @@ class Passbook_lib{
 		}
 		return false;
 	}
-	
+
 	//取得資金資料
-	public function get_passbook_list($virtual_account='',$limit=false){
+    public function get_passbook_list($virtual_account = '', $limit = FALSE, array $exclude_sources = [], array $where = [], int $total = 0)
+    {
 		$list = [];
 		if($virtual_account){
-		    if(!$limit){
-                $this->CI->virtual_passbook_model->limit($limit);
+            if (empty($exclude_sources))
+            {
+                if ( ! $limit)
+                {
+                    $this->CI->virtual_passbook_model->limit($limit);
+                }
+                $virtual_passbook = $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at', 'asc')->get_many_by(
+                    array_merge(['virtual_account' => $virtual_account], $where)
+                );
             }
-			$virtual_passbook 	= $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at','asc')->get_many_by([
-				'virtual_account' => $virtual_account
-			]);
+            else
+            {
+                $virtual_passbook = $this->CI->virtual_passbook_model->get_list($virtual_account, $exclude_sources, $limit);
+            }
+
 			if($virtual_passbook){
-				$total 	= 0;
 				foreach($virtual_passbook as $key => $value){
-					$total	+= $value->amount;
+					$total	+= intval($value->amount);
 					$list[] = array(
 						'amount' 		=> intval($value->amount),
 						'bank_amount'	=> $total,

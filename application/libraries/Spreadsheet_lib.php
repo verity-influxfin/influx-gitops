@@ -9,6 +9,10 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+
 
 class Spreadsheet_lib
 {
@@ -33,7 +37,7 @@ class Spreadsheet_lib
 	 *     ['target_no' => 'STS2019061700001', 'user_id' => '487']
 	 * ]
 	 */
-	function load($title_rows, $data_rows)
+	function save($title_rows, $data_rows, $filename='export2.xlsx')
 	{
 		$this->spreadsheet = new Spreadsheet();
 		$sheet = $this->spreadsheet->getActiveSheet();
@@ -57,14 +61,20 @@ class Spreadsheet_lib
     {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="export2.xlsx"');
+
+        $this->download($filename, $spreadsheet);
+	}
+
+    function download($filename, $spreadsheet) {
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment;filename={$filename}");
         header('Cache-Control: max-age=0');
         header('Cache-Control: max-age=1');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
         header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
         header('Pragma: public'); // HTTP/1.0
-
-        $writer = new Xlsx($this->spreadsheet);
+        $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
     }
 
@@ -119,8 +129,9 @@ class Spreadsheet_lib
 					$data_value = $this_data_row[$key];
 				}
 
-				$sheet->setCellValueExplicit($column_index . ($row_index), $data_value, $value['datatype'] ?? DataType::TYPE_STRING);
-
+                $data_type = $value['datatype'] ?? DataType::TYPE_STRING;
+                $data_type = is_numeric($data_value) ? DataType::TYPE_NUMERIC : $data_type;
+				$sheet->setCellValueExplicit($column_index . ($row_index), $data_value, $data_type);
 
 				if (isset($value['alignment'])) {
 					$alignment = $sheet->getStyle($column_index . $row_index)->getAlignment();
@@ -180,4 +191,174 @@ class Spreadsheet_lib
 
 		return $result;
 	}
+
+    function get_investor_report_from_html($html, $data) {
+        $html = str_replace('&', '&amp;', $html);
+
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
+        $spreadsheet = $reader->loadFromString($html);
+        $spreadsheet->getProperties()
+            ->setCreator("普匯金融科技股份有限公司")
+            ->setLastModifiedBy("普匯金融科技股份有限公司")
+            ->setTitle("投資人報告書")
+            ->setSubject("投資人報告書")
+            ->setDescription("普匯金融科技股份有限公司-投資人報告書")
+            ->setKeywords("普匯金融科技股份有限公司 投資人報告書")
+            ->setCategory("投資人報告書")
+            ->setCompany('普匯金融科技股份有限公司');
+
+        $width_list = [['column' => 'A', 'width' => 18.33], ['column' => 'B', 'width' => 11.17], ['column' => 'C', 'width' => 8.5],
+            ['column' => 'D', 'width' => 11.17], ['column' => 'E', 'width' => 12.3], ['column' => 'F', 'width' => 6.67],
+            ['column' => 'G', 'width' => 6.67], ['column' => 'H', 'width' => 8.5], ['column' => 'I', 'width' => 7.3],
+            ['column' => 'J', 'width' => 12]];
+        foreach ($width_list as $info)
+        {
+            $spreadsheet->getActiveSheet()->getStyle($info['column'])->getAlignment()->setHorizontal('center');
+            $spreadsheet->getActiveSheet()->getStyle($info['column'])->getAlignment()->setVertical('center');
+            $spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->setAutoSize(TRUE);
+        }
+
+        $alignments = [
+            [
+                'range' => 'A'.($data['start_row']['account_payable_interest']-5).':G'.($data['start_row']['account_payable_interest']-3),
+                'horizontal' => 'left'
+            ]
+        ];
+        $this->set_alignment($spreadsheet, $alignments);
+
+        $format_list = [
+            [
+                'range' => 'D1',
+                'format_code' => '#,##0'
+            ],
+            [
+                'range' => 'B6:D8',
+                'format_code' => '#,##0'
+            ],
+            [
+                'range' => 'B'.($data['start_row']['realized_rate_of_return']+1).':I'.($data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])),
+                'format_code' => '#,##0'
+            ],
+            [
+                'range' => 'B'.($data['start_row']['account_payable_interest']+1).':B'.($data['start_row']['delay_not_return']-3),
+                'format_code' => '#,##0'
+            ],
+            [
+                'range' => 'B'.($data['start_row']['delay_not_return']+1).':B'.($data['start_row']['delay_not_return']+count($data['delay_not_return']??[])),
+                'format_code' => '#,##0'
+            ],
+            [
+                'range' => 'J'.($data['start_row']['realized_rate_of_return']+1).':J'.($data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])),
+                'format_code' => NumberFormat::FORMAT_PERCENTAGE_00
+            ]
+        ];
+        $this->set_format_code($spreadsheet, $format_list);
+
+        $border_list = [
+            [
+                'range' => 'A1:D2',
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['argb' => 'FFFFFFFFF'],
+                    ],
+                    'outline' => [
+                        'borderStyle' => Border::BORDER_THICK,
+                        'color' => ['argb' => 'FFFFFFFFF'],
+                    ]
+
+                ]
+            ],
+            [
+                'range' => 'A5:D8',
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['argb' => 'FFFFFFFFF'],
+                    ]
+                ]
+            ],
+            [
+                'range' => 'A11:J'.($data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])),
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['argb' => 'FFFFFFFFF'],
+                    ]
+                ]
+            ],
+            [
+                'range' => 'A'.$data['start_row']['account_payable_interest'].':B'.($data['start_row']['delay_not_return']-3),
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['argb' => 'FFFFFFFFF'],
+                    ]
+                ]
+            ],
+            [
+                'range' => 'A'.$data['start_row']['delay_not_return'].':B'.($data['start_row']['delay_not_return']+count($data['delay_not_return']??[])),
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['argb' => 'FFFFFFFFF'],
+                    ]
+                ]
+            ]
+        ];
+        $this->set_border($spreadsheet, $border_list);
+
+        // 針對低於最小寬度的欄位重新調整
+        $spreadsheet->getActiveSheet()->calculateColumnWidths();
+        foreach ($width_list as $info) {
+            if($spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->getWidth() < $info['width'])
+            {
+                $spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->setAutoSize(FALSE);
+                $spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->setWidth($info['width']);
+            }
+        }
+
+        $spreadsheet->getActiveSheet()->setSelectedCell('A1');
+        return $spreadsheet;
+    }
+
+    function set_alignment(&$spreadsheet, $alignments)
+    {
+        foreach ($alignments as $alignment)
+        {
+            if(isset($alignment['vertical']))
+            {
+                $spreadsheet->getActiveSheet()->getStyle($alignment['range'])->getAlignment()->setVertical($alignment['vertical']);
+            }
+            if(isset($alignment['horizontal']))
+            {
+                $spreadsheet->getActiveSheet()->getStyle($alignment['range'])->getAlignment()->setHorizontal($alignment['horizontal']);
+            }
+        }
+        return $spreadsheet;
+    }
+
+    function set_format_code(&$spreadsheet, $format_list)
+    {
+        foreach ($format_list as $format)
+        {
+            if (isset($format['format_code']))
+            {
+                $spreadsheet->getActiveSheet()->getStyle($format['range'])->getNumberFormat()->setFormatCode($format['format_code']);
+
+            }
+        }
+        return $spreadsheet;
+    }
+
+    function set_border(&$spreadsheet, $borders) {
+        foreach ($borders as $border)
+        {
+            if (isset($border['range']))
+            {
+                $spreadsheet->getActiveSheet()->getStyle($border['range'])->applyFromArray(['borders' => $border['borders']]);
+            }
+        }
+        return $spreadsheet;
+    }
 }

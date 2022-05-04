@@ -365,3 +365,14 @@
 	border-left-color: #60daaa;
 	transition: border-color 0s ease-out 0.5s, width 0.25s ease-out 0.5s, height 0.25s ease-out 0.75s;
 }
+
+.d-flex {
+    display: flex;
+}
+
+.aic {
+    align-items: center;
+}
+.w-100{
+	width: 100%;
+}

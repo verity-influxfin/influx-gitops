@@ -119,6 +119,23 @@ class Cron extends CI_Controller
 		die('1');
 	}
 
+    // 檢查待簽約案件的核可額度是否過期
+    public function chk_target_signing()
+    {
+        $this->load->library('target_lib');
+        $start_time = time();
+        $count = $this->target_lib->script_chk_signing();
+        $end_time = time();
+        $data = [
+            'script_name' => __FUNCTION__,
+            'num' => $count,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
+
 	public function check_transfer_bidding()
 	{	//每五分鐘
 		$this->load->library('Transfer_lib');
@@ -382,7 +399,7 @@ class Cron extends CI_Controller
 		echo "successCnt:".$successCnt;
 		echo "failedCnt:".$failedCnt;
 	}
-	
+
     public function trigger_edm_event()
     {	//每一小時
         $this->load->library('user_lib');
@@ -637,7 +654,7 @@ class Cron extends CI_Controller
       }
 
       $this->load->model('user/user_model');
-      $meta = $this->user_model->getUsersBy(['certification_id' => CERTIFICATION_IDCARD], ['name', 'id_card_place'], $current->offset, 1);
+      $meta = $this->user_model->getUsersBy(['certification_id' => CERTIFICATION_IDENTITY], ['name', 'id_card_place'], $current->offset, 1);
 
       $this->load->library('scraper/judicial_yuan_lib.php',['ip'=>$ip]);
       $current->userId = $meta['0']->user_id;
@@ -650,7 +667,7 @@ class Cron extends CI_Controller
           $current->offset++;
         }
 
-        $meta = $this->user_model->getUsersBy(['certification_id' => CERTIFICATION_IDCARD], ['name', 'id_card_place'], $current->offset, 1);
+        $meta = $this->user_model->getUsersBy(['certification_id' => CERTIFICATION_IDENTITY], ['name', 'id_card_place'], $current->offset, 1);
 
         if(! empty($meta)){
           $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($meta['0']->name, $meta['0']->id_card_place, $meta['0']->user_id);

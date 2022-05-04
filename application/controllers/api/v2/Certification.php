@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH.'/libraries/REST_Controller.php');
+require_once(APPPATH.'/libraries/REST_Controller.php');
+
+use Certification\Certification_factory;
 
 class Certification extends REST_Controller {
 
@@ -32,11 +34,6 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 
-            //代理人
-            if($tokenData->company==1 && $tokenData->incharge != 1 && $this->user_info->name != null ){
-                $this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
-            }
-
             if($this->request->method != 'get'){
                 $this->load->model('log/log_request_model');
                 $this->log_request_model->insert(array(
@@ -61,17 +58,17 @@ class Certification extends REST_Controller {
                 if($this->user_info->naturalPerson && $this->request->method == 'post'){
                     $this->load->library('certification_lib');
                     //檢核變卡認證，並排除以下認證
-                    if(!in_array($method, ['governmentauthorities','idcard','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody'])){
-                        $cerGovernmentauthorities = $this->certification_lib->get_certification_info($tokenData->id, CERTIFICATION_GOVERNMENTAUTHORITIES, 0);
+                    if(!in_array($method, ['governmentauthorities','identity','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody'])){
+                        $cerGovernmentauthorities = $this->certification_lib->get_certification_info($tokenData->id, CERTIFICATION_GOVERNMENTAUTHORITIES, $this->user_info->investor);
                         if(!$cerGovernmentauthorities && $method != 'governmentauthorities'){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
                         }
                     }
                     //要求先完成實名相關
-                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker','livingBody'])){
-                        $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, 0);
-                        if(!$cerIDCARD){
-                            $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
+                    if(!in_array($method, ['identity','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker','livingBody'])){
+                        $cerIDENTITY = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDENTITY, 0);
+                        if(!$cerIDENTITY){
+                            $this->response(array('result' => 'ERROR','error' => NO_CER_IDENTITY ));
                         }
                     }
 //                elseif(!in_array($method,['debitcard','list','social','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail','governmentauthorities','charter','registerofmembers','mainproductstatus','startupfunds','business_plan','verification','condensedbalancesheet','condensedincomestatement','purchasesalesvendorlist','employeeinsurancelist','companyemail'])){
@@ -223,7 +220,7 @@ class Certification extends REST_Controller {
             //     $user_id = $judicial_person->user_id;
             // }
 
-			$rs	= $this->certification_lib->get_certification_info($user_id,$certification['id'],$investor);
+            $rs = $this->certification_lib->get_certification_info($user_id, $certification['id'], $investor);
             if($rs){
 				$data = array(
 					'alias'				=> $alias,
@@ -298,6 +295,22 @@ class Certification extends REST_Controller {
                     case 14:
                         $fields 	= [];
 						break;
+                    case CERTIFICATION_SOCIAL_INTELLIGENT:
+                        if (isset($rs->content['type']))
+                        {
+                            if ($rs->content['type'] == 'instagram')
+                            {
+                                $ig_exist = 1;
+                            }
+                        }
+                        if (isset($rs->content['instagram']) && $rs->content['instagram'] != NULL)
+                        {
+                            $ig_exist = 1;
+                        }
+                        $ig_bind = isset($ig_exist) ? 1 : 0;
+                        $fields = [];
+                        $data['ig_bind'] = $ig_bind;
+                        break;
 					case 500:
                         $fields 	= [];
 						break;
@@ -394,9 +407,9 @@ class Certification extends REST_Controller {
     }
 
 	/**
-     * @api {post} /v2/certification/idcard 認證 實名認證
+     * @api {post} /v2/certification/identity 認證 實名認證
 	 * @apiVersion 0.2.0
-	 * @apiName PostCertificationIdcard
+	 * @apiName PostCertificationIdentity
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String{2..15}} name 姓名
@@ -451,7 +464,7 @@ class Certification extends REST_Controller {
      *     }
 	 *
      */
-	public function idcard_post()
+	public function identity_post()
     {
 		$certification_id 	= 1;
 		$certification 		= $this->certification[$certification_id];
@@ -532,15 +545,9 @@ class Certification extends REST_Controller {
                 'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
-			if($insert){
-				$this->load->library('scraper/judicial_yuan_lib.php');
-	      $this->judicial_yuan_lib->requestJudicialYuanVerdicts(
-				    $input['name'],
-				    $content['id_card_place'],
-				    $user_id
-				);
-
-				$this->response(array('result' => 'SUCCESS'));
+			if($insert)
+            {
+                $this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
@@ -549,9 +556,9 @@ class Certification extends REST_Controller {
     }
 
     /**
-     * @api {get} /v2/certification/idcard 認證 實名認證
+     * @api {get} /v2/certification/identity 認證 實名認證
      * @apiVersion 0.2.0
-     * @apiName GetCertificationIdcard
+     * @apiName GetCertificationIdentity
      * @apiGroup Certification
      * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String{2..15}} name 姓名
@@ -585,7 +592,7 @@ class Certification extends REST_Controller {
      *     }
      *
      */
-    public function idcard_get()
+    public function identity_get()
     {
         $certification_id 	= 1;
         $certification 		= $this->certification[$certification_id];
@@ -601,7 +608,7 @@ class Certification extends REST_Controller {
 
             $param = array(
                 'user_id'			=> $user_id,
-                'certification_id'	=> CERTIFICATION_IDCARD,
+                'certification_id'	=> CERTIFICATION_IDENTITY,
                 'investor'			=> $investor,
                 'status'            => [1,2]
             );
@@ -723,20 +730,6 @@ class Certification extends REST_Controller {
      *       "error": "510"
      *     }
 	 *
-     * @apiError 511 此學生Email已被使用過
-     * @apiErrorExample {Object} 511
-     *     {
-     *       "result": "ERROR",
-     *       "error": "511"
-     *     }
-	 *
-     * @apiError 204 Email格式錯誤
-     * @apiErrorExample {Object} 204
-     *     {
-     *       "result": "ERROR",
-     *       "error": "204"
-     *     }
-	 *
      */
 	public function student_post()
     {
@@ -757,39 +750,31 @@ class Certification extends REST_Controller {
 				'department',
 				'grade',
 				'student_id',
-				'email',
 				'major',
 				'sip_account',
 				'sip_password'
 			];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+					$this->response(array(
+					    'result'  => 'ERROR',
+                        'error'   => INPUT_NOT_CORRECT,
+                        'err_msg' => $field . 'is empty!'
+                    ));
 				}else{
 					$content[$field] = $input[$field];
 				}
 			}
 
+            // for news 前端判斷email 待app新上版要刪除
+            $content['email'] = '';
+            // alleninflux   2020-02-21 15:29:32 +0800 不知道作用
             isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
 
 			$content['system'] 	 = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
-            isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:"";
-
-			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
-				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
-			}
+      isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:'';
 
 			$this->load->model('user/user_meta_model');
-
-			//Email是否使用過
-			$user_meta = $this->user_meta_model->get_by(array(
-				'meta_key'	=> 'school_email',
-				'meta_value'=> $content['email'],
-			));
-
-			if($user_meta && $user_meta->user_id != $user_id){
-				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTEMAIL_EXIST ));
-			}
 
 			//學號是否使用過
 			$user_meta = $this->user_meta_model->get_by(array(
@@ -812,7 +797,11 @@ class Certification extends REST_Controller {
             foreach ($file_fields as $field) {
                 $image_id = intval($input[$field]);
                 if (!$image_id) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                    $this->response(array(
+                        'result' => 'ERROR',
+                        'error' => INPUT_NOT_CORRECT,
+                        'err_msg' => $field . 'is empty!'
+                    ));
                 }else{
                     $rs = $this->log_image_model->get_by([
                         'id'		=> $image_id,
@@ -820,18 +809,23 @@ class Certification extends REST_Controller {
                     ]);
 
                     if($rs){
+                        $content[$field . '_id'] = $rs->id;
                         $content[$field] = $rs->url;
                     }else{
-                        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                        $this->response(array(
+                            'result' => 'ERROR',
+                            'error' => INPUT_NOT_CORRECT,
+                            'err_msg' => $image_id . 'not found in db!'
+                        ));
                     }
                 }
             }
 
 			$file_fields = [];
             isset($input['transcript_image']) && is_numeric($input['transcript_image'])?$file_fields[]='transcript_image':'';
-            isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:"";
+            isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:'';
             isset($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
-            isset($input['game_work'])?$content['game_work']=$input['game_work']:"";
+            isset($input['game_work'])?$content['game_work']=$input['game_work']:'';
             isset($input['game_work_image']) && !empty($input['game_work_image'])?$file_fields[]='game_work_image':'';
             //多個檔案欄位
             foreach ($file_fields as $field) {
@@ -854,7 +848,10 @@ class Certification extends REST_Controller {
                 }
             }
 
-            $content['graduate_date'] = isset($input['graduate_date'])?$input['graduate_date']:"";
+            $content['graduate_date'] = isset($input['graduate_date'])?$input['graduate_date']:'';
+            $content['school'] = trim($content['school'], ' ');
+            $content['sip_account'] = trim($content['sip_account'], ' ');
+            $content['sip_password'] = trim($content['sip_password'], ' ');
 
 			$param		= array(
 				'user_id'			=> $user_id,
@@ -866,14 +863,7 @@ class Certification extends REST_Controller {
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->load->library('scraper/sip_lib.php');
-				$this->sip_lib->requestSipLogin(
-				    $content['school'],
-				    $content['sip_account'],
-				    $content['sip_password']
-				);
-
-				$this->load->library('Sendemail');
-				$this->sendemail->send_verify_school($insert,$content['email']);
+				$this->sip_lib->requestDeep($content['school'], $content['sip_account'], $content['sip_password']);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -903,24 +893,31 @@ class Certification extends REST_Controller {
     public function student_cards_post()
     {
         $post = $this->input->post(NULL, TRUE);
-        $imageId = isset($post['id']) ? intval($post['id']) : 0;
+        $front_image_id = isset($post['front_id']) ? intval($post['front_id']) : 0;
+        $back_image_id  = isset($post['back_id']) ? intval($post['back_id']) : 0;
 
-        if ($imageId <= 0) {
-            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        if ( ! $front_image_id || ! $back_image_id)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
 
         $this->load->model('log/log_image_model');
-        $imageLog = $this->log_image_model->get($imageId);
+        $front_image_log = $this->log_image_model->get($front_image_id);
+        $back_image_log  = $this->log_image_model->get($back_image_id);
 
         $ownerId = $this->user_info->id;
-        if (!$imageLog || $imageLog->user_id != $ownerId) {
-            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        if ( ! $front_image_log || ! $back_image_log)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
 
-        $ownerId = $this->user_info->id;
+        if ($front_image_log->user_id != $ownerId || $back_image_log->user_id != $ownerId)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
 
-        $this->load->library('image_recognition_lib');
-        $this->image_recognition_lib->requestStudentCardIdentification($imageLog, $ownerId);
+        $this->load->library('student_card_recognition_lib');
+        $this->student_card_recognition_lib->request_student_card_identification($front_image_log, $back_image_log);
 
         $this->response(['result' => 'SUCCESS']);
     }
@@ -931,7 +928,38 @@ class Certification extends REST_Controller {
      * @apiName PostCertificationStudentCards
      * @apiGroup Certification
      * @apiHeader {String} request_token 登入後取得的 Request Token
-     * @apiParam {String} photo id
+     * @apiParam {String} photo front_id
+     * @apiParam {String} photo back_id
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data":
+     *          {
+     *              status' => 0,
+     *              student_id' => '',
+     *              student_department' => '',
+     *              student_academic_degree' => '',
+     *              university' => '',
+     *              spent_time' => 0.15646
+     *          }
+     *    }
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data":
+     *          {
+     *              status' => 1,
+     *              student_id' => 'A100345871',
+     *              student_department' => '資工所',
+     *              student_academic_degree' => '碩士',
+     *              university' => '國立臺灣大學',
+     *              spent_time' => 8.34556
+     *          }
+     *    }
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -941,33 +969,47 @@ class Certification extends REST_Controller {
      *
      * @apiUse InputError
      * @apiUse TokenError
+     * @apiUse PictureNotClearError
      *
      */
     public function student_cards_get()
     {
         $get = $this->input->get(NULL, TRUE);
-        $imageId = isset($get['id']) ? intval($get['id']) : 0;
+        $front_image_id = isset($get['front_id']) ? intval($get['front_id']) : 0;
+        $back_image_id  = isset($get['back_id']) ? intval($get['back_id']) : 0;
+
+        if ( ! $front_image_id || ! $back_image_id)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
 
         $this->load->model('log/log_image_model');
-        $imageLog = $this->log_image_model->get($imageId);
-
-        if (!$imageLog) {
-            $this->response(['result' => 'SUCCESS']);
-        }
+        $front_image_log = $this->log_image_model->get($front_image_id);
+        $back_image_log  = $this->log_image_model->get($back_image_id);
 
         $ownerId = $this->user_info->id;
-        if (!$imageLog || $imageLog->user_id != $ownerId) {
-            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        if ( ! $front_image_log || ! $back_image_log)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
 
-        $this->load->library('image_recognition_lib');
-        $university = $this->image_recognition_lib->getStudentCardIdentification($imageLog);
-
-        if ($university) {
-            $this->response(['result' => 'SUCCESS', 'data' => ['university' => $university]]);
+        if ($front_image_log->user_id != $ownerId || $back_image_log->user_id != $ownerId)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
 
-        $this->response(['result' => 'SUCCESS']);
+        $reference = $front_image_log->id . '-' . $back_image_log->id;
+        $this->load->library('student_card_recognition_lib');
+        $result = $this->student_card_recognition_lib->get_student_card_identification($reference);
+
+        if ( ! $result)
+        {
+            $this->response(['result' => 'ERROR', 'error' => EXIT_ERROR]);
+        }
+        else
+        {
+            $this->response(['result' => 'SUCCESS', 'data' => $result]);
+        }
     }
 
 	/**
@@ -1234,7 +1276,7 @@ class Certification extends REST_Controller {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
 
-            if($investor == 0){
+            if($investor == USER_BORROWER || $investor == USER_INVESTOR){
                 $name_limit = array('爸爸','媽媽','爺爺','奶奶','父親','母親');
                 if(in_array($content['name'],$name_limit)){
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1242,6 +1284,7 @@ class Certification extends REST_Controller {
 
                 $phone_exist = $this->user_model->get_by([
                     'phone'		=> $content['phone'],
+                    'id'        => $user_id,
                     'status'	=> 1,
                 ]);
                 if($phone_exist){
@@ -1625,7 +1668,7 @@ class Certification extends REST_Controller {
      */
 	public function financialWorker_post()
     {
-		$certification_id 	= 14;
+        $certification_id = CERTIFICATION_FINANCIALWORKER;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
@@ -1746,7 +1789,12 @@ class Certification extends REST_Controller {
 			if($insert){
                 // 有傳圖片的話轉人工，沒有自動過件
                 if($should_check == false){
-                    $this->certification_lib->set_success($insert);
+                    $info = $this->user_certification_model->order_by('certification_id', 'DESC')->get_by([
+                        'certification_id' => $certification_id,
+                        'user_id' => $user_id
+                    ]);
+                    $cert = Certification_factory::get_instance_by_model_resource($info);
+                    $cert->set_success(TRUE);
                 }
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
@@ -1841,7 +1889,7 @@ class Certification extends REST_Controller {
                 case "instagram":
                     $this->load->library('scraper/instagram_lib');
                     $log_status = $this->instagram_lib->getLogStatus($user_id, $input['access_token']);
-                    $info['username'] = $input['access_token'];
+                    $info['username'] = preg_replace('/\s+/', '', $input['access_token']);
                     $info['link'] = 'https://www.instagram.com/' . $input['access_token'];
                     $info['info'] = [];
                     $time = isset($log_status['response']['result']['updatedAt']) ? $log_status['response']['result']['updatedAt'] : 0;
@@ -1912,6 +1960,110 @@ class Certification extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
+
+     /**
+     * @api {post} /v2/certification/social_intelligent 認證 (名校貸)社交認證
+     * @apiVersion 0.2.0
+     * @apiName PostCertificationSocialIntelligent
+     * @apiGroup Certification
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {String=instagram} type 認證類型
+     * @apiParam {String} access_token Instagram AccessToken
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse InsertError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     * @apiUse IsCompany
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+     *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {Object} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+     *
+     */
+    public function social_intelligent_post()
+    {
+        $certification_id = CERTIFICATION_SOCIAL_INTELLIGENT;
+        $certification = $this->certification[$certification_id];
+        if ($certification && $certification['status'] == CERTIFICATION_STATUS_SUCCEED)
+        {
+            $input = $this->input->post(NULL, TRUE);
+            $type = $input['type'];
+            $user_id = $this->user_info->id;
+            $investor = $this->user_info->investor;
+
+            $fields = ['access_token'];
+            foreach ($fields as $field)
+            {
+                if (empty($input[$field]))
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                }
+            }
+            switch ($type)
+            {
+                case 'instagram':
+                    $this->load->library('scraper/instagram_lib');
+                    $log_status = $this->instagram_lib->getLogStatus($user_id, $input['access_token']);
+                    $info['username'] = $input['access_token'];
+                    $info['link'] = 'https://www.instagram.com/' . $input['access_token'];
+                    $info['info'] = [];
+                    $time = isset($log_status['response']['result']['updatedAt']) ? $log_status['response']['result']['updatedAt'] : 0;
+                    if ($log_status && $log_status['status'] == SCRAPER_STATUS_NO_CONTENT || $time > strtotime('-72 hours'))
+                    {
+                        $this->instagram_lib->updateRiskControlInfo($user_id, $input['access_token']);
+                    }
+
+                    $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
+                        'user_id' => $user_id,
+                        'certification_id' => $certification_id,
+                        'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
+                        'investor' => $investor,
+                    ]);
+                    if (empty($get_data))
+                    {
+                        $initialize_id = $this->social_initialize($user_id, $investor, CERTIFICATION_SOCIAL_INTELLIGENT);
+                        $content = [
+                            'facebook' => '',
+                            'instagram' => $info,
+                        ];
+                        $rs = $this->user_certification_model->update($initialize_id, ['content' => json_encode($content)]);
+                        $rs ? $this->response(array('result' => 'SUCCESS'))
+                            : $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+                    }
+                    else
+                    {
+                        $content_data = json_decode($get_data->content);
+                        $content = [
+                            'facebook' => $content_data->facebook,
+                            'instagram' => $info,
+                        ];
+                        $rs = $this->user_certification_model->update($get_data->id, ["content" => json_encode($content)]);
+                        $rs ? $this->response(array('result' => 'SUCCESS'))
+                            : $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+                    }
+                    break;
+            }
+        }
+        $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+    }
+
 
 	/**
      * @api {post} /v2/certification/diploma 認證 最高學歷認證
@@ -2159,6 +2311,7 @@ class Certification extends REST_Controller {
                 'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
+
 			if($insert){
 			    if($send_mail){
                     $this->notification_lib->notice_cer_investigation($user_id, implode(' / ', $target));
@@ -2348,6 +2501,7 @@ class Certification extends REST_Controller {
 			$content['type'] 		  = array_key_exists(intval($input['type']),$job_type_name)?intval($input['type']):0;
 			$content['seniority'] 	  = array_key_exists(intval($input['seniority']),$seniority_range)?intval($input['seniority']):0;
 			$content['job_seniority'] = array_key_exists(intval($input['job_seniority']),$seniority_range)?intval($input['job_seniority']):0;
+            $content['job_title'] = $input['job_title'] ?? ''; // 工作職稱
 
 			// 使用者手填資料
 			$content['LaborQryDate'] = isset($input['LaborQryDate']) ? $input['LaborQryDate'] : '';
@@ -2501,11 +2655,12 @@ class Certification extends REST_Controller {
         $input 		= $this->input->post(NULL, TRUE);
         $user_id 	= $this->user_info->id;
         $investor 	= $this->user_info->investor;
-        $targetId   = $input['target_id'];
 
-        if(!isset($targetId)) {
-            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT));
+        if ( ! isset($input['target_id']))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
         }
+        $targetId = $input['target_id'];
 
         $target = $this->target_model->get($targetId);
         if(!isset($target)) {
@@ -2520,8 +2675,18 @@ class Certification extends REST_Controller {
 
         $this->load->library('Certification_lib');
         $result = $this->certification_lib->verify_certifications($target, 1);
-        if($result)
+        if ($result)
+        {
+            $this->load->helper('product');
+            if (is_judicial_product($target->product_id) === FALSE)
+            {
+                $this->target_model->update($targetId, [
+                    'status' => TARGET_WAITING_APPROVE,
+                    'certificate_status' => TARGET_CERTIFICATE_SUBMITTED
+                ]);
+            }
             $this->response(['result' => 'SUCCESS']);
+        }
         else
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
@@ -4028,18 +4193,27 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['employeeinsurancelist_image'];
+            $fields 	= ['employeeinsurancelist_image', 'affidavit_image'];
+            $empty_flag = TRUE;
             foreach ($fields as $field) {
-                if (empty($input[$field])) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }else{
+                if (isset($input[$field]) && ! empty($input[$field]))
+                {
+                    $empty_flag = FALSE;
                     $content[$field] = $input[$field];
                 }
             }
+            if($empty_flag)
+            {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
 
-            $file_fields = ['employeeinsurancelist_image'];
+            $file_fields = ['employeeinsurancelist_image', 'affidavit_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
+                if ( ! isset($content[$field]) || empty($content[$field]))
+                {
+                    continue;
+                }
                 $image_ids = explode(',',$content[$field]);
                 if(count($image_ids)>15){
                     $image_ids = array_slice($image_ids,0,15);
@@ -4276,14 +4450,16 @@ class Certification extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
         }
 	}
-	private function social_initialize($user_id,$investor){
+
+    private function social_initialize($user_id, $investor, $certification_id = CERTIFICATION_SOCIAL)
+    {
         $content = [
 			'facebook' => '',
 			'instagram' => '',
         ];
         $param	= [
 			'user_id'			=> $user_id,
-			'certification_id'	=> 4,
+			'certification_id'	=> $certification_id,
 			'investor'			=> $investor,
 			'content'			=> json_encode($content),
             'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE

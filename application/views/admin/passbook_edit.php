@@ -16,6 +16,28 @@
 				alert("金額過小");
 			}
 		}
+
+        function showChang(searchDate) {
+            const url = new URL(location.href);
+            const searchParams = url.searchParams;
+            url.search = new URLSearchParams({
+                id: searchParams.get('id'),
+                sdate: searchDate || $("#sdate").val(),
+                edate: searchDate || $("#edate").val()
+            });
+            window.location = url.href;
+        }
+
+        function showAll() {
+            showChang('all');
+        }
+
+        function showToday() {
+            let today = new Date();
+            showChang(
+                today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+            );
+        }
 	</script>
 
         <div id="page-wrapper">
@@ -31,6 +53,37 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
+                            <table>
+                                <tr>
+                                    <td>指定區間</td>
+                                    <td>：</td>
+                                    <td>
+                                        <a href="javascript:void(0)" target="_self" onclick="showToday()"
+                                           class="btn btn-default float-right btn-md">本日</a>
+                                        <a href="javascript:void(0)" target="_self" onclick="showAll()"
+                                           class="btn btn-default float-right btn-md">全部</a></td>
+                                    <td><input type="text" value="<?= $sdate == 'all' ? '' : $sdate ?>" id="sdate"
+                                               data-toggle="datepicker"/> -
+                                        <input type="text" value="<?= $edate == 'all' ? '' : $edate ?>" id="edate"
+                                               data-toggle="datepicker"/></td>
+                                    <td><a href="javascript:void(0)" onclick="showChang();"
+                                           class="btn btn-default float-right btn-md">查詢</a></td>
+                                </tr>
+                                <tr>
+                                    <td>查詢範圍區間</td>
+                                    <td>：</td>
+                                    <td><?= $sdate == 'all' ? '全部' : $sdate . ' - ' . $edate ?></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">查詢結果</td>
+                                    <td rowspan="2">：</td>
+                                    <td>交易明細：<?= count($list) ?>筆</td>
+                                </tr>
+                                <tr>
+                                    <td>待交易紀錄：<?= count($frozen_list) ?>筆</td>
+                                </tr>
+                            </table>
+                            <hr/>
 							<table>
 								<? if ($virtual_account->virtual_account == PLATFORM_VIRTUAL_ACCOUNT){?>
 								<tr>

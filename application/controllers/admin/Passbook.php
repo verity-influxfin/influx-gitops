@@ -46,6 +46,7 @@ class Passbook extends MY_Admin_Controller {
 	public function edit(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?$get['id']:'';
+        $exclude_sources = [];
 		$virtual_accounts = [PLATFORM_VIRTUAL_ACCOUNT,PLATFORM_TAISHIN_VIRTUAL_ACCOUNT];
 		if(in_array($id,$virtual_accounts)){
 			$virtual_account = new stdClass();
@@ -58,8 +59,36 @@ class Passbook extends MY_Admin_Controller {
 		}
 
 		if($virtual_account){
-			$list 				= $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
-			$frozen_list 		= $this->frozen_amount_model->order_by('tx_datetime','ASC')->get_many_by(array('virtual_account'=>$virtual_account->virtual_account));
+
+            $sdate = ! empty($get['sdate']) ? $get['sdate'] : get_entering_date();
+            $edate = ! empty($get['edate']) ? $get['edate'] : get_entering_date();
+
+            $page_data = [
+                'sdate' => $sdate,
+                'edate' => $edate
+            ];
+            $this->load->model('transaction/virtual_passbook_model');
+            if ($sdate !== 'all' && $edate !== 'all')
+            {
+                $where = [
+                    'tx_datetime >=' => $sdate,
+                    'tx_datetime <' => date('Y-m-d', strtotime($edate . '+1 day'))
+                ];
+                $init_bank_amount = $this->virtual_passbook_model->get_sum_amount([
+                    'tx_datetime <' => $sdate,
+                    'virtual_account' => $virtual_account->virtual_account
+                ]);
+            }
+            else
+            {
+                $where = [];
+                $init_bank_amount = 0;
+            }
+            $list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account, FALSE, $exclude_sources, $where, $init_bank_amount);
+            $frozen_list = $this->frozen_amount_model->order_by('tx_datetime', 'ASC')->get_many_by(array_merge(
+                array('virtual_account' => $virtual_account->virtual_account),
+                $where
+            ));
 			$frozen_type 		= $this->frozen_amount_model->type_list;
 			$page_data['list'] 					= $list;
 			$page_data['virtual_account'] 		= $virtual_account;
