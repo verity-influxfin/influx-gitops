@@ -102,20 +102,130 @@
                 </div>
             </div>
         </div>
-        <!-- 計數器 -->
-        <!-- <div class="計數器">
-            <alesis-space size="small"></alesis-space>
-
-            <alesis-space size="medium"></alesis-space>
-        </div> -->
-        <!-- / 計數器 -->
+        <div class="index-loan">
+            <div class="block-content">
+                <div class="block-title">一支手機，完成貸款</div>
+                <div class="block-info">隨借隨貸，安全零距離</div>
+                <div class="row no-gutters loan-imgs">
+                    <img id="img58" src="@/asset/images/index/img58.png">
+                    <img id="img56" src="@/asset/images/index/img56.png">
+                    <img id="img57" src="@/asset/images/index/img57.png">
+                </div>
+            </div>
+        </div>
+        <div class="index-service">
+            <div class="block-content">
+                <div class="block-title">我們的服務</div>
+                <div class="block-info">提供多元個人及企業融資貸款管道平台</div>
+                <div class="row no-gutters service-imgs">
+                    <img id="service-1" src="@/asset/images/index/service-1.png">
+                    <div class="service-groups">
+                        <div class="group">
+                            <div class="item">簡單</div>
+                            <div class="item">快速</div>
+                            <div class="item">方便</div>
+                        </div>
+                        <div class="group">
+                            <div class="item">安全</div>
+                            <div class="item">便利</div>
+                            <div class="item">輕鬆</div>
+                        </div>
+                        <div class="group">
+                            <div class="item">特點</div>
+                            <div class="item">特點</div>
+                            <div class="item">特點</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="index-tech">
+            <div class="block-content row no-gutters">
+                <div class="col-6"></div>
+                <div class="col-6">
+                    <div class="block-title">唯一多項驗證專利</div>
+                    <div class="block-info">台灣金融科技的領導者</div>
+                    <div class="step-container">
+                        <div class="step-content-1">
+                            <div class="step-content-title">強大的專利技術</div>
+                            <div class="step-content-info">
+                                <div>
+                                    普匯經由專業的科技開發團隊，開發個人實名認證、
+                                    企業身份驗證流程，並確實具有法律效益，分別在
+                                    109、110年成功申請裝置系統驗證專利。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-content-2">
+                            <div class="step-content-title">法人實名認證裝置</div>
+                            <div class="step-content-info">
+                                <div>
+                                    普匯，你的手機ATM 為了使申貸無人化，用戶資產以及資訊
+                                    安全受到保障，我們持續地精進自己，於2021年取得法人實
+                                    名裝置專利，將以往繁瑣的申貸流程濃縮到你的手機中。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-content-3">
+                            <div class="step-content-title">身份驗證裝置</div>
+                            <div class="step-content-info">
+                                <div>
+                                    為了你的資產安全，我們不遺餘力，普匯於2020年取得
+                                    身份驗證裝置專利，讓借款人以及投資人的資產收到保障
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="index-tech">
+            <div class="block-content row no-gutters">
+                <div class="col-6">
+                    <div class="block-title">新創融資貸款</div>
+                    <div class="block-info">我是文字我是文字</div>
+                    <div class="step-container">
+                        <div class="step-content-1">
+                            <div class="step-content-title">強大的專利技術</div>
+                            <div class="step-content-info">
+                                <div>
+                                    普匯經由專業的科技開發團隊，開發個人實名認證、
+                                    企業身份驗證流程，並確實具有法律效益，分別在
+                                    109、110年成功申請裝置系統驗證專利。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-content-2">
+                            <div class="step-content-title">法人實名認證裝置</div>
+                            <div class="step-content-info">
+                                <div>
+                                    普匯，你的手機ATM 為了使申貸無人化，用戶資產以及資訊
+                                    安全受到保障，我們持續地精進自己，於2021年取得法人實
+                                    名裝置專利，將以往繁瑣的申貸流程濃縮到你的手機中。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-content-3">
+                            <div class="step-content-title">身份驗證裝置</div>
+                            <div class="step-content-info">
+                                <div>
+                                    為了你的資產安全，我們不遺餘力，普匯於2020年取得
+                                    身份驗證裝置專利，讓借款人以及投資人的資產收到保障
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6"></div>
+            </div>
+        </div>
 
         <!-- 服務區塊 -->
         <div class="服務區塊">
+            <alesis-space size="small"></alesis-space>
             <alesis-header>
                 <div class="標題">我們的服務</div>
             </alesis-header>
-
             <alesis-space size="small"></alesis-space>
             <alesis-section :secondary="true">
                 <alesis-space class="hidden-phone" size="medium"></alesis-space>
@@ -631,7 +741,6 @@ import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisSpace             from "../component/alesis/AlesisSpace";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
-import histroyDot from "../component/svg/histroyDotComponent";
 
 // 遠端資料
 import PlanData from "../data/index_plans"
@@ -646,6 +755,8 @@ import "swiper/components/navigation/navigation.min.css"
 import SwiperCore, {
   Navigation
 } from 'swiper/core';
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default {
     components: {
@@ -715,6 +826,33 @@ export default {
         $("title").text(`首頁 - inFlux普匯金融科技`);
     },
     mounted() {
+        gsap.registerPlugin(ScrollTrigger)
+        gsap.from('#img58',{
+            scrollTrigger:{
+                trigger:'.index-loan',
+                start: "-240px top",
+                // markers:true,
+            },
+            x:-1200,
+            duration:2
+        })
+        gsap.from('#img57',{
+            scrollTrigger:{
+                trigger:'.index-loan',
+                start: "-240px top",
+            },
+            x:1200,
+            duration:2
+        })
+        gsap.from('#img56',{
+            scrollTrigger:{
+                trigger:'.index-loan',
+                start: "-240px top",
+            },
+            y:1200,
+            duration:2
+        })
+
          alesisIndexCounter().then((v) => {
              this.indexCounter = v
         });
@@ -1916,6 +2054,11 @@ export default {
         }
     }
 }
+.block-content{
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
 .index-intro{
     background-image: url('~images/index/index-header-bg.png');
     background-position: center;
@@ -2027,6 +2170,183 @@ export default {
             }
         }
 
+    }
+}
+.index-loan{
+    padding: 70px 70px;
+    .block-title{
+        color: #036EB7;
+        font-size: 32px;
+        text-align: center;
+    }
+    .block-info{
+        color: #036EB7;
+        font-size: 20px;
+        margin-top: 24px;
+        opacity: 0.64;
+        text-align: center;
+    }
+    .loan-imgs{
+        padding: 35px 0;
+        position: relative;
+        height: 900px;
+        #img56{
+            display: block;
+            margin: auto;
+        }
+        #img58{
+            left: -50px;
+            bottom: -12px;
+            position: absolute;
+            transform: matrix(1, 0.08, 0.08, 1, 0, 0);
+        }
+        #img57{
+            top: -20px;
+            right: -232px;
+            position: absolute;
+            transform: rotate(-7.93deg);
+        }
+    }
+}
+@keyframes service {
+    3% {
+      right: -125px;
+      opacity: 0.4;
+      filter: alpha(opacity=20);
+    }
+    20%{
+        right: 125px;
+        opacity: 1;
+        filter: alpha(opacity=0);
+    }
+    45%{
+        right: 125px;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+}
+.index-service{
+    padding: 70px 70px;
+    .block-title{
+        color: #036EB7;
+        font-size: 32px;
+        text-align: center;
+    }
+    .block-info{
+        color: #036EB7;
+        font-size: 20px;
+        margin-top: 24px;
+        opacity: 0.64;
+        text-align: center;
+    }
+    .service-imgs{
+        padding: 35px 0;
+        position: relative;
+        height: 900px;
+        #service-1{
+            display: block;
+            margin: auto;
+        }
+    }
+    .service-groups{
+        margin-top: 300px;
+        .group{
+            right: -300px;
+            position: absolute;
+            opacity: 0;
+            filter: alpha(opacity=0);
+            animation: service 12s linear infinite;
+        }
+        .group .item{
+            font-size: 20px;
+            padding: 5px 50px;
+            margin-bottom: 10px;
+            border: 1.5px solid #036EB7;
+            border-radius: 12px;
+            color: #393939;
+        }
+        .group:nth-child(1){
+            animation-delay: 0s;
+        }
+        .group:nth-child(2){
+            animation-delay: 4s;
+        }
+        .group:nth-child(3){
+            animation-delay: 8s;
+        }
+    }
+}
+.index-tech{
+    padding: 70px 70px;
+    .block-title{
+        color: #036EB7;
+        font-size: 32px;
+        text-align: center;
+    }
+    .block-info{
+        color: #036EB7;
+        font-size: 20px;
+        margin-top: 24px;
+        opacity: 0.64;
+        text-align: center;
+    }
+    .step-container{
+        margin: 45px auto;
+        width: fit-content;
+        position: relative;
+    }
+    .step-content-1{
+        width: 420px;
+        padding: 0 15px 10px 0;
+        .step-content-title::before{
+            content: '1';
+        }
+    }
+    .step-content-2{
+        width: 420px;
+        padding: 0 15px 10px 0;
+        .step-content-title::before{
+            content: '2';
+        }
+        .step-content-info{
+            border-left: 5px solid #f29600;
+        }
+    }
+    .step-content-3{
+        width: 420px;
+        padding: 0 15px 10px 0;
+        .step-content-title::before{
+            content: '3';
+        }
+    }
+    .step-content-title{
+        padding-left: 30px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        color: #036FB7;
+        &::before{
+            background: #036FB7;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 500;
+            position: absolute;
+            left: -16px;
+            text-align: center;
+            width: 36px;
+        }
+    }
+    .step-content-info{
+        margin: 15px 0;
+        padding-left: 30px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 23px;
+        color: #023D64;
+        opacity: 0.56;
+        border-left: 5px solid #036FB7;
     }
 }
 .product-step{
@@ -2306,11 +2626,6 @@ export default {
 /**
     user experience
 */
-.block-content{
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-}
 .user-experience{
     position: relative;
     background-image: url('~images/user_experence_cover.png');
