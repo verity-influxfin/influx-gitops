@@ -848,7 +848,7 @@ class User_lib {
         return (int)$responsible_user_id;
     }
 
-     * 取得首次投資資訊
+     /** 取得首次投資資訊
      * @param $user_id
      * @return array
      */
