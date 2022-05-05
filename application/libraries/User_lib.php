@@ -839,7 +839,7 @@ class User_lib {
         $responsible_user_id = $rs->meta_value;
 
         $this->CI->load->library('Certification_lib');
-        $user_certification = $this->CI->certification_lib->get_certification_info($responsible_user_id, CERTIFICATION_IDCARD,
+        $user_certification = $this->CI->certification_lib->get_certification_info($responsible_user_id, CERTIFICATION_IDENTITY,
             $investor);
         if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
         {
