@@ -161,6 +161,8 @@
         },
         methods: {
             doSubmit() {
+                let selector = this.$el;
+                $(selector).find('button[type=submit]').attr('disabled', true).text('資料更新中...');
                 return axios.post('/admin/target/save_meta_info', {
                     meta: {...this.formData},
                     id: this.page_id

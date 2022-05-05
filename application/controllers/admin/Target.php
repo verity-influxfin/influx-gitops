@@ -2310,15 +2310,33 @@ class Target extends MY_Admin_Controller {
         {
             $this->json_output->setStatusCode(204)->setErrorCode(INPUT_NOT_CORRECT)->setErrorMessage('查無使用者資料')->send();
         }
-
+        $response['data'] = [
+            'user_id' => $user_info->user_id,
+            'meta_info' => []
+        ];
         $this->load->model('loan/target_meta_model');
         $meta_info = $this->target_meta_model->get_many_by([
             'target_id' => $get['id']
         ]);
-        $response['data'] = [
-            'user_id' => $user_info->user_id,
-            'meta_info' => array_column($meta_info, 'meta_value', 'meta_key')
-        ];
+        array_walk($meta_info, function ($element) use (&$response) {
+            switch ($element->meta_key)
+            {
+                case 'changes': // 人力變動狀況
+                    $index = $pow = 0;
+                    while ($element->meta_value >= $pow)
+                    {
+                        $pow = pow(2, ++$index);
+                        if ($element->meta_value & $pow)
+                        {
+                            $element->meta_value -= $pow;
+                            $response['data']['meta_info'][$element->meta_key][] = $index;
+                        }
+                    }
+                    break;
+                default:
+                    $response['data']['meta_info'][$element->meta_key] = $element->meta_value;
+            }
+        });
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
@@ -2338,7 +2356,15 @@ class Target extends MY_Admin_Controller {
         $this->load->model('loan/target_meta_model');
         foreach ($post['meta'] as $key => $value)
         {
-            $value = is_array($value) ? json_encode($value) : $value;
+            if (is_array($value))
+            {
+                $value_tmp = 0;
+                array_walk($value, function ($element) use (&$value_tmp) {
+                    $value_tmp += pow(2, $element);
+                });
+                $value = $value_tmp;
+            }
+
             $exist = $this->target_meta_model->get_by(array('target_id' => $post['id'], 'meta_key' => $key));
             if ($exist)
             {
