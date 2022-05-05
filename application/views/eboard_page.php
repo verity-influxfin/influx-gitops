@@ -670,24 +670,6 @@
 					],
 					series: [
 						{
-							name: '3S',
-							type: 'bar',
-							barWidth: 9,
-							label: {
-								show: true,
-								position: 'top',
-								fontSize: '10',
-								color: '#fff',
-								formatter: (x) => {
-									return x.value > 0 ? x.value : ''
-								}
-							},
-							itemStyle: {
-								borderRadius: [4, 4, 0, 0],
-							},
-							data: data.map(x => x.product_bids['SMART_STUDENT'])
-						},
-						{
 							name: '學生貸',
 							type: 'bar',
 							barWidth: 9,
