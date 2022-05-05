@@ -18,6 +18,17 @@ class Sales_lib_test extends TestCase
         $this->obj = $this->CI->sales_lib;
     }
 
+    public function test_calculate()
+    {
+        $expected_key = 'total_deals';
+        $expected_count = 15;
+
+        $datas = $this->obj->calculate();
+
+        $this->assertArrayHasKey($expected_key, $datas);
+        $this->assertEquals($expected_count, count($datas));
+    }
+
     public function test_get_goals()
     {
         $expected_keys = ['goal_a_month', 'goal_per_day'];

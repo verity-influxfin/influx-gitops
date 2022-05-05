@@ -13,15 +13,22 @@ class Sale_dashboard_model_test extends TestCase
     {
         $expected = 16;
 
+        $date = new DateTimeImmutable(date('Y-m-d'));
         $input_types = [$this->obj::TARGET_WEB_TRAFFIC];
 
-        $date = new DateTimeImmutable(date('Y-m-d'));
         $amounts1 = $this->obj->get_amounts_at($date);
-
         $this->assertEquals($expected, count($amounts1));
 
         $amounts2 = $this->obj->get_amounts_at($date, $input_types);
         $this->assertEquals($expected, count($amounts2));
+    }
+
+    public function test_set_amounts_at()
+    {
+        $date = new DateTimeImmutable(date('2022-01-01'));
+        $return = $this->obj->set_amounts_at($date, 0, '999');
+
+        $this->assertNull($return);
     }
 
     public function test_get_loan_mapping_eboard_key_to_type()
@@ -63,5 +70,4 @@ class Sale_dashboard_model_test extends TestCase
         $data = $this->obj->get_amounts_by_month($has_data_month);
         $this->assertEquals($expected, count($data));
     }
-
 }
