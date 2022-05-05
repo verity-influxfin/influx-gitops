@@ -115,8 +115,8 @@
 		.rank-item {
 			color: #fff;
 			font-size: 20px;
-			margin: 8px;
-			text-align: center;
+			margin: 8px auto;
+			width: max-content;
 		}
 
 		@keyframes marquee {
@@ -323,7 +323,9 @@
 				charts.real = echarts.init(document.getElementById('real-1'))
 				charts.qr = echarts.init(document.getElementById('qr-1'))
 				charts.qr2 = echarts.init(document.getElementById('qr-2'))
-				getData()
+				getData().then(()=>{
+					nextQrData()
+				})
 			})
 
 			const covertNum = (num) => {
@@ -336,7 +338,7 @@
 					axios.get('/assets/eboard/taiwan.json').then(function ({ data }) {
 						state.geoJson = data
 					})
-				axios.get("/page/get_eboard_data").then(function ({ data }) {
+				return axios.get("/page/get_eboard_data").then(function ({ data }) {
 					state.data = data.data.history.reverse()
 					state.weather = data.data.weather
 					state.data.app_download = data.data.app_download
@@ -356,10 +358,8 @@
 					drawTable2()
 					drawTable3()
 					drawReal()
-					nextQrData()
 					drawGeo()
-					drawQr2()
-					setTimeout(getData, 300000)
+					setTimeout(()=>{getData}, 300000)
 				})
 			}
 
