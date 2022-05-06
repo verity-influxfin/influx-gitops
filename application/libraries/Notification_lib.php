@@ -42,7 +42,7 @@ class Notification_lib{
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type, FALSE, FALSE, FALSE, $investor);
 
 		return $rs;
 	}
@@ -69,7 +69,7 @@ class Notification_lib{
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type, FALSE, FALSE, FALSE, $investor);
 
 		return $rs;
 	}
@@ -188,7 +188,7 @@ class Notification_lib{
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03', FALSE, FALSE, FALSE, $investor);
 		return $rs;
 	}
 
@@ -208,7 +208,7 @@ class Notification_lib{
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03', FALSE, FALSE, FALSE, $investor);
 		return $rs;
 	}
 
@@ -227,7 +227,7 @@ class Notification_lib{
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), 'b03');
+        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), 'b03', FALSE, FALSE, FALSE, $investor);
         return $rs;
     }
 
@@ -249,7 +249,7 @@ class Notification_lib{
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03', FALSE, FALSE, FALSE, $investor);
         return $rs;
     }
 
@@ -267,7 +267,7 @@ class Notification_lib{
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), 'b03');
+        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), 'b03', FALSE, FALSE, FALSE, INVESTOR);
         return $rs;
     }
 
@@ -283,7 +283,7 @@ class Notification_lib{
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03', FALSE, FALSE, FALSE, $investor);
         return $rs;
     }
 
@@ -498,7 +498,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type,$attach);
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type,$attach, FALSE, FALSE, $investor);
 		return $rs;
 	}
 
@@ -515,7 +515,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'i08');
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'i08', FALSE, FALSE, FALSE, INVESTOR);
 		return $rs;
 	}
 
@@ -536,7 +536,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type, FALSE, FALSE, FALSE, $investor);
 		return $rs;
 	}
 
@@ -614,7 +614,7 @@ $name 您好，
 
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type, FALSE, FALSE, FALSE, $investor);
 		return $rs;
 	}
 
@@ -696,7 +696,7 @@ $name 您好，
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'i08');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'i08', FALSE, FALSE, FALSE, INVESTOR);
         return $rs;
     }
 
@@ -734,7 +734,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'i08');
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'i08', FALSE, FALSE, FALSE, $investor);
 		return $rs;
 	}
 
@@ -957,7 +957,7 @@ econtent;
                     $this->CI->user_notification_model->insert($param);
                 }
                 $this->CI->load->library('Sendemail');
-                $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+                $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type, FALSE, FALSE, FALSE, $param['investor'] ?? 0);
                 $count++;
             }
             $this->CI->load->library('parser');
@@ -1040,7 +1040,7 @@ econtent;
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03', FALSE, FALSE, FALSE, INVESTOR);
         return $rs;
     }
 
@@ -1071,7 +1071,7 @@ econtent;
 
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type, FALSE, FALSE, FALSE, $investor);
         return $rs;
 	}
 
