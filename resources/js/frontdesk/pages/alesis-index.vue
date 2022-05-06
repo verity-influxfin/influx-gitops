@@ -141,7 +141,9 @@
     </div>
     <div class="index-tech section">
       <div class="block-content row no-gutters">
-        <div class="col-6"></div>
+        <div class="col-6 d-flex align-items-center">
+          <img src="@/asset/images/index/img60.png" alt="" />
+        </div>
         <div class="col-6">
           <div class="block-title">唯一多項驗證專利</div>
           <div class="block-info">台灣金融科技的領導者</div>
@@ -216,7 +218,74 @@
             </div>
           </div>
         </div>
-        <div class="col-6"></div>
+        <div class="col-6 d-flex align-items-center">
+          <img
+            src="@/asset/images/index/cart_shopping_3d_render_10 1.png"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+    <div class="index-cert section">
+      <div class="block-content">
+        <div class="block-title">普匯一路上獲得了許多的認證</div>
+        <div class="block-info">我們努力就是為了讓用戶安心</div>
+        <div class="swiper-container cert-swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide cert-cards">
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-cover">
+                    <img src="@/asset/images/index/handshake2.png" alt="" />
+                  </div>
+                  <div class="card-title">新光金控創投入資</div>
+                  <div class="card-divider"></div>
+                  <div class="card-text">
+                    2021年6月榮獲「新光金控創投」 挹資入股董事，是首家獲得金控
+                    投資的金融科技公司，更奠定了 普匯在金融科技領域的品牌領導
+                    地位。
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-cover">
+                    <img src="@/asset/images/index/handshake2.png" alt="" />
+                  </div>
+                  <div class="card-title">獲得多家銀行搶先合作</div>
+                  <div class="card-divider"></div>
+                  <div class="card-text">
+                    普匯提供使用者體驗快速簡單便利的金融科技感受，加上穩定成長的會員，分別與凱基、上海銀行攜手信貸業務合作，更於2021年與新光銀行首次合作線上微型企業貸款。
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-cover">
+                    <img src="@/asset/images/index/handshake2.png" alt="" />
+                  </div>
+                  <div class="card-title">最年輕的借款APP</div>
+                  <div class="card-divider"></div>
+                  <div class="card-text">
+                    普匯從學生貸起家，目前已是全國最大學生金融科技平台;並踏入上班族以及企業貸款，憑藉快速、簡單、方便的特性，普匯已成為最受年輕人借貸喜愛使用的APP。
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-cover">
+                    <img src="@/asset/images/index/handshake2.png" alt="" />
+                  </div>
+                  <div class="card-title">ESG綠色金融科技平台</div>
+                  <div class="card-divider"></div>
+                  <div class="card-text">
+                    普匯運用P2P點對點技術，建構區塊鏈底層，結合AI自動化風控技術，打造符合ESG綠色金融科技平台環境，符合未來環保趨勢。
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="product-step section">
@@ -625,34 +694,32 @@
 </template>
 
 <script>
-import AlesisCounter from "../component/alesis/AlesisCounter";
-import float from "../component/floatComponent";
-import { alesisIndexCounter } from "./api"
-import 'swiper/swiper.scss';
-import "swiper/components/navigation/navigation.min.css"
-import SwiperCore, {
-  Navigation
-} from 'swiper/core';
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AlesisCounter from '../component/alesis/AlesisCounter'
+import float from '../component/floatComponent'
+import { alesisIndexCounter } from './api'
+import 'swiper/swiper.scss'
+import 'swiper/components/navigation/navigation.min.css'
+import SwiperCore, { Navigation } from 'swiper/core'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export default {
   components: {
     float,
-    AlesisCounter,
+    AlesisCounter
   },
   data: () => ({
-    indexCounter: {},
+    indexCounter: {}
   }),
   created() {
-    $("title").text(`首頁 - inFlux普匯金融科技`);
+    $('title').text(`首頁 - inFlux普匯金融科技`)
   },
   mounted() {
     gsap.registerPlugin(ScrollTrigger)
     gsap.from('#img58', {
       scrollTrigger: {
         trigger: '.index-loan',
-        start: "-240px top",
+        start: '-240px top'
         // markers:true,
       },
       x: -1200,
@@ -661,7 +728,7 @@ export default {
     gsap.from('#img57', {
       scrollTrigger: {
         trigger: '.index-loan',
-        start: "-240px top",
+        start: '-240px top'
       },
       x: 1200,
       duration: 2
@@ -669,24 +736,24 @@ export default {
     gsap.from('#img56', {
       scrollTrigger: {
         trigger: '.index-loan',
-        start: "-240px top",
+        start: '-240px top'
       },
       y: 1200,
       duration: 2
     })
-    alesisIndexCounter().then((v) => {
+    alesisIndexCounter().then(v => {
       this.indexCounter = v
-    });
+    })
     // 用戶體驗
-    SwiperCore.use([Navigation]);
+    SwiperCore.use([Navigation])
     new Swiper('.swiper-container.user-experience-back', {
       navigation: {
         nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    });
-  },
-};
+        prevEl: '.swiper-button-prev'
+      }
+    })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -992,6 +1059,68 @@ export default {
     color: #023d64;
     opacity: 0.56;
     border-left: 5px solid #036fb7;
+  }
+}
+.index-cert {
+  padding: 64px;
+  background: #f3f9fc;
+  .cert-swiper {
+    overflow: initial;
+  }
+  .block-title {
+    color: #036eb7;
+    font-size: 32px;
+    text-align: center;
+  }
+  .block-info {
+    color: #036eb7;
+    font-size: 20px;
+    margin-top: 24px;
+    opacity: 0.64;
+    text-align: center;
+  }
+  .cert-cards {
+    display: flex;
+    margin-top: 60px;
+    justify-content: center;
+    gap: 20px;
+    .card {
+      width: 328px;
+      border: none;
+      box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
+      border-radius: 16px;
+      .card-body {
+        padding: 24px 30px;
+      }
+      .card-cover {
+        width: 84px;
+        margin: 0 auto 16px;
+        padding: 12px;
+        background: #cdeafe;
+        border-radius: 6px;
+      }
+      .card-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        text-align: center;
+        color: #023d64;
+      }
+      .card-divider {
+        width: 39px;
+        margin: 8px auto;
+        border-bottom: 3px solid #036fb7;
+        border-radius: 100px;
+      }
+      .card-text {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 26px;
+        color: #023d64;
+        opacity: 0.56;
+      }
+    }
   }
 }
 .product-step {
