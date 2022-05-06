@@ -115,7 +115,7 @@ class Sendemail
 			if($user_info && $user_info->email){
 			    $mail_event = $this->CI->config->item('mail_event');
                 $content = $this->CI->parser->parse('email/user_notification', array('title' => $title, 'content' => $content, 'type' => $type, 'mail_event' => $mail_event, 'app_icon' => $app_icon), TRUE);
-                $this->load->helper('user_meta');
+                $this->CI->load->helper('user_meta');
                 $email_to = get_email_to($user_info, $investor);
 				if($attach){
                     $this->CI->email->initialize($this->config);
@@ -265,7 +265,7 @@ class Sendemail
 		if(isset($user_info) && $user_info->email) {
 			$mail_event = $this->CI->config->item('mail_event');
 			$content = $this->CI->parser->parse('email/user_notification', array("title" => $title, "content" => nl2br($content), "type" => $type, "mail_event" => $mail_event), TRUE);
-            $this->load->helper('user_meta');
+            $this->CI->load->helper('user_meta');
             $email_to = get_email_to($user_info, $investor);
 			$this->send($email_to,isset($subject)?$subject:$title, $content);
 		}
