@@ -2699,10 +2699,10 @@ END:
 
             $user = $this->user_model->get($user_id);
 
-            $this->spreadsheet_lib->load($title_rows, $data_rows);
+            $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
             $filepath = 'tmp/subcode_' . round(microtime(true) * 1000) .'.xlsx';
 
-            $this->spreadsheet_lib->save($filepath);
+            $this->spreadsheet_lib->save($filepath, $spreadsheet);
             if (file_exists($filepath))
             {
                 $title = '【普匯金融推薦有賞明細】';
