@@ -2234,6 +2234,12 @@ class Certification_lib{
                 }
 
 				$this->CI->user_model->update($info->user_id,array('email'=> $content['email']));
+
+                $this->CI->user_meta_model->insert([
+                    'user_id' => $info->user_id,
+                    'meta_key' => $info->investor == INVESTOR ? 'email_investor' : 'email_borrower',
+                    'meta_value' => $content['email'],
+                ]);
                 return $this->fail_other_cer($info);
 			}
 		}
