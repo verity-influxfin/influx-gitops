@@ -237,6 +237,7 @@ $ci-color: #153a71;
             display: flex;
             color: #fff;
             padding: 10px 36px;
+            margin: 0 auto;
             width: 100%;
             max-width: 1400px;
             gap: 80px;
@@ -297,6 +298,7 @@ $ci-color: #153a71;
     padding: 0 36px;
     width: 100%;
     max-width: 1400px;
+    margin: 0 auto;
     position: initial;
     .functions{
         display: flex;
@@ -324,9 +326,14 @@ $ci-color: #153a71;
     .search-group {
         position: relative;
         display: none;
-        width: 350px;
+        width: 100%;
+        max-width: 350px;
         &.inputing {
             display: flex;
+            @include rwd{
+                justify-content: flex-end;
+                margin-right: 15px;
+            }
         }
         .search-input {
             width: 100%;
@@ -335,6 +342,9 @@ $ci-color: #153a71;
             font-size: 18px;
             border: 1px solid #036EB7;
             border-radius: 6px;
+            @include rwd{
+                width: 85%;
+            }
         }
         .clear-icon {
             padding: 3px;
@@ -354,7 +364,11 @@ $ci-color: #153a71;
     }
 
     @include rwd {
-        flex-wrap: wrap;
+        padding:15px !important;
+        justify-content: space-between;
+        .bar{
+            font-size: 20px;
+        }
     }
 
     .logo {
@@ -584,84 +598,81 @@ $ci-color: #153a71;
         }
 
     }
+}
+.rwd-list {
+    display: none;
+    flex: 100%;
+    margin: 1rem 0 0.5rem;
+    font-weight: 900;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-left: 15px;
+    &.-active {
+        display: flex;
+    }
 
-    .rwd-list {
-        display: none;
-        flex: 100%;
-        margin: 1rem 0 0.5rem;
-        font-weight: 900;
-        flex-direction: column;
-        gap: 0.75rem;
-
-        &.-active {
+    .item {
+        color: #393939;
+        text-decoration: none;
+        .sub-title {
             display: flex;
+            align-items: center;
+            padding: 0.4rem 1.5rem;
+            gap: 10px;
+            background: #f2f2f2;
+            font-family: NotoSansTC;
+            font-size: 16px;
+            line-height: 1.45;
+            letter-spacing: 1px;
+            text-align: left;
+            color: #112e53;
         }
 
-        .item {
-            color: #fff;
-            text-decoration: none;
-            .sub-title {
-                display: flex;
-                align-items: center;
-                padding: 0.4rem 1.5rem;
-                gap: 10px;
-                background: #f2f2f2;
-                font-family: NotoSansTC;
-                font-size: 16px;
-                line-height: 1.45;
-                letter-spacing: 1px;
-                text-align: left;
-                color: #112e53;
+        &.-dropdown {
+            .text::after {
+                display: inline-block;
+                margin-left: 0.255em;
+                vertical-align: 0.255em;
+                content: "";
+                border-top: 0.3em solid;
+                border-right: 0.3em solid transparent;
+                border-bottom: 0;
+                border-left: 0.3em solid transparent;
             }
+        }
 
-            &.-dropdown {
-                .text::after {
-                    display: inline-block;
-                    margin-left: 0.255em;
-                    vertical-align: 0.255em;
-                    content: "";
-                    border-top: 0.3em solid;
-                    border-right: 0.3em solid transparent;
-                    border-bottom: 0;
-                    border-left: 0.3em solid transparent;
-                }
-            }
+        .text {
+            pointer-events: none;
+        }
 
-            .text {
-                pointer-events: none;
-            }
-
-            &.-active {
-                .sub {
-                    display: flex;
-                }
-            }
-
+        &.-active {
             .sub {
-                background: #fff;
-                padding: 0;
-                border-radius: 0.25rem;
-                margin: 0.25rem 0;
-                display: none;
-                flex-direction: column;
-                overflow: hidden;
-                .item {
+                display: flex;
+            }
+        }
+
+        .sub {
+            background: #fff;
+            padding: 0;
+            border-radius: 0.25rem;
+            margin: 0.25rem 0;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            .item {
+                color: #8f8f8f;
+                padding: 0.4rem 1.5rem;
+                &.-disabled {
                     color: #8f8f8f;
-                    padding: 0.4rem 1.5rem;
-                    &.-disabled {
-                        color: #8f8f8f;
-                        background-color: #fff;
-                    }
+                    background-color: #fff;
                 }
             }
+        }
 
-            .login {
-                border-radius: 6px;
-                background: #2c4c9b;
-                padding: 5px;
-                border: 1.5px solid #1d82be;
-                color: #e0e0e0;
-            }
+        .login {
+            border-radius: 6px;
+            padding: 5px;
+            border: 1.5px solid #1d82be;
         }
     }
 }
@@ -671,6 +682,7 @@ $ci-color: #153a71;
     width: 100%;
     max-width: 1400px;
     padding: 0.5rem 0;
+    margin: 0 auto;
     color: #fff;
     position: relative;
 
@@ -700,6 +712,12 @@ $ci-color: #153a71;
             margin-bottom: 35px;
             gap: 50px;
             grid-template-columns: 1fr 3fr 3fr;
+            @include rwd{
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr 1fr;
+                gap: 10px;
+                margin-bottom: 0;
+            }
             > .brand {
                 display: flex;
                 align-items: center;
@@ -718,7 +736,6 @@ $ci-color: #153a71;
                     height: 40px;
                 }
             }
-
             > .paragraphy {
                 font-size: 0.9rem;
                 line-height: 2;
@@ -733,32 +750,10 @@ $ci-color: #153a71;
             gap: 3rem;
             font-size: 0.9rem;
             margin-top: 10px;
-            @include rwd {
-                grid-template-columns: 1fr 1fr;
-                grid-template-areas:
-                "loan invest"
-                "loan about"
-                "contact contact";
-                text-align: center;
-                gap: 0rem 5rem;
-
-                > .item:nth-child(1) {
-                    grid-area: loan;
-                }
-
-                > .item:nth-child(2) {
-                    grid-area: invest;
-                }
-
-                > .item:nth-child(3) {
-                    grid-area: about;
-                }
-
-                > .item:nth-child(4) {
-                    grid-area: contact;
-                }
+            @include rwd{
+                gap: 20px;
+                justify-content: center;
             }
-
             > .item {
                 > .header {
                     font-size: 1.5rem;

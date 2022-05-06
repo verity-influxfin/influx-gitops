@@ -144,30 +144,24 @@
     <noscript>
         please turn on your jacascript
     </noscript>
-    <div id="web_index" @mousemove="">
+    <div id="web_index" @mousemove="clicked">
         <div class="header-container">
             <div class="row no-gutters">
-                <div class="col"></div>
                 <div class="col-auto alesis-header">
                     <div class="logo">
                         <a href="/index"><img src="/images/logo.svg" class="image"></a>
                     </div>
-                    <div class="row no-gutters w-100">
+                    <div class="d-sm-flex d-none no-gutters w-100">
                         <div class="functions col-auto">
                             <div class="function-item">
                                 <div class="function-title">產品列表</div>
                                 <div class="function-list row no-gutters">
-                                    <div class="col"></div>
                                     <div class="col-auto d-flex no-gutters">
-                                        <div class="col"></div>
                                         <div class="function-list-content product">
                                             <div class="function-list-items">
                                                 <div class="link-title">個人金融</div>
                                                 <div class="link-item">
                                                     <a href="/collegeLoan" class="link-text">學生貸</a>
-                                                </div>
-                                                <div class="link-item">
-                                                    <a href="/3s-college-loan" class="link-text">3s名校貸</a>
                                                 </div>
                                                 <div class="link-item">
                                                     <a href="/workLoan" class="link-text">上班族貸</a>
@@ -225,17 +219,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col"></div>
                                     </div>
-                                    <div class="col"></div>
                                 </div>
                             </div>
                             <div class="function-item">
                                 <div class="function-title">慈善捐款</div>
                                 <div class="function-list row no-gutters">
-                                    <div class="col"></div>
                                     <div class="col-auto d-flex no-gutters">
-                                        <div class="col"></div>
                                         <div class="function-list-content charitable">
                                             <div class="function-list-items">
                                                 <div class="link-title">慈善捐款</div>
@@ -244,17 +234,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col"></div>
                                     </div>
-                                    <div class="col"></div>
                                 </div>
                             </div>
                             <div class="function-item">
                                 <div class="function-title">投資專區</div>
                                 <div class="function-list row no-gutters">
-                                    <div class="col"></div>
                                     <div class="col-auto d-flex no-gutters">
-                                        <div class="col"></div>
                                         <div class="function-list-content invest">
                                             <div class="function-list-items">
                                                 <div class="link-title">投資專區</div>
@@ -274,17 +260,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col"></div>
                                     </div>
-                                    <div class="col"></div>
                                 </div>
                             </div>
                             <div class="function-item">
                                 <div class="function-title">關於普匯</div>
                                 <div class="function-list row no-gutters">
-                                    <div class="col"></div>
                                     <div class="col-auto d-flex no-gutters">
-                                        <div class="col"></div>
                                         <div class="function-list-content">
                                             <div class="function-list-items">
                                                 <div class="link-title">關於我們</div>
@@ -329,9 +311,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col"></div>
                                     </div>
-                                    <div class="col"></div>
                                 </div>
                             </div>
                         </div>
@@ -363,82 +343,92 @@
                             </div>
                         </div>
                     </div>
-                    <div class="rwd-list">
-                        <div class="item -dropdown">
-                            <div class="text">我要借款</div>
-                            <div class="sub">
-                                <div class="sub-title">
-                                    <div class="sub-title-icon">
-                                        <img src="/images/personal-header-icon.svg" alt="">
-                                    </div>
-                                    <div>個人金融</div>
-                                </div>
-                                <a href="/3s-college-loan" class="item">3S名校貸</a>
-                                <a href="/collegeLoan" class="item">學生貸款</a>
-                                <a href="/workLoan" class="item">上班族貸款</a>
-                                <a href="/engineerLoan" class="item">資訊工程師專案</a>
-                                <div class="sub-title">
-                                    <div class="sub-title-icon">
-                                        <img src="/images/business-header-icon.svg" alt="">
-                                    </div>
-                                    <a href="/business-loan">企業融資</a>
-                                </div>
-                                <a href="/business-loan/sme" class="item">微企e秒貸</a>
-                                <div class="item -disabled">信保專案融資 (coming soon)</div>
-                                <div class="item -disabled">一般企業融資 (coming soon)</div>
-                            </div>
+                    <div class="d-flex d-sm-none">
+                        <div class="search-icon mr-3" v-show="!inputing" @click="clickSearch">
+                            <img src="/images/search-icon-blue.svg" alt="">
                         </div>
-                        <div class="item -dropdown">
-                            <div class="text">我要投資</div>
-                            <div class="sub">
-                                <a href="/investment" class="item">債權投資</a>
-                                <a href="/transfer" class="item">債權轉讓</a>
-                            </div>
+                        <div class="search-group" :class="{inputing}">
+                            <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText" @keyup.enter="doSearch" />
+                            <div class="clear-icon" @click="doClear">x</div>
                         </div>
-                        <div class="item -dropdown">
-                            <div class="text">關於我們</div>
-                            <div class="sub">
-                                <a href="/company" class="item">公司介紹</a>
-                                <a href="/news" class="item">最新消息</a>
-                            </div>
-                        </div>
-                        <div class="item -dropdown">
-                            <div class="text">小學堂金融科技</div>
-                            <div class="sub">
-                                <a href="/blog" class="item">小學堂</a>
-                                <a href="/vlog?q=share" class="item">小學堂影音</a>
-                            </div>
-                        </div>
-                        <div class="item -dropdown">
-                            <div class="text">了解更多</div>
-                            <div class="sub">
-                                <a href="/faq" class="item">常見問題</a>
-                                <a href="/risk" class="item">風險報告書</a>
-                                <a href="/projects" class="item">查看案件</a>
-                            </div>
-                        </div>
-                        <a href="/borrowLink" target="_blank" class="item">下載APP</a>
-                        <a href="/charitable" class="item">慈善專區</a>
-                        <div class="item">
-                            <div v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login"><i class="fas fa-user"></i> SIGN IN</div>
-                            <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" style="color: #fff;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
-                                <ul class="dropdown-menu" style="min-width: 5rem;">
-                                    <li v-if="isInvestor == 0">
-                                        <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
-                                    </li>
-                                    <li v-else>
-                                        <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
-                                    </li>
-                                    <li v-if="flag === 'login'">
-                                        <p class="dropdown-item" @click="logout">登出</p>
-                                    </li>
-                                </ul>
-                            </div>
+                        <div class="bar icon-hamburger">
+                            <i class="fa fa-bars"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col"></div>
+            </div>
+            <div class="rwd-list">
+                <div class="item -dropdown">
+                    <div class="text">我要借款</div>
+                    <div class="sub">
+                        <div class="sub-title">
+                            <div class="sub-title-icon">
+                                <img src="/images/personal-header-icon.svg" alt="">
+                            </div>
+                            <div>個人金融</div>
+                        </div>
+                        <a href="/collegeLoan" class="item">學生貸款</a>
+                        <a href="/workLoan" class="item">上班族貸款</a>
+                        <a href="/engineerLoan" class="item">資訊工程師專案</a>
+                        <div class="sub-title">
+                            <div class="sub-title-icon">
+                                <img src="/images/business-header-icon.svg" alt="">
+                            </div>
+                            <a href="/business-loan">企業融資</a>
+                        </div>
+                        <a href="/business-loan/sme" class="item">微企e秒貸</a>
+                        <div class="item -disabled">信保專案融資 (coming soon)</div>
+                        <div class="item -disabled">一般企業融資 (coming soon)</div>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">我要投資</div>
+                    <div class="sub">
+                        <a href="/investment" class="item">債權投資</a>
+                        <a href="/transfer" class="item">債權轉讓</a>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">關於我們</div>
+                    <div class="sub">
+                        <a href="/company" class="item">公司介紹</a>
+                        <a href="/news" class="item">最新消息</a>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">小學堂金融科技</div>
+                    <div class="sub">
+                        <a href="/blog" class="item">小學堂</a>
+                        <a href="/vlog?q=share" class="item">小學堂影音</a>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">了解更多</div>
+                    <div class="sub">
+                        <a href="/faq" class="item">常見問題</a>
+                        <a href="/risk" class="item">風險報告書</a>
+                        <a href="/projects" class="item">查看案件</a>
+                    </div>
+                </div>
+                <a href="/borrowLink" target="_blank" class="item">下載APP</a>
+                <a href="/charitable" class="item">慈善專區</a>
+                <div class="item">
+                    <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login btn"><i class="fas fa-user"></i> SIGN IN</button>
+                    <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" style="color: #fff;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
+                        <ul class="dropdown-menu" style="min-width: 5rem;">
+                            <li v-if="isInvestor == 0">
+                                <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
+                            </li>
+                            <li v-else>
+                                <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
+                            </li>
+                            <li v-if="flag === 'login'">
+                                <p class="dropdown-item" @click="logout">登出</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -485,7 +475,6 @@
             <router-view></router-view>
         </div>
         <div class="row no-gutters" style="background: #153a71;">
-            <div class="col"></div>
             <div class="alesis-footer">
                 <div class="line"></div>
                 <div class="main">
@@ -505,7 +494,6 @@
                         <div class="item">
                             <div class="header">個人金融</div>
                             <div class="list">
-                                <a href="/3s-college-loan">3S名校貸</a>
                                 <a href="/collegeLoan">學生貸款</a>
                                 <a href="/workLoan">上班族貸款</a>
                                 <a href="/engineerLoan">資訊工程師專案</a>
@@ -606,7 +594,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col"></div>
         </div>
 
 
