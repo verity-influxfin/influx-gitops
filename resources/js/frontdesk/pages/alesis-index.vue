@@ -17,18 +17,6 @@
           </div>
           <div class="product-item">
             <div class="card">
-              <div class="card-title">3S名校貸</div>
-              <div class="card-content">
-                <div class="card-subtitle">額度最高18萬</div>
-                <div class="card-image p2"></div>
-                <router-link to="/3s-college-loan" class="card-link">
-                  了解更多
-                </router-link>
-              </div>
-            </div>
-          </div>
-          <div class="product-item">
-            <div class="card">
               <div class="card-title">資訊工程師貸</div>
               <div class="card-content">
                 <div class="card-subtitle">額度最高30萬</div>
@@ -63,7 +51,7 @@
               </div>
             </div>
           </div>
-          <div class="product-item">
+          <!-- <div class="product-item">
             <div class="card">
               <div class="card-title">信保專案(銀行)</div>
               <div class="card-content">
@@ -74,7 +62,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="product-item">
             <div class="card">
               <div class="card-title">企業貸款</div>
@@ -118,7 +106,7 @@
             集人才，打造綠色金融科技環境，善用AI技術首創自動化風控審核，無人化P2P借貸融資系統。
           </div>
         </div>
-        <div class="block-title mt-3">
+        <div class="block-title">
           年輕人的金融科技平台、簡單快速安全隱私、創造金融新生態
         </div>
         <div class="block-info d-block">
@@ -131,6 +119,9 @@
             為輔助，提供最人性友善流暢的APP使用者介面，全程AI無人化自動風控審核，運用金融科技技術加快速度、提高安全、保護隱私，提供最有溫度的社群金融服務，讓社會資金運用更便利快速有效率，創造全新的金融生態圈。
           </span>
         </div>
+      </div>
+      <div class="wave">
+        <img src="@/asset/images/index/bg-white-wave.svg" alt="" />
       </div>
     </div>
     <div class="index-loan section">
@@ -162,26 +153,33 @@
       </div>
     </div>
     <div class="index-service section">
+      <div class="wave reverse">
+        <img src="@/asset/images/index/bg-white-wave.svg" alt="" />
+      </div>
       <div class="block-content">
         <div class="block-title">我們的服務</div>
         <div class="block-info">提供多元個人及企業融資貸款管道平台</div>
         <div class="row no-gutters service-imgs">
           <img id="service-1" src="@/asset/images/index/service-1.png" />
+          <img id="service-2" src="@/asset/images/index/service-2.png" />
           <div class="service-groups">
             <div class="group">
-              <div class="item">簡單</div>
-              <div class="item">快速</div>
-              <div class="item">方便</div>
+              <div class="item">競標即時撮合</div>
+              <div class="item">無卡分期系統</div>
+              <div class="item">債權轉讓</div>
+              <div class="item">貸後管理系統</div>
             </div>
             <div class="group">
-              <div class="item">安全</div>
-              <div class="item">便利</div>
-              <div class="item">輕鬆</div>
+              <div class="item">分秒計息系統</div>
+              <div class="item">虛擬帳戶金流管理系統</div>
+              <div class="item">線上對保撥款系統</div>
+              <div class="item">自動核貸上架系統</div>
             </div>
             <div class="group">
-              <div class="item">特點</div>
-              <div class="item">特點</div>
-              <div class="item">特點</div>
+              <div class="item">風控信評額度系統</div>
+              <div class="item">反洗錢系統</div>
+              <div class="item">關係人歸戶系統</div>
+              <div class="item">反詐欺系統</div>
             </div>
           </div>
         </div>
@@ -298,7 +296,7 @@
               <div class="card">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img src="@/asset/images/index/handshake2.png" alt="" />
+                    <img src="@/asset/images/index/link-1.png" alt="" />
                   </div>
                   <div class="card-title">獲得多家銀行搶先合作</div>
                   <div class="card-divider"></div>
@@ -310,7 +308,7 @@
               <div class="card">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img src="@/asset/images/index/handshake2.png" alt="" />
+                    <img src="@/asset/images/index/dating-app-1.png" alt="" />
                   </div>
                   <div class="card-title">最年輕的借款APP</div>
                   <div class="card-divider"></div>
@@ -322,7 +320,7 @@
               <div class="card">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img src="@/asset/images/index/handshake2.png" alt="" />
+                    <img src="@/asset/images/index/planet-earth-1.png" alt="" />
                   </div>
                   <div class="card-title">ESG綠色金融科技平台</div>
                   <div class="card-divider"></div>
@@ -370,8 +368,8 @@
       <div class="charity">
         <div class="block-content">
           <div class="block-title">慈善公益</div>
-          <div class="row no-gutters">
-            <div class="col-6">
+          <div class="row no-gutters justify-content-center">
+            <div class="col-5">
               <div class="info-title">愛心100，捐款100</div>
               <div class="info-content">
                 攜手台大兒童醫院、台大兒童健康基金會、愛心大使張鈞甯、愛心主持鍾欣凌，聯合勸募樂捐幫助台灣弱勢兒童，維護孩子們的健康
@@ -388,7 +386,12 @@
                 ></iframe>
               </div>
             </div>
-            <div class="col-6"></div>
+            <div class="col-5 d-flex justify-content-center">
+              <img
+                src="@/asset/images/index/Group1251.png"
+                style="height: 420px"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -837,6 +840,19 @@ export default {
   max-width: 1400px;
   margin: 0 auto;
 }
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: -30px;
+  height: 100px;
+  overflow: hidden;
+  &.reverse {
+    top: 0;
+    left: initial;
+    right: -30px;
+    transform: rotate(180deg);
+  }
+}
 .index-intro {
   background-image: url('~images/index/index-header-bg.png');
   background-position: center;
@@ -856,7 +872,7 @@ export default {
       display: grid;
       grid-template-rows: 160px 160px;
       gap: 20px;
-      grid-template-columns: repeat(4, 230px);
+      grid-template-columns: repeat(3, 230px);
     }
     .product-item {
       .card {
@@ -958,14 +974,20 @@ export default {
   }
 }
 .index-concept {
-  padding: 40px;
+  position: relative;
+  padding: 80px;
   background-color: #036eb7;
+  background-image: url('~images/index/concept-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 1044px;
   .block-content {
     padding: 0 50px;
     .block-title {
       font-weight: 500;
       font-size: 40px;
       line-height: 81px;
+      margin: 40px 0;
       color: #e6f5ff;
       text-align: center;
     }
@@ -1007,7 +1029,12 @@ export default {
   }
 }
 .index-loan {
+  position: relative;
   padding: 70px 70px;
+  background-image: url('~images/index/index-phone-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 1200px;
   .block-title {
     color: #036eb7;
     font-size: 32px;
@@ -1072,41 +1099,64 @@ export default {
     filter: alpha(opacity=20);
   }
   20% {
-    right: 125px;
+    right: 145px;
     opacity: 1;
     filter: alpha(opacity=0);
   }
   45% {
-    right: 125px;
+    right: 145px;
     opacity: 0;
     filter: alpha(opacity=0);
   }
 }
+@keyframes service-img {
+  0% {
+    margin: 30px auto;
+  }
+  50% {
+    margin: 0 auto;
+  }
+  100% {
+    margin: 30px auto;
+  }
+}
 .index-service {
+  position: relative;
   padding: 70px 70px;
+  background: linear-gradient(180.82deg, #036eb7 0.7%, #ffffff 92.77%);
   .block-title {
-    color: #036eb7;
+    color: #fff;
     font-size: 32px;
     text-align: center;
   }
   .block-info {
-    color: #036eb7;
+    color: #fff;
     font-size: 20px;
     margin-top: 24px;
     opacity: 0.64;
     text-align: center;
   }
   .service-imgs {
-    padding: 35px 0;
+    padding: 35px 0 140px;
     position: relative;
-    height: 900px;
+    overflow: hidden;
     #service-1 {
+      animation: service-img 4s linear infinite;
       display: block;
-      margin: auto;
+      margin: 30px auto;
+      height: 500px;
+    }
+    #service-2 {
+      position: absolute;
+      display: block;
+      margin: 0 auto;
+      bottom: -111px;
+      left: 400px;
+      height: 400px;
     }
   }
   .service-groups {
-    margin-top: 300px;
+    margin-top: 200px;
     .group {
       right: -300px;
       position: absolute;
@@ -1116,11 +1166,12 @@ export default {
     }
     .group .item {
       font-size: 20px;
-      padding: 5px 50px;
+      padding: 6px 30px;
       margin-bottom: 10px;
-      border: 1.5px solid #036eb7;
-      border-radius: 12px;
-      color: #393939;
+      background: #fff;
+      border-radius: 6px;
+      text-align: center;
+      color: #083a6e;
     }
     .group:nth-child(1) {
       animation-delay: 0s;
@@ -1566,7 +1617,7 @@ export default {
     color: #023d64;
   }
   .info-content {
-      margin: 12px 0 32px;
+    margin: 12px 0 32px;
     font-size: 18px;
     line-height: 26px;
     color: #023d64;
