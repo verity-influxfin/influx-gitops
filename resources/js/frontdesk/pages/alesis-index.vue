@@ -102,6 +102,37 @@
         </div>
       </div>
     </div>
+    <div class="index-concept section">
+      <div class="block-content">
+        <div class="block-title">普惠金融，匯流人才</div>
+        <div class="block-info concept-1">
+          <div class="op">
+            <div>
+              惠金融，落實傳統銀行無法提供的金融服務，運用P2P、區塊鏈等技術，串起社會閒置資源，幫助年輕人完成夢想，
+            </div>
+            <div>同時滿足新興創新中小企業，提供數位金融服務。</div>
+          </div>
+        </div>
+        <div class="block-info concept-2">
+          <div class="op">
+            集人才，打造綠色金融科技環境，善用AI技術首創自動化風控審核，無人化P2P借貸融資系統。
+          </div>
+        </div>
+        <div class="block-title mt-3">
+          年輕人的金融科技平台、簡單快速安全隱私、創造金融新生態
+        </div>
+        <div class="block-info d-block">
+          <span class="em">「我們不是銀行」</span>
+          <span class="op">，普匯是以</span>
+          <span class="em f-yellow">「金融專業」</span>
+          <span class="op">為核心，</span>
+          <span class="em">「高端科技」</span>
+          <span class="op">
+            為輔助，提供最人性友善流暢的APP使用者介面，全程AI無人化自動風控審核，運用金融科技技術加快速度、提高安全、保護隱私，提供最有溫度的社群金融服務，讓社會資金運用更便利快速有效率，創造全新的金融生態圈。
+          </span>
+        </div>
+      </div>
+    </div>
     <div class="index-loan section">
       <div class="block-content">
         <div class="block-title">一支手機，完成貸款</div>
@@ -881,6 +912,55 @@ export default {
           }
         }
       }
+    }
+  }
+}
+.index-concept {
+  padding: 40px;
+  background-color: #036eb7;
+  .block-content {
+    padding: 0 50px;
+    .block-title {
+      font-weight: 500;
+      font-size: 40px;
+      line-height: 81px;
+      color: #e6f5ff;
+      text-align: center;
+    }
+    .block-info {
+      display: flex;
+      align-items: flex-start;
+      font-size: 20px;
+      color: #fff;
+      line-height: 2.5;
+      &.concept-1::before {
+        display: inline-block;
+        content: '「普」';
+        color: #fff;
+        opacity: 1;
+        font-size: 32px;
+        line-height: 45px;
+      }
+      &.concept-2::before {
+        display: inline-block;
+        content: '「匯」';
+        color: #f29600;
+        opacity: 1;
+        font-size: 32px;
+        line-height: 45px;
+      }
+    }
+    .op {
+      opacity: 0.56;
+    }
+    .em {
+      font-size: 32px;
+      color: #fff;
+      opacity: 1;
+    }
+    .f-yellow {
+      color: #f29600;
+      opacity: 1;
     }
   }
 }
