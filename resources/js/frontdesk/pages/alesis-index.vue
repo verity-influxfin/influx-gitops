@@ -139,7 +139,24 @@
         <div class="block-info">隨借隨貸，安全零距離</div>
         <div class="row no-gutters loan-imgs">
           <img id="img58" src="@/asset/images/index/img58.png" />
-          <img id="img56" src="@/asset/images/index/img56.png" />
+          <div id="img56">
+            <div class="position-relative">
+              <div class="card tip-card tip-1">
+                <div class="card-container">
+                  <div class="tip">無人打擾、免照會</div>
+                </div>
+              </div>
+              <div class="card tip-card tip-2">
+                <div class="card-container">
+                  <div class="tip">安全隱私保密機制</div>
+                </div>
+              </div>
+              <img src="@/asset/images/index/img56.png" />
+              <div>
+                  <div class="block-title mx-auto">普匯•你的手機ATM</div>
+              </div>
+            </div>
+          </div>
           <img id="img57" src="@/asset/images/index/img57.png" />
         </div>
       </div>
@@ -997,6 +1014,29 @@ export default {
       right: -232px;
       position: absolute;
       transform: rotate(-7.93deg);
+    }
+  }
+  .tip-card {
+    &.tip-1 {
+      right: 200px;
+      top: 200px;
+    }
+    &.tip-2 {
+      left: 166px;
+      top: 400px;
+    }
+    position: absolute;
+    border: none;
+    width: 300px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    .card-container {
+      padding: 24px 26px;
+    }
+    .tip {
+        text-align: center;
+      font-size: 24px;
+      color: #036eb7;
     }
   }
 }
