@@ -673,14 +673,14 @@ END:
 					'agent'			=> 0,
 				];
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
-//				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
-//
-//				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id,$location,$os);
-//
-//				if($first_time){
-//					$this->load->library('notification_lib');
-//					$this->notification_lib->first_login($user_info->id,$investor);
-//				}
+				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
+
+				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id,$location,$os);
+
+				if($first_time){
+					$this->load->library('notification_lib');
+					$this->notification_lib->first_login($user_info->id,$investor);
+				}
 				$this->response([
 					'result' => 'SUCCESS',
 					'data' 	 => [
