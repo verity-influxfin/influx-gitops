@@ -153,7 +153,7 @@
               </div>
               <img src="@/asset/images/index/img56.png" />
               <div>
-                  <div class="block-title mx-auto">普匯•你的手機ATM</div>
+                <div class="block-title mx-auto">普匯•你的手機ATM</div>
               </div>
             </div>
           </div>
@@ -337,7 +337,7 @@
       </div>
     </div>
     <div class="product-step section">
-      <div class="block-content">
+      <div class="block-content p-4">
         <div class="row no-gutters">
           <div class="product-step-head-title col-12 my-4">
             <span style="color: #f29500; padding: 0 16px">普匯金融</span>
@@ -365,6 +365,31 @@
             :number="indexCounter.transactionCount"
             unit="筆"
           ></alesis-counter>
+        </div>
+      </div>
+      <div class="charity">
+        <div class="block-content">
+          <div class="block-title">慈善公益</div>
+          <div class="row no-gutters">
+            <div class="col-6">
+              <div class="info-title">愛心100，捐款100</div>
+              <div class="info-content">
+                攜手台大兒童醫院、台大兒童健康基金會、愛心大使張鈞甯、愛心主持鍾欣凌，聯合勸募樂捐幫助台灣弱勢兒童，維護孩子們的健康
+              </div>
+              <div>
+                <iframe
+                  width="560"
+                  height="315"
+                  src="https://www.youtube.com/embed/Ve1MkgdZQlc"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </div>
+            <div class="col-6"></div>
+          </div>
         </div>
       </div>
       <div class="row no-gutters steps mt-4">
@@ -1034,7 +1059,7 @@ export default {
       padding: 24px 26px;
     }
     .tip {
-        text-align: center;
+      text-align: center;
       font-size: 24px;
       color: #036eb7;
     }
@@ -1243,6 +1268,7 @@ export default {
     }
   }
 }
+
 .product-step {
   .product-step-head-title {
     font-style: normal;
@@ -1522,6 +1548,29 @@ export default {
       transition-duration: 1s;
       opacity: 0;
     }
+  }
+}
+.charity {
+  padding: 64px;
+  background: #f3f9fc;
+  .block-title {
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 81px;
+    color: #023d64;
+    text-align: center;
+  }
+  .info-title {
+    font-size: 40px;
+    line-height: 58px;
+    color: #023d64;
+  }
+  .info-content {
+      margin: 12px 0 32px;
+    font-size: 18px;
+    line-height: 26px;
+    color: #023d64;
+    opacity: 0.64;
   }
 }
 /**
