@@ -3,87 +3,122 @@
     <div class="index-intro section">
       <div class="row no-gutters block-content intro-content">
         <div class="intro-products">
-          <div class="product-item">
-            <div class="card">
-              <div class="card-title">學生貸</div>
-              <div class="card-content p1">
-                <div class="card-subtitle">額度最高15萬</div>
-                <div class="card-image p1"></div>
-                <router-link to="/collegeLoan" class="card-link">
-                  了解更多
-                </router-link>
+          <div class="group">
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">學生貸</div>
+                <div class="card-content p1">
+                  <div class="card-subtitle">額度最高15萬</div>
+                  <div class="card-image p1"></div>
+                  <router-link to="/collegeLoan" class="card-link">
+                    了解更多
+                  </router-link>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="product-item">
-            <div class="card">
-              <div class="card-title">資訊工程師貸</div>
-              <div class="card-content">
-                <div class="card-subtitle">額度最高30萬</div>
-                <div class="card-image p3"></div>
-                <router-link to="/engineerLoan" class="card-link">
-                  了解更多
-                </router-link>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">上班族貸</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高30萬</div>
+                  <div class="card-image p2"></div>
+                  <router-link to="/workLoan" class="card-link">
+                    了解更多
+                  </router-link>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="product-item">
-            <div class="card">
-              <div class="card-title">上班族貸</div>
-              <div class="card-content">
-                <div class="card-subtitle">額度最高30萬</div>
-                <div class="card-image p4"></div>
-                <router-link to="/workLoan" class="card-link">
-                  了解更多
-                </router-link>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">資訊工程師貸</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高30萬</div>
+                  <div class="card-image p3"></div>
+                  <router-link to="/engineerLoan" class="card-link">
+                    了解更多
+                  </router-link>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="product-item">
-            <div class="card">
-              <div class="card-title">企業主速貸</div>
-              <div class="card-content">
-                <div class="card-subtitle">額度最高100萬</div>
-                <div class="card-image p5"></div>
-                <div class="card-link">
-                  <a>了解更多</a>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">汽車貸款</div>
+                <div class="card-content">
+                  <div class="card-image p4"></div>
+                  <div class="card-link">了解更多</div>
+                </div>
+              </div>
+            </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">投資人專區</div>
+                <div class="card-content">
+                  <div class="card-image p5"></div>
+                  <router-link to="/charitable" class="card-link">
+                    了解更多
+                  </router-link>
                 </div>
               </div>
             </div>
           </div>
-          <!-- <div class="product-item">
-            <div class="card">
-              <div class="card-title">信保專案(銀行)</div>
-              <div class="card-content">
-                <div class="card-subtitle">額度最高600萬</div>
-                <div class="card-image p6"></div>
-                <div class="card-link">
-                  <a>了解更多</a>
+          <div class="group">
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">企業主速貸</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高100萬</div>
+                  <div class="card-image p6"></div>
+                  <div class="card-link">
+                    <a>了解更多</a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div> -->
-          <div class="product-item">
-            <div class="card">
-              <div class="card-title">企業貸款</div>
-              <div class="card-content">
-                <div class="card-subtitle">額度最高2000萬</div>
-                <div class="card-image p7"></div>
-                <div class="card-link">
-                  <a>了解更多</a>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">信保專案(銀行合作)</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高600萬</div>
+                  <div class="card-image p7"></div>
+                  <div class="card-link">
+                    <a>了解更多</a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="product-item">
-            <div class="card">
-              <div class="card-title">慈善公益</div>
-              <div class="card-content">
-                <div class="card-subtitle">台大兒醫</div>
-                <div class="card-image p8"></div>
-                <router-link to="/charitable" class="card-link">
-                  了解更多
-                </router-link>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">中小企業信貸</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高2000萬</div>
+                  <div class="card-image p8"></div>
+                  <div class="card-link">
+                    <a>了解更多</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">慈善公益</div>
+                <div class="card-content">
+                  <div class="card-subtitle">台大兒醫</div>
+                  <div class="card-image p9"></div>
+                  <router-link to="/charitable" class="card-link">
+                    了解更多
+                  </router-link>
+                </div>
+              </div>
+            </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">分享 QR code</div>
+                <div class="card-content">
+                  <div class="card-image p10"></div>
+                  <router-link to="/promote-code-intro" class="card-link">
+                    了解更多
+                  </router-link>
+                </div>
               </div>
             </div>
           </div>
@@ -96,14 +131,16 @@
         <div class="block-info concept-1">
           <div class="op">
             <div>
-              惠金融，落實傳統銀行無法提供的金融服務，運用P2P、區塊鏈等技術，串起社會閒置資源，幫助年輕人完成夢想，
+              惠金融：運用金融科技P2P、區塊鏈，結合AI人工智慧技術，串起社會閒置資源，落實傳統銀行無法提供的服務，
             </div>
-            <div>同時滿足新興創新中小企業，提供數位金融服務。</div>
+            <div>
+              幫助年輕人實現夢想，協助新創中小企業取得投融資，體現金融科技創新服務。
+            </div>
           </div>
         </div>
         <div class="block-info concept-2">
           <div class="op">
-            集人才，打造綠色金融科技環境，善用AI技術首創自動化風控審核，無人化P2P借貸融資系統。
+            集人才：開發創新科技，建構AI無人自動化，打造最有溫度的金融新生態，呈現綠色金融科技新環境。
           </div>
         </div>
         <div class="block-title">
@@ -162,64 +199,74 @@
         <div class="row no-gutters service-imgs">
           <img id="service-1" src="@/asset/images/index/service-1.png" />
           <img id="service-2" src="@/asset/images/index/service-2.png" />
-          <div class="service-groups">
-            <div class="group">
-              <div class="item">競標即時撮合</div>
-              <div class="item">無卡分期系統</div>
-              <div class="item">債權轉讓</div>
-              <div class="item">貸後管理系統</div>
-            </div>
-            <div class="group">
-              <div class="item">分秒計息系統</div>
-              <div class="item">虛擬帳戶金流管理系統</div>
-              <div class="item">線上對保撥款系統</div>
-              <div class="item">自動核貸上架系統</div>
-            </div>
-            <div class="group">
-              <div class="item">風控信評額度系統</div>
-              <div class="item">反洗錢系統</div>
-              <div class="item">關係人歸戶系統</div>
-              <div class="item">反詐欺系統</div>
-            </div>
+          <div id="s1">
+            <div>提供多元個人、汽車、</div>
+            <div>企業融資貸款產品</div>
+          </div>
+          <div id="s2">
+            <div>嚴格身份驗證專利、完善反詐欺風控、</div>
+            <div>嚴謹合規信評貸後、準確金流帳務、</div>
+            <div>全方位資安防護</div>
+          </div>
+          <div id="s3">
+            <div>小額分散/安全穩定、債權轉讓/資金流動、</div>
+            <div>AI智能/穩賺複利高投報</div>
+          </div>
+          <div id="s4">
+            <div>金控銀行、上市櫃企業、知名大學、</div>
+            <div>新創團隊，夥伴多元，共創多贏</div>
           </div>
         </div>
       </div>
     </div>
     <div class="index-tech section">
+      <div class="block-content mt-3 mb-5">
+        <div class="block-content-header-title">最創新、最安全的金融科技</div>
+        <div class="block-content-header-info">
+          <div>唯一榮獲金控集團創投投資</div>
+          <div>第一個獲得政府同意銀行合作的 中小企業線上信保融資平台</div>
+        </div>
+      </div>
       <div class="block-content row no-gutters">
         <div class="col-6 d-flex align-items-center">
-          <img src="@/asset/images/index/img60.png" alt="" />
+          <img src="@/asset/images/index/img60.png" style="height:450px" alt="" />
         </div>
         <div class="col-6">
-          <div class="block-title">唯一多項驗證專利</div>
+          <div class="block-title">台灣金融科技融資領導品牌</div>
           <div class="block-info">台灣金融科技的領導者</div>
           <div class="step-container">
             <div class="step-content-1">
-              <div class="step-content-title">強大的專利技術</div>
+              <div class="step-content-title">強大的KYC風控系統</div>
               <div class="step-content-info">
                 <div>
-                  普匯經由專業的科技開發團隊，開發個人實名認證、
-                  企業身份驗證流程，並確實具有法律效益，分別在
-                  109、110年成功申請裝置系統驗證專利。
+                  擁有最完整且完善的AI自動化審核風控系統，全程透過手機APP，完成嚴謹徵信評估，自動產生信評等額度，最快「5分鐘申貸、10分鐘審核、1小時放款」，365天24小時不停歇。
                 </div>
               </div>
             </div>
             <div class="step-content-2">
-              <div class="step-content-title">法人實名認證裝置</div>
+              <div class="step-content-title">個人身分驗證專利</div>
               <div class="step-content-info">
                 <div>
-                  普匯，你的手機ATM 為了使申貸無人化，用戶資產以及資訊
-                  安全受到保障，我們持續地精進自己，於2021年取得法人實
-                  名裝置專利，將以往繁瑣的申貸流程濃縮到你的手機中。
+                  2020年12月創新取得個人法定身分，透過系統裝置進行線上實名驗證之專利，並實際獲得全台灣各地方法院判決成立實證。
                 </div>
               </div>
             </div>
             <div class="step-content-3">
-              <div class="step-content-title">身份驗證裝置</div>
+              <div class="step-content-title">法人實名認證專利</div>
               <div class="step-content-info">
                 <div>
-                  為了你的資產安全，我們不遺餘力，普匯於2020年取得
-                  身份驗證裝置專利，讓借款人以及投資人的資產收到保障
+                  繼2020年取得個人實名身分驗證專利後，2021年7月再取得法人實名認證專利，完成個人法人線上融資借貸法定身分認證之重要里程碑，開創台灣金融科技應用市場之先驅。
+                </div>
+              </div>
+            </div>
+            <div class="step-content-4">
+              <div class="step-content-title">
+                <div>首創全線上無人化</div>
+              </div>
+              <div class="step-content-info">
+                <div class="content-title-style">中小企業信保融資平台</div>
+                <div class="op">
+                  獲政府同意攜手銀行共同揭開台灣普惠金融科技序幕。
                 </div>
               </div>
             </div>
@@ -230,8 +277,12 @@
     <div class="index-tech section">
       <div class="block-content row no-gutters">
         <div class="col-6">
-          <div class="block-title">新創融資貸款</div>
-          <div class="block-info">我是文字我是文字</div>
+          <div class="tech-head">
+            <div class="block-title">創新金融科技融資產品</div>
+            <div class="block-info info">
+              秉持金融科技分享式經濟理念，運用P2P區塊鏈技術，結合不限金融銀行、產業電商、汽車銷售等異業合作，創新多項產品，加速金融服務產業，提升經濟價值，普惠金融落地。
+            </div>
+          </div>
           <div class="step-container">
             <div class="step-content-1">
               <div class="step-content-title">強大的專利技術</div>
@@ -274,8 +325,8 @@
     </div>
     <div class="index-cert section">
       <div class="block-content">
-        <div class="block-title">普匯一路上獲得了許多的認證</div>
-        <div class="block-info">我們努力就是為了讓用戶安心</div>
+        <div class="block-title">一路走來，獲得許多肯定與認同</div>
+        <div class="block-info">我們的努力，就是為了讓你更安心</div>
         <div class="swiper-container cert-swiper">
           <div class="swiper-wrapper">
             <div class="swiper-slide cert-cards">
@@ -301,7 +352,7 @@
                   <div class="card-title">獲得多家銀行搶先合作</div>
                   <div class="card-divider"></div>
                   <div class="card-text">
-                    普匯提供使用者體驗快速簡單便利的金融科技感受，加上穩定成長的會員，分別與凱基、上海銀行攜手信貸業務合作，更於2021年與新光銀行首次合作線上微型企業貸款。
+                    我們提供使用者最簡單便利安全的金融科技體驗，快速成長10萬會員，榮獲網路評價最佳年輕化金融借貸平台，分別獲得凱基、上海、王道及新光銀行搶先合作，更於2021年破天荒與新光銀行攜手共推全台灣第一全線上無人化「中小微企業信保融資」業務。
                   </div>
                 </div>
               </div>
@@ -310,10 +361,10 @@
                   <div class="card-cover">
                     <img src="@/asset/images/index/dating-app-1.png" alt="" />
                   </div>
-                  <div class="card-title">最年輕的借款APP</div>
+                  <div class="card-title">最年輕化的借貸APP</div>
                   <div class="card-divider"></div>
                   <div class="card-text">
-                    普匯從學生貸起家，目前已是全國最大學生金融科技平台;並踏入上班族以及企業貸款，憑藉快速、簡單、方便的特性，普匯已成為最受年輕人借貸喜愛使用的APP。
+                    我們是全台最大最安全最受學生喜愛的借貸平台，透過普匯APP可以簡單便利取得進修、生活、以及學雜費資金，多年來已陪伴幫助數萬名莘莘學子完成學業，實現夢想。
                   </div>
                 </div>
               </div>
@@ -325,7 +376,7 @@
                   <div class="card-title">ESG綠色金融科技平台</div>
                   <div class="card-divider"></div>
                   <div class="card-text">
-                    普匯運用P2P點對點技術，建構區塊鏈底層，結合AI自動化風控技術，打造符合ESG綠色金融科技平台環境，符合未來環保趨勢。
+                    秉持善用P2P區塊鏈科技提供融資服務，創立以來堅持AI自動風控審核，全程無人化無紙化，善盡保護地球保護環境，打造真正的綠色金融科技。更致力於善用AI金融科技投身慈善公益，號召知名藝人張鈞甯、鍾欣凌，共同協助台大兒醫、健康基金會聯合勸募，幫助台灣弱勢兒童，找回身心健康，身體力行ESG。
                   </div>
                 </div>
               </div>
@@ -336,13 +387,14 @@
     </div>
     <div class="product-step section">
       <div class="block-content p-4">
-        <div class="row no-gutters">
+        <div>
           <div class="product-step-head-title col-12 my-4">
             <span style="color: #f29500; padding: 0 16px">普匯金融</span>
-            幫助超過
+            幫助超過數
             <span style="color: #036eb7; padding: 0 16px">萬人</span>
-            美夢成真
+            渡過難關美夢成真
           </div>
+          <div class="block-content-info">我們的成績</div>
         </div>
         <div class="row no-gutters counter-row">
           <alesis-counter
@@ -368,28 +420,65 @@
       <div class="charity">
         <div class="block-content">
           <div class="block-title">慈善公益</div>
+          <div class="block-info">愛心100，捐款100</div>
           <div class="row no-gutters justify-content-center">
             <div class="col-5">
-              <div class="info-title">愛心100，捐款100</div>
-              <div class="info-content">
-                攜手台大兒童醫院、台大兒童健康基金會、愛心大使張鈞甯、愛心主持鍾欣凌，聯合勸募樂捐幫助台灣弱勢兒童，維護孩子們的健康
+              <div class="info-title">
+                <div>愛心不落人後，即使捐款100</div>
+                <div>也能幫助弱勢兒童，找回身心健康</div>
               </div>
-              <div>
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/Ve1MkgdZQlc"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                ></iframe>
+              <div class="info-content">
+                普匯攜手愛心大使「張鈞甯」、愛心主持「鍾欣凌」，共同協助台大兒醫、台大兒醫健康基金會聯合勸募，透過普匯捐款系統，即使捐款100元也能幫助兒童們健康，我們邀請您一起投入捐款，找回孩子們健康，創造更美好的台灣環境。
+              </div>
+              <div class="img-group">
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC1.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC2.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC3.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC4.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC5.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
               </div>
             </div>
-            <div class="col-5 d-flex justify-content-center">
+            <div class="col-auto">
               <img
                 src="@/asset/images/index/Group1251.png"
-                style="height: 420px"
+                style="height: 496px; margin-left: 15px"
               />
             </div>
           </div>
@@ -817,6 +906,38 @@ export default {
       y: 1200,
       duration: 2
     })
+    gsap.from('#s1', {
+      scrollTrigger: {
+        trigger: '.service-imgs',
+        start: '-240px top'
+      },
+      y: 1200,
+      duration: 2
+    })
+    gsap.from('#s2', {
+      scrollTrigger: {
+        trigger: '.service-imgs',
+        start: '-240px top'
+      },
+      x: -1200,
+      duration: 2
+    })
+    gsap.from('#s3', {
+      scrollTrigger: {
+        trigger: '.service-imgs',
+        start: '-240px top'
+      },
+      x: 1200,
+      duration: 2
+    })
+    gsap.from('#s4', {
+      scrollTrigger: {
+        trigger: '.service-imgs',
+        start: '-240px top'
+      },
+      y: 1200,
+      duration: 2
+    })
     alesisIndexCounter().then(v => {
       this.indexCounter = v
     })
@@ -869,20 +990,23 @@ export default {
     justify-content: center;
     align-items: flex-end;
     .intro-products {
-      display: grid;
-      grid-template-rows: 160px 160px;
-      gap: 20px;
-      grid-template-columns: repeat(3, 230px);
+      .group {
+        margin: 20px;
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+      }
     }
     .product-item {
       .card {
+        width: 230px;
         padding: 12px;
         border-radius: 4px;
       }
       .card-title {
         font-weight: 700;
-        font-size: 24px;
-        line-height: 35px;
+        font-size: 22px;
+        line-height: 32px;
         color: #393939;
       }
       .card-content {
@@ -913,17 +1037,17 @@ export default {
           background-size: contain;
           background-position: center;
           &.p1 {
-            background-image: url('~images/index/backpack1.svg');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/backpack.gif');
-            }
-          }
-          &.p2 {
             background-image: url('~images/index/mortarboard1.png');
             &:hover,
             &:focus-within {
               background-image: url('~images/index/mortarboard.gif');
+            }
+          }
+          &.p2 {
+            background-image: url('~images/index/id1.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/id.gif');
             }
           }
           &.p3 {
@@ -934,38 +1058,52 @@ export default {
             }
           }
           &.p4 {
-            background-image: url('~images/index/id1.png');
+            background-image: url('~images/index/car1.png');
             &:hover,
             &:focus-within {
-              background-image: url('~images/index/id.gif');
+              background-image: url('~images/index/car.gif');
             }
           }
           &.p5 {
+            background-image: url('~images/index/line-chart.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/line-chart.gif');
+            }
+          }
+          &.p6 {
             background-image: url('~images/index/handshake1.png');
             &:hover,
             &:focus-within {
               background-image: url('~images/index/handshake.gif');
             }
           }
-          &.p6 {
+          &.p7 {
             background-image: url('~images/index/university1.png');
             &:hover,
             &:focus-within {
               background-image: url('~images/index/university.gif');
             }
           }
-          &.p7 {
+          &.p8 {
             background-image: url('~images/index/building1.png');
             &:hover,
             &:focus-within {
               background-image: url('~images/index/building.gif');
             }
           }
-          &.p8 {
+          &.p9 {
             background-image: url('~images/index/love1.png');
             &:hover,
             &:focus-within {
               background-image: url('~images/index/love.gif');
+            }
+          }
+          &.p10 {
+            background-image: url('~images/index/money-bag.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/money-bag.gif');
             }
           }
         }
@@ -1111,13 +1249,13 @@ export default {
 }
 @keyframes service-img {
   0% {
-    margin: 30px auto;
+    top: 0px;
   }
   50% {
-    margin: 0 auto;
+    top: 30px;
   }
   100% {
-    margin: 30px auto;
+    top: 0;
   }
 }
 .index-service {
@@ -1137,13 +1275,14 @@ export default {
     text-align: center;
   }
   .service-imgs {
-    padding: 35px 0 140px;
+    padding: 15px 0 180px;
     position: relative;
     overflow: hidden;
     #service-1 {
       animation: service-img 4s linear infinite;
+      position: relative;
       display: block;
-      margin: 30px auto;
+      margin: 0 auto;
       height: 500px;
     }
     #service-2 {
@@ -1154,38 +1293,65 @@ export default {
       left: 400px;
       height: 400px;
     }
-  }
-  .service-groups {
-    margin-top: 200px;
-    .group {
-      right: -300px;
+    #s1 {
       position: absolute;
-      opacity: 0;
-      filter: alpha(opacity=0);
-      animation: service 12s linear infinite;
+      left: 253px;
+      top: 127px;
+      font-size: 18px;
+      line-height: 26px;
+      color: #ffffff;
     }
-    .group .item {
-      font-size: 20px;
-      padding: 6px 30px;
-      margin-bottom: 10px;
-      background: #fff;
-      border-radius: 6px;
-      text-align: center;
-      color: #083a6e;
+    #s2 {
+      position: absolute;
+      right: 178px;
+      top: 175px;
+      font-size: 18px;
+      line-height: 26px;
+      color: #ffffff;
     }
-    .group:nth-child(1) {
-      animation-delay: 0s;
+    #s3 {
+      position: absolute;
+      left: 188px;
+      bottom: 160px;
+      font-size: 18px;
+      line-height: 26px;
+      color: #ffffff;
     }
-    .group:nth-child(2) {
-      animation-delay: 4s;
-    }
-    .group:nth-child(3) {
-      animation-delay: 8s;
+    #s4 {
+      position: absolute;
+      right: 210px;
+      bottom: 165px;
+      font-size: 18px;
+      line-height: 26px;
+      color: #ffffff;
     }
   }
 }
 .index-tech {
   padding: 70px 70px;
+  .tech-head {
+    width: 420px;
+    margin: 0 auto;
+    .block-title {
+      text-align: left;
+    }
+    .block-info {
+      margin: 0;
+      text-align: left;
+    }
+  }
+  .block-content-header-title {
+    color: #036eb7;
+    font-size: 42px;
+    text-align: center;
+  }
+  .block-content-header-info {
+    color: #036eb7;
+    font-size: 24px;
+    margin-top: 24px;
+    opacity: 0.64;
+    text-align: center;
+  }
   .block-title {
     color: #036eb7;
     font-size: 32px;
@@ -1227,6 +1393,20 @@ export default {
       content: '3';
     }
   }
+  .step-content-4 {
+    width: 420px;
+    padding: 0 15px 10px 0;
+    .step-content-title::before {
+      content: '4';
+    }
+    .step-content-info {
+      border-left: 5px solid #f29600;
+      opacity: 1;
+    }
+    .op {
+      opacity: 0.56;
+    }
+  }
   .step-content-title {
     padding-left: 30px;
     font-style: normal;
@@ -1245,6 +1425,13 @@ export default {
       text-align: center;
       width: 36px;
     }
+  }
+  .content-title-style {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    color: #036fb7;
+    margin-bottom: 15px;
   }
   .step-content-info {
     margin: 15px 0;
@@ -1311,8 +1498,8 @@ export default {
       .card-text {
         font-style: normal;
         font-weight: 400;
-        font-size: 18px;
-        line-height: 26px;
+        font-size: 16px;
+        line-height: 1.2;
         color: #023d64;
         opacity: 0.56;
       }
@@ -1325,6 +1512,13 @@ export default {
     font-style: normal;
     font-weight: 700;
     font-size: 42px;
+    text-align: center;
+  }
+  .block-content-info {
+    color: #036eb7;
+    font-size: 24px;
+    margin: 24px 0;
+    opacity: 0.64;
     text-align: center;
   }
   .counter-row {
@@ -1607,13 +1801,19 @@ export default {
   .block-title {
     font-weight: 500;
     font-size: 40px;
-    line-height: 81px;
-    color: #023d64;
+    color: #036fb7;
+    text-align: center;
+  }
+  .block-info {
+    color: #036fb7;
+    font-size: 20px;
+    margin-top: 24px;
+    margin-bottom: 15px;
+    opacity: 0.64;
     text-align: center;
   }
   .info-title {
-    font-size: 40px;
-    line-height: 58px;
+    font-size: 32px;
     color: #023d64;
   }
   .info-content {
@@ -1622,6 +1822,12 @@ export default {
     line-height: 26px;
     color: #023d64;
     opacity: 0.64;
+  }
+  .img-group {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
   }
 }
 /**
