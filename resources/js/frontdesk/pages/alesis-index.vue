@@ -229,7 +229,7 @@
       </div>
       <div class="block-content row no-gutters">
         <div class="col-6 d-flex align-items-center">
-          <img src="@/asset/images/index/img60.png" style="height:450px" alt="" />
+          <img src="@/asset/images/index/img60.png" style="height:550px" alt="" />
         </div>
         <div class="col-6">
           <div class="block-title">台灣金融科技融資領導品牌</div>
@@ -484,7 +484,7 @@
           </div>
         </div>
       </div>
-      <div class="row no-gutters steps mt-4">
+      <div class="row no-gutters steps">
         <div class="block-content step-container">
           <div class="loan">
             <div class="step-head-title">我想借款</div>
