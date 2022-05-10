@@ -12,7 +12,7 @@
                 <div class="search-btn">
 
                     <div>
-                        <h4><?php echo $goal_at?> 目標</h4>
+                        <h4><?php echo $goal_ym?> 目標</h4>
                     </div>
                     
                 </div>
@@ -22,7 +22,7 @@
             <table  class="display responsive nowrap" width="100%" id="dataTables-paging">
                 <div class="search-btn">
 
-                    <form action="<?=base_url() . 'admin/Sales/set_monthly_goals'?>" method="post" style="display: inline-block">
+                    <form action="<?=base_url() . 'admin/Sales/set_monthly_goals/' . $goal_ym?>" method="post" style="display: inline-block">
 
                             <?php foreach ($goal_items as $key => $value) { ?>
                                 <tr><td><?=$value?>&nbsp;:&nbsp;<input type="number" value="<?=$goal_number[$key]['number']?>" name="<?=$goal_number[$key]['id']?>" /></td></tr>

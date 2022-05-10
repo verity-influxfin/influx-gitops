@@ -1175,7 +1175,7 @@ class Sales extends MY_Admin_Controller {
 
     public function sales_report()
     {
-        $goal_ym = $this->input->get('goal_ym');
+        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
         $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
 
         // 把大部分的東西都改寫到 library 裡面
@@ -1287,13 +1287,13 @@ class Sales extends MY_Admin_Controller {
     // 載入更新整月目標頁
     public function monthly_goals_edit()
     {
-        $goal_ym = $this->input->get('goal_ym');
+        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
         $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
 
-        $goals = $this->sale_goals_model->get_goals_number_at_this_month();
+        $goals = $this->sale_goals_model->get_goals_number_at_this_month($at_month);
 
         $page_data = [
-            'goal_at' => $goal_ym,
+            'goal_ym' => $goal_ym,
             'goal_items' => $this->sale_goals_model->type_name_mapping(),
             'goal_number' => $this->_parse_goal_struct($goals),
         ];
@@ -1319,15 +1319,33 @@ class Sales extends MY_Admin_Controller {
         return $data;
     }
 
-    public function set_monthly_goals()
+    public function set_monthly_goals($goal_ym)
     {
         $input = $this->input->post(NULL, TRUE);
-        foreach ($input as $key => $value)
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
+
+        $goals = $this->sale_goals_model->get_goals_number_at_this_month($at_month);
+        $db_goals = array_column($goals, 'number', 'id');
+
+        if ($this->_is_input_vaild($input, $db_goals))
         {
-            $this->sale_goals_model->update($key, ['number' => $value]);
+            $updated_data = array_diff($input, $db_goals);
+            if ($updated_data) 
+            {
+                foreach ($updated_data as $key => $value)
+                {
+                    $this->sale_goals_model->update($key, ['number' => $value]);
+                }
+            }
         }
 
         redirect('/admin/Sales/sales_report', 'refresh');
+    }
+
+    private function _is_input_vaild($input, $db_goals)
+    {
+        $same_key = array_intersect_key($input, $db_goals);
+        return (count($same_key) == count($input)) ? TRUE : FALSE;
     }
 
     public function goals_export()
