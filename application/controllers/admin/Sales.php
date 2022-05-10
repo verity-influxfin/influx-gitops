@@ -1175,8 +1175,8 @@ class Sales extends MY_Admin_Controller {
 
     public function sales_report()
     {
-        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
-        $at_month = str_replace('-', '', $goal_ym);
+        $goal_ym = $this->input->get('goal_ym');
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
 
         // 把大部分的東西都改寫到 library 裡面
         $this->load->library('Sales_lib', ['at_month' => $at_month]);
@@ -1287,8 +1287,8 @@ class Sales extends MY_Admin_Controller {
     // 載入更新整月目標頁
     public function monthly_goals_edit()
     {
-        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
-        $at_month = str_replace('-', '', $goal_ym);
+        $goal_ym = $this->input->get('goal_ym');
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
 
         $goals = $this->sale_goals_model->get_goals_number_at_this_month();
 
@@ -1332,8 +1332,8 @@ class Sales extends MY_Admin_Controller {
 
     public function goals_export()
     {
-        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
-        $at_month = str_replace('-', '', $goal_ym);
+        $goal_ym = $this->input->get('goal_ym');
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
 
         $this->load->library('Sales_lib', ['at_month' => $at_month]);
         $days_info = $this->sales_lib->get_days();
@@ -1517,5 +1517,19 @@ class Sales extends MY_Admin_Controller {
 
         $writer->save('php://output');
         exit;
+    }
+
+    private function _parse_goal_ym_to_at_month($goal_ym)
+    {
+        try
+        {
+            $day = new DateTimeImmutable($goal_ym);
+        }
+        catch (Exception $e)
+        {
+            return date('Ym');
+        }
+
+        return $day->format('Ym');
     }
 }
