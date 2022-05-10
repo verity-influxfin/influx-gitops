@@ -354,6 +354,13 @@ Route::prefix('api/v1')->group(function() {
     Route::post('/user/upload_pdf', 'ProductController@postUploadPdf');
     Route::post('/user/upload', 'ProductController@postUpload');
 
+    // 活動
+    Route::get('/campaign2022/list', 'Campaign2022Controller@get_all');
+    Route::get('/campaign2022/list/page/{page}', 'Campaign2022Controller@get_by_page');
+    Route::get('/campaign2022/list/search/{keyword}/page/{page}', 'Campaign2022Controller@get_by_keyword');
+    Route::get('/campaign2022/data/{id}', 'Campaign2022Controller@get_one');
+    Route::post('/campaign2022/upload', 'Campaign2022Controller@save_file');
+    Route::post('/campaign2022/vote', 'Campaign2022Controller@save_vote');
 });
 
 // 捐款動畫 SSE API
