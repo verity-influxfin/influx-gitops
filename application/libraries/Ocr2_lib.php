@@ -253,7 +253,7 @@ class Ocr2_lib
             '2' => '女',
         ];
 
-        return $list[$num];
+        return $list[$num] ?? '';
     }
 
     /**
