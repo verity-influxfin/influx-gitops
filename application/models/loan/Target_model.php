@@ -682,7 +682,7 @@ class Target_model extends MY_Model
     {
         $this->db->select('id, product_id, sub_product_id');
         $this->db->from('p2p_loan.targets');
-        $this->db->where_in('status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED]);
+        $this->db->where_in('status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED]);
         $this->db->where([
             'loan_status' => 1,
             'loan_date' => $date->format('Y-m-d'),
@@ -701,6 +701,8 @@ class Target_model extends MY_Model
             'STUDENT' => 0,
             'SALARY_MAN' => 0,
             'SK_MILLION' => 0, // 微企貸沒有出現在 匯出的 excel 裡面
+            'CREDIT_INSURANCE' => 0, // TODO 當信保專案上線後，需要在下方新增他的 case
+            'SME' => 0, // TODO 當中小企業上線後，需要在下方新增他的 case
         ];
 
         foreach ($targets as $target)

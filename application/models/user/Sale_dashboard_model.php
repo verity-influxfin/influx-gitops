@@ -116,6 +116,8 @@ class Sale_dashboard_model extends MY_Model
             'STUDENT' => self::TARGET_LOAN_STUDENT,
             'SALARY_MAN' => self::TARGET_LOAN_SALARY_MAN,
             'SK_MILLION' => self::TARGET_LOAN_SK_MILLION_SMEG, // 微企貸沒有出現在 匯出的 excel 裡面
+            'CREDIT_INSURANCE' => self::TARGET_LOAN_CREDIT_INSURANCE,
+            'SME' => self::TARGET_LOAN_SME,
         ];
     }
 
@@ -126,6 +128,8 @@ class Sale_dashboard_model extends MY_Model
             'STUDENT' => self::TARGET_DEAL_STUDENT,
             'SALARY_MAN' => self::TARGET_DEAL_SALARY_MAN,
             'SK_MILLION' => self::TARGET_DEAL_SK_MILLION_SMEG, // 微企貸沒有出現在 匯出的 excel 裡面
+            'CREDIT_INSURANCE' => self::TARGET_DEAL_CREDIT_INSURANCE,
+            'SME' => self::TARGET_DEAL_SME,
         ];
     }
 

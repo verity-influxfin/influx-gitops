@@ -113,8 +113,8 @@ class Sales_lib
             $real_a_month += $value['amounts'];
 
             // 計算達成率 real/goal 取百分比
-            $real[$day2key] = $value['amounts'];
-            $rate[$day2key] = $this->_caculate_rate($value['amounts'], $goal_per_day);
+            $real[$day2key] += $value['amounts']; // MEMO 申貸總計這項會有多個同日資料
+            $rate[$day2key] = $this->_caculate_rate($real[$day2key], $goal_per_day);
 
             // 檢查是否要累積成交數
             if (in_array($type, $this->_total_deal_content_type()))
