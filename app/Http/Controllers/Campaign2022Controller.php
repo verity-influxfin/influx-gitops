@@ -139,7 +139,7 @@ class Campaign2022Controller extends Controller
         }
         // 寫入資料庫
         try {
-            $filename = strtotime('now').'.'.$mime_type;
+            $filename = $response['data']['id'].strtotime('now').'.'.$mime_type;
             $file->move('upload/campaign2022', $filename);
             $inputs = $request->all();
             Campaign2022::updateOrCreate(['user_id' => $response['data']['id']], [
