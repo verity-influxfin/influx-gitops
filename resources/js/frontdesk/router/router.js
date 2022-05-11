@@ -67,6 +67,7 @@ import companySalesInfo from '../pages/enterpriseUpload/forms/companySalesInfo'
 import companyInsuranceInfo from '../pages/enterpriseUpload/forms/companyInsuranceInfo'
 import companyIncomeInfo from '../pages/enterpriseUpload/forms/companyIncomeInfo'
 import companyCreditInfo from '../pages/enterpriseUpload/forms/companyCreditInfo'
+import jumpEvent from '../pages/jumpEvent'
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -232,6 +233,10 @@ let routers = [
                 ]
             }
         ]
+    },
+    {
+        path: '/5th-anniversary',
+        component:jumpEvent
     }
 ];
 

@@ -326,7 +326,6 @@ $ci-color: #153a71;
     .search-group {
         position: relative;
         display: none;
-        width: 100%;
         max-width: 350px;
         &.inputing {
             display: flex;
@@ -364,7 +363,7 @@ $ci-color: #153a71;
     }
 
     @include rwd {
-        padding:15px !important;
+        padding:5px 15px !important;
         justify-content: space-between;
         .bar{
             font-size: 20px;
