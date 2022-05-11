@@ -143,8 +143,13 @@
             集人才：開發創新科技，建構AI無人自動化，打造最有溫度的金融新生態，呈現綠色金融科技新環境。
           </div>
         </div>
-        <div class="block-title">
+        <div class="block-title-2 d-sm-block d-none">
           年輕人的金融科技平台、簡單快速安全隱私、創造金融新生態
+        </div>
+        <div class="block-title-2 d-block d-sm-none">
+          <div>年輕人的金融科技平台</div>
+          <div>簡單快速安全隱私</div>
+          <div>創造金融新生態</div>
         </div>
         <div class="block-info d-block">
           <span class="em">「我們不是銀行」</span>
@@ -158,7 +163,11 @@
         </div>
       </div>
       <div class="wave">
-        <img src="@/asset/images/index/bg-white-wave.svg" alt="" />
+        <img
+          class="img-fluid w-100"
+          src="@/asset/images/index/bg-white-wave.svg"
+          alt=""
+        />
       </div>
     </div>
     <div class="index-loan section">
@@ -166,9 +175,13 @@
         <div class="block-title">一支手機，完成貸款</div>
         <div class="block-info">隨借隨貸，安全零距離</div>
         <div class="row no-gutters loan-imgs">
-          <img id="img58" src="@/asset/images/index/img58.png" />
+          <img
+            id="img58"
+            class="img-fluid d-sm-block d-none"
+            src="@/asset/images/index/img58.png"
+          />
           <div id="img56">
-            <div class="position-relative">
+            <div class="position-relative text-center">
               <div class="card tip-card tip-1">
                 <div class="card-container">
                   <div class="tip">無人打擾、免照會</div>
@@ -179,23 +192,34 @@
                   <div class="tip">安全隱私保密機制</div>
                 </div>
               </div>
-              <img src="@/asset/images/index/img56.png" />
+              <img class="img56-img" src="@/asset/images/index/img56.png" />
               <div>
                 <div class="block-title mx-auto">普匯•你的手機ATM</div>
               </div>
             </div>
           </div>
-          <img id="img57" src="@/asset/images/index/img57.png" />
+          <img
+            id="img57"
+            class="img-fluid d-sm-block d-none"
+            src="@/asset/images/index/img57.png"
+          />
         </div>
       </div>
     </div>
     <div class="index-service section">
       <div class="wave reverse">
-        <img src="@/asset/images/index/bg-white-wave.svg" alt="" />
+        <img
+          src="@/asset/images/index/bg-white-wave.svg"
+          class="img-fluid w-100"
+          alt=""
+        />
       </div>
       <div class="block-content">
         <div class="block-title">我們的服務</div>
-        <div class="block-info">提供多元個人及企業融資貸款管道平台</div>
+        <div class="block-info">
+          <div>創新金融科技 安全保護投資</div>
+          <div>提供多元借貸 服務普惠金融</div>
+        </div>
         <div class="row no-gutters service-imgs">
           <img id="service-1" src="@/asset/images/index/service-1.png" />
           <img id="service-2" src="@/asset/images/index/service-2.png" />
@@ -228,10 +252,10 @@
         </div>
       </div>
       <div class="block-content row no-gutters">
-        <div class="col-6 d-flex align-items-center">
-          <img src="@/asset/images/index/img60.png" style="height:550px" alt="" />
+        <div class="col-sm-6 col-12 d-flex align-items-center">
+          <img src="@/asset/images/index/img60.png" class="img-fluid" />
         </div>
-        <div class="col-6">
+        <div class="col-sm-6 col-12">
           <div class="block-title">台灣金融科技融資領導品牌</div>
           <div class="block-info">台灣金融科技的領導者</div>
           <div class="step-container">
@@ -275,49 +299,37 @@
       </div>
     </div>
     <div class="index-tech section">
-      <div class="block-content row no-gutters">
-        <div class="col-6">
+      <div class="block-content row no-gutters flex-sm-row flex-column-reverse">
+        <div class="col-sm-6 col-12">
           <div class="tech-head">
             <div class="block-title">創新金融科技融資產品</div>
-            <div class="block-info info">
+            <div class="block-info">
               秉持金融科技分享式經濟理念，運用P2P區塊鏈技術，結合不限金融銀行、產業電商、汽車銷售等異業合作，創新多項產品，加速金融服務產業，提升經濟價值，普惠金融落地。
             </div>
           </div>
           <div class="step-container">
             <div class="step-content-1">
-              <div class="step-content-title">強大的專利技術</div>
+              <div class="step-content-title">普匯信用錢包</div>
               <div class="step-content-info">
                 <div>
-                  普匯經由專業的科技開發團隊，開發個人實名認證、
-                  企業身份驗證流程，並確實具有法律效益，分別在
-                  109、110年成功申請裝置系統驗證專利。
+                  創新手機提供不限個人、企業信用錢包，便利生活消費或營運使用，體驗金融科技帶來的便利，提升生活品質及企業營運效能，實現「普匯•你的手機ATM」，隨借隨貸，「一支手機，搞定借貸」。
                 </div>
               </div>
             </div>
             <div class="step-content-2">
-              <div class="step-content-title">法人實名認證裝置</div>
+              <div class="step-content-title">分期超市</div>
               <div class="step-content-info">
                 <div>
-                  普匯，你的手機ATM 為了使申貸無人化，用戶資產以及資訊
-                  安全受到保障，我們持續地精進自己，於2021年取得法人實
-                  名裝置專利，將以往繁瑣的申貸流程濃縮到你的手機中。
-                </div>
-              </div>
-            </div>
-            <div class="step-content-3">
-              <div class="step-content-title">身份驗證裝置</div>
-              <div class="step-content-info">
-                <div>
-                  為了你的資產安全，我們不遺餘力，普匯於2020年取得
-                  身份驗證裝置專利，讓借款人以及投資人的資產收到保障
+                  提供多元、多種類、快速便利又安全的「先買後付」信用支付工具，讓你的消費更便利，廠商收款更快速，促進經濟活絡，提升金融服務價值。
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-6 d-flex align-items-center">
+        <div class="col-sm-6 col-12 d-flex align-items-center">
           <img
             src="@/asset/images/index/cart_shopping_3d_render_10 1.png"
+            class="img-fluid"
             alt=""
           />
         </div>
@@ -325,7 +337,13 @@
     </div>
     <div class="index-cert section">
       <div class="block-content">
-        <div class="block-title">一路走來，獲得許多肯定與認同</div>
+        <div class="block-title d-none d-sm-block">
+          一路走來，獲得許多肯定與認同
+        </div>
+        <div class="block-title d-sm-none d-block">
+          <div>一路走來</div>
+          <div>獲得許多肯定與認同</div>
+        </div>
         <div class="block-info">我們的努力，就是為了讓你更安心</div>
         <div class="swiper-container cert-swiper">
           <div class="swiper-wrapper">
@@ -333,7 +351,11 @@
               <div class="card">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img src="@/asset/images/index/handshake2.png" alt="" />
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/handshake2.png"
+                      alt=""
+                    />
                   </div>
                   <div class="card-title">新光金控創投入資</div>
                   <div class="card-divider"></div>
@@ -347,7 +369,11 @@
               <div class="card">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img src="@/asset/images/index/link-1.png" alt="" />
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/link-1.png"
+                      alt=""
+                    />
                   </div>
                   <div class="card-title">獲得多家銀行搶先合作</div>
                   <div class="card-divider"></div>
@@ -359,7 +385,11 @@
               <div class="card">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img src="@/asset/images/index/dating-app-1.png" alt="" />
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/dating-app-1.png"
+                      alt=""
+                    />
                   </div>
                   <div class="card-title">最年輕化的借貸APP</div>
                   <div class="card-divider"></div>
@@ -371,7 +401,11 @@
               <div class="card">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img src="@/asset/images/index/planet-earth-1.png" alt="" />
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/planet-earth-1.png"
+                      alt=""
+                    />
                   </div>
                   <div class="card-title">ESG綠色金融科技平台</div>
                   <div class="card-divider"></div>
@@ -389,9 +423,9 @@
       <div class="block-content p-4">
         <div>
           <div class="product-step-head-title col-12 my-4">
-            <span style="color: #f29500; padding: 0 16px">普匯金融</span>
+            <span style="color: #f29500" class="pr-sm-2 pr-1">普匯金融</span>
             幫助超過數
-            <span style="color: #036eb7; padding: 0 16px">萬人</span>
+            <span style="color: #036eb7" class="pr-sm-2 pr-1">萬人</span>
             渡過難關美夢成真
           </div>
           <div class="block-content-info">我們的成績</div>
@@ -422,7 +456,7 @@
           <div class="block-title">慈善公益</div>
           <div class="block-info">愛心100，捐款100</div>
           <div class="row no-gutters justify-content-center">
-            <div class="col-5">
+            <div class="col-sm-5 col-12 p-2 p-sm-0">
               <div class="info-title">
                 <div>愛心不落人後，即使捐款100</div>
                 <div>也能幫助弱勢兒童，找回身心健康</div>
@@ -430,6 +464,10 @@
               <div class="info-content">
                 普匯攜手愛心大使「張鈞甯」、愛心主持「鍾欣凌」，共同協助台大兒醫、台大兒醫健康基金會聯合勸募，透過普匯捐款系統，即使捐款100元也能幫助兒童們健康，我們邀請您一起投入捐款，找回孩子們健康，創造更美好的台灣環境。
               </div>
+              <img
+                class="img-fluid img-1251 d-sm-none d-block"
+                src="@/asset/images/index/Group1251.png"
+              />
               <div class="img-group">
                 <div class="img-item">
                   <img
@@ -475,16 +513,25 @@
                 </div>
               </div>
             </div>
-            <div class="col-auto">
+            <div class="col-sm-auto col-12 d-sm-block d-none">
               <img
+                class="img-fluid img-1251"
                 src="@/asset/images/index/Group1251.png"
-                style="height: 496px; margin-left: 15px"
               />
             </div>
           </div>
         </div>
       </div>
       <div class="row no-gutters steps">
+        <div class="block-content">
+          <div class="block-title d-sm-block d-none">
+            如何完成夢想，幫助他們圓夢
+          </div>
+          <div class="block-title d-block d-sm-none">
+            <div>如何完成夢想</div>
+            <div>幫助他們圓夢</div>
+          </div>
+        </div>
         <div class="block-content step-container">
           <div class="loan">
             <div class="step-head-title">我想借款</div>
@@ -500,7 +547,11 @@
                   <div>提供完整資訊，有助提高額度</div>
                 </div>
                 <div class="step-content-img">
-                  <img src="@/asset/images/index/loan-step-1.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-1.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-2">
@@ -510,7 +561,11 @@
                   <div>根據您的身分選擇適合的專案</div>
                 </div>
                 <div class="step-content-img">
-                  <img src="@/asset/images/index/loan-step-2.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-2.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-3">
@@ -520,7 +575,11 @@
                   <div>AI數據分析審核，全程無人打擾</div>
                 </div>
                 <div class="step-content-img">
-                  <img src="@/asset/images/index/loan-step-3.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-3.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-4">
@@ -530,7 +589,11 @@
                   <div>審核成功後，立即上架幫您媒合投資人</div>
                 </div>
                 <div class="step-content-img">
-                  <img src="@/asset/images/index/loan-step-4.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-4.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-5">
@@ -540,7 +603,11 @@
                   <div>24小時收到款項</div>
                 </div>
                 <div class="step-content-img">
-                  <img src="@/asset/images/index/loan-step-5.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-5.png"
+                    alt=""
+                  />
                 </div>
               </div>
             </div>
@@ -573,7 +640,11 @@
                   <div>進入我的資產 -</div>
                 </div>
                 <div class="step-content-img">
-                  <img src="@/asset/images/index/invest-step-1.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-1.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-2">
@@ -582,7 +653,11 @@
                   <div>選擇單筆/打包出售 -</div>
                 </div>
                 <div class="step-content-img">
-                  <img src="@/asset/images/index/invest-step-2.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-2.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-3">
@@ -592,7 +667,11 @@
                   <div>詳閱轉讓協議書 -</div>
                 </div>
                 <div class="step-content-img">
-                  <img src="@/asset/images/index/invest-step-3.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-3.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-4">
@@ -601,7 +680,11 @@
                   <div>上架成功，等待媒合 -</div>
                 </div>
                 <div class="step-content-img">
-                  <img src="@/asset/images/index/invest-step-4.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-4.png"
+                    alt=""
+                  />
                 </div>
               </div>
             </div>
@@ -645,7 +728,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-auto mx-5">
+                <div class="col-auto mx-5 d-sm-block d-none">
                   <div class="card comment-card">
                     <div class="card-body">
                       <div class="card-title star">
@@ -663,7 +746,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-auto">
+                <div class="col-auto d-sm-block d-none">
                   <div class="card comment-card">
                     <div class="card-body">
                       <div class="card-title star">
@@ -697,7 +780,7 @@
                   >
                   </iframe>
                 </div>
-                <div class="col-auto mx-5">
+                <div class="col-auto mx-5 d-sm-block d-none">
                   <iframe
                     width="360"
                     height="230"
@@ -709,7 +792,7 @@
                   >
                   </iframe>
                 </div>
-                <div class="col-auto">
+                <div class="col-auto d-sm-block d-none">
                   <iframe
                     width="360"
                     height="230"
@@ -964,12 +1047,12 @@ export default {
 .wave {
   position: absolute;
   bottom: 0;
-  left: -30px;
+  left: 0px;
+  width: 100%;
   height: 100px;
   overflow: hidden;
   &.reverse {
     top: 0;
-    left: initial;
     right: -30px;
     transform: rotate(180deg);
   }
@@ -1129,6 +1212,13 @@ export default {
       color: #e6f5ff;
       text-align: center;
     }
+    .block-title-2 {
+      color: #e6f5ff;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.4;
+      margin: 40px 0;
+    }
     .block-info {
       display: flex;
       align-items: flex-start;
@@ -1192,6 +1282,9 @@ export default {
     #img56 {
       display: block;
       margin: auto;
+      .img56-img {
+        width: 380px;
+      }
     }
     #img58 {
       left: -50px;
@@ -1208,11 +1301,11 @@ export default {
   }
   .tip-card {
     &.tip-1 {
-      right: 200px;
+      right: -155px;
       top: 200px;
     }
     &.tip-2 {
-      left: 166px;
+      left: -144px;
       top: 400px;
     }
     position: absolute;
@@ -1370,14 +1463,14 @@ export default {
     position: relative;
   }
   .step-content-1 {
-    width: 420px;
+    width: 435px;
     padding: 0 15px 10px 0;
     .step-content-title::before {
       content: '1';
     }
   }
   .step-content-2 {
-    width: 420px;
+    width: 435px;
     padding: 0 15px 10px 0;
     .step-content-title::before {
       content: '2';
@@ -1387,14 +1480,14 @@ export default {
     }
   }
   .step-content-3 {
-    width: 420px;
+    width: 435px;
     padding: 0 15px 10px 0;
     .step-content-title::before {
       content: '3';
     }
   }
   .step-content-4 {
-    width: 420px;
+    width: 435px;
     padding: 0 15px 10px 0;
     .step-content-title::before {
       content: '4';
@@ -1508,6 +1601,12 @@ export default {
 }
 
 .product-step {
+  .block-title {
+    margin-top: 40px;
+    color: #036eb7;
+    font-size: 48px;
+    text-align: center;
+  }
   .product-step-head-title {
     font-style: normal;
     font-weight: 700;
@@ -1525,7 +1624,7 @@ export default {
     justify-content: space-evenly;
   }
   .steps {
-    height: 900px;
+    height: 1000px;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -1829,6 +1928,10 @@ export default {
     grid-template-columns: 1fr 1fr 1fr;
     gap: 15px;
   }
+  .img-1251 {
+    height: 496px;
+    margin-left: 15px;
+  }
 }
 /**
     user experience
@@ -1884,6 +1987,710 @@ export default {
   .ue-prev,
   .ue-next {
     top: 215px;
+  }
+}
+
+@media (max-width: 768px) {
+  .block-content {
+    margin: 0 auto;
+  }
+  .wave {
+    position: absolute;
+    bottom: initial;
+    height: 100px;
+    overflow: hidden;
+    &.reverse {
+      top: -40px;
+      transform: rotate(180deg);
+    }
+  }
+  .index-intro {
+    background-image: none;
+    padding: 0;
+    height: auto;
+    .intro-content {
+      background-image: url('~images/index/header-bg-phone.png');
+      background-position: initial;
+      .intro-products {
+        margin-top: 365px;
+        .group {
+          margin: 20px 0;
+          flex-direction: column;
+        }
+      }
+      .product-item {
+        .card {
+          width: 330px;
+          position: relative;
+        }
+        .card-content {
+          display: flex;
+          gap: 15px;
+          .card-subtitle {
+            margin: 0;
+            font-size: 14px;
+            line-height: 20px;
+          }
+          .card-link {
+            font-size: 14px;
+            line-height: 20px;
+          }
+          .card-image {
+            position: absolute;
+            top: 8px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+          }
+        }
+      }
+    }
+  }
+  .index-concept {
+    position: relative;
+    padding: 30px 10px;
+    background-image: url('~images/index/concept-bg.png');
+    height: auto;
+    .block-content {
+      padding: 0 0 50px;
+      .block-title {
+        font-size: 28px;
+        line-height: 1.4;
+        margin: 0 0 20px;
+      }
+      .block-title-2 {
+        font-size: 20px;
+        line-height: 1.4;
+        margin: 0 0 20px;
+      }
+      .block-info {
+        display: flex;
+        align-items: flex-start;
+        font-size: 14px;
+        line-height: 1.5;
+        &.concept-1::before {
+          content: '「普」';
+          font-size: 20px;
+          line-height: 14px;
+        }
+        &.concept-2::before {
+          display: inline-block;
+          content: '「匯」';
+          font-size: 20px;
+          line-height: 14px;
+        }
+      }
+      .op {
+        margin-bottom: 10px;
+      }
+      .em {
+        font-size: 20px;
+      }
+    }
+  }
+  .index-loan {
+    padding: 20px 0;
+    background-image: url('~images/index/index-phone-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 575px;
+    .block-title {
+      font-size: 28px;
+    }
+    .block-info {
+      font-size: 18px;
+      margin-top: 8px;
+    }
+    .loan-imgs {
+      padding: 35px 0;
+      position: relative;
+      height: auto;
+      #img56 .img56-img {
+        width: 210px;
+      }
+      //   #img58 {
+      //     left: -50px;
+      //     bottom: -12px;
+      //     position: absolute;
+      //     transform: matrix(1, 0.08, 0.08, 1, 0, 0);
+      //   }
+      //   #img57 {
+      //     top: -20px;
+      //     right: -232px;
+      //     position: absolute;
+      //     transform: rotate(-7.93deg);
+      //   }
+    }
+    .tip-card {
+      &.tip-1 {
+        right: -40px;
+        top: 128px;
+      }
+      &.tip-2 {
+        left: -40px;
+        top: 280px;
+      }
+      width: 160px;
+      .card-container {
+        padding: 8px 12px;
+      }
+      .tip {
+        font-size: 14px;
+      }
+    }
+  }
+  @keyframes service {
+    3% {
+      right: -125px;
+      opacity: 0.4;
+      filter: alpha(opacity=20);
+    }
+    20% {
+      right: 145px;
+      opacity: 1;
+      filter: alpha(opacity=0);
+    }
+    45% {
+      right: 145px;
+      opacity: 0;
+      filter: alpha(opacity=0);
+    }
+  }
+  @keyframes service-img {
+    0% {
+      top: 0px;
+    }
+    50% {
+      top: 30px;
+    }
+    100% {
+      top: 0;
+    }
+  }
+  .index-service {
+    position: relative;
+    padding: 75px 0 25px;
+    background: linear-gradient(180.82deg, #036eb7 13.7%, #ffffff 99.77%);
+    .block-title {
+      color: #fff;
+      font-size: 32px;
+      text-align: center;
+    }
+    .block-info {
+      color: #fff;
+      font-size: 20px;
+      margin-top: 16px;
+      opacity: 0.64;
+      text-align: center;
+    }
+    .service-imgs {
+      padding: 15px 0 130px;
+      position: relative;
+      overflow: hidden;
+      #service-1 {
+        margin-top: 15px;
+        animation: none;
+        max-width: 70%;
+        margin: 0 auto;
+        height: auto;
+      }
+      #service-2 {
+        position: absolute;
+        display: block;
+        margin: 0 auto;
+        bottom: -75px;
+        left: 0px;
+        height: 260px;
+      }
+      #s1 {
+        left: 20px;
+        top: 20px;
+        font-size: 12px;
+        line-height: 1.6;
+        width: 70px;
+      }
+      #s2 {
+        position: absolute;
+        right: 3px;
+        top: 19px;
+        font-size: 12px;
+        line-height: 1.6;
+        width: 100px;
+      }
+      #s3 {
+        position: absolute;
+        left: 15px;
+        bottom: 58px;
+        font-size: 12px;
+        line-height: 1.6;
+        width: 100px;
+      }
+      #s4 {
+        position: absolute;
+        right: 3px;
+        bottom: 80px;
+        font-size: 12px;
+        line-height: 1.6;
+        width: 110px;
+      }
+    }
+  }
+  .index-tech {
+    padding: 30px 0px;
+    .tech-head {
+      width: 100%;
+      margin: 0 auto;
+      .block-title {
+        text-align: center;
+      }
+      .block-info {
+        margin: 0;
+        padding: 0 15px;
+        text-align: left;
+      }
+    }
+    .block-content-header-title {
+      font-size: 28px;
+    }
+    .block-content-header-info {
+      font-size: 18px;
+      width: 256px;
+      margin: 8px auto;
+    }
+    .block-title {
+      font-size: 20px;
+    }
+    .block-info {
+      font-size: 16px;
+      margin-top: 8px;
+    }
+    .step-container {
+      margin: 15px auto;
+      padding: 0 25px;
+      position: relative;
+    }
+    .step-content-1 {
+      width: 100%;
+      padding: 0;
+      .step-content-title::before {
+        content: '1';
+      }
+    }
+    .step-content-2 {
+      width: 100%;
+      padding: 0;
+      .step-content-title::before {
+        content: '2';
+      }
+      .step-content-info {
+        border-left: 5px solid #f29600;
+      }
+    }
+    .step-content-3 {
+      width: 100%;
+      padding: 0;
+      .step-content-title::before {
+        content: '3';
+      }
+    }
+    .step-content-4 {
+      width: 100%;
+      padding: 0;
+      .step-content-title::before {
+        content: '4';
+      }
+      .step-content-info {
+        border-left: 5px solid #f29600;
+        opacity: 1;
+      }
+      .op {
+        opacity: 0.56;
+      }
+    }
+    .step-content-title {
+      padding-left: 30px;
+      font-size: 18px;
+      line-height: 36px;
+      &::before {
+        background: #036fb7;
+        color: #fff;
+        font-size: 18px;
+        line-height: 36px;
+        left: 10px;
+        width: 36px;
+      }
+    }
+    .content-title-style {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.2;
+      color: #036fb7;
+      margin-bottom: 10px;
+    }
+    .step-content-info {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+  }
+  .index-cert {
+    padding: 36px;
+    .cert-swiper {
+      overflow: initial;
+    }
+    .block-title {
+      font-size: 28px;
+    }
+    .block-info {
+      font-size: 18px;
+      margin-top: 6px;
+    }
+    .cert-cards {
+      flex-direction: column;
+      margin-top: 20px;
+      gap: 20px;
+      .card {
+        width: 100%;
+        border: none;
+        .card-body {
+          padding: 22px;
+        }
+        .card-cover {
+          width: 68px;
+          margin: 0 auto 12px;
+          padding: 8px;
+        }
+        .card-title {
+          font-size: 18px;
+        }
+        .card-text {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  .product-step {
+    .product-step-head-title {
+      font-size: 28px;
+    }
+    .block-title {
+      margin-top: 30px;
+      color: #036eb7;
+      font-size: 28px;
+      text-align: center;
+    }
+    .block-content-info {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+    .counter-row {
+      flex-direction: column;
+      gap: 15px;
+    }
+    .steps {
+      height: auto;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-image: url('~images/index/step-bg.png');
+    }
+    .step-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      padding: 20px 0;
+      gap: 20px;
+      .loan {
+        .step-head-title {
+          color: #036fb7;
+        }
+        .step-content-1 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          border-left: 5px solid #036fb7;
+          .step-content-title::before {
+            content: '1';
+          }
+          .step-content-img {
+            opacity: 1;
+            z-index: 3;
+          }
+        }
+        .step-content-2 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          border-left: 5px solid #036fb7;
+          .step-content-title::before {
+            content: '2';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-3 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          border-left: 5px solid #036fb7;
+          .step-content-title::before {
+            content: '3';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-4 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          border-left: 5px solid #036fb7;
+          .step-content-title::before {
+            content: '4';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-5 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          .step-content-title::before {
+            content: '5';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .solgan {
+          font-size: 18px;
+          margin: 30px auto;
+          padding: 14px;
+          width: 180px;
+          .em {
+            font-size: 24px;
+          }
+          .sm {
+            font-size: 12px;
+          }
+        }
+      }
+      .invest {
+        .step-head-title {
+          color: #f29500;
+        }
+        .step-content-1 {
+          width: 160px;
+          padding: 0 15px 40px 30px;
+          border-left: 5px solid #f29500;
+          .step-content-title::before {
+            content: '1';
+            background: #f29500;
+          }
+          .step-content-img {
+            opacity: 1;
+            z-index: 3;
+          }
+        }
+        .step-content-2 {
+          width: 160px;
+          padding: 0 15px 40px 30px;
+          border-left: 5px solid #f29500;
+          .step-content-title::before {
+            content: '2';
+            background: #f29500;
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-3 {
+          width: 160px;
+          padding: 0 15px 25px 30px;
+          border-left: 5px solid #f29500;
+          .step-content-title::before {
+            content: '3';
+            background: #f29500;
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-4 {
+          width: 160px;
+          padding: 0 15px 10px 30px;
+          .step-content-title::before {
+            content: '4';
+            background: #f29500;
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .solgan {
+          font-size: 18px;
+          margin: 30px auto;
+          padding: 14px;
+          width: 180px;
+          .em {
+            font-size: 24px;
+          }
+          .sm {
+            font-size: 12px;
+          }
+        }
+      }
+      .step-head-title {
+        font-size: 18px;
+      }
+      .step-head-info {
+        margin-top: 8px;
+        font-size: 12px;
+      }
+      .step-main {
+        margin-top: 25px;
+        display: flex;
+        // width: 200px;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      .divide {
+        display: none;
+      }
+      .step-content-title {
+        font-size: 18px;
+        line-height: 2;
+        color: #036fb7;
+        &::before {
+          right: 140px;
+          font-size: 18px;
+          line-height: 2;
+          width: 36px;
+        }
+      }
+      .step-content-info {
+        font-size: 12px;
+      }
+      .step-content-img {
+        top: 30px;
+        left: 0;
+        width: 195px;
+        transition-property: opacity;
+        transition-duration: 1s;
+        opacity: 0;
+      }
+    }
+  }
+  .charity {
+    padding: 32px 0;
+    .block-title {
+      font-size: 28px;
+    }
+    .block-info {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .info-title {
+      font-size: 18px;
+      text-align: center;
+    }
+    .info-content {
+      margin: 12px 0 12px;
+      font-size: 12px;
+      line-height: 1.3;
+    }
+    .img-group {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+    }
+    .img-1251 {
+      height: auto;
+      margin-left: 0;
+      margin-bottom: 15px;
+    }
+  }
+  /**
+    user experience
+*/
+  .user-experience {
+    position: relative;
+    height: 575px;
+    background-position: top;
+    .block-title {
+      margin-top: 24px;
+      font-size: 28px;
+      line-height: 1.4;
+    }
+    .block-info {
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    .user-comment {
+      margin-top: 50px;
+      justify-content: center;
+      .comment-card {
+        width: 270px;
+        padding: 10px;
+        .portrait {
+          width: 40px;
+        }
+      }
+    }
+    .media {
+      position: absolute;
+      padding: 20px;
+      bottom: 0;
+      width: 101%;
+      left: 15px;
+      background: rgba($color: #8c97af, $alpha: 0.5);
+      .圖片 {
+        height: 32px;
+      }
+    }
+    .ue-prev,
+    .ue-next {
+      top: 175px;
+    }
   }
 }
 </style>

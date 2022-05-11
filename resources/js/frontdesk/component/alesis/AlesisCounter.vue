@@ -83,6 +83,9 @@ export default {
 .計數項目 .象徵 {
     width: 75px;
     margin-bottom: 15px;
+    @include rwd{
+        margin-bottom: 8px;
+    }
 }
 
 .計數項目 .內容 {
@@ -92,8 +95,7 @@ export default {
     justify-content: center;
 
     @include rwd {
-        margin-top : 1rem;
-        align-items: center;
+        margin-top : 0;
     }
 }
 
