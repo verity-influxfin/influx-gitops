@@ -2631,7 +2631,7 @@ END:
 
             $data['subcode_id'] = (int)$user_subcode['id'];
             $data['status'] = (int)$data['status'];
-            $data['promote_url'] = 'https://event.influxfin.com/R/url?identity=subcode';
+            $data['promote_url'] = 'https://event.influxfin.com/R/url?p='.$data['promote_code'];
             $data['promote_qrcode'] = get_qrcode('https://event.influxfin.com/R/url?p='.$data['promote_code']);
             $list[] = $data;
         }
