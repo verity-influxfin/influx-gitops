@@ -6,7 +6,7 @@ html {
 body {
     cursor: default;
     font-family:  Noto Sans TC, Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica,
-        sans-serif;
+    sans-serif;
     width: 100%;
     overflow-x: hidden;
 }
@@ -24,10 +24,10 @@ $ci-color: #153a71;
 .page-header {
     z-index: 11;
     background-image: linear-gradient(
-        to right,
-        #1e2973 0%,
-        #319acf 36%,
-        #1e2973 73%
+    to right,
+    #1e2973 0%,
+    #319acf 36%,
+    #1e2973 73%
     );
 
     .web-logo {
@@ -211,7 +211,7 @@ $ci-color: #153a71;
 
 .content-wrapper {
     width: 100%;
-    margin-top: 66px;
+    margin-top: 45px;
     overflow: auto;
     overflow-x: hidden;
 
@@ -219,34 +219,143 @@ $ci-color: #153a71;
         margin-top: 56px;
     }
 }
+.header-container{
+    position: fixed;
+    z-index: 11;
+    width: 100%;
+    top: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15);
+    .function-list{
+        display: none;
+        position: absolute;
+        background: rgba(112, 112, 112, 0.8);;
+        width: 100%;
+        top: 45px;
+        left: 0;
+        .function-list-content{
+            display: flex;
+            color: #fff;
+            padding: 10px 36px;
+            width: 100%;
+            max-width: 1400px;
+            gap: 80px;
+            min-height: 260px;
+            .function-list-items{
+                width: 200px;
+            }
+            .link-title{
+                font-style: normal;
+                font-weight: 700;
+                font-size: 20px;
+                line-height: 29px;
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+                border-bottom: 2px solid #fff;
+            }
+            .link-item{
+                padding-bottom: 15px;
+                color: #fff;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 20px;
+                line-height: 29px;
+            }
+            &.charitable{
+                justify-content: center;
+                .function-list-items{
+                    width: 600px;
+                }
+                .link-title,.link-item{
+                    text-align: center;
+                }
+            }
+            &.invest{
+                justify-content: center;
+                .function-list-items{
+                    width: 800px;
+                }
+                .link-title,.link-item{
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
+
+
 
 .alesis-header {
-    color: #fff;
-    background-image: linear-gradient(
-        to right,
-        #1e2973 0%,
-        #319acf 36%,
-        #1e2973 73%
-    );
-
+    color: #393939;
     display: flex;
     align-items: center;
-    padding: 0.5rem 1rem;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 11;
+    padding: 0 36px;
+    width: 100%;
+    max-width: 1400px;
+    position: initial;
+    .functions{
+        display: flex;
+        align-items: center;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 23px;
+        color: #393939;
+        position: initial;
+        .function-item{
+            padding: 10px 16px;
+            &:hover,&:focus-within{
+                .function-list{
+                    display: block;
+                }
+            }
+        }
+
+    }
+    .search-icon{
+        display: flex;
+        align-items: center;
+    }
+    .search-group {
+        position: relative;
+        display: none;
+        width: 350px;
+        &.inputing {
+            display: flex;
+        }
+        .search-input {
+            width: 100%;
+            color: #393939;
+            padding: 5px 16px;
+            font-size: 18px;
+            border: 1px solid #036EB7;
+            border-radius: 6px;
+        }
+        .clear-icon {
+            padding: 3px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #036EB7;
+            position: absolute;
+            right: 10px;
+        }
+
+    }
+    .login-btn{
+        padding: 3px 20px;
+        color: #fff;
+        background-color: #036EB7;
+        border-radius: 4px;
+    }
 
     @include rwd {
         flex-wrap: wrap;
     }
 
     .logo {
-        flex: 1;
-
+        padding: 10px 0;
         .image {
-            height: 40px;
+            height: 30px;
         }
     }
 
@@ -468,54 +577,7 @@ $ci-color: #153a71;
                 margin-bottom: 2px;
             }
         }
-        .search-group {
-            @include rwd {
-                width: 0;
-                flex: 1;
-                grid-area: 1/1/2/2;
-            }
-            position: relative;
-            display: none;
-            width: 550px;
-            grid-area: 1/1/2/8;
-            margin: -0.5rem -1rem;
-            &.inputing {
-                display: flex;
-            }
-            .search-input {
-                width: 100%;
-                border: none;
-                color: #fff;
-                padding: 19px;
-                font-size: 18px;
-                background-image: linear-gradient(
-                    to right,
-                    #3869ab 0%,
-                    #051f5d 73%
-                );
-                &::placeholder {
-                    color: rgba(255, 255, 255, 0.8);
-                }
-                @include rwd {
-                    padding: 8px;
-                    font-size: 14px;
-                }
-            }
-            .clear-icon {
-                padding: 13px;
-                cursor: pointer;
-                font-size: 22px;
-                color: #fff;
-                position: absolute;
-                right: 20px;
-                @include rwd {
-                    padding: 4px;
-                    font-size: 18px;
-                    top: 0;
-                    right: 6px;
-                }
-            }
-        }
+
     }
 
     .rwd-list {
@@ -601,6 +663,8 @@ $ci-color: #153a71;
 
 .alesis-footer {
     background: #153a71;
+    width: 100%;
+    max-width: 1400px;
     padding: 0.5rem 0;
     color: #fff;
     position: relative;
@@ -612,18 +676,12 @@ $ci-color: #153a71;
     > .line {
         height: 1px;
         background: #2f95cb;
-        max-width: 95%;
         margin: 1rem auto;
     }
 
     > .main {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        margin: 1rem auto 0;
-        max-width: 1280px;
-        gap: 3rem;
-        display: grid;
-        grid-template-columns: 1fr 2fr;
+        display: flex;
+        flex-direction: column;
 
         @include rwd {
             display: flex;
@@ -633,6 +691,10 @@ $ci-color: #153a71;
         }
 
         > .introduction {
+            display: grid;
+            margin-bottom: 35px;
+            gap: 50px;
+            grid-template-columns: 1fr 3fr 3fr;
             > .brand {
                 display: flex;
                 align-items: center;
@@ -660,17 +722,18 @@ $ci-color: #153a71;
         }
 
         > .information {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 3rem;
             font-size: 0.9rem;
-
+            margin-top: 10px;
             @include rwd {
                 grid-template-columns: 1fr 1fr;
                 grid-template-areas:
-                    "loan invest"
-                    "loan about"
-                    "contact contact";
+                "loan invest"
+                "loan about"
+                "contact contact";
                 text-align: center;
                 gap: 0rem 5rem;
 
@@ -766,9 +829,10 @@ $ci-color: #153a71;
     }
 
     > .secondary {
-        margin: 4rem auto 1rem;
-        max-width: 1280px;
+        margin: 20px auto;
+        max-width: 1400px;
         display: flex;
+        justify-content: center;
         align-items: flex-end;
 
         @include rwd {
@@ -1084,7 +1148,7 @@ $ci-color: #153a71;
 
 %modal-style {
     font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica,
-        sans-serif;
+    sans-serif;
 
     .modal-header {
         display: initial !important;
