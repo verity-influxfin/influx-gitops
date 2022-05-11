@@ -540,10 +540,6 @@ class Credit_lib{
             ],
             ['status'=> 0]
         );
-        if($sub_product_id == STAGE_CER_TARGET && $time < $credit['expire_time']){
-            $rs 		= $this->CI->credit_model->update($credit['id'],$param);
-            return $rs;
-        }
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
