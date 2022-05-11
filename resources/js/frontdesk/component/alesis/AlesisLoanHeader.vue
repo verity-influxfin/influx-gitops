@@ -5,8 +5,9 @@
             <div
                 class="圖片 hidden-phone"
                 v-if="imagePhone"
-                :style="{backgroundImage:`url(${imagePhone})`}"
-                style="background-position: top center;background-size: cover;">
+                style="background-position: top center;background-size: cover;"
+                :style="[{backgroundImage:`url(${imagePhone})`},imgPhoneStyle]"
+            >
             </div>
         </div>
         <div class="遮罩">
@@ -52,6 +53,9 @@ export default {
         },
         imagePhone:{
             default:"",
+        },
+        imgPhoneStyle:{
+            default:""
         },
         headerImg:{
             default:"",

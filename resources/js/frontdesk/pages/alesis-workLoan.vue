@@ -1,12 +1,22 @@
 <template>
     <div>
         <!-- 標頭 -->
-        <alesis-loan-header header="上班族貸" content="
+        <!-- <alesis-loan-header header="上班族貸" content="
         貸款特色：快速審核、方便操作、申貸流程<br>
         　　　　　簡單明瞭、隱私無照會
         <br><br>
         適用對象：已畢業且有穩定收入的上班族<br>
-        　　　　　皆可申請！" image="/images/business_man_watching_smart_phone.jpg"></alesis-loan-header>
+        　　　　　皆可申請！"
+        :image="require('@/asset/images/workloan-product-banner.jpg')"
+        :image-phone="require('@/asset/images/workloan-product-banner-phone.jpg')"
+        :img-phone-style="{backgroundPosition:'center -175px'}"
+        ></alesis-loan-header> -->
+        <div class="d-sm-none d-flex">
+            <img src="@/asset/images/workloan-product-banner-phone.jpg" style="width:100%">
+        </div>
+        <div class="d-none d-sm-flex">
+            <img src="@/asset/images/workloan-product-banner.jpg" style="width:100%">
+        </div>
         <!-- 標頭 -->
 
         <!-- 快速審核 -->

@@ -313,6 +313,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <a href="/collegeLoan" class="item">學生貸款</a>
+                            <a href="/workLoan" class="item">上班族貸款</a>
+                            <a href="/engineerLoan" class="item">資訊工程師專案</a>
                         </div>
                         <div class="col"></div>
                         <div class="col-auto d-flex">
@@ -482,7 +485,18 @@
                             <img class="image" src="/images/footer@2x.png">
                         </div>
                         <div class="paragraphy">
-                            inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。
+                        「繳稅警語」<br>
+                        普匯溫馨提醒所有用戶，在普匯的相關利息收入與支出，都應主動申報綜合所得稅，以善盡繳稅義務，避免遭稅捐機關開罰。
+                    </div>
+                </div>
+                <div class="information">
+                    <div class="item">
+                        <div class="header">我要申貸</div>
+                        <div class="list">
+                            <a href="/collegeLoan">學生貸款</a>
+                            <a href="/workLoan">上班族貸款</a>
+                            <a href="/engineerLoan">資訊工程師專案</a>
+                            <a href="/business-loan">企業融資</a>
                         </div>
                         <div class="paragraphy">
                             「繳稅警語」<br>
