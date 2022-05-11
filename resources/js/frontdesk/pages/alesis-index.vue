@@ -1,1694 +1,2696 @@
 <template>
-    <div class="index-wrapper">
-        <div class="swiper-container 標頭幻燈片">
-            <div class="swiper-wrapper">
-                <!-- 微企e秒貸 -->
-                <div class="swiper-slide">
-                    <a href="/business-loan/sme">
-                        <img :data-src="require('@/asset/images/sme-index-banner.gif')" class="旗幟圖片 swiper-lazy">
-                        <img :data-src="require('@/asset/images/sme-index-banner-phone.gif')" class="旗幟圖片 旗幟圖片_手機的 swiper-lazy">
-                    </a>
+  <div class="index-wrapper">
+    <div class="index-intro section">
+      <div class="row no-gutters block-content intro-content">
+        <div class="intro-products">
+          <div class="group">
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">學生貸</div>
+                <div class="card-content p1">
+                  <div class="card-subtitle">額度最高15萬</div>
+                  <div class="card-image p1"></div>
+                  <router-link to="/collegeLoan" class="card-link">
+                    了解更多
+                  </router-link>
                 </div>
-                <!-- 學生貸 -->
-                <div class="swiper-slide">
-                    <a href="/collegeLoan">
-                        <img src="/images/普匯 你的手機ATM (學生貸) Banner.gif" class="旗幟圖片">
-                        <img src="/images/普匯-你的手機ATM-(學生貸)手機版.gif" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
-                </div>
-                <!-- 上班族 -->
-                <div class="swiper-slide">
-                    <a href="/workLoan">
-                        <img src="/images/普匯-你的手機ATM-(上班族)-Banner.gif" class="旗幟圖片">
-                        <img src="/images/普匯-你的手機ATM-(上班族)手機版.gif" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
-                </div>
-                <!-- 普匯‧你的手機ATM -->
-                <div class="swiper-slide">
-                    <div class="banner">
-                        <div class="puhey-banner">
-                            <img src="/images/首頁BANNER.png" class="hidden-desktop img-fluid" />
-                            <img src="/images/index-banner-m.jpg" class="hidden-phone img-fluid" />
-                            <img src="/images/diagram-d.svg" class="diagram hidden-desktop" />
-                            <img src="/images/diagram-m.svg" class="diagram hidden-phone" />
-
-                            <div class="content hidden-desktop">
-                                <div class="box">
-                                    <a class="loan" href="/investLink">
-                                        <img src="/images/home_banner_button_bg_blue.svg" class="img-fluid" />
-                                        <div class="text">我想投資 <i class="fa fa-angle-double-right"></i></div>
-                                    </a>
-                                    <a class="borrow" href="/borrowLink">
-                                        <img src="/images/home_banner_button_bg_grey.svg" class="img-fluid" />
-                                        <div class="text">我想借款 <i class="fa fa-angle-double-right"></i></div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 後台設定 -->
-                <div class="swiper-slide" v-for="item in swiperItems" :key="item.desktop">
-                    <a :href="item.link">
-                        <img :src="item.desktop" class="旗幟圖片">
-                        <img :src="item.mobile" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
-                </div>
+              </div>
             </div>
-
-            <!-- 導覽按鈕 -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-            <!-- / 導覽按鈕 -->
-        </div>
-
-        <!-- 計數器 -->
-        <div class="計數器">
-            <alesis-space size="small"></alesis-space>
-            <div class="包裹容器">
-                <alesis-counter image="/images/alesis-registered.svg" header="累積註冊用戶" :number="indexCounter.memberCount" unit="人"></alesis-counter>
-                <alesis-counter image="/images/alesis-totalmoney.svg" header="累積媒合金額" :number="indexCounter.totalLoanAmount" unit="元"></alesis-counter>
-                <alesis-counter image="/images/alesis-totalapproved.svg" header="累積成交筆數" :number="indexCounter.transactionCount" unit="筆"></alesis-counter>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">上班族貸</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高30萬</div>
+                  <div class="card-image p2"></div>
+                  <router-link to="/workLoan" class="card-link">
+                    了解更多
+                  </router-link>
+                </div>
+              </div>
             </div>
-            <alesis-space size="medium"></alesis-space>
-        </div>
-        <!-- / 計數器 -->
-
-        <!-- 服務區塊 -->
-        <div class="服務區塊">
-            <alesis-header>
-                <div class="標題">我們的服務</div>
-            </alesis-header>
-
-            <alesis-space size="small"></alesis-space>
-            <alesis-section :secondary="true">
-                <alesis-space class="hidden-phone" size="medium"></alesis-space>
-                <img class="圖片" src="/images/p2p.svg" />
-                <div class="動作區塊">
-                    <div class="左側">
-                        <a href="/investLink" class="動作">立即投資</a>
-                        <a href="/invest" class="動作">了解更多</a>
-                    </div>
-                    <div class="右側">
-                        <a href="/borrowLink" class="動作">立即借款</a>
-                        <a href="/borrow" class="動作">了解更多</a>
-                    </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">資訊工程師貸</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高30萬</div>
+                  <div class="card-image p3"></div>
+                  <router-link to="/engineerLoan" class="card-link">
+                    了解更多
+                  </router-link>
                 </div>
-                <alesis-space class="hidden-phone" size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 服務區塊 -->
-
-        <alesis-space size="small"></alesis-space>
-
-        <!-- 公司簡介 -->
-        <div class="公司簡介">
-            <alesis-header>
-                <div class="標題">公司簡介</div>
-            </alesis-header>
-            <alesis-space size="medium"></alesis-space>
-            <div class="包裹容器">
-                <alesis-horizontal-roadmap></alesis-horizontal-roadmap>
+              </div>
             </div>
-            <div class="手機容器">
-                <alesis-vertical-roadmap></alesis-vertical-roadmap>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">汽車貸款</div>
+                <div class="card-content">
+                  <div class="card-image p4"></div>
+                  <div class="card-link">了解更多</div>
+                </div>
+              </div>
             </div>
-            <alesis-space size="medium"></alesis-space>
-        </div>
-        <!-- / 公司簡介 -->
-
-        <!-- 產品特色 -->
-        <div class="產品特色">
-            <alesis-header>
-                <div class="標題">產品特色</div>
-            </alesis-header>
-            <alesis-section :secondary="true">
-                <alesis-space size="medium"></alesis-space>
-                <div class="包裹容器">
-                    <div class="內容區塊 hidden-phone">
-                        <alesis-bullet class="bullet" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></alesis-bullet>
-                    </div>
-                    <div class="展示區塊">
-                        <img class="圖片" src="/images/步驟1-01.png">
-                    </div>
-                    <div class="內容區塊">
-                        <alesis-bullet class="bullet hidden-new-desktop" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></alesis-bullet>
-                        <div class="半月列表">
-                            <div class="項目">
-                                <alesis-moon class="圖示" header="簡單" :level=1></alesis-moon>
-                                <div class="內容">
-                                    AWS安全系統為架構，<br>
-                                    輔以簡潔的操作界面。
-                                </div>
-                            </div>
-                            <div class="項目">
-                                <alesis-moon class="圖示" header="快速" :level=2></alesis-moon>
-                                <div class="內容">
-                                    5分鐘申貸、10分鐘審核、<br>
-                                    1小時核准、24小時媒合放款。<br>
-                                </div>
-                            </div>
-                            <div class="項目">
-                                <alesis-moon class="圖示" header="安全" :level=3></alesis-moon>
-                                <div class="內容 security">
-                                    資訊傳輸由HTTPS方式利用SSL/TLS加密，儲存於亞馬遜AWS雲端伺服器。
-                                </div>
-                            </div>
-                            <div class="項目">
-                                <alesis-moon class="圖示" header="隱私" :level=4></alesis-moon>
-                                <div class="內容">
-                                    全台唯一無人化借貸平台，<br>
-                                    讓手機成為您專屬的ATM。
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">投資人專區</div>
+                <div class="card-content">
+                  <div class="card-image p5"></div>
+                  <router-link to="/invest" class="card-link">
+                    了解更多
+                  </router-link>
                 </div>
-                <div class="標語">全年無休假日放款</div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 產品特色 -->
-
-        <!-- 快速變現 -->
-        <div class="快速變現">
-            <alesis-header>
-                <div class="標題">普匯債權、快速變現</div>
-                <div class="標題">全台唯一債權轉讓功能</div>
-            </alesis-header>
-            <alesis-section>
-                <alesis-space size="medium"></alesis-space>
-                <div class="包裹容器">
-                    <div class="圖表">
-                        <img class="圖片" src="/images/alesis-transfer-graph.svg">
-                    </div>
-                    <div class="半月列表">
-                        <alesis-moon class="項目" header="債權轉讓" multiline="快速變現" :level=3></alesis-moon>
-                        <alesis-moon class="項目" header="小額資金" multiline="分散風險" :level=2></alesis-moon>
-                        <alesis-moon class="項目" header="智能投資" multiline="自動下標" :level=1></alesis-moon>
-                    </div>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 快速變現 -->
-
-        <!-- 產品方案 -->
-        <div class="產品方案">
-            <alesis-header>
-                <div class="標題">產品方案</div>
-            </alesis-header>
-            <alesis-section :secondary="true">
-                <alesis-space size="medium"></alesis-space>
-                <div class="包裹容器">
-                    <div class="箭頭" @click="prevSolution">
-                        <img class="圖示" src="/images/alesis-styled-arrow-left.svg">
-                    </div>
-                    <alesis-plan class="方案表" :header="item.header" :targets="item.targets" :image="item.image" :action="item.action" :features="item.features" :unready="item.unready" v-for="(item, index) in plans" :link="item.link" :key="index" :class="{'方案表_已啟用': index == currentPlan}"></alesis-plan>
-                    <div class="箭頭" @click="nextSolution">
-                        <img class="圖示" src="/images/alesis-styled-arrow-right.svg">
-                    </div>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 產品方案 -->
-
-        <!-- 分期計算機 -->
-        <div class="分期計算機">
-            <alesis-header>
-                <div class="標題">分期還款沒壓力</div>
-            </alesis-header>
-            <alesis-section :secondary="true">
-                <alesis-space size="medium"></alesis-space>
-                <div class="包裹容器">
-                    <div class="計算機">
-                        <creditBoard amount="300000" minRate="5" maxRate="16" v-on:update-calculator="updateCalculator"/>
-                    </div>
-                    <div class="輸入群組">
-                        <div class="列">
-                            <div class="文字">申請</div>
-                            <input type="text" class="輸入欄位" v-model="amountCount">
-                            <div class="文字">元</div>
-                        </div>
-                        <div class="列">
-                            <div class="文字">分期償還</div>
-                            <input type="text" class="輸入欄位" v-model="period">
-                            <div class="文字">期</div>
-                        </div>
-                        <div class="列">
-                            <div class="文字">每月僅需約</div>
-                            <input type="text" class="輸入欄位" v-model="pmt">
-                            <div class="文字">元</div>
-                        </div>
-                    </div>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 分期計算機 -->
-
-        <!-- 人物推薦 -->
-        <div class="人物推薦">
-            <alesis-header>
-                <div class="標題">看看他們怎麼說</div>
-            </alesis-header>
-            <alesis-section>
-                <alesis-space size="small"></alesis-space>
-                <alesis-suggestion-reviews type="index"></alesis-suggestion-reviews>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 人物推薦 -->
-
-        <!-- 媒體報導 -->
-        <div class="媒體報導">
-            <alesis-header class="區塊標題_拖尾的">
-                <div class="標題 標題_外框線的">媒體報導支持</div>
-            </alesis-header>
-            <alesis-space size="medium"></alesis-space>
-            <div class="包裹容器 media_report">
-                <alesis-space size="tiny"></alesis-space>
-                <div class="row d-none d-sm-flex align-items-center mb-3">
-                    <div class="col">
-                        <a class="項目" href="https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html" target="_blank">
-                            <img class="圖片" src="/images/media/a645f762048f5f425d0f0a8486f34612.png" alt="Yahoo!新聞">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="http://n.yam.com/Article/20180803346949" target="_blank">
-                            <img class="圖片" src="/images/media/1JHY1QOLYPF0.png" alt="蕃薯藤">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://www.nownews.com/news/20180807/2798010/" target="_blank">
-                            <img class="圖片" src="/images/media/Now_News_logo.png" alt="今日新聞">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv" target="_blank">
-                            <img class="圖片" src="/images/media/logo-chinatimes2019.png" alt="中時電子報">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://www.wealth.com.tw/home/articles/20567" target="_blank">
-                            <img class="圖片" src="/images/media/logo-red.png" alt="財訊">
-                        </a>
-                    </div>
-                </div>
-                <div class="row d-none d-sm-flex align-items-center">
-                    <div class="col">
-                        <a class="項目" href="https://news.cnyes.com/news/id/4267004" target="_blank">
-                            <img class="圖片" src="/images/media/logo-cn-yes-1.png" alt="鉅亨網">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://www.gvm.com.tw/article/71426" target="_blank">
-                            <img class="圖片" src="/images/media/logo_gvm.svg" alt="遠見">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198" target="_blank">
-                            <img class="圖片" src="/images/media/logo300_90.png" alt="工商時報">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://www.setn.com/News.aspx?NewsID=792990" target="_blank">
-                            <img class="圖片" src="/images/media/logo_setn.png" alt="三立新聞網">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://www.cna.com.tw/postwrite/detail/279030" target="_blank">
-                            <img class="圖片" src="/images/media/logo_cna.png" alt="中央通訊社">
-                        </a>
-                    </div>
-                </div>
-
-                <div class="row d-flex d-sm-none align-items-center my-3">
-                    <div class="col">
-                        <a class="項目" href="https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html" target="_blank">
-                            <img class="圖片" src="/images/media/a645f762048f5f425d0f0a8486f34612.png" alt="Yahoo!新聞">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="http://n.yam.com/Article/20180803346949" target="_blank">
-                            <img class="圖片" src="/images/media/1JHY1QOLYPF0.png" alt="蕃薯藤">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://www.nownews.com/news/20180807/2798010/" target="_blank">
-                            <img class="圖片" src="/images/media/Now_News_logo.png" alt="今日新聞">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv" target="_blank">
-                            <img class="圖片" src="/images/media/logo-chinatimes2019.png" alt="中時電子報">
-                        </a>
-                    </div>
-                </div>
-
-                <div class="row d-flex d-sm-none align-items-center my-3">
-                    <div class="col">
-                        <a class="項目" href="https://news.cnyes.com/news/id/4267004" target="_blank">
-                            <img class="圖片" src="/images/media/logo-cn-yes-1.png" alt="鉅亨網">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://www.gvm.com.tw/article/71426" target="_blank">
-                            <img class="圖片" src="/images/media/logo_gvm.svg" alt="遠見">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198" target="_blank">
-                            <img class="圖片" src="/images/media/logo300_90.png" alt="工商時報">
-                        </a>
-                    </div>
-                </div>
-
-                <div class="row d-flex d-sm-none align-items-center my-3">
-                    <div class="col">
-                        <a class="項目" href="https://www.wealth.com.tw/home/articles/20567" target="_blank">
-                            <img class="圖片" src="/images/media/logo-red.png" alt="財訊">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://www.cna.com.tw/postwrite/detail/279030" target="_blank">
-                            <img class="圖片" src="/images/media/logo_cna.png" alt="中央通訊社">
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="項目" href="https://www.setn.com/News.aspx?NewsID=792990" target="_blank">
-                            <img class="圖片" src="/images/media/logo_setn.png" alt="三立新聞網">
-                        </a>
-                    </div>
-                </div>
-                <alesis-space size="tiny"></alesis-space>
+              </div>
             </div>
+          </div>
+          <div class="group">
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">企業主速貸</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高100萬</div>
+                  <div class="card-image p6"></div>
+                  <div class="card-link">
+                    <a>了解更多</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">信保專案(銀行合作)</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高600萬</div>
+                  <div class="card-image p7"></div>
+                  <div class="card-link">
+                    <a>了解更多</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">中小企業信貸</div>
+                <div class="card-content">
+                  <div class="card-subtitle">額度最高2000萬</div>
+                  <div class="card-image p8"></div>
+                  <div class="card-link">
+                    <a>了解更多</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">慈善公益</div>
+                <div class="card-content">
+                  <div class="card-subtitle">台大兒醫</div>
+                  <div class="card-image p9"></div>
+                  <router-link to="/charitable" class="card-link">
+                    了解更多
+                  </router-link>
+                </div>
+              </div>
+            </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-title">分享 QR code</div>
+                <div class="card-content">
+                  <div class="card-image p10"></div>
+                  <router-link to="/promote-code-intro" class="card-link">
+                    了解更多
+                  </router-link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- / 媒體報導 -->
-
-        <float />
+      </div>
     </div>
+    <div class="index-concept section">
+      <div class="block-content">
+        <div class="block-title">普惠金融，匯流人才</div>
+        <div class="block-info concept-1">
+          <div class="op">
+            <div>
+              惠金融：運用金融科技P2P、區塊鏈，結合AI人工智慧技術，串起社會閒置資源，落實傳統銀行無法提供的服務，
+            </div>
+            <div>
+              幫助年輕人實現夢想，協助新創中小企業取得投融資，體現金融科技創新服務。
+            </div>
+          </div>
+        </div>
+        <div class="block-info concept-2">
+          <div class="op">
+            集人才：開發創新科技，建構AI無人自動化，打造最有溫度的金融新生態，呈現綠色金融科技新環境。
+          </div>
+        </div>
+        <div class="block-title-2 d-sm-block d-none">
+          年輕人的金融科技平台、簡單快速安全隱私、創造金融新生態
+        </div>
+        <div class="block-title-2 d-block d-sm-none">
+          <div>年輕人的金融科技平台</div>
+          <div>簡單快速安全隱私</div>
+          <div>創造金融新生態</div>
+        </div>
+        <div class="block-info d-block">
+          <span class="em">「我們不是銀行」</span>
+          <span class="op">，普匯是以</span>
+          <span class="em f-yellow">「金融專業」</span>
+          <span class="op">為核心，</span>
+          <span class="em">「高端科技」</span>
+          <span class="op">
+            為輔助，提供最人性友善流暢的APP使用者介面，全程AI無人化自動風控審核，運用金融科技技術加快速度、提高安全、保護隱私，提供最有溫度的社群金融服務，讓社會資金運用更便利快速有效率，創造全新的金融生態圈。
+          </span>
+        </div>
+      </div>
+      <div class="wave">
+        <img
+          class="img-fluid w-100"
+          src="@/asset/images/index/bg-white-wave.svg"
+          alt=""
+        />
+      </div>
+    </div>
+    <div class="index-loan section">
+      <div class="block-content">
+        <div class="block-title">一支手機，完成貸款</div>
+        <div class="block-info">隨借隨貸，安全零距離</div>
+        <div class="row no-gutters loan-imgs">
+          <img
+            id="img58"
+            class="img-fluid d-sm-block d-none"
+            src="@/asset/images/index/img58.png"
+          />
+          <div id="img56">
+            <div class="position-relative text-center">
+              <div class="card tip-card tip-1">
+                <div class="card-container">
+                  <div class="tip">無人打擾、免照會</div>
+                </div>
+              </div>
+              <div class="card tip-card tip-2">
+                <div class="card-container">
+                  <div class="tip">安全隱私保密機制</div>
+                </div>
+              </div>
+              <img class="img56-img" src="@/asset/images/index/img56.png" />
+              <div>
+                <div class="block-title mx-auto">普匯•你的手機ATM</div>
+              </div>
+            </div>
+          </div>
+          <img
+            id="img57"
+            class="img-fluid d-sm-block d-none"
+            src="@/asset/images/index/img57.png"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="index-service section">
+      <div class="wave reverse">
+        <img
+          src="@/asset/images/index/bg-white-wave.svg"
+          class="img-fluid w-100"
+          alt=""
+        />
+      </div>
+      <div class="block-content">
+        <div class="block-title">我們的服務</div>
+        <div class="block-info">
+          <div>創新金融科技 安全保護投資</div>
+          <div>提供多元借貸 服務普惠金融</div>
+        </div>
+        <div class="row no-gutters service-imgs">
+          <img id="service-1" src="@/asset/images/index/service-1.png" />
+          <img id="service-2" src="@/asset/images/index/service-2.png" />
+          <div id="s1">
+            <div>提供多元個人、汽車、</div>
+            <div>企業融資貸款產品</div>
+          </div>
+          <div id="s2">
+            <div>嚴格身份驗證專利、完善反詐欺風控、</div>
+            <div>嚴謹合規信評貸後、準確金流帳務、</div>
+            <div>全方位資安防護</div>
+          </div>
+          <div id="s3">
+            <div>小額分散/安全穩定、債權轉讓/資金流動、</div>
+            <div>AI智能/穩賺複利高投報</div>
+          </div>
+          <div id="s4">
+            <div>金控銀行、上市櫃企業、知名大學、</div>
+            <div>新創團隊，夥伴多元，共創多贏</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="index-tech section">
+      <div class="block-content mt-3 mb-5">
+        <div class="block-content-header-title">最創新、最安全的金融科技</div>
+        <div class="block-content-header-info">
+          <div>唯一榮獲金控集團創投投資</div>
+          <div>第一個獲得政府同意銀行合作的 中小企業線上信保融資平台</div>
+        </div>
+      </div>
+      <div class="block-content row no-gutters">
+        <div class="col-sm-6 col-12 d-flex align-items-center">
+          <img src="@/asset/images/index/img60.png" class="img-fluid" />
+        </div>
+        <div class="col-sm-6 col-12">
+          <div class="block-title">台灣金融科技融資領導品牌</div>
+          <div class="block-info">台灣金融科技的領導者</div>
+          <div class="step-container">
+            <div class="step-content-1">
+              <div class="step-content-title">強大的KYC風控系統</div>
+              <div class="step-content-info">
+                <div>
+                  擁有最完整且完善的AI自動化審核風控系統，全程透過手機APP，完成嚴謹徵信評估，自動產生信評等額度，最快「5分鐘申貸、10分鐘審核、1小時放款」，365天24小時不停歇。
+                </div>
+              </div>
+            </div>
+            <div class="step-content-2">
+              <div class="step-content-title">個人身分驗證專利</div>
+              <div class="step-content-info">
+                <div>
+                  2020年12月創新取得個人法定身分，透過系統裝置進行線上實名驗證之專利，並實際獲得全台灣各地方法院判決成立實證。
+                </div>
+              </div>
+            </div>
+            <div class="step-content-3">
+              <div class="step-content-title">法人實名認證專利</div>
+              <div class="step-content-info">
+                <div>
+                  繼2020年取得個人實名身分驗證專利後，2021年7月再取得法人實名認證專利，完成個人法人線上融資借貸法定身分認證之重要里程碑，開創台灣金融科技應用市場之先驅。
+                </div>
+              </div>
+            </div>
+            <div class="step-content-4">
+              <div class="step-content-title">
+                <div>首創全線上無人化</div>
+              </div>
+              <div class="step-content-info">
+                <div class="content-title-style">中小企業信保融資平台</div>
+                <div class="op">
+                  獲政府同意攜手銀行共同揭開台灣普惠金融科技序幕。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="index-tech section">
+      <div class="block-content row no-gutters flex-sm-row flex-column-reverse">
+        <div class="col-sm-6 col-12">
+          <div class="tech-head">
+            <div class="block-title">創新金融科技融資產品</div>
+            <div class="block-info">
+              秉持金融科技分享式經濟理念，運用P2P區塊鏈技術，結合不限金融銀行、產業電商、汽車銷售等異業合作，創新多項產品，加速金融服務產業，提升經濟價值，普惠金融落地。
+            </div>
+          </div>
+          <div class="step-container">
+            <div class="step-content-1">
+              <div class="step-content-title">普匯信用錢包</div>
+              <div class="step-content-info">
+                <div>
+                  創新手機提供不限個人、企業信用錢包，便利生活消費或營運使用，體驗金融科技帶來的便利，提升生活品質及企業營運效能，實現「普匯•你的手機ATM」，隨借隨貸，「一支手機，搞定借貸」。
+                </div>
+              </div>
+            </div>
+            <div class="step-content-2">
+              <div class="step-content-title">分期超市</div>
+              <div class="step-content-info">
+                <div>
+                  提供多元、多種類、快速便利又安全的「先買後付」信用支付工具，讓你的消費更便利，廠商收款更快速，促進經濟活絡，提升金融服務價值。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-12 d-flex align-items-center">
+          <img
+            src="@/asset/images/index/cart_shopping_3d_render_10 1.png"
+            class="img-fluid"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+    <div class="index-cert section">
+      <div class="block-content">
+        <div class="block-title d-none d-sm-block">
+          一路走來，獲得許多肯定與認同
+        </div>
+        <div class="block-title d-sm-none d-block">
+          <div>一路走來</div>
+          <div>獲得許多肯定與認同</div>
+        </div>
+        <div class="block-info">我們的努力，就是為了讓你更安心</div>
+        <div class="swiper-container cert-swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide cert-cards">
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-cover">
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/handshake2.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="card-title">新光金控創投入資</div>
+                  <div class="card-divider"></div>
+                  <div class="card-text">
+                    2021年6月榮獲「新光金控創投」 挹資入股董事，是首家獲得金控
+                    投資的金融科技公司，更奠定了 普匯在金融科技領域的品牌領導
+                    地位。
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-cover">
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/link-1.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="card-title">獲得多家銀行搶先合作</div>
+                  <div class="card-divider"></div>
+                  <div class="card-text">
+                    我們提供使用者最簡單便利安全的金融科技體驗，快速成長10萬會員，榮獲網路評價最佳年輕化金融借貸平台，分別獲得凱基、上海、王道及新光銀行搶先合作，更於2021年破天荒與新光銀行攜手共推全台灣第一全線上無人化「中小微企業信保融資」業務。
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-cover">
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/dating-app-1.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="card-title">最年輕化的借貸APP</div>
+                  <div class="card-divider"></div>
+                  <div class="card-text">
+                    我們是全台最大最安全最受學生喜愛的借貸平台，透過普匯APP可以簡單便利取得進修、生活、以及學雜費資金，多年來已陪伴幫助數萬名莘莘學子完成學業，實現夢想。
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-cover">
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/planet-earth-1.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="card-title">ESG綠色金融科技平台</div>
+                  <div class="card-divider"></div>
+                  <div class="card-text">
+                    秉持善用P2P區塊鏈科技提供融資服務，創立以來堅持AI自動風控審核，全程無人化無紙化，善盡保護地球保護環境，打造真正的綠色金融科技。更致力於善用AI金融科技投身慈善公益，號召知名藝人張鈞甯、鍾欣凌，共同協助台大兒醫、健康基金會聯合勸募，幫助台灣弱勢兒童，找回身心健康，身體力行ESG。
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="product-step section">
+      <div class="block-content p-4">
+        <div>
+          <div class="product-step-head-title col-12 my-4">
+            <span style="color: #f29500" class="pr-sm-2 pr-1">普匯金融</span>
+            幫助超過數
+            <span style="color: #036eb7" class="pr-sm-2 pr-1">萬人</span>
+            渡過難關美夢成真
+          </div>
+          <div class="block-content-info">我們的成績</div>
+        </div>
+        <div class="row no-gutters counter-row">
+          <alesis-counter
+            image="/images/alesis-registered.svg"
+            header="累積註冊用戶"
+            :number="indexCounter.memberCount"
+            unit="人"
+          ></alesis-counter>
+          <alesis-counter
+            image="/images/alesis-totalmoney.svg"
+            header="累積媒合金額"
+            :number="indexCounter.totalLoanAmount"
+            unit="元"
+          ></alesis-counter>
+          <alesis-counter
+            image="/images/alesis-totalapproved.svg"
+            header="累積成交筆數"
+            :number="indexCounter.transactionCount"
+            unit="筆"
+          ></alesis-counter>
+        </div>
+      </div>
+      <div class="charity">
+        <div class="block-content">
+          <div class="block-title">慈善公益</div>
+          <div class="block-info">愛心100，捐款100</div>
+          <div class="row no-gutters justify-content-center">
+            <div class="col-sm-5 col-12 p-2 p-sm-0">
+              <div class="info-title">
+                <div>愛心不落人後，即使捐款100</div>
+                <div>也能幫助弱勢兒童，找回身心健康</div>
+              </div>
+              <div class="info-content">
+                普匯攜手愛心大使「張鈞甯」、愛心主持「鍾欣凌」，共同協助台大兒醫、台大兒醫健康基金會聯合勸募，透過普匯捐款系統，即使捐款100元也能幫助兒童們健康，我們邀請您一起投入捐款，找回孩子們健康，創造更美好的台灣環境。
+              </div>
+              <img
+                class="img-fluid img-1251 d-sm-none d-block"
+                src="@/asset/images/index/Group1251.png"
+              />
+              <div class="img-group">
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC1.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC2.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC3.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC4.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="img-item">
+                  <img
+                    src="@/asset/images/index/DSC5.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-auto col-12 d-sm-block d-none">
+              <img
+                class="img-fluid img-1251"
+                src="@/asset/images/index/Group1251.png"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row no-gutters steps">
+        <div class="block-content">
+          <div class="block-title d-sm-block d-none">
+            如何完成夢想，幫助他們圓夢
+          </div>
+          <div class="block-title d-block d-sm-none">
+            <div>如何完成夢想</div>
+            <div>幫助他們圓夢</div>
+          </div>
+        </div>
+        <div class="block-content step-container">
+          <div class="loan">
+            <div class="step-head-title">我想借款</div>
+            <div class="step-head-info">
+              <div>選擇額度 -</div>
+              <div>提供完整資訊，有助提高額度</div>
+            </div>
+            <div class="step-main">
+              <div class="step-content-1">
+                <div class="step-content-title">步驟一</div>
+                <div class="step-content-info">
+                  <div>選擇額度 -</div>
+                  <div>提供完整資訊，有助提高額度</div>
+                </div>
+                <div class="step-content-img">
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-1.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div class="step-content-2">
+                <div class="step-content-title">步驟二</div>
+                <div class="step-content-info">
+                  <div>選擇身分 -</div>
+                  <div>根據您的身分選擇適合的專案</div>
+                </div>
+                <div class="step-content-img">
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-2.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div class="step-content-3">
+                <div class="step-content-title">步驟三</div>
+                <div class="step-content-info">
+                  <div>上傳資料 -</div>
+                  <div>AI數據分析審核，全程無人打擾</div>
+                </div>
+                <div class="step-content-img">
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-3.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div class="step-content-4">
+                <div class="step-content-title">步驟四</div>
+                <div class="step-content-info">
+                  <div>持證自拍 -</div>
+                  <div>審核成功後，立即上架幫您媒合投資人</div>
+                </div>
+                <div class="step-content-img">
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-4.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div class="step-content-5">
+                <div class="step-content-title">步驟五</div>
+                <div class="step-content-info">
+                  <div>媒合成功 -</div>
+                  <div>24小時收到款項</div>
+                </div>
+                <div class="step-content-img">
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-5.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="solgan">
+              <span>AI線上</span>
+              <span class="em">借款</span>
+              <span>平台</span>
+              <span class="sm">提供您最快的資金需求</span>
+            </div>
+          </div>
+          <div class="divide">
+            <svg width="4" height="282" viewBox="0 0 4 282">
+              <rect opacity="0.4" width="4" height="282" fill="#036FB7" />
+            </svg>
+            <div class="circle"></div>
+            <svg width="4" height="282" viewBox="0 0 4 282">
+              <rect opacity="0.4" width="4" height="282" fill="#036FB7" />
+            </svg>
+          </div>
+          <div class="invest">
+            <div class="step-head-title">我想投資</div>
+            <div class="step-head-info">
+              <div>您的一小筆錢，可能幫他圓夢</div>
+              <div>更可能救了他的人生</div>
+            </div>
+            <div class="step-main">
+              <div class="step-content-1">
+                <div class="step-content-title">步驟一</div>
+                <div class="step-content-info">
+                  <div>進入我的資產 -</div>
+                </div>
+                <div class="step-content-img">
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-1.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div class="step-content-2">
+                <div class="step-content-title">步驟二</div>
+                <div class="step-content-info">
+                  <div>選擇單筆/打包出售 -</div>
+                </div>
+                <div class="step-content-img">
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-2.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div class="step-content-3">
+                <div class="step-content-title">步驟三</div>
+                <div class="step-content-info">
+                  <div>調整出讓金額，並點選出讓</div>
+                  <div>詳閱轉讓協議書 -</div>
+                </div>
+                <div class="step-content-img">
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-3.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div class="step-content-4">
+                <div class="step-content-title">步驟四</div>
+                <div class="step-content-info">
+                  <div>上架成功，等待媒合 -</div>
+                </div>
+                <div class="step-content-img">
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-4.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="solgan">
+              <span>小額</span>
+              <span class="em">投資</span>
+              <span>無負擔</span>
+              <span class="sm">活絡資金助人圓夢</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="user-experience section">
+      <div class="block-content">
+        <div class="row no-gutters">
+          <div class="col-12">
+            <div class="block-title">用戶體驗</div>
+            <div class="block-info">我們提供最溫暖的金融科技服務</div>
+          </div>
+        </div>
+        <div class="row no-gutters swiper-container user-experience-back">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <div class="row no-gutters user-comment">
+                <div class="col-auto">
+                  <div class="card comment-card">
+                    <div class="card-body">
+                      <div class="card-title star">
+                        <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                      </div>
+                      <div class="card-text">
+                        很棒的平台，是一個不錯的投資管道，創造穩定的現金流，不用怕被股市震盪影響心情。
+                      </div>
+                      <div class="mt-2 d-flex align-items-center">
+                        <div class="portrait mr-2">
+                          <img src="@/asset/images/ue-1.png" alt="" />
+                        </div>
+                        <span> 王先生 </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-auto mx-5 d-sm-block d-none">
+                  <div class="card comment-card">
+                    <div class="card-body">
+                      <div class="card-title star">
+                        <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                      </div>
+                      <div class="card-text">
+                        很棒的新創公司，雖然成立時間不長，但是在選校園大使期間，也感受到這間公司的氛圍是很棒的，是歡樂的。
+                      </div>
+                      <div class="mt-2 d-flex align-items-center">
+                        <div class="portrait mr-2">
+                          <img src="@/asset/images/ue-2.png" alt="" />
+                        </div>
+                        <span> 陳小姐 </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-auto d-sm-block d-none">
+                  <div class="card comment-card">
+                    <div class="card-body">
+                      <div class="card-title star">
+                        <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                      </div>
+                      <div class="card-text">
+                        對於實習生培訓企劃用心且真誠，老闆會針對提案親自給予回饋，在乎並深耕於教育與人才養成
+                      </div>
+                      <div class="mt-2 d-flex align-items-center">
+                        <div class="portrait mr-2">
+                          <img src="@/asset/images/ue-3.png" alt="" />
+                        </div>
+                        <span> 林先生 </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="row no-gutters user-comment">
+                <div class="col-auto">
+                  <iframe
+                    width="360"
+                    height="230px"
+                    src="https://www.youtube.com/embed/VTJB7c1fS-4"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  >
+                  </iframe>
+                </div>
+                <div class="col-auto mx-5 d-sm-block d-none">
+                  <iframe
+                    width="360"
+                    height="230"
+                    src="https://www.youtube.com/embed/YkZyp5iSgxs"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  >
+                  </iframe>
+                </div>
+                <div class="col-auto d-sm-block d-none">
+                  <iframe
+                    width="360"
+                    height="230"
+                    src="https://www.youtube.com/embed/ewEoWAjkbGs"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  >
+                  </iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 導覽按鈕 -->
+          <div class="swiper-button-prev ue-prev"></div>
+          <div class="swiper-button-next ue-next"></div>
+        </div>
+      </div>
+      <div class="row align-items-center media">
+        <div class="col">
+          <a
+            class="項目"
+            href="https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html"
+            target="_blank"
+          >
+            <img
+              class="圖片"
+              src="/images/media/a645f762048f5f425d0f0a8486f34612.png"
+              alt="Yahoo!新聞"
+            />
+          </a>
+        </div>
+        <div class="col">
+          <a
+            class="項目"
+            href="http://n.yam.com/Article/20180803346949"
+            target="_blank"
+          >
+            <img
+              class="圖片"
+              src="/images/media/1JHY1QOLYPF0.png"
+              alt="蕃薯藤"
+            />
+          </a>
+        </div>
+        <div class="col">
+          <a
+            class="項目"
+            href="https://www.nownews.com/news/20180807/2798010/"
+            target="_blank"
+          >
+            <img
+              class="圖片"
+              src="/images/media/Now_News_logo.png"
+              alt="今日新聞"
+            />
+          </a>
+        </div>
+        <div class="col">
+          <a
+            class="項目"
+            href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv"
+            target="_blank"
+          >
+            <img
+              class="圖片"
+              src="/images/media/logo-chinatimes2019.png"
+              alt="中時電子報"
+            />
+          </a>
+        </div>
+        <div class="col">
+          <a
+            class="項目"
+            href="https://www.wealth.com.tw/home/articles/20567"
+            target="_blank"
+          >
+            <img class="圖片" src="/images/media/logo-red.png" alt="財訊" />
+          </a>
+        </div>
+        <div class="col">
+          <a
+            class="項目"
+            href="https://news.cnyes.com/news/id/4267004"
+            target="_blank"
+          >
+            <img
+              class="圖片"
+              src="/images/media/logo-cn-yes-1.png"
+              alt="鉅亨網"
+            />
+          </a>
+        </div>
+        <div class="col">
+          <a
+            class="項目"
+            href="https://www.gvm.com.tw/article/71426"
+            target="_blank"
+          >
+            <img class="圖片" src="/images/media/logo_gvm.svg" alt="遠見" />
+          </a>
+        </div>
+        <div class="col">
+          <a
+            class="項目"
+            href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198"
+            target="_blank"
+          >
+            <img
+              class="圖片"
+              src="/images/media/logo300_90.png"
+              alt="工商時報"
+            />
+          </a>
+        </div>
+        <div class="col">
+          <a
+            class="項目"
+            href="https://www.setn.com/News.aspx?NewsID=792990"
+            target="_blank"
+          >
+            <img
+              class="圖片"
+              src="/images/media/logo_setn.png"
+              alt="三立新聞網"
+            />
+          </a>
+        </div>
+        <div class="col">
+          <a
+            class="項目"
+            href="https://www.cna.com.tw/postwrite/detail/279030"
+            target="_blank"
+          >
+            <img
+              class="圖片"
+              src="/images/media/logo_cna.png"
+              alt="中央通訊社"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+    <float />
+  </div>
 </template>
 
 <script>
-import { Splide, SplideSlide } from "@splidejs/vue-splide";
-//
-import creditBoard from "../component/svg/creditBoardComponent";
-import float       from "../component/floatComponent";
-// Alesis 元件
-import AlesisAppRecommendation from "../component/alesis/AlesisAppRecommendation";
-import AlesisBullet            from "../component/alesis/AlesisBullet";
-import AlesisButton            from "../component/alesis/AlesisButton";
-import AlesisCounter           from "../component/alesis/AlesisCounter";
-import AlesisHeader            from "../component/alesis/AlesisHeader";
-import AlesisHorizontalRoadmap from "../component/alesis/AlesisHorizontalRoadmap";
-import AlesisHuman             from "../component/alesis/AlesisHuman";
-import AlesisLoanHeader        from "../component/alesis/AlesisLoanHeader";
-import AlesisMoon              from "../component/alesis/AlesisMoon";
-import AlesisPlan              from "../component/alesis/AlesisPlan";
-import AlesisProject           from "../component/alesis/AlesisProject";
-import AlesisSection           from "../component/alesis/AlesisSection";
-import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
-import AlesisSymcard           from "../component/alesis/AlesisSymcard";
-import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
-import AlesisSpace             from "../component/alesis/AlesisSpace";
-import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
-import histroyDot from "../component/svg/histroyDotComponent";
-
-// 遠端資料
-import PlanData from "../data/index_plans"
-import WorkCategories from "../data/work_categories"
-import routeMap from "../component/svg/routeMapComponent";
-import routeMapM from "../component/svg/routeMapMComponent.vue";
-
-import {alesisIndexCounter, alesisIndexBanners} from "./api"
-
-import 'swiper/swiper.scss';
-import "swiper/components/navigation/navigation.min.css"
-import SwiperCore, {
-  Navigation
-} from 'swiper/core';
+import AlesisCounter from '../component/alesis/AlesisCounter'
+import float from '../component/floatComponent'
+import { alesisIndexCounter } from './api'
+import 'swiper/swiper.scss'
+import 'swiper/components/navigation/navigation.min.css'
+import SwiperCore, { Navigation } from 'swiper/core'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export default {
-    components: {
-        float,
-        creditBoard,
-        Splide,
-        SplideSlide,
-        //
-        AlesisAppRecommendation,
-        AlesisBullet,
-        AlesisButton,
-        AlesisCounter,
-        AlesisHeader,
-        AlesisHorizontalRoadmap,
-        AlesisHuman,
-        AlesisLoanHeader,
-        AlesisMoon,
-        AlesisPlan,
-        AlesisProject,
-        AlesisSection,
-        AlesisSuggestionReviews,
-        AlesisSymcard,
-        AlesisTaiwanMap,
-        AlesisSpace,
-        AlesisVerticalRoadmap,
-        routeMap,
-        routeMapM,
-    },
-    data: () => ({
-        isDesktop             : window.innerWidth > 767 ? true : false,
-        load2                 : false,
-        load3                 : false,
-        routeIndex            : {
-          start: 0,
-          end  : 0,
-        },
-        amountCount           : 5000,
-        rateCount             : 5,
-        pmt                   : 0,
-        tweenedPmt            : 0,
-        currentPlan           : 0,
-        plans                 : PlanData,
-        isForm                : false,
-        period                : 3,
-        flattenWorkCategories : [],
-        formGraduate          : "",
-        formCompany           : "",
-        formSalary            : "",
-        formLoan              : "",
-        formReturn            : "",
-        formCredit            : "",
-        formTotal             : "",
-        formCalculated        : false,
-        formAnswerTotal       : 0,
-        formAnswerSpan        : 0,
-        formAnswerFee         : 0,
-        formAnswerPer         : 0,
-        isFormValid           : true,
-        borrowReportResult    : {},
-        routeData             : [],
-        workCategories        : WorkCategories,
-        indexCounter          : {},
-        swiperItems           : [],
-    }),
-    created() {
-    this.getMilestoneData();
-        $("title").text(`首頁 - inFlux普匯金融科技`);
-    },
-    mounted() {
-         alesisIndexCounter().then((v) => {
-             this.indexCounter = v
-        });
-
-        alesisIndexBanners().then((v) => {
-            this.swiperItems = v
-
-            setTimeout(() => {
-                SwiperCore.use([Navigation]);
-                new Swiper('.swiper-container.標頭幻燈片', {
-                    autoplay: {
-                        delay: 3000,
-                    },
-                    loop: true,
-                    lazy:true,
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                });
-             }, 100)
-        })
-
-        // 管理與財經
-        this.workCategories.n = this.workCategories.n.map(v => {
-            this.flattenWorkCategories.push({
-                disabled: true,
-                title: v.des,
-                value: "",
-            })
-
-            // 經營幕僚
-            v.n = v.n.map((j) => {
-                j.des = `　　${j.des}`
-                this.flattenWorkCategories.push({
-                    disabled: true,
-                    title: j.des,
-                    value: "",
-                })
-                // 儲備幹部
-                j.n = j.n.map((l, k) => {
-                    l.des = `　　　　${l.des}`
-                    this.flattenWorkCategories.push({
-                        disabled: false,
-                        title: l.des,
-                        value: l.no,
-                    })
-                    return l
-                })
-                return j
-            })
-            return v
-        });
-
-
-    },
-    watch : {
-        "routeIndex.start"() {
-          this.routeData = [];
-          this.milestone.forEach((item, index) => {
-            if (this.routeIndex.start <= index && this.routeIndex.end >= index) {
-              this.routeData.push(item);
-            }
-          });
-        },
-    },
-    methods: {
-        async getMilestoneData() {
-          let res = await axios.post(`${location.origin}/getMilestoneData`);
-
-          this.milestone = res.data.reverse();
-
-          this.routeIndex.end = this.milestone.length - 1;
-          this.routeIndex.start =
-            window.innerWidth > 767 ? this.milestone.length - 6 : this.milestone.length - 4;
-
-          this.milestone.forEach((item, index) => {
-            if (this.routeIndex.start <= index && this.routeIndex.end >= index) {
-              this.routeData.push(item);
-            }
-          });
-        },
-        calculateForm() {
-            this.isFormValid = false;
-            let data = new FormData(this.$refs.borrowReport);
-
-            try {
-
-                let attrs = [
-                    'identity',
-                    'educational_level',
-                    'job',
-                    'is_top_enterprises',
-                    'insurance_salary',
-                    'debt_amount',
-                    'monthly_repayment',
-                    'creditcard_quota',
-                    'creditcard_bill',
-                    'name',
-                    'email',
-                ];
-
-                attrs.forEach( attr => {
-                    if ('' == data.get(attr)) {
-                        throw new Error(`Invalid value ` + attr);
-                    }
-                });
-                axios({
-                    url: `${location.origin}/getBorrowReport`,
-                    method: 'post',
-                    data: data,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Accept': 'application/json',
-                    }
-                }).then((res) => {
-                    this.borrowReportResult.amount = res.data.amount
-                    this.borrowReportResult.rate = res.data.rate
-                    this.borrowReportResult.platform_fee = res.data.platform_fee
-                    this.borrowReportResult.repayment = res.data.repayment
-                    this.formCalculated = true
-                    this.isFormValid = true
-                })
-                .catch((error) => {
-                    console.error('getBorrowReport 發生錯誤，請稍後再試');
-                });
-
-            } catch (e) {
-                this.isFormValid = true;
-                alert('請提供正確資料');
-            }
-        },
-        nextSolution() {
-            if (this.currentPlan + 1 > this.plans.length - 1) {
-                this.currentPlan = 0
-            } else {
-                this.currentPlan++
-            }
-        },
-        prevSolution() {
-            if (this.currentPlan - 1 < 0) {
-                this.currentPlan = this.plans.length - 1
-            } else {
-                this.currentPlan--
-            }
-        },
-        updateCalculator(e) {
-            this.pmt = e.pmt
-            switch (e.key) {
-                case 0:
-                    this.period = 3
-                    break
-                case 1:
-                    this.period = 6
-                    break
-                case 2:
-                    this.period = 12
-                    break
-                case 3:
-                    this.period = 18
-                    break
-                case 4:
-                    this.period = 24
-                    break
-            }
-            this.rateCount   = e.rateCount
-            this.amountCount = e.amountCount
-        },
-        format(data) {
-            data = parseInt(data);
-            if (!isNaN(data)) {
-                let l10nEN = new Intl.NumberFormat("en-US");
-                return l10nEN.format(data.toFixed(0));
-            }
-            return 0;
-        },
-        pre() {
-          if (this.routeIndex.start > 0) {
-            this.routeIndex.start--;
-            this.routeIndex.end--;
-          }
-        },
-        next() {
-          if (this.routeIndex.end < this.milestone.length - 1) {
-            this.routeIndex.start++;
-            this.routeIndex.end++;
-          }
-        },
-    },
-};
+  components: {
+    float,
+    AlesisCounter
+  },
+  data: () => ({
+    indexCounter: {}
+  }),
+  created() {
+    $('title').text(`首頁 - inFlux普匯金融科技`)
+  },
+  mounted() {
+    gsap.registerPlugin(ScrollTrigger)
+    gsap.from('#img58', {
+      scrollTrigger: {
+        trigger: '.index-loan',
+        start: '-240px top'
+        // markers:true,
+      },
+      x: -1200,
+      duration: 2
+    })
+    gsap.from('#img57', {
+      scrollTrigger: {
+        trigger: '.index-loan',
+        start: '-240px top'
+      },
+      x: 1200,
+      duration: 2
+    })
+    gsap.from('#img56', {
+      scrollTrigger: {
+        trigger: '.index-loan',
+        start: '-240px top'
+      },
+      y: 1200,
+      duration: 2
+    })
+    gsap.from('#s1', {
+      scrollTrigger: {
+        trigger: '.service-imgs',
+        start: '-240px top'
+      },
+      y: 1200,
+      duration: 2
+    })
+    gsap.from('#s2', {
+      scrollTrigger: {
+        trigger: '.service-imgs',
+        start: '-240px top'
+      },
+      x: -1200,
+      duration: 2
+    })
+    gsap.from('#s3', {
+      scrollTrigger: {
+        trigger: '.service-imgs',
+        start: '-240px top'
+      },
+      x: 1200,
+      duration: 2
+    })
+    gsap.from('#s4', {
+      scrollTrigger: {
+        trigger: '.service-imgs',
+        start: '-240px top'
+      },
+      y: 1200,
+      duration: 2
+    })
+    alesisIndexCounter().then(v => {
+      this.indexCounter = v
+    })
+    // 用戶體驗
+    SwiperCore.use([Navigation])
+    new Swiper('.swiper-container.user-experience-back', {
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
+    })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../component/alesis/alesis";
+@import '../component/alesis/alesis';
 
-/*
- * display rwd for flex css
- */
-.hidden-new-desktop {
-    @include rwd {
-        display: none;
-    }
+.block-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
-
-/**
- * 標頭幻燈片
- */
-
-.標頭幻燈片 {
-    .swiper-button-prev,
-    .swiper-button-next {
-        top: 42%;
-    }
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0px;
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  &.reverse {
+    top: 0;
+    right: -30px;
+    transform: rotate(180deg);
+  }
 }
-
-.標頭幻燈片 .旗幟圖片 {
-    width: 100vw;
-
-    @include rwd {
-        display: none;
-    }
-}
-
-.標頭幻燈片 .旗幟圖片.旗幟圖片_手機的 {
-    display: none;
-
-    @include rwd {
-        display: block;
-    }
-}
-
-.標頭幻燈片 {
-    .新光銀行功能 {
-        position       : absolute;
-        z-index        : 100;
-        gap            : 3rem;
-        top            : initial;
-        bottom         : 1rem;
-        left           : 50%;
-        right          : initial;
-        width          : 32vw;
-        transform      : translateX(-113%);
-        align-items    : flex-end;
-        justify-content: center;
-        display        : flex;
-
-        @include rwd {
-            top         : -6%;
-            bottom      : 0;
-            left        : 0;
-            right       : 0;
-            height      : 100%;
-            width       : initial;
-            transform   : translateX(0);
-            align-items : center;
-        }
-        .連結 {
-            display: block;
-            width  : 28vw;
-        }
-    }
-    .上海商銀功能 {
-        position       : absolute;
-        z-index        : 100;
-        gap            : 5rem;
-        top            : initial;
-        bottom         : 3rem;
-        left           : 50%;
-        right          : initial;
-        width          : 34vw;
-        transform      : translateX(-113%);
-        align-items    : flex-end;
-        justify-content: center;
-        display        : flex;
-
-        @include rwd {
-            top: 37%;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2rem;
-            width: 18rem;
-            transform: translateX(0);
-            align-items: center;
-            gap: 1rem;
-        }
-        .連結 {
-            display: block;
-            width  : 28vw;
-        }
-    }
-
-    .sme-desc {
-        position: absolute;
-        left: 4vw;
-        top: 18%;
-
-        h1 {
-            text-shadow: 4px 4px 4px rgb(0 0 0 / 50%);
-            font-size: 4em;
-            letter-spacing: 2px;
-            color: #f2e627;
-            margin-bottom: 20px;
-        }
-        h4 {
-            text-shadow: 4px 4px 4px rgb(0 0 0 / 50%);
-            font-size: 2em;
-            line-height: 1.5em;
-            letter-spacing: 0.9px;
-            color: white;
-        }
-        @include rwd {
-            top: 2%;
-            h1 {
-                font-size: 2em;
-                margin-bottom: 10px;
-            }
-            h4 {
-                font-size: 1em;
-                line-height: 1em;
-            }
-        }
-    }
-    .sme-link {
-        position: absolute;
-        left: 6vw;
-        top: 59%;
-        a.連結 {
-            margin-right: 3em;
-            transform: scale(1.1);
-            display: inline-block;
-        }
-        @include rwd {
-            left: 0;
-            top: 20%;
-            a.連結 {
-                margin-right: 0;
-                transform: scale(0.9);
-                display: block;
-                width: 49%;
-                float: left;
-            }
-        }
-    }
-
-    .王道銀行功能 {
-        position       : absolute;
-        z-index        : 100;
-        gap            : 5rem;
-        bottom         : 5%;
-        right          : 5%;
-        width          : 34vw;
-        align-items    : flex-end;
-        justify-content: center;
-        display        : flex;
-
-        @include rwd {
-            top: 37%;
-            bottom: 0;
-            left: 14%;
-            right: 0;
-            height: 2rem;
-            width: 18rem;
-            transform: translateX(0);
-            align-items: center;
-            gap: 1rem;
-        }
-        .連結 {
-            display: block;
-            width  : 28vw;
-        }
-    }
-
-}
-
-
-/**
- * 計數器
- */
-
-.計數器 {
-    margin   : 0 auto;
-    max-width: 1280px;
-}
-
-.計數器 .包裹容器 {
-    display        : flex;
+.index-intro {
+  background-image: url('~images/index/index-header-bg.png');
+  background-position: center;
+  padding: 30px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 750px;
+  .intro-content {
+    height: 100%;
+    background-image: url('~images/index/index-header-bg-2.png');
+    background-size: cover;
+    background-position: center -40px;
+    display: flex;
     justify-content: center;
-}
-
-/**
- * 服務區塊
- */
-
-.服務區塊 {
-    position: relative;
-}
-
-.服務區塊 .圖片 {
-    width    : 100%;
-    max-width: 920px;
-    margin   : 0 auto 3rem;
-    display  : block;
-    z-index  : 0;
-    position : relative;
-}
-
-.服務區塊 .動作區塊 {
-    position  : absolute;
-    display   : flex;
-    left      : 50%;
-    transform : translateX(-50%);
-    width     : 100%;
-    max-width : 1200px;
-    margin-top: -4rem;
-    z-index   : 1;
-}
-
-.服務區塊 .動作區塊 .左側,
-.服務區塊 .動作區塊 .右側 {
-    text-align: center;
-    flex      : 1;
-
-    @include rwd {
-        display       : flex;
-        flex-direction: column;
-        gap           : 1rem;
-        align-items   : center;
-    }
-}
-
-.服務區塊 .動作區塊 .左側 {
-    margin-right: 4.5rem;
-}
-
-.服務區塊 .動作區塊 .右側 {
-    margin-left: 4.5rem;
-}
-
-.服務區塊 .動作區塊 .動作 {
-    border-radius: 1rem;
-    padding      : 0.3rem 1.5rem;
-    font-size    : 1.2rem;
-    font-weight  : bolder;
-    color        : #112e53;
-    border       : 1px solid #1a5fa2;
-
-    @include rwd {
-        font-size: .8rem;
-        max-width: 7rem;
-        padding  : .2rem 1rem;
-    }
-
-    &:not(:first-child) {
-        margin-left: 1rem;
-
-        @include rwd {
-            margin-left: 0;
-        }
-    }
-}
-
-/**
- * 公司簡介
- */
-
-.公司簡介 {
-    position: relative;
-
-    @include rwd {
-        padding: 0 1rem;
-    }
-}
-
-.公司簡介 .包裹容器 {
-    margin     : 0 auto 3rem;
-    text-align : center;
-
-    @include rwd {
-        display: none;
-    }
-}
-
-.公司簡介 .包裹容器 svg {
-    width    : 90vw;
-    max-width: 1170px;
-    height   : 550px;
-
-    @include rwd {
-        height : initial;
-    }
-}
-
-.公司簡介 .手機容器 {
-    display   : none;
-    text-align: center;
-
-    @include rwd {
-        display: block;
-    }
-}
-
-.公司簡介 .手機容器 svg {
-    width        : 70vw;
-    margin-bottom: 4rem;
-}
-
-.公司簡介 .介紹區域 {
-    display  : flex;
-    max-width: 1280px;
-    margin   : 0 auto;
-
-    @include rwd {
-        flex-direction: column;
-    }
-}
-
-.公司簡介 .介紹區域 .展示區塊 {
-    flex      : 1;
-    max-width : min(590px, 45vw);
-    text-align: center;
-
-    @include rwd {
-        max-width: initial;
-    }
-}
-
-.公司簡介 .介紹區域 .展示區塊 .圖片 {
-    max-width: min(590px, 32vw);
-
-    @include rwd {
-        max-width: 100%;
-        width    : 100%;
-    }
-}
-
-.公司簡介 .介紹區域 .項目清單 {
-    flex           : 1;
-    display        : flex;
-    flex-direction : column;
-    align-items    : flex-start;
-    justify-content: center;
-}
-
-.公司簡介 .介紹區域 .項目清單 .項目 {
-    margin-top: 3rem;
-}
-
-/**
- * 產品特色
- */
-
-.產品特色 {
-    position: relative;
-}
-
-.產品特色 .包裹容器 {
-    display        : flex;
-    justify-content: center;
-    max-width      : 1280px;
-    margin         : 0 auto;
-
-    @include rwd {
-        flex-direction: column;
-        gap           : 3rem;
-        padding       : 0 0rem;
-    }
-}
-
-.產品特色 .包裹容器 .展示區塊 {
-    flex       : 0.75;
-    text-align : center;
-    padding-top: 4rem;
-
-    @include rwd {
-        padding-top: 0;
-    }
-}
-
-.產品特色 .包裹容器 .展示區塊 .圖片 {
-    width: 240px;
-}
-
-.產品特色 .包裹容器 .內容區塊 {
-    flex: 1;
-
-    @include rwd {
-        max-width: 450px;
-        margin   : 0 auto;
-    }
-}
-
-.產品特色 .包裹容器 .內容區塊 .bullet {
-    margin-left: 2.3rem;
-
-    @include rwd {
-        margin-left: 0;
-    }
-}
-
-.產品特色 .包裹容器 .內容區塊 .bullet .symbol {
-    @include rwd {
-        margin-right: 2rem;
-    }
-}
-
-.產品特色 .包裹容器 .半月列表 > .項目 {
-    display   : flex;
-    margin-top: 3.5rem;
-
-    @include rwd {
-        &:not(:first-child) {
-            margin-top: 1.5rem;
-        }
-    }
-}
-
-.產品特色 .包裹容器 .半月列表 > .項目 .圖示 {
-    margin-right: 3rem;
-
-    @include rwd {
-        margin-right: 1.5rem;
-    }
-
-    @include rwd-minimum {
-        margin-right: 0rem;
-    }
-}
-
-.產品特色 .包裹容器 .半月列表 > .項目 .內容.security {
-    max-width: 18em;
-
-    @include rwd {
-        max-width: none;
-    }
-}
-
-.產品特色 .包裹容器 .半月列表 > .項目 .內容 {
-    color: #5d5555;
-
-    @include rwd {
-        font-size  : .9rem;
-        line-height: 1.8;
-    }
-}
-
-.產品特色 .標語 {
-    text-align : center;
-    color      : #f29600;
-    font-size  : 2rem;
-    font-weight: bolder;
-    margin-top : 4rem;
-
-    @include rwd {
-        font-size : 1rem;
-        margin-top: 2rem;
-    }
-}
-
-/**
- * 快速變現
- */
-
-.快速變現 {
-    position: relative;
-}
-
-.快速變現 .包裹容器 {
-    display    : flex;
-    margin     : 0 auto;
-    align-items: center;
-    max-width  : 1000px;
-
-    @include rwd {
-        flex-direction: column;
-        gap           : 4rem;
-    }
-}
-
-.快速變現 .包裹容器 .圖表 {
-    text-align: center;
-    flex      : 1;
-}
-
-.快速變現 .包裹容器 .圖表 .圖片 {
-    width: 590px;
-
-    @include rwd {
-        width: 76vw;
-    }
-}
-
-.快速變現 .包裹容器 .半月列表 > .項目:not(:first-child) {
-    margin-top: 5rem;
-
-    @include rwd {
-        margin-top: 3rem;
-    }
-}
-
-/**
- * 產品方案
- */
-
-.產品方案 {
-    position: relative;
-}
-
-.產品方案 .包裹容器 {
-    display              : grid;
-    grid-template-columns: repeat(3, 1fr);
-    max-width            : 900px;
-    margin               : 3rem auto 0;
-    gap                  : 1.5rem;
-
-    @include rwd {
-        align-items          : center;
-        justify-content      : center;
-        grid-template-columns: min-content 1fr min-content;
-        max-width            : 400px;
-        min-height           : 465px;
-    }
-}
-
-.產品方案 .包裹容器 .箭頭 {
-    display: none;
-
-    @include rwd {
-        text-align: center;
-        display   : block;
-    }
-}
-
-.產品方案 .包裹容器 .箭頭 .圖示 {
-    width: 33px;
-}
-
-.產品方案 .包裹容器 .方案表 {
-    padding: 1rem;
-    flex   : 1;
-
-    @include rwd {
-        &:not(.方案表_已啟用) {
-            display: none;
-        }
-    }
-}
-
-/**
- * 媒體報導
- */
-
-.媒體報導 {
-    position: relative;
-}
-
-.媒體報導 .包裹容器 {
-    background-image: url('/images/sshot-1644.png');
-    background-size : cover;
-    padding         : .5rem 1rem;
-
-    @include rwd {
-        padding: .5rem 1rem;
-    }
-}
-
-.媒體報導 .包裹容器 .商標區塊 {
-    display              : grid;
-    grid-template-columns: repeat(5, 1fr);
-    max-width            : 1280px;
-    margin               : 2rem auto;
-    gap                  : 1rem;
-
-    @include rwd {
-        margin: 1rem auto;
-    }
-}
-
-.媒體報導 .包裹容器 .商標區塊.商標區塊_三欄 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-.媒體報導 .包裹容器 .商標區塊 .項目 {
-    text-align: center;
-}
-
-.媒體報導 .包裹容器 .商標區塊 .項目 .圖片 {
-    height        : 60px;
-    margin        : 0 auto;
-    mix-blend-mode: darken;
-
-    @include rwd {
-        height    : 6vw;
-        max-height: 30px;
-    }
-}
-.media_report {
-    .col {
-        text-align: center;
-    }
-    img {
-        height: 5em;
-        @include rwd {
-            max-width: 100%;
-            height: initial;
-            max-height: 2em;
-        }
-    }
-}
-
-/**
- * 計算器
- */
-
-.分期計算機 {
-    position: relative;
-}
-
-.分期計算機 .包裹容器 {
-    display        : flex;
-    align-items    : center;
-    justify-content: center;
-    max-width      : 1280px;
-    margin         : 0 auto;
-
-    @include rwd {
-        flex-direction: column;
-    }
-}
-
-.分期計算機 .包裹容器 .計算機 {
-    flex           : 1;
-    display        : flex;
-    align-items    : center;
-    justify-content: center;
-    margin-right   : 7rem;
-
-    @include rwd {
-        width       : 380px;
-        margin-right: 0;
-    }
-}
-
-.分期計算機 .包裹容器 .計算機 > div {
-    width: 600px;
-}
-
-.分期計算機 .包裹容器 .輸入群組 {
-    flex: 1;
-}
-
-.分期計算機 .包裹容器 .輸入群組 .列 {
-    margin    : 0;
-    margin-top: 1rem;
-    display   : flex;
-
-    @include rwd {
-        justify-content: center;
-
-        &:first-child {
-            display     : inline-flex;
-            margin-right: 1rem;
-        }
-
-        &:nth-child(2) {
-            display: inline-flex;
-
-            .輸入欄位 {
-                width: 3rem;
-            }
-        }
-    }
-}
-
-.分期計算機 .包裹容器 .輸入群組 .列 .文字 {
-    text-align      : center;
-    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
-    background-clip : text;
-    width           : fit-content;
-    color           : rgba(255, 255, 255, 0);
-    font-weight     : bolder;
-    font-size       : 2rem;
-    line-height     : 1.2;
-    white-space     : nowrap;
-
-    @include rwd {
-        font-size: 1.2rem;
-    }
-}
-
-.分期計算機 .包裹容器 .輸入群組 .列 .輸入欄位 {
-    appearance    : none;
-    border        : 0;
-    border-bottom : 1px solid #2b8bc3;
-    padding       : .25rem 1rem;
-    box-sizing    : border-box;
-    background    : transparent;
-    color         : #f29600;
-    font-size     : 2.3rem;
-    margin-top    : -1rem;
-    line-height   : 1;
-    width         : 11rem;
-    text-align    : center;
-    outline       : none;
-    pointer-events: none;
-
-    @include rwd {
-        font-size : 1.2rem;
-        width     : 6rem;
-        padding   : 0;
-        margin-top: -.5rem;
-    }
-}
-
-/**
- * 人物推薦
- */
-
-.人物推薦 {
-    position: relative;
-}
-
-.index-wrapper {
-    width: 100%;
-
-    .banner {
-        position: relative;
-        overflow: hidden;
-
-        .puhey-banner {
-            img {
-                width: 100%;
-            }
-
-            .diagram {
-                position: absolute;
-                top     : 11%;
-                left    : 29%;
-                width   : 50%;
-                opacity : 30%;
-            }
-
-            .content {
-                position  : absolute;
-                top       : 73%;
-                left      : 35%;
-                transform : translate(-50%, -50%);
-                text-align: center;
-
-                @include rwd {
-                    top: 45%;
-                }
-
-                p {
-                    text-shadow   : 2px 6px 6px rgba(0, 0, 0, 0.75);
-                    font-family   : NotoSansTC;
-                    font-size     : 2.3vw;
-                    letter-spacing: 2.4px;
-                    color         : #ffffff;
-                }
-
-                span {
-                    text-shadow   : 2px 6px 6px rgba(0, 0, 0, 0.75);
-                    font-size     : 2.1vw;
-                    letter-spacing: 1.8px;
-                    color         : #f2e627;
-                    text-align    : center;
-                }
-            }
-
-            .box {
-                display: flex;
-
-                a {
-                    img {
-                        width: 17vw;
-                        max-width: 230px;
-                    }
-                }
-
-                %block {
-                    // width   : 40%;
-                    width   : 100%;
-                    margin  : 0px 2rem;
-                    position: relative;
-                    @include rwd {
-                        margin  : 0px auto;
-                    }
-
-                    :hover {
-                        text-decoration: none;
-                    }
-
-                    .text {
-                        position : absolute;
-                        top      : 51%;
-                        left     : 47%;
-                        transform: translate(-50%, -50%);
-                        font-size: min(1.5vw, 26px);
-                        font-weight:bold;
-                        width    : 100%;
-
-                        i.fa {
-                            font-size: 1.5rem;
-                        }
-                    }
-                }
-
-                .loan {
-                    @extend %block;
-
-                    :hover {
-                        color: #ffffff;
-                    }
-
-                    .text {
-                        color: #ffffff;
-                    }
-                }
-
-                .borrow {
-                    @extend %block;
-
-                    :hover {
-                        color: #064280;
-                    }
-
-                    .text {
-                        color: #064280;
-                    }
-                }
-            }
-        }
-    }
-    .histroy-card {
-      padding: 40px 30px;
-      background-color: #ecedf1;
-
-      .h-c {
+    align-items: flex-end;
+    .intro-products {
+      .group {
+        margin: 20px;
         display: flex;
-
-        .arrows {
-          position: relative;
-          width: 100px;
-          z-index: 1;
-
-          div {
-            width: 100px;
-            position: absolute;
-            top: 50%;
-            transform: translate(0px, -50%);
-            cursor: pointer;
-          }
-        }
+        gap: 20px;
+        justify-content: center;
       }
     }
-
-    @media screen and (max-width: 767px) {
-    .histroy-card {
-      padding: 10px;
-
-      .h-c {
-        width: 100%;
-        padding: 10px 0px;
-        flex-direction: column;
-
-        .al {
-          div {
-            right: 0px;
-            transform: translate(0px, 50%) rotate(90deg);
-          }
-        }
-
-        .ar {
-          div {
-            left: 0px;
-            transform: translate(0px, -100%) rotate(90deg);
-          }
-        }
-
-        .arrows {
-          width: 100%;
-
-          div {
-            width: 70px;
-          }
-        }
+    .product-item {
+      .card {
+        width: 230px;
+        padding: 12px;
+        border-radius: 4px;
       }
-    }
-        .banner {
-            .puhey-banner {
-                .diagram {
-                    position: absolute;
-                    top     : 25%;
-                    left    : 10px;
-                    width   : 65%;
-                }
-
-                img {
-                    width: 100%;
-                }
-
-                .content {
-                    font-size: 16px;
-                    width    : 100%;
-                    left     : 50%;
-                    top      : 55%;
-
-                    p {
-                        font-size     : 25px;
-                        letter-spacing: 0px;
-                    }
-
-                    span {
-                        font-size: 22px;
-                        letter-spacing: 0px;
-                    }
-
-                    .box {
-                        margin-top: 103vw;
-
-                        %block {
-                            width: 170px;
-
-                            .text {
-                                font-size: 16px;
-
-                                i.fa {
-                                    font-size: .9rem;
-                                }
-                            }
-                        }
-
-                        a {
-                            img {
-                                width: 100%;
-                            }
-                        }
-                    }
-                }
+      .card-title {
+        font-weight: 700;
+        font-size: 22px;
+        line-height: 32px;
+        color: #393939;
+      }
+      .card-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 60px 30px;
+        grid-template-areas:
+          'subtitle image'
+          'link image';
+        .card-subtitle {
+          grid-area: subtitle;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+          color: #707070;
+        }
+        .card-link {
+          grid-area: link;
+          font-size: 15px;
+          line-height: 22px;
+          text-decoration-line: underline;
+          color: #036eb7;
+        }
+        .card-image {
+          grid-area: image;
+          background-repeat: no-repeat;
+          background-size: contain;
+          background-position: center;
+          &.p1 {
+            background-image: url('~images/index/mortarboard1.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/mortarboard.gif');
             }
+          }
+          &.p2 {
+            background-image: url('~images/index/id1.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/id.gif');
+            }
+          }
+          &.p3 {
+            background-image: url('~images/index/computer1.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/computer.gif');
+            }
+          }
+          &.p4 {
+            background-image: url('~images/index/car1.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/car.gif');
+            }
+          }
+          &.p5 {
+            background-image: url('~images/index/line-chart.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/line-chart.gif');
+            }
+          }
+          &.p6 {
+            background-image: url('~images/index/handshake1.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/handshake.gif');
+            }
+          }
+          &.p7 {
+            background-image: url('~images/index/university1.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/university.gif');
+            }
+          }
+          &.p8 {
+            background-image: url('~images/index/building1.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/building.gif');
+            }
+          }
+          &.p9 {
+            background-image: url('~images/index/love1.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/love.gif');
+            }
+          }
+          &.p10 {
+            background-image: url('~images/index/money-bag.png');
+            &:hover,
+            &:focus-within {
+              background-image: url('~images/index/money-bag.gif');
+            }
+          }
         }
+      }
     }
+  }
+}
+.index-concept {
+  position: relative;
+  padding: 80px;
+  background-color: #036eb7;
+  background-image: url('~images/index/concept-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 1044px;
+  .block-content {
+    padding: 0 50px;
+    .block-title {
+      font-weight: 500;
+      font-size: 40px;
+      line-height: 81px;
+      margin: 40px 0;
+      color: #e6f5ff;
+      text-align: center;
+    }
+    .block-title-2 {
+      color: #e6f5ff;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.4;
+      margin: 40px 0;
+    }
+    .block-info {
+      display: flex;
+      align-items: flex-start;
+      font-size: 20px;
+      color: #fff;
+      line-height: 2.5;
+      &.concept-1::before {
+        display: inline-block;
+        content: '「普」';
+        color: #fff;
+        opacity: 1;
+        font-size: 32px;
+        line-height: 45px;
+      }
+      &.concept-2::before {
+        display: inline-block;
+        content: '「匯」';
+        color: #f29600;
+        opacity: 1;
+        font-size: 32px;
+        line-height: 45px;
+      }
+    }
+    .op {
+      opacity: 0.56;
+    }
+    .em {
+      font-size: 32px;
+      color: #fff;
+      opacity: 1;
+    }
+    .f-yellow {
+      color: #f29600;
+      opacity: 1;
+    }
+  }
+}
+.index-loan {
+  position: relative;
+  padding: 70px 70px;
+  background-image: url('~images/index/index-phone-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 1200px;
+  .block-title {
+    color: #036eb7;
+    font-size: 32px;
+    text-align: center;
+  }
+  .block-info {
+    color: #036eb7;
+    font-size: 20px;
+    margin-top: 24px;
+    opacity: 0.64;
+    text-align: center;
+  }
+  .loan-imgs {
+    padding: 35px 0;
+    position: relative;
+    height: 900px;
+    #img56 {
+      display: block;
+      margin: auto;
+      .img56-img {
+        width: 380px;
+      }
+    }
+    #img58 {
+      left: -50px;
+      bottom: -12px;
+      position: absolute;
+      transform: matrix(1, 0.08, 0.08, 1, 0, 0);
+    }
+    #img57 {
+      top: -20px;
+      right: -232px;
+      position: absolute;
+      transform: rotate(-7.93deg);
+    }
+  }
+  .tip-card {
+    &.tip-1 {
+      right: -155px;
+      top: 200px;
+    }
+    &.tip-2 {
+      left: -144px;
+      top: 400px;
+    }
+    position: absolute;
+    border: none;
+    width: 300px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    .card-container {
+      padding: 24px 26px;
+    }
+    .tip {
+      text-align: center;
+      font-size: 24px;
+      color: #036eb7;
+    }
+  }
+}
+@keyframes service {
+  3% {
+    right: -125px;
+    opacity: 0.4;
+    filter: alpha(opacity=20);
+  }
+  20% {
+    right: 145px;
+    opacity: 1;
+    filter: alpha(opacity=0);
+  }
+  45% {
+    right: 145px;
+    opacity: 0;
+    filter: alpha(opacity=0);
+  }
+}
+@keyframes service-img {
+  0% {
+    top: 0px;
+  }
+  50% {
+    top: 30px;
+  }
+  100% {
+    top: 0;
+  }
+}
+.index-service {
+  position: relative;
+  padding: 70px 70px;
+  background: linear-gradient(180.82deg, #036eb7 0.7%, #ffffff 92.77%);
+  .block-title {
+    color: #fff;
+    font-size: 32px;
+    text-align: center;
+  }
+  .block-info {
+    color: #fff;
+    font-size: 20px;
+    margin-top: 24px;
+    opacity: 0.64;
+    text-align: center;
+  }
+  .service-imgs {
+    padding: 15px 0 180px;
+    position: relative;
+    overflow: hidden;
+    #service-1 {
+      animation: service-img 4s linear infinite;
+      position: relative;
+      display: block;
+      margin: 0 auto;
+      height: 500px;
+    }
+    #service-2 {
+      position: absolute;
+      display: block;
+      margin: 0 auto;
+      bottom: -111px;
+      left: 400px;
+      height: 400px;
+    }
+    #s1 {
+      position: absolute;
+      left: 253px;
+      top: 127px;
+      font-size: 18px;
+      line-height: 26px;
+      color: #ffffff;
+    }
+    #s2 {
+      position: absolute;
+      right: 178px;
+      top: 175px;
+      font-size: 18px;
+      line-height: 26px;
+      color: #ffffff;
+    }
+    #s3 {
+      position: absolute;
+      left: 188px;
+      bottom: 160px;
+      font-size: 18px;
+      line-height: 26px;
+      color: #ffffff;
+    }
+    #s4 {
+      position: absolute;
+      right: 210px;
+      bottom: 165px;
+      font-size: 18px;
+      line-height: 26px;
+      color: #ffffff;
+    }
+  }
+}
+.index-tech {
+  padding: 70px 70px;
+  .tech-head {
+    width: 420px;
+    margin: 0 auto;
+    .block-title {
+      text-align: left;
+    }
+    .block-info {
+      margin: 0;
+      text-align: left;
+    }
+  }
+  .block-content-header-title {
+    color: #036eb7;
+    font-size: 42px;
+    text-align: center;
+  }
+  .block-content-header-info {
+    color: #036eb7;
+    font-size: 24px;
+    margin-top: 24px;
+    opacity: 0.64;
+    text-align: center;
+  }
+  .block-title {
+    color: #036eb7;
+    font-size: 32px;
+    text-align: center;
+  }
+  .block-info {
+    color: #036eb7;
+    font-size: 20px;
+    margin-top: 24px;
+    opacity: 0.64;
+    text-align: center;
+  }
+  .step-container {
+    margin: 45px auto;
+    width: fit-content;
+    position: relative;
+  }
+  .step-content-1 {
+    width: 435px;
+    padding: 0 15px 10px 0;
+    .step-content-title::before {
+      content: '1';
+    }
+  }
+  .step-content-2 {
+    width: 435px;
+    padding: 0 15px 10px 0;
+    .step-content-title::before {
+      content: '2';
+    }
+    .step-content-info {
+      border-left: 5px solid #f29600;
+    }
+  }
+  .step-content-3 {
+    width: 435px;
+    padding: 0 15px 10px 0;
+    .step-content-title::before {
+      content: '3';
+    }
+  }
+  .step-content-4 {
+    width: 435px;
+    padding: 0 15px 10px 0;
+    .step-content-title::before {
+      content: '4';
+    }
+    .step-content-info {
+      border-left: 5px solid #f29600;
+      opacity: 1;
+    }
+    .op {
+      opacity: 0.56;
+    }
+  }
+  .step-content-title {
+    padding-left: 30px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    color: #036fb7;
+    &::before {
+      background: #036fb7;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 500;
+      position: absolute;
+      left: -16px;
+      text-align: center;
+      width: 36px;
+    }
+  }
+  .content-title-style {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    color: #036fb7;
+    margin-bottom: 15px;
+  }
+  .step-content-info {
+    margin: 15px 0;
+    padding-left: 30px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 23px;
+    color: #023d64;
+    opacity: 0.56;
+    border-left: 5px solid #036fb7;
+  }
+}
+.index-cert {
+  padding: 64px;
+  background: #f3f9fc;
+  .cert-swiper {
+    overflow: initial;
+  }
+  .block-title {
+    color: #036eb7;
+    font-size: 32px;
+    text-align: center;
+  }
+  .block-info {
+    color: #036eb7;
+    font-size: 20px;
+    margin-top: 24px;
+    opacity: 0.64;
+    text-align: center;
+  }
+  .cert-cards {
+    display: flex;
+    margin-top: 60px;
+    justify-content: center;
+    gap: 20px;
+    .card {
+      width: 328px;
+      border: none;
+      box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
+      border-radius: 16px;
+      .card-body {
+        padding: 24px 30px;
+      }
+      .card-cover {
+        width: 84px;
+        margin: 0 auto 16px;
+        padding: 12px;
+        background: #cdeafe;
+        border-radius: 6px;
+      }
+      .card-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        text-align: center;
+        color: #023d64;
+      }
+      .card-divider {
+        width: 39px;
+        margin: 8px auto;
+        border-bottom: 3px solid #036fb7;
+        border-radius: 100px;
+      }
+      .card-text {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 1.2;
+        color: #023d64;
+        opacity: 0.56;
+      }
+    }
+  }
 }
 
-.公司簡介 {
-    .route-map {
-        position: relative;
-        width: calc(100% - 200px);
-        max-width: 1200px;
-        margin: 0 auto;
+.product-step {
+  .block-title {
+    margin-top: 40px;
+    color: #036eb7;
+    font-size: 48px;
+    text-align: center;
+  }
+  .product-step-head-title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 42px;
+    text-align: center;
+  }
+  .block-content-info {
+    color: #036eb7;
+    font-size: 24px;
+    margin: 24px 0;
+    opacity: 0.64;
+    text-align: center;
+  }
+  .counter-row {
+    justify-content: space-evenly;
+  }
+  .steps {
+    height: 1000px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('~images/index/step-bg.png');
+  }
+  .step-container {
+    display: grid;
+    grid-template-columns: 1fr 32px 1fr;
+    padding: 60px;
+    gap: 20px;
+    .loan {
+      .step-head-title {
+        color: #036fb7;
+      }
+      .step-content-1 {
+        width: 275px;
+        padding: 0 15px 10px 30px;
+        border-left: 5px solid #036fb7;
+        .step-content-title::before {
+          content: '1';
+        }
+        .step-content-img {
+          opacity: 1;
+          z-index: 3;
+        }
+      }
+      .step-content-2 {
+        width: 275px;
+        padding: 0 15px 10px 30px;
+        border-left: 5px solid #036fb7;
+        .step-content-title::before {
+          content: '2';
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .step-content-3 {
+        width: 275px;
+        padding: 0 15px 10px 30px;
+        border-left: 5px solid #036fb7;
+        .step-content-title::before {
+          content: '3';
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .step-content-4 {
+        width: 275px;
+        padding: 0 15px 10px 30px;
+        border-left: 5px solid #036fb7;
+        .step-content-title::before {
+          content: '4';
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .step-content-5 {
+        width: 275px;
+        padding: 0 15px 10px 30px;
+        .step-content-title::before {
+          content: '5';
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .solgan {
+        border-radius: 16px;
+        border: 1px solid #036fb7;
+        color: #393939;
+        font-size: 20px;
+        margin: 30px 0 0 45px;
+        padding: 14px;
+        text-align: center;
+        width: 210px;
+        .em {
+          font-size: 28px;
+          color: #036eb7;
+        }
+        .sm {
+          font-size: 14px;
+          opacity: 0.8;
+        }
+      }
     }
-    .arrows {
+    .invest {
+      .step-head-title {
+        color: #f29500;
+      }
+      .step-content-1 {
+        width: 275px;
+        padding: 0 15px 40px 30px;
+        border-left: 5px solid #f29500;
+        .step-content-title::before {
+          content: '1';
+          background: #f29500;
+        }
+        .step-content-img {
+          opacity: 1;
+          z-index: 3;
+        }
+      }
+      .step-content-2 {
+        width: 275px;
+        padding: 0 15px 40px 30px;
+        border-left: 5px solid #f29500;
+        .step-content-title::before {
+          content: '2';
+          background: #f29500;
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .step-content-3 {
+        width: 275px;
+        padding: 0 15px 25px 30px;
+        border-left: 5px solid #f29500;
+        .step-content-title::before {
+          content: '3';
+          background: #f29500;
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .step-content-4 {
+        width: 275px;
+        padding: 0 15px 10px 30px;
+        .step-content-title::before {
+          content: '4';
+          background: #f29500;
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .solgan {
+        border-radius: 16px;
+        border: 1px solid #036fb7;
+        color: #393939;
+        font-size: 20px;
+        margin: 139px 0 0 45px;
+        padding: 14px;
+        text-align: center;
+        width: 210px;
+        .em {
+          font-size: 28px;
+          color: #036eb7;
+        }
+        .sm {
+          font-size: 14px;
+          opacity: 0.8;
+        }
+      }
+    }
+    .step-head-title {
+      font-weight: 700;
+      font-size: 32px;
+      text-align: center;
+      letter-spacing: 0.2px;
+    }
+    .step-head-info {
+      margin-top: 8px;
+      font-weight: 700;
+      font-size: 20px;
+      text-align: center;
+      color: #393939;
+    }
+    .step-main {
+      margin-top: 45px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .divide {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .circle {
+        width: 32px;
+        height: 32px;
+        background: #036fb7;
+        margin: 60px 0;
+        border-radius: 50%;
+      }
+    }
+    .step-content-title {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 24px;
+      color: #036fb7;
+      &::before {
+        background: #036fb7;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 500;
         position: absolute;
-        top: 270px;
-        cursor: pointer;
-        z-index: 10;
-        &.ar {
-            right: 6rem;
-        }
-        &.al {
-            left: 6rem;
-        }
+        right: 255px;
+        text-align: center;
+        width: 36px;
+      }
     }
-    @include rwd {
-        .arrows {
-            top: initial;
-            left: initial;
-            right: initial;
-            position: relative;
+    .step-content-info {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 23px;
+      color: #023d64;
+      opacity: 0.56;
+    }
+    .step-content-img {
+      top: 0;
+      left: 15px;
+      position: absolute;
+      transition-property: opacity;
+      transition-duration: 1s;
+      opacity: 0;
+    }
+  }
+}
+.charity {
+  padding: 64px;
+  background: #f3f9fc;
+  .block-title {
+    font-weight: 500;
+    font-size: 40px;
+    color: #036fb7;
+    text-align: center;
+  }
+  .block-info {
+    color: #036fb7;
+    font-size: 20px;
+    margin-top: 24px;
+    margin-bottom: 15px;
+    opacity: 0.64;
+    text-align: center;
+  }
+  .info-title {
+    font-size: 32px;
+    color: #023d64;
+  }
+  .info-content {
+    margin: 12px 0 32px;
+    font-size: 18px;
+    line-height: 26px;
+    color: #023d64;
+    opacity: 0.64;
+  }
+  .img-group {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+  }
+  .img-1251 {
+    height: 496px;
+    margin-left: 15px;
+  }
+}
+/**
+    user experience
+*/
+.user-experience {
+  position: relative;
+  background-image: url('~images/user_experence_cover.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 0 top;
+  height: 820px;
 
-            &.al, &.ar {
-                z-index: 10;
-                width: 70px;
-            }
-            &.al {
-                left: 85%;
-                transform: translate(0px, 50%) rotate(90deg);
-                top: 3rem;
-            }
-            &.ar {
-                left: 0;
-                transform: translate(0px, 50%) rotate(90deg);
-                bottom: 5rem;
-            }
-        }
-        .h-c {
-            .routeM-map {
-                pointer-events: none;
-            }
-        }
+  .block-title {
+    margin-top: 36px;
+    font-size: 56px;
+    line-height: 81px;
+    text-align: center;
+    letter-spacing: 0.2px;
+    color: #fff;
+  }
+  .block-info {
+    font-size: 24px;
+    line-height: 35px;
+    text-align: center;
+    color: #393939;
+  }
+  .user-comment {
+    margin-top: 100px;
+    justify-content: center;
+    .comment-card {
+      width: 360px;
+      padding: 10px;
+      .star {
+        color: #f3cd03;
+      }
+      .portrait {
+        width: 56px;
+        border-radius: 50%;
+      }
     }
+  }
+  .media {
+    position: absolute;
+    padding: 20px;
+    bottom: 0;
+    width: 101%;
+    left: 15px;
+    background: rgba($color: #8c97af, $alpha: 0.5);
+    .圖片 {
+      height: 48px;
+    }
+  }
+  .ue-prev,
+  .ue-next {
+    top: 215px;
+  }
+}
+
+@media (max-width: 768px) {
+  .block-content {
+    margin: 0 auto;
+  }
+  .wave {
+    position: absolute;
+    bottom: initial;
+    height: 100px;
+    overflow: hidden;
+    &.reverse {
+      top: -40px;
+      transform: rotate(180deg);
+    }
+  }
+  .index-intro {
+    background-image: none;
+    padding: 0;
+    height: auto;
+    .intro-content {
+      background-image: url('~images/index/header-bg-phone.png');
+      background-position: initial;
+      .intro-products {
+        margin-top: 365px;
+        .group {
+          margin: 20px 0;
+          flex-direction: column;
+        }
+      }
+      .product-item {
+        .card {
+          width: 330px;
+          position: relative;
+        }
+        .card-content {
+          display: flex;
+          gap: 15px;
+          .card-subtitle {
+            margin: 0;
+            font-size: 14px;
+            line-height: 20px;
+          }
+          .card-link {
+            font-size: 14px;
+            line-height: 20px;
+          }
+          .card-image {
+            position: absolute;
+            top: 8px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+          }
+        }
+      }
+    }
+  }
+  .index-concept {
+    position: relative;
+    padding: 30px 10px;
+    background-image: url('~images/index/concept-bg.png');
+    height: auto;
+    .block-content {
+      padding: 0 0 50px;
+      .block-title {
+        font-size: 28px;
+        line-height: 1.4;
+        margin: 0 0 20px;
+      }
+      .block-title-2 {
+        font-size: 20px;
+        line-height: 1.4;
+        margin: 0 0 20px;
+      }
+      .block-info {
+        display: flex;
+        align-items: flex-start;
+        font-size: 14px;
+        line-height: 1.5;
+        &.concept-1::before {
+          content: '「普」';
+          font-size: 20px;
+          line-height: 14px;
+        }
+        &.concept-2::before {
+          display: inline-block;
+          content: '「匯」';
+          font-size: 20px;
+          line-height: 14px;
+        }
+      }
+      .op {
+        margin-bottom: 10px;
+      }
+      .em {
+        font-size: 20px;
+      }
+    }
+  }
+  .index-loan {
+    padding: 20px 0;
+    background-image: url('~images/index/index-phone-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 575px;
+    .block-title {
+      font-size: 28px;
+    }
+    .block-info {
+      font-size: 18px;
+      margin-top: 8px;
+    }
+    .loan-imgs {
+      padding: 35px 0;
+      position: relative;
+      height: auto;
+      #img56 .img56-img {
+        width: 210px;
+      }
+      //   #img58 {
+      //     left: -50px;
+      //     bottom: -12px;
+      //     position: absolute;
+      //     transform: matrix(1, 0.08, 0.08, 1, 0, 0);
+      //   }
+      //   #img57 {
+      //     top: -20px;
+      //     right: -232px;
+      //     position: absolute;
+      //     transform: rotate(-7.93deg);
+      //   }
+    }
+    .tip-card {
+      &.tip-1 {
+        right: -40px;
+        top: 128px;
+      }
+      &.tip-2 {
+        left: -40px;
+        top: 280px;
+      }
+      width: 160px;
+      .card-container {
+        padding: 8px 12px;
+      }
+      .tip {
+        font-size: 14px;
+      }
+    }
+  }
+  @keyframes service {
+    3% {
+      right: -125px;
+      opacity: 0.4;
+      filter: alpha(opacity=20);
+    }
+    20% {
+      right: 145px;
+      opacity: 1;
+      filter: alpha(opacity=0);
+    }
+    45% {
+      right: 145px;
+      opacity: 0;
+      filter: alpha(opacity=0);
+    }
+  }
+  @keyframes service-img {
+    0% {
+      top: 0px;
+    }
+    50% {
+      top: 30px;
+    }
+    100% {
+      top: 0;
+    }
+  }
+  .index-service {
+    position: relative;
+    padding: 75px 0 25px;
+    background: linear-gradient(180.82deg, #036eb7 13.7%, #ffffff 99.77%);
+    .block-title {
+      color: #fff;
+      font-size: 32px;
+      text-align: center;
+    }
+    .block-info {
+      color: #fff;
+      font-size: 20px;
+      margin-top: 16px;
+      opacity: 0.64;
+      text-align: center;
+    }
+    .service-imgs {
+      padding: 15px 0 130px;
+      position: relative;
+      overflow: hidden;
+      #service-1 {
+        margin-top: 15px;
+        animation: none;
+        max-width: 70%;
+        margin: 0 auto;
+        height: auto;
+      }
+      #service-2 {
+        position: absolute;
+        display: block;
+        margin: 0 auto;
+        bottom: -75px;
+        left: 0px;
+        height: 260px;
+      }
+      #s1 {
+        left: 20px;
+        top: 20px;
+        font-size: 12px;
+        line-height: 1.6;
+        width: 70px;
+      }
+      #s2 {
+        position: absolute;
+        right: 3px;
+        top: 19px;
+        font-size: 12px;
+        line-height: 1.6;
+        width: 100px;
+      }
+      #s3 {
+        position: absolute;
+        left: 15px;
+        bottom: 58px;
+        font-size: 12px;
+        line-height: 1.6;
+        width: 100px;
+      }
+      #s4 {
+        position: absolute;
+        right: 3px;
+        bottom: 80px;
+        font-size: 12px;
+        line-height: 1.6;
+        width: 110px;
+      }
+    }
+  }
+  .index-tech {
+    padding: 30px 0px;
+    .tech-head {
+      width: 100%;
+      margin: 0 auto;
+      .block-title {
+        text-align: center;
+      }
+      .block-info {
+        margin: 0;
+        padding: 0 15px;
+        text-align: left;
+      }
+    }
+    .block-content-header-title {
+      font-size: 28px;
+    }
+    .block-content-header-info {
+      font-size: 18px;
+      width: 256px;
+      margin: 8px auto;
+    }
+    .block-title {
+      font-size: 20px;
+    }
+    .block-info {
+      font-size: 16px;
+      margin-top: 8px;
+    }
+    .step-container {
+      margin: 15px auto;
+      padding: 0 25px;
+      position: relative;
+    }
+    .step-content-1 {
+      width: 100%;
+      padding: 0;
+      .step-content-title::before {
+        content: '1';
+      }
+    }
+    .step-content-2 {
+      width: 100%;
+      padding: 0;
+      .step-content-title::before {
+        content: '2';
+      }
+      .step-content-info {
+        border-left: 5px solid #f29600;
+      }
+    }
+    .step-content-3 {
+      width: 100%;
+      padding: 0;
+      .step-content-title::before {
+        content: '3';
+      }
+    }
+    .step-content-4 {
+      width: 100%;
+      padding: 0;
+      .step-content-title::before {
+        content: '4';
+      }
+      .step-content-info {
+        border-left: 5px solid #f29600;
+        opacity: 1;
+      }
+      .op {
+        opacity: 0.56;
+      }
+    }
+    .step-content-title {
+      padding-left: 30px;
+      font-size: 18px;
+      line-height: 36px;
+      &::before {
+        background: #036fb7;
+        color: #fff;
+        font-size: 18px;
+        line-height: 36px;
+        left: 10px;
+        width: 36px;
+      }
+    }
+    .content-title-style {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.2;
+      color: #036fb7;
+      margin-bottom: 10px;
+    }
+    .step-content-info {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+  }
+  .index-cert {
+    padding: 36px;
+    .cert-swiper {
+      overflow: initial;
+    }
+    .block-title {
+      font-size: 28px;
+    }
+    .block-info {
+      font-size: 18px;
+      margin-top: 6px;
+    }
+    .cert-cards {
+      flex-direction: column;
+      margin-top: 20px;
+      gap: 20px;
+      .card {
+        width: 100%;
+        border: none;
+        .card-body {
+          padding: 22px;
+        }
+        .card-cover {
+          width: 68px;
+          margin: 0 auto 12px;
+          padding: 8px;
+        }
+        .card-title {
+          font-size: 18px;
+        }
+        .card-text {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  .product-step {
+    .product-step-head-title {
+      font-size: 28px;
+    }
+    .block-title {
+      margin-top: 30px;
+      color: #036eb7;
+      font-size: 28px;
+      text-align: center;
+    }
+    .block-content-info {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+    .counter-row {
+      flex-direction: column;
+      gap: 15px;
+    }
+    .steps {
+      height: auto;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-image: url('~images/index/step-bg.png');
+    }
+    .step-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      padding: 20px 0;
+      gap: 20px;
+      .loan {
+        .step-head-title {
+          color: #036fb7;
+        }
+        .step-content-1 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          border-left: 5px solid #036fb7;
+          .step-content-title::before {
+            content: '1';
+          }
+          .step-content-img {
+            opacity: 1;
+            z-index: 3;
+          }
+        }
+        .step-content-2 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          border-left: 5px solid #036fb7;
+          .step-content-title::before {
+            content: '2';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-3 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          border-left: 5px solid #036fb7;
+          .step-content-title::before {
+            content: '3';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-4 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          border-left: 5px solid #036fb7;
+          .step-content-title::before {
+            content: '4';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-5 {
+          width: 160px;
+          padding: 0 10px 8px 24px;
+          .step-content-title::before {
+            content: '5';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .solgan {
+          font-size: 18px;
+          margin: 30px auto;
+          padding: 14px;
+          width: 180px;
+          .em {
+            font-size: 24px;
+          }
+          .sm {
+            font-size: 12px;
+          }
+        }
+      }
+      .invest {
+        .step-head-title {
+          color: #f29500;
+        }
+        .step-content-1 {
+          width: 160px;
+          padding: 0 15px 40px 30px;
+          border-left: 5px solid #f29500;
+          .step-content-title::before {
+            content: '1';
+            background: #f29500;
+          }
+          .step-content-img {
+            opacity: 1;
+            z-index: 3;
+          }
+        }
+        .step-content-2 {
+          width: 160px;
+          padding: 0 15px 40px 30px;
+          border-left: 5px solid #f29500;
+          .step-content-title::before {
+            content: '2';
+            background: #f29500;
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-3 {
+          width: 160px;
+          padding: 0 15px 25px 30px;
+          border-left: 5px solid #f29500;
+          .step-content-title::before {
+            content: '3';
+            background: #f29500;
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .step-content-4 {
+          width: 160px;
+          padding: 0 15px 10px 30px;
+          .step-content-title::before {
+            content: '4';
+            background: #f29500;
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        .solgan {
+          font-size: 18px;
+          margin: 30px auto;
+          padding: 14px;
+          width: 180px;
+          .em {
+            font-size: 24px;
+          }
+          .sm {
+            font-size: 12px;
+          }
+        }
+      }
+      .step-head-title {
+        font-size: 18px;
+      }
+      .step-head-info {
+        margin-top: 8px;
+        font-size: 12px;
+      }
+      .step-main {
+        margin-top: 25px;
+        display: flex;
+        // width: 200px;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      .divide {
+        display: none;
+      }
+      .step-content-title {
+        font-size: 18px;
+        line-height: 2;
+        color: #036fb7;
+        &::before {
+          right: 140px;
+          font-size: 18px;
+          line-height: 2;
+          width: 36px;
+        }
+      }
+      .step-content-info {
+        font-size: 12px;
+      }
+      .step-content-img {
+        top: 30px;
+        left: 0;
+        width: 195px;
+        transition-property: opacity;
+        transition-duration: 1s;
+        opacity: 0;
+      }
+    }
+  }
+  .charity {
+    padding: 32px 0;
+    .block-title {
+      font-size: 28px;
+    }
+    .block-info {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .info-title {
+      font-size: 18px;
+      text-align: center;
+    }
+    .info-content {
+      margin: 12px 0 12px;
+      font-size: 12px;
+      line-height: 1.3;
+    }
+    .img-group {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+    }
+    .img-1251 {
+      height: auto;
+      margin-left: 0;
+      margin-bottom: 15px;
+    }
+  }
+  /**
+    user experience
+*/
+  .user-experience {
+    position: relative;
+    height: 575px;
+    background-position: top;
+    .block-title {
+      margin-top: 24px;
+      font-size: 28px;
+      line-height: 1.4;
+    }
+    .block-info {
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    .user-comment {
+      margin-top: 50px;
+      justify-content: center;
+      .comment-card {
+        width: 270px;
+        padding: 10px;
+        .portrait {
+          width: 40px;
+        }
+      }
+    }
+    .media {
+      position: absolute;
+      padding: 20px;
+      bottom: 0;
+      width: 101%;
+      left: 15px;
+      background: rgba($color: #8c97af, $alpha: 0.5);
+      .圖片 {
+        height: 32px;
+      }
+    }
+    .ue-prev,
+    .ue-next {
+      top: 175px;
+    }
+  }
 }
 </style>

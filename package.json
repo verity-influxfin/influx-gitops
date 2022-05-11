@@ -25,6 +25,7 @@
         "animejs": "^3.2.1",
         "ckeditor4": "^4.14.1",
         "ckeditor4-vue": "^1.0.1",
+        "gsap": "^3.10.4",
         "html2canvas": "^1.4.1",
         "liquor-tree": "^0.2.70",
         "superagent": "^6.1.0",

@@ -73,42 +73,36 @@ export default {
 @import "./alesis";
 
 .計數項目 {
-    flex           : 1;
     text-align     : center;
     display        : flex;
     align-items    : center;
     justify-content: center;
-
-    @include rwd {
-        flex-direction: column;
-    }
+    flex-direction: column;
 }
 
 .計數項目 .象徵 {
-    margin-right: 1rem;
-
-    @include rwd {
-        margin-right: 0;
-        width       : 70px;
+    width: 75px;
+    margin-bottom: 15px;
+    @include rwd{
+        margin-bottom: 8px;
     }
 }
 
 .計數項目 .內容 {
     display        : flex;
-    align-items    : flex-start;
+    align-items    : center;
     flex-direction : column;
     justify-content: center;
 
     @include rwd {
-        margin-top : 1rem;
-        align-items: center;
+        margin-top : 0;
     }
 }
 
 .計數項目 .內容 .標題 {
     font-size  : 1.2rem;
     font-weight: bold;
-    color      : #353482;
+    color      : #023D64;
 
     @include rwd {
         font-size: 1rem;
@@ -117,20 +111,19 @@ export default {
 
 .計數項目 .內容 .計數器 {
     font-size: 1.2rem;
-
     @include rwd {
         font-size: 1rem;
     }
 }
 
 .計數項目 .內容 .計數器 .數字 {
-    color: #646464;
+    color: #F29500;
 }
 
 .計數項目 .內容 .計數器 .單位 {
     font-size  : 1.2rem;
     font-weight: bold;
-    color      : #353482;
+    color      : #023D64;
 
     @include rwd {
         font-size: 1rem;
