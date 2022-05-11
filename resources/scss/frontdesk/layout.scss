@@ -823,6 +823,9 @@ $ci-color: #153a71;
                         margin-right: 0.2rem;
                     }
                 }
+                @include rwd{
+                    min-width: 120px;
+                }
             }
         }
     }

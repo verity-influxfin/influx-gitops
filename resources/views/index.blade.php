@@ -495,17 +495,24 @@
                             <div class="header">個人金融</div>
                             <div class="list">
                                 <a href="/collegeLoan">學生貸款</a>
-                                <a href="/workLoan">上班族貸款</a>
                                 <a href="/engineerLoan">資訊工程師專案</a>
-                                <a href="/business-loan">企業融資</a>
+                                <a href="/workLoan">上班族貸款</a>
+
                             </div>
                         </div>
                         <div class="item">
                             <div class="header">企業金融</div>
                             <div class="list">
-                                <a href="/business-loan/sme" class="text-white">微企e秒貸</a>
-                                <div class="text-white">信保專案融資 (coming soon)</div>
-                                <div class="text-white">一般企業融資 (coming soon)</div>
+                                <a href="/business-loan">企業主速貸</a>
+                                <div class="text-white">信保專案(銀行)</div>
+                                <div class="text-white">企業貸款</div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="header">汽車貸款</div>
+                            <div class="list">
+                                <div class="text-white">我是消費者</div>
+                                <div class="text-white">我是車商</div>
                             </div>
                         </div>
                         <div class="item">
@@ -520,14 +527,13 @@
                                 <a href="/investment">債權投資</a>
                                 <a href="/transfer">債權轉讓</a>
                                 <a href="/risk" class="text-white">風險報告書</a>
-                                <a href="/projects" class="text-white">查看案件</a>
+                                <a href="/projects" class="text-white">案件呈現</a>
                             </div>
                         </div>
                         <div class="item">
                             <div class="header">關於普匯</div>
                             <div class="list">
-                                <a href="/company" class="text-white">公司介紹</a>
-                                <a href="/index#company-intro" class="text-white">公司歷程</a>
+                                <a href="/company" class="text-white">關於我們</a>
                                 <a href="/news" class="text-white">最新消息</a>
                                 <a href="/blog" class="text-white">AI金融科技新知</a>
                             </div>
@@ -535,10 +541,11 @@
                         <div class="item">
                             <div class="header">合作洽談</div>
                             <div class="list">
-                                <a href="/recruiting" class="text-white">普匯徵才</a>
+                                <a href="/recruiting" class="text-white">徵才</a>
                                 <a href="/promote-code-intro" class="text-white">分享QR，賺外快</a>
                                 <a href="/clubcooperation" class="text-white">社團贊助</a>
                                 <a href="/companycooperation" class="text-white">業務合作</a>
+                                <div class="text-white">我們的夥伴</div>
                             </div>
                         </div>
                         <div class="item">
