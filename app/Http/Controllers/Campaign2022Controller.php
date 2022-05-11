@@ -10,6 +10,7 @@ use App\Models\Campaign2022_vote;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Campaign2022Controller extends Controller
 {
@@ -79,26 +80,37 @@ class Campaign2022Controller extends Controller
             return $this->_return_failed($response['data'], $response['status']);
         }
         // 驗單日單人總投票數
-        $votes = Campaign2022_vote::where('vote_from', $response['data']['id'])->count();
+        $votes = Campaign2022_vote::where('vote_from', $response['data']['id'])
+            ->whereBetween(DB::raw('UNIX_TIMESTAMP(created_at)'), [strtotime('today'), strtotime('tomorrow')])
+            ->count();
         if ($votes >= self::max_votes_per_day) {
-            return $this->_return_success([], '今日已投滿3票', 204);
+            return $this->_return_success([], '今日已投滿3票');
         }
         // 驗作品資料
         $inputs = $request->all();
         if (empty($inputs['id'])) {
             return $this->_return_failed('無此作品');
         }
-        if (!Campaign2022::where('id', $inputs['id'])->exists()) {
-            return $this->_return_failed('無此作品');
-        }
         // 寫入資料庫
         try {
-            Campaign2022_vote::insert([
+            DB::beginTransaction();
+            $campaign2022 = Campaign2022::lockForUpdate()->find($inputs['id']);
+            if (empty($campaign2022['user_id'])) {
+                return $this->_return_failed('無此作品');
+            }
+
+            Campaign2022_vote::create([
                 'vote_from' => $response['data']['id'],
-                'vote_to' => $inputs['user_id']
+                'vote_to' => $campaign2022['user_id']
             ]);
+            $campaign2022::where('id', $inputs['id'])->update([
+                'votes' => DB::raw('votes+1')
+            ]);
+
+            DB::commit();
             return $this->_return_success([], '投票成功', 201);
         } catch (\Exception $e) {
+            DB::rollback();
             return $this->_return_failed($e->getMessage(), 500);
         }
     }
