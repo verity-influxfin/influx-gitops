@@ -207,8 +207,7 @@
                                                 <div class="link-title">分享QR</div>
                                                 <div class="link-item">
                                                     <div class="link-text">
-                                                        <div>我是推薦者</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                        <a href="/promote-code-intro" class="link-text">我是推薦者</a>
                                                     </div>
                                                 </div>
                                                 <div class="link-item">

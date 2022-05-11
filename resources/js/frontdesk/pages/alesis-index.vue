@@ -54,7 +54,7 @@
                 <div class="card-title">投資人專區</div>
                 <div class="card-content">
                   <div class="card-image p5"></div>
-                  <router-link to="/charitable" class="card-link">
+                  <router-link to="/invest" class="card-link">
                     了解更多
                   </router-link>
                 </div>
