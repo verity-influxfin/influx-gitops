@@ -150,14 +150,14 @@
           <input class="search-input" type="text" />
         </form>
         <div class="works">
-          <div class="work-item" v-for="item in workList" :key="item.id">
+          <div class="work-item" v-for="item in workList" :key="item.id" @click="openWorkModal(item)">
             <div class="work-item-title">{{ item.nick_name }}</div>
             <div class="work-item-img">
               <img class="img-fluid" :src="'/' + item.file_name" alt="" />
             </div>
             <div class="work-item-num">NO.{{ item.id }}</div>
             <div class="work-item-vote">
-              <button class="btn p-0" @click="doVote(item.id)">
+              <button class="btn p-0" @click.stop="doVote(item.id)">
                 <img
                   class="vote-img"
                   src="@/asset/images/jump/seo-internet-like.svg"
@@ -347,6 +347,51 @@
         </div>
       </div>
     </div>
+    <div
+      class="modal fade"
+      id="workModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">查看作品</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="work-item">
+              <div class="work-item-title">{{ workModalData.nick_name }}</div>
+              <div class="work-item-img">
+                <img
+                  class="img-fluid"
+                  :src="'/' + workModalData.file_name"
+                  alt=""
+                />
+              </div>
+              <div class="work-item-num">NO.{{ workModalData.id }}</div>
+              <div class="work-item-vote">
+                <button class="btn p-0" @click="doVote(workModalData.id)">
+                  <img
+                    class="vote-img"
+                    src="@/asset/images/jump/seo-internet-like.svg"
+                  />
+                </button>
+                <span class="vote-num">{{ workModalData.votes }}票</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -363,6 +408,13 @@ export default {
       fileName: '',
       file: new File([], ''),
       workList: [],
+      workModalData: {
+        id: 0,
+        user_id: 0,
+        nick_name: '',
+        votes: 0,
+        file_name: ''
+      },
       currentPage: 1,
       maxPage: 1
     }
@@ -460,6 +512,15 @@ export default {
           this.currentPage = this.currentPage + 1
         }
       })
+    },
+    openWorkModal(item) {
+      if (item) {
+        this.workModalData = { ...item }
+        $('#workModal').modal('show')
+        return
+      }else{
+          // get from api
+      }
     }
   },
 }
@@ -711,9 +772,7 @@ export default {
         '. .';
       gap: 20px;
       grid-auto-rows: auto;
-    }
-    .work-item {
-      &:nth-child(1) {
+      .work-item:nth-child(1) {
         &::before {
           content: '';
           background-image: url('~images/jump/crown.png');
@@ -727,42 +786,43 @@ export default {
         position: relative;
         grid-area: champion;
         background: #ffc535;
-
         margin: auto;
       }
-      max-width: 200px;
-      background: #b4e4ff;
-      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-      border-radius: 6px;
-      padding: 12px 20px;
-      &-title {
-        text-align: center;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 1.6;
-        color: #083a6e;
-      }
-      &-img {
-        margin: 5px 0;
-        border-radius: 10px;
-        width: 120px;
-      }
-      &-num {
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 1.4;
-        color: #393939;
-      }
-      &-vote {
-        margin-top: 8px;
-        text-align: center;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 14px;
-        line-height: 1.4;
-        color: #083a6e;
-      }
+    }
+  }
+  .work-item {
+    max-width: 200px;
+    background: #b4e4ff;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 12px 20px;
+    &-title {
+      text-align: center;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #083a6e;
+    }
+    &-img {
+      margin: 5px 0;
+      border-radius: 10px;
+      width: 120px;
+    }
+    &-num {
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #393939;
+    }
+    &-vote {
+      margin-top: 8px;
+      text-align: center;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #083a6e;
     }
   }
   #bouns {
@@ -882,6 +942,24 @@ export default {
     color: #ffffff;
     padding: 12px;
     text-align: center;
+  }
+}
+#workModal {
+  .work-item {
+    max-width: 600px;
+    &-title {
+      font-size: 24px;
+    }
+    &-img {
+      width: 100%;
+    }
+    &-num {
+      font-size: 20px;
+      color: #393939;
+    }
+    &-vote {
+      font-size: 20px;
+    }
   }
 }
 @media (min-width: 700px) {
