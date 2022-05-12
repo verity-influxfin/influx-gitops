@@ -272,6 +272,83 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="row no-gutters">
+              <div class="col-auto"></div>
+              <div class="modal-title col">上傳說明</div>
+              <div class="col-auto">
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+            <div class="row no-gutters modal-info">
+              <div class="col">
+                <div>範例圖&格式說明</div>
+                <div>1.4:3直式照片</div>
+                <div>2.各式跳躍動作</div>
+                <div>3.在照片上寫下想對普匯說的話</div>
+                <div>(ex : 普匯五歲生日快樂 !、一支手機貸你完成夢想)</div>
+              </div>
+              <div class="col-auto">
+                <img
+                  class="img-fluid"
+                  src="@/asset/images/jump/upload-example.png"
+                  alt=""
+                />
+              </div>
+            </div>
+            <form @submit.prevent="doUpload">
+              <div class="row no-gutters">
+                <input
+                  type="text"
+                  class="modal-input w-100"
+                  placeholder="*請輸入您的暱稱："
+                  v-model="nickNameInput"
+                  required
+                />
+              </div>
+              <div
+                class="row no-gutters modal-upload-file"
+                @drop="drop"
+                @dragover.prevent
+              >
+                <img
+                  src="@/asset/images/jump/remove-file.png"
+                  class="remove-file"
+                  @click="removeFile"
+                />
+                <img
+                  @click="$refs.fileUpload.click()"
+                  src="@/asset/images/jump/upload-icon.png"
+                  class="upload-icon img-fluid"
+                />
+                <div v-if="fileName" class="file-name">
+                  已上傳檔案：{{ fileName }}
+                </div>
+              </div>
+              <input
+                type="file"
+                ref="fileUpload"
+                @change="onUpload(e)"
+                hidden
+              />
+              <button type="submit" class="btn btn-block btn-upload-submit">
+                確認上傳「我的跳躍」
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -283,7 +360,10 @@ export default {
   data() {
     return {
       indexCounter: {},
-      flag: ''
+      nickNameInput: '',
+      flag: '',
+      fileName: '',
+      file: new File([], '')
     }
   },
   mounted() {
@@ -295,14 +375,59 @@ export default {
       this.indexCounter = v
     })
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
-    Axios.get('api/v1/campaign2022/list/page/1')
+    Axios.get('api/v1/campaign2022/list')
   },
   methods: {
+    onUpload() {
+      this.fileName = ''
+      const currentFiles = this.$refs.fileUpload.files
+      if (currentFiles.length === 0) {
+        return
+      } else {
+        for (const file of currentFiles) {
+          this.file = file
+          this.fileName = file.name
+        }
+      }
+    },
+    drop(event) {
+      event.preventDefault();
+      this.$refs.fileUpload.files = event.dataTransfer.files
+      this.onUpload()
+    },
+    removeFile() {
+      this.file = new File([], '')
+      this.fileName = ''
+    },
     doJump() {
       if (this.flag === 'login') {
-
+        $('#uploadModal').modal('show')
       } else {
         this.$store.commit('mutation5thLogin')
+      }
+    },
+    async doUpload() {
+      if (!this.fileName) {
+        alert('請上傳檔案')
+      } else {
+        if (!confirm('確定上傳此作品嗎？')) {
+          return
+        }
+        const formData = new FormData()
+        formData.append('file', this.file)
+        formData.append('nick_name', this.nickNameInput)
+        const { data } = await Axios({
+          method: 'POST',
+          url: '/api/v1/campaign2022/upload',
+          data: formData,
+          mimeType: 'multipart/form-data',
+        })
+        if(data.success){
+            alert('上傳成功')
+            location.reload()
+        }else{
+            alert('上傳失敗，請稍後再試')
+        }
       }
     }
   },
@@ -659,6 +784,73 @@ export default {
         padding-inline-start: 20px;
       }
     }
+  }
+}
+#uploadModal {
+  .modal-title {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 29px;
+    text-align: center;
+    color: #036eb7;
+    margin-bottom: 14px;
+  }
+  .modal-info {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: #000000;
+  }
+  .modal-input {
+    margin-top: 14px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid #383838;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: #000000;
+  }
+  .modal-upload-file {
+    position: relative;
+    margin-top: 12px;
+    border: 1px dashed #036eb7;
+    border-radius: 20px;
+    padding: 30px;
+    font-size: 14px;
+    .remove-file {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+    .upload-icon {
+      margin: 0 auto;
+    }
+    .file-name {
+      position: absolute;
+      bottom: 15px;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+  }
+  .btn-upload-submit {
+    margin-top: 15px;
+    background: #036eb7;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    padding: 12px;
+    text-align: center;
   }
 }
 @media (min-width: 700px) {
