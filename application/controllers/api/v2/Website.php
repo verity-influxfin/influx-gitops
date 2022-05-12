@@ -1006,6 +1006,10 @@ class Website extends REST_Controller {
         $reference = $this->input->post('reference');
         $user_id = $this->input->post('user_id');
         $img = $this->input->post('img');
+        if (empty($reference) || empty($user_id) || empty($img))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
 
         $url = $this->_get_pandora_url() . '/montage/user';
         $response = curl_put($url, json_encode([
@@ -1035,6 +1039,10 @@ class Website extends REST_Controller {
         $reference = $this->input->post('reference');
         $user_id = $this->input->post('user_id');
         $img = $this->input->post('img');
+        if (empty($reference) || empty($user_id) || empty($img))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
 
         $url = $this->_get_pandora_url() . '/montage/user';
         $response = curl_get($url, json_encode([
@@ -1062,6 +1070,10 @@ class Website extends REST_Controller {
     {
         $reference = $this->input->get('reference');
         $user_id = $this->input->get('user_id');
+        if (empty($reference) || empty($user_id))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
 
         $url = $this->_get_pandora_url() . '/montage/user?reference=' . $reference . '&user_id=' . $user_id;
         $response = curl_get($url);
@@ -1094,6 +1106,10 @@ class Website extends REST_Controller {
     public function montage_get()
     {
         $reference = $this->input->get('reference');
+        if (empty($reference))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
 
         $url = $this->_get_pandora_url() . '/montage/img?reference=' . $reference;
         $response = curl_get($url);
