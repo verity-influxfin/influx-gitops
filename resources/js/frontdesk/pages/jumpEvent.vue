@@ -89,10 +89,10 @@
       <div class="block-content">
         <div class="method-title">活動時間</div>
         <div class="method-time">
-          22.5.13 (五) 12：00 AM ~ 6.8 (三) 23：59 PM
+          22.5.13 (五) 12：00 AM ~ 6.30 (四) 23：59 PM
         </div>
         <div class="method-title">活動結果公布</div>
-        <div class="method-time">22.6.10 (五) 12：00 PM</div>
+        <div class="method-time">22.7.4 (一) 15：00 PM</div>
         <div class="method-title">如何參加？</div>
         <div class="method-step">
           <div class="method-step-item">
@@ -150,16 +150,12 @@
           <input class="search-input" type="text" />
         </form>
         <div class="works">
-          <div class="work-item" v-for="i in 5" :key="i">
-            <div class="work-item-title">我是小普</div>
+          <div class="work-item" v-for="item in workList" :key="item.id">
+            <div class="work-item-title">{{ item.nick_name }}</div>
             <div class="work-item-img">
-              <img
-                class="img-fluid"
-                src="https://via.placeholder.com/120x180"
-                alt=""
-              />
+              <img class="img-fluid" :src="'/' + item.file_name" alt="" />
             </div>
-            <div class="work-item-num">NO.001</div>
+            <div class="work-item-num">NO.{{ item.id }}</div>
             <div class="work-item-vote">
               <button class="btn p-0">
                 <img
@@ -167,12 +163,12 @@
                   src="@/asset/images/jump/seo-internet-like.svg"
                 />
               </button>
-              <span class="vote-num">100票</span>
+              <span class="vote-num">{{ item.votes }}票</span>
             </div>
           </div>
         </div>
         <div class="text-center">
-          <button class="btn">
+          <button class="btn" @click="loadList">
             <img src="@/asset/images/jump/load-more.svg" />
           </button>
         </div>
@@ -213,8 +209,8 @@
         <div class="bouns-title mt-3">活動詳情</div>
         <div class="bouns-info">
           <div>一、活動日期：</div>
-          <div>2022/5/13(五)中午12:00整至2022/6/8(三)晚間23:59整，</div>
-          <div>並於2022/6/10(五)中午12:00於官網公佈本次活動獲獎者。</div>
+          <div>2022/5/13(五)中午12:00整至2022/6/30(四)晚間23:59整，</div>
+          <div>並於2022/7/4(一)下午15:00於官網公佈本次活動獲獎者。</div>
           <div class="mt-3">二、活動規範：</div>
           <div>
             拍攝主題為『跳躍』，上傳跳躍動作之直式4:3照片，加入慶生祝褔(ex：祝賀語、生日圖示、普匯特色等)，參賽者可自行加入創意與各式元素。(唯主辦單位保有審核參加資格之權利，若有不適當圖片主辦單位有權刪除其內容並取消參賽資格)
@@ -229,8 +225,7 @@
             3. 每一會員每天有3票，不限同件作品。(投票者須先成為官方會員)
           </div>
           <div>
-            4. 得獎者請於2022/6/24 (五)
-            前主動聯繫主辦單位，提供「我的使用者編號」及「照片電子檔」驗證獲獎資格，逾期視同放棄。
+            4. 得獎者請於2022/7/15 (五) 前主動聯繫主辦單位，提供「我的使用者編號」及「照片電子檔」驗證獲獎資格，逾期視同放棄。
           </div>
           <div class="mt-3">四、主辦單位聯繫方式：</div>
           <div>聯絡電話 : (02)2507-9990</div>
@@ -363,7 +358,10 @@ export default {
       nickNameInput: '',
       flag: '',
       fileName: '',
-      file: new File([], '')
+      file: new File([], ''),
+      workList: [],
+      currentPage: 1,
+      maxPage: 1
     }
   },
   mounted() {
@@ -371,11 +369,11 @@ export default {
       x: 500,
       duration: 2
     })
+    this.loadList()
     alesisIndexCounter().then(v => {
       this.indexCounter = v
     })
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
-    Axios.get('api/v1/campaign2022/list')
   },
   methods: {
     onUpload() {
@@ -422,13 +420,25 @@ export default {
           data: formData,
           mimeType: 'multipart/form-data',
         })
-        if(data.success){
-            alert('上傳成功')
-            location.reload()
-        }else{
-            alert('上傳失敗，請稍後再試')
+        if (data.success) {
+          alert('上傳成功')
+          location.reload()
+        } else {
+          alert('上傳失敗，請稍後再試')
         }
       }
+    },
+    loadList() {
+      if (this.currentPage > this.maxPage) {
+        return
+      }
+      Axios.get('/api/v1/campaign2022/list/page/' + this.currentPage).then(({ data }) => {
+        if (data.success) {
+          this.workList = [...this.workList, ...data.data.list]
+          this.maxPage = Math.ceil(data.data.total / 3)
+          this.currentPage = this.currentPage + 1
+        }
+      })
     }
   },
 }
