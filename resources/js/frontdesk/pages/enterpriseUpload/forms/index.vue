@@ -32,6 +32,14 @@ export default {
   mounted() {
     this.getApplyInfo()
   },
+  beforeRouteEnter(to, from, next) {
+    if (sessionStorage.length === 0 || sessionStorage.flag === 'logout') {
+      next('/index')
+      // next();
+    } else {
+      next()
+    }
+  },
   data() {
     return {
       companyData: {
