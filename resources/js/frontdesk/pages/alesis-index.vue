@@ -253,9 +253,12 @@
       </div>
       <div class="block-content row no-gutters">
         <div class="col-sm-6 col-12 d-flex align-items-center">
-          <img src="@/asset/images/index/img60.png" class="img-fluid" />
+          <img
+            src="@/asset/images/index/img60.png"
+            class="img-fluid p-sm-5 p-2"
+          />
         </div>
-        <div class="col-sm-6 col-12">
+        <div class="col-sm-6 col-12 fin-left">
           <div class="block-title">台灣金融科技融資領導品牌</div>
           <div class="block-info">台灣金融科技的領導者</div>
           <div class="step-container">
@@ -300,8 +303,8 @@
     </div>
     <div class="index-tech section">
       <div class="block-content row no-gutters flex-sm-row flex-column-reverse">
-        <div class="col-sm-6 col-12">
-          <div class="tech-head">
+        <div class="col-sm-6 col-12 tech-left">
+          <div>
             <div class="block-title">創新金融科技融資產品</div>
             <div class="block-info">
               秉持金融科技分享式經濟理念，運用P2P區塊鏈技術，結合不限金融銀行、產業電商、汽車銷售等異業合作，創新多項產品，加速金融服務產業，提升經濟價值，普惠金融落地。
@@ -329,7 +332,7 @@
         <div class="col-sm-6 col-12 d-flex align-items-center">
           <img
             src="@/asset/images/index/cart_shopping_3d_render_10 1.png"
-            class="img-fluid"
+            class="img-fluid p-sm-4 p-1"
             alt=""
           />
         </div>
@@ -1262,7 +1265,7 @@ export default {
   background-image: url('~images/index/index-phone-bg.png');
   background-repeat: no-repeat;
   background-size: cover;
-  height: 990px;
+  height: 1063px;
   .block-title {
     color: #036eb7;
     font-size: 56px;
@@ -1421,16 +1424,11 @@ export default {
 }
 .index-tech {
   padding: 20px 50px;
-  .tech-head {
-    width: 525px;
-    margin-left: 175px;
-    .block-title {
-      text-align: left;
-    }
-    .block-info {
-      margin: 0;
-      text-align: left;
-    }
+  .tech-left {
+    padding-left: 80px;
+  }
+  .fin-left {
+    padding-left: 30px;
   }
   .block-content-header-title {
     color: #036eb7;
@@ -1447,18 +1445,17 @@ export default {
   .block-title {
     color: #036eb7;
     font-size: 48px;
-    text-align: center;
+    text-align: left;
   }
   .block-info {
     color: #036eb7;
     font-size: 30px;
     margin-top: 24px;
     opacity: 0.64;
-    text-align: center;
+    text-align: left;
   }
   .step-container {
     margin: 45px auto;
-    width: fit-content;
     position: relative;
   }
   .step-content-1 {
@@ -1504,7 +1501,7 @@ export default {
     font-style: normal;
     font-weight: 700;
     font-size: 40px;
-    color: #023D64;
+    color: #023d64;
     &::before {
       background: #036fb7;
       border-radius: 50%;
@@ -1522,7 +1519,7 @@ export default {
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
-    color: #023D64;
+    color: #023d64;
     margin-bottom: 15px;
   }
   .step-content-info {
@@ -2094,7 +2091,7 @@ export default {
     background-image: url('~images/index/index-phone-bg.png');
     background-repeat: no-repeat;
     background-size: cover;
-    height: 575px;
+    height: 600px;
     .block-title {
       font-size: 28px;
     }
@@ -2237,18 +2234,9 @@ export default {
     }
   }
   .index-tech {
-    padding: 30px 0px;
-    .tech-head {
-      width: 100%;
-      margin: 0 auto;
-      .block-title {
-        text-align: center;
-      }
-      .block-info {
-        margin: 0;
-        padding: 0 15px;
-        text-align: left;
-      }
+    padding: 0 30px;
+    .tech-left {
+      padding-left: 30px;
     }
     .block-content-header-title {
       font-size: 28px;
@@ -2267,7 +2255,7 @@ export default {
     }
     .step-container {
       margin: 15px auto;
-      padding: 0 25px;
+      padding: 0 10px;
       position: relative;
     }
     .step-content-1 {
@@ -2317,7 +2305,7 @@ export default {
         color: #fff;
         font-size: 18px;
         line-height: 36px;
-        left: 10px;
+        left: -5px;
         width: 36px;
       }
     }
@@ -2332,6 +2320,7 @@ export default {
     .step-content-info {
       font-size: 12px;
       line-height: 1.4;
+      padding-left: 24px;
     }
   }
   .index-cert {
