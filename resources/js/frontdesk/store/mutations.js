@@ -10,7 +10,7 @@ export default {
         $.each(data, (index, row) => {
             data[index].link = `/articlepage?q=knowledge-${row.ID}`;
         });
-        
+
         state.knowledge = data;
     },
     mutationVideoData(state, data) {
@@ -62,5 +62,13 @@ export default {
     },
     mutationInvestmentData(state,data){
         state.investAccountData = data.data;
+    },
+    // 5th
+    mutation5thLogin(state) {
+        state.openLogin = !state.openLogin
+    },
+    mutationloginHideOption(state, data) {
+        console.log(data)
+        state.loginHideOption = data
     }
 }

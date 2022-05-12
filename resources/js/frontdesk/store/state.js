@@ -7,6 +7,8 @@ export default {
     userData: {},
     applyList:{},
     investAccountData:{},
+    loginHideOption: false,
+    openLogin:false,
     loginErrorCode: {
         302: "會員不存在",
         304: "密碼錯誤",
