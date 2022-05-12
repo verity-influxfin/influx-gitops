@@ -35,10 +35,7 @@
       <div class="mt-5 white-block">
         <div
           class="mask"
-          v-if="
-            certification.governmentauthorities.user_status === null ||
-            certification.judicialguarantee.user_status === null
-          "
+          v-if="certification.idcard.user_status === null"
         ></div>
         <div>
           <cert-item
