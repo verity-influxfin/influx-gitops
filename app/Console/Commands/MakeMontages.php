@@ -114,10 +114,14 @@ class MakeMontages extends Command
 
     private function _get_base64_img($file_url)
     {
-        $img = file_get_contents($file_url);
-        if ($img === false) {
+        try {
+            $img = file_get_contents('./upload/campaign2022/'.$file_url);
+            if ($img === false) {
+                return false;
+            }
+            return base64_encode($img);
+        } catch (\Exception $e) {
             return false;
         }
-        return base64_encode($img);
     }
 }
