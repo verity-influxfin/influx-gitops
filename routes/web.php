@@ -361,6 +361,7 @@ Route::prefix('api/v1')->group(function() {
     Route::get('/campaign2022/data/{id}', 'Campaign2022Controller@get_one');
     Route::post('/campaign2022/upload', 'Campaign2022Controller@save_file');
     Route::post('/campaign2022/vote', 'Campaign2022Controller@save_vote');
+    Route::get('/campaign2022/montage', 'Campaign2022Controller@get_montage');
 });
 
 // 捐款動畫 SSE API
