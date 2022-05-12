@@ -730,3 +730,8 @@ defined('STATUS_ACTIVE')   OR define('STATUS_ACTIVE', 1);
 // 黑名單檢查類型代碼 (0: 禁止申貸 1: 轉二審)
 defined('CHECK_APPLY_PRODUCT') OR define('CHECK_APPLY_PRODUCT', 0);
 defined('CHECK_SECOND_INSTANCE')   OR define('CHECK_SECOND_INSTANCE', 1);
+
+// montage user status
+defined('MONTAGE_USER_STATUS_EXISTS') or define('MONTAGE_USER_STATUS_EXISTS', 1); // 已上傳過
+defined('MONTAGE_USER_STATUS_NO_REFERENCE') or define('MONTAGE_USER_STATUS_NO_REFERENCE', 2); // 找不到reference的圖
+defined('MONTAGE_USER_STATUS_NO_USER') or define('MONTAGE_USER_STATUS_NO_USER', 3); // 找不到user的圖
