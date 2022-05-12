@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class Campaign2022Controller extends Controller
 {
@@ -163,7 +164,7 @@ class Campaign2022Controller extends Controller
         $response = (new Client())
             ->request($method, env('API_URL').'user/info', [
                 'headers' => [
-                    'request_token' => $token
+                    'request_token' => Session::get('token')
                 ]
             ])
             ->getBody();
