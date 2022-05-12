@@ -17,11 +17,7 @@
             j.src =
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '{{env('
-            APP_ENV ') == '
-            production ' ? '
-            GTM - 5 Z439PW ' : '
-            GTM - 589 Z9H6 '}}');
+        })(window, document, 'script', 'dataLayer', '{{env('APP_ENV ') == 'production ' ? 'GTM - 5 Z439PW ' : 'GTM - 589 Z9H6 '}}');
     </script>
     <!-- End Google Tag Manager -->
     <meta charset="utf-8">
