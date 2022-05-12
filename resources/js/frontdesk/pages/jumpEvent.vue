@@ -87,7 +87,7 @@
     </div>
     <div id="method">
       <div class="block-content">
-        <div class="method-title">活動時間</div>
+        <div class="method-title">投票成功間</div>
         <div class="method-time">
           22.5.13 (五) 12：00 AM ~ 6.30 (四) 23：59 PM
         </div>
@@ -157,7 +157,7 @@
             </div>
             <div class="work-item-num">NO.{{ item.id }}</div>
             <div class="work-item-vote">
-              <button class="btn p-0">
+              <button class="btn p-0" @click="doVote(item.id)">
                 <img
                   class="vote-img"
                   src="@/asset/images/jump/seo-internet-like.svg"
@@ -193,18 +193,20 @@
             <span class="em">＄2,000</span>
             元
           </div>
-          <div>人氣獎 (6~10名)：&emsp;&emsp; ＄1,500 元</div>
+          <div>
+            人氣獎 (6~10名)：&emsp;&emsp; <span class="em">＄1,500 元</span>
+          </div>
           <div class="mt-3">沒有名次嗎？創意和搞笑也可以！</div>
           <div>特別獎</div>
-          <div>執行長青睞獎：＄1,000 元</div>
-          <div>風格創意獎：＄1,000 元</div>
-          <div>捧腹大笑獎：＄1,000 元</div>
+          <div>執行長青睞獎：<span class="em">＄1,000</span> 元</div>
+          <div>風格創意獎：<span class="em">＄1,000</span> 元</div>
+          <div>捧腹大笑獎：<span class="em">＄1,000</span> 元</div>
           <div class="mt-3">
             凡參與本次活動(含參賽者及投票者)，皆獲抽獎資格！
           </div>
           <div>頭獎：Airpods 3代</div>
-          <div>貳獎：1,000 元禮券*2份，共2,000元</div>
-          <div>參獎：500 元禮券*3份，共1,500元</div>
+          <div>貳獎：<span class="em">1,000</span> 元禮券*2份，共2,000元</div>
+          <div>參獎：<span class="em">500</span> 元禮券*3份，共1,500元</div>
         </div>
         <div class="bouns-title mt-3">活動詳情</div>
         <div class="bouns-info">
@@ -225,7 +227,8 @@
             3. 每一會員每天有3票，不限同件作品。(投票者須先成為官方會員)
           </div>
           <div>
-            4. 得獎者請於2022/7/15 (五) 前主動聯繫主辦單位，提供「我的使用者編號」及「照片電子檔」驗證獲獎資格，逾期視同放棄。
+            4. 得獎者請於2022/7/15 (五)
+            前主動聯繫主辦單位，提供「我的使用者編號」及「照片電子檔」驗證獲獎資格，逾期視同放棄。
           </div>
           <div class="mt-3">四、主辦單位聯繫方式：</div>
           <div>聯絡電話 : (02)2507-9990</div>
@@ -398,10 +401,28 @@ export default {
       this.fileName = ''
     },
     doJump() {
-      if (this.flag === 'login') {
+      if (this登入後.flag === 'login') {
         $('#uploadModal').modal('show')
       } else {
         this.$store.commit('mutation5thLogin')
+      }
+    },
+    doVote(id) {
+      if (this.flag !== 'login') {
+        this.$store.commit('mutation5thLogin')
+        return
+      }
+      if (confirm('是否要投票給此作品')) {
+        Axios.post('/api/v1/campaign2022/vote', { id }).then(({ data }) => {
+          if (data.msg != '投票成功') {
+            alert(data.msg)
+            return
+          }
+          alert(`投票成功，今日已投 ${data.data.votes} 票`)
+          location.reload()
+        }).catch(err => {
+          console.log(err)
+        })
       }
     },
     async doUpload() {
