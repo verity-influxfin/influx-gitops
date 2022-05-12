@@ -74,9 +74,7 @@ class Campaign2022Controller extends Controller
     // 使用者投票
     public function save_vote(Request $request): JsonResponse
     {
-        // 驗user身份
-        $token = $request->header('request-token');
-        $response = $this->_connect_deus('GET', $token);
+        $response = $this->_connect_deus('GET');
         if ($response['status'] != 200) {
             return $this->_return_failed($response['data'], $response['status']);
         }
@@ -109,7 +107,7 @@ class Campaign2022Controller extends Controller
             ]);
 
             DB::commit();
-            return $this->_return_success([], '投票成功', 201);
+            return $this->_return_success(['votes' => $votes + 1], '投票成功', 201);
         } catch (\Exception $e) {
             DB::rollback();
             return $this->_return_failed($e->getMessage(), 500);
@@ -119,9 +117,7 @@ class Campaign2022Controller extends Controller
     // 使用者上傳檔案
     public function save_file(Request $request): JsonResponse
     {
-        // 驗user身份
-        $token = $request->header('request-token');
-        $response = $this->_connect_deus('GET', $token);
+        $response = $this->_connect_deus('GET');
         if ($response['status'] != 200) {
             return $this->_return_failed($response['data'], $response['status']);
         }
@@ -155,11 +151,8 @@ class Campaign2022Controller extends Controller
         }
     }
 
-    private function _connect_deus($method, $token)
+    private function _connect_deus($method)
     {
-        if (empty($token)) {
-            return ['data' => '無效的Token', 'status' => 401];
-        }
 
         $response = (new Client())
             ->request($method, env('API_URL').'user/info', [
