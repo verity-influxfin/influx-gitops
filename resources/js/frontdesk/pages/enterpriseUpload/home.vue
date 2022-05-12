@@ -244,8 +244,8 @@ export default {
           return x.status === this.caseType
         } else {
           // 申貸中 0~4
-          //   return Number(x.status < 5)
-          return true
+            return Number(x.status < 5)
+          // return true
         }
       })
     },
