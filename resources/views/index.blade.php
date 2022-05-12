@@ -144,7 +144,7 @@
     <noscript>
         please turn on your jacascript
     </noscript>
-    <div id="web_index" @mousemove="">
+    <div id="web_index" @mousemove="clicked">
         <div class="header-container">
             <div class="row no-gutters">
                 <div class="col-auto alesis-header">
