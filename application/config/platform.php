@@ -979,7 +979,7 @@ $config['product_list'] = [
                 CERTIFICATION_COMPANYEMAIL,
             ]
         ],
-        'instalment' => [36],
+        'instalment' => [12, 24, 36, 48, 60, 72],
         'repayment' => [1],
         'targetData' => [],
         'secondInstance' => false,
