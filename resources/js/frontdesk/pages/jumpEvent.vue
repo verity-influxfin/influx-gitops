@@ -2,7 +2,7 @@
   <div class="jump-event">
     <nav id="top">
       <div class="row no-gutters">
-        <div class="col-auto p-1 p-sm-3">
+        <div class="col-auto p-1">
           <img src="/images/logo.svg" alt="influx-logo" />
         </div>
         <div class="col"></div>
@@ -153,6 +153,7 @@
             class="search-input"
             type="text"
             v-model="searchInput"
+            maxlength="10"
             @change="doSearch"
           />
         </form>
@@ -323,8 +324,9 @@
                 <input
                   type="text"
                   class="modal-input w-100"
-                  placeholder="*請輸入您的暱稱："
+                  placeholder="*請輸入您的暱稱： (最大長度10個字)"
                   v-model="nickNameInput"
+                  maxlength="10"
                   required
                 />
               </div>
@@ -339,13 +341,12 @@
                   @click="removeFile"
                 />
                 <img
+                  v-if="!fileName"
                   @click="$refs.fileUpload.click()"
                   src="@/asset/images/jump/upload-icon.png"
                   class="upload-icon img-fluid"
                 />
-                <div v-if="fileName" class="file-name">
-                  已上傳檔案：{{ fileName }}
-                </div>
+                <img v-else id="fileRead" class="img-fluid" />
               </div>
               <input
                 type="file"
@@ -424,6 +425,8 @@ export default {
       fileName: '',
       file: new File([], ''),
       workList: [],
+      fullList: [],
+      userId: '',
       workModalData: {
         id: 0,
         user_id: 0,
@@ -441,12 +444,28 @@ export default {
       duration: 2
     })
     this.doSearch()
+    this.getList()
     alesisIndexCounter().then(v => {
       this.indexCounter = v
     })
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
   },
   methods: {
+    checkUpload() {
+      const userData = sessionStorage.getItem('userData')
+      console.log(userData)
+      let userId = null
+      if (userData && JSON.parse(userData).id) {
+        userId = JSON.parse(userData).id
+      }
+      if (userId) {
+        const uploaded = this.fullList.some(x => x.user_id == userId)
+        if (uploaded) {
+          return true
+        }
+      }
+      return false
+    },
     resetList() {
       this.workList = []
       this.currentPage = 1
@@ -454,12 +473,17 @@ export default {
     },
     onUpload() {
       this.fileName = ''
+      let reader = new FileReader()
       const currentFiles = this.$refs.fileUpload.files
       if (currentFiles.length === 0) {
         return
       } else {
         for (const file of currentFiles) {
           this.file = file
+          reader.onloadend = function () {
+            document.querySelector('#fileRead').src = reader.result
+          }
+          reader.readAsDataURL(file)
           this.fileName = file.name
         }
       }
@@ -475,6 +499,11 @@ export default {
     },
     doJump() {
       if (this.flag === 'login') {
+          if(this.checkUpload()){
+              if(!confirm('您的照片已出現在跳躍作品集裡，如重新上傳將更換您的照片，並重新計算票數')){
+                  return
+              }
+          }
         $('#uploadModal').modal('show')
       } else {
         this.$store.commit('mutation5thLogin')
@@ -497,6 +526,11 @@ export default {
           console.log(err)
         })
       }
+    },
+    getList() {
+      Axios.get('/api/v1/campaign2022/list').then(({ data }) => {
+        this.fullList = data.data
+      })
     },
     async doUpload() {
       if (!this.fileName) {
@@ -856,7 +890,7 @@ export default {
     &-img {
       margin: 5px 0;
       border-radius: 10px;
-      width: 120px;
+      min-width: 120px;
     }
     &-num {
       font-weight: 500;
@@ -1009,330 +1043,6 @@ export default {
     }
     &-vote {
       font-size: 20px;
-    }
-  }
-}
-@media (min-width: 700px) {
-  .block-content {
-    max-width: 1400px;
-    width: 100%;
-    margin: 0 auto;
-  }
-  .jump-event {
-    max-width: initial;
-    margin: auto;
-    padding-top: 5px;
-    #top {
-      max-width: 1400px;
-      width: 100%;
-      margin: 0 auto;
-      .top-a {
-        font-size: 24px;
-        padding: 9px 25px;
-        color: #ffffff;
-      }
-    }
-    .banner {
-      position: relative;
-      background-image: url('~images/jump/header.png');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: top center;
-      height: 415px;
-      &-content {
-        margin-top: 13px;
-        position: relative;
-        padding-left: 20px;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 14px;
-        line-height: 17px;
-        color: #ffffff;
-        & .em {
-          font-size: 16px;
-          color: #fff100;
-        }
-        & .sm {
-          font-size: 12px;
-        }
-        & .btn-join {
-          position: relative;
-          left: -25px;
-          bottom: -50px;
-          height: 90px;
-          width: 90px;
-          border-radius: 50%;
-          font-style: normal;
-          font-weight: 700;
-          font-size: 14px;
-          color: #fff;
-          background: #083a6e;
-          box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
-        }
-        & .btn-vote {
-          position: relative;
-          margin-top: 15px;
-          left: -10px;
-          height: 90px;
-          width: 90px;
-          border-radius: 50%;
-          font-style: normal;
-          font-weight: 700;
-          font-size: 14px;
-          color: #fff;
-          background: #ffc535;
-          box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
-        }
-        & #img-57 {
-          position: absolute;
-          height: 267px;
-          right: -15px;
-          bottom: -100px;
-          transform: rotate(-10deg);
-        }
-      }
-    }
-    .intro {
-      padding-bottom: 36px;
-      &-title {
-        margin: 36px 0 15px;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 22px;
-        line-height: 32px;
-        text-align: center;
-        color: #036eb7;
-      }
-      &-content {
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 1.6;
-        text-align: center;
-        color: #707070;
-        &-2 {
-          font-style: normal;
-          font-weight: 500;
-          font-size: 14px;
-          line-height: 20px;
-          text-align: center;
-          color: #393939;
-        }
-      }
-      &-cover {
-        margin: 20px auto 15px;
-      }
-      .btn-jump {
-        background: #036eb7;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        border-radius: 6px;
-        color: #fff;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 18px;
-        line-height: 26px;
-        .jump-icon {
-          margin-right: 8px;
-          height: 26px;
-        }
-      }
-    }
-    #method {
-      padding: 24px 0;
-      background: #036eb7;
-      .method {
-        &-title {
-          font-style: normal;
-          font-weight: 700;
-          font-size: 16px;
-          line-height: 2;
-          color: #ffffff;
-        }
-        &-time {
-          font-style: normal;
-          font-weight: 500;
-          font-size: 16px;
-          line-height: 1.6;
-          color: #fff100;
-          margin-bottom: 12px;
-        }
-        &-step {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 10px;
-          &-item {
-            font-style: normal;
-            font-weight: 500;
-            font-size: 12px;
-            line-height: 14px;
-            text-align: center;
-            color: #ffffff;
-            min-width: 90px;
-            .icon {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              height: 50px;
-              margin-bottom: 10px;
-            }
-          }
-        }
-        &-tip {
-          font-style: normal;
-          font-weight: 500;
-          font-size: 12px;
-          line-height: 1.6;
-          color: #ffffff;
-          opacity: 0.5;
-        }
-      }
-    }
-    #vote {
-      padding-top: 36px;
-      .vote-title {
-        font-style: normal;
-        font-weight: 700;
-        font-size: 22px;
-        line-height: 32px;
-        text-align: center;
-        color: #036eb7;
-      }
-      .search-input-group {
-        position: relative;
-        margin: 15px auto;
-        width: 220px;
-        .search-input {
-          position: relative;
-          width: 100%;
-          padding: 3px 20px 3px 40px;
-          border-radius: 20px;
-          border: solid 1px #036eb7;
-          background-color: #fff;
-          font-size: 16px;
-          font-style: normal;
-          line-height: 1.6;
-          color: #4d4d4d;
-        }
-        .loupe {
-          z-index: 2;
-          position: absolute;
-          left: 10px;
-          top: 7px;
-        }
-      }
-      .works {
-        padding: 15px 0;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-          'champion champion'
-          '. .';
-        gap: 20px;
-        grid-auto-rows: auto;
-      }
-      .work-item {
-        &:nth-child(1) {
-          &::before {
-            content: '';
-            background-image: url('~images/jump/crown.png');
-            left: -49px;
-            top: -49px;
-            width: 65px;
-            height: 65px;
-            display: block;
-            position: absolute;
-          }
-          position: relative;
-          grid-area: champion;
-          background: #ffc535;
-
-          margin: auto;
-        }
-        max-width: 200px;
-        background: #b4e4ff;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        border-radius: 6px;
-        padding: 12px 20px;
-        &-title {
-          text-align: center;
-          font-style: normal;
-          font-weight: 500;
-          font-size: 16px;
-          line-height: 1.6;
-          color: #083a6e;
-        }
-        &-img {
-          margin: 5px 0;
-          border-radius: 10px;
-          width: 120px;
-        }
-        &-num {
-          font-weight: 500;
-          font-size: 12px;
-          line-height: 1.4;
-          color: #393939;
-        }
-        &-vote {
-          margin-top: 8px;
-          text-align: center;
-          font-style: normal;
-          font-weight: 700;
-          font-size: 14px;
-          line-height: 1.4;
-          color: #083a6e;
-        }
-      }
-    }
-    #bouns {
-      &::before {
-        content: '';
-        background-image: url('~images/jump/bg-wave.svg');
-        background-repeat: no-repeat;
-        background-position: top;
-        background-size: contain;
-        height: 150px;
-        width: 100%;
-        position: absolute;
-        top: -70px;
-        z-index: -1;
-      }
-      position: relative;
-      background-color: #036eb7;
-      margin-top: 100px;
-      padding-bottom: 30px;
-      .bouns {
-        &-title {
-          font-style: normal;
-          font-weight: 700;
-          font-size: 16px;
-          line-height: 20px;
-          text-align: center;
-          color: #ffffff;
-          margin-bottom: 20px;
-        }
-        &-info {
-          font-style: normal;
-          font-weight: 500;
-          font-size: 12px;
-          line-height: 1.6;
-          color: #ffffff;
-          .em {
-            font-size: 14px;
-            color: #fff100;
-          }
-        }
-        &-tip {
-          font-style: normal;
-          font-weight: 300;
-          font-size: 12px;
-          line-height: 16px;
-          color: #ffffff;
-          opacity: 0.75;
-        }
-        &-ul {
-          padding-inline-start: 20px;
-        }
-      }
     }
   }
 }
