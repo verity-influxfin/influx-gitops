@@ -100,6 +100,13 @@ $(() => {
             isSearchTextEmpty(){
                 const s = this.searchText
                 return s.length<1
+            },
+            // 5th login
+            openLogin() {
+                return this.$store.state.openLogin
+            },
+            loginHideOption() {
+                return this.$store.state.loginHideOption
             }
         },
         created() {
@@ -129,6 +136,9 @@ $(() => {
             },
             account() {
                 this.account = this.account.replace(/[^\d]/g, '');
+            },
+            openLogin() {
+                this.openLoginModal()
             }
         },
         methods: {
@@ -154,6 +164,10 @@ $(() => {
                 AOS.refresh();
             },
             openLoginModal() {
+                // 5th
+                if (this.$route.path === '/5th-anniversary') {
+                    this.$store.commit('mutationloginHideOption',true)
+                }
                 $(this.$refs.loginForm).modal("show");
             },
             hideLoginModal() {
@@ -209,7 +223,11 @@ $(() => {
                                 .then((res) => {
                                     this.$store.commit('mutationUserData', res.data);
                                     $(this.$refs.loginForm).modal("hide");
-
+                                    // 5th
+                                    if (this.$route.path === '/5th-anniversary') {
+                                        location.reload()
+                                        return
+                                    }
                                     if (investor === '1') {
                                         this.$router.push('investnotification');
                                     } else {

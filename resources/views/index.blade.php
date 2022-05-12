@@ -414,7 +414,7 @@
                 <div class="item">
                     <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login btn"><i class="fas fa-user"></i> SIGN IN</button>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" style="color: #fff;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                         <ul class="dropdown-menu" style="min-width: 5rem;">
                             <li v-if="isInvestor == 0">
                                 <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
@@ -646,7 +646,7 @@
                         <div class="login-logo"><img src="/images/logo_puhey.svg" class="img-fluid"></div>
                     </div>
                     <div class="modal-body">
-                        <div class="input-group">
+                        <div class="input-group" v-if="!loginHideOption">
                             <button type="button" :class="['btn','btn-switch',{checked:!isCompany}]" @click="switchTag($event)">自然人登入</button>
                             <button type="button" :class="['btn','btn-switch',{checked:isCompany}]" @click="switchTag($event)">法人登入</button>
                         </div>
@@ -662,7 +662,7 @@
                             <span class="input-group-addon label-text">密碼：</span>
                             <input type="password" class="form-control label-input" placeholder="請輸入密碼" autocomplete="off" v-model="password" maxlength="50">
                         </div>
-                        <div class="input-group">
+                        <div class="input-group" v-if="!loginHideOption">
                             <span class="input-group-addon label-text"></span>
                             <div class="radio-custom">
                                 <label><input type="radio" name="investor" class="radio-inline" value="0" v-model="investor" checked><span class="outside"><span class="inside"></span></span>借款人</label>
