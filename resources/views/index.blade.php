@@ -17,7 +17,11 @@
             j.src =
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '{{env('APP_ENV ') == 'production ' ? 'GTM - 5 Z439PW ' : 'GTM - 589 Z9H6 '}}');
+        })(window, document, 'script', 'dataLayer', '{{env('
+            APP_ENV ') == '
+            production ' ? '
+            GTM - 5 Z439PW ' : '
+            GTM - 589 Z9H6 '}}');
     </script>
     <!-- End Google Tag Manager -->
     <meta charset="utf-8">
@@ -239,19 +243,17 @@
                                         <div class="function-list-content invest">
                                             <div class="function-list-items">
                                                 <div class="link-title">投資專區</div>
-                                                <div class="d-flex justify-content-between">
-                                                    <div class="link-item">
-                                                        <a href="/investment" class="link-text">債權投資</a>
-                                                    </div>
-                                                    <div class="link-item">
-                                                        <a href="/transfer" class="link-text">債權轉讓</a>
-                                                    </div>
-                                                    <div class="link-item">
-                                                        <a href="/risk" class="link-text">風險報告書</a>
-                                                    </div>
-                                                    <div class="link-item">
-                                                        <a href="/projects" class="link-text">查看案件</a>
-                                                    </div>
+                                                <div class="link-item">
+                                                    <a href="/investment" class="link-text">債權投資</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/transfer" class="link-text">債權轉讓</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/risk" class="link-text">風險報告書</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/projects" class="link-text">查看案件</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -262,14 +264,11 @@
                                 <div class="function-title">關於普匯</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
-                                        <div class="function-list-content">
+                                        <div class="function-list-content about">
                                             <div class="function-list-items">
                                                 <div class="link-title">關於我們</div>
                                                 <div class="link-item">
-                                                    <a href="/company" class="link-text">公司介紹</a>
-                                                </div>
-                                                <div class="link-item">
-                                                    <a href="/index#company-intro" class="link-text">公司歷程</a>
+                                                    <a href="/company" class="link-text">關於我們</a>
                                                 </div>
                                                 <div class="link-item">
                                                     <a href="/news" class="link-text">最新消息</a>
@@ -278,19 +277,7 @@
                                                     <a href="/blog" class="link-text">AI金融科技新知</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="" class="link-text">合作夥伴</a>
-                                                </div>
-                                                <div class="link-item">
-                                                    <a href="" class="link-text">媒體消息</a>
-                                                </div>
-                                            </div>
-                                            <div class="function-list-items">
-                                                <div class="link-title">服務項目</div>
-                                                <div class="link-item">
-                                                    <a href="/news" class="link-text">最新消息</a>
-                                                </div>
-                                                <div class="link-item">
-                                                    <a href="/faq" class="link-text">常見問題</a>
+                                                    <a href="/faq" class="link-text">瞭解更多</a>
                                                 </div>
                                             </div>
                                             <div class="function-list-items">
