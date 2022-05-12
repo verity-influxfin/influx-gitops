@@ -471,7 +471,7 @@ export default {
       this.fileName = ''
     },
     doJump() {
-      if (this登入後.flag === 'login') {
+      if (this.flag === 'login') {
         $('#uploadModal').modal('show')
       } else {
         this.$store.commit('mutation5thLogin')
