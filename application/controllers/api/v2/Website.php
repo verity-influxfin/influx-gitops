@@ -1086,6 +1086,26 @@ class Website extends REST_Controller {
         $this->response(['result' => 'ERROR']);
     }
 
+    /**
+     * 找蒙太奇圖片
+     *
+     * @param reference 蒙太奇底層圖片名稱
+     */
+    public function montage_get()
+    {
+        $reference = $this->input->get('reference');
+
+        $url = $this->_get_pandora_url() . '/montage/img?reference=' . $reference;
+        $response = curl_get($url);
+        $response = json_decode($response, TRUE);
+
+        if ( ! empty($response['img']))
+        {
+            $this->response(['result' => 'SUCCESS', 'data' => $response['img']]);
+        }
+        $this->response(['result' => 'ERROR']);
+    }
+
     private function _get_pandora_url()
     {
         return 'http://' . getenv('PANDORA_IP') . ':' . getenv('PANDORA_PORT');
