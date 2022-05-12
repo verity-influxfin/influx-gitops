@@ -7,10 +7,10 @@
         </div>
         <div class="col"></div>
         <div class="top-method col-auto">
-          <a href="#method" class="top-a">活動辦法</a>
+          <a href="#method-nav" class="top-a">活動辦法</a>
         </div>
         <div class="top-bouns col-auto mr-2">
-          <a href="#bouns" class="top-a">活動獎金</a>
+          <a href="#bouns-nav" class="top-a">活動獎金</a>
         </div>
       </div>
     </nav>
@@ -36,13 +36,13 @@
           </div>
         </div>
         <div class="banner-btns">
-          <a href="#method">
+          <a href="#method-nav">
             <button class="btn btn-join">
               立即參與
               <i class="fa fa-chevron-down"></i>
             </button>
           </a>
-          <a href="#vote">
+          <a href="#vote-nav">
             <button class="btn btn-vote">
               立即投票
               <i class="fa fa-chevron-down"></i>
@@ -84,10 +84,11 @@
           </button>
         </div>
       </div>
+      <div id="method-nav"></div>
     </div>
     <div id="method">
       <div class="block-content">
-        <div class="method-title">投票成功間</div>
+        <div class="method-title">活動時間</div>
         <div class="method-time">
           22.5.13 (五) 12：00 AM ~ 6.30 (四) 23：59 PM
         </div>
@@ -140,6 +141,7 @@
           <div>- 可重複投給一位參賽者</div>
           <div>- 每日一個會員最多送出3個讚</div>
         </div>
+        <div id="vote-nav"></div>
       </div>
     </div>
     <div id="vote">
@@ -185,6 +187,7 @@
         </div>
       </div>
     </div>
+    <div id="bouns-nav"></div>
     <div id="bouns">
       <div class="block-content">
         <div class="bouns-title">活動獎金</div>
@@ -994,6 +997,7 @@ export default {
   .work-item {
     max-width: 600px;
     &-title {
+      overflow-wrap: anywhere;
       font-size: 24px;
     }
     &-img {
