@@ -271,21 +271,30 @@ $ci-color: #153a71;
                 }
             }
             &.charitable{
-                justify-content: center;
                 .function-list-items{
-                    width: 600px;
+                    margin-left: 168px;
+                    width: 200px;
                 }
                 .link-title,.link-item{
-                    text-align: center;
+                    text-align: left;
                 }
             }
             &.invest{
-                justify-content: center;
                 .function-list-items{
-                    width: 800px;
+                    margin-left: 260px;
+                    width: 200px;
                 }
                 .link-title,.link-item{
-                    text-align: center;
+                    text-align: left;
+                }
+            }
+            &.about{
+                padding-left: 396px;
+                .function-list-items{
+                    width: 200px;
+                }
+                .link-title,.link-item{
+                    text-align: left;
                 }
             }
         }

@@ -948,8 +948,8 @@ import { alesisIndexCounter } from './api'
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
 import SwiperCore, { Navigation } from 'swiper/core'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { gsap } from 'gsap/dist/gsap'
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 
 export default {
   components: {
@@ -1068,7 +1068,7 @@ export default {
     height: 100%;
     background-image: url('~images/index/index-header-bg-2.png');
     background-size: cover;
-    background-position: center -40px;
+    background-position: -320px -39px;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -1196,7 +1196,7 @@ export default {
 }
 .index-concept {
   position: relative;
-  padding: 80px;
+  padding: 40px 80px;
   background-color: #036eb7;
   background-image: url('~images/index/concept-bg.png');
   background-repeat: no-repeat;
@@ -1208,7 +1208,7 @@ export default {
       font-weight: 500;
       font-size: 40px;
       line-height: 81px;
-      margin: 40px 0;
+      margin: 20px 0;
       color: #e6f5ff;
       text-align: center;
     }
@@ -1258,7 +1258,7 @@ export default {
 }
 .index-loan {
   position: relative;
-  padding: 70px 70px;
+  padding: 30px 70px;
   background-image: url('~images/index/index-phone-bg.png');
   background-repeat: no-repeat;
   background-size: cover;
@@ -1290,7 +1290,6 @@ export default {
       left: -50px;
       bottom: -12px;
       position: absolute;
-      transform: matrix(1, 0.08, 0.08, 1, 0, 0);
     }
     #img57 {
       top: -20px;
@@ -1353,7 +1352,7 @@ export default {
 }
 .index-service {
   position: relative;
-  padding: 70px 70px;
+  padding: 100px 70px 20px;
   background: linear-gradient(180.82deg, #036eb7 0.7%, #ffffff 92.77%);
   .block-title {
     color: #fff;
@@ -1421,7 +1420,7 @@ export default {
   }
 }
 .index-tech {
-  padding: 70px 70px;
+  padding: 20px 50px;
   .tech-head {
     width: 420px;
     margin: 0 auto;
@@ -1898,6 +1897,7 @@ export default {
   padding: 64px;
   background: #f3f9fc;
   .block-title {
+    margin-top: 0;
     font-weight: 500;
     font-size: 40px;
     color: #036fb7;
@@ -1907,7 +1907,7 @@ export default {
     color: #036fb7;
     font-size: 20px;
     margin-top: 24px;
-    margin-bottom: 15px;
+    margin-bottom: 70px;
     opacity: 0.64;
     text-align: center;
   }
@@ -2011,6 +2011,7 @@ export default {
     .intro-content {
       background-image: url('~images/index/header-bg-phone.png');
       background-position: initial;
+      background-position: center;
       .intro-products {
         margin-top: 365px;
         .group {
