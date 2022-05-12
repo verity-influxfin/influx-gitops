@@ -147,10 +147,21 @@
         <div class="vote-title">跳躍作品集</div>
         <form class="search-input-group" @submit.prevent>
           <img class="loupe" src="../asset/images/loupe.svg" />
-          <input class="search-input" type="text" />
+          <input
+            class="search-input"
+            type="text"
+            v-model="searchInput"
+            @change="doSearch"
+          />
         </form>
         <div class="works">
-          <div class="work-item" v-for="item in workList" :key="item.id" @click="openWorkModal(item)">
+          <div
+            class="work-item"
+            :class="{ normal: Boolean(lastSearch) }"
+            v-for="item in workList"
+            :key="item.id"
+            @click="openWorkModal(item)"
+          >
             <div class="work-item-title">{{ item.nick_name }}</div>
             <div class="work-item-img">
               <img class="img-fluid" :src="'/' + item.file_name" alt="" />
@@ -168,7 +179,7 @@
           </div>
         </div>
         <div class="text-center">
-          <button class="btn" @click="loadList">
+          <button class="btn" @click="doSearch">
             <img src="@/asset/images/jump/load-more.svg" />
           </button>
         </div>
@@ -404,6 +415,8 @@ export default {
     return {
       indexCounter: {},
       nickNameInput: '',
+      searchInput: '',
+      lastSearch: null,
       flag: '',
       fileName: '',
       file: new File([], ''),
@@ -424,13 +437,18 @@ export default {
       x: 500,
       duration: 2
     })
-    this.loadList()
+    this.doSearch()
     alesisIndexCounter().then(v => {
       this.indexCounter = v
     })
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
   },
   methods: {
+    resetList() {
+      this.workList = []
+      this.currentPage = 1
+      this.maxPage = 1
+    },
     onUpload() {
       this.fileName = ''
       const currentFiles = this.$refs.fileUpload.files
@@ -502,6 +520,7 @@ export default {
       }
     },
     loadList() {
+      this.lastSearch = null
       if (this.currentPage > this.maxPage) {
         return
       }
@@ -513,13 +532,38 @@ export default {
         }
       })
     },
+    doSearch() {
+      if (!Boolean(this.searchInput)) {
+        if (Boolean(this.lastSearch)) {
+          // 取消查詢
+          this.resetList()
+        }
+        this.loadList()
+        return
+      }
+      if (this.lastSearch !== this.searchInput) {
+        // 重新查詢
+        this.resetList()
+      }
+      if (this.currentPage > this.maxPage) {
+        return
+      }
+      Axios.get(`api/v1/campaign2022/list/search/${this.searchInput}/page/${this.currentPage}`).then(({ data }) => {
+        if (data.success) {
+          this.lastSearch = this.searchInput
+          this.workList = [...this.workList, ...data.data.list]
+          this.maxPage = Math.ceil(data.data.total / 3)
+          this.currentPage = this.currentPage + 1
+        }
+      })
+    },
     openWorkModal(item) {
       if (item) {
         this.workModalData = { ...item }
         $('#workModal').modal('show')
         return
-      }else{
-          // get from api
+      } else {
+        // get from api
       }
     }
   },
@@ -773,19 +817,21 @@ export default {
       gap: 20px;
       grid-auto-rows: auto;
       .work-item:nth-child(1) {
-        &::before {
-          content: '';
-          background-image: url('~images/jump/crown.png');
-          left: -49px;
-          top: -49px;
-          width: 65px;
-          height: 65px;
-          display: block;
-          position: absolute;
+        &:not(.normal) {
+          &::before {
+            content: '';
+            background-image: url('~images/jump/crown.png');
+            left: -49px;
+            top: -49px;
+            width: 65px;
+            height: 65px;
+            display: block;
+            position: absolute;
+          }
+          background: #ffc535;
         }
         position: relative;
         grid-area: champion;
-        background: #ffc535;
         margin: auto;
       }
     }
