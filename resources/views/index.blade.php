@@ -150,7 +150,7 @@
                     <div class="d-sm-flex d-none no-gutters w-100">
                         <div class="functions col-auto">
                             <div class="function-item">
-                                <div class="function-title">產品列表</div>
+                                <div class="function-title">貸款產品</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content product">
@@ -218,21 +218,6 @@
                                 </div>
                             </div>
                             <div class="function-item">
-                                <div class="function-title">慈善捐款</div>
-                                <div class="function-list row no-gutters">
-                                    <div class="col-auto d-flex no-gutters">
-                                        <div class="function-list-content charitable">
-                                            <div class="function-list-items">
-                                                <div class="link-title">慈善捐款</div>
-                                                <div class="link-item">
-                                                    <a href="/charitable" class="link-text">台大兒醫</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="function-item">
                                 <div class="function-title">投資專區</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
@@ -257,12 +242,27 @@
                                 </div>
                             </div>
                             <div class="function-item">
+                                <div class="function-title">慈善捐款</div>
+                                <div class="function-list row no-gutters">
+                                    <div class="col-auto d-flex no-gutters">
+                                        <div class="function-list-content charitable">
+                                            <div class="function-list-items">
+                                                <div class="link-title">慈善捐款</div>
+                                                <div class="link-item">
+                                                    <a href="/charitable" class="link-text">台大兒醫</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="function-item">
                                 <div class="function-title">關於普匯</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content about">
                                             <div class="function-list-items">
-                                                <div class="link-title">關於我們</div>
+                                                <div class="link-title">關於普匯</div>
                                                 <div class="link-item">
                                                     <a href="/company" class="link-text">關於我們</a>
                                                 </div>
@@ -303,7 +303,7 @@
                                 <div class="clear-icon" @click="doClear">x</div>
                             </div>
                             <div class="item ml-3 d-flex align-items-center">
-                                <button @click="openLoginModal" class="login-btn btn d-none" :class="{'d-block':!flag || flag === 'logout'}">我的/Login</button>
+                                <button @click="openLoginModal" class="login-btn btn d-none" :class="{'d-block':!flag || flag === 'logout'}">登入/加入會員</button>
                                 <div class="nav-item dropdown d-none" :class="{'d-block':Object.keys(userData).length !== 0}">
                                     <a class="nav-link dropdown-toggle" style="color: #036EB7;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                                     <ul class="dropdown-menu" style="min-width: 5rem;">

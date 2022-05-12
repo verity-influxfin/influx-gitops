@@ -270,9 +270,15 @@ $ci-color: #153a71;
                     line-height: 1;
                 }
             }
+            &.product{
+                padding-left: 111px;
+                .link-title,.link-item{
+                    text-align: left;
+                }
+            }
             &.charitable{
                 .function-list-items{
-                    margin-left: 168px;
+                    margin-left: 260px;
                     width: 200px;
                 }
                 .link-title,.link-item{
@@ -281,7 +287,7 @@ $ci-color: #153a71;
             }
             &.invest{
                 .function-list-items{
-                    margin-left: 260px;
+                    margin-left: 168px;
                     width: 200px;
                 }
                 .link-title,.link-item{

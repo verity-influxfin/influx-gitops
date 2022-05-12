@@ -194,7 +194,7 @@
               </div>
               <img class="img56-img" src="@/asset/images/index/img56.png" />
               <div>
-                <div class="block-title mx-auto">普匯•你的手機ATM</div>
+                <div class="block-title mx-auto mt-3">普匯•你的手機ATM</div>
               </div>
             </div>
           </div>
@@ -1206,7 +1206,7 @@ export default {
     padding: 0 50px;
     .block-title {
       font-weight: 500;
-      font-size: 40px;
+      font-size: 56px;
       line-height: 81px;
       margin: 20px 0;
       color: #e6f5ff;
@@ -1215,7 +1215,7 @@ export default {
     .block-title-2 {
       color: #e6f5ff;
       text-align: center;
-      font-size: 28px;
+      font-size: 32px;
       line-height: 1.4;
       margin: 40px 0;
     }
@@ -1230,7 +1230,7 @@ export default {
         content: '「普」';
         color: #fff;
         opacity: 1;
-        font-size: 32px;
+        font-size: 40px;
         line-height: 45px;
       }
       &.concept-2::before {
@@ -1262,15 +1262,15 @@ export default {
   background-image: url('~images/index/index-phone-bg.png');
   background-repeat: no-repeat;
   background-size: cover;
-  height: 1200px;
+  height: 990px;
   .block-title {
     color: #036eb7;
-    font-size: 32px;
+    font-size: 56px;
     text-align: center;
   }
   .block-info {
     color: #036eb7;
-    font-size: 20px;
+    font-size: 40px;
     margin-top: 24px;
     opacity: 0.64;
     text-align: center;
@@ -1356,12 +1356,12 @@ export default {
   background: linear-gradient(180.82deg, #036eb7 0.7%, #ffffff 92.77%);
   .block-title {
     color: #fff;
-    font-size: 32px;
+    font-size: 56px;
     text-align: center;
   }
   .block-info {
     color: #fff;
-    font-size: 20px;
+    font-size: 40px;
     margin-top: 24px;
     opacity: 0.64;
     text-align: center;
@@ -1422,8 +1422,8 @@ export default {
 .index-tech {
   padding: 20px 50px;
   .tech-head {
-    width: 420px;
-    margin: 0 auto;
+    width: 525px;
+    margin-left: 175px;
     .block-title {
       text-align: left;
     }
@@ -1434,24 +1434,24 @@ export default {
   }
   .block-content-header-title {
     color: #036eb7;
-    font-size: 42px;
+    font-size: 56px;
     text-align: center;
   }
   .block-content-header-info {
     color: #036eb7;
-    font-size: 24px;
+    font-size: 40px;
     margin-top: 24px;
     opacity: 0.64;
     text-align: center;
   }
   .block-title {
     color: #036eb7;
-    font-size: 32px;
+    font-size: 48px;
     text-align: center;
   }
   .block-info {
     color: #036eb7;
-    font-size: 20px;
+    font-size: 30px;
     margin-top: 24px;
     opacity: 0.64;
     text-align: center;
@@ -1500,34 +1500,34 @@ export default {
     }
   }
   .step-content-title {
-    padding-left: 30px;
+    padding-left: 42px;
     font-style: normal;
     font-weight: 700;
-    font-size: 24px;
-    color: #036fb7;
+    font-size: 40px;
+    color: #023D64;
     &::before {
       background: #036fb7;
       border-radius: 50%;
       color: #fff;
-      font-size: 24px;
+      font-size: 40px;
       font-style: normal;
       font-weight: 500;
       position: absolute;
-      left: -16px;
+      left: -28px;
       text-align: center;
-      width: 36px;
+      width: 60px;
     }
   }
   .content-title-style {
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
-    color: #036fb7;
+    color: #023D64;
     margin-bottom: 15px;
   }
   .step-content-info {
     margin: 15px 0;
-    padding-left: 30px;
+    padding-left: 42px;
     font-weight: 400;
     font-size: 16px;
     line-height: 23px;
@@ -1544,12 +1544,12 @@ export default {
   }
   .block-title {
     color: #036eb7;
-    font-size: 32px;
+    font-size: 56px;
     text-align: center;
   }
   .block-info {
     color: #036eb7;
-    font-size: 20px;
+    font-size: 40px;
     margin-top: 24px;
     opacity: 0.64;
     text-align: center;
@@ -1560,12 +1560,12 @@ export default {
     justify-content: center;
     gap: 20px;
     .card {
-      width: 328px;
+      width: 330px;
       border: none;
       box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
       border-radius: 16px;
       .card-body {
-        padding: 24px 30px;
+        padding: 24px;
       }
       .card-cover {
         width: 84px;
@@ -1577,7 +1577,7 @@ export default {
       .card-title {
         font-style: normal;
         font-weight: 700;
-        font-size: 24px;
+        font-size: 28px;
         text-align: center;
         color: #023d64;
       }
@@ -1603,18 +1603,18 @@ export default {
   .block-title {
     margin-top: 40px;
     color: #036eb7;
-    font-size: 48px;
+    font-size: 56px;
     text-align: center;
   }
   .product-step-head-title {
     font-style: normal;
     font-weight: 700;
-    font-size: 42px;
+    font-size: 56px;
     text-align: center;
   }
   .block-content-info {
     color: #036eb7;
-    font-size: 24px;
+    font-size: 40px;
     margin: 24px 0;
     opacity: 0.64;
     text-align: center;
@@ -1899,13 +1899,13 @@ export default {
   .block-title {
     margin-top: 0;
     font-weight: 500;
-    font-size: 40px;
+    font-size: 56px;
     color: #036fb7;
     text-align: center;
   }
   .block-info {
     color: #036fb7;
-    font-size: 20px;
+    font-size: 40px;
     margin-top: 24px;
     margin-bottom: 70px;
     opacity: 0.64;

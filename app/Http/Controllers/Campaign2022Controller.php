@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
 class Campaign2022Controller extends Controller
@@ -143,12 +144,26 @@ class Campaign2022Controller extends Controller
                 'user_id' => $response['data']['id'],
                 'nick_name' => $inputs['nick_name'] ?? '',
                 'file_name' => $filename,
-                'votes' => 0
+                'votes' => 0,
+                'status' => 0
             ]);
             return $this->_return_success([], '上傳成功', 201);
         } catch (\Exception $e) {
             return $this->_return_failed($e->getMessage(), 500);
         }
+    }
+
+    public function get_montage()
+    {
+        $montage_res = Http::get(env('API_URL').'website/montage', [
+            'reference' => 'campaign2022'
+        ])->json();
+
+        if ($montage_res['result'] == 'SUCCESS') {
+            return $this->_return_success($montage_res['data']);
+        }
+
+        return $this->_return_failed('fail');
     }
 
     private function _connect_deus($method)

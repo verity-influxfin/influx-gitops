@@ -100,7 +100,7 @@ export default {
 }
 
 .計數項目 .內容 .標題 {
-    font-size  : 1.2rem;
+    font-size  : 32px;
     font-weight: bold;
     color      : #023D64;
 
@@ -110,7 +110,7 @@ export default {
 }
 
 .計數項目 .內容 .計數器 {
-    font-size: 1.2rem;
+    font-size: 32px;
     @include rwd {
         font-size: 1rem;
     }
