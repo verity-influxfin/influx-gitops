@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 
 class MakeMontages extends Command
 {
-    private const reference = 'campaign_2022';
+    private const reference = 'campaign2022';
     /**
      * The name and signature of the console command.
      *
@@ -40,7 +40,7 @@ class MakeMontages extends Command
      */
     public function handle()
     {
-        $data_list = Campaign2022::where('status', '=', 0)->get(['file_name', 'user_id']);
+        $data_list = Campaign2022::where('status', '=', 0)->get(['file_name', 'user_id', 'id']);
         foreach ($data_list as $data) {
             $user_montage_res = Http::get(env('API_URL').'website/user_montage', [
                 'reference' => self::reference,
@@ -60,19 +60,13 @@ class MakeMontages extends Command
                     if ($this->_update_user_montage($data['file_name'], $data['user_id']) == false) {
                         break;
                     }
-                    Campaign2022::update(['id' => $data['id']], ['status' => 1]);
-                    break;
-                case 2: // 找不到reference的圖
-                    if ($this->_new_user_montage($data['file_name'], $data['user_id']) == false) {
-                        break;
-                    }
-                    Campaign2022::update(['id' => $data['id']], ['status' => 1]);
+                    Campaign2022::where(['id' => $data['id']])->update(['status' => 1]);
                     break;
                 default:
                     if ($this->_new_user_montage($data['file_name'], $data['user_id']) == false) {
                         break;
                     }
-                    Campaign2022::update(['id' => $data['id']], ['status' => 1]);
+                    Campaign2022::where(['id' => $data['id']])->update(['status' => 1]);
             }
         }
         return Command::SUCCESS;
@@ -88,7 +82,7 @@ class MakeMontages extends Command
             'reference' => self::reference,
             'user_id' => $user_id,
             'img' => $base64_img,
-        ]);
+        ])->json();
         if ($response['result'] != 'SUCCESS') {
             return false;
         }
@@ -105,7 +99,7 @@ class MakeMontages extends Command
             'reference' => self::reference,
             'user_id' => $user_id,
             'img' => $base64_img,
-        ]);
+        ])->json();
         if ($response['result'] != 'SUCCESS') {
             return false;
         }
@@ -115,7 +109,7 @@ class MakeMontages extends Command
     private function _get_base64_img($file_url)
     {
         try {
-            $img = file_get_contents('./upload/campaign2022/'.$file_url);
+            $img = file_get_contents(public_path('upload/campaign2022/' . $file_url));
             if ($img === false) {
                 return false;
             }
