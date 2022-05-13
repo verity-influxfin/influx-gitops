@@ -381,14 +381,14 @@ class Qrcode_lib
         $subcode_user = $this->CI->user_model->get_by(['id_number' => $registered_id, 'block_status != ' => 1, 'company_status' => USER_NOT_COMPANY]);
         if (isset($subcode_user))
         {
-            $borrower = $this->CI->certification_lib->get_certification_info($subcode_user->id, CERTIFICATION_IDCARD, USER_BORROWER);
+            $borrower = $this->CI->certification_lib->get_certification_info($subcode_user->id, CERTIFICATION_IDENTITY, USER_BORROWER);
             if ($borrower !== FALSE)
             {
                 $identity = $borrower;
             }
             else
             {
-                $investor = $this->CI->certification_lib->get_certification_info($subcode_user->id, CERTIFICATION_IDCARD, USER_INVESTOR);
+                $investor = $this->CI->certification_lib->get_certification_info($subcode_user->id, CERTIFICATION_IDENTITY, USER_INVESTOR);
                 $identity = $investor;
             }
         }

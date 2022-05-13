@@ -1392,7 +1392,6 @@ class Sales extends MY_Admin_Controller
         $this->load->view('admin/_footer');
 
     }
-}
 
     public function qrcode_modify_settings()
     {
@@ -1682,7 +1681,8 @@ class Sales extends MY_Admin_Controller
             $list = array_intersect_key($review_list, $keys);
             $contract_format = $this->contract_format_model->order_by('created_at', 'desc')->get_by(['id' => $review_list['contract_format_id']]);
             $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($review_list['alias']);
-            $content = $this->qrcode_lib->get_contract_format_content($contract_type_name, '', '', []);
+            $contract_content = json_decode($review_list['contract_content'], TRUE);
+            $content = $this->qrcode_lib->get_contract_format_content($contract_type_name, $contract_content[0] ?? '', $contract_content[10] ?? '', []);
             $list['content'] = array_slice(json_decode($review_list['contract_content'], TRUE) ?? [], 4, 4);
             $content[4] = '%platform_fee%';
             $content[5] = '%interest%';

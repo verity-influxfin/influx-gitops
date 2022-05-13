@@ -312,7 +312,7 @@ class User extends REST_Controller {
 
             // 確認自然人需通過實名認證
             $this->load->library('Certification_lib');
-            $user_certification = $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
+            $user_certification = $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDENTITY,
                 $personal_user_info->investor);
             if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
             {
@@ -2205,9 +2205,9 @@ END:
         if (count($doneCertifications) === count($promote_cert_list))
         {
             $this->load->library('Certification_lib');
-            if ($company == USER_NOT_COMPANY && isset($doneCertifications[CERTIFICATION_IDCARD]))
+            if ($company == USER_NOT_COMPANY && isset($doneCertifications[CERTIFICATION_IDENTITY]))
             {
-                $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDCARD], FALSE);
+                $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDENTITY], FALSE);
             }
             else if ($company == USER_IS_COMPANY && isset($doneCertifications[CERTIFICATION_GOVERNMENTAUTHORITIES]))
             {
