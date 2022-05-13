@@ -292,6 +292,9 @@
                                     </div>
                                 </div>
                             </div>
+                             <div class="function-item">
+                                <a href="/5th-anniversary" class="function-title">普匯五週年</a>
+                            </div>
                         </div>
                         <div class="col"></div>
                         <div class="col-auto d-flex">
@@ -390,6 +393,7 @@
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <a href="/charitable" class="item">慈善專區</a>
+                <a href="/5th-anniversary" class="item">普匯五週年</a>
                 <div class="item">
                     <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login btn"><i class="fas fa-user"></i> SIGN IN</button>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
