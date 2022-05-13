@@ -68,10 +68,12 @@
         </div>
         <div class="intro-cover">
           <img
+            v-if="montageLoading"
             class="img-fluid"
             src="@/asset/images/jump/intro-cover.png"
             alt="5周年慶"
           />
+          <img id="montage-img" class="img-fluid" />
         </div>
         <div class="intro-join">
           <button class="btn btn-block btn-jump" @click="doJump">
@@ -421,6 +423,7 @@ export default {
       nickNameInput: '',
       searchInput: '',
       lastSearch: null,
+      montageLoading: true,
       flag: '',
       fileName: '',
       file: new File([], ''),
@@ -445,6 +448,7 @@ export default {
     })
     this.doSearch()
     this.getList()
+    this.getMontage()
     alesisIndexCounter().then(v => {
       this.indexCounter = v
     })
@@ -499,11 +503,11 @@ export default {
     },
     doJump() {
       if (this.flag === 'login') {
-          if(this.checkUpload()){
-              if(!confirm('您的照片已出現在跳躍作品集裡，如重新上傳將更換您的照片，並重新計算票數')){
-                  return
-              }
+        if (this.checkUpload()) {
+          if (!confirm('您的照片已出現在跳躍作品集裡，如重新上傳將更換您的照片，並重新計算票數')) {
+            return
           }
+        }
         $('#uploadModal').modal('show')
       } else {
         this.$store.commit('mutation5thLogin')
@@ -530,6 +534,15 @@ export default {
     getList() {
       Axios.get('/api/v1/campaign2022/list').then(({ data }) => {
         this.fullList = data.data
+      })
+    },
+    getMontage() {
+      this.montageLoading = true
+      Axios.get('/api/v1/campaign2022/montage').then(({ data }) => {
+        if (data.success) {
+          document.querySelector('#montage-img').src = 'data:image/png;base64,' + data.data
+          this.montageLoading = false
+        }
       })
     },
     async doUpload() {
