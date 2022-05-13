@@ -2,9 +2,13 @@
   <div class="index-wrapper">
     <div class="index-intro section">
       <div class="row no-gutters block-content intro-content">
-          <div class="d-sm-none d-flex mt-3">
-              <img src="@/asset/images/index/phone-header-text.png" class="img-fluid p-3" alt="">
-          </div>
+        <div class="d-sm-none d-flex mt-3">
+          <img
+            src="@/asset/images/index/phone-header-text.png"
+            class="img-fluid p-3"
+            alt=""
+          />
+        </div>
         <div class="intro-products">
           <div class="group group-web">
             <router-link to="/collegeLoan" class="product-item">
@@ -107,8 +111,12 @@
             </router-link>
             <router-link to="/promote-code-intro" class="product-item">
               <div class="card">
-                <div class="card-title">分享 QR code</div>
+                <div class="card-title">分享QR賺外快</div>
                 <div class="card-content">
+                  <div class="card-subtitle">
+                      <div>特約通路商</div>
+                      <div>管理系統</div>
+                    </div>
                   <div class="card-image p10"></div>
                   <router-link to="/promote-code-intro" class="card-link">
                     了解更多
@@ -145,12 +153,14 @@
                 <div class="card-title space-bottom">汽車貸款</div>
               </div>
             </div>
-            <router-link to="/invest" class="product-item">
+            <router-link to="/charitable" class="product-item">
               <div class="card">
-                <div class="card-image p5"></div>
-                <div class="card-title space-bottom">投資人專區</div>
+                <div class="card-image p9"></div>
+                <div class="card-title">慈善公益</div>
+                <div class="card-subtitle">台大兒醫</div>
               </div>
             </router-link>
+
             <div class="product-item">
               <div class="card">
                 <div class="card-image p6"></div>
@@ -172,17 +182,20 @@
                 <div class="card-subtitle">coming soon</div>
               </div>
             </div>
-            <router-link to="/charitable" class="product-item">
+            <router-link to="/invest" class="product-item">
               <div class="card">
-                <div class="card-image p9"></div>
-                <div class="card-title">慈善公益</div>
-                <div class="card-subtitle">台大兒醫</div>
+                <div class="card-image p5"></div>
+                <div class="card-title space-bottom">投資人專區</div>
               </div>
             </router-link>
             <router-link to="/promote-code-intro" class="product-item">
               <div class="card">
                 <div class="card-image p10"></div>
-                <div class="card-title space-bottom">分享 QR code</div>
+                <div class="card-title">分享QR賺外快</div>
+                <div class="card-subtitle">
+                  <div>特約通路商</div>
+                  <div>管理系統</div>
+                </div>
               </div>
             </router-link>
           </div>
@@ -2108,17 +2121,17 @@ export default {
         }
         .card-title {
           font-size: 14px;
-          line-height: 1.2;
+          line-height: 25px;
           margin-bottom: 0;
           text-align: center;
-          &.space-bottom{
-              padding-bottom: 20px;
+          &.space-bottom {
+            padding-bottom: 15px;
           }
         }
         .card-subtitle {
           margin: 0;
           font-size: 12px;
-          line-height: 20px;
+          line-height: 1.2;
           text-align: center;
         }
         .card-image {
