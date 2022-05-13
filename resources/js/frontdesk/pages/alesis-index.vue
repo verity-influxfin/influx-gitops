@@ -2,6 +2,9 @@
   <div class="index-wrapper">
     <div class="index-intro section">
       <div class="row no-gutters block-content intro-content">
+          <div class="d-sm-none d-flex mt-3">
+              <img src="@/asset/images/index/phone-header-text.png" class="img-fluid p-3" alt="">
+          </div>
         <div class="intro-products">
           <div class="group group-web">
             <router-link to="/collegeLoan" class="product-item">
@@ -877,7 +880,7 @@
         </div>
       </div>
       <div class="row align-items-center media">
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html"
@@ -890,7 +893,7 @@
             />
           </a>
         </div>
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="http://n.yam.com/Article/20180803346949"
@@ -903,7 +906,7 @@
             />
           </a>
         </div>
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="https://www.nownews.com/news/20180807/2798010/"
@@ -916,7 +919,7 @@
             />
           </a>
         </div>
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv"
@@ -929,7 +932,7 @@
             />
           </a>
         </div>
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="https://www.wealth.com.tw/home/articles/20567"
@@ -942,7 +945,7 @@
             />
           </a>
         </div>
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="https://news.cnyes.com/news/id/4267004"
@@ -955,7 +958,7 @@
             />
           </a>
         </div>
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="https://www.gvm.com.tw/article/71426"
@@ -968,7 +971,7 @@
             />
           </a>
         </div>
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198"
@@ -981,7 +984,7 @@
             />
           </a>
         </div>
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="https://www.setn.com/News.aspx?NewsID=792990"
@@ -994,7 +997,7 @@
             />
           </a>
         </div>
-        <div class="col">
+        <div class="col-sm col-auto">
           <a
             class="項目"
             href="https://www.cna.com.tw/postwrite/detail/279030"
@@ -2079,10 +2082,11 @@ export default {
     padding: 0;
     height: auto;
     .intro-content {
-      background-image: url('~images/index/header-bg-phone.png');
+      background-image: url('~images/index/header-bg-phone.jpg');
       background-position: initial;
       .intro-products {
-        margin-top: 375px;
+        margin-top: -90px;
+        padding-bottom: 45px;
         .group {
           &.group-web {
             display: none;
@@ -2757,6 +2761,7 @@ export default {
       background: rgba($color: #8c97af, $alpha: 0.5);
       .圖片 {
         height: 32px;
+        max-width: initial;
       }
     }
     .ue-prev,
