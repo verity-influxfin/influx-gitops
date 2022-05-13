@@ -1378,7 +1378,9 @@ class Sales extends MY_Admin_Controller
                     'identity' => ['name' => '通過實名', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']],
                     'student' => ['name' => '通過學生認證', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']]
                 ];
-                $this->spreadsheet_lib->save($title_rows, $list, "{$product_info['name']}_高價值用戶_{$start_date}_{$end_date}.xlsx");
+
+                $spreadsheet = $this->spreadsheet_lib->load($title_rows, $list);
+                $this->spreadsheet_lib->download("{$product_info['name']}_高價值用戶_{$start_date}_{$end_date}.xlsx", $spreadsheet);
                 return;
             }
         }

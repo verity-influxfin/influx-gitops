@@ -316,7 +316,7 @@ class User extends REST_Controller {
                 $personal_user_info->investor);
             if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
             {
-                $result['error'] = NO_CER_IDCARD;
+                $result['error'] = NO_CER_IDENTITY;
                 goto END;
             }
 
@@ -673,14 +673,14 @@ END:
 					'agent'			=> 0,
 				];
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
-//				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
-//
-//				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id,$location,$os);
-//
-//				if($first_time){
-//					$this->load->library('notification_lib');
-//					$this->notification_lib->first_login($user_info->id,$investor);
-//				}
+				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
+
+				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id,$location,$os);
+
+				if($first_time){
+					$this->load->library('notification_lib');
+					$this->notification_lib->first_login($user_info->id,$investor);
+				}
 				$this->response([
 					'result' => 'SUCCESS',
 					'data' 	 => [
@@ -2699,10 +2699,10 @@ END:
 
             $user = $this->user_model->get($user_id);
 
-            $this->spreadsheet_lib->load($title_rows, $data_rows);
+            $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
             $filepath = 'tmp/subcode_' . round(microtime(true) * 1000) .'.xlsx';
 
-            $this->spreadsheet_lib->save($filepath);
+            $this->spreadsheet_lib->save($filepath, $spreadsheet);
             if (file_exists($filepath))
             {
                 $title = '【普匯金融推薦有賞明細】';

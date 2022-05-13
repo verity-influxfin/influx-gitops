@@ -107,17 +107,20 @@ class Sendemail
 		return false;
 	}
 
-    public function user_notification($user_id = 0, $title = "", $content = "", $type = FALSE, $attach = FALSE, $replay_to = FALSE, $replay_to_name = FALSE, $app_icon = TRUE)
+    public function user_notification($user_id = 0, $title = "", $content = "", $type = FALSE, $attach = FALSE, $replay_to = FALSE, $replay_to_name = FALSE, $app_icon = TRUE,
+                                      $investor = BORROWER)
     {
 		if($user_id){
 			$user_info 		= $this->CI->user_model->get($user_id);
 			if($user_info && $user_info->email){
 			    $mail_event = $this->CI->config->item('mail_event');
                 $content = $this->CI->parser->parse('email/user_notification', array('title' => $title, 'content' => $content, 'type' => $type, 'mail_event' => $mail_event, 'app_icon' => $app_icon), TRUE);
+                $this->CI->load->helper('user_meta');
+                $email_to = get_email_to($user_info, $investor);
 				if($attach){
                     $this->CI->email->initialize($this->config);
                     $this->CI->email->clear(TRUE);
-                    $this->CI->email->to($user_info->email);
+                    $this->CI->email->to($email_to);
                     $this->CI->email->from(GMAIL_SMTP_ACCOUNT,GMAIL_SMTP_NAME);
                     $this->CI->email->subject($title);
                     $this->CI->email->message($content);
@@ -127,7 +130,7 @@ class Sendemail
                     $rs = $this->CI->email->send();
                     $this->CI->load->model('log/log_send_email_model');
                     $insert_data = [
-                        'email_to' => $user_info->email,
+                        'email_to' => $email_to,
                         'email_from' => GMAIL_SMTP_ACCOUNT,
                         'subject' => $title,
                         'content' => $content,
@@ -136,7 +139,7 @@ class Sendemail
                     $this->CI->log_send_email_model->insert($insert_data);
                 }
 				else{
-                    $rs = $this->send($user_info->email,$title,$content,$replay_to,$replay_to_name);
+                    $rs = $this->send($email_to,$title,$content,$replay_to,$replay_to_name);
                 }
                 if($rs){
                     $this->CI->email->clear(true);
@@ -262,7 +265,9 @@ class Sendemail
 		if(isset($user_info) && $user_info->email) {
 			$mail_event = $this->CI->config->item('mail_event');
 			$content = $this->CI->parser->parse('email/user_notification', array("title" => $title, "content" => nl2br($content), "type" => $type, "mail_event" => $mail_event), TRUE);
-			$this->send($user_info->email,isset($subject)?$subject:$title, $content);
+            $this->CI->load->helper('user_meta');
+            $email_to = get_email_to($user_info, $investor);
+			$this->send($email_to,isset($subject)?$subject:$title, $content);
 		}
 	}
 

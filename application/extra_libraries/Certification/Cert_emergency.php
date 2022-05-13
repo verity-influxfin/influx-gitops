@@ -141,8 +141,6 @@ class Cert_emergency extends Certification_base
         $rs = $this->CI->certification_lib->user_meta_progress($data, $this->certification);
         if ($rs)
         {
-            $this->CI->load->library('brookesia/brookesia_lib');
-            $this->CI->brookesia_lib->userCheckAllRules($this->certification['user_id']);
             return $this->CI->certification_lib->fail_other_cer($this->certification);
         }
         return FALSE;

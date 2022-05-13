@@ -1,6 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use phpseclib3\Crypt\PublicKeyLoader;
 
 class Ocr2_lib
@@ -77,24 +78,29 @@ class Ocr2_lib
 
     public function cards_identity($type, $image)
     {
-        $router_mapping = [
-            'identification_card_front' => '/ocr/id_card',
-            'identification_card_back' => '/ocr/id_card_back',
-            'national_health_insurance' => '/ocr/health_card',
-        ];
+        if ($this->_is_valid())
+        {
+            $router_mapping = [
+                'identification_card_front' => '/ocr/id_card',
+                'identification_card_back' => '/ocr/id_card_back',
+                'national_health_insurance' => '/ocr/health_card',
+            ];
 
-        return $this->_post($router_mapping[$type] ?? '', $image);
+            return $this->_post($router_mapping[$type] ?? '', $image);
+        }
+
+        return '';
     }
 
     public function identity_verification($images)
     {
-        if ( ! $this->_is_valid())
+        if ($this->_is_valid())
         {
-            $this->_init_client();
+            $router = '/identity_verification';
+            return $this->_post($router, $images);
         }
 
-        $router = '/identity_verification';
-        return $this->_post($router, $images);
+        return '';
     }
 
     private function _post($router, $images)
@@ -120,12 +126,21 @@ class Ocr2_lib
                 ]),
             ]);
         }
-        catch (Exception $e)
+        catch (BadResponseException $e)
         {
             $this->_log_event(
                 $router,
                 $e->getResponse()->getStatusCode(),
                 $e->getResponse()->getBody()
+            );
+            return '';
+        }
+        catch (Exception $e)
+        {
+            $this->_log_event(
+                $router,
+                $e->getCode(),
+                $e->getMessage()
             );
             return '';
         }
@@ -238,7 +253,7 @@ class Ocr2_lib
             '2' => '女',
         ];
 
-        return $list[$num];
+        return $list[$num] ?? '';
     }
 
     /**
@@ -265,12 +280,21 @@ class Ocr2_lib
                 ]),
             ]);
         }
-        catch (Exception $e)
+        catch (BadResponseException $e)
         {
             $this->_log_event(
                 $router,
                 $e->getResponse()->getStatusCode(),
                 $e->getResponse()->getBody()
+            );
+            return '';
+        }
+        catch (Exception $e)
+        {
+            $this->_log_event(
+                $router,
+                $e->getCode(),
+                $e->getMessage()
             );
             return '';
         }
@@ -285,12 +309,21 @@ class Ocr2_lib
         {
             $res = $this->client->request('GET', $router);
         }
-        catch (Exception $e)
+        catch (BadResponseException $e)
         {
             $this->_log_event(
                 $router,
                 $e->getResponse()->getStatusCode(),
                 $e->getResponse()->getBody()
+            );
+            return '';
+        }
+        catch (Exception $e)
+        {
+            $this->_log_event(
+                $router,
+                $e->getCode(),
+                $e->getMessage()
             );
             return '';
         }
