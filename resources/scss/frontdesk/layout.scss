@@ -326,6 +326,9 @@ $ci-color: #153a71;
         position: initial;
         .function-item{
             padding: 10px 16px;
+            .function-title{
+                color: #393939;
+            }
             &:hover,&:focus-within{
                 .function-list{
                     display: block;

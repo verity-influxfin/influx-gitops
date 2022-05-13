@@ -4,7 +4,7 @@
       <div class="row no-gutters block-content intro-content">
         <div class="intro-products">
           <div class="group">
-            <div class="product-item">
+            <router-link to="/collegeLoan" class="product-item">
               <div class="card">
                 <div class="card-title">學生貸</div>
                 <div class="card-content p1">
@@ -15,8 +15,8 @@
                   </router-link>
                 </div>
               </div>
-            </div>
-            <div class="product-item">
+            </router-link>
+            <router-link to="/workLoan" class="product-item">
               <div class="card">
                 <div class="card-title">上班族貸</div>
                 <div class="card-content">
@@ -27,8 +27,8 @@
                   </router-link>
                 </div>
               </div>
-            </div>
-            <div class="product-item">
+            </router-link>
+            <router-link to="/engineerLoan" class="product-item">
               <div class="card">
                 <div class="card-title">資訊工程師貸</div>
                 <div class="card-content">
@@ -39,17 +39,17 @@
                   </router-link>
                 </div>
               </div>
-            </div>
+            </router-link>
             <div class="product-item">
               <div class="card">
                 <div class="card-title">汽車貸款</div>
                 <div class="card-content">
                   <div class="card-image p4"></div>
-                  <div class="card-link">了解更多</div>
+                  <div style="grid-area: link;">coming soon</div>
                 </div>
               </div>
             </div>
-            <div class="product-item">
+            <router-link to="/invest" class="product-item">
               <div class="card">
                 <div class="card-title">投資人專區</div>
                 <div class="card-content">
@@ -59,7 +59,7 @@
                   </router-link>
                 </div>
               </div>
-            </div>
+            </router-link>
           </div>
           <div class="group">
             <div class="product-item">
@@ -68,8 +68,8 @@
                 <div class="card-content">
                   <div class="card-subtitle">額度最高100萬</div>
                   <div class="card-image p6"></div>
-                  <div class="card-link">
-                    <a>了解更多</a>
+                  <div>
+                    coming soon
                   </div>
                 </div>
               </div>
@@ -80,8 +80,8 @@
                 <div class="card-content">
                   <div class="card-subtitle">額度最高600萬</div>
                   <div class="card-image p7"></div>
-                  <div class="card-link">
-                    <a>了解更多</a>
+                  <div>
+                    coming soon
                   </div>
                 </div>
               </div>
@@ -92,13 +92,13 @@
                 <div class="card-content">
                   <div class="card-subtitle">額度最高2000萬</div>
                   <div class="card-image p8"></div>
-                  <div class="card-link">
-                    <a>了解更多</a>
+                  <div>
+                    coming soon
                   </div>
                 </div>
               </div>
             </div>
-            <div class="product-item">
+            <router-link to="/charitable" class="product-item">
               <div class="card">
                 <div class="card-title">慈善公益</div>
                 <div class="card-content">
@@ -109,8 +109,8 @@
                   </router-link>
                 </div>
               </div>
-            </div>
-            <div class="product-item">
+            </router-link>
+            <router-link to="/promote-code-intro" class="product-item">
               <div class="card">
                 <div class="card-title">分享 QR code</div>
                 <div class="card-content">
@@ -120,7 +120,7 @@
                   </router-link>
                 </div>
               </div>
-            </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -823,7 +823,7 @@
             target="_blank"
           >
             <img
-              class="圖片"
+              class="圖片 img-fluid"
               src="/images/media/a645f762048f5f425d0f0a8486f34612.png"
               alt="Yahoo!新聞"
             />
@@ -836,7 +836,7 @@
             target="_blank"
           >
             <img
-              class="圖片"
+              class="圖片 img-fluid"
               src="/images/media/1JHY1QOLYPF0.png"
               alt="蕃薯藤"
             />
@@ -849,7 +849,7 @@
             target="_blank"
           >
             <img
-              class="圖片"
+              class="圖片 img-fluid"
               src="/images/media/Now_News_logo.png"
               alt="今日新聞"
             />
@@ -862,7 +862,7 @@
             target="_blank"
           >
             <img
-              class="圖片"
+              class="圖片 img-fluid"
               src="/images/media/logo-chinatimes2019.png"
               alt="中時電子報"
             />
@@ -874,7 +874,7 @@
             href="https://www.wealth.com.tw/home/articles/20567"
             target="_blank"
           >
-            <img class="圖片" src="/images/media/logo-red.png" alt="財訊" />
+            <img class="圖片 img-fluid" src="/images/media/logo-red.png" alt="財訊" />
           </a>
         </div>
         <div class="col">
@@ -884,7 +884,7 @@
             target="_blank"
           >
             <img
-              class="圖片"
+              class="圖片 img-fluid"
               src="/images/media/logo-cn-yes-1.png"
               alt="鉅亨網"
             />
@@ -896,7 +896,7 @@
             href="https://www.gvm.com.tw/article/71426"
             target="_blank"
           >
-            <img class="圖片" src="/images/media/logo_gvm.svg" alt="遠見" />
+            <img class="圖片 img-fluid" src="/images/media/logo_gvm.svg" alt="遠見" />
           </a>
         </div>
         <div class="col">
@@ -906,7 +906,7 @@
             target="_blank"
           >
             <img
-              class="圖片"
+              class="圖片 img-fluid"
               src="/images/media/logo300_90.png"
               alt="工商時報"
             />
@@ -919,7 +919,7 @@
             target="_blank"
           >
             <img
-              class="圖片"
+              class="圖片 img-fluid"
               src="/images/media/logo_setn.png"
               alt="三立新聞網"
             />
@@ -932,7 +932,7 @@
             target="_blank"
           >
             <img
-              class="圖片"
+              class="圖片 img-fluid"
               src="/images/media/logo_cna.png"
               alt="中央通訊社"
             />
@@ -1370,7 +1370,7 @@ export default {
     text-align: center;
   }
   .service-imgs {
-    padding: 15px 0 180px;
+    padding: 15px 0 190px;
     position: relative;
     overflow: hidden;
     #service-1 {
@@ -1384,7 +1384,7 @@ export default {
       position: absolute;
       display: block;
       margin: 0 auto;
-      bottom: -111px;
+      bottom: -125px;
       left: 400px;
       height: 400px;
     }
