@@ -3,7 +3,7 @@
     <div class="index-intro section">
       <div class="row no-gutters block-content intro-content">
         <div class="intro-products">
-          <div class="group">
+          <div class="group group-web">
             <router-link to="/collegeLoan" class="product-item">
               <div class="card">
                 <div class="card-title">學生貸</div>
@@ -45,7 +45,7 @@
                 <div class="card-title">汽車貸款</div>
                 <div class="card-content">
                   <div class="card-image p4"></div>
-                  <div style="grid-area: link;">coming soon</div>
+                  <div style="grid-area: link">coming soon</div>
                 </div>
               </div>
             </div>
@@ -60,17 +60,13 @@
                 </div>
               </div>
             </router-link>
-          </div>
-          <div class="group">
             <div class="product-item">
               <div class="card">
                 <div class="card-title">企業主速貸</div>
                 <div class="card-content">
                   <div class="card-subtitle">額度最高100萬</div>
                   <div class="card-image p6"></div>
-                  <div>
-                    coming soon
-                  </div>
+                  <div>coming soon</div>
                 </div>
               </div>
             </div>
@@ -80,9 +76,7 @@
                 <div class="card-content">
                   <div class="card-subtitle">額度最高600萬</div>
                   <div class="card-image p7"></div>
-                  <div>
-                    coming soon
-                  </div>
+                  <div>coming soon</div>
                 </div>
               </div>
             </div>
@@ -92,9 +86,7 @@
                 <div class="card-content">
                   <div class="card-subtitle">額度最高2000萬</div>
                   <div class="card-image p8"></div>
-                  <div>
-                    coming soon
-                  </div>
+                  <div>coming soon</div>
                 </div>
               </div>
             </div>
@@ -119,6 +111,75 @@
                     了解更多
                   </router-link>
                 </div>
+              </div>
+            </router-link>
+          </div>
+          <div class="group group-phone">
+            <router-link to="/collegeLoan" class="product-item">
+              <div class="card">
+                <div class="card-image p1"></div>
+                <div class="card-title">學生貸</div>
+                <div class="card-subtitle">額度最高15萬</div>
+              </div>
+            </router-link>
+            <router-link to="/workLoan" class="product-item">
+              <div class="card">
+                <div class="card-image p2"></div>
+                <div class="card-title">上班族貸</div>
+                <div class="card-subtitle">額度最高30萬</div>
+              </div>
+            </router-link>
+            <router-link to="/engineerLoan" class="product-item">
+              <div class="card">
+                <div class="card-image p3"></div>
+                <div class="card-title">資訊工程師貸</div>
+                <div class="card-subtitle">額度最高30萬</div>
+              </div>
+            </router-link>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-image p4"></div>
+                <div class="card-title space-bottom">汽車貸款</div>
+              </div>
+            </div>
+            <router-link to="/invest" class="product-item">
+              <div class="card">
+                <div class="card-image p5"></div>
+                <div class="card-title space-bottom">投資人專區</div>
+              </div>
+            </router-link>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-image p6"></div>
+                <div class="card-title">企業主速貸</div>
+                <div class="card-subtitle">coming soon</div>
+              </div>
+            </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-image p7"></div>
+                <div class="card-title">信保專案</div>
+                <div class="card-subtitle">coming soon</div>
+              </div>
+            </div>
+            <div class="product-item">
+              <div class="card">
+                <div class="card-image p8"></div>
+                <div class="card-title">中小企業信貸</div>
+                <div class="card-subtitle">coming soon</div>
+              </div>
+            </div>
+            <router-link to="/charitable" class="product-item">
+              <div class="card">
+                <div class="card-image p9"></div>
+                <div class="card-title">慈善公益</div>
+                <div class="card-subtitle">台大兒醫</div>
+              </div>
+            </router-link>
+            <router-link to="/promote-code-intro" class="product-item">
+              <div class="card">
+                <div class="card-image p10"></div>
+                <div class="card-title space-bottom">分享 QR code</div>
               </div>
             </router-link>
           </div>
@@ -874,7 +935,11 @@
             href="https://www.wealth.com.tw/home/articles/20567"
             target="_blank"
           >
-            <img class="圖片 img-fluid" src="/images/media/logo-red.png" alt="財訊" />
+            <img
+              class="圖片 img-fluid"
+              src="/images/media/logo-red.png"
+              alt="財訊"
+            />
           </a>
         </div>
         <div class="col">
@@ -896,7 +961,11 @@
             href="https://www.gvm.com.tw/article/71426"
             target="_blank"
           >
-            <img class="圖片 img-fluid" src="/images/media/logo_gvm.svg" alt="遠見" />
+            <img
+              class="圖片 img-fluid"
+              src="/images/media/logo_gvm.svg"
+              alt="遠見"
+            />
           </a>
         </div>
         <div class="col">
@@ -1077,15 +1146,19 @@ export default {
     align-items: flex-end;
     .intro-products {
       .group {
+        &.group-web {
+          display: grid;
+        }
+        &.group-phone {
+          display: none;
+        }
         margin: 20px;
-        display: flex;
+        grid-template-columns: repeat(5, 1fr);
         gap: 20px;
-        justify-content: center;
       }
     }
     .product-item {
       .card {
-        width: 230px;
         padding: 12px;
         border-radius: 4px;
       }
@@ -1102,95 +1175,95 @@ export default {
         grid-template-areas:
           'subtitle image'
           'link image';
-        .card-subtitle {
-          grid-area: subtitle;
-          font-style: normal;
-          font-weight: 400;
-          font-size: 14px;
-          line-height: 20px;
-          color: #707070;
+      }
+      .card-subtitle {
+        grid-area: subtitle;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: #707070;
+      }
+      .card-link {
+        grid-area: link;
+        font-size: 15px;
+        line-height: 22px;
+        text-decoration-line: underline;
+        color: #036eb7;
+      }
+      .card-image {
+        grid-area: image;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        &.p1 {
+          background-image: url('~images/index/mortarboard1.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/mortarboard.gif');
+          }
         }
-        .card-link {
-          grid-area: link;
-          font-size: 15px;
-          line-height: 22px;
-          text-decoration-line: underline;
-          color: #036eb7;
+        &.p2 {
+          background-image: url('~images/index/id1.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/id.gif');
+          }
         }
-        .card-image {
-          grid-area: image;
-          background-repeat: no-repeat;
-          background-size: contain;
-          background-position: center;
-          &.p1 {
-            background-image: url('~images/index/mortarboard1.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/mortarboard.gif');
-            }
+        &.p3 {
+          background-image: url('~images/index/computer1.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/computer.gif');
           }
-          &.p2 {
-            background-image: url('~images/index/id1.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/id.gif');
-            }
+        }
+        &.p4 {
+          background-image: url('~images/index/car1.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/car.gif');
           }
-          &.p3 {
-            background-image: url('~images/index/computer1.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/computer.gif');
-            }
+        }
+        &.p5 {
+          background-image: url('~images/index/line-chart.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/line-chart.gif');
           }
-          &.p4 {
-            background-image: url('~images/index/car1.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/car.gif');
-            }
+        }
+        &.p6 {
+          background-image: url('~images/index/handshake1.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/handshake.gif');
           }
-          &.p5 {
-            background-image: url('~images/index/line-chart.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/line-chart.gif');
-            }
+        }
+        &.p7 {
+          background-image: url('~images/index/university1.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/university.gif');
           }
-          &.p6 {
-            background-image: url('~images/index/handshake1.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/handshake.gif');
-            }
+        }
+        &.p8 {
+          background-image: url('~images/index/building1.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/building.gif');
           }
-          &.p7 {
-            background-image: url('~images/index/university1.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/university.gif');
-            }
+        }
+        &.p9 {
+          background-image: url('~images/index/love1.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/love.gif');
           }
-          &.p8 {
-            background-image: url('~images/index/building1.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/building.gif');
-            }
-          }
-          &.p9 {
-            background-image: url('~images/index/love1.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/love.gif');
-            }
-          }
-          &.p10 {
-            background-image: url('~images/index/money-bag.png');
-            &:hover,
-            &:focus-within {
-              background-image: url('~images/index/money-bag.gif');
-            }
+        }
+        &.p10 {
+          background-image: url('~images/index/money-bag.png');
+          &:hover,
+          &:focus-within {
+            background-image: url('~images/index/money-bag.gif');
           }
         }
       }
@@ -2008,38 +2081,47 @@ export default {
     .intro-content {
       background-image: url('~images/index/header-bg-phone.png');
       background-position: initial;
-      background-position: center;
       .intro-products {
-        margin-top: 365px;
+        margin-top: 375px;
         .group {
+          &.group-web {
+            display: none;
+          }
+          &.group-phone {
+            display: grid;
+          }
+          gap: 13px;
           margin: 20px 0;
-          flex-direction: column;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
         }
       }
       .product-item {
         .card {
-          width: 330px;
+          width: auto;
+          padding: 8px;
           position: relative;
         }
-        .card-content {
-          display: flex;
-          gap: 15px;
-          .card-subtitle {
-            margin: 0;
-            font-size: 14px;
-            line-height: 20px;
+        .card-title {
+          font-size: 14px;
+          line-height: 1.2;
+          margin-bottom: 0;
+          text-align: center;
+          &.space-bottom{
+              padding-bottom: 20px;
           }
-          .card-link {
-            font-size: 14px;
-            line-height: 20px;
-          }
-          .card-image {
-            position: absolute;
-            top: 8px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-          }
+        }
+        .card-subtitle {
+          margin: 0;
+          font-size: 12px;
+          line-height: 20px;
+          text-align: center;
+        }
+        .card-image {
+          position: relative;
+          margin: 0 auto;
+          width: 50px;
+          height: 50px;
         }
       }
     }
