@@ -231,12 +231,13 @@ $(() => {
                                     if (investor === '1') {
                                         this.$router.push('investnotification');
                                     } else {
-                                        if (this.isCompany) {
-                                            // 法人導到新的首頁
-                                            this.$router.push('enterprise-upload/home')
-                                        } else {
-                                            this.$router.push('loannotification');
-                                        }
+                                        // if (this.isCompany) {
+                                        //     // 法人導到新的首頁
+                                        //     this.$router.push('enterprise-upload/home')
+                                        // } else {
+                                        //     this.$router.push('loannotification');
+                                        // }
+                                        this.$router.push('loannotification');
                                     }
 
                                     if($("#loginModal").attr("data-type") == "cardgame"){

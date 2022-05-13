@@ -901,6 +901,8 @@ export default {
       color: #083a6e;
     }
     &-img {
+      display: flex;
+      min-height: 210px;
       margin: 5px 0;
       border-radius: 10px;
       min-width: 120px;
