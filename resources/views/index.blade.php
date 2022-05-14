@@ -3,11 +3,22 @@
 
 <head>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','{{env('APP_ENV') == 'production' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'}}');</script>
+    <script>
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', '{{env('APP_ENV ') == 'production ' ? 'GTM - 5 Z439PW ' : 'GTM - 589 Z9H6 '}}');
+    </script>
     <!-- End Google Tag Manager -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,10 +51,7 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <!-- local -->
     <link rel="stylesheet" href="{{ asset('css/web.css?'.csrf_token()) }}">
@@ -62,21 +70,30 @@
 
     <!-- Facebook Pixel Code -->
     <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window,document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-     fbq('init', '2521369841313676');
-    fbq('track', 'PageView');
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '2521369841313676');
+        fbq('track', 'PageView');
     </script>
     <noscript>
-     <img height="1" width="1"
-    src="https://www.facebook.com/tr?id=2521369841313676&ev=PageView
-    &noscript=1"/>
+        <img height="1" width="1" src="https://www.facebook.com/tr?id=2521369841313676&ev=PageView
+    &noscript=1" />
     </noscript>
     <!-- End Facebook Pixel Code -->
 
@@ -89,135 +106,237 @@
             dataLayer.push(arguments);
         }
         gtag('js', new Date());
-		gtag('config', 'AW-692812197');
+        gtag('config', 'AW-692812197');
     </script>
-	<!-- Event snippet for 借款、投資app下載 conversion page In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
-	<!-- 借款：WE5GCNWzgpoCEKXzrcoC 投資：vcdCCJyj_ZkCEKXzrcoC -->
-	<script>
-		window.addEventListener("load", function(event) {
-		  setTimeout(function(){
-				document.querySelectorAll("a[href*='investLink']").forEach(function(e){
-					e.addEventListener('click',function(){
-						gtag('event', 'conversion', {'send_to': 'AW-692812197/vcdCCJyj_ZkCEKXzrcoC'});
-		   		});
-		   	});
+    <!-- Event snippet for 借款、投資app下載 conversion page In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
+    <!-- 借款：WE5GCNWzgpoCEKXzrcoC 投資：vcdCCJyj_ZkCEKXzrcoC -->
+    <script>
+        window.addEventListener("load", function(event) {
+            setTimeout(function() {
+                document.querySelectorAll("a[href*='investLink']").forEach(function(e) {
+                    e.addEventListener('click', function() {
+                        gtag('event', 'conversion', {
+                            'send_to': 'AW-692812197/vcdCCJyj_ZkCEKXzrcoC'
+                        });
+                    });
+                });
 
-		    document.querySelectorAll("a[href*='borrowLink']").forEach(function(e){
-					e.addEventListener('click',function(){
-						gtag('event', 'conversion', {'send_to': 'AW-692812197/WE5GCNWzgpoCEKXzrcoC'});
-		   		});
-		   	});
-		  },2000)
-	  });
-	</script>
+                document.querySelectorAll("a[href*='borrowLink']").forEach(function(e) {
+                    e.addEventListener('click', function() {
+                        gtag('event', 'conversion', {
+                            'send_to': 'AW-692812197/WE5GCNWzgpoCEKXzrcoC'
+                        });
+                    });
+                });
+            }, 2000)
+        });
+    </script>
 </head>
 
 <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{env('APP_ENV') == 'production' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'}}"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{env('APP_ENV') == 'production' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'}}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <noscript>
         please turn on your jacascript
     </noscript>
     <div id="web_index" @mousemove="clicked">
-        <div class="alesis-header">
-            <div class="logo">
-                <a href="/index"><img src="/images/logo_new.png" class="image"></a>
-            </div>
-            <div class="center">
-                <div class="item">
-                    我要借款
-                    <div class="item-content">
-                        <div class="sub">
-                            <div class="sub-title">
-                                <div class="sub-title-icon">
-                                    <img src="/images/personal-header-icon.svg" alt="">
+        <div class="header-container">
+            <div class="row no-gutters">
+                <div class="col-auto alesis-header">
+                    <div class="logo">
+                        <a href="/index"><img src="/images/logo.svg" class="image"></a>
+                    </div>
+                    <div class="d-sm-flex d-none no-gutters w-100">
+                        <div class="functions col-auto">
+                            <div class="function-item">
+                                <div class="function-title">貸款產品</div>
+                                <div class="function-list row no-gutters">
+                                    <div class="col-auto d-flex no-gutters">
+                                        <div class="function-list-content product">
+                                            <div class="function-list-items">
+                                                <div class="link-title">個人金融</div>
+                                                <div class="link-item">
+                                                    <a href="/collegeLoan" class="link-text">學生貸</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/workLoan" class="link-text">上班族貸</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/engineerLoan" class="link-text">資訊工程師貸</a>
+                                                </div>
+                                            </div>
+                                            <div class="function-list-items">
+                                                <div class="link-title">企業金融</div>
+                                                <div class="link-item">
+                                                    <a href="/business-loan/sme" class="link-text">微企e秒貸</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <div class="link-text">
+                                                        <div>信保專案融資</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
+                                                </div>
+                                                <div class="link-item">
+                                                    <div class="link-text">
+                                                        <div>一般企業融資</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="function-list-items">
+                                                <div class="link-title">汽車貸款</div>
+                                                <div class="link-item">
+                                                    <div class="link-text">
+                                                        <div>我是消費者</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
+                                                </div>
+                                                <div class="link-item">
+                                                    <div class="link-text">
+                                                        <div>我是車商</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="function-list-items">
+                                                <div class="link-title">分享QR</div>
+                                                <div class="link-item">
+                                                    <div class="link-text">
+                                                        <a href="/promote-code-intro" class="link-text">我是推薦者</a>
+                                                    </div>
+                                                </div>
+                                                <div class="link-item">
+                                                    <div class="link-text">
+                                                        <div>我是特約商</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>個人金融</div>
                             </div>
-                            <a href="/collegeLoan" class="item">學生貸款</a>
-                            <a href="/workLoan" class="item">上班族貸款</a>
-                            <a href="/engineerLoan" class="item">資訊工程師專案</a>
-                        </div>
-                        <div class="sub">
-                            <a class="sub-title" href="/business-loan">
-                                <div class="sub-title-icon">
-                                    <img src="/images/business-header-icon.svg" alt="">
+                            <div class="function-item">
+                                <div class="function-title">投資專區</div>
+                                <div class="function-list row no-gutters">
+                                    <div class="col-auto d-flex no-gutters">
+                                        <div class="function-list-content invest">
+                                            <div class="function-list-items">
+                                                <div class="link-title">投資專區</div>
+                                                <div class="link-item">
+                                                    <a href="/investment" class="link-text">債權投資</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/transfer" class="link-text">債權轉讓</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/risk" class="link-text">風險報告書</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/projects" class="link-text">查看案件</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>企業融資</div>
-                            </a>
-                            <a href="/business-loan/sme" class="item">微企e秒貸</a>
-                            <div class="item -disabled ">信保專案融資 (coming soon)</div>
-                            <div class="item -disabled ">一般企業融資 (coming soon)</div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-title">慈善捐款</div>
+                                <div class="function-list row no-gutters">
+                                    <div class="col-auto d-flex no-gutters">
+                                        <div class="function-list-content charitable">
+                                            <div class="function-list-items">
+                                                <div class="link-title">慈善捐款</div>
+                                                <div class="link-item">
+                                                    <a href="/charitable" class="link-text">台大兒醫</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-title">關於普匯</div>
+                                <div class="function-list row no-gutters">
+                                    <div class="col-auto d-flex no-gutters">
+                                        <div class="function-list-content about">
+                                            <div class="function-list-items">
+                                                <div class="link-title">關於普匯</div>
+                                                <div class="link-item">
+                                                    <a href="/company" class="link-text">關於我們</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/news" class="link-text">最新消息</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/blog" class="link-text">AI金融科技新知</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/faq" class="link-text">瞭解更多</a>
+                                                </div>
+                                            </div>
+                                            <div class="function-list-items">
+                                                <div class="link-title">合作洽談</div>
+                                                <div class="link-item">
+                                                    <a href="/recruiting" class="link-text">普匯徵才</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/clubcooperation" class="link-text">社團贊助</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/companycooperation" class="link-text">業務合作</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="function-item">
+                                <a href="/5th-anniversary" class="function-title">普匯五週年</a>
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                        <div class="col-auto d-flex">
+                            <div class="search-icon" v-show="!inputing" @click="clickSearch">
+                                <img src="/images/search-icon-blue.svg" alt="">
+                            </div>
+                            <div class="search-group" :class="{inputing}">
+                                <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText" @keyup.enter="doSearch" />
+                                <div class="clear-icon" @click="doClear">x</div>
+                            </div>
+                            <div class="item ml-3 d-flex align-items-center">
+                                <button @click="openLoginModal" class="login-btn btn d-none" :class="{'d-block':!flag || flag === 'logout'}">登入/加入會員</button>
+                                <div class="nav-item dropdown d-none" :class="{'d-block':Object.keys(userData).length !== 0}">
+                                    <a class="nav-link dropdown-toggle" style="color: #036EB7;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
+                                    <ul class="dropdown-menu" style="min-width: 5rem;">
+                                        <li v-if="isInvestor == 0">
+                                            <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
+                                        </li>
+                                        <li v-else>
+                                            <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
+                                        </li>
+                                        <li v-if="flag === 'login'">
+                                            <p class="dropdown-item" @click="logout">登出</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex d-sm-none">
+                        <div class="search-icon mr-3" v-show="!inputing" @click="clickSearch">
+                            <img src="/images/search-icon-blue.svg" alt="">
+                        </div>
+                        <div class="search-group" :class="{inputing}">
+                            <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText" @keyup.enter="doSearch" />
+                            <div class="clear-icon" @click="doClear">x</div>
+                        </div>
+                        <div class="bar icon-hamburger">
+                            <i class="fa fa-bars"></i>
                         </div>
                     </div>
                 </div>
-                <div class="separator"><img src="/images/alesis-drop-separator.svg" class="image"></div>
-                <div class="item">
-                    我要投資
-                    <div class="sub">
-                        <a href="/investment" class="item">債權投資</a>
-                        <a href="/transfer" class="item">債權轉讓</a>
-                    </div>
-                </div>
-            </div>
-            <div class="aside">
-                <div class="search-group" :class="{inputing}">
-                    <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText" @keyup.enter="doSearch" />
-                    <div class="clear-icon" @click="doClear">x</div>
-                </div>
-                <div class="item" v-show="!inputing">
-                    關於我們
-                    <div class="sub">
-                        <a href="/company" class="item">公司介紹</a>
-                        <a href="/news" class="item">最新消息</a>
-                    </div>
-                </div>
-                <div class="item" v-show="!inputing">
-                    小學堂金融科技
-                    <div class="sub">
-                        <a href="/blog" class="item">小學堂</a>
-                        <a href="/vlog?q=share" class="item">小學堂影音</a>
-                    </div>
-                </div>
-                <div class="item" v-show="!inputing">
-                    了解更多
-                    <div class="sub">
-                        <a href="/faq" class="item">常見問題</a>
-                        <a href="/risk" class="item">風險報告書</a>
-                        <a href="/projects" class="item">查看案件</a>
-                    </div>
-                </div>
-                <!-- 捐款專區更改 -->
-                <a href="/charitable" class="item" v-show="!inputing">慈善專區</a>
-                <a href="/news" class="item" v-show="!inputing">平台公告</a>
-                <!-- <a href="/borrowLink" target="_blank" class="item" v-show="!inputing">下載APP</a> -->
-                <div class="item" v-show="!inputing" @click="clickSearch">
-                    <img class="search-icon" src="/images/alesis-search-icon.svg">
-                </div>
-                <div class="item">
-                    <div v-if="!flag || flag === 'logout'"  @click="openLoginModal" class="login nav-item">SIGN IN</div>
-                    <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" style="color: #fff;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
-                        <ul class="dropdown-menu" style="min-width: 5rem;">
-                            <li v-if="isInvestor == 0">
-                                <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
-                            </li>
-                            <li v-else>
-                                <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
-                            </li>
-                            <li v-if="flag === 'login'">
-                                <p class="dropdown-item" @click="logout">登出</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="item hamburger">
-                    <img class="icon icon-search" v-show="!inputing"  @click="inputing=true" src="/images/alesis-search-icon.svg">
-                    <img class="icon icon-hamburger" src="/images/alesis-hamburger.svg">
-                </div>
-
             </div>
             <div class="rwd-list">
                 <div class="item -dropdown">
@@ -239,8 +358,8 @@
                             <a href="/business-loan">企業融資</a>
                         </div>
                         <a href="/business-loan/sme" class="item">微企e秒貸</a>
-                        <div class="item -disabled">信保專案融資  (coming soon)</div>
-                        <div class="item -disabled">一般企業融資  (coming soon)</div>
+                        <div class="item -disabled">信保專案融資 (coming soon)</div>
+                        <div class="item -disabled">一般企業融資 (coming soon)</div>
                     </div>
                 </div>
                 <div class="item -dropdown">
@@ -274,10 +393,11 @@
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <a href="/charitable" class="item">慈善專區</a>
+                <a href="/5th-anniversary" class="item">普匯五週年</a>
                 <div class="item">
-                    <div v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login"><i class="fas fa-user"></i> SIGN IN</div>
+                    <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login btn"><i class="fas fa-user"></i> SIGN IN</button>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" style="color: #fff;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                         <ul class="dropdown-menu" style="min-width: 5rem;">
                             <li v-if="isInvestor == 0">
                                 <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
@@ -324,7 +444,7 @@
                     v.addEventListener("click", (e) => {
                         Array.prototype.filter.call(document.querySelectorAll(".rwd-list .item"), (j) => {
                             return v !== j
-                        }).forEach((v) =>{
+                        }).forEach((v) => {
                             v.classList.remove("-active")
                         })
                         v.classList.toggle("-active")
@@ -336,100 +456,135 @@
         <div class="content-wrapper">
             <router-view></router-view>
         </div>
-        <div class="alesis-footer">
-            <div class="line"></div>
-            <div class="main">
-                <div class="introduction">
-                    <div class="brand">
-                        <div class="text">認識</div>
-                        <img class="image" src="/images/footer@2x.png">
-                    </div>
-                    <div class="paragraphy">
-                        「普匯．你的手機ATM」<br>
-                        inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。
-                    </div>
+        <div class="row no-gutters" style="background: #153a71;">
+            <div class="alesis-footer">
+                <div class="line"></div>
+                <div class="main">
+                    <div class="introduction">
+                        <div class="brand">
+                            <img class="image" src="/images/footer@2x.png">
+                        </div>
                         <div class="paragraphy">
-                        「繳稅警語」<br>
-                        普匯溫馨提醒所有用戶，在普匯的相關利息收入與支出，都應主動申報綜合所得稅，以善盡繳稅義務，避免遭稅捐機關開罰。
+                            inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。
+                        </div>
+                        <div class="paragraphy">
+                            「繳稅警語」<br>
+                            普匯溫馨提醒所有用戶，在普匯的相關利息收入與支出，都應主動申報綜合所得稅，以善盡繳稅義務，避免遭稅捐機關開罰。
+                        </div>
+                    </div>
+                    <div class="information">
+                        <div class="item">
+                            <div class="header">個人金融</div>
+                            <div class="list">
+                                <a href="/collegeLoan">學生貸款</a>
+                                <a href="/engineerLoan">資訊工程師專案</a>
+                                <a href="/workLoan">上班族貸款</a>
+
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="header">企業金融</div>
+                            <div class="list">
+                                <a href="/business-loan">企業主速貸</a>
+                                <div class="text-white">信保專案(銀行)</div>
+                                <div class="text-white">企業貸款</div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="header">汽車貸款</div>
+                            <div class="list">
+                                <div class="text-white">我是消費者</div>
+                                <div class="text-white">我是車商</div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="header">慈善捐款</div>
+                            <div class="list">
+                                <a href="/charitable" class="text-white">台大兒醫</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="header">投資專區</div>
+                            <div class="list">
+                                <a href="/investment">債權投資</a>
+                                <a href="/transfer">債權轉讓</a>
+                                <a href="/risk" class="text-white">風險報告書</a>
+                                <a href="/projects" class="text-white">案件呈現</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="header">關於普匯</div>
+                            <div class="list">
+                                <a href="/company" class="text-white">關於我們</a>
+                                <a href="/news" class="text-white">最新消息</a>
+                                <a href="/blog" class="text-white">AI金融科技新知</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="header">合作洽談</div>
+                            <div class="list">
+                                <a href="/recruiting" class="text-white">徵才</a>
+                                <a href="/promote-code-intro" class="text-white">分享QR，賺外快</a>
+                                <a href="/clubcooperation" class="text-white">社團贊助</a>
+                                <a href="/companycooperation" class="text-white">業務合作</a>
+                                <div class="text-white">我們的夥伴</div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="header">聯絡我們</div>
+                            <div class="meta">
+                                <div class="icon"><img src="/images/alesis-clock.svg"></div>
+                                <div class="text">服務時間 9:00 AM - 6:00 PM</div>
+
+                                <div class="icon"><img src="/images/alesis-phone.svg"></div>
+                                <div class="text"><a href="tel:+886225079990" target="_blank">02-2507-9990</a></div>
+
+                                <div class="icon"><img src="/images/alesis-email.svg"></div>
+                                <div class="text"><a href="mailto:service@influxfin.com" target="_blank">service@influxfin.com</a></div>
+
+                                <div class="icon"><img src="/images/alesis-address.svg"></div>
+                                <div class="text"><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank">台北市中山區松江路111號11樓之1</a></div>
+                            </div>
+                            <div class="socials">
+                                <a href="https://m.facebook.com/inFluxtw/" target="_blank" class="item"><img src="/images/alesis-facebook.svg"></a>
+                                <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank" class="item"><img src="/images/alesis-line.svg"></a>
+                                <a href="https://www.instagram.com/pop.finance/" target="_blank" class="item"><img src="/images/alesis-instagram.svg"></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="information">
-                    <div class="item">
-                        <div class="header">我要申貸</div>
-                        <div class="list">
-                            <a href="/collegeLoan">學生貸款</a>
-                            <a href="/workLoan">上班族貸款</a>
-                            <a href="/engineerLoan">資訊工程師專案</a>
-                            <a href="/business-loan">企業融資</a>
+                <div class="line"></div>
+                <div class="secondary">
+                    <div class="copyright">
+                        Copyright ©2020 普匯金融科技股份有限公司 All rights reserved.
+                        <div class="links">
+                            <a href="/userTerms" class="item">使用者條款</a> |
+                            <a href="/privacyTerms" class="item">隱私權條款</a> |
+                            <a href="/loanerTerms" class="item">借款人服務條款</a> |
+                            <a href="/lenderTerms" class="item">貸款人服務條款</a> |
+                            <a href="/transferTerms" class="item">債權受讓人服務條款</a>
                         </div>
                     </div>
-                    <div class="item">
-                        <div class="header">我要投資</div>
-                        <div class="list">
-                            <a href="/investment">債權投資</a>
-                            <a href="/transfer">債權轉讓</a>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="header">關於我們</div>
-                        <div class="list">
-                            <a href="/company">關於我們</a>
-                            <a href="/news">最新消息</a>
-                            <a href="/blog">AI金融科技新知</a>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="header">聯絡我們</div>
-                        <div class="meta">
-                            <div class="icon"><img src="/images/alesis-clock.svg"></div>
-                            <div class="text">服務時間  9:00 AM - 6:00 PM</div>
-
-                            <div class="icon"><img src="/images/alesis-phone.svg"></div>
-                            <div class="text"><a href="tel:+886225079990" target="_blank">02-2507-9990</a></div>
-
-                            <div class="icon"><img src="/images/alesis-email.svg"></div>
-                            <div class="text"><a href="mailto:service@influxfin.com" target="_blank">service@influxfin.com</a></div>
-
-                            <div class="icon"><img src="/images/alesis-address.svg"></div>
-                            <div class="text"><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank">台北市中山區松江路111號11樓之1</a></div>
-                        </div>
-                        <div class="socials">
-                            <a href="https://m.facebook.com/inFluxtw/" target="_blank" class="item"><img src="/images/alesis-facebook.svg"></a>
-                            <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank" class="item"><img src="/images/alesis-line.svg"></a>
-                            <a href="https://www.instagram.com/pop.finance/" target="_blank" class="item"><img src="/images/alesis-instagram.svg"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="secondary">
-                <div class="copyright">
-                    Copyright ©2020 普匯金融科技股份有限公司 All rights reserved.
                     <div class="links">
-                        <a href="/userTerms" class="item">使用者條款</a> |
-                        <a href="/privacyTerms" class="item">隱私權條款</a> |
-                        <a href="/loanerTerms" class="item">借款人服務條款</a> |
-                        <a href="/lenderTerms" class="item">貸款人服務條款</a> |
-                        <a href="/transferTerms" class="item">債權受讓人服務條款</a>
+                        <a href="/recruiting" class="item">徵才服務</a> |
+                        <a href="/campaign/2021-campus-ambassador" class="item">校園大使</a> |
+                        <a href="/clubcooperation" class="item">社團合作</a> |
+                        <a href="/firmcooperation" class="item">商行合作</a> |
+                        <a href="/companycooperation" class="item">企業合作</a> |
+                        <a href="/promote-code-intro" class="item">推薦有賞</a>
                     </div>
-                </div>
-                <div class="links">
-                    <a href="/recruiting" class="item">徵才服務</a> |
-                    <a href="/campaign/2021-campus-ambassador" class="item">校園大使</a> |
-                    <a href="/clubcooperation" class="item">社團合作</a> |
-                    <a href="/firmcooperation" class="item">商行合作</a> |
-                    <a href="/companycooperation" class="item">企業合作</a> |
-                    <a href="/promote-code-intro" class="item">推薦有賞</a>
-                </div>
-                <div class="externals" v-if="!location.pathname.includes('/business-loan/sme')">
-                    <a class="item" href="/borrowLink" >我想申貸</a>
-                    <a class="item -invest" href="/investLink">我想投資</a>
-                </div>
-                 <div class="externals" v-else>
-                    <a class="item" href="/business-loan/sme/apply" >立即申辦</a>
-                    <a class="item -invest" href="/business-loan/sme/consult">我要諮詢</a>
+                    <div class="externals" v-if="!location.pathname.includes('/business-loan/sme')">
+                        <a class="item" href="/borrowLink">我想申貸</a>
+                        <a class="item -invest" href="/investLink">我想投資</a>
+                    </div>
+                    <div class="externals" v-else>
+                        <a class="item" href="/business-loan/sme/apply">立即申辦</a>
+                        <a class="item -invest" href="/business-loan/sme/consult">我要諮詢</a>
+                    </div>
                 </div>
             </div>
         </div>
+
 
         <!--<a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>-->
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -474,7 +629,7 @@
                         <div class="login-logo"><img src="/images/logo_puhey.svg" class="img-fluid"></div>
                     </div>
                     <div class="modal-body">
-                        <div class="input-group">
+                        <div class="input-group" v-if="!loginHideOption">
                             <button type="button" :class="['btn','btn-switch',{checked:!isCompany}]" @click="switchTag($event)">自然人登入</button>
                             <button type="button" :class="['btn','btn-switch',{checked:isCompany}]" @click="switchTag($event)">法人登入</button>
                         </div>
@@ -490,7 +645,7 @@
                             <span class="input-group-addon label-text">密碼：</span>
                             <input type="password" class="form-control label-input" placeholder="請輸入密碼" autocomplete="off" v-model="password" maxlength="50">
                         </div>
-                        <div class="input-group">
+                        <div class="input-group" v-if="!loginHideOption">
                             <span class="input-group-addon label-text"></span>
                             <div class="radio-custom">
                                 <label><input type="radio" name="investor" class="radio-inline" value="0" v-model="investor" checked><span class="outside"><span class="inside"></span></span>借款人</label>

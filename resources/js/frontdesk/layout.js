@@ -3,6 +3,7 @@ import state from './store/state';
 import getters from './store/getters';
 import actions from './store/actions';
 import mutations from './store/mutations';
+import enterprise from './store/module/enterprise'
 //vue router
 import routers from './router/router';
 //import Vue from 'vue'
@@ -47,6 +48,9 @@ $(() => {
     });
 
     const store = new Vuex.Store({
+        modules: {
+            enterprise
+        },
         state,
         getters,
         actions,
@@ -96,6 +100,13 @@ $(() => {
             isSearchTextEmpty(){
                 const s = this.searchText
                 return s.length<1
+            },
+            // 5th login
+            openLogin() {
+                return this.$store.state.openLogin
+            },
+            loginHideOption() {
+                return this.$store.state.loginHideOption
             }
         },
         created() {
@@ -125,6 +136,9 @@ $(() => {
             },
             account() {
                 this.account = this.account.replace(/[^\d]/g, '');
+            },
+            openLogin() {
+                this.openLoginModal()
             }
         },
         methods: {
@@ -150,6 +164,10 @@ $(() => {
                 AOS.refresh();
             },
             openLoginModal() {
+                // 5th
+                if (this.$route.path === '/5th-anniversary') {
+                    this.$store.commit('mutationloginHideOption',true)
+                }
                 $(this.$refs.loginForm).modal("show");
             },
             hideLoginModal() {
@@ -205,7 +223,11 @@ $(() => {
                                 .then((res) => {
                                     this.$store.commit('mutationUserData', res.data);
                                     $(this.$refs.loginForm).modal("hide");
-
+                                    // 5th
+                                    if (this.$route.path === '/5th-anniversary') {
+                                        location.reload()
+                                        return
+                                    }
                                     if (investor === '1') {
                                         this.$router.push('investnotification');
                                     } else {
