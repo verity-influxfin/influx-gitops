@@ -993,4 +993,137 @@ class Website extends REST_Controller {
         $this->spreadsheet_lib->download('投資人報告書.xlsx', $spreadsheet);
         exit(1);
     }
+
+    /**
+     * 更新使用者的蒙太奇圖片
+     *
+     * @param reference 蒙太奇底層圖片名稱
+     * @param user_id 使用者id (p2p_user.users.id)
+     * @param img 使用者上傳的原始圖片，轉換成base64格式
+     */
+    public function update_user_montage_post()
+    {
+        $reference = $this->input->post('reference');
+        $user_id = $this->input->post('user_id');
+        $img = $this->input->post('img');
+        if (empty($reference) || empty($user_id) || empty($img))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $url = $this->_get_pandora_url() . '/montage/user';
+        $response = curl_put($url, json_encode([
+            'reference' => $reference,
+            'user_id' => $user_id,
+            'img' => $img
+        ]), ['Content-Type: application/json']);
+        $response = json_decode($response, TRUE);
+
+        if ( ! empty($response['message'] && $response['message'] == $user_id . '更新中'))
+        {
+            $this->response(['result' => 'SUCCESS']);
+        }
+
+        $this->response(['result' => 'ERROR',$response]);
+    }
+
+    /**
+     * 新增使用者的蒙太奇圖片
+     *
+     * @param reference 蒙太奇底層圖片名稱
+     * @param user_id 使用者id (p2p_user.users.id)
+     * @param img 使用者上傳的原始圖片，轉換成base64格式
+     */
+    public function new_user_montage_post()
+    {
+        $reference = $this->input->post('reference');
+        $user_id = $this->input->post('user_id');
+        $img = $this->input->post('img');
+        if (empty($reference) || empty($user_id) || empty($img))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $url = $this->_get_pandora_url() . '/montage/user';
+        $response = curl_get($url, json_encode([
+            'reference' => $reference,
+            'user_id' => $user_id,
+            'img' => $img
+        ]), ['Content-Type: application/json']);
+        $response = json_decode($response, TRUE);
+
+        if ( ! empty($response['message'] && $response['message'] == $user_id . '新增中'))
+        {
+            $this->response(['result' => 'SUCCESS']);
+        }
+
+        $this->response(['result' => 'ERROR']);
+    }
+
+    /**
+     * 找使用者的蒙太奇圖片
+     *
+     * @param reference 蒙太奇底層圖片名稱
+     * @param user_id 使用者id (p2p_user.users.id)
+     */
+    public function user_montage_get()
+    {
+        $reference = $this->input->get('reference');
+        $user_id = $this->input->get('user_id');
+        if (empty($reference) || empty($user_id))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $url = $this->_get_pandora_url() . '/montage/user?reference=' . $reference . '&user_id=' . $user_id;
+        $response = curl_get($url);
+        $response = json_decode($response, TRUE);
+
+        if (isset($response['message']))
+        {
+            switch ($response['message'])
+            {
+                case '此蒙太奇名稱不存在':
+                    $this->response(['result' => 'SUCCESS', 'data' => ['status' => MONTAGE_USER_STATUS_NO_REFERENCE]]);
+                    break;
+                case '此user_id未上傳過圖片':
+                    $this->response(['result' => 'SUCCESS', 'data' => ['status' => MONTAGE_USER_STATUS_NO_USER]]);
+                    break;
+            }
+        }
+        elseif ( ! empty($response['user_info']))
+        {
+            $this->response(['result' => 'SUCCESS', 'data' => ['status' => MONTAGE_USER_STATUS_EXISTS]]);
+        }
+        $this->response(['result' => 'ERROR']);
+    }
+
+    /**
+     * 找蒙太奇圖片
+     *
+     * @param reference 蒙太奇底層圖片名稱
+     */
+    public function montage_get()
+    {
+        $reference = $this->input->get('reference');
+        if (empty($reference))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $url = $this->_get_pandora_url() . '/montage/img?reference=' . $reference;
+        $response = curl_get($url);
+        $response = json_decode($response, TRUE);
+
+        if ( ! empty($response['img']))
+        {
+            $this->response(['result' => 'SUCCESS', 'data' => $response['img']]);
+        }
+        $this->response(['result' => 'ERROR']);
+    }
+
+    private function _get_pandora_url()
+    {
+        return 'http://' . getenv('PANDORA_IP') . ':' . getenv('PANDORA_PORT');
+    }
 }

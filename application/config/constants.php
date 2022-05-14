@@ -689,3 +689,8 @@ defined('ASSOCIATES_CHARACTER_GUARANTOR_B') or define('ASSOCIATES_CHARACTER_GUAR
 // charity_institution_model table status
 defined('CHARITY_INSTITUTION_STATUS_BLOCK') or define('CHARITY_INSTITUTION_STATUS_BLOCK', 0); // 停用
 defined('CHARITY_INSTITUTION_STATUS_AVAILABLE') or define('CHARITY_INSTITUTION_STATUS_AVAILABLE', 1); // 啟用
+
+// montage user status
+defined('MONTAGE_USER_STATUS_EXISTS') or define('MONTAGE_USER_STATUS_EXISTS', 1); // 已上傳過
+defined('MONTAGE_USER_STATUS_NO_REFERENCE') or define('MONTAGE_USER_STATUS_NO_REFERENCE', 2); // 找不到reference的圖
+defined('MONTAGE_USER_STATUS_NO_USER') or define('MONTAGE_USER_STATUS_NO_USER', 3); // 找不到user的圖
