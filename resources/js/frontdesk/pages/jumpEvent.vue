@@ -16,7 +16,7 @@
     </nav>
     <div class="banner">
       <img
-        class="img-fluid mx-auto pt-3 d-block"
+        class="img-fluid mx-auto pt-3 d-block d-sm-none"
         src="@/asset/images/jump/header-text.png"
         alt="普匯5週年"
       />
@@ -524,7 +524,7 @@ export default {
             alert(data.msg)
             return
           }
-          alert(`投票成功，今日已投 ${data.data.votes} 票`)
+          alert(`投票成功`)
           location.reload()
         }).catch(err => {
           console.log(err)
@@ -1058,6 +1058,393 @@ export default {
     }
     &-vote {
       font-size: 20px;
+    }
+  }
+}
+@media (min-width: 700px) {
+  .block-content {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .jump-event {
+    max-width: none;
+    padding-top: 5px;
+    #top {
+      display: none;
+    }
+    .banner {
+      background-image: url('~images/jump/header-web.png');
+      background-position: top center;
+      height: 825px;
+      max-width: 1920px;
+      margin: 0 auto;
+      &-content {
+        max-width: 1400px;
+        margin-top: 0;
+        margin: 0 auto;
+        padding: 395px 0 0 650px;
+        font-size: 32px;
+        line-height: 1.6;
+        &-info {
+          display: none;
+        }
+        & .em {
+          font-size: 36px;
+        }
+        & .btn-join {
+          bottom: 0;
+          height: 160px;
+          width: 160px;
+          font-size: 28px;
+        }
+        & .btn-vote {
+          margin-top: 30px;
+          top: 30px;
+          left: 45px;
+          height: 160px;
+          width: 160px;
+          font-size: 28px;
+        }
+        & #img-57 {
+          position: absolute;
+          height: 650px;
+          right: -25px;
+          bottom: 0;
+          top: 245px;
+          transform: rotate(-10deg);
+        }
+      }
+    }
+    .intro {
+      padding-bottom: 36px;
+      &-title {
+        margin: 36px 0 15px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 22px;
+        line-height: 32px;
+        text-align: center;
+        color: #036eb7;
+      }
+      &-content {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 1.6;
+        text-align: center;
+        color: #707070;
+        &-2 {
+          font-style: normal;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          text-align: center;
+          color: #393939;
+        }
+      }
+      &-cover {
+        margin: 20px auto 15px;
+      }
+      .btn-jump {
+        background: #036eb7;
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        color: #fff;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 26px;
+        .jump-icon {
+          margin-right: 8px;
+          height: 26px;
+        }
+      }
+    }
+    #method {
+      padding: 24px 0;
+      background: #036eb7;
+      .method {
+        &-title {
+          font-style: normal;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 2;
+          color: #ffffff;
+        }
+        &-time {
+          font-style: normal;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 1.6;
+          color: #fff100;
+          margin-bottom: 12px;
+        }
+        &-step {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+          &-item {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 14px;
+            text-align: center;
+            color: #ffffff;
+            min-width: 90px;
+            .icon {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 50px;
+              margin-bottom: 10px;
+            }
+          }
+        }
+        &-tip {
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 1.6;
+          color: #ffffff;
+          opacity: 0.5;
+        }
+      }
+    }
+    #vote {
+      padding-top: 36px;
+      .vote-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 22px;
+        line-height: 32px;
+        text-align: center;
+        color: #036eb7;
+      }
+      .search-input-group {
+        position: relative;
+        margin: 15px auto;
+        width: 220px;
+        .search-input {
+          position: relative;
+          width: 100%;
+          padding: 3px 20px 3px 40px;
+          border-radius: 20px;
+          border: solid 1px #036eb7;
+          background-color: #fff;
+          font-size: 16px;
+          font-style: normal;
+          line-height: 1.6;
+          color: #4d4d4d;
+        }
+        .loupe {
+          z-index: 2;
+          position: absolute;
+          left: 10px;
+          top: 7px;
+        }
+      }
+      .works {
+        padding: 15px 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          'champion champion'
+          '. .';
+        gap: 20px;
+        grid-auto-rows: auto;
+        .work-item:nth-child(1) {
+          &:not(.normal) {
+            &::before {
+              content: '';
+              background-image: url('~images/jump/crown.png');
+              left: -49px;
+              top: -49px;
+              width: 65px;
+              height: 65px;
+              display: block;
+              position: absolute;
+            }
+            background: #ffc535;
+          }
+          position: relative;
+          grid-area: champion;
+          margin: auto;
+        }
+      }
+    }
+    .work-item {
+      max-width: 200px;
+      background: #b4e4ff;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+      padding: 12px 20px;
+      &-title {
+        text-align: center;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #083a6e;
+      }
+      &-img {
+        display: flex;
+        min-height: 210px;
+        margin: 5px 0;
+        border-radius: 10px;
+        min-width: 120px;
+      }
+      &-num {
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 1.4;
+        color: #393939;
+      }
+      &-vote {
+        margin-top: 8px;
+        text-align: center;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.4;
+        color: #083a6e;
+      }
+    }
+    #bouns {
+      &::before {
+        content: '';
+        background-image: url('~images/jump/bg-wave.svg');
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: contain;
+        height: 150px;
+        width: 100%;
+        position: absolute;
+        top: -70px;
+        z-index: -1;
+      }
+      position: relative;
+      background-color: #036eb7;
+      margin-top: 100px;
+      padding-bottom: 30px;
+      .bouns {
+        &-title {
+          font-style: normal;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 20px;
+          text-align: center;
+          color: #ffffff;
+          margin-bottom: 20px;
+        }
+        &-info {
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 1.6;
+          color: #ffffff;
+          .em {
+            font-size: 14px;
+            color: #fff100;
+          }
+        }
+        &-tip {
+          font-style: normal;
+          font-weight: 300;
+          font-size: 12px;
+          line-height: 16px;
+          color: #ffffff;
+          opacity: 0.75;
+        }
+        &-ul {
+          padding-inline-start: 20px;
+        }
+      }
+    }
+  }
+  #uploadModal {
+    .modal-title {
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 29px;
+      text-align: center;
+      color: #036eb7;
+      margin-bottom: 14px;
+    }
+    .modal-info {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      color: #000000;
+    }
+    .modal-input {
+      margin-top: 14px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid #383838;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      color: #000000;
+    }
+    .modal-upload-file {
+      position: relative;
+      margin-top: 12px;
+      border: 1px dashed #036eb7;
+      border-radius: 20px;
+      padding: 30px;
+      font-size: 14px;
+      .remove-file {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+      .upload-icon {
+        margin: 0 auto;
+      }
+      .file-name {
+        position: absolute;
+        bottom: 15px;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+    }
+    .btn-upload-submit {
+      margin-top: 15px;
+      background: #036eb7;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 6px;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 26px;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      padding: 12px;
+      text-align: center;
+    }
+  }
+  #workModal {
+    .work-item {
+      max-width: 600px;
+      &-title {
+        overflow-wrap: anywhere;
+        font-size: 24px;
+      }
+      &-img {
+        width: 100%;
+      }
+      &-num {
+        font-size: 20px;
+        color: #393939;
+      }
+      &-vote {
+        font-size: 20px;
+      }
     }
   }
 }
