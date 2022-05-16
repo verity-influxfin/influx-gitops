@@ -164,6 +164,53 @@ class Cert_identity extends Certification_base
             return FALSE;
         }
 
+        // 系統「自動」過實名認證時觸發本人、父、母、配偶，google、司法院爬蟲
+        $this->CI->load->library('scraper/judicial_yuan_lib.php');
+        $this->CI->load->library('scraper/google_lib.php');
+        $this->CI->load->model('user/user_model');
+        $remark = $this->remark;
+
+        $names = [
+            $content['name'],
+            $remark['OCR']['father'] ?? '',
+            $remark['OCR']['mother'] ?? '',
+            $remark['OCR']['spouse'] ?? ''
+        ];
+
+        // 取得地址
+        $info = $this->CI->user_model->get($this->certification['user_id']);
+        $address = isset($info->address) ? $info->address : '';
+        preg_match('/([\x{4e00}-\x{9fa5}]+)(縣|市)/u', str_replace('台', '臺', $address), $matches);
+        $domicile = ! empty($matches) ? $matches[1] : '';
+
+        foreach ($names as $name)
+        {
+            if (!$name)
+            {
+                continue;
+            }
+
+            $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name, $domicile);
+            if(isset($verdicts_statuses['status']))
+            {
+                if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
+                    || $verdicts_statuses['status'] == 204)
+                {
+                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($name, $domicile);
+                }
+            }
+
+            $google_statuses = $this->CI->google_lib->get_google_status($name);
+            if (isset($google_statuses['status']))
+            {
+                if (($google_statuses['status'] == 200 && $google_statuses['response']['updatedAt'] < strtotime('- 1 week'))
+                    || $google_statuses['status'] == 204)
+                {
+                    $this->CI->google_lib->request_google($name);
+                }
+            }
+        }
+
         $data = array(
             'id_card_status' => 1,
             'id_card_front' => $content['front_image'],
