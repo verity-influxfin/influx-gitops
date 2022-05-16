@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Session;
 class Campaign2022Controller extends Controller
 {
     // 每頁呈現的作品數
-    private const num_per_page = 4;
+    private const num_per_page = 6;
     // 每人每日總票數
     private const max_votes_per_day = 3;
 
@@ -108,7 +108,7 @@ class Campaign2022Controller extends Controller
             ]);
 
             DB::commit();
-            return $this->_return_success([], '投票成功', 201);
+            return $this->_return_success([], '投票成功，您今日已成功投了' . ($votes + 1) . '票', 201);
         } catch (\Exception $e) {
             DB::rollback();
             return $this->_return_failed($e->getMessage(), 500);
