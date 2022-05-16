@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Session;
 class Campaign2022Controller extends Controller
 {
     // 每頁呈現的作品數
-    private const num_per_page = 3;
+    private const num_per_page = 4;
     // 每人每日總票數
     private const max_votes_per_day = 3;
 
