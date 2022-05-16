@@ -230,7 +230,7 @@
             </div>
           </div>
         </div>
-        <div class="text-center">
+        <div class="text-center" v-if="!isLast">
           <button class="btn" @click="doSearch">
             <img src="@/asset/images/jump/load-more.svg" />
           </button>
@@ -568,11 +568,11 @@ export default {
       }
       if (confirm('是否要投票給此作品')) {
         Axios.post('/api/v1/campaign2022/vote', { id }).then(({ data }) => {
-          if (data.msg != '投票成功') {
+          if (!data.msg.includes('投票成功')) {
             alert(data.msg)
             return
           }
-          alert(`投票成功`)
+          alert(data.msg)
           location.reload()
         }).catch(err => {
           console.log(err)
@@ -650,7 +650,7 @@ export default {
         if (data.success) {
           this.lastSearch = this.searchInput
           this.workList = [...this.workList, ...data.data.list]
-          this.maxPage = Math.ceil(data.data.total / 3)
+          this.maxPage = Math.ceil(data.data.total / 8)
           this.currentPage = this.currentPage + 1
         }
       })
@@ -665,6 +665,11 @@ export default {
       }
     }
   },
+  computed:{
+      isLast(){
+          return this.currentPage < this.maxPage
+      }
+  }
 }
 </script>
 
