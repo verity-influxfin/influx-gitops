@@ -2019,7 +2019,7 @@ class Certification_lib{
                 }
             }
 
-            // 通過實名認證時觸發本人、父、母、配偶，google、司法院爬蟲
+            // 認證頁「手動」通過實名認證時觸發本人、父、母、配偶，google、司法院爬蟲
             $this->CI->load->library('scraper/judicial_yuan_lib.php');
             $this->CI->load->library('scraper/google_lib.php');
             $remark = json_decode($info->remark, TRUE);
@@ -2031,6 +2031,11 @@ class Certification_lib{
                 $remark['OCR']['spouse'] ?? ''
             ];
 
+            // 取得地址
+            $address = isset($user->address) ? $user->address : '';
+            preg_match('/([\x{4e00}-\x{9fa5}]+)(縣|市)/u', str_replace('台', '臺', $address), $matches);
+            $domicile = ! empty($matches) ? $matches[1] : '';
+
             foreach ($names as $name)
             {
                 if (!$name)
@@ -2038,13 +2043,13 @@ class Certification_lib{
                     continue;
                 }
 
-                $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name);
+                $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name, $domicile);
                 if(isset($verdicts_statuses['status']))
                 {
                     if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
                         || $verdicts_statuses['status'] == 204)
                     {
-                        $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($name);
+                        $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($name, $domicile);
                     }
                 }
 
