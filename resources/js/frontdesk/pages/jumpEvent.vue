@@ -477,6 +477,7 @@ export default {
       file: new File([], ''),
       workList: [],
       fullList: [],
+      total:0,
       userId: '',
       workModalData: {
         id: 0,
@@ -650,6 +651,7 @@ export default {
         if (data.success) {
           this.lastSearch = this.searchInput
           this.workList = [...this.workList, ...data.data.list]
+          this.total = data.data.total
           this.maxPage = Math.ceil(data.data.total / 8)
           this.currentPage = this.currentPage + 1
         }
@@ -667,7 +669,7 @@ export default {
   },
   computed:{
       isLast(){
-          return this.currentPage < this.maxPage
+          return this.total <= this.workList.length
       }
   }
 }
