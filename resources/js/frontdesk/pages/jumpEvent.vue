@@ -143,7 +143,7 @@
           <div>- 可重複投給一位參賽者</div>
           <div>- 每日一個會員最多送出3個讚</div>
         </div>
-        <div class="intro-example">
+        <div class="intro-example d-xl-block d-none">
           <div class="method-title">上傳照片範例：</div>
           <img
             src="@/asset/images/jump/example.png"
@@ -151,6 +151,45 @@
           />
         </div>
         <div id="vote-nav"></div>
+      </div>
+    </div>
+    <div class="row bouns-web">
+      <div class="block-content">
+        <div class="bouns-title d-md-block d-none">活動獎金</div>
+        <div class="bouns-info d-md-flex d-none no-gutters">
+          <div class="col-6">
+            <div>
+              第1名：
+              <span class="em">＄55,555 </span>
+              元
+            </div>
+            <div>
+              第2名： <span class="em">＄5,000</span>元 &emsp;&emsp; 第3名：
+              <span class="em">＄4,000</span>
+              元
+            </div>
+            <div>
+              第4名： <span class="em">＄3,000</span>元 &emsp;&emsp; 第5名：
+              <span class="em">＄2,000</span>
+              元
+            </div>
+            <div>
+              人氣獎 (6~10名)：&emsp;&emsp; <span class="em">＄1,500 元</span>
+            </div>
+
+            <div class="mt-3">沒有名次嗎？創意和搞笑也可以！</div>
+            <div>特別獎</div>
+            <div>執行長青睞獎：<span class="em">＄1,000</span> 元</div>
+            <div>風格創意獎：<span class="em">＄1,000</span> 元</div>
+            <div>捧腹大笑獎：<span class="em">＄1,000</span> 元</div>
+          </div>
+          <div class="pl-5 col-6">
+            <div>凡參與本次活動(含參賽者及投票者)，皆獲抽獎資格！</div>
+            <div>頭獎：Airpods 3代</div>
+            <div>貳獎：<span class="em">1,000</span> 元禮券*2份，共2,000元</div>
+            <div>參獎：<span class="em">500</span> 元禮券*3份，共1,500元</div>
+          </div>
+        </div>
       </div>
     </div>
     <div id="vote">
@@ -200,8 +239,8 @@
     <div id="bouns-nav"></div>
     <div id="bouns">
       <div class="block-content">
-        <div class="bouns-title">活動獎金</div>
-        <div class="bouns-info">
+        <div class="bouns-title d-md-none d-block">活動獎金</div>
+        <div class="bouns-info d-md-none d-block">
           <div>
             第1名：
             <span class="em">＄55,555 </span>
@@ -259,8 +298,9 @@
           <div>電子信箱 : service@influxfin.com</div>
           <div>LINE官方客服 : @influxfin</div>
         </div>
+        <div class="d-md-block d-none bouns-title">注意事項</div>
         <div class="bouns-tip mt-3">
-          <div>注意事項</div>
+          <div class="d-md-none d-block">注意事項</div>
           <ul class="bouns-ul">
             <li>參賽者須詳閱活動辦法等並遵守其相關規範。</li>
             <li>每位參賽者投稿作品件數為一件，作品必須符合活動主題。</li>
@@ -1071,7 +1111,7 @@ export default {
     }
   }
 }
-@media (min-width: 700px) {
+@media (min-width: 768px) {
   .block-content {
     max-width: 1400px;
     margin: 0 auto;
@@ -1229,6 +1269,30 @@ export default {
         }
       }
     }
+    .bouns-web {
+      background: #083a6e;
+      padding: 60px 0;
+      .bouns-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 160%;
+        text-align: center;
+        color: #ffffff;
+        margin-bottom: 20px;
+      }
+      .bouns-info {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 30px;
+        line-height: 160%;
+        color: #ffffff;
+        .em {
+          font-size: 32px;
+          color: #fff100;
+        }
+      }
+    }
     #vote {
       padding-top: 36px;
       .vote-title {
@@ -1329,50 +1393,37 @@ export default {
       }
     }
     #bouns {
+      .block-content {
+        display: grid;
+        gap: 10px 60px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+          '. .'
+          'info tip';
+      }
       &::before {
-        content: '';
-        background-image: url('~images/jump/bg-wave.svg');
-        background-repeat: no-repeat;
-        background-position: top;
-        background-size: contain;
-        height: 150px;
-        width: 100%;
-        position: absolute;
-        top: -70px;
-        z-index: -1;
+        content: none;
       }
       position: relative;
       background-color: #036eb7;
-      margin-top: 100px;
+      margin-top: 300px;
       padding-bottom: 30px;
       .bouns {
         &-title {
-          font-style: normal;
-          font-weight: 700;
-          font-size: 16px;
-          line-height: 20px;
-          text-align: center;
-          color: #ffffff;
-          margin-bottom: 20px;
+          font-size: 36px;
+          line-height: 1.6;
+          margin-bottom: 0;
         }
         &-info {
-          font-style: normal;
-          font-weight: 500;
-          font-size: 12px;
-          line-height: 1.6;
+          font-size: 20px;
           color: #ffffff;
-          .em {
-            font-size: 14px;
-            color: #fff100;
-          }
+          grid-area: info;
         }
         &-tip {
-          font-style: normal;
-          font-weight: 300;
-          font-size: 12px;
-          line-height: 16px;
-          color: #ffffff;
-          opacity: 0.75;
+          font-size: 20px;
+          line-height: 1.6;
+          grid-area: tip;
         }
         &-ul {
           padding-inline-start: 20px;
