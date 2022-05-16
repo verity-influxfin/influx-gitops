@@ -203,6 +203,7 @@
             v-model="searchInput"
             maxlength="10"
             @change="doSearch"
+            placeholder="搜尋暱稱"
           />
         </form>
         <div class="works">
@@ -1296,43 +1297,31 @@ export default {
     #vote {
       padding-top: 36px;
       .vote-title {
-        font-style: normal;
-        font-weight: 700;
-        font-size: 22px;
-        line-height: 32px;
-        text-align: center;
-        color: #036eb7;
+        font-size: 36px;
+        line-height: 52px;
       }
       .search-input-group {
-        position: relative;
         margin: 15px auto;
-        width: 220px;
+        width: 420px;
         .search-input {
           position: relative;
-          width: 100%;
-          padding: 3px 20px 3px 40px;
-          border-radius: 20px;
-          border: solid 1px #036eb7;
-          background-color: #fff;
-          font-size: 16px;
-          font-style: normal;
-          line-height: 1.6;
-          color: #4d4d4d;
+          padding: 3px 20px 3px 50px;
+          font-size: 24px;
         }
         .loupe {
           z-index: 2;
           position: absolute;
-          left: 10px;
-          top: 7px;
+          left: 15px;
+          top: 13px;
         }
       }
       .works {
         padding: 15px 0;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-template-areas:
-          'champion champion'
-          '. .';
+          'champion . . .'
+          '. . . .';
         gap: 20px;
         grid-auto-rows: auto;
         .work-item:nth-child(1) {
@@ -1356,38 +1345,25 @@ export default {
       }
     }
     .work-item {
-      max-width: 200px;
-      background: #b4e4ff;
-      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-      border-radius: 6px;
-      padding: 12px 20px;
+      max-width: 320px;
       &-title {
-        text-align: center;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 1.6;
+        font-size: 24px;
+        line-height: 38px;
+        height: 38px;
         color: #083a6e;
       }
       &-img {
         display: flex;
-        min-height: 210px;
+        min-height: 448px;
         margin: 5px 0;
         border-radius: 10px;
         min-width: 120px;
       }
       &-num {
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 1.4;
-        color: #393939;
+        font-size: 18px;
       }
       &-vote {
-        margin-top: 8px;
-        text-align: center;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 14px;
+        font-size: 28px;
         line-height: 1.4;
         color: #083a6e;
       }
@@ -1407,7 +1383,7 @@ export default {
       }
       position: relative;
       background-color: #036eb7;
-      margin-top: 300px;
+      margin-top: 80px;
       padding-bottom: 30px;
       .bouns {
         &-title {
@@ -1433,32 +1409,18 @@ export default {
   }
   #uploadModal {
     .modal-title {
-      font-weight: 700;
-      font-size: 20px;
-      line-height: 29px;
-      text-align: center;
-      color: #036eb7;
-      margin-bottom: 14px;
+      font-size: 32px;
+      line-height: 1.6;
+      margin-bottom: 20px;
     }
     .modal-info {
       font-style: normal;
       font-weight: 400;
-      font-size: 12px;
-      line-height: 1.3;
-      letter-spacing: -0.02em;
-      color: #000000;
+      font-size: 20px;
     }
     .modal-input {
-      margin-top: 14px;
-      padding: 8px 16px;
-      border-radius: 10px;
-      border: 1px solid #383838;
-      font-style: normal;
       font-weight: 400;
-      font-size: 12px;
-      line-height: 1.3;
-      letter-spacing: -0.02em;
-      color: #000000;
+      font-size: 20px;
     }
     .modal-upload-file {
       position: relative;
@@ -1466,7 +1428,7 @@ export default {
       border: 1px dashed #036eb7;
       border-radius: 20px;
       padding: 30px;
-      font-size: 14px;
+      font-size: 20px;
       .remove-file {
         position: absolute;
         right: 10px;
@@ -1486,16 +1448,8 @@ export default {
     .btn-upload-submit {
       margin-top: 15px;
       background: #036eb7;
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      border-radius: 6px;
-      font-style: normal;
-      font-weight: 700;
-      font-size: 18px;
-      line-height: 26px;
-      letter-spacing: -0.02em;
-      color: #ffffff;
-      padding: 12px;
-      text-align: center;
+      font-size: 24px;
+      line-height: 1.2;
     }
   }
   #workModal {
@@ -1503,7 +1457,7 @@ export default {
       max-width: 600px;
       &-title {
         overflow-wrap: anywhere;
-        font-size: 24px;
+        font-size: 32px;
       }
       &-img {
         width: 100%;
@@ -1513,7 +1467,7 @@ export default {
         color: #393939;
       }
       &-vote {
-        font-size: 20px;
+        font-size: 24px;
       }
     }
   }
