@@ -114,9 +114,9 @@
                 <div class="card-title">分享QR賺外快</div>
                 <div class="card-content">
                   <div class="card-subtitle">
-                      <div>特約通路商</div>
-                      <div>管理系統</div>
-                    </div>
+                    <div>特約通路商</div>
+                    <div>管理系統</div>
+                  </div>
                   <div class="card-image p10"></div>
                   <router-link to="/promote-code-intro" class="card-link">
                     了解更多
@@ -1174,6 +1174,39 @@ export default {
       }
     }
     .product-item {
+      &:focus-within,
+      &:hover {
+        .card-image.p1 {
+          background-image: url('~images/index/mortarboard.gif');
+        }
+        .card-image.p2 {
+          background-image: url('~images/index/id.gif');
+        }
+        .card-image.p3 {
+          background-image: url('~images/index/computer.gif');
+        }
+        .card-image.p4 {
+          background-image: url('~images/index/car.gif');
+        }
+        .card-image.p5 {
+          background-image: url('~images/index/line-chart.gif');
+        }
+        .card-image.p6 {
+          background-image: url('~images/index/handshake.gif');
+        }
+        .card-image.p7 {
+          background-image: url('~images/index/university.gif');
+        }
+        .card-image.p8 {
+          background-image: url('~images/index/building.gif');
+        }
+        .card-image.p9 {
+          background-image: url('~images/index/love.gif');
+        }
+        .card-image.p10 {
+          background-image: url('~images/index/money-bag.gif');
+        }
+      }
       .card {
         padding: 12px;
         border-radius: 4px;
@@ -1214,73 +1247,33 @@ export default {
         background-position: center;
         &.p1 {
           background-image: url('~images/index/mortarboard1.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/mortarboard.gif');
-          }
         }
         &.p2 {
           background-image: url('~images/index/id1.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/id.gif');
-          }
         }
         &.p3 {
           background-image: url('~images/index/computer1.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/computer.gif');
-          }
         }
         &.p4 {
           background-image: url('~images/index/car1.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/car.gif');
-          }
         }
         &.p5 {
           background-image: url('~images/index/line-chart.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/line-chart.gif');
-          }
         }
         &.p6 {
           background-image: url('~images/index/handshake1.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/handshake.gif');
-          }
         }
         &.p7 {
           background-image: url('~images/index/university1.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/university.gif');
-          }
         }
         &.p8 {
           background-image: url('~images/index/building1.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/building.gif');
-          }
         }
         &.p9 {
           background-image: url('~images/index/love1.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/love.gif');
-          }
         }
         &.p10 {
           background-image: url('~images/index/money-bag.png');
-          &:hover,
-          &:focus-within {
-            background-image: url('~images/index/money-bag.gif');
-          }
         }
       }
     }
