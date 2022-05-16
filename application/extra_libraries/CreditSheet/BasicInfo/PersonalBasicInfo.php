@@ -10,7 +10,7 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
 
     protected $CI;
     protected $certificationProcessList = [
-        CERTIFICATION_IDCARD => ['name', 'id_number', 'birthday', 'address'],
+        CERTIFICATION_IDENTITY => ['name', 'id_number', 'birthday', 'address'],
         CERTIFICATION_JOB => ['company'],
         CERTIFICATION_STUDENT => ['school'],
         CERTIFICATION_EMAIL => ['email'],

@@ -377,11 +377,11 @@ class Credit_lib{
         if ($sub_product_id) {
             //techie
             if ($sub_product_id == 1) {
-                $job_license_point =  isset($data['job_license']) ? $data['job_license'] * 50 : 0;
+                $job_license_point =  isset($data['job_license']) ? (int) $data['job_license'] * 50 : 0;
                 $total += $job_license_point;
                 $this->scoreHistory[] = '工程師貸提供專業證書: ' . $job_license_point . ' * 50';
 
-                $job_pro_level_point = isset($data['job_pro_level']) ? $data['job_pro_level'] * 100 : 0;
+                $job_pro_level_point = isset($data['job_pro_level']) ? (int) $data['job_pro_level'] * 100 : 0;
                 $total += $job_pro_level_point;
                 $this->scoreHistory[] = '工程師貸專家調整: ' . $job_pro_level_point . ' * 100';
             }
@@ -938,9 +938,12 @@ class Credit_lib{
                             $rate -= isset($data['student_license_level'])?$data['student_license_level']*0.5:0;
                             $rate -= isset($data['student_game_work_level'])?$data['student_game_work_level']*0.5:0;
                         }elseif ($product_id == 3){
-                            $rate -= isset($data['job_license'])?$data['job_license']*0.5:0;
+                            $rate -= isset($data['job_license']) ? (int) $data['job_license'] * 0.5 : 0;
                             //工作認證減免%
-                            $rate -= isset($data['job_title'])?$sub_product->titleList->{$data['job_title']}->level:0;
+                            if (isset($sub_product->titleList->{$data['job_title']}))
+                            {
+                                $rate -= isset($data['job_title']) ? $sub_product->titleList->{$data['job_title']}->level : 0;
+                            }
                         }
                     }
                     $product_info 	= $this->CI->config->item('product_list')[$target->product_id];
@@ -1026,5 +1029,86 @@ class Credit_lib{
             return $get_list[$sub_product_mapping];
         }
 	    return false;
+    }
+
+    /**
+     * 取得使用者申請同產品的剩餘額度
+     * @param int $user_id
+     * @param int $product_id
+     * @param int $sub_product_id
+     * @param int $except_target_id
+     * @return array
+     */
+    public function get_remain_amount(int $user_id, int $product_id, int $sub_product_id, int $except_target_id = 0)
+    {
+        $result = [
+            'credit_amount' => 0, // 核可額度
+            'target_amount' => 0, // 佔用中的額度
+            'remain_amount' => 0, // 剩餘可用額度
+            'instalment' => 0
+        ];
+
+        // 撈取同產品的最新一筆核可資訊
+        $credit = $this->get_credit($user_id, $product_id,
+            $sub_product_id == STAGE_CER_TARGET ? 0 : $sub_product_id);
+        if ($credit)
+        {
+            $used_amount = 0;
+            $other_used_amount = 0;
+            $user_max_credit_amount = $this->get_user_max_credit_amount($user_id);
+            //取得所有產品申請或進行中的案件
+            $target_list = $this->CI->target_model->get_many_by([
+                'id !=' => $except_target_id,
+                'user_id' => $user_id,
+                'status NOT' => [TARGET_CANCEL, TARGET_FAIL, TARGET_REPAYMENTED]
+            ]);
+            if ($target_list)
+            {
+                foreach ($target_list as $value)
+                {
+                    if ($product_id == $value->product_id)
+                    {
+                        $used_amount = $used_amount + intval($value->loan_amount);
+                    }
+                    else
+                    {
+                        $other_used_amount = $other_used_amount + intval($value->loan_amount);
+                    }
+                    //取得案件已還款金額
+                    $pay_back_transactions = $this->CI->transaction_model->get_many_by(array(
+                        'source' => SOURCE_PRINCIPAL,
+                        'user_from' => $user_id,
+                        'target_id' => $value->id,
+                        'status' => TRANSACTION_STATUS_PAID_OFF
+                    ));
+                    //扣除已還款金額
+                    foreach ($pay_back_transactions as $value2)
+                    {
+                        if ($product_id == $value->product_id)
+                        {
+                            $used_amount = $used_amount - intval($value2->amount);
+                        }
+                        else
+                        {
+                            $other_used_amount = $other_used_amount - intval($value2->amount);
+                        }
+                    }
+                }
+                //無條件進位使用額度(千元) ex: 1001 ->1100
+                $used_amount = $used_amount % 1000 != 0 ? ceil($used_amount * 0.001) * 1000 : $used_amount;
+                $other_used_amount = $other_used_amount % 1000 != 0 ? ceil($other_used_amount * 0.001) * 1000 : $other_used_amount;
+            }
+
+            $all_used_amount = $used_amount + $other_used_amount;
+
+            $result = [
+                'credit_amount' => $user_max_credit_amount, // 核可額度
+                'target_amount' => $all_used_amount, // 佔用中的額度
+                'remain_amount' => $user_max_credit_amount - $all_used_amount, // 剩餘可用額度
+                'instalment' => $credit['instalment']
+            ];
+        }
+
+        return $result;
     }
 }

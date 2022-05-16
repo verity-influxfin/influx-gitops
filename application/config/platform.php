@@ -5,9 +5,11 @@ $config['admin_menu'] = [
     'Charity' => ['name' => '慈善專區', 'icon' => 'fa-briefcase'],
     'Ntu' => ['name' => '台大慈善', 'icon' => 'fa-briefcase'],
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
-	'AntiFraud' => [
-		'name' => '反詐欺管理指標'
-	],
+    'AntiFraud' => [
+        'parent_name' => '反詐欺系統',
+        'index' => '反詐欺管理指標',
+        'list' => '反詐欺規則總覽'
+    ],
     'Target' => [
         'parent_name' => '借款管理',
         'index' => '全部列表',
@@ -30,16 +32,17 @@ $config['admin_menu'] = [
         'obligations' => '全部列表(New)',
         'waiting_transfer' => '債轉待收購',
         'waiting_transfer_success' => '債轉待放款',
-		'bidding' => '已投標'
+        'bidding' => '已投標'
     ],
     'Risk' => [
         'parent_name' => '風控專區',
         //'index' => '風控審核(全)',
-        'index?investor=0&company=0' => '自然人借款端審核',
+        'natural_person' => '自然人借款端審核',
         'index?investor=0&company=1' => '法人借款端審核',
         'index?investor=1' => '投資端審核',
         'credit' => '信評管理',
-		'credit_management' => '授信審核表'
+        'credit_management' => '授信審核表',
+        'black_list' => '黑名單列表'
         //'loaned_wait_push' => '貸後催收',
         //'loaned_wait_push?slist=1' => '貸後已催收列表',
     ],
@@ -101,7 +104,9 @@ $config['admin_menu'] = [
         'loan_overview' => '申貸總覽',
         'valuable_report' => '高價值用戶報表',
         'promote_list'  => '推薦有賞',
-        'promote_reward_list'  => '推薦有賞放款'
+        'promote_reward_list'  => '推薦有賞放款',
+        'qrcode_projects'     => 'QRcode方案設定',
+        'qrcode_contracts'    => 'QRcode合約審核'
     ],
     'Account' => [
         'parent_name' => '財務作業',
@@ -114,11 +119,11 @@ $config['admin_menu'] = [
         'parent_name' => 'OCR 結果',
         'index' => '報表',
     ],
-	'PostLoan' => [
-		'parent_name' => '貸後管理',
-		'legal_doc' => '法訴文件管理',
-		'deduct' => '法催扣款'
-	],
+    'PostLoan' => [
+        'parent_name' => '貸後管理',
+        'legal_doc' => '法訴文件管理',
+        'deduct' => '法催扣款'
+    ],
     'Article' => [
         'parent_name' => '活動及最新消息',
         'index' => '最新活動',
@@ -138,13 +143,13 @@ $config['role_permission'] = [
         'name' => '角色-貸後權限',
         'permission' => [
             'Passbook' => [
-              'display' => [
-                  'validator' => [
-                      'className' =>'RequestValidator\PostLoan\VirtualPassbookValidator',
-                      'parameters' => ['virtual_account' => '*']
-                  ],
-                  'menu_display' => false,
-              ]
+            'display' => [
+                'validator' => [
+                    'className' =>'RequestValidator\PostLoan\VirtualPassbookValidator',
+                    'parameters' => ['virtual_account' => '*']
+                ],
+                'menu_display' => false,
+            ]
             ],
             'User' => [
                 'display' =>  [
@@ -279,7 +284,7 @@ $config['company_type'] = [
 // 'sub_product' => [5000, STAGE_CER_TARGET, 1],
 // 需要認證或徵信之項目列表
 // 'certifications' => [
-//     CERTIFICATION_IDCARD,
+//     CERTIFICATION_IDENTITY,
 //     CERTIFICATION_STUDENT,
 //     CERTIFICATION_DEBITCARD,
 //     CERTIFICATION_SOCIAL,
@@ -324,7 +329,7 @@ $config['product_list'] = [
         'charge_platform_min' => PLATFORM_FEES_MIN,
         'sub_product' => [SUBPRODUCT_INTELLIGENT_STUDENT, 5000, STAGE_CER_TARGET, 1],
         'certifications' => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_STUDENT,
             CERTIFICATION_DEBITCARD,
             CERTIFICATION_SOCIAL,
@@ -339,7 +344,7 @@ $config['product_list'] = [
         ],
         'certifications_stage' => [
             [
-                CERTIFICATION_IDCARD,
+                CERTIFICATION_IDENTITY,
                 CERTIFICATION_STUDENT,
                 CERTIFICATION_DEBITCARD,
             ],
@@ -377,7 +382,7 @@ $config['product_list'] = [
         'charge_platform_min' => PLATFORM_FEES_MIN,
         'sub_product' => [],
         'certifications' => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_STUDENT,
             CERTIFICATION_DEBITCARD,
             CERTIFICATION_SOCIAL,
@@ -392,7 +397,7 @@ $config['product_list'] = [
         ],
         'certifications_stage' => [
             [
-                CERTIFICATION_IDCARD,
+                CERTIFICATION_IDENTITY,
                 CERTIFICATION_STUDENT,
                 CERTIFICATION_DEBITCARD,
             ],
@@ -427,15 +432,15 @@ $config['product_list'] = [
         'loan_range_e' => 300000,
         'interest_rate_s' => 5.5,
         'interest_rate_e' => 16,
-		'condition_rate' => [
-			'salary_below' => 35000,
-			'rate' => 4.5
-		],
+        'condition_rate' => [
+            'salary_below' => 35000,
+            'rate' => 4.5
+        ],
         'charge_platform' => 4,
         'charge_platform_min' => PLATFORM_FEES_MIN,
         'sub_product' => [5001, STAGE_CER_TARGET, 1],
         'certifications' => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_DEBITCARD,
             CERTIFICATION_SOCIAL,
             CERTIFICATION_EMERGENCY,
@@ -455,7 +460,7 @@ $config['product_list'] = [
         ],
         'certifications_stage' => [
             [
-                CERTIFICATION_IDCARD,
+                CERTIFICATION_IDENTITY,
                 CERTIFICATION_DEBITCARD,
             ],
             [
@@ -498,7 +503,7 @@ $config['product_list'] = [
         'charge_platform_min' => PLATFORM_FEES_MIN,
         'sub_product' => [],
         'certifications' => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_DEBITCARD,
             CERTIFICATION_SOCIAL,
             CERTIFICATION_EMERGENCY,
@@ -518,7 +523,7 @@ $config['product_list'] = [
         ],
         'certifications_stage' => [
             [
-                CERTIFICATION_IDCARD,
+                CERTIFICATION_IDENTITY,
                 CERTIFICATION_DEBITCARD,
             ],
             [
@@ -561,7 +566,7 @@ $config['product_list'] = [
     //    'charge_platform_min' => 10000,
     //    'sub_product' => [],
     //    'certifications' => [
-    //            CERTIFICATION_IDCARD,
+    //            CERTIFICATION_IDENTITY,
     //            CERTIFICATION_STUDENT,
     //            CERTIFICATION_DEBITCARD,
     //            CERTIFICATION_SOCIAL,
@@ -597,7 +602,7 @@ $config['product_list'] = [
     //    'charge_platform_min' => 10000,
     //    'sub_product' => [],
     //    'certifications' => [
-    //            CERTIFICATION_IDCARD,
+    //            CERTIFICATION_IDENTITY,
     //            CERTIFICATION_DEBITCARD,
     //            CERTIFICATION_SOCIAL,
     //            CERTIFICATION_EMERGENCY,
@@ -635,7 +640,7 @@ $config['product_list'] = [
 //        'charge_platform_min' => 500,
 //        'sub_product' => [4],
 //        'certifications' => [
-//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_IDENTITY,
 //            CERTIFICATION_STUDENT,
 //            CERTIFICATION_DEBITCARD,
 //            CERTIFICATION_SOCIAL,
@@ -671,7 +676,7 @@ $config['product_list'] = [
 //        'charge_platform_min' => 500,
 //        'sub_product' => [4],
 //        'certifications' => [
-//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_IDENTITY,
 //            CERTIFICATION_DEBITCARD,
 //            CERTIFICATION_SOCIAL,
 //            CERTIFICATION_EMERGENCY,
@@ -709,7 +714,7 @@ $config['product_list'] = [
 //        'charge_platform_min' => 500,
 //        'sub_product' => [5],
 //        'certifications' => [
-//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_IDENTITY,
 //            CERTIFICATION_STUDENT,
 //            CERTIFICATION_DEBITCARD,
 //            CERTIFICATION_SOCIAL,
@@ -745,7 +750,7 @@ $config['product_list'] = [
 //        'charge_platform_min' => 500,
 //        'sub_product' => [5],
 //        'certifications' => [
-//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_IDENTITY,
 //            CERTIFICATION_DEBITCARD,
 //            CERTIFICATION_SOCIAL,
 //            CERTIFICATION_EMERGENCY,
@@ -782,7 +787,7 @@ $config['product_list'] = [
 //        'charge_platform_min' => 500,
 //        'sub_product' => [],
 //        'certifications' => [
-//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_IDENTITY,
 //            CERTIFICATION_DEBITCARD,
 //            CERTIFICATION_SOCIAL,
 //            CERTIFICATION_EMERGENCY,
@@ -819,7 +824,7 @@ $config['product_list'] = [
         'charge_platform_min' => 10000,
         'sub_product' => [3],//2,
         'certifications' => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_DEBITCARD,
             CERTIFICATION_SOCIAL,
             CERTIFICATION_EMERGENCY,
@@ -839,7 +844,7 @@ $config['product_list'] = [
         ],
         'certifications_stage' => [
             [
-                CERTIFICATION_IDCARD,
+                CERTIFICATION_IDENTITY,
                 CERTIFICATION_DEBITCARD,
             ],
             [
@@ -925,7 +930,7 @@ $config['product_list'] = [
         'charge_platform_min' => 500,
         'sub_product' => [5002],
         'certifications' => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_EMAIL,
             CERTIFICATION_PROFILE,
             CERTIFICATION_SIMPLIFICATIONJOB,
@@ -938,7 +943,7 @@ $config['product_list'] = [
             CERTIFICATION_EMPLOYEEINSURANCELIST,
             CERTIFICATION_INCOMESTATEMENT,
             CERTIFICATION_INVESTIGATIONJUDICIAL,
-			CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_INVESTIGATIONA11,
             CERTIFICATION_COMPANYEMAIL,
         ],
         // [APP]上選填的徵信項，避免系統無法一審
@@ -950,7 +955,7 @@ $config['product_list'] = [
         ],
         'certifications_stage' => [
             [
-                CERTIFICATION_IDCARD,
+                CERTIFICATION_IDENTITY,
 
             ],
             [
@@ -966,7 +971,7 @@ $config['product_list'] = [
                 CERTIFICATION_EMPLOYEEINSURANCELIST,
                 CERTIFICATION_INCOMESTATEMENT,
                 CERTIFICATION_INVESTIGATIONJUDICIAL,
-    			CERTIFICATION_INVESTIGATIONA11,
+                CERTIFICATION_INVESTIGATIONA11,
                 CERTIFICATION_COMPANYEMAIL,
             ]
         ],
@@ -990,7 +995,7 @@ $config['product_list'] = [
 $config['associates_certifications'] = [
     PRODUCT_SK_MILLION_SMEG => [
         ASSOCIATES_CHARACTER_REGISTER_OWNER => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_EMAIL,
             CERTIFICATION_PROFILE,
             CERTIFICATION_INVESTIGATIONA11,
@@ -998,7 +1003,7 @@ $config['associates_certifications'] = [
             CERTIFICATION_SIMPLIFICATIONJOB
         ],
         ASSOCIATES_CHARACTER_OWNER => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_EMAIL,
             CERTIFICATION_PROFILE,
             CERTIFICATION_INVESTIGATIONA11,
@@ -1006,7 +1011,7 @@ $config['associates_certifications'] = [
             CERTIFICATION_SIMPLIFICATIONJOB
         ],
         ASSOCIATES_CHARACTER_REAL_OWNER => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_EMAIL,
             CERTIFICATION_PROFILE,
             CERTIFICATION_INVESTIGATIONA11,
@@ -1014,7 +1019,7 @@ $config['associates_certifications'] = [
             CERTIFICATION_SIMPLIFICATIONJOB
         ],
         ASSOCIATES_CHARACTER_SPOUSE => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_EMAIL,
             CERTIFICATION_PROFILE,
             CERTIFICATION_INVESTIGATIONA11,
@@ -1022,7 +1027,7 @@ $config['associates_certifications'] = [
             CERTIFICATION_SIMPLIFICATIONJOB
         ],
         ASSOCIATES_CHARACTER_GUARANTOR_A => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_EMAIL,
             CERTIFICATION_PROFILE,
             CERTIFICATION_INVESTIGATIONA11,
@@ -1030,7 +1035,7 @@ $config['associates_certifications'] = [
             CERTIFICATION_SIMPLIFICATIONJOB
         ],
         ASSOCIATES_CHARACTER_GUARANTOR_B => [
-            CERTIFICATION_IDCARD,
+            CERTIFICATION_IDENTITY,
             CERTIFICATION_EMAIL,
             CERTIFICATION_PROFILE,
             CERTIFICATION_INVESTIGATIONA11,
@@ -1262,7 +1267,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_STUDENT,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL,
@@ -1275,9 +1280,9 @@ $config['sub_product_list'] = [
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                 ],
-                'certification_verify_stage' => [
+                'certifications_stage' => [
                     [
-                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_IDENTITY,
                         CERTIFICATION_STUDENT,
                         CERTIFICATION_DEBITCARD,
                     ],
@@ -1310,7 +1315,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => 4,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
@@ -1328,9 +1333,9 @@ $config['sub_product_list'] = [
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                 ],
-                'certification_verify_stage' => [
+                'certifications_stage' => [
                     [
-                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_IDENTITY,
                         CERTIFICATION_DEBITCARD,
                     ],
                     [
@@ -1457,7 +1462,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => 500,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_STUDENT,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL,
@@ -1521,7 +1526,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_STUDENT,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL,
@@ -1553,7 +1558,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => 4,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
@@ -1562,7 +1567,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_DIPLOMA,
                     // CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB,
-					CERTIFICATION_INVESTIGATIONA11,
+                    CERTIFICATION_INVESTIGATIONA11,
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
@@ -1593,7 +1598,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [ // 必填認證
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_STUDENT,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL_INTELLIGENT,
@@ -1606,9 +1611,9 @@ $config['sub_product_list'] = [
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                 ],
-                'certification_verify_stage' => [
+                'certifications_stage' => [
                     [
-                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_IDENTITY,
                         CERTIFICATION_STUDENT,
                         CERTIFICATION_DEBITCARD,
                     ],
@@ -1651,7 +1656,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_STUDENT,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL,
@@ -1666,7 +1671,7 @@ $config['sub_product_list'] = [
                 ],
                 'certifications_stage' => [
                     [
-                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_IDENTITY,
                         CERTIFICATION_STUDENT,
                         CERTIFICATION_DEBITCARD,
                     ],
@@ -1704,7 +1709,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => 4,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
@@ -1724,7 +1729,7 @@ $config['sub_product_list'] = [
                 ],
                 'certifications_stage' => [
                     [
-                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_IDENTITY,
                         CERTIFICATION_DEBITCARD,
                     ],
                     [
@@ -1766,7 +1771,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => 500,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_EMAIL,
                     // CERTIFICATION_INVESTIGATION,
@@ -1775,7 +1780,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SIMPLIFICATIONFINANCIAL,
                     CERTIFICATION_INCOMESTATEMENT,
                     CERTIFICATION_INVESTIGATIONJUDICIAL,
-					CERTIFICATION_INVESTIGATIONA11,
+                    CERTIFICATION_INVESTIGATIONA11,
                     CERTIFICATION_PASSBOOKCASHFLOW,
                     CERTIFICATION_GOVERNMENTAUTHORITIES,
                     CERTIFICATION_EMPLOYEEINSURANCELIST,
@@ -1813,7 +1818,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => 5,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_STUDENT,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL,
@@ -1828,7 +1833,7 @@ $config['sub_product_list'] = [
                 ],
                 'certifications_stage' => [
                     [
-                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_IDENTITY,
                         CERTIFICATION_STUDENT,
                         CERTIFICATION_DEBITCARD,
                     ],
@@ -1862,7 +1867,7 @@ $config['sub_product_list'] = [
                 'charge_platform' => 5,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
-                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_IDENTITY,
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
@@ -1884,7 +1889,7 @@ $config['sub_product_list'] = [
                 ],
                 'certifications_stage' => [
                     [
-                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_IDENTITY,
                         CERTIFICATION_DEBITCARD,
                     ],
                     [
@@ -1931,7 +1936,7 @@ $config['subloan_list'] = 'STS|STNS|STIS|FGNS|FGIS';
 $config['product_type'] = [
     1 => '信用貸款',
     2 => '分期付款',
-//	3=> '抵押貸款',
+//    3=> '抵押貸款',
 ];
 
 //產品型態
@@ -2038,7 +2043,7 @@ $config['transaction_type_name'] = [
 ];
 
 $config['certifications'] = [
-    1 => ['id' => CERTIFICATION_IDCARD, 'alias' => 'idcard', 'name' => '實名認證', 'status' => 1, 'description' => '驗證個人身份資訊', 'optional' => []],
+    1 => ['id' => CERTIFICATION_IDENTITY, 'alias' => 'identity', 'name' => '實名認證', 'status' => 1, 'description' => '驗證個人身份資訊', 'optional' => []],
     2 => ['id' => CERTIFICATION_STUDENT, 'alias' => 'student', 'name' => '學生身份認證', 'status' => 1, 'description' => '驗證學生身份', 'optional' => []],
     3 => ['id' => CERTIFICATION_DEBITCARD, 'alias' => 'debitcard', 'name' => '金融帳號認證', 'status' => 1, 'description' => '驗證個人金融帳號', 'optional' => []],
     4 => ['id' => CERTIFICATION_SOCIAL, 'alias' => 'social', 'name' => '社交帳號', 'status' => 1, 'description' => '個人社交帳號', 'optional' => []],
@@ -2066,7 +2071,7 @@ $config['certifications'] = [
     1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '近6個月封面及內頁公司存摺', 'status' => 1, 'description' => '提供近6個月封面及內頁公司存摺', 'optional' => []],
     1005 => ['id' => CERTIFICATION_INTERVIEW, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '提供親訪報告', 'optional' => []],
     1006 => ['id' => CERTIFICATION_CERCREDITJUDICIAL, 'alias' => 'cercreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '提供信用評估表', 'optional' => []],
-    1007 => ['id' => CERTIFICATION_GOVERNMENTAUTHORITIES, 'alias' => 'governmentauthorities', 'name' => '公司變更事項登記表', 'status' => 1, 'description' => '提供公司變更事項登記表', 'optional' => []],
+    1007 => ['id' => CERTIFICATION_GOVERNMENTAUTHORITIES, 'alias' => 'governmentauthorities', 'name' => '變卡正本拍攝(全頁)', 'status' => 1, 'description' => '提供公司變更事項登記表', 'optional' => []],
     1008 => ['id' => CERTIFICATION_CHARTER, 'alias' => 'charter', 'name' => '公司章程', 'status' => 1, 'description' => '提供公司章程', 'optional' => []],
     1009 => ['id' => CERTIFICATION_REGISTEROFMEMBERS, 'alias' => 'registerofmembers', 'name' => '股東名簿', 'status' => 1, 'description' => '提供股東名簿', 'optional' => []],
     1010 => ['id' => CERTIFICATION_MAINPRODUCTSTATUS, 'alias' => 'mainproductstatus', 'name' => '主要商品銷售情況表', 'status' => 1, 'description' => '提供主要商品銷售情況表', 'optional' => []],
@@ -2081,10 +2086,12 @@ $config['certifications'] = [
     1019 => ['id' => CERTIFICATION_COMPANYEMAIL, 'alias' => 'companyemail', 'name' => '公司電子信箱', 'status' => 1, 'description' => '驗證公司E-Mail位址', 'optional' => []],
     1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '公司授權核實', 'status' => 1, 'description' => '公司授權核實', 'optional' => []],
 
+    1021 => ['id' => CERTIFICATION_PASSBOOK, 'alias' => 'passbook', 'name' => '主要往來存摺', 'status' => 1, 'description' => '提供主要往來存摺', 'optional' => []],
+
     2000 => ['id' => CERTIFICATION_SALESDETAIL, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
 $config['certifications_sort'] = [
-    CERTIFICATION_IDCARD,
+    CERTIFICATION_IDENTITY,
     CERTIFICATION_STUDENT,
     CERTIFICATION_DEBITCARD,
     CERTIFICATION_SOCIAL,
@@ -2095,7 +2102,7 @@ $config['certifications_sort'] = [
     CERTIFICATION_INVESTIGATION,
     CERTIFICATION_JOB,
     CERTIFICATION_PROFILE,
-	CERTIFICATION_INVESTIGATIONA11,
+    CERTIFICATION_INVESTIGATIONA11,
     CERTIFICATION_CRIMINALRECORD,
     CERTIFICATION_SOCIAL_INTELLIGENT,
     CERTIFICATION_SIMPLIFICATIONFINANCIAL,
@@ -2122,7 +2129,8 @@ $config['certifications_sort'] = [
     CERTIFICATION_SALESDETAIL,
     CERTIFICATION_PROFILEJUDICIAL,
     CERTIFICATION_COMPANYEMAIL,
-    CERTIFICATION_JUDICIALGUARANTEE
+    CERTIFICATION_JUDICIALGUARANTEE,
+    CERTIFICATION_PASSBOOK
 ];
 
 //支援XML銀行列表
@@ -2201,7 +2209,7 @@ $config['selling_type'] = [
 ];
 
 $config['character'] = [
-	0 => '登記負責人',
+    0 => '登記負責人',
     1 => '負責人',
     2 => '實際負責人',
     3 => '配偶',
@@ -2238,7 +2246,7 @@ $config['Agency'] = array(
 
 
 $config['certifications_msg'] = [
-    CERTIFICATION_IDCARD => [
+    CERTIFICATION_IDENTITY => [
         '身份非平台服務範圍，我們無法提供服務給您，造成不便，敬請見諒！',
         '照片顛倒，煩請您重新拍攝',
         '照片不清晰，煩請您重新拍攝',
@@ -2341,36 +2349,36 @@ $config['allow_aiBidding_product'] = [1, 2, 3, 4];
 # 推播的相關設定
 abstract class NotificationTargetCategory
 {
-	const Investment = 1;
-	const Loan = 2;
-	const All = 3;
+    const Investment = 1;
+    const Loan = 2;
+    const All = 3;
 }
 abstract class NotificationType
 {
-	const Manual = 1;
-	const RoutineReminder = 2;
+    const Manual = 1;
+    const RoutineReminder = 2;
 }
 abstract class NotificationStatus
 {
-	const Pending = 0;
-	const Accepted = 1;
-	const Rejected = 2;
-	const Sent = 3;
-	const Canceled = 4;
+    const Pending = 0;
+    const Accepted = 1;
+    const Rejected = 2;
+    const Sent = 3;
+    const Canceled = 4;
 }
 
 $config['notification'] = [
-	'target_category_name' => [
-		NotificationTargetCategory::Investment => '投資',
-		NotificationTargetCategory::Loan => '借款',
-		NotificationTargetCategory::All => '投資&借款'],
-	'status' => [
-		NotificationStatus::Pending => '待核可',
-		NotificationStatus::Accepted => '待發送',
-		NotificationStatus::Rejected => '已拒絕',
-		NotificationStatus::Sent => '已發送',
-		NotificationStatus::Canceled => '已取消'
-	]
+    'target_category_name' => [
+        NotificationTargetCategory::Investment => '投資',
+        NotificationTargetCategory::Loan => '借款',
+        NotificationTargetCategory::All => '投資&借款'],
+    'status' => [
+        NotificationStatus::Pending => '待核可',
+        NotificationStatus::Accepted => '待發送',
+        NotificationStatus::Rejected => '已拒絕',
+        NotificationStatus::Sent => '已發送',
+        NotificationStatus::Canceled => '已取消'
+    ]
 ];
 
 $config['no_prepayment_allowance'] = [PRODUCT_FOREX_CAR_VEHICLE];
@@ -2396,7 +2404,8 @@ $config['cer_profilejudicial'] = [
 ];
 
 // 推薦碼需要的徵信項目
-$config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];
+$config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];
+$config['promote_code_certs_company'] = [CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_COMPANYEMAIL, CERTIFICATION_JUDICIALGUARANTEE];
 
 // 捐款案收據方式
 $config['charity_receipt_type_list'] = [CHARITY_RECEIPT_TYPE_SINGLE_PAPER => "單次紙本收據"];

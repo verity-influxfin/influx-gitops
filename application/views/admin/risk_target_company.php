@@ -341,7 +341,7 @@
                                                             if ($value->certification[$svalue['id']]["user_status"]!==null) {
                                                                 $certification_id = $value->certification[$svalue['id']]["certification_id"];
                                                                 $sys_check = $value->certification[$svalue['id']]["sys_check"] === 0 ? " btn-circle" : " ";
-                                                                $status = ($value->certification[$svalue['id']]['expire_time'] <= time() && !in_array($svalue['id'], [CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL]) ? 'danger' : 'success');
+                                                                $status = ($value->certification[$svalue['id']]['expire_time'] <= time() && !in_array($svalue['id'], [CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL]) ? 'danger' : 'success');
                                                             }
                                                             if($checkOwner){
                                                                 if($svalue['id'] == CERTIFICATION_GOVERNMENTAUTHORITIES){

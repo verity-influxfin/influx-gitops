@@ -193,6 +193,10 @@
 	{
 		$CI 	=& get_instance();
 		$list 	= $CI->config->item('access_ip_list');
+        if (ENVIRONMENT === 'development')
+        {
+            return TRUE;
+        }
 		foreach($list as $ip){
 			if(preg_match('/\.\*$/',$ip)){
 				list($main, $sub) = explode('.*', $ip);
@@ -260,7 +264,6 @@
 		}
 		return rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
 	}
-
 
 	function make_promote_code($length=8) {
 		$code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -515,4 +518,64 @@
 		}
 		return $date;
 	}
+
+	function pagination_config($config=[]) {
+		if(empty($config))
+			$config = [];
+
+		$config['num_links'] = 2;
+		$config['use_page_numbers'] = TRUE;
+		$config['reuse_query_string'] = TRUE;
+		$config['page_query_string'] = TRUE;
+
+		$config['full_tag_open'] = '<nav aria-label="Page navigation"><ul class="pagination">';
+		$config['full_tag_close'] = '</ul></nav>';
+
+		$config['first_link'] = '第一頁';
+		$config['first_tag_open'] = '<li class="page-item">';
+		$config['first_tag_close'] = '</li>';
+
+		$config['last_link'] = '最後一頁';
+		$config['last_tag_open'] = '<li class="page-item">';
+		$config['last_tag_close'] = '</li>';
+
+		$config['next_link'] = '下一頁';
+		$config['next_tag_open'] = '<li class="page-item">';
+		$config['next_tag_close'] = '</li>';
+
+		$config['prev_link'] = '上一頁';
+		$config['prev_tag_open'] = '<li class="page-item">';
+		$config['prev_tag_close'] = '</li>';
+
+		$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+		$config['cur_tag_close'] = '</a</li>';
+
+		$config['num_tag_open'] = '<li class="page-item">';
+		$config['num_tag_close'] = '</li>';
+
+		return $config;
+	}
+
+
+    function array_sum_identical_keys() {
+        $arrays = func_get_args();
+        $keys = array_keys(array_reduce($arrays, function ($keys, $arr) { return $keys + $arr; }, array()));
+        $sums = [];
+
+        foreach ($keys as $key) {
+            $sums[$key] = array_reduce($arrays, function ($sum, $arr) use ($key) {
+                return $sum + $arr[$key];
+            }, is_numeric($arrays[0][$key]) ? 0 : []);
+        }
+
+        return $sums;
+    }
+
+    function log_msg($level, $message)
+    {
+        $backtrace = debug_backtrace();
+        log_message($level, $backtrace[0]['file'] .'(' . $backtrace[0]['line']  . ') :: ' . $message . '\n' .
+            (!empty($backtrace[1]) ? $backtrace[1]['file'] .'(' . $backtrace[1]['line'] : ''));
+    }
+
 ?>

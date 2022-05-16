@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH.'/libraries/REST_Controller.php');
+require_once(APPPATH.'/libraries/REST_Controller.php');
+
+use Certification\Certification_factory;
 
 class Certification extends REST_Controller {
 
@@ -56,17 +58,17 @@ class Certification extends REST_Controller {
                 if($this->user_info->naturalPerson && $this->request->method == 'post'){
                     $this->load->library('certification_lib');
                     //檢核變卡認證，並排除以下認證
-                    if(!in_array($method, ['governmentauthorities','idcard','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody'])){
+                    if(!in_array($method, ['governmentauthorities','identity','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody'])){
                         $cerGovernmentauthorities = $this->certification_lib->get_certification_info($tokenData->id, CERTIFICATION_GOVERNMENTAUTHORITIES, $this->user_info->investor);
                         if(!$cerGovernmentauthorities && $method != 'governmentauthorities'){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
                         }
                     }
                     //要求先完成實名相關
-                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker','livingBody'])){
-                        $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, $this->user_info->investor);
-                        if(!$cerIDCARD){
-                            $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
+                    if(!in_array($method, ['identity','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker','livingBody'])){
+                        $cerIDENTITY = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDENTITY, 0);
+                        if(!$cerIDENTITY){
+                            $this->response(array('result' => 'ERROR','error' => NO_CER_IDENTITY ));
                         }
                     }
 //                elseif(!in_array($method,['debitcard','list','social','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail','governmentauthorities','charter','registerofmembers','mainproductstatus','startupfunds','business_plan','verification','condensedbalancesheet','condensedincomestatement','purchasesalesvendorlist','employeeinsurancelist','companyemail'])){
@@ -405,9 +407,9 @@ class Certification extends REST_Controller {
     }
 
 	/**
-     * @api {post} /v2/certification/idcard 認證 實名認證
+     * @api {post} /v2/certification/identity 認證 實名認證
 	 * @apiVersion 0.2.0
-	 * @apiName PostCertificationIdcard
+	 * @apiName PostCertificationIdentity
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String{2..15}} name 姓名
@@ -462,7 +464,7 @@ class Certification extends REST_Controller {
      *     }
 	 *
      */
-	public function idcard_post()
+	public function identity_post()
     {
 		$certification_id 	= 1;
 		$certification 		= $this->certification[$certification_id];
@@ -543,15 +545,9 @@ class Certification extends REST_Controller {
                 'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
-			if($insert){
-				$this->load->library('scraper/judicial_yuan_lib.php');
-	      $this->judicial_yuan_lib->requestJudicialYuanVerdicts(
-				    $input['name'],
-				    $content['id_card_place'],
-				    $user_id
-				);
-
-				$this->response(array('result' => 'SUCCESS'));
+			if($insert)
+            {
+                $this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
@@ -560,9 +556,9 @@ class Certification extends REST_Controller {
     }
 
     /**
-     * @api {get} /v2/certification/idcard 認證 實名認證
+     * @api {get} /v2/certification/identity 認證 實名認證
      * @apiVersion 0.2.0
-     * @apiName GetCertificationIdcard
+     * @apiName GetCertificationIdentity
      * @apiGroup Certification
      * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String{2..15}} name 姓名
@@ -596,7 +592,7 @@ class Certification extends REST_Controller {
      *     }
      *
      */
-    public function idcard_get()
+    public function identity_get()
     {
         $certification_id 	= 1;
         $certification 		= $this->certification[$certification_id];
@@ -612,7 +608,7 @@ class Certification extends REST_Controller {
 
             $param = array(
                 'user_id'			=> $user_id,
-                'certification_id'	=> CERTIFICATION_IDCARD,
+                'certification_id'	=> CERTIFICATION_IDENTITY,
                 'investor'			=> $investor,
                 'status'            => [1,2]
             );
@@ -1672,7 +1668,7 @@ class Certification extends REST_Controller {
      */
 	public function financialWorker_post()
     {
-		$certification_id 	= 14;
+        $certification_id = CERTIFICATION_FINANCIALWORKER;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
@@ -1793,7 +1789,12 @@ class Certification extends REST_Controller {
 			if($insert){
                 // 有傳圖片的話轉人工，沒有自動過件
                 if($should_check == false){
-                    $this->certification_lib->set_success($insert);
+                    $info = $this->user_certification_model->order_by('certification_id', 'DESC')->get_by([
+                        'certification_id' => $certification_id,
+                        'user_id' => $user_id
+                    ]);
+                    $cert = Certification_factory::get_instance_by_model_resource($info);
+                    $cert->set_success(TRUE);
                 }
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
@@ -2654,11 +2655,12 @@ class Certification extends REST_Controller {
         $input 		= $this->input->post(NULL, TRUE);
         $user_id 	= $this->user_info->id;
         $investor 	= $this->user_info->investor;
-        $targetId   = $input['target_id'];
 
-        if(!isset($targetId)) {
-            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT));
+        if ( ! isset($input['target_id']))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
         }
+        $targetId = $input['target_id'];
 
         $target = $this->target_model->get($targetId);
         if(!isset($target)) {
@@ -2673,8 +2675,18 @@ class Certification extends REST_Controller {
 
         $this->load->library('Certification_lib');
         $result = $this->certification_lib->verify_certifications($target, 1);
-        if($result)
+        if ($result)
+        {
+            $this->load->helper('product');
+            if (is_judicial_product($target->product_id) === FALSE)
+            {
+                $this->target_model->update($targetId, [
+                    'status' => TARGET_WAITING_APPROVE,
+                    'certificate_status' => TARGET_CERTIFICATE_SUBMITTED
+                ]);
+            }
             $this->response(['result' => 'SUCCESS']);
+        }
         else
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
@@ -3316,6 +3328,211 @@ class Certification extends REST_Controller {
             }
         }
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    /**
+     * @api {post} /v2/certification/debitcard 認證 金融帳號認證
+     * @apiVersion 0.2.0
+     * @apiName PostCertificationDebitcard
+     * @apiGroup Certification
+     * @apiDescription 法人登入時，只有負責人情況下可操作。
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {String{3}} bank_code 銀行代碼三碼
+     * @apiParam {String{4}} branch_code 分支機構代號四碼
+     * @apiParam {String{10..14}} bank_account 銀行帳號
+     * @apiParam {Number} front_image 金融卡正面照 ( 圖片ID )
+     * @apiParam {Number} back_image 金融卡背面照 ( 圖片ID )
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse InsertError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     * @apiUse NotIncharge
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+     *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {Object} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+     *
+     * @apiError 506 銀行代碼長度錯誤
+     * @apiErrorExample {Object} 506
+     *     {
+     *       "result": "ERROR",
+     *       "error": "506"
+     *     }
+     *
+     * @apiError 507 分支機構代號長度錯誤
+     * @apiErrorExample {Object} 507
+     *     {
+     *       "result": "ERROR",
+     *       "error": "507"
+     *     }
+     *
+     * @apiError 508 銀行帳號長度錯誤
+     * @apiErrorExample {Object} 508
+     *     {
+     *       "result": "ERROR",
+     *       "error": "508"
+     *     }
+     *
+     * @apiError 509 銀行帳號已存在
+     * @apiErrorExample {Object} 509
+     *     {
+     *       "result": "ERROR",
+     *       "error": "509"
+     *     }
+     *
+     */
+    public function passbook_post()
+    {
+        $this->load->model('user/user_bankaccount_model');
+        $certification_id = CERTIFICATION_PASSBOOK;
+        $certification = $this->certification[$certification_id];
+        if ($certification && $certification['status'] == CERTIFICATION_STATUS_SUCCEED)
+        {
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input = $this->input->post(NULL, TRUE);
+            $user_id = $this->user_info->id;
+            $investor = $this->user_info->investor;
+            $company = $this->user_info->company;
+            $content = [];
+
+            //必填欄位
+            $fields = ['bank_code', 'branch_code', 'bank_account'];
+            foreach ($fields as $field)
+            {
+                if (empty($input[$field]))
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                }
+                else
+                {
+                    $content[$field] = trim($input[$field]);
+                }
+            }
+
+            if (strlen($content['bank_code']) != 3)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_CODE_ERROR));
+            }
+            if (strlen($content['branch_code']) != 4)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BRANCH_CODE_ERROR));
+            }
+            if (strlen(intval($content['bank_account'])) < 8 || strlen($content['bank_account']) < 10 || strlen($content['bank_account']) > 14 || is_virtual_account($content['bank_account']))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_ERROR));
+            }
+
+            // TODO: 存摺如果是公司，需要驗證哪些徵信項
+
+            $where = [
+                'investor' => $investor,
+                'bank_code' => $content['bank_code'],
+                'bank_account' => $content['bank_account'],
+                'status' => CERTIFICATION_STATUS_SUCCEED,
+            ];
+
+            $user_bankaccount = $this->user_bankaccount_model->get_by($where);
+            if ($user_bankaccount)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_EXIST));
+            }
+
+            //上傳檔案欄位
+            $file_fields = ['front_image', 'back_image'];
+            foreach ($file_fields as $field)
+            {
+                $image_id = intval($input[$field]);
+                if ( ! $image_id)
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                }
+                else
+                {
+                    $rs = $this->log_image_model->get_by([
+                        'id' => $image_id,
+                        'user_id' => $this->user_info->originalID,
+                    ]);
+
+                    if ($rs)
+                    {
+                        $content[$field] = $rs->url;
+                    }
+                    else
+                    {
+                        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                    }
+                }
+            }
+
+            $param = [
+                'user_id' => $user_id,
+                'certification_id' => $certification_id,
+                'investor' => $investor,
+                'expire_time' => strtotime('+20 years'),
+                'content' => json_encode($content),
+            ];
+
+            $insert = $this->user_certification_model->insert($param);
+            if ($insert)
+            {
+                $bankaccount_info = [
+                    'user_id' => $user_id,
+                    'investor' => $investor,
+                    'user_certification_id' => $insert,
+                    'bank_code' => $content['bank_code'],
+                    'branch_code' => $content['branch_code'],
+                    'bank_account' => $content['bank_account'],
+                    'front_image' => $content['front_image'],
+                    'back_image' => $content['back_image'],
+                ];
+
+                if ($investor)
+                {
+                    $bankaccount_info['verify'] = 2;
+                }
+                else
+                {
+                    isset($this->user_info->naturalPerson) ? $user_id = [$user_id, $this->user_info->originalID] : '';
+                    $this->certification_lib->set_success($insert);
+                    $target = $this->target_model->get_by([
+                        'user_id' => $user_id,
+                        'status' => TARGET_WAITING_VERIFY,
+                    ]);
+                    if ($target)
+                    {
+                        $bankaccount_info['verify'] = 2;
+                    }
+                }
+
+                $this->user_bankaccount_model->insert($bankaccount_info);
+
+                $this->response(array('result' => 'SUCCESS'));
+            }
+            else
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+            }
+        }
+        $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
     }
 
     public function governmentauthorities_post()

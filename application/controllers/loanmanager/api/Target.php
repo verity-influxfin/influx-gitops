@@ -563,7 +563,7 @@ class Target extends REST_Controller
                 foreach($getUserCerList as $key => $value){
                     $structure['title'] = '更新認證';
                     $structure['content'] = $loanmanagerConfig['certifications'][$value->certification_id]['name'];
-                    // . '(' . $loanmanagerConfig['cer_status'][ $value->expire_time > time() && !in_array($value->certification_id,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL]) ? $value->status : 2] . ')'
+                    // . '(' . $loanmanagerConfig['cer_status'][ $value->expire_time > time() && !in_array($value->certification_id,[CERTIFICATION_IDENTITY,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL]) ? $value->status : 2] . ')'
                     $structure['time'] = date('Y-m-d H:i:s', $value->created_at);
                     $structure['remark'] = "送出認證";
                     $structure['type'] = 2;

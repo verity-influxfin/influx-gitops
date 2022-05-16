@@ -32,7 +32,7 @@
     "Certification",
     "GetCertificationList",
     "GetCertificationIndex",
-    "PostCertificationIdcard",
+    "PostCertificationIdentity",
     "PostCertificationStudent",
     "PostCertificationDebitcard",
     "PostCertificationSocial",
