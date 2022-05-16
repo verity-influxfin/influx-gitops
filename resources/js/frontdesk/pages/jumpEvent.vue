@@ -143,6 +143,13 @@
           <div>- 可重複投給一位參賽者</div>
           <div>- 每日一個會員最多送出3個讚</div>
         </div>
+        <div class="intro-example">
+          <div class="method-title">上傳照片範例：</div>
+          <img
+            src="@/asset/images/jump/example.png"
+            class="img-fluid img-example"
+          />
+        </div>
         <div id="vote-nav"></div>
       </div>
     </div>
@@ -822,6 +829,9 @@ export default {
         color: #ffffff;
         opacity: 0.5;
       }
+      .intro-example {
+        display: none;
+      }
     }
   }
   #vote {
@@ -1065,6 +1075,7 @@ export default {
   .block-content {
     max-width: 1400px;
     margin: 0 auto;
+    padding: 15px;
   }
   .jump-event {
     max-width: none;
@@ -1167,52 +1178,54 @@ export default {
       }
     }
     #method {
+      .block-content {
+        position: relative;
+      }
       padding: 24px 0;
       background: #036eb7;
       .method {
         &-title {
-          font-style: normal;
-          font-weight: 700;
-          font-size: 16px;
+          font-size: 30px;
           line-height: 2;
           color: #ffffff;
         }
         &-time {
-          font-style: normal;
-          font-weight: 500;
-          font-size: 16px;
+          font-size: 30px;
           line-height: 1.6;
-          color: #fff100;
           margin-bottom: 12px;
         }
         &-step {
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-start;
           margin-bottom: 10px;
+          gap: 0 45px;
           &-item {
-            font-style: normal;
-            font-weight: 500;
-            font-size: 12px;
-            line-height: 14px;
+            font-size: 20px;
+            line-height: 1.6;
             text-align: center;
             color: #ffffff;
             min-width: 90px;
             .icon {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              height: 50px;
+              transform: scale(1.5);
+              height: 80px;
               margin-bottom: 10px;
             }
           }
         }
         &-tip {
-          font-style: normal;
-          font-weight: 500;
-          font-size: 12px;
+          font-size: 20px;
           line-height: 1.6;
           color: #ffffff;
           opacity: 0.5;
+        }
+      }
+      .intro-example {
+        display: block;
+        position: absolute;
+        right: 65px;
+        top: 35px;
+        .img-example {
+          height: 600px;
         }
       }
     }
