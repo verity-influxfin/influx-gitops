@@ -16,7 +16,7 @@
     </nav>
     <div class="banner">
       <img
-        class="img-fluid mx-auto pt-3 d-block"
+        class="img-fluid mx-auto pt-3 d-block d-sm-none"
         src="@/asset/images/jump/header-text.png"
         alt="普匯5週年"
       />
@@ -143,7 +143,53 @@
           <div>- 可重複投給一位參賽者</div>
           <div>- 每日一個會員最多送出3個讚</div>
         </div>
+        <div class="intro-example d-xl-block d-none">
+          <div class="method-title">上傳照片範例：</div>
+          <img
+            src="@/asset/images/jump/example.png"
+            class="img-fluid img-example"
+          />
+        </div>
         <div id="vote-nav"></div>
+      </div>
+    </div>
+    <div class="row bouns-web">
+      <div class="block-content">
+        <div class="bouns-title d-md-block d-none">活動獎金</div>
+        <div class="bouns-info d-md-flex d-none no-gutters">
+          <div class="col-6">
+            <div>
+              第1名：
+              <span class="em">＄55,555 </span>
+              元
+            </div>
+            <div>
+              第2名： <span class="em">＄5,000</span>元 &emsp;&emsp; 第3名：
+              <span class="em">＄4,000</span>
+              元
+            </div>
+            <div>
+              第4名： <span class="em">＄3,000</span>元 &emsp;&emsp; 第5名：
+              <span class="em">＄2,000</span>
+              元
+            </div>
+            <div>
+              人氣獎 (6~10名)：&emsp;&emsp; <span class="em">＄1,500 元</span>
+            </div>
+
+            <div class="mt-3">沒有名次嗎？創意和搞笑也可以！</div>
+            <div>特別獎</div>
+            <div>執行長青睞獎：<span class="em">＄1,000</span> 元</div>
+            <div>風格創意獎：<span class="em">＄1,000</span> 元</div>
+            <div>捧腹大笑獎：<span class="em">＄1,000</span> 元</div>
+          </div>
+          <div class="pl-5 col-6">
+            <div>凡參與本次活動(含參賽者及投票者)，皆獲抽獎資格！</div>
+            <div>頭獎：Airpods 3代</div>
+            <div>貳獎：<span class="em">1,000</span> 元禮券*2份，共2,000元</div>
+            <div>參獎：<span class="em">500</span> 元禮券*3份，共1,500元</div>
+          </div>
+        </div>
       </div>
     </div>
     <div id="vote">
@@ -157,6 +203,7 @@
             v-model="searchInput"
             maxlength="10"
             @change="doSearch"
+            placeholder="搜尋暱稱"
           />
         </form>
         <div class="works">
@@ -183,7 +230,7 @@
             </div>
           </div>
         </div>
-        <div class="text-center">
+        <div class="text-center" v-if="!isLast">
           <button class="btn" @click="doSearch">
             <img src="@/asset/images/jump/load-more.svg" />
           </button>
@@ -193,8 +240,8 @@
     <div id="bouns-nav"></div>
     <div id="bouns">
       <div class="block-content">
-        <div class="bouns-title">活動獎金</div>
-        <div class="bouns-info">
+        <div class="bouns-title d-md-none d-block">活動獎金</div>
+        <div class="bouns-info d-md-none d-block">
           <div>
             第1名：
             <span class="em">＄55,555 </span>
@@ -252,8 +299,9 @@
           <div>電子信箱 : service@influxfin.com</div>
           <div>LINE官方客服 : @influxfin</div>
         </div>
+        <div class="d-md-block d-none bouns-title">注意事項</div>
         <div class="bouns-tip mt-3">
-          <div>注意事項</div>
+          <div class="d-md-none d-block">注意事項</div>
           <ul class="bouns-ul">
             <li>參賽者須詳閱活動辦法等並遵守其相關規範。</li>
             <li>每位參賽者投稿作品件數為一件，作品必須符合活動主題。</li>
@@ -429,6 +477,7 @@ export default {
       file: new File([], ''),
       workList: [],
       fullList: [],
+      total:0,
       userId: '',
       workModalData: {
         id: 0,
@@ -520,11 +569,11 @@ export default {
       }
       if (confirm('是否要投票給此作品')) {
         Axios.post('/api/v1/campaign2022/vote', { id }).then(({ data }) => {
-          if (data.msg != '投票成功') {
+          if (!data.msg.includes('投票成功')) {
             alert(data.msg)
             return
           }
-          alert(`投票成功，今日已投 ${data.data.votes} 票`)
+          alert(data.msg)
           location.reload()
         }).catch(err => {
           console.log(err)
@@ -602,7 +651,8 @@ export default {
         if (data.success) {
           this.lastSearch = this.searchInput
           this.workList = [...this.workList, ...data.data.list]
-          this.maxPage = Math.ceil(data.data.total / 3)
+          this.total = data.data.total
+          this.maxPage = Math.ceil(data.data.total / 8)
           this.currentPage = this.currentPage + 1
         }
       })
@@ -617,6 +667,11 @@ export default {
       }
     }
   },
+  computed:{
+      isLast(){
+          return this.total <= this.workList.length
+      }
+  }
 }
 </script>
 
@@ -821,6 +876,9 @@ export default {
         line-height: 1.6;
         color: #ffffff;
         opacity: 0.5;
+      }
+      .intro-example {
+        display: none;
       }
     }
   }
@@ -1058,6 +1116,366 @@ export default {
     }
     &-vote {
       font-size: 20px;
+    }
+  }
+}
+@media (min-width: 768px) {
+  .block-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 15px;
+  }
+  .jump-event {
+    max-width: none;
+    padding-top: 5px;
+    #top {
+      display: none;
+    }
+    .banner {
+      background-image: url('~images/jump/header-web.png');
+      background-position: top center;
+      height: 825px;
+      max-width: 1920px;
+      margin: 0 auto;
+      &-content {
+        max-width: 1400px;
+        margin-top: 0;
+        margin: 0 auto;
+        padding: 395px 0 0 650px;
+        font-size: 32px;
+        line-height: 1.6;
+        &-info {
+          display: none;
+        }
+        & .em {
+          font-size: 36px;
+        }
+        & .btn-join {
+          bottom: 0;
+          height: 160px;
+          width: 160px;
+          font-size: 28px;
+        }
+        & .btn-vote {
+          margin-top: 30px;
+          top: 30px;
+          left: 45px;
+          height: 160px;
+          width: 160px;
+          font-size: 28px;
+        }
+        & #img-57 {
+          position: absolute;
+          height: 650px;
+          right: -25px;
+          bottom: 0;
+          top: 245px;
+          transform: rotate(-10deg);
+        }
+      }
+    }
+    .intro {
+      .block-content {
+        display: grid;
+        padding: 60px 15px;
+        grid-template-columns: 1fr 550px;
+        grid-template-rows: auto auto 1fr 1fr;
+        gap: 20px 15px;
+        grid-template-areas:
+          'c1 cover'
+          'title cover'
+          'c2 cover'
+          'join cover';
+      }
+      padding-bottom: 36px;
+      &-title {
+        grid-area: title;
+        margin: 36px 0 15px;
+        font-size: 52px;
+        line-height: 1.6;
+        text-align: left;
+        color: #036eb7;
+      }
+      &-content {
+        grid-area: c1;
+        font-size: 30px;
+        text-align: left;
+        &-2 {
+          grid-area: c2;
+          text-align: left;
+          font-size: 32px;
+          line-height: 1.6;
+        }
+      }
+      &-cover {
+        grid-area: cover;
+        padding: 0 35px;
+        margin: 0;
+      }
+      &-join {
+        max-width: 450px;
+      }
+      .btn-jump {
+        grid-area: jump;
+        font-size: 32px;
+        line-height: 42px;
+        .jump-icon {
+          margin-right: 12px;
+          height: 42px;
+        }
+      }
+    }
+    #method {
+      .block-content {
+        position: relative;
+      }
+      padding: 24px 0;
+      background: #036eb7;
+      .method {
+        &-title {
+          font-size: 30px;
+          line-height: 2;
+          color: #ffffff;
+        }
+        &-time {
+          font-size: 30px;
+          line-height: 1.6;
+          margin-bottom: 12px;
+        }
+        &-step {
+          display: flex;
+          justify-content: flex-start;
+          margin-bottom: 10px;
+          gap: 0 45px;
+          &-item {
+            font-size: 20px;
+            line-height: 1.6;
+            text-align: center;
+            color: #ffffff;
+            min-width: 90px;
+            .icon {
+              transform: scale(1.5);
+              height: 80px;
+              margin-bottom: 10px;
+            }
+          }
+        }
+        &-tip {
+          font-size: 20px;
+          line-height: 1.6;
+          color: #ffffff;
+          opacity: 0.5;
+        }
+      }
+      .intro-example {
+        display: block;
+        position: absolute;
+        right: 65px;
+        top: 35px;
+        .img-example {
+          height: 600px;
+        }
+      }
+    }
+    .bouns-web {
+      background: #083a6e;
+      padding: 60px 0;
+      .bouns-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 160%;
+        text-align: center;
+        color: #ffffff;
+        margin-bottom: 20px;
+      }
+      .bouns-info {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 30px;
+        line-height: 160%;
+        color: #ffffff;
+        .em {
+          font-size: 32px;
+          color: #fff100;
+        }
+      }
+    }
+    #vote {
+      padding-top: 36px;
+      .vote-title {
+        font-size: 36px;
+        line-height: 52px;
+      }
+      .search-input-group {
+        margin: 15px auto;
+        width: 420px;
+        .search-input {
+          position: relative;
+          padding: 3px 20px 3px 50px;
+          font-size: 24px;
+        }
+        .loupe {
+          z-index: 2;
+          position: absolute;
+          left: 15px;
+          top: 13px;
+        }
+      }
+      .works {
+        padding: 15px 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-areas:
+          'champion . . .'
+          '. . . .';
+        gap: 20px;
+        grid-auto-rows: auto;
+        .work-item:nth-child(1) {
+          &:not(.normal) {
+            &::before {
+              content: '';
+              background-image: url('~images/jump/crown.png');
+              left: -49px;
+              top: -49px;
+              width: 65px;
+              height: 65px;
+              display: block;
+              position: absolute;
+            }
+            background: #ffc535;
+          }
+          position: relative;
+          grid-area: champion;
+          margin: auto;
+        }
+      }
+    }
+    .work-item {
+      max-width: 320px;
+      &-title {
+        font-size: 24px;
+        line-height: 38px;
+        height: 38px;
+        color: #083a6e;
+      }
+      &-img {
+        display: flex;
+        min-height: 448px;
+        margin: 5px 0;
+        border-radius: 10px;
+        min-width: 120px;
+      }
+      &-num {
+        font-size: 18px;
+      }
+      &-vote {
+        font-size: 28px;
+        line-height: 1.4;
+        color: #083a6e;
+      }
+    }
+    #bouns {
+      .block-content {
+        display: grid;
+        gap: 10px 60px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+          '. .'
+          'info tip';
+      }
+      &::before {
+        content: none;
+      }
+      position: relative;
+      background-color: #036eb7;
+      margin-top: 80px;
+      padding-bottom: 30px;
+      .bouns {
+        &-title {
+          font-size: 36px;
+          line-height: 1.6;
+          margin-bottom: 0;
+        }
+        &-info {
+          font-size: 20px;
+          color: #ffffff;
+          grid-area: info;
+        }
+        &-tip {
+          font-size: 20px;
+          line-height: 1.6;
+          grid-area: tip;
+        }
+        &-ul {
+          padding-inline-start: 20px;
+        }
+      }
+    }
+  }
+  #uploadModal {
+    .modal-title {
+      font-size: 32px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .modal-info {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 20px;
+    }
+    .modal-input {
+      font-weight: 400;
+      font-size: 20px;
+    }
+    .modal-upload-file {
+      position: relative;
+      margin-top: 12px;
+      border: 1px dashed #036eb7;
+      border-radius: 20px;
+      padding: 30px;
+      font-size: 20px;
+      .remove-file {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+      .upload-icon {
+        margin: 0 auto;
+      }
+      .file-name {
+        position: absolute;
+        bottom: 15px;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+    }
+    .btn-upload-submit {
+      margin-top: 15px;
+      background: #036eb7;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+  }
+  #workModal {
+    .work-item {
+      max-width: 600px;
+      &-title {
+        overflow-wrap: anywhere;
+        font-size: 32px;
+      }
+      &-img {
+        width: 100%;
+      }
+      &-num {
+        font-size: 20px;
+        color: #393939;
+      }
+      &-vote {
+        font-size: 24px;
+      }
     }
   }
 }

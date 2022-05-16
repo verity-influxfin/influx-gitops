@@ -155,7 +155,7 @@
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content product">
                                             <div class="function-list-items">
-                                                <div class="link-title">個人金融</div>
+                                                <div class="link-title">個人融資</div>
                                                 <div class="link-item">
                                                     <a href="/collegeLoan" class="link-text">學生貸</a>
                                                 </div>
@@ -167,7 +167,7 @@
                                                 </div>
                                             </div>
                                             <div class="function-list-items">
-                                                <div class="link-title">企業金融</div>
+                                                <div class="link-title">企業融資</div>
                                                 <div class="link-item">
                                                     <a href="/business-loan/sme" class="link-text">微企e秒貸</a>
                                                 </div>
@@ -346,7 +346,7 @@
                             <div class="sub-title-icon">
                                 <img src="/images/personal-header-icon.svg" alt="">
                             </div>
-                            <div>個人金融</div>
+                            <div>個人融資</div>
                         </div>
                         <a href="/collegeLoan" class="item">學生貸款</a>
                         <a href="/workLoan" class="item">上班族貸款</a>
@@ -474,7 +474,7 @@
                     </div>
                     <div class="information">
                         <div class="item">
-                            <div class="header">個人金融</div>
+                            <div class="header">個人融資</div>
                             <div class="list">
                                 <a href="/collegeLoan">學生貸款</a>
                                 <a href="/engineerLoan">資訊工程師專案</a>
@@ -483,7 +483,7 @@
                             </div>
                         </div>
                         <div class="item">
-                            <div class="header">企業金融</div>
+                            <div class="header">企業融資</div>
                             <div class="list">
                                 <a href="/business-loan">企業主速貸</a>
                                 <div class="text-white">信保專案(銀行)</div>
@@ -630,8 +630,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="input-group" v-if="!loginHideOption">
-                            <button type="button" :class="['btn','btn-switch',{checked:!isCompany}]" @click="switchTag($event)">自然人登入</button>
-                            <button type="button" :class="['btn','btn-switch',{checked:isCompany}]" @click="switchTag($event)">法人登入</button>
+                            <button type="button" :class="['btn','btn-switch',{checked:!isCompany}]" @click="switchTag($event)">個人登入</button>
+                            <button type="button" :class="['btn','btn-switch',{checked:isCompany}]" @click="switchTag($event)">企業登入</button>
                         </div>
                         <div class="input-group" v-if="isCompany">
                             <span class="input-group-addon label-text">公司統編：</span>
