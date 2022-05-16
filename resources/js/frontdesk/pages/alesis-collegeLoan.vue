@@ -19,7 +19,7 @@
             <alesis-header>
                 <div class="標題">適用對象</div>
                 <div class="註釋">
-                    滿20歲的在校生，準備您的雙證件、學生證、金融卡，APP拍照上傳，<br>10分鐘申請、30分鐘審核、60分鐘極速到帳！
+                    滿20歲的在校生，準備您的雙證件、學生證、金融卡，APP拍照上傳，<br>5分鐘申貸 10分鐘核准 最快1小時放款！
                 </div>
             </alesis-header>
             <alesis-section>

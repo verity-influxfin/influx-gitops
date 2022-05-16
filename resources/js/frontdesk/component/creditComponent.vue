@@ -6,7 +6,7 @@
       </template>
       <template v-else>
         <p class="t-t">
-          只要有一支手機，「10分鐘」完成申貸手續、「30分鐘」核准、「60分鐘」到帳，<br />
+          只要有一支手機，5分鐘申貸 10分鐘核准 最快1小時放款，<br />
           全程AI自動審核、無人照會打擾，<br />
           完全符合現代年輕人希望簡單、快速、尊重隱私的生活需求！
         </p>
@@ -18,7 +18,7 @@
         <p class="license">*{{ $props.license }}</p>
       </template>
       <div class="credit-slider">
-        <creditBoard 
+        <creditBoard
         :amount="amount"
         minRate="5"
         maxRate="16"

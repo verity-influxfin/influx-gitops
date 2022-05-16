@@ -26,7 +26,7 @@
     <credit
       :creditList="creditList"
       amount="120000"
-      text="數萬名大專院校、碩博學士會員<br>動動手拍拍照手機上傳，額度立即核准！<br>最快5分鐘申貸 10分鐘核准 1小時放款！"
+      text="數萬名大專院校、碩博學士會員<br>動動手拍拍照手機上傳，額度立即核准！<br>5分鐘申貸 10分鐘核准 最快1小時放款！"
     />
     <experience :experiences="experiences" title="同學回饋" />
     <download :isLoan="true" :isInvest="false" />
