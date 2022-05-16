@@ -806,21 +806,21 @@ class Certification_lib{
                                                     $sip_id_number = $sip_data['response']['result']['idNumber'] ?? '';
                                                     if ($name != $sip_name)
                                                     {
-                                                        $verifiedResult->addMessage("SIP姓名與實名認證資訊不同:1.實名認證姓名=\"{$name}\"2.SIP姓名=\"{$sip_name}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                        $verifiedResult->addMessage("SIP姓名與實名認證資訊不同:1.實名認證姓名=\"{$name}\"2.SIP姓名=\"{$sip_name}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                                     }
                                                     if ($id_number != $sip_id_number)
                                                     {
-                                                        $verifiedResult->addMessage("SIP身分證與實名認證資訊不同1.實名認證身分證=\"{$id_number}\"2.SIP身分證=\"{$sip_id_number}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                        $verifiedResult->addMessage("SIP身分證與實名認證資訊不同1.實名認證身分證=\"{$id_number}\"2.SIP身分證=\"{$sip_id_number}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    $verifiedResult->addMessage('SIP爬蟲DeepScraper沒有資料，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                    $verifiedResult->addMessage('SIP爬蟲DeepScraper沒有資料，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                                 }
                                             }
                                             else if ($deep_log['response']['status'] == 'failure')
                                             {
-                                                $verifiedResult->addMessage('SIP爬蟲DeepScraper失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                $verifiedResult->addMessage('SIP爬蟲DeepScraper失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                             }
                                             else if ($deep_log['response']['status'] == 'deep scraping' || $deep_log['response']['status'] == 'logging in')
                                             {
@@ -828,7 +828,7 @@ class Certification_lib{
                                             }
                                             else
                                             {
-                                                $verifiedResult->addMessage('SIP爬蟲DeepLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                $verifiedResult->addMessage('SIP爬蟲DeepLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                             }
                                         }
                                         else if ($deep_log['status'] == SCRAPER_STATUS_NO_CONTENT)
@@ -841,7 +841,7 @@ class Certification_lib{
                                 else
                                 {
                                     // SIP 帳號密碼判定正確，但登入爬取過程中出現異常
-                                    $verifiedResult->addMessage('SIP帳號密碼正確，爬蟲執行失敗，請確認是否為在學中帳號，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                    $verifiedResult->addMessage('SIP帳號密碼正確，爬蟲執行失敗，請確認是否為在學中帳號，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                 }
                             }
                             else
@@ -858,20 +858,20 @@ class Certification_lib{
                                 ];
                                 $verifiedResult->addMessage('SIP登入失敗，學校狀態: ' .
                                     $status_mapping[$sip_log['response']['universityStatus']] .
-                                    '，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                    '，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                             }
                         }
                         else if ($sip_log['response']['status'] == 'failure')
                         {
-                            $verifiedResult->addMessage('SIP登入執行失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('SIP登入執行失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                         }
                         else if ($sip_log['response']['status'] == 'university_not_found')
                         {
-                            $verifiedResult->addMessage('SIP學校不在清單內，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('SIP學校不在清單內，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                         }
                         else if ($sip_log['response']['status'] == 'university_not_enabled')
                         {
-                            $verifiedResult->addMessage('SIP學校為黑名單，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('SIP學校為黑名單，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                         }
                         // 爬蟲未跑完
                         else if ($sip_log['response']['status'] == 'started' || $sip_log['response']['status'] == 'retry' || $sip_log['response']['status'] == 'requested')
@@ -880,7 +880,7 @@ class Certification_lib{
                         }
                         else
                         {
-                            $verifiedResult->addMessage('SIP爬蟲LoginLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('SIP爬蟲LoginLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                         }
                     }
                     else if ($sip_log['status'] == SCRAPER_STATUS_NO_CONTENT)
@@ -894,17 +894,17 @@ class Certification_lib{
                     }
                     else
                     {
-                        $verifiedResult->addMessage('SIP爬蟲LoginLog http回應: ' . $sip_log['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                        $verifiedResult->addMessage('SIP爬蟲LoginLog http回應: ' . $sip_log['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                     }
                 }
                 else
                 {
-                    $verifiedResult->addMessage('SIP爬蟲LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                    $verifiedResult->addMessage('SIP爬蟲LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                 }
             }
             else
             {
-                $verifiedResult->addMessage('SIP填入資訊為空', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                $verifiedResult->addMessage('SIP填入資訊為空', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             }
 
             // 預計畢業時間
@@ -921,24 +921,24 @@ class Certification_lib{
                         // 是否超過六年
                         if ($graduate_date <= strtotime(date('Y-m-d', $info->created_at) . '-6 years'))
                         {
-                            $verifiedResult->addMessage('已畢業，請申請上班族貸', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
+                            $verifiedResult->addMessage('已畢業，請申請上班族貸', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
                         }
                     }
                 }
                 else
                 {
-                    $verifiedResult->addMessage('預計畢業時間格式錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                    $verifiedResult->addMessage('預計畢業時間格式錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                 }
             }
             else
             {
-                $verifiedResult->addMessage('預計畢業時間格式錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                $verifiedResult->addMessage('預計畢業時間格式錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             }
 
             $status                  = $verifiedResult->getStatus();
             $remark                  = is_array(json_decode($info->remark, TRUE)) ? json_decode($info->remark, TRUE) : [];
             $remark['verify_result'] = isset($remark['verify_result']) ? $remark['verify_result'] : [];
-            $remark['verify_result'] = array_merge($remark['verify_result'], $verifiedResult->getAllMessage(MassageDisplay::Backend));
+            $remark['verify_result'] = array_merge($remark['verify_result'], $verifiedResult->getAllMessage(MessageDisplay::Backend));
 
             $this->CI->user_certification_model->update($info->id, array(
                 'status'    => $status != CERTIFICATION_STATUS_PENDING_TO_REVIEW ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,

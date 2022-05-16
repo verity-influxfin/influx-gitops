@@ -1,4 +1,6 @@
 <?php
+use CertificationResult\CertificationResult;
+use CertificationResult\MessageDisplay;
 
 class StudentCertificationResult extends CertificationResult
 {
@@ -11,6 +13,6 @@ class StudentCertificationResult extends CertificationResult
         if($this->banResubmit)
             return ['經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務'];
         else
-            return $this->getMessage($status, MassageDisplay::Client);
+            return $this->getMessage($status, MessageDisplay::Client);
     }
 }

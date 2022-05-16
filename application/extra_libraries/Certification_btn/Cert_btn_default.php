@@ -14,7 +14,7 @@ class Cert_btn_default extends Certification_btn_base
             case CERTIFICATION_STATUS_PENDING_TO_VALIDATE:
                 if ($this->is_submitted == FALSE)
                 {
-                    return '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $this->id) . '"><button type="button" class="btn btn-danger' . $sys_check . ' nhide"><i class="fa fa-exclamation"></i></button></a><span class="sword" style="display:none">未提交</span>';
+                    return '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $this->id) . '"><button type="button" class="btn btn-danger' . $sys_check . ' nhide"><i class="fa fa-exclamation"></i></button></a><span class="sword" style="display:none">資料未繳交完全</span>';
                 }
             case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
             case CERTIFICATION_STATUS_AUTHENTICATED:
