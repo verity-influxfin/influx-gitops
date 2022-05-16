@@ -23,8 +23,7 @@ class Instagram_lib
 
         $url = $this->scraper_url . "{$reference}/{$followed_account}/follow";
         $data = ['key' => ''];
-        $result = curl_get_statuscode($url, $data);
-        $response = json_decode($result, TRUE);
+        $response = curl_get_statuscode($url, $data);
 
         return $response;
     }

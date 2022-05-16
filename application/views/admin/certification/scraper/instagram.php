@@ -199,7 +199,7 @@
                             if (data.response.status == 200) {
                                 location.reload()
                             } else {
-                                alert(`子系統回應${data.response.status}，請洽工程師！`)
+                                alert(`子系統回應${data.response}，請洽工程師！`)
                             }
                         } else {
                             alert(`http回應${data.code}，請洽工程師！`)

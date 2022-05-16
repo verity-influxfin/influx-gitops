@@ -345,7 +345,6 @@ class Scraper extends MY_Admin_Controller
             ];
             echo json_encode($error);
         }
-        // 
         echo json_encode($result);
     }
 
@@ -567,7 +566,7 @@ class Scraper extends MY_Admin_Controller
             echo json_encode($error);
         }
         // 
-        echo json_encode(['status' => 200]);
+        echo json_encode($result);
     }
 
     public function business_registration()
@@ -608,7 +607,7 @@ class Scraper extends MY_Admin_Controller
             echo json_encode($error);
         }
         // 
-        echo json_encode(['status' => 200]);
+        echo json_encode($result);
     }
 
     public function google_status(){
@@ -669,7 +668,6 @@ class Scraper extends MY_Admin_Controller
             ];
             echo json_encode($error);
         }
-        // 
         echo json_encode($result);
     }
 
@@ -796,7 +794,7 @@ class Scraper extends MY_Admin_Controller
     public function updateIGUserInfo(){
         $this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
-        $result = $this->instagram_lib->updateUserInfo($input['userId'], $input['followed_account']);
+        $result = $this->instagram_lib->updateRiskControlInfo($input['userId'], $input['followed_account']);
         if( ! $result){
             $error = [
                 'response' => [
@@ -805,7 +803,6 @@ class Scraper extends MY_Admin_Controller
             ];
             echo json_encode($error);
         }
-        // 
         echo json_encode($result);
     }
 
@@ -821,8 +818,7 @@ class Scraper extends MY_Admin_Controller
             ];
             echo json_encode($error);
         }
-        // 
-        echo json_encode(['status' => 200]);
+        echo json_encode($result);
     }
 }
 ?>
