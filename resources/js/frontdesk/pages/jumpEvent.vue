@@ -1116,47 +1116,53 @@ export default {
       }
     }
     .intro {
+      .block-content {
+        display: grid;
+        padding: 60px 15px;
+        grid-template-columns: 1fr 550px;
+        grid-template-rows: auto auto 1fr 1fr;
+        gap: 20px 15px;
+        grid-template-areas:
+          'c1 cover'
+          'title cover'
+          'c2 cover'
+          'join cover';
+      }
       padding-bottom: 36px;
       &-title {
+        grid-area: title;
         margin: 36px 0 15px;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 22px;
-        line-height: 32px;
-        text-align: center;
+        font-size: 52px;
+        line-height: 1.6;
+        text-align: left;
         color: #036eb7;
       }
       &-content {
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 1.6;
-        text-align: center;
-        color: #707070;
+        grid-area: c1;
+        font-size: 30px;
+        text-align: left;
         &-2 {
-          font-style: normal;
-          font-weight: 500;
-          font-size: 14px;
-          line-height: 20px;
-          text-align: center;
-          color: #393939;
+          grid-area: c2;
+          text-align: left;
+          font-size: 32px;
+          line-height: 1.6;
         }
       }
       &-cover {
-        margin: 20px auto 15px;
+        grid-area: cover;
+        padding: 0 35px;
+        margin: 0;
+      }
+      &-join {
+        max-width: 450px;
       }
       .btn-jump {
-        background: #036eb7;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        border-radius: 6px;
-        color: #fff;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 18px;
-        line-height: 26px;
+        grid-area: jump;
+        font-size: 32px;
+        line-height: 42px;
         .jump-icon {
-          margin-right: 8px;
-          height: 26px;
+          margin-right: 12px;
+          height: 42px;
         }
       }
     }
