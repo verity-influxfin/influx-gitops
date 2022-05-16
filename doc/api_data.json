@@ -1046,10 +1046,10 @@
   },
   {
     "type": "get",
-    "url": "/certification/idcard",
+    "url": "/certification/identity",
     "title": "認證 實名認證資料",
     "version": "0.1.0",
-    "name": "GetCertificationIdcard",
+    "name": "GetCertificationIdentity",
     "group": "Certification",
     "header": {
       "fields": {
@@ -1217,7 +1217,7 @@
     "groupTitle": "Certification",
     "sampleRequest": [
       {
-        "url": "https://dev-api.influxfin.com/api/certification/idcard"
+        "url": "https://dev-api.influxfin.com/api/certification/identity"
       }
     ]
   },
@@ -3594,10 +3594,10 @@
   },
   {
     "type": "post",
-    "url": "/v2/certification/idcard",
+    "url": "/v2/certification/identity",
     "title": "認證 實名認證",
     "version": "0.2.0",
-    "name": "PostCertificationIdcard",
+    "name": "PostCertificationIdentity",
     "group": "Certification",
     "header": {
       "fields": {
@@ -3820,16 +3820,16 @@
     "groupTitle": "Certification",
     "sampleRequest": [
       {
-        "url": "https://dev-api.influxfin.com/api/v2/certification/idcard"
+        "url": "https://dev-api.influxfin.com/api/v2/certification/identity"
       }
     ]
   },
   {
     "type": "post",
-    "url": "/certification/idcard",
+    "url": "/certification/identity",
     "title": "認證 實名認證",
     "version": "0.1.0",
-    "name": "PostCertificationIdcard",
+    "name": "PostCertificationIdentity",
     "group": "Certification",
     "header": {
       "fields": {
@@ -4042,7 +4042,7 @@
     "groupTitle": "Certification",
     "sampleRequest": [
       {
-        "url": "https://dev-api.influxfin.com/api/certification/idcard"
+        "url": "https://dev-api.influxfin.com/api/certification/identity"
       }
     ]
   },

@@ -968,6 +968,16 @@ class Estatement_lib{
 						);
 					}
 					break;
+                case "promote_code":
+                    $url = $this->upload_pdf(
+                        $user_id,
+                        $html,
+                        $user_info->id_number,
+                        "推薦有賞對帳單",
+                        $user_id."-promote-".$edate.".pdf",
+                        "promote_code/".$edate
+                    );
+                    break;
 				default:
 					break;
 			}
@@ -1008,7 +1018,22 @@ class Estatement_lib{
 					$content = '親愛的 '.$user_info->name.' '.($user_info->sex=='M'?'先生':($user_info->sex=='F'?'小姐':'')).'您好：<br> 　　茲寄送您'.$y.'年'.$m.'月綜合對帳單，請您核對。<br>若有疑問請洽Line@粉絲團客服，我們將竭誠為您服務。<br>普匯金融科技有限公司　敬上 <br><p style="color:red;font-size:14px;">＊附件綜合對帳單已設為加密信件，開啟密碼個人戶為身分證字號(英文字母請輸入大寫)，公司戶為統一編號。</p>';
 					return $this->CI->sendemail->email_file_estatement($user_info->email,$title,$content,$estatement_url,$estatement_detail_url,$investor_status);
 				}
-			}
+            }
+            else if ($estatement && $estatement->type == 'promote_code')
+            {
+                $user_info = $this->CI->user_model->get($estatement->user_id);
+                if ($user_info && $user_info->name && $user_info->email)
+                {
+                    $this->CI->user_estatement_model->update($estatement_id, array("status" => 1));
+                    $estatement_url = $estatement->url;
+                    $investor_status = $estatement->investor;
+                    $y = date("Y", strtotime($estatement->sdate));
+                    $m = date("m", strtotime($estatement->sdate));
+                    $title = '【推薦有賞對帳單】';
+                    $content = '親愛的 ' . $user_info->name . ' ' . ($user_info->sex == 'M' ? '先生' : ($user_info->sex == 'F' ? '小姐' : '')) . '您好：<br> 　　茲寄送您' . $y . '年' . $m . '月推薦有賞對帳單，請您核對。<br>若有疑問請洽Line@粉絲團客服，我們將竭誠為您服務。<br>普匯金融科技有限公司　敬上 <br><p style="color:red;font-size:14px;">＊附件綜合對帳單已設為加密信件，開啟密碼個人戶為身分證字號(英文字母請輸入大寫)，公司戶為統一編號。</p>';
+                    return $this->CI->sendemail->email_file_estatement($user_info->email, $title, $content, $estatement_url, "", $investor_status);
+                }
+            }
 		}
 		return false;
 	}
