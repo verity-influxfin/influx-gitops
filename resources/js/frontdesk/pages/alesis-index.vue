@@ -123,7 +123,9 @@
               <div class="card">
                 <div class="card-title">學生貸</div>
                 <div class="card-content p1">
-                  <div class="card-subtitle">額度最高15萬</div>
+                  <div class="card-subtitle">
+                    台灣最大學生貸平台進修、學雜費、3C、機車
+                  </div>
                   <div class="card-image p1"></div>
                   <router-link to="/collegeLoan" class="card-link">
                     了解更多
@@ -135,7 +137,9 @@
               <div class="card">
                 <div class="card-title">上班族貸</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高30萬</div>
+                  <div class="card-subtitle">
+                    公開透明，無人化自動審核信用評分，申辦不收手續費
+                  </div>
                   <div class="card-image p2"></div>
                   <router-link to="/workLoan" class="card-link">
                     了解更多
@@ -147,7 +151,9 @@
               <div class="card">
                 <div class="card-title">資訊工程師貸</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高30萬</div>
+                  <div class="card-subtitle">
+                    工程師最優惠貸款，就在普匯 只要你•工程師
+                  </div>
                   <div class="card-image p3"></div>
                   <router-link to="/engineerLoan" class="card-link">
                     了解更多
@@ -159,6 +165,9 @@
               <div class="card">
                 <div class="card-title">汽車貸款</div>
                 <div class="card-content">
+                  <div class="card-subtitle">
+                    只要你有車，貸給你車商、購車，都能貸
+                  </div>
                   <div class="card-image p4"></div>
                   <div style="grid-area: link">coming soon</div>
                 </div>
@@ -168,6 +177,9 @@
               <div class="card">
                 <div class="card-title">投資人專區</div>
                 <div class="card-content">
+                  <div class="card-subtitle">
+                    只要你有車，貸給你車商、購車，都能貸
+                  </div>
                   <div class="card-image p5"></div>
                   <router-link to="/invest" class="card-link">
                     了解更多
@@ -179,7 +191,9 @@
               <div class="card">
                 <div class="card-title">企業主速貸</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高100萬</div>
+                  <div class="card-subtitle">
+                    速速來貸，最高額度100萬 歡迎新創、微企，快速貸給你
+                  </div>
                   <div class="card-image p6"></div>
                   <div>coming soon</div>
                 </div>
@@ -189,7 +203,9 @@
               <div class="card">
                 <div class="card-title">信保專案(銀行合作)</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高600萬</div>
+                  <div class="card-subtitle">
+                    普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
+                  </div>
                   <div class="card-image p7"></div>
                   <div>coming soon</div>
                 </div>
@@ -199,7 +215,7 @@
               <div class="card">
                 <div class="card-title">中小企業信貸</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高2000萬</div>
+                  <div class="card-subtitle">專為中小企業，最高信貸2000萬</div>
                   <div class="card-image p8"></div>
                   <div>coming soon</div>
                 </div>
@@ -209,7 +225,9 @@
               <div class="card">
                 <div class="card-title">慈善公益</div>
                 <div class="card-content">
-                  <div class="card-subtitle">台大兒醫</div>
+                  <div class="card-subtitle">
+                    您的樂捐，讓台灣兒童更健康 攜手台大兒童基金會聯合勸募樂
+                  </div>
                   <div class="card-image p9"></div>
                   <router-link to="/charitable" class="card-link">
                     了解更多
@@ -222,8 +240,7 @@
                 <div class="card-title">分享QR賺外快</div>
                 <div class="card-content">
                   <div class="card-subtitle">
-                    <div>特約通路商</div>
-                    <div>管理系統</div>
+                    <div>取得普匯QR，分享爽賺 會員、特約商管理專區</div>
                   </div>
                   <div class="card-image p10"></div>
                   <router-link to="/promote-code-intro" class="card-link">
@@ -1417,7 +1434,7 @@ export default {
       .card-content {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 60px 30px;
+        grid-template-rows: 74px 30px;
         grid-template-areas:
           'subtitle image'
           'link image';
