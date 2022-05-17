@@ -825,7 +825,7 @@ class Product extends REST_Controller {
             $this->load->library('credit_lib');
             $chk_credit = $this->credit_lib->get_remain_amount($user_id, $product['id'], $sub_product_id);
 
-            if ($chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $input['instalment'])
+            if ($chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $input['instalment'] && $chk_credit['remain_amount'] > $product['loan_range_s'])
             {
                 // 有效期內的核可額度(條件：同產品、同期間)
                 if ($chk_credit['remain_amount'] >= $input['amount'])
@@ -835,7 +835,7 @@ class Product extends REST_Controller {
                 else
                 { // 該產品已無使用額度
                     $param['status'] = TARGET_WAITING_SIGNING;
-                    $param['loan_amount'] = $chk_credit['remain_amount'];
+                    $param['loan_amount'] = floor($chk_credit['remain_amount'] / 1000) * 1000;
                 }
             }
 
