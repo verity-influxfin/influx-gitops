@@ -429,6 +429,9 @@ class Target_lib
                                 }
                                 $param['target_data'] = json_encode($tempData);
 
+                                $param['status'] = TARGET_WAITING_APPROVE;
+                                $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
+
                                 $rs = $this->CI->target_model->update($target->id, $param);
 
                                 if(!$renew) {
