@@ -6,25 +6,6 @@
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
-                <div class="row no-gutters general">
-                  <div class="col-auto">
-                    <div class="text-bg">
-                      <img
-                        src="@/asset/images/index/header/general-phone.png"
-                        alt="普匯influx"
-                      />
-                    </div>
-                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
-                  </div>
-                  <div class="col position-releative">
-                    <img
-                      src="@/asset/images/index/header/general-man-phone.png"
-                      class="man"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="swiper-slide">
                 <div class="row no-gutters anniversary">
                   <div class="col-auto">
                     <div class="text-bg">
@@ -48,7 +29,29 @@
                     <div class="solgan">提供公開 透明 安全的金融科技服務</div>
                   </div>
                   <div class="col position-releative">
-                    <img src="@/asset/images/index/header/img57-phone.png" class="img57" />
+                    <img
+                      src="@/asset/images/index/header/img57-phone.png"
+                      class="img57"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="row no-gutters general">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/general-phone.png"
+                        alt="普匯influx"
+                      />
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img
+                      src="@/asset/images/index/header/general-man-phone.png"
+                      class="man"
+                    />
                   </div>
                 </div>
               </div>
@@ -61,25 +64,6 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <div class="row no-gutters general">
-                  <div class="col-auto">
-                    <div class="text-bg">
-                      <img
-                        src="@/asset/images/index/header/general.png"
-                        alt="普匯influx"
-                      />
-                    </div>
-                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
-                  </div>
-                  <div class="col position-releative">
-                    <img
-                      src="@/asset/images/index/header/general-man.png"
-                      class="man"
-                    />
-                  </div>
-                </div>
-              </div>
               <div class="swiper-slide">
                 <div class="row no-gutters anniversary">
                   <div class="col-auto">
@@ -105,6 +89,25 @@
                   </div>
                   <div class="col position-releative">
                     <img src="@/asset/images/index/img57.png" class="img57" />
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="row no-gutters general">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/general.png"
+                        alt="普匯influx"
+                      />
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img
+                      src="@/asset/images/index/header/general-man.png"
+                      class="man"
+                    />
                   </div>
                 </div>
               </div>
@@ -1227,6 +1230,11 @@ export default {
     })
     // banner
     new Swiper('.sw-headers', {
+      loop: true,
+      speed: 2500,
+      autoplay: {
+        delay: 5000,
+      },
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev'
@@ -2321,7 +2329,7 @@ export default {
             height: 267px;
             transform: rotate(-10deg);
             top: 72px;
-            left:-155px;
+            left: -155px;
           }
         }
         .general {
