@@ -835,7 +835,12 @@ class Product extends REST_Controller {
                 else
                 { // 該產品已無使用額度
                     $param['status'] = TARGET_WAITING_SIGNING;
-                    $param['loan_amount'] = floor($chk_credit['remain_amount'] / 1000) * 1000;
+                    $param['loan_amount'] = (int) (floor($chk_credit['remain_amount'] / 1000) * 1000);
+                }
+                $param['credit_level'] = $chk_credit['credit_level'];
+                if ( ! empty($param['loan_amount']) && $param['loan_amount'] > $product['loan_range_e'])
+                {
+                    $param['loan_amount'] = $product['loan_range_e'];
                 }
             }
 
