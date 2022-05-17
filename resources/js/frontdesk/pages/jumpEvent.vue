@@ -230,11 +230,6 @@
             </div>
           </div>
         </div>
-        <div class="text-center" v-if="!isLast">
-          <button class="btn" @click="doSearch">
-            <img src="@/asset/images/jump/load-more.svg" />
-          </button>
-        </div>
       </div>
     </div>
     <div id="bouns-nav"></div>
@@ -581,7 +576,7 @@ export default {
       }
     },
     getList() {
-      Axios.get('/api/v1/campaign2022/list').then(({ data }) => {
+      return Axios.get('/api/v1/campaign2022/list').then(({ data }) => {
         this.fullList = data.data
       })
     },
@@ -623,12 +618,8 @@ export default {
       if (this.currentPage > this.maxPage) {
         return
       }
-      Axios.get('/api/v1/campaign2022/list/page/' + this.currentPage).then(({ data }) => {
-        if (data.success) {
-          this.workList = [...this.workList, ...data.data.list]
-          this.maxPage = Math.ceil(data.data.total / 3)
-          this.currentPage = this.currentPage + 1
-        }
+      this.getList().then(()=>{
+          this.workList = this.fullList
       })
     },
     doSearch() {
@@ -667,11 +658,6 @@ export default {
       }
     }
   },
-  computed:{
-      isLast(){
-          return this.total <= this.workList.length
-      }
-  }
 }
 </script>
 
