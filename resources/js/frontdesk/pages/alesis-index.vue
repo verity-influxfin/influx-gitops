@@ -2,12 +2,61 @@
   <div class="index-wrapper">
     <div class="index-intro section">
       <div class="block-content intro-content">
-        <div class="d-sm-none d-flex mt-3">
-          <img
-            src="@/asset/images/index/phone-header-text.png"
-            class="img-fluid p-3"
-            alt=""
-          />
+        <div class="d-sm-none d-flex">
+          <div class="swiper sw-headers">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="row no-gutters general">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/general-phone.png"
+                        alt="普匯influx"
+                      />
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img
+                      src="@/asset/images/index/header/general-man-phone.png"
+                      class="man"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="row no-gutters anniversary">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/anniversary-text-phone.png"
+                        alt="普匯5週年"
+                      />
+                    </div>
+                    <div class="links">
+                      <a href="/5th-anniversary#method-nav">
+                        <button class="btn btn-join">
+                          立即參與 <i class="fa fa-chevron-right"></i>
+                        </button>
+                      </a>
+                      <a href="/5th-anniversary#vote-nav">
+                        <button class="btn btn-vote">
+                          立即投票 <i class="fa fa-chevron-right"></i>
+                        </button>
+                      </a>
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img src="@/asset/images/index/header/img57-phone.png" class="img57" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
         </div>
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
@@ -2230,8 +2279,71 @@ export default {
     .intro-content {
       background-image: url('~images/index/header-bg-phone.jpg');
       background-position: initial;
+      .sw-headers {
+        min-height: 300px;
+        .swiper-slide {
+          padding: 0 35px;
+          color: white;
+        }
+        .swiper-button-prev,
+        .swiper-button-next {
+          color: #fff;
+          &::after {
+            font-size: 20px;
+          }
+        }
+        .anniversary {
+          padding-top: 20px;
+          .text-bg {
+            height: 92px;
+            width: 313px;
+          }
+          .links {
+            margin: 35px 0;
+            gap: 15px;
+            flex-direction: column;
+            .btn-join {
+              gap: 10px;
+              width: 130px;
+              font-size: 14px;
+            }
+            .btn-vote {
+              gap: 10px;
+              width: 130px;
+              font-size: 14px;
+            }
+          }
+          .solgan {
+            font-size: 14px;
+          }
+          .img57 {
+            position: absolute;
+            height: 267px;
+            transform: rotate(-10deg);
+            top: 72px;
+            left:-155px;
+          }
+        }
+        .general {
+          padding-top: 20px;
+          .text-bg {
+            height: 104px;
+            width: 178px;
+          }
+          .solgan {
+            margin-top: 182px;
+            font-size: 14px;
+          }
+          .man {
+            left: -90px;
+            position: absolute;
+            height: 295px;
+            top: 85px;
+          }
+        }
+      }
       .intro-products {
-        margin-top: -90px;
+        margin-top: -10px;
         padding-bottom: 45px;
         .group {
           &.group-web {
@@ -2241,7 +2353,7 @@ export default {
             display: grid;
           }
           gap: 13px;
-          margin: 20px 0;
+          margin: 20px 13px;
           display: grid;
           grid-template-columns: 1fr 1fr 1fr;
         }
