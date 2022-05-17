@@ -1,13 +1,69 @@
 <template>
   <div class="index-wrapper">
     <div class="index-intro section">
-      <div class="row no-gutters block-content intro-content">
+      <div class="block-content intro-content">
         <div class="d-sm-none d-flex mt-3">
           <img
             src="@/asset/images/index/phone-header-text.png"
             class="img-fluid p-3"
             alt=""
           />
+        </div>
+        <div class="d-sm-flex d-none">
+          <div class="swiper sw-headers">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="row no-gutters general">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/general.png"
+                        alt="普匯influx"
+                      />
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img
+                      src="@/asset/images/index/header/general-man.png"
+                      class="man"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="row no-gutters anniversary">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/anniversary-text.png"
+                        alt="普匯5週年"
+                      />
+                    </div>
+                    <div class="links">
+                      <a href="/5th-anniversary#method-nav">
+                        <button class="btn btn-join">
+                          立即參與 <i class="fa fa-chevron-right"></i>
+                        </button>
+                      </a>
+                      <a href="/5th-anniversary#vote-nav">
+                        <button class="btn btn-vote">
+                          立即投票 <i class="fa fa-chevron-right"></i>
+                        </button>
+                      </a>
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img src="@/asset/images/index/img57.png" class="img57" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
         </div>
         <div class="intro-products">
           <div class="group group-web">
@@ -1120,6 +1176,13 @@ export default {
         prevEl: '.swiper-button-prev'
       }
     })
+    // banner
+    new Swiper('.sw-headers', {
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
+    })
   }
 }
 </script>
@@ -1148,18 +1211,95 @@ export default {
 .index-intro {
   background-image: url('~images/index/index-header-bg.png');
   background-position: center;
-  padding: 30px;
+  padding: 80px 0 30px;
   background-size: cover;
   background-repeat: no-repeat;
-  height: 750px;
+  min-height: 750px;
   .intro-content {
-    height: 100%;
-    background-image: url('~images/index/index-header-bg-2.png');
-    background-size: cover;
-    background-position: -320px -39px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    .sw-headers {
+      min-height: 300px;
+      z-index: 0;
+      .swiper-slide {
+        padding: 0 45px;
+        color: white;
+      }
+      .swiper-button-prev,
+      .swiper-button-next {
+        color: #fff;
+        &::after {
+          font-size: 28px;
+        }
+      }
+      .anniversary {
+        .text-bg {
+          height: 192px;
+          width: 656px;
+        }
+        .links {
+          margin: 20px 0;
+          display: flex;
+          gap: 36px;
+          .btn-join {
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            color: #fff;
+            background: #083a6e;
+            box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            font-size: 28px;
+          }
+          .btn-vote {
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            color: #fff;
+            background: #ffc535;
+            box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            font-size: 28px;
+          }
+        }
+        .solgan {
+          font-style: normal;
+          font-weight: 700;
+          font-size: 24px;
+          letter-spacing: 0.04em;
+          color: #ffffff;
+        }
+        .img57 {
+          position: absolute;
+          height: 550px;
+          top: -15px;
+        }
+      }
+      .general {
+        .text-bg {
+          height: 192px;
+          width: 472px;
+        }
+        .solgan {
+          margin-top: 100px;
+          font-style: normal;
+          font-weight: 700;
+          font-size: 24px;
+          letter-spacing: 0.04em;
+          color: #ffffff;
+        }
+        .man {
+          left: 200px;
+          position: absolute;
+          height: 625px;
+          top: -15px;
+        }
+      }
+    }
     .intro-products {
       .group {
         &.group-web {
@@ -1168,7 +1308,7 @@ export default {
         &.group-phone {
           display: none;
         }
-        margin: 20px;
+        margin: 16px 45px 16px 30px;
         grid-template-columns: repeat(5, 1fr);
         gap: 20px;
       }
