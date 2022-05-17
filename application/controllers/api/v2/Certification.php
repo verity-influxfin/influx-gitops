@@ -610,10 +610,13 @@ class Certification extends REST_Controller {
                 'user_id'			=> $user_id,
                 'certification_id'	=> CERTIFICATION_IDENTITY,
                 'investor'			=> $investor,
-                'status'            => [1,2]
             );
 
-            $certification = $this->user_certification_model->order_by('created_at','desc')->get_by($param);
+            $last_certification = $this->user_certification_model->order_by('created_at','desc')->get_by($param);
+            $data['status'] = (int)($last_certification->status ?? 0);
+            $certification = $this->user_certification_model->order_by('created_at','desc')->get_by(
+                array_merge($param, ['status' => [CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_FAILED]])
+            );
             if($certification) {
                 $content = json_decode($certification->content, TRUE);
                 $remark = json_decode($certification->remark, TRUE);

@@ -1045,7 +1045,8 @@ class Credit_lib{
             'credit_amount' => 0, // 核可額度
             'target_amount' => 0, // 佔用中的額度
             'remain_amount' => 0, // 剩餘可用額度
-            'instalment' => 0
+            'instalment' => 0,
+            'credit_level' => 0,
         ];
 
         // 撈取同產品的最新一筆核可資訊
@@ -1105,7 +1106,8 @@ class Credit_lib{
                 'credit_amount' => $user_max_credit_amount, // 核可額度
                 'target_amount' => $all_used_amount, // 佔用中的額度
                 'remain_amount' => $user_max_credit_amount - $all_used_amount, // 剩餘可用額度
-                'instalment' => $credit['instalment']
+                'instalment' => $credit['instalment'],
+                'credit_level' => $credit['level'] ?? 0
             ];
         }
 
