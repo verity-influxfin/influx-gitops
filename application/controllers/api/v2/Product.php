@@ -839,7 +839,6 @@ class Product extends REST_Controller {
                     $param['loan_amount'] = (int) (floor($chk_credit['remain_amount'] / 1000) * 1000);
                 }
                 $param['credit_level'] = $chk_credit['credit_level'];
-                $param['sys_check'] = SYSTEM_CHECK;
                 if ( ! empty($param['loan_amount']) && $param['loan_amount'] > $product['loan_range_e'])
                 {
                     $param['loan_amount'] = $product['loan_range_e'];
