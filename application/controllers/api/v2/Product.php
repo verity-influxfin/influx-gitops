@@ -831,6 +831,7 @@ class Product extends REST_Controller {
                 if ($chk_credit['remain_amount'] >= $input['amount'])
                 { // 該產品有未使用額度
                     $param['status'] = TARGET_WAITING_SIGNING;
+                    $param['loan_amount'] = (int) (floor($input['amount'] / 1000) * 1000);
                 }
                 else
                 { // 該產品已無使用額度
@@ -838,6 +839,7 @@ class Product extends REST_Controller {
                     $param['loan_amount'] = (int) (floor($chk_credit['remain_amount'] / 1000) * 1000);
                 }
                 $param['credit_level'] = $chk_credit['credit_level'];
+                $param['sys_check'] = SYSTEM_CHECK;
                 if ( ! empty($param['loan_amount']) && $param['loan_amount'] > $product['loan_range_e'])
                 {
                     $param['loan_amount'] = $product['loan_range_e'];
@@ -2727,10 +2729,36 @@ class Product extends REST_Controller {
                 $contract_data = ['', $target->user_id, $target->loan_amount, $interest_rate, ''];
 
                 $this->target_model->update($insert, [
-                    'status' => TARGET_WAITING_SIGNING,
                     'platform_fee' => $this->financial_lib->get_platform_fee($target->loan_amount, $product_info['charge_platform']),
                     'interest_rate' => $interest_rate,
                     'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
+                ]);
+
+                // 寫授審表
+                $creditSheet = \CreditSheet\CreditSheetFactory::getInstance($target->id);
+                $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '一審通過');
+                $creditSheet->setFinalReviewerLevel($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM);
+                $creditSheet->archive($credit);
+
+                // 寫target_data
+                $credit_sheet_info = $this->credit_sheet_model->get_by(['target_id' => $target->id]);
+                if ( ! empty($credit_sheet_info->certification_list))
+                {
+                    $target_data = json_decode($target->target_data ?? '', TRUE);
+                    $target_data['certification_id'] = json_decode($credit_sheet_info->certification_list, TRUE);
+                    $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
+                }
+
+                // 寫log
+                $this->load->model('log/log_targetschange_model');
+                $this->log_targetschange_model->insert([
+                    'target_id' => $target->id,
+                    'interest_rate' => $target->interest_rate,
+                    'delay' => 0,
+                    'status' => $target->status,
+                    'loan_status' => $target->loan_status,
+                    'sub_status' => $target->sub_status,
+                    'sys_check' => $target->sys_check
                 ]);
             }
 
