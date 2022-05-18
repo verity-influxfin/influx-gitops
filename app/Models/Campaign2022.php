@@ -22,7 +22,7 @@ class Campaign2022 extends Model
 
     public function scopeKeyword($query, $keyword)
     {
-        return $query->where('user_id', 'like', "%{$keyword}%")->orWhere('nick_name', 'like', "%{$keyword}%");
+        return $query->where('nick_name', 'like', "%{$keyword}%");
     }
 
     public function scopeGetColumns($query)
