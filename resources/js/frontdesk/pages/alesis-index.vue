@@ -1,13 +1,121 @@
 <template>
   <div class="index-wrapper">
     <div class="index-intro section">
-      <div class="row no-gutters block-content intro-content">
-        <div class="d-sm-none d-flex mt-3">
-          <img
-            src="@/asset/images/index/phone-header-text.png"
-            class="img-fluid p-3"
-            alt=""
-          />
+      <div class="block-content intro-content">
+        <div class="d-sm-none d-flex">
+          <div class="swiper sw-headers">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="row no-gutters anniversary">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/anniversary-text-phone.png"
+                        alt="普匯5週年"
+                      />
+                    </div>
+                    <div class="links">
+                      <a href="/5th-anniversary#method-nav">
+                        <button class="btn btn-join">
+                          立即參與 <i class="fa fa-chevron-right"></i>
+                        </button>
+                      </a>
+                      <a href="/5th-anniversary#vote-nav">
+                        <button class="btn btn-vote">
+                          立即投票 <i class="fa fa-chevron-right"></i>
+                        </button>
+                      </a>
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img
+                      src="@/asset/images/index/header/img57-phone.png"
+                      class="img57"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="row no-gutters general">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/general-phone.png"
+                        alt="普匯influx"
+                      />
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img
+                      src="@/asset/images/index/header/general-man-phone.png"
+                      class="man"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div>
+        <div class="d-sm-flex d-none">
+          <div class="swiper sw-headers">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="row no-gutters anniversary">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/anniversary-text.png"
+                        alt="普匯5週年"
+                      />
+                    </div>
+                    <div class="links">
+                      <a href="/5th-anniversary#method-nav">
+                        <button class="btn btn-join">
+                          立即參與 <i class="fa fa-chevron-right"></i>
+                        </button>
+                      </a>
+                      <a href="/5th-anniversary#vote-nav">
+                        <button class="btn btn-vote">
+                          立即投票 <i class="fa fa-chevron-right"></i>
+                        </button>
+                      </a>
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img src="@/asset/images/index/img57.png" class="img57" />
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="row no-gutters general">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/general.png"
+                        alt="普匯influx"
+                      />
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img
+                      src="@/asset/images/index/header/general-man.png"
+                      class="man"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
         </div>
         <div class="intro-products">
           <div class="group group-web">
@@ -15,7 +123,9 @@
               <div class="card">
                 <div class="card-title">學生貸</div>
                 <div class="card-content p1">
-                  <div class="card-subtitle">額度最高15萬</div>
+                  <div class="card-subtitle">
+                    台灣最大學生貸平台進修、學雜費、3C、機車
+                  </div>
                   <div class="card-image p1"></div>
                   <router-link to="/collegeLoan" class="card-link">
                     了解更多
@@ -27,7 +137,9 @@
               <div class="card">
                 <div class="card-title">上班族貸</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高30萬</div>
+                  <div class="card-subtitle">
+                    公開透明，無人化自動審核信用評分，申辦不收手續費
+                  </div>
                   <div class="card-image p2"></div>
                   <router-link to="/workLoan" class="card-link">
                     了解更多
@@ -39,7 +151,9 @@
               <div class="card">
                 <div class="card-title">資訊工程師貸</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高30萬</div>
+                  <div class="card-subtitle">
+                    工程師最優惠貸款，就在普匯 只要你•工程師
+                  </div>
                   <div class="card-image p3"></div>
                   <router-link to="/engineerLoan" class="card-link">
                     了解更多
@@ -51,6 +165,9 @@
               <div class="card">
                 <div class="card-title">汽車貸款</div>
                 <div class="card-content">
+                  <div class="card-subtitle">
+                    只要你有車，貸給你車商、購車，都能貸
+                  </div>
                   <div class="card-image p4"></div>
                   <div style="grid-area: link">coming soon</div>
                 </div>
@@ -60,6 +177,9 @@
               <div class="card">
                 <div class="card-title">投資人專區</div>
                 <div class="card-content">
+                  <div class="card-subtitle">
+                    小額、分期，最佳投資心法低風險、高報酬，複利滾投
+                  </div>
                   <div class="card-image p5"></div>
                   <router-link to="/invest" class="card-link">
                     了解更多
@@ -71,7 +191,9 @@
               <div class="card">
                 <div class="card-title">企業主速貸</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高100萬</div>
+                  <div class="card-subtitle">
+                    速速來貸，最高額度100萬 歡迎新創、微企，快速貸給你
+                  </div>
                   <div class="card-image p6"></div>
                   <div>coming soon</div>
                 </div>
@@ -81,7 +203,9 @@
               <div class="card">
                 <div class="card-title">信保專案(銀行合作)</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高600萬</div>
+                  <div class="card-subtitle">
+                    普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
+                  </div>
                   <div class="card-image p7"></div>
                   <div>coming soon</div>
                 </div>
@@ -91,7 +215,7 @@
               <div class="card">
                 <div class="card-title">中小企業信貸</div>
                 <div class="card-content">
-                  <div class="card-subtitle">額度最高2000萬</div>
+                  <div class="card-subtitle">專為中小企業，最高信貸2000萬</div>
                   <div class="card-image p8"></div>
                   <div>coming soon</div>
                 </div>
@@ -101,7 +225,11 @@
               <div class="card">
                 <div class="card-title">慈善公益</div>
                 <div class="card-content">
-                  <div class="card-subtitle">台大兒醫</div>
+                  <div class="card-subtitle">
+                      <div>台大兒童基金會、</div>
+                      <div>張鈞甯、鍾欣凌，</div>
+                      <div>聯合勸募</div>
+                  </div>
                   <div class="card-image p9"></div>
                   <router-link to="/charitable" class="card-link">
                     了解更多
@@ -114,8 +242,7 @@
                 <div class="card-title">分享QR賺外快</div>
                 <div class="card-content">
                   <div class="card-subtitle">
-                    <div>特約通路商</div>
-                    <div>管理系統</div>
+                    <div>取得普匯QR，分享爽賺 會員、特約商管理專區</div>
                   </div>
                   <div class="card-image p10"></div>
                   <router-link to="/promote-code-intro" class="card-link">
@@ -717,7 +844,7 @@
               <div class="step-content-1">
                 <div class="step-content-title">步驟一</div>
                 <div class="step-content-info">
-                  <div>進入我的資產 -</div>
+                  <div>進入我的資產</div>
                 </div>
                 <div class="step-content-img">
                   <img
@@ -730,7 +857,7 @@
               <div class="step-content-2">
                 <div class="step-content-title">步驟二</div>
                 <div class="step-content-info">
-                  <div>選擇單筆/打包出售 -</div>
+                  <div>選擇單筆/打包出售</div>
                 </div>
                 <div class="step-content-img">
                   <img
@@ -744,7 +871,7 @@
                 <div class="step-content-title">步驟三</div>
                 <div class="step-content-info">
                   <div>調整出讓金額，並點選出讓</div>
-                  <div>詳閱轉讓協議書 -</div>
+                  <div>詳閱轉讓協議書</div>
                 </div>
                 <div class="step-content-img">
                   <img
@@ -757,7 +884,7 @@
               <div class="step-content-4">
                 <div class="step-content-title">步驟四</div>
                 <div class="step-content-info">
-                  <div>上架成功，等待媒合 -</div>
+                  <div>上架成功，等待媒合</div>
                 </div>
                 <div class="step-content-img">
                   <img
@@ -1120,6 +1247,18 @@ export default {
         prevEl: '.swiper-button-prev'
       }
     })
+    // banner
+    new Swiper('.sw-headers', {
+      loop: true,
+      speed: 2500,
+      autoplay: {
+        delay: 5000,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
+    })
   }
 }
 </script>
@@ -1148,18 +1287,95 @@ export default {
 .index-intro {
   background-image: url('~images/index/index-header-bg.png');
   background-position: center;
-  padding: 30px;
+  padding: 80px 0 30px;
   background-size: cover;
   background-repeat: no-repeat;
-  height: 750px;
+  min-height: 750px;
   .intro-content {
-    height: 100%;
-    background-image: url('~images/index/index-header-bg-2.png');
-    background-size: cover;
-    background-position: -320px -39px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    .sw-headers {
+      min-height: 300px;
+      z-index: 0;
+      .swiper-slide {
+        padding: 0 45px;
+        color: white;
+      }
+      .swiper-button-prev,
+      .swiper-button-next {
+        color: #fff;
+        &::after {
+          font-size: 28px;
+        }
+      }
+      .anniversary {
+        .text-bg {
+          height: 192px;
+          width: 656px;
+        }
+        .links {
+          margin: 20px 0;
+          display: flex;
+          gap: 36px;
+          .btn-join {
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            color: #fff;
+            background: #083a6e;
+            box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            font-size: 28px;
+          }
+          .btn-vote {
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            color: #fff;
+            background: #ffc535;
+            box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            font-size: 28px;
+          }
+        }
+        .solgan {
+          font-style: normal;
+          font-weight: 700;
+          font-size: 24px;
+          letter-spacing: 0.04em;
+          color: #ffffff;
+        }
+        .img57 {
+          position: absolute;
+          height: 550px;
+          top: -15px;
+        }
+      }
+      .general {
+        .text-bg {
+          height: 192px;
+          width: 472px;
+        }
+        .solgan {
+          margin-top: 100px;
+          font-style: normal;
+          font-weight: 700;
+          font-size: 24px;
+          letter-spacing: 0.04em;
+          color: #ffffff;
+        }
+        .man {
+          left: 200px;
+          position: absolute;
+          height: 625px;
+          top: -15px;
+        }
+      }
+    }
     .intro-products {
       .group {
         &.group-web {
@@ -1168,7 +1384,7 @@ export default {
         &.group-phone {
           display: none;
         }
-        margin: 20px;
+        margin: 16px 45px 16px 30px;
         grid-template-columns: repeat(5, 1fr);
         gap: 20px;
       }
@@ -1219,8 +1435,8 @@ export default {
       }
       .card-content {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 60px 30px;
+        grid-template-columns: 10fr 7fr;
+        grid-template-rows: 74px 30px;
         grid-template-areas:
           'subtitle image'
           'link image';
@@ -1323,7 +1539,7 @@ export default {
         content: '「匯」';
         color: #f29600;
         opacity: 1;
-        font-size: 32px;
+        font-size: 40px;
         line-height: 45px;
       }
     }
@@ -2090,8 +2306,71 @@ export default {
     .intro-content {
       background-image: url('~images/index/header-bg-phone.jpg');
       background-position: initial;
+      .sw-headers {
+        min-height: 300px;
+        .swiper-slide {
+          padding: 0 35px;
+          color: white;
+        }
+        .swiper-button-prev,
+        .swiper-button-next {
+          color: #fff;
+          &::after {
+            font-size: 20px;
+          }
+        }
+        .anniversary {
+          padding-top: 20px;
+          .text-bg {
+            height: 92px;
+            width: 313px;
+          }
+          .links {
+            margin: 35px 0;
+            gap: 15px;
+            flex-direction: column;
+            .btn-join {
+              gap: 10px;
+              width: 130px;
+              font-size: 14px;
+            }
+            .btn-vote {
+              gap: 10px;
+              width: 130px;
+              font-size: 14px;
+            }
+          }
+          .solgan {
+            font-size: 14px;
+          }
+          .img57 {
+            position: absolute;
+            height: 267px;
+            transform: rotate(-10deg);
+            top: 72px;
+            left: -155px;
+          }
+        }
+        .general {
+          padding-top: 20px;
+          .text-bg {
+            height: 104px;
+            width: 178px;
+          }
+          .solgan {
+            margin-top: 182px;
+            font-size: 14px;
+          }
+          .man {
+            left: -90px;
+            position: absolute;
+            height: 295px;
+            top: 85px;
+          }
+        }
+      }
       .intro-products {
-        margin-top: -90px;
+        margin-top: -10px;
         padding-bottom: 45px;
         .group {
           &.group-web {
@@ -2101,7 +2380,7 @@ export default {
             display: grid;
           }
           gap: 13px;
-          margin: 20px 0;
+          margin: 20px 13px;
           display: grid;
           grid-template-columns: 1fr 1fr 1fr;
         }
