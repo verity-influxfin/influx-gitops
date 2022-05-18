@@ -178,7 +178,7 @@
                 <div class="card-title">投資人專區</div>
                 <div class="card-content">
                   <div class="card-subtitle">
-                    只要你有車，貸給你車商、購車，都能貸
+                    小額、分期，最佳投資心法低風險、高報酬，複利滾投
                   </div>
                   <div class="card-image p5"></div>
                   <router-link to="/invest" class="card-link">
@@ -226,7 +226,9 @@
                 <div class="card-title">慈善公益</div>
                 <div class="card-content">
                   <div class="card-subtitle">
-                    您的樂捐，讓台灣兒童更健康 攜手台大兒童基金會聯合勸募樂
+                      <div>台大兒童基金會、</div>
+                      <div>張鈞甯、鍾欣凌，</div>
+                      <div>聯合勸募</div>
                   </div>
                   <div class="card-image p9"></div>
                   <router-link to="/charitable" class="card-link">
@@ -842,7 +844,7 @@
               <div class="step-content-1">
                 <div class="step-content-title">步驟一</div>
                 <div class="step-content-info">
-                  <div>進入我的資產 -</div>
+                  <div>進入我的資產</div>
                 </div>
                 <div class="step-content-img">
                   <img
@@ -855,7 +857,7 @@
               <div class="step-content-2">
                 <div class="step-content-title">步驟二</div>
                 <div class="step-content-info">
-                  <div>選擇單筆/打包出售 -</div>
+                  <div>選擇單筆/打包出售</div>
                 </div>
                 <div class="step-content-img">
                   <img
@@ -869,7 +871,7 @@
                 <div class="step-content-title">步驟三</div>
                 <div class="step-content-info">
                   <div>調整出讓金額，並點選出讓</div>
-                  <div>詳閱轉讓協議書 -</div>
+                  <div>詳閱轉讓協議書</div>
                 </div>
                 <div class="step-content-img">
                   <img
@@ -882,7 +884,7 @@
               <div class="step-content-4">
                 <div class="step-content-title">步驟四</div>
                 <div class="step-content-info">
-                  <div>上架成功，等待媒合 -</div>
+                  <div>上架成功，等待媒合</div>
                 </div>
                 <div class="step-content-img">
                   <img
@@ -1433,7 +1435,7 @@ export default {
       }
       .card-content {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 10fr 7fr;
         grid-template-rows: 74px 30px;
         grid-template-areas:
           'subtitle image'
@@ -1537,7 +1539,7 @@ export default {
         content: '「匯」';
         color: #f29600;
         opacity: 1;
-        font-size: 32px;
+        font-size: 40px;
         line-height: 45px;
       }
     }

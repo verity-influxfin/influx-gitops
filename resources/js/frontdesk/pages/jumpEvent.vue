@@ -3,7 +3,7 @@
     <nav id="top">
       <div class="row no-gutters">
         <div class="col-auto p-1">
-          <img src="/images/logo.svg" alt="influx-logo" />
+          <img src="/images/logo.png" alt="influx-logo" style="height:30px"/>
         </div>
         <div class="col"></div>
         <div class="top-method col-auto">
