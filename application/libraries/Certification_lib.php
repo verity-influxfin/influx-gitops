@@ -544,6 +544,12 @@ class Certification_lib{
             $msg .= $ocr_result['infoValidation']['msg'] . '<br/>';
         }
 
+        if (empty($content['name']) || empty($ocr_result['ocr']['id_card']['name'])
+            || $ocr_result['ocr']['id_card']['name'] != $content['name'])
+        {
+            $msg .= '[姓名比對] 自填姓名與身分證OCR姓名不符<br/>';
+        }
+
         // 身份證＆健保卡的辨識資料重組
         $id_card_days = $this->CI->ocr2_lib->combine_ymd($ocr_result['ocr']['id_card']);
         $health_card_days = $this->CI->ocr2_lib->combine_ymd($ocr_result['ocr']['health_card']);
