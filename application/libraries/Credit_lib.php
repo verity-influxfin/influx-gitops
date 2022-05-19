@@ -1057,7 +1057,7 @@ class Credit_lib{
         {
             $used_amount = 0;
             $other_used_amount = 0;
-            $user_max_credit_amount = $credit['amount'];
+
             //取得所有產品申請或進行中的案件
             $target_list = $this->CI->target_model->get_many_by([
                 'id !=' => $except_target_id,
@@ -1102,11 +1102,11 @@ class Credit_lib{
             }
 
             $all_used_amount = $used_amount + $other_used_amount;
-
+            $remain_amount = $credit['amount'] > $all_used_amount ? $credit['amount'] - $all_used_amount : 0;
             $result = [
-                'credit_amount' => $user_max_credit_amount, // 核可額度
+                'credit_amount' => $credit['amount'], // 核可額度
                 'target_amount' => $all_used_amount, // 佔用中的額度
-                'remain_amount' => $user_max_credit_amount - $all_used_amount, // 剩餘可用額度
+                'remain_amount' => $remain_amount, // 剩餘可用額度
                 'instalment' => $credit['instalment'],
                 'credit_level' => $credit['level'] ?? 0
             ];
