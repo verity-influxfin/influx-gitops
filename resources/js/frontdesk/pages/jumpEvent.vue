@@ -3,7 +3,7 @@
     <nav id="top">
       <div class="row no-gutters">
         <div class="col-auto p-1">
-          <img src="/images/logo.png" alt="influx-logo" style="height:30px"/>
+          <img src="/images/logo.png" alt="influx-logo" style="height: 30px" />
         </div>
         <div class="col"></div>
         <div class="top-method col-auto">
@@ -157,7 +157,7 @@
       <div class="block-content">
         <div class="bouns-title d-md-block d-none">活動獎金</div>
         <div class="bouns-info d-md-flex d-none no-gutters">
-          <div class="col-6">
+          <div class="col-auto pr-5">
             <div>
               第1名：
               <span class="em">＄55,555 </span>
@@ -176,18 +176,13 @@
             <div>
               人氣獎 (6~10名)：&emsp;&emsp; <span class="em">＄1,500 元</span>
             </div>
-
-            <div class="mt-3">沒有名次嗎？創意和搞笑也可以！</div>
+          </div>
+          <div class="col-auto pl-5">
+            <div>沒有名次嗎？創意和搞笑也可以！</div>
             <div>特別獎</div>
             <div>執行長青睞獎：<span class="em">＄1,000</span> 元</div>
             <div>風格創意獎：<span class="em">＄1,000</span> 元</div>
             <div>捧腹大笑獎：<span class="em">＄1,000</span> 元</div>
-          </div>
-          <div class="pl-5 col-6">
-            <div>凡參與本次活動(含參賽者及投票者)，皆獲抽獎資格！</div>
-            <div>頭獎：Airpods 3代</div>
-            <div>貳獎：<span class="em">1,000</span> 元禮券*2份，共2,000元</div>
-            <div>參獎：<span class="em">500</span> 元禮券*3份，共1,500元</div>
           </div>
         </div>
       </div>
@@ -260,12 +255,6 @@
           <div>執行長青睞獎：<span class="em">＄1,000</span> 元</div>
           <div>風格創意獎：<span class="em">＄1,000</span> 元</div>
           <div>捧腹大笑獎：<span class="em">＄1,000</span> 元</div>
-          <div class="mt-3">
-            凡參與本次活動(含參賽者及投票者)，皆獲抽獎資格！
-          </div>
-          <div>頭獎：Airpods 3代</div>
-          <div>貳獎：<span class="em">1,000</span> 元禮券*2份，共2,000元</div>
-          <div>參獎：<span class="em">500</span> 元禮券*3份，共1,500元</div>
         </div>
         <div class="bouns-title mt-3">活動詳情</div>
         <div class="bouns-info">
@@ -472,7 +461,7 @@ export default {
       file: new File([], ''),
       workList: [],
       fullList: [],
-      total:0,
+      total: 0,
       userId: '',
       workModalData: {
         id: 0,
@@ -618,8 +607,8 @@ export default {
       if (this.currentPage > this.maxPage) {
         return
       }
-      this.getList().then(()=>{
-          this.workList = this.fullList
+      this.getList().then(() => {
+        this.workList = this.fullList
       })
     },
     doSearch() {
@@ -947,6 +936,7 @@ export default {
     &-img {
       display: flex;
       min-height: 210px;
+      max-height: 210px;
       margin: 5px 0;
       border-radius: 10px;
       min-width: 120px;
@@ -1348,6 +1338,7 @@ export default {
       &-img {
         display: flex;
         min-height: 448px;
+        max-height: 448px;
         margin: 5px 0;
         border-radius: 10px;
         min-width: 120px;
