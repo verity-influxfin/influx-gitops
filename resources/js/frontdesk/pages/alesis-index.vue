@@ -448,7 +448,7 @@
       </div>
     </div>
     <div class="index-tech section">
-      <div class="block-content mt-3 mb-5">
+      <div class="block-content mt-3 mb-5 pb-md-5 pb-0">
         <div class="block-content-header-title">最創新、最安全的金融科技</div>
         <div class="block-content-header-info">
           <div>唯一榮獲金控集團創投投資</div>
@@ -1027,7 +1027,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/a645f762048f5f425d0f0a8486f34612.png"
               alt="Yahoo!新聞"
             />
@@ -1040,7 +1040,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/1JHY1QOLYPF0.png"
               alt="蕃薯藤"
             />
@@ -1053,7 +1053,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/Now_News_logo.png"
               alt="今日新聞"
             />
@@ -1066,7 +1066,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo-chinatimes2019.png"
               alt="中時電子報"
             />
@@ -1079,7 +1079,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo-red.png"
               alt="財訊"
             />
@@ -1092,7 +1092,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo-cn-yes-1.png"
               alt="鉅亨網"
             />
@@ -1105,7 +1105,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo_gvm.svg"
               alt="遠見"
             />
@@ -1118,7 +1118,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo300_90.png"
               alt="工商時報"
             />
@@ -1131,7 +1131,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo_setn.png"
               alt="三立新聞網"
             />
@@ -1144,7 +1144,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo_cna.png"
               alt="中央通訊社"
             />
@@ -1751,12 +1751,12 @@ export default {
   .block-info {
     color: #036eb7;
     font-size: 30px;
-    margin-top: 24px;
+    margin-top: 0;
     opacity: 0.64;
     text-align: left;
   }
   .step-container {
-    margin: 45px auto;
+    margin: 15px auto;
     position: relative;
   }
   .step-content-1 {
