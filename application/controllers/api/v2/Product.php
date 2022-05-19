@@ -2733,19 +2733,25 @@ class Product extends REST_Controller {
                     'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
                 ]);
 
+                $this->load->model('loan/credit_sheet_model');
+                $credit_sheet_info = $this->credit_sheet_model->order_by('created_at', 'desc')->get_by([
+                    'credit_id' => $credit['id'],
+                    'status' => 1
+                ]);
+
                 // 寫授審表
                 $creditSheet = \CreditSheet\CreditSheetFactory::getInstance($target->id);
                 $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '一審通過');
                 $creditSheet->setFinalReviewerLevel($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM);
                 $creditSheet->archive($credit);
 
-                // 寫target_data
-                $credit_sheet_info = $this->credit_sheet_model->get_by(['target_id' => $target->id]);
+                // 回寫當初給額度時，授審表封存的徵信項（更新 targets.target_data、credit_sheet.certification_list）
                 if ( ! empty($credit_sheet_info->certification_list))
                 {
                     $target_data = json_decode($target->target_data ?? '', TRUE);
-                    $target_data['certification_id'] = json_decode($credit_sheet_info->certification_list, TRUE);
+                    $target_data['certification_id'] = $certification_id = json_decode($credit_sheet_info->certification_list, TRUE);
                     $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
+                    $this->credit_sheet_model->update_by(['target_id' => $target->id], ['certification_list' => json_encode($certification_id)]);
                 }
 
                 // 寫log

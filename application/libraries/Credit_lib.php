@@ -870,8 +870,9 @@ class Credit_lib{
                         return FALSE;
                 }
 
-				$info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
-				if(isset($info->meta_value) && in_array($product_id, [1, 2])) {
+                $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
+                if (isset($info->meta_value) && in_array($product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
+                {
                     $school_points_data = $this->get_school_point($info->meta_value);
                     $school_config = $this->CI->config->item('school_points');
                     // 黑名單的學校額度是0
@@ -1056,7 +1057,7 @@ class Credit_lib{
         {
             $used_amount = 0;
             $other_used_amount = 0;
-            $user_max_credit_amount = $this->get_user_max_credit_amount($user_id);
+            $user_max_credit_amount = $credit['amount'];
             //取得所有產品申請或進行中的案件
             $target_list = $this->CI->target_model->get_many_by([
                 'id !=' => $except_target_id,
