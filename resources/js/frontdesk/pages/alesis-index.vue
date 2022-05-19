@@ -663,7 +663,7 @@
           <div class="block-title">慈善公益</div>
           <div class="block-info">愛心100，捐款100</div>
           <div class="row no-gutters justify-content-center">
-            <div class="col-sm-5 col-12 p-2 p-sm-0">
+            <div class="col-sm-5 col-12 p-2 p-sm-0 z-5">
               <div class="info-title">
                 <div>愛心不落人後，即使捐款100</div>
                 <div>也能幫助弱勢兒童，找回身心健康</div>
@@ -678,42 +678,42 @@
               <div class="img-group">
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC.png"
+                    src="@/asset/images/index/j1.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC1.png"
+                    src="@/asset/images/index/j2.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC2.png"
+                    src="@/asset/images/index/j3.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC3.png"
+                    src="@/asset/images/index/j4.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC4.png"
+                    src="@/asset/images/index/j5.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC5.png"
+                    src="@/asset/images/index/j6.jpg"
                     alt=""
                     class="img-fluid"
                   />
@@ -1283,6 +1283,9 @@ export default {
     right: -30px;
     transform: rotate(180deg);
   }
+}
+.z-5{
+    z-index: 5;
 }
 .index-intro {
   background-image: url('~images/index/index-header-bg.png');
@@ -2222,9 +2225,15 @@ export default {
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 15px;
+    .img-item{
+        transition: transform 0.5s ease;
+    }
+    .img-item:hover{
+        transform:scale(2.5);
+    }
   }
   .img-1251 {
-    height: 496px;
+    height: 505px;
     margin-left: 15px;
   }
 }
@@ -3003,6 +3012,21 @@ export default {
       grid-template-rows: 1fr 1fr;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 15px;
+      position: relative;
+      .img-item{
+          &:hover,&:focus-within{
+              &:nth-child(1),&:nth-child(4){
+                  transform: scale(3.27) translate(38px,0);
+              }
+              &:nth-child(2),&:nth-child(5){
+                  transform: scale(3.27);
+              }
+              &:nth-child(3),&:nth-child(6){
+                  transform: scale(3.27) translate(-38px,0);
+              }
+
+          }
+      }
     }
     .img-1251 {
       height: auto;
