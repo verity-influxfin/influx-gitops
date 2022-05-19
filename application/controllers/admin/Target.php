@@ -217,7 +217,7 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$value->amount.'</td>';
                     $html .= '<td>'.(isset($value->credit->amount)?$value->credit->amount:'').'</td>';
                     $html .= '<td>'.$value->loan_amount.'</td>';
-                    $html .= '<td>' . $remain_amount['instalment'] == $value->instalment ? $remain_amount['remain_amount'] : '-' . '</td>'; // 可動用額度
+                    $html .= '<td>' . ($remain_amount['instalment'] == $value->instalment ? $remain_amount['remain_amount'] : '-') . '</td>'; // 可動用額度
                     $html .= '<td>'.$value->remaining_principal.'</td>';
                     $html .= '<td>'.floatval($value->interest_rate).'</td>';
                     $html .= '<td>'.$instalment_list[$value->instalment].'</td>';
