@@ -224,6 +224,7 @@ class Cert_investigation extends Certification_base
         if($sys_check == TRUE)
         {
             $this->set_review(TRUE);
+            return FALSE;
         }
         return TRUE;
     }
