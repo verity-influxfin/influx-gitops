@@ -150,7 +150,6 @@ abstract class Certification_base implements Certification_definition
             if ($well_formatted)
             {
                 $verified_successfully = $this->verify_data($parsed_content);
-                $parsed_content = $this->content;
                 if ($verified_successfully)
                 {
                     $this->review_data($parsed_content);
@@ -182,7 +181,7 @@ abstract class Certification_base implements Certification_definition
                 break;
         }
 
-        return TRUE;
+        return $this->post_verify();
     }
 
     /**
@@ -577,5 +576,10 @@ abstract class Certification_base implements Certification_definition
         }
 
         $this->related_product = $result;
+    }
+
+    public function post_verify(): bool
+    {
+        return TRUE;
     }
 }

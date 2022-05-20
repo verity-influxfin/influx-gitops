@@ -12,7 +12,6 @@ interface Certification_definition
 
     /**
      * 解析輸入資料
-     * @return bool
      */
     public function parse();
 
@@ -199,4 +198,6 @@ interface Certification_definition
      * @return bool
      */
     public function can_re_submit(): bool;
+
+    public function post_verify(): bool;
 }

@@ -54,7 +54,6 @@ class Cert_investigation extends Certification_base
     /**
      * 解析輸入資料
      * @return array|mixed
-     * @return bool
      */
     public function parse()
     {

@@ -35,7 +35,7 @@
                 </div>
                 <div class="p-2">
                     <button type="button" class="btn btn-danger btn-circle"><i class="fa fa-exclamation"></i></button>
-                    未提交
+                    資料未繳交完全
                 </div>
                 <div class="p-2">
                     <button type="button" class="btn btn-danger btn-circle"><i class="fa fa-minus"></i></button>

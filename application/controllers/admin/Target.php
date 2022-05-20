@@ -166,7 +166,7 @@ class Target extends MY_Admin_Controller {
                     // 可動用額度，需要同產品(product_id)、同期間(instalment)
                     $this->load->library('credit_lib');
                     $remain_amount = $this->credit_lib->get_remain_amount($value->user_id, $value->product_id, $value->sub_product_id);
-                    $list[$key]->remain_amount = $remain_amount['instalment'] == $value->instalment ? $remain_amount['remain_amount'] : '-';
+                    $list[$key]->remain_amount = $remain_amount['instalment'] == $value->instalment ? $remain_amount['user_available_amount'] : '-';
                 }
 			}
 		}
@@ -217,7 +217,7 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$value->amount.'</td>';
                     $html .= '<td>'.(isset($value->credit->amount)?$value->credit->amount:'').'</td>';
                     $html .= '<td>'.$value->loan_amount.'</td>';
-                    $html .= '<td>' . ($remain_amount['instalment'] == $value->instalment ? $remain_amount['remain_amount'] : '-') . '</td>'; // 可動用額度
+                    $html .= '<td>' . ($remain_amount['instalment'] == $value->instalment ? $remain_amount['user_available_amount'] : '-') . '</td>'; // 可動用額度
                     $html .= '<td>'.$value->remaining_principal.'</td>';
                     $html .= '<td>'.floatval($value->interest_rate).'</td>';
                     $html .= '<td>'.$instalment_list[$value->instalment].'</td>';
