@@ -198,4 +198,6 @@ interface Certification_definition
      * @return bool
      */
     public function can_re_submit(): bool;
+
+    public function post_verify(): bool;
 }

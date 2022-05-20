@@ -39,6 +39,11 @@ class Cert_social_intelligent extends Certification_base
     private $transform_data = [];
 
     /**
+     * @var array 驗證後的額外資料
+     */
+    private $additional_data = [];
+
+    /**
      * 所有項目是否已提交
      * @override
      * @return bool
@@ -167,7 +172,7 @@ class Cert_social_intelligent extends Certification_base
                                     $this->result->addMessage('IG非活躍帳號', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                 }
                             }
-                            $this->content['instagram'] = [
+                            $this->additional_data['instagram'] = [
                                 'username' => $ig_username,
                                 'usernameExist' => $usernameExist,
                                 'info' => [
@@ -179,7 +184,7 @@ class Cert_social_intelligent extends Certification_base
                                     'allFollowingCount' => $allFollowingCount
                                 ]
                             ];
-                            $this->content['meta'] = [
+                            $this->additional_data['meta'] = [
                                 'follow_count' => $allFollowerCount,
                                 'posts_in_3months' => $postsIn3Months,
                                 'key_word' => $postsWithKeyWords
@@ -313,6 +318,27 @@ class Cert_social_intelligent extends Certification_base
      */
     public function is_expired(): bool
     {
+        return FALSE;
+    }
+
+    public function post_verify(): bool
+    {
+        if (empty($this->additional_data))
+        {
+            return TRUE;
+        }
+
+        $certification_info = $this->CI->user_certification_model->get($this->certification['id']);
+        $content = json_decode($certification_info->content ?? '');
+        $result = $this->CI->user_certification_model->update($this->certification['id'], [
+            'content' => json_encode(array_replace_recursive($content, $this->additional_data), JSON_INVALID_UTF8_IGNORE)
+        ]);
+
+        if ($result)
+        {
+            return TRUE;
+        }
+
         return FALSE;
     }
 }
