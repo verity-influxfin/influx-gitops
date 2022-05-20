@@ -825,7 +825,7 @@ class Product extends REST_Controller {
             $this->load->library('credit_lib');
             $chk_credit = $this->credit_lib->get_remain_amount($user_id, $product['id'], $sub_product_id);
 
-            if ($chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $input['instalment'] && $chk_credit['remain_amount'] > $product['loan_range_s'])
+            if ($chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $input['instalment'] && $chk_credit['remain_amount'] >= $product['loan_range_s'])
             {
                 // 有效期內的核可額度(條件：同產品、同期間)
                 if ($chk_credit['remain_amount'] >= $input['amount'])
@@ -3613,7 +3613,7 @@ class Product extends REST_Controller {
 
         $this->load->library('credit_lib');
         $chk_credit = $this->credit_lib->get_remain_amount($this->user_info->id, $target->product_id, $target->sub_product_id, $input['target_id']);
-
+        $this->load->model('log/log_targetschange_model');
         if ($input['amount'] > $chk_credit['remain_amount'] || $chk_credit['instalment'] != $target->instalment)
         {
             $this->target_model->update($target->id, [
@@ -3621,6 +3621,11 @@ class Product extends REST_Controller {
                 'sub_status' => TARGET_SUBSTATUS_NORNAL,
                 'loan_amount' => 0,
                 'remark' => '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。'
+            ]);
+            $this->log_targetschange_model->insert([
+                'target_id' => $target->id,
+                'status' => TARGET_FAIL,
+                'sub_status' => TARGET_SUBSTATUS_NORNAL,
             ]);
             $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT,
                 'data' => ['text' => '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。']
@@ -3635,9 +3640,15 @@ class Product extends REST_Controller {
         $contract_type = 'lend';
         $contract_data = ['', $target->user_id, $input['amount'], $interest_rate, ''];
 
+        $loan_amount = (int) (floor($input['amount'] / 1000) * 1000);
+        if ($loan_amount > $product_info['loan_range_e'] || $loan_amount < $product_info['loan_range_s'])
+        {
+            $this->response(['result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE]);
+        }
+
         $this->target_model->update(
             $input['target_id'], [
-                'loan_amount' => $input['amount'],
+                'loan_amount' => $loan_amount,
                 'platform_fee' => $this->financial_lib->get_platform_fee($input['amount'], $product_info['charge_platform']),
                 'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
             ]

@@ -1103,6 +1103,20 @@ class Credit_lib{
 
             $all_used_amount = $used_amount + $other_used_amount;
             $remain_amount = $credit['amount'] > $all_used_amount ? $credit['amount'] - $all_used_amount : 0;
+
+            // 額度需符合產品設定的上下限
+            $this->CI->load->library('loanmanager/product_lib');
+            $product_info = $this->CI->product_lib->getProductInfo($product_id, $sub_product_id);
+            if ($remain_amount < $product_info['loan_range_s'])
+            {
+                $remain_amount = 0;
+            }
+            else
+            {
+                $remain_amount = min($product_info['loan_range_e'], $remain_amount);
+            }
+            $remain_amount = (int) (floor($remain_amount / 1000) * 1000);
+
             $result = [
                 'credit_amount' => $credit['amount'], // 核可額度
                 'target_amount' => $all_used_amount, // 佔用中的額度
