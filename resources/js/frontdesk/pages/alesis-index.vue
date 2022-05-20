@@ -277,7 +277,8 @@
             <div class="product-item">
               <div class="card">
                 <div class="card-image p4"></div>
-                <div class="card-title space-bottom">汽車貸款</div>
+                <div class="card-title">汽車貸款</div>
+                <div class="card-subtitle">coming soon</div>
               </div>
             </div>
             <router-link to="/charitable" class="product-item">
@@ -448,7 +449,7 @@
       </div>
     </div>
     <div class="index-tech section">
-      <div class="block-content mt-3 mb-5">
+      <div class="block-content mt-3 mb-5 pb-md-5 pb-0">
         <div class="block-content-header-title">最創新、最安全的金融科技</div>
         <div class="block-content-header-info">
           <div>唯一榮獲金控集團創投投資</div>
@@ -663,7 +664,7 @@
           <div class="block-title">慈善公益</div>
           <div class="block-info">愛心100，捐款100</div>
           <div class="row no-gutters justify-content-center">
-            <div class="col-sm-5 col-12 p-2 p-sm-0">
+            <div class="col-sm-5 col-12 p-2 p-sm-0 z-5">
               <div class="info-title">
                 <div>愛心不落人後，即使捐款100</div>
                 <div>也能幫助弱勢兒童，找回身心健康</div>
@@ -678,42 +679,42 @@
               <div class="img-group">
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC.png"
+                    src="@/asset/images/index/j1.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC1.png"
+                    src="@/asset/images/index/j2.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC2.png"
+                    src="@/asset/images/index/j3.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC3.png"
+                    src="@/asset/images/index/j4.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC4.png"
+                    src="@/asset/images/index/j5.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/DSC5.png"
+                    src="@/asset/images/index/j6.jpg"
                     alt=""
                     class="img-fluid"
                   />
@@ -1027,7 +1028,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/a645f762048f5f425d0f0a8486f34612.png"
               alt="Yahoo!新聞"
             />
@@ -1040,7 +1041,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/1JHY1QOLYPF0.png"
               alt="蕃薯藤"
             />
@@ -1053,7 +1054,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/Now_News_logo.png"
               alt="今日新聞"
             />
@@ -1066,7 +1067,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo-chinatimes2019.png"
               alt="中時電子報"
             />
@@ -1079,7 +1080,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo-red.png"
               alt="財訊"
             />
@@ -1092,7 +1093,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo-cn-yes-1.png"
               alt="鉅亨網"
             />
@@ -1105,7 +1106,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo_gvm.svg"
               alt="遠見"
             />
@@ -1118,7 +1119,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo300_90.png"
               alt="工商時報"
             />
@@ -1131,7 +1132,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo_setn.png"
               alt="三立新聞網"
             />
@@ -1144,7 +1145,7 @@
             target="_blank"
           >
             <img
-              class="圖片 img-fluid"
+              class="圖片 img-fluid d-block mx-auto"
               src="/images/media/logo_cna.png"
               alt="中央通訊社"
             />
@@ -1283,6 +1284,9 @@ export default {
     right: -30px;
     transform: rotate(180deg);
   }
+}
+.z-5{
+    z-index: 5;
 }
 .index-intro {
   background-image: url('~images/index/index-header-bg.png');
@@ -1748,12 +1752,12 @@ export default {
   .block-info {
     color: #036eb7;
     font-size: 30px;
-    margin-top: 24px;
+    margin-top: 0;
     opacity: 0.64;
     text-align: left;
   }
   .step-container {
-    margin: 45px auto;
+    margin: 15px auto;
     position: relative;
   }
   .step-content-1 {
@@ -2222,9 +2226,15 @@ export default {
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 15px;
+    .img-item{
+        transition: transform 0.5s ease;
+    }
+    .img-item:hover{
+        transform:scale(2.5);
+    }
   }
   .img-1251 {
-    height: 496px;
+    height: 505px;
     margin-left: 15px;
   }
 }
@@ -3003,6 +3013,21 @@ export default {
       grid-template-rows: 1fr 1fr;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 15px;
+      position: relative;
+      .img-item{
+          &:hover,&:focus-within{
+              &:nth-child(1),&:nth-child(4){
+                  transform: scale(3.27) translate(38px,0);
+              }
+              &:nth-child(2),&:nth-child(5){
+                  transform: scale(3.27);
+              }
+              &:nth-child(3),&:nth-child(6){
+                  transform: scale(3.27) translate(-38px,0);
+              }
+
+          }
+      }
     }
     .img-1251 {
       height: auto;
