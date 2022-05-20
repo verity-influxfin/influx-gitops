@@ -150,7 +150,7 @@ abstract class Certification_base implements Certification_definition
             if ($well_formatted)
             {
                 $verified_successfully = $this->verify_data($parsed_content);
-                $parsed_content = array_merge($parsed_content, $this->content);
+                $parsed_content = array_replace_recursive($parsed_content, $this->content);
                 if ($verified_successfully)
                 {
                     $this->review_data($parsed_content);

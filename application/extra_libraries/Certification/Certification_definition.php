@@ -12,7 +12,6 @@ interface Certification_definition
 
     /**
      * 解析輸入資料
-     * @return bool
      */
     public function parse();
 

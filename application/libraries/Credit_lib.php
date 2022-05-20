@@ -1047,6 +1047,7 @@ class Credit_lib{
             'credit_amount' => 0, // 核可額度
             'target_amount' => 0, // 佔用中的額度
             'remain_amount' => 0, // 剩餘可用額度
+            'user_available_amount' => 0, // 使用者可動用的額度(符合產品設定、千元表達)
             'instalment' => 0,
             'credit_level' => 0,
         ];
@@ -1103,25 +1104,34 @@ class Credit_lib{
             }
 
             $all_used_amount = $used_amount + $other_used_amount;
-            $remain_amount = $credit['amount'] > $all_used_amount ? $credit['amount'] - $all_used_amount : 0;
-
-            // 額度需符合產品設定的上下限
-            $this->CI->load->library('loanmanager/product_lib');
-            $product_info = $this->CI->product_lib->getProductInfo($product_id, $sub_product_id);
-            if ($remain_amount < $product_info['loan_range_s'])
+            if ($credit['amount'] > $all_used_amount)
             {
-                $remain_amount = 0;
+                $remain_amount = $credit['amount'] - $all_used_amount;
+
+                // 額度需符合產品設定的上下限
+                $this->CI->load->library('loanmanager/product_lib');
+                $product_info = $this->CI->product_lib->getProductInfo($product_id, $sub_product_id);
+                if ($remain_amount < $product_info['loan_range_s'])
+                {
+                    $user_available_amount = 0;
+                }
+                else
+                {
+                    $user_available_amount = min($product_info['loan_range_e'], $remain_amount);
+                    $user_available_amount = (int) (floor($user_available_amount / 1000) * 1000);
+                }
             }
             else
             {
-                $remain_amount = min($product_info['loan_range_e'], $remain_amount);
+                $remain_amount = 0;
+                $user_available_amount = 0;
             }
-            $remain_amount = (int) (floor($remain_amount / 1000) * 1000);
 
             $result = [
                 'credit_amount' => $credit['amount'], // 核可額度
                 'target_amount' => $all_used_amount, // 佔用中的額度
                 'remain_amount' => $remain_amount, // 剩餘可用額度
+                'user_available_amount' => $user_available_amount,
                 'instalment' => $credit['instalment'],
                 'credit_level' => $credit['level'] ?? 0
             ];
