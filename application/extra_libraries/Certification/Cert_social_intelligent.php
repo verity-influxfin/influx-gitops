@@ -268,6 +268,11 @@ class Cert_social_intelligent extends Certification_base
      */
     public function post_success($sys_check): bool
     {
+        $user_meta = array_replace_recursive($this->content['meta'] ?? [], $this->additional_data['meta'] ?? []);
+        if ( ! empty($user_meta))
+        {
+            $this->CI->certification_lib->user_meta_progress($user_meta, $this->certification);
+        }
         return $this->CI->certification_lib->fail_other_cer($this->certification);
     }
 
