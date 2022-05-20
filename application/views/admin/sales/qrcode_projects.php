@@ -17,27 +17,27 @@
                 <div class="panel panel-default">
                     <div class="panel-body form-horizontal">
                         <div class="form-group">
-                            <label for="platform_fee" class="col-sm-6 control-label">服務手續費 (%)</label>
+                            <label for="individual_reward" class="col-sm-6 control-label">個金核可獎金 (元)</label>
                             <div class="col-sm-6">
-                                <input type="" class="form-control" v-model="contract.platform_fee" id="platform_fee" placeholder="服務手續費 (%)">
+                                <input type="" class="form-control" v-model="contract.individual_reward" id="individual_reward" placeholder="個金核可獎金 (元)">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="interest" class="col-sm-6 control-label">利息手續費 (%)</label>
+                            <label for="individual_platform_fee" class="col-sm-6 control-label">個金服務費 (%)</label>
                             <div class="col-sm-6">
-                                <input type="" class="form-control" v-model="contract.interest" id="interest" placeholder="利息手續費 (%)">
+                                <input type="" class="form-control" v-model="contract.individual_platform_fee" id="individual_platform_fee" placeholder="個金服務費 (%)">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="collaboration_person" class="col-sm-6 control-label">第三方合作個人產品 (元)</label>
+                            <label for="enterprise_reward" class="col-sm-6 control-label">企金核可獎金 (元)</label>
                             <div class="col-sm-6">
-                                <input type="" class="form-control" v-model="contract.collaboration_person" id="collaboration_person" placeholder="第三方合作個人產品 (元)">
+                                <input type="" class="form-control" v-model="contract.enterprise_reward" id="enterprise_reward" placeholder="企金核可獎金 (元)">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="collaboration_enterprise" class="col-sm-6 control-label">第三方合作企業產品 (元)</label>
+                            <label for="enterprise_platform_fee" class="col-sm-6 control-label">企金服務費 (%)</label>
                             <div class="col-sm-6">
-                                <input type="" class="form-control" v-model="contract.collaboration_enterprise" id="collaboration_enterprise" placeholder="第三方合作企業產品 (元)">
+                                <input type="" class="form-control" v-model="contract.enterprise_platform_fee" id="enterprise_platform_fee" placeholder="企金服務費 (%)">
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
             <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <pre class="preview_zone" v-if="Array.isArray(context)">{{context[0]}}<input v-model="contract.platform_fee" />{{context[1]}}<input v-model="contract.interest" />{{context[2]}}<input v-model="contract.collaboration_person" />{{context[3]}}<input v-model="contract.collaboration_enterprise" />{{context[4]}}</pre>
+                        <pre class="preview_zone" v-if="Array.isArray(context)">{{context[0]}}<input v-model="contract.individual_reward" />{{context[1]}}<input v-model="contract.individual_platform_fee" />{{context[2]}}<input v-model="contract.enterprise_reward" />{{context[3]}}<input v-model="contract.enterprise_platform_fee" />{{context[4]}}</pre>
                         <pre class="preview_zone" v-else>{{context}}</pre>
                     </div>
                 </div>

@@ -55,8 +55,8 @@ class Qrcode_lib
                 break;
             case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
                 return [$name, $contract_year, $contract_month, $contract_day,
-                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['investor_percent'] ?? 0,
-                    $settings['reward']['collaboration_person']['amount'] ?? 0, $settings['reward']['collaboration_enterprise']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['student']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0,
                     $name, $name, $address,
                     $contract_year, $contract_month, $contract_day];
                 break;

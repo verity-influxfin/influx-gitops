@@ -11,13 +11,15 @@ class User_lib {
     private $totalCount;
 
     // 特約方案可以改申貸服務費/利息百分比的產品類別
-    public $appointedRewardCategories = ['student', 'salary_man'];
+    public $appointed_individual_categories = ['student', 'salary_man'];
+    public $appointed_enterprise_categories = ['small_enterprise'];
 
     public $rewardCategories = [
-        'student' => [1, 2],
-        'salary_man' => [3, 4],
+        'student' => [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER],
+        'salary_man' => [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER],
         'small_enterprise' => [PRODUCT_SK_MILLION_SMEG],
     ];
+
     public $categoriesName = [
         'student' => '學生貸',
         'salary_man' => '上班族貸',
@@ -29,6 +31,7 @@ class User_lib {
         'salary_man' => [TARGET_REPAYMENTING, TARGET_REPAYMENTED],
         'small_enterprise' => [TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED],
     ];
+
     public $logRewardColumns = [
         'student', 'salary_man', 'small_enterprise', 'fullMember'
     ];
@@ -221,9 +224,10 @@ class User_lib {
      * @param int $limit
      * @param int $offset
      * @param bool $filterDelayed 是否要過濾逾期案
+     * @param bool $initialized 是否只獲得初始化資料結構
      * @return array
      */
-    public function getPromotedRewardInfo(array $where, string $startDate = '', string $endDate = '', int $limit = 0, int $offset = 0, bool $filterDelayed = FALSE, bool $initialized=FALSE): array
+    public function getPromotedRewardInfo(array $where, string $startDate = '', string $endDate = '', int $limit = 0, int $offset = 0, bool $filterDelayed = FALSE, bool $initialized = FALSE): array
     {
         $this->CI->load->model('user/user_qrcode_model');
         $this->CI->load->library('qrcode_lib');

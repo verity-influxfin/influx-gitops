@@ -1767,10 +1767,10 @@ class Sales extends MY_Admin_Controller {
             $contract_content = json_decode($review_list['contract_content'], TRUE);
             $content = $this->qrcode_lib->get_contract_format_content($contract_type_name, $contract_content[0] ?? '', $contract_content[10] ?? '', []);
             $list['content'] = array_slice(json_decode($review_list['contract_content'], TRUE) ?? [], 4, 4);
-            $content[4] = '%platform_fee%';
-            $content[5] = '%interest%';
-            $content[6] = '%collaboration_person%';
-            $content[7] = '%collaboration_enterprise%';
+            $content[4] = '%individual_reward%';
+            $content[5] = '%individual_platform_fee%';
+            $content[6] = '%enterprise_reward%';
+            $content[7] = '%enterprise_platform_fee%';
             $list['contract'] = '';
             if (isset($contract_format->content))
             {
@@ -1944,7 +1944,7 @@ class Sales extends MY_Admin_Controller {
 
         $input = $this->input->post(NULL, TRUE);
         $data = [];
-        $fields = ['qrcode_apply_id', 'platform_fee', 'interest', 'collaboration_person', 'collaboration_enterprise'];
+        $fields = ['qrcode_apply_id', 'individual_reward', 'individual_platform_fee', 'enterprise_reward', 'enterprise_platform_fee'];
 
         foreach ($fields as $field)
         {
@@ -1964,8 +1964,15 @@ class Sales extends MY_Admin_Controller {
         {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
         }
+
+        if (( ! empty($data['individual_reward']) && ! empty($data['individual_platform_fee'])) ||
+            ( ! empty($data['enterprise_reward']) && ! empty($data['enterprise_platform_fee'])))
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '不能同時設定獎金及服務費，只能擇其一'))->send();
+        }
+
         $contract_content = json_decode($apply_info->contract_content, TRUE);
-        $fields = ['platform_fee' => 4, 'interest' => 5, 'collaboration_person' => 6, 'collaboration_enterprise' => 7];
+        $fields = ['individual_reward' => 4, 'individual_platform_fee' => 5, 'enterprise_reward' => 6, 'enterprise_platform_fee' => 7];
         foreach ($fields as $field => $idx)
         {
             if (isset($data[$field]))
@@ -2060,13 +2067,18 @@ class Sales extends MY_Admin_Controller {
             $this->contract_lib->update_contract($qrcode_code->contract_id, $contract_content);
             $content = array_slice($contract_content, 4, 4);
 
-            foreach ($this->user_lib->appointedRewardCategories as $category)
+            foreach ($this->user_lib->appointed_individual_categories as $category)
             {
-                $settings['reward']['product'][$category]['borrower_percent'] = (float) $content[0] ?? 0;
-                $settings['reward']['product'][$category]['investor_percent'] = (float) $content[1] ?? 0;
+                $settings['reward']['product'][$category]['amount'] = (int) $content[0] ?? 0;
+                $settings['reward']['product'][$category]['borrower_percent'] = (float) $content[1] ?? 0;
             }
-            $settings['reward']['collaboration_person'] = ['amount' => (int) $content[2] ?? 0];
-            $settings['reward']['collaboration_enterprise'] = ['amount' => (int) $content[3] ?? 0];
+
+            foreach ($this->user_lib->appointed_enterprise_categories as $category)
+            {
+                $settings['reward']['product'][$category]['amount'] = (int) $content[2] ?? 0;
+                $settings['reward']['product'][$category]['borrower_percent'] = (float) $content[3] ?? 0;
+            }
+
             $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], ['settings' => json_encode($settings)]);
 
             $this->load->model('user/user_certification_model');
