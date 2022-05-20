@@ -862,6 +862,7 @@ class Credit_lib{
 					'instalment' => intval($rs->instalment),
 					'created_at' => intval($rs->created_at),
 					'expire_time'=> intval($rs->expire_time),
+                    'sub_product_id' => (int) $rs->sub_product_id,
 				];
                 if($target){
                     $data['rate'] = $this->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id,$target);
@@ -1053,7 +1054,7 @@ class Credit_lib{
         // 撈取同產品的最新一筆核可資訊
         $credit = $this->get_credit($user_id, $product_id,
             $sub_product_id == STAGE_CER_TARGET ? 0 : $sub_product_id);
-        if ($credit)
+        if ($credit && isset($credit['sub_product_id']) && $credit['sub_product_id'] == $sub_product_id)
         {
             $used_amount = 0;
             $other_used_amount = 0;
