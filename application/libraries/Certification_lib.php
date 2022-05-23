@@ -255,7 +255,7 @@ class Certification_lib{
                     {
                         $content = json_decode($certifications[CERTIFICATION_IDENTITY]->content, TRUE);
 
-                        $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_GENERAL_CONTRACT_TYPE_NAME,
+                        $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME,
                             $content['name'] ?? '', $content['address'] ?? '', $settings, $origin_contract_date);
                     }
                     else

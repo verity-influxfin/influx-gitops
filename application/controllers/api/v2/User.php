@@ -2779,7 +2779,7 @@ END:
 
         if ($company == USER_NOT_COMPANY)
         {
-            $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
+            $contract_type_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
             $user_info = $this->user_model->get($user_id);
             $name = $user_info->name ?? '';
             $address = $user_info->address ?? '';
@@ -2952,7 +2952,7 @@ END:
 
         if ( ! $company)
         {
-            $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
+            $contract_type_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
             $alias = $this->qrcode_setting_model->generalCaseAliasName;
         }
         else
@@ -2989,7 +2989,7 @@ END:
             $contract = "";
             if ($userQrcodeInfo['status'] == PROMOTE_STATUS_AVAILABLE)
             {
-                $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id']);
+                $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id'], [], FALSE);
 
                 // 初始化結構
                 try
@@ -3136,7 +3136,7 @@ END:
                                 break;
                             case PROMOTE_REVIEW_STATUS_SUCCESS:
                                 $data['status'] = PROMOTE_STATUS_CAN_SIGN_CONTRACT;
-                                $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id']);
+                                $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id'], [], FALSE);
                                 break;
                         }
                     }

@@ -46,7 +46,7 @@ class Qrcode_lib
 
         switch ($type_name)
         {
-            case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
                 return [$name, $contract_year, $contract_month, $contract_day,
                     $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
                     $settings['reward']['product']['small_enterprise']['amount'] ?? 0,
@@ -70,7 +70,7 @@ class Qrcode_lib
         $contract_type_name = '';
         if ($alias == $this->CI->qrcode_setting_model->generalCaseAliasName)
         {
-            $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
+            $contract_type_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
         }
         else if ($alias == $this->CI->qrcode_setting_model->appointedCaseAliasName)
         {
