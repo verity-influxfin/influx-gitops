@@ -6,51 +6,68 @@ class Business_registration_lib
     function __construct()
     {
         $this->CI = &get_instance();
-        $businessRegistrationPort = '9998';
-        $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":{$businessRegistrationPort}/scraper/api/v1.0/";
+        if (empty(getenv('GRACULA_IP')) || empty(getenv('GRACULA_PORT')))
+        {
+            throw new Exception('can not get Business_registration ip or port');
+        }
+        $end_point = 'businessregistration';
+        $this->scraper_url = 'http://' . getenv('GRACULA_IP') . ':' . getenv('GRACULA_PORT') . '/scraper/api/v1.0/' . $end_point;
     }
 
     public function downloadBusinessRegistration()
     {
-        $url = $this->scraperUrl  . "businessregistration/download";
-		$data = ["download"];
-		$result = curl_get($url, $data);
+        $url = $this->scraper_url . '/download';
+        $data = ['download'];
+        $response = curl_get_statuscode($url, $data);
 
-		if (!$result) {
-            return false;
-        }
-
-        return true;
+        return $response;
     }
 
     public function getResultByBusinessId($businessid)
     {
-        if(!$businessid) {
-            return;
+        if ( ! $businessid)
+        {
+            return FALSE;
         }
-
-		$url = $this->scraperUrl  . "businessregistration/{$businessid}/";
+        $response = [];
+        $url = $this->scraper_url . '/data?businessId=' . $businessid;
         $result = curl_get($url);
-        $response = json_decode($result);
-
-        if (!$result || !isset($response->status) || $response->status != 200) {
-            return;
+        if ( ! empty($result))
+        {
+            $response = json_decode($result, TRUE);
         }
 
         return $response;
     }
 
-	public function getDate()
-	{
-		$url = $this->scraperUrl  . "businessregistration/date";
-		$result = curl_get($url);
-		$response = json_decode($result);
+    public function getDate()
+    {
+        $response = [];
+        $url = $this->scraper_url . '/date';
+        $result = curl_get($url);
+        if ( ! empty($result))
+        {
+            $response = json_decode($result, TRUE);
+        }
 
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
-		}
+        return $response;
+    }
 
-		return $response;
-	}
+    public function getBrStatus($date)
+    {
+        if ( ! $date)
+        {
+            return FALSE;
+        }
+        $response = [];
+        $url = $this->scraper_url . '/status?date=' . $date;
+        $result = curl_get($url);
+        if ( ! empty($result))
+        {
+            $response = json_decode($result, TRUE);
+        }
+
+        return $response;
+    }
 
 }

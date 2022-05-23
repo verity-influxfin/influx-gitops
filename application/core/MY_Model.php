@@ -961,4 +961,156 @@ class MY_Model extends CI_Model
     public function trans_status() {
         return $this->_database->trans_status();
     }
+
+    /**
+     * 設定分頁
+     *
+     * @param      int               $current_page  目前頁數
+     * @param      int               $per_page      每頁筆數
+     * @return     Model_Pagination                 Model 分頁物件
+     * 
+     * @created_at                                  2021-12-10
+     * @created_by                                  Jack
+     */
+    public function set_page(int $current_page, int $per_page)
+    {
+        return new Model_Pagination([
+            'current_page' => $current_page,
+            'per_page'     => $per_page
+        ], $this->db);
+    }
+}
+
+/**
+ * Model 分頁
+ */
+class Model_Pagination
+{
+    protected $_db;
+
+    public $current_page = 1;
+    public $per_page     = 20;
+
+    /**
+     * 建構子
+     *
+     * @param      array                $params  參數陣列
+     * @param      CI_DB_mysqli_driver  $db      CI DB Driver 物件
+     * 
+     * @created_at                               2021-12-10
+     * @created_by                               Jack
+     */
+    public function __construct(array $params=[], CI_DB_mysqli_driver $db)
+    {
+        $this->_db = $db;
+
+        if (isset($params['current_page']))
+        {
+            $this->current_page = (int) $params['current_page'];
+        }
+
+        if (isset($params['per_page']))
+        {
+            $this->per_page = (int) $params['per_page'];
+        }
+
+        if (isset($params['last_page']))
+        {
+            $this->last_page = (int) $params['last_page'];
+        }
+
+        if (isset($params['total_rows']))
+        {
+            $this->total_rows = (int) $params['total_rows'];
+        }
+    }
+
+    /**
+     * Magic method 取得資料
+     *
+     * @param      string  $key    索引
+     * @return     mixed           回傳值
+     * 
+     * @created_at                 2021-12-10
+     * @created_by                 Jack
+     */
+    public function __get(string $key)
+    {
+        if (is_callable($callback = [$this, 'get_' . $key]))
+        {
+            return call_user_func($callback);
+        }
+    }
+
+    /**
+     * 取得 offset
+     *
+     * @return     int   資料起始位址
+     * 
+     * @created_at       2021-12-10
+     * @created_by       Jack
+     */
+    public function get_offset()
+    {
+        $offset = 0;
+        if ($this->current_page > 0)
+        {
+            $offset = $this->per_page * ($this->current_page - 1);
+        }
+        return $offset;
+    }
+
+    /**
+     * 取得 CI DB Driver 物件
+     *
+     * @return     CI_DB_mysqli_driver  CI DB Driver 物件
+     * 
+     * @created_at                      2021-12-10
+     * @created_by                      Jack
+     */
+    public function get_db()
+    {
+        return $this->_db;
+    }
+
+    /**
+     * 取得總共資料筆數
+     *
+     * @return     int   總筆數
+     * 
+     * @created_at       2021-12-10
+     * @created_by       Jack
+     */
+    public function get_total_rows()
+    {
+        return (clone $this->db)->count_all_results();
+    }
+
+    /**
+     * 取得最後頁數
+     *
+     * @return     int   最後頁數
+     * 
+     * @created_at       2021-12-10
+     * @created_by       Jack
+     */
+    public function get_last_page()
+    {
+        return ceil($this->total_rows / $this->per_page);
+    }
+
+    /**
+     * 取得資料篩選結果
+     *
+     * @return     array  資料陣列
+     * 
+     * @created_at        2021-12-10
+     * @created_by        Jack
+     */
+    public function get_data_result()
+    {
+        return (clone $this->db)->limit($this->per_page, $this->offset)
+                        ->get()
+                        ->result_array();
+    }
 }
