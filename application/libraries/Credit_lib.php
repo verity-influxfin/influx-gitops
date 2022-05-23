@@ -377,11 +377,11 @@ class Credit_lib{
         if ($sub_product_id) {
             //techie
             if ($sub_product_id == 1) {
-                $job_license_point =  isset($data['job_license']) ? $data['job_license'] * 50 : 0;
+                $job_license_point =  isset($data['job_license']) ? (int) $data['job_license'] * 50 : 0;
                 $total += $job_license_point;
                 $this->scoreHistory[] = '工程師貸提供專業證書: ' . $job_license_point . ' * 50';
 
-                $job_pro_level_point = isset($data['job_pro_level']) ? $data['job_pro_level'] * 100 : 0;
+                $job_pro_level_point = isset($data['job_pro_level']) ? (int) $data['job_pro_level'] * 100 : 0;
                 $total += $job_pro_level_point;
                 $this->scoreHistory[] = '工程師貸專家調整: ' . $job_pro_level_point . ' * 100';
             }
@@ -540,10 +540,6 @@ class Credit_lib{
             ],
             ['status'=> 0]
         );
-        if($sub_product_id == STAGE_CER_TARGET && $time < $credit['expire_time']){
-            $rs 		= $this->CI->credit_model->update($credit['id'],$param);
-            return $rs;
-        }
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
@@ -866,6 +862,7 @@ class Credit_lib{
 					'instalment' => intval($rs->instalment),
 					'created_at' => intval($rs->created_at),
 					'expire_time'=> intval($rs->expire_time),
+                    'sub_product_id' => (int) $rs->sub_product_id,
 				];
                 if($target){
                     $data['rate'] = $this->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id,$target);
@@ -874,8 +871,9 @@ class Credit_lib{
                         return FALSE;
                 }
 
-				$info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
-				if(isset($info->meta_value) && in_array($product_id, [1, 2])) {
+                $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
+                if (isset($info->meta_value) && in_array($product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
+                {
                     $school_points_data = $this->get_school_point($info->meta_value);
                     $school_config = $this->CI->config->item('school_points');
                     // 黑名單的學校額度是0
@@ -942,9 +940,12 @@ class Credit_lib{
                             $rate -= isset($data['student_license_level'])?$data['student_license_level']*0.5:0;
                             $rate -= isset($data['student_game_work_level'])?$data['student_game_work_level']*0.5:0;
                         }elseif ($product_id == 3){
-                            $rate -= isset($data['job_license'])?$data['job_license']*0.5:0;
+                            $rate -= isset($data['job_license']) ? (int) $data['job_license'] * 0.5 : 0;
                             //工作認證減免%
-                            $rate -= isset($data['job_title'])?$sub_product->titleList->{$data['job_title']}->level:0;
+                            if (isset($sub_product->titleList->{$data['job_title']}))
+                            {
+                                $rate -= isset($data['job_title']) ? $sub_product->titleList->{$data['job_title']}->level : 0;
+                            }
                         }
                     }
                     $product_info 	= $this->CI->config->item('product_list')[$target->product_id];
@@ -1030,5 +1031,112 @@ class Credit_lib{
             return $get_list[$sub_product_mapping];
         }
 	    return false;
+    }
+
+    /**
+     * 取得使用者申請同產品的剩餘額度
+     * @param int $user_id
+     * @param int $product_id
+     * @param int $sub_product_id
+     * @param int $except_target_id
+     * @return array
+     */
+    public function get_remain_amount(int $user_id, int $product_id, int $sub_product_id, int $except_target_id = 0)
+    {
+        $result = [
+            'credit_amount' => 0, // 核可額度
+            'target_amount' => 0, // 佔用中的額度
+            'remain_amount' => 0, // 剩餘可用額度
+            'user_available_amount' => 0, // 使用者可動用的額度(符合產品設定、千元表達)
+            'instalment' => 0,
+            'credit_level' => 0,
+        ];
+
+        // 撈取同產品的最新一筆核可資訊
+        $credit = $this->get_credit($user_id, $product_id,
+            $sub_product_id == STAGE_CER_TARGET ? 0 : $sub_product_id);
+        if ($credit && isset($credit['sub_product_id']) && $credit['sub_product_id'] == $sub_product_id)
+        {
+            $used_amount = 0;
+            $other_used_amount = 0;
+
+            //取得所有產品申請或進行中的案件
+            $target_list = $this->CI->target_model->get_many_by([
+                'id !=' => $except_target_id,
+                'user_id' => $user_id,
+                'status NOT' => [TARGET_CANCEL, TARGET_FAIL, TARGET_REPAYMENTED]
+            ]);
+            if ($target_list)
+            {
+                foreach ($target_list as $value)
+                {
+                    if ($product_id == $value->product_id)
+                    {
+                        $used_amount = $used_amount + intval($value->loan_amount);
+                    }
+                    else
+                    {
+                        $other_used_amount = $other_used_amount + intval($value->loan_amount);
+                    }
+                    //取得案件已還款金額
+                    $pay_back_transactions = $this->CI->transaction_model->get_many_by(array(
+                        'source' => SOURCE_PRINCIPAL,
+                        'user_from' => $user_id,
+                        'target_id' => $value->id,
+                        'status' => TRANSACTION_STATUS_PAID_OFF
+                    ));
+                    //扣除已還款金額
+                    foreach ($pay_back_transactions as $value2)
+                    {
+                        if ($product_id == $value->product_id)
+                        {
+                            $used_amount = $used_amount - intval($value2->amount);
+                        }
+                        else
+                        {
+                            $other_used_amount = $other_used_amount - intval($value2->amount);
+                        }
+                    }
+                }
+                //無條件進位使用額度(千元) ex: 1001 ->1100
+                $used_amount = $used_amount % 1000 != 0 ? ceil($used_amount * 0.001) * 1000 : $used_amount;
+                $other_used_amount = $other_used_amount % 1000 != 0 ? ceil($other_used_amount * 0.001) * 1000 : $other_used_amount;
+            }
+
+            $all_used_amount = $used_amount + $other_used_amount;
+            if ($credit['amount'] > $all_used_amount)
+            {
+                $remain_amount = $credit['amount'] - $all_used_amount;
+
+                // 額度需符合產品設定的上下限
+                $this->CI->load->library('loanmanager/product_lib');
+                $product_info = $this->CI->product_lib->getProductInfo($product_id, $sub_product_id);
+                if ($remain_amount < $product_info['loan_range_s'])
+                {
+                    $user_available_amount = 0;
+                }
+                else
+                {
+                    $user_available_amount = min($product_info['loan_range_e'], $remain_amount);
+                    $user_available_amount = (int) (floor($user_available_amount / 1000) * 1000);
+                }
+            }
+            else
+            {
+                $remain_amount = 0;
+                $user_available_amount = 0;
+            }
+
+            $result = [
+                'credit_amount' => $credit['amount'], // 核可額度
+                'target_amount' => $all_used_amount, // 佔用中的額度
+                'remain_amount' => $remain_amount, // 剩餘可用額度
+                'user_available_amount' => $user_available_amount,
+                'instalment' => $credit['instalment'],
+                'credit_level' => $credit['level'] ?? 0
+            ];
+        }
+
+        return $result;
     }
 }

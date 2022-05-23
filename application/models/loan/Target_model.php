@@ -330,6 +330,11 @@ class Target_model extends MY_Model
         return $this->db->get()->result();
     }
 
+    /**
+     * 取得逾期案件之相關資訊（含該案的平台手續費）
+     * @param $targetIds
+     * @return mixed
+     */
     public function getDelayedTarget($targetIds) {
         $this->db->select('target_id, entering_date, user_from, user_to')
             ->from("`p2p_transaction`.`transactions`")
@@ -337,6 +342,7 @@ class Target_model extends MY_Model
             ->where('source', SOURCE_AR_DELAYINTEREST)
             ->group_by('target_id');
         $subquery = $this->db->get_compiled_select('', TRUE);
+
         $this->db
             ->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.id, t.entering_date as delay_date')
             ->from('`p2p_loan`.`targets` AS `ta`')
@@ -603,6 +609,119 @@ class Target_model extends MY_Model
         return $this->_database->get()->result_array();
     }
 
+    public function get_failed_target(int $user_id)
+    {
+        $subqery = $this->db
+            ->select('MAX(id)')
+            ->from('p2p_loan.targets')
+            ->where('user_id', $user_id)
+            ->group_start()
+                ->where('status', TARGET_FAIL)
+                ->or_group_start()
+                    ->where('status', TARGET_WAITING_APPROVE)
+                    ->where('certificate_status', TARGET_CERTIFICATE_SUBMITTED)
+                ->group_end()
+            ->group_end()
+            ->group_by('product_id')
+            ->group_by('sub_product_id')
+            ->get_compiled_select(NULL, TRUE);
+
+        $this->db
+            ->select('t.id')
+            ->select('t.target_no')
+            ->select('t.product_id')
+            ->select('t.sub_product_id')
+            ->select('t.user_id')
+            ->select('t.remark')
+            ->select('t.created_at')
+            ->select('t.status')
+            ->select('t.certificate_status')
+            ->from('p2p_loan.targets t')
+            ->where("t.id IN ($subqery)");
+
+        return $this->db->get()->result_array();
+    }
+
+    /**
+     * @param int $investor : 投資人/借款人
+     * @param array $cert_status : 徵信項狀態 (參考constant(CERTIFICATION_STATUS_*))
+     * @param int $product_id : 產品ID
+     * @param $has_stage_target : 是否撈取階段上架的相關申貸案 (TRUE=只撈階段上架 FALSE=不撈取階段上架 NULL=不管是不是階段上架都撈)
+     * @return mixed
+     */
+    public function get_risk_person_list(int $investor, array $cert_status, int $product_id, $has_stage_target = NULL)
+    {
+        $subquery = $this->db
+            ->select('DISTINCT(user_id) AS user_id')
+            ->from('p2p_user.user_certification uc')
+            ->where_in('uc.status', $cert_status)
+            ->where('uc.investor', $investor)
+            ->get_compiled_select(NULL, TRUE);
+
+        $this->db
+            ->select('t.*')
+            ->from('p2p_loan.targets t')
+            ->join("({$subquery}) AS a", 'a.user_id=t.user_id')
+            ->where('t.product_id<', PRODUCT_FOREX_CAR_VEHICLE)
+            ->where_in('t.status', [
+                TARGET_WAITING_APPROVE,
+                TARGET_WAITING_SIGNING,
+                TARGET_WAITING_VERIFY,
+                TARGET_ORDER_WAITING_SIGNING,
+                TARGET_ORDER_WAITING_VERIFY
+            ])
+            ->where('t.product_id', $product_id)
+            ->order_by('t.id', 'ASC');
+
+        if ($has_stage_target === FALSE)
+        {
+            $this->db->where('t.sub_product_id !=', STAGE_CER_TARGET);
+        }
+        elseif ($has_stage_target === TRUE)
+        {
+            $this->db->where('t.sub_product_id', STAGE_CER_TARGET);
+        }
+
+        return $this->db->get()->result();
+    }
+
+    /**
+     * @param int $user_id
+     * @param array $target_status
+     * @param array $prod_subprod_id : 產品ID
+     * [
+     *     product_id => [sub_product_id],
+     *     1 => [0, 6, 9999],
+     *     3 => [0, 9999]
+     * ]
+     * @return mixed
+     */
+    public function get_by_multi_product(int $user_id, array $target_status, array $prod_subprod_id)
+    {
+        $this->db
+            ->select('id')
+            ->from('p2p_loan.targets')
+            ->where('user_id', $user_id)
+            ->where_in('status', $target_status);
+
+        if ($prod_subprod_id)
+        {
+            $this->db->group_start();
+            foreach ($prod_subprod_id as $key => $value)
+            {
+                $this->db
+                    ->or_group_start()
+                    ->where('product_id', $key)
+                    ->where_in('sub_product_id', $value)
+                    ->group_end();
+
+            }
+            $this->db->group_end();
+        }
+
+        return $this->db->get()->result_array();
+    }
+
     /**
      * 撈取案件未結算交易科目
      * @param integer $userId 投資人使用者編號
@@ -640,4 +759,5 @@ class Target_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
 }

@@ -5,13 +5,13 @@ class Qrcode_setting_model extends MY_Model
 	public $_table = 'qrcode_setting';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
-	public $status_list   = array(
-		0 =>	'停用',
-		1 =>	'有效'
-	);
 
+    // 一般方案 qrcode_setting 的 alias
 	public $generalCaseAliasName = 'general';
-	
+
+	// 特約商方案 qrcode_setting 的 alias
+	public $appointedCaseAliasName = 'appointed';
+
 	public function __construct()
 	{
 		parent::__construct();

@@ -8,6 +8,7 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
@@ -34,12 +35,12 @@ class Spreadsheet_lib
 	 *     ['target_no' => 'STS2019061700001', 'user_id' => '487']
 	 * ]
 	 */
-	function save($title_rows, $data_rows, $filename='export2.xlsx')
+	function load($title_rows, $data_rows)
 	{
-		$spreadsheet = new Spreadsheet();
-		$sheet = $spreadsheet->getActiveSheet();
-		$style = $spreadsheet->getDefaultStyle();
-		$style->getFont()->setName('微軟正黑體');
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $style = $spreadsheet->getDefaultStyle();
+        $style->getFont()->setName('微軟正黑體');
 		$style->getFont()->setSize(12);
 		$style->getAlignment()->setWrapText(true);
 		$style->getAlignment()->setVertical(Alignment::VERTICAL_TOP);
@@ -47,8 +48,14 @@ class Spreadsheet_lib
 		$this->draw_title($sheet, $title_rows);
 		$this->draw_data($sheet, $title_rows, $data_rows);
 
-        $this->download($filename, $spreadsheet);
+        return $spreadsheet;
 	}
+
+    function save($filename, $spreadsheet)
+    {
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save($filename);
+    }
 
     function download($filename, $spreadsheet) {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -114,8 +121,10 @@ class Spreadsheet_lib
 					$data_value = $this_data_row[$key];
 				}
 
-                $data_type = $value['datatype'] ?? DataType::TYPE_STRING;
-                $data_type = is_numeric($data_value) ? DataType::TYPE_NUMERIC : $data_type;
+                $data_type = $value['datatype']
+                    ?? is_numeric($data_value)
+                        ? DataType::TYPE_NUMERIC
+                        : DataType::TYPE_STRING;
 				$sheet->setCellValueExplicit($column_index . ($row_index), $data_value, $data_type);
 
 				if (isset($value['alignment'])) {

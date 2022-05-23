@@ -5,7 +5,7 @@ use RequestValidator\ValidatorBase;
 class CertificationValidator extends ValidatorBase
 {
     private $allowCertificationIdList = [
-        CERTIFICATION_IDCARD,
+        CERTIFICATION_IDENTITY,
         CERTIFICATION_STUDENT,
         CERTIFICATION_DEBITCARD
     ];
