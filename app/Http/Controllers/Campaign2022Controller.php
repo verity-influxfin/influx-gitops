@@ -6,6 +6,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campaign2022;
+use App\Models\Campaign2022_add;
 use App\Models\Campaign2022_vote;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +25,21 @@ class Campaign2022Controller extends Controller
     // 取得全部作品列表
     public function get_all(): JsonResponse
     {
-        $result = Campaign2022::rankingDesc()->getColumns()->get();
+        $result = Campaign2022::rankingDesc()->getColumns()->get()->toArray();
+        $result_add = Campaign2022_add::groupBy('campaign2022s_id')->selectRaw('campaign2022s_id,sum(votes) AS votes')->get()->toArray();
+        $result_add = array_column($result_add, 'votes', 'campaign2022s_id');
+        array_walk($result, function (&$item) use ($result_add) {
+            if (!empty($result_add[$item['id']])) {
+                $item['votes'] += $result_add[$item['id']];
+            }
+        });
+        usort($result, function ($a, $b) {
+            if ($a['votes'] == $b['votes']) {
+                return 0;
+            }
+            return ($a['votes'] > $b['votes']) ? -1 : 1;
+        });
+
         return $this->_return_success($result);
     }
 
@@ -137,7 +152,7 @@ class Campaign2022Controller extends Controller
         }
         // 寫入資料庫
         try {
-            $filename = $response['data']['id'].strtotime('now').'.'.$mime_type;
+            $filename = $response['data']['id'] . strtotime('now') . '.' . $mime_type;
             $file->move('upload/campaign2022', $filename);
             $inputs = $request->all();
             Campaign2022::updateOrCreate(['user_id' => $response['data']['id']], [
@@ -155,7 +170,7 @@ class Campaign2022Controller extends Controller
 
     public function get_montage()
     {
-        $montage_res = Http::get(env('API_URL').'website/montage', [
+        $montage_res = Http::get(env('API_URL') . 'website/montage', [
             'reference' => 'campaign2022'
         ])->json();
 
@@ -170,7 +185,7 @@ class Campaign2022Controller extends Controller
     {
 
         $response = (new Client())
-            ->request($method, env('API_URL').'user/info', [
+            ->request($method, env('API_URL') . 'user/info', [
                 'headers' => [
                     'request_token' => Session::get('token')
                 ]

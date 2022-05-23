@@ -22,4 +22,5 @@ Route::group([
     $router->resource('media', MediaController::class);
     $router->resource('partner', PartnerController::class);
     $router->resource('event_users', EventUsersController::class);
+    $router->resource('campaign2022_add', Campaign2022Controller::class);
 });
