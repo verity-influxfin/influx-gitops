@@ -345,6 +345,10 @@ class Target_model extends MY_Model
      * @return mixed
      */
     public function getDelayedTarget($targetIds) {
+        if(empty($targetIds))
+        {
+            return [];
+        }
         $this->db->select('target_id, entering_date, user_from, user_to')
             ->from("`p2p_transaction`.`transactions`")
             ->where_in('target_id', $targetIds)

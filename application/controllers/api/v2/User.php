@@ -2909,6 +2909,7 @@ END:
 
     public function promote_code_get()
     {
+        $this->load->model('user/user_model');
         $this->load->model('user/user_qrcode_model');
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('admin/contract_format_model');
@@ -2967,9 +2968,10 @@ END:
             $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias]);
             if ($qrcode_settings)
             {
+                $user_info = $this->user_model->get($user_id);
                 $settings = json_decode($qrcode_settings->settings, TRUE);
                 $data['contract'] = vsprintf($contract_format->content,
-                    $this->qrcode_lib->get_contract_format_content($contract_type_name, '', '', $settings));
+                    $this->qrcode_lib->get_contract_format_content($contract_type_name, $user_info->name ?? '', $user_info->address ?? '', $settings));
             }
         }
 
@@ -3048,8 +3050,8 @@ END:
                             unset($list[$formattedMonth][$category]['investorPlatformFee']);
                         }
 
-                        $data['overview']['rewardAmount'][$category] += $list[$formattedMonth][$category]['rewardAmount'];
-                        $data['total_reward_amount'] += $list[$formattedMonth][$category]['rewardAmount'];
+                        $data['overview']['rewardAmount'][$category] += $rewardAmount;
+                        $data['total_reward_amount'] += $rewardAmount;
                     }
                 }
 
