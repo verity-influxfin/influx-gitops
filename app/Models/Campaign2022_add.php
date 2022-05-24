@@ -17,6 +17,6 @@ class Campaign2022_add extends Model
      */
     protected function serializeDate(\DateTimeInterface $date): string
     {
-        return $date->format('Y-m-d H:i:s');
+        return $date->setTimezone(new \DateTimeZone('+8'))->format('Y-m-d H:i:s');
     }
 }
