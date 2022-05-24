@@ -299,7 +299,7 @@ class Check_list
                 ]
             ],
             // 實名
-            CERTIFICATION_IDCARD => [
+            CERTIFICATION_IDENTITY => [
                 [
                     'location' => 'A02',
                     'raw_data_name' => ['front_image', 'back_image', 'healthcard_image']
