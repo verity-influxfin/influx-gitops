@@ -249,7 +249,8 @@ class Cert_job extends Certification_base
             $this->CI->certification_lib->withdraw_investigation($this->certification['user_id'], $this->certification['investor']);
         }
 
-        return TRUE;
+        // 退工作收入證明時，需退掉所有還款力計算
+        return $this->CI->certification_lib->set_fail_repayment_capacity($this->certification['user_id'], '因工作收入證明審核失敗');
     }
 
     /**

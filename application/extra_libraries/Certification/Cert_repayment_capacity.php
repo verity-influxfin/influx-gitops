@@ -193,6 +193,10 @@ class Cert_repayment_capacity extends Certification_base
             $this->result,
             $content
         );
+        if ($this->result->getStatus() == CERTIFICATION_STATUS_FAILED)
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        }
 
         return TRUE;
     }

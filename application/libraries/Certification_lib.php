@@ -3866,4 +3866,39 @@ class Certification_lib{
             2
         );
     }
+
+    public function set_fail_repayment_capacity(int $user_id, string $msg_backend = '', string $msg_client = ''): bool
+    {
+        $repayment_capacity_list = $this->CI->user_certification_model->get_many_by([
+            'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
+            'user_id' => $user_id,
+            'status !=' => CERTIFICATION_STATUS_FAILED
+        ]);
+
+        if (empty($repayment_capacity_list))
+        {
+            return TRUE;
+        }
+
+        $rs = TRUE;
+        foreach ($repayment_capacity_list as $info)
+        {
+            $cert = (new Certification_factory())::get_instance_by_model_resource($info);
+            if ( ! empty($msg_backend))
+                $cert->result->addMessage($msg_backend, CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+            if ( ! empty($msg_client))
+                $cert->result->addMessage($msg_client, CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+
+            $remark = json_decode($info->remark, TRUE);
+            $remark['fail'] = implode("、", $cert->result->getAPPMessage(CERTIFICATION_STATUS_FAILED));
+            $remark['verify_result'] = $cert->result->getAllMessage(MessageDisplay::Backend);
+            $remark['verify_result_json'] = $cert->result->jsonDump();
+
+            $this->CI->user_certification_model->update($info->id, [
+                'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
+            ]);
+            $rs = $rs && $cert->set_failure(TRUE);
+        }
+        return $rs;
+    }
 }
