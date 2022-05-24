@@ -226,9 +226,9 @@
                 <div class="card-title">慈善公益</div>
                 <div class="card-content">
                   <div class="card-subtitle">
-                      <div>台大兒童基金會、</div>
-                      <div>張鈞甯、鍾欣凌，</div>
-                      <div>聯合勸募</div>
+                    <div>台大兒童基金會、</div>
+                    <div>張鈞甯、鍾欣凌，</div>
+                    <div>聯合勸募</div>
                   </div>
                   <div class="card-image p9"></div>
                   <router-link to="/charitable" class="card-link">
@@ -257,63 +257,98 @@
               <div class="card">
                 <div class="card-image p1"></div>
                 <div class="card-title">學生貸</div>
-                <div class="card-subtitle">額度最高15萬</div>
+                <div class="card-subtitle">
+                  台灣最大學生貸平台進修、學雜費、3C、機車
+                </div>
+                <router-link to="/collegeLoan" class="card-link">
+                  了解更多
+                </router-link>
               </div>
             </router-link>
             <router-link to="/workLoan" class="product-item">
               <div class="card">
                 <div class="card-image p2"></div>
                 <div class="card-title">上班族貸</div>
-                <div class="card-subtitle">額度最高30萬</div>
+                <div class="card-subtitle">
+                  公開透明，無人化自動審核信用評分，申辦不收手續費
+                </div>
+                <router-link to="/workLoan" class="card-link">
+                  了解更多
+                </router-link>
               </div>
             </router-link>
             <router-link to="/engineerLoan" class="product-item">
               <div class="card">
                 <div class="card-image p3"></div>
                 <div class="card-title">資訊工程師貸</div>
-                <div class="card-subtitle">額度最高30萬</div>
+                <div class="card-subtitle">
+                  工程師最優惠貸款，就在普匯 只要你•工程師
+                </div>
+                <router-link to="/engineerLoan" class="card-link">
+                  了解更多
+                </router-link>
               </div>
             </router-link>
             <div class="product-item">
               <div class="card">
                 <div class="card-image p4"></div>
                 <div class="card-title">汽車貸款</div>
-                <div class="card-subtitle">coming soon</div>
+                <div class="card-subtitle">
+                  只要你有車，貸給你車商、購車，都能貸
+                </div>
+                <div style="grid-area: link">coming soon</div>
               </div>
             </div>
             <router-link to="/charitable" class="product-item">
               <div class="card">
                 <div class="card-image p9"></div>
                 <div class="card-title">慈善公益</div>
-                <div class="card-subtitle">台大兒醫</div>
+                <div class="card-subtitle">
+                  台大兒童基金會、張鈞甯、鍾欣凌，聯合勸募
+                </div>
+                <router-link to="/charitable" class="card-link">
+                  了解更多
+                </router-link>
               </div>
             </router-link>
-
             <div class="product-item">
               <div class="card">
                 <div class="card-image p6"></div>
                 <div class="card-title">企業主速貸</div>
-                <div class="card-subtitle">coming soon</div>
+                <div class="card-subtitle">
+                  速速來貸，最高額度100萬 歡迎新創、微企，快速貸給你
+                </div>
+                <div style="grid-area: link">coming soon</div>
               </div>
             </div>
             <div class="product-item">
               <div class="card">
                 <div class="card-image p7"></div>
                 <div class="card-title">信保專案</div>
-                <div class="card-subtitle">coming soon</div>
+                <div class="card-subtitle">
+                  普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
+                </div>
+                <div style="grid-area: link">coming soon</div>
               </div>
             </div>
             <div class="product-item">
               <div class="card">
                 <div class="card-image p8"></div>
                 <div class="card-title">中小企業信貸</div>
-                <div class="card-subtitle">coming soon</div>
+                <div class="card-subtitle">專為中小企業，最高信貸2000萬</div>
+                <div style="grid-area: link">coming soon</div>
               </div>
             </div>
             <router-link to="/invest" class="product-item">
               <div class="card">
                 <div class="card-image p5"></div>
-                <div class="card-title space-bottom">投資人專區</div>
+                <div class="card-title">投資人專區</div>
+                <div class="card-subtitle">
+                  小額、分期，最佳投資心法低風險、高報酬，複利滾投
+                </div>
+                <router-link to="/invest" class="card-link">
+                  了解更多
+                </router-link>
               </div>
             </router-link>
             <router-link to="/promote-code-intro" class="product-item">
@@ -321,9 +356,11 @@
                 <div class="card-image p10"></div>
                 <div class="card-title">分享QR賺外快</div>
                 <div class="card-subtitle">
-                  <div>特約通路商</div>
-                  <div>管理系統</div>
+                  取得普匯QR，分享爽賺 會員、特約商管理專區
                 </div>
+                <router-link to="/promote-code-intro" class="card-link">
+                  了解更多
+                </router-link>
               </div>
             </router-link>
           </div>
@@ -1285,8 +1322,8 @@ export default {
     transform: rotate(180deg);
   }
 }
-.z-5{
-    z-index: 5;
+.z-5 {
+  z-index: 5;
 }
 .index-intro {
   background-image: url('~images/index/index-header-bg.png');
@@ -2226,11 +2263,11 @@ export default {
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 15px;
-    .img-item{
-        transition: transform 0.5s ease;
+    .img-item {
+      transition: transform 0.5s ease;
     }
-    .img-item:hover{
-        transform:scale(2.5);
+    .img-item:hover {
+      transform: scale(2.5);
     }
   }
   .img-1251 {
@@ -2391,8 +2428,7 @@ export default {
           }
           gap: 13px;
           margin: 20px 13px;
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-columns: 1fr;
         }
       }
       .product-item {
@@ -2400,12 +2436,22 @@ export default {
           width: auto;
           padding: 8px;
           position: relative;
+          display: grid;
+          grid-template-areas:
+            '. image'
+            'subtitle image'
+            'link image';
+          grid-template-columns: 1fr 90px;
+          grid-template-rows: auto auto;
+          font-size: 12px;
+          line-height: 1.5;
         }
         .card-title {
+          grid-area: 1 / 1 / 2 / 2;
           font-size: 14px;
-          line-height: 25px;
+          line-height: 1.2;
           margin-bottom: 0;
-          text-align: center;
+          text-align: left;
           &.space-bottom {
             padding-bottom: 15px;
           }
@@ -2414,13 +2460,17 @@ export default {
           margin: 0;
           font-size: 12px;
           line-height: 1.2;
-          text-align: center;
+          margin: 4px 0;
+          text-align: left;
         }
         .card-image {
           position: relative;
           margin: 0 auto;
           width: 50px;
-          height: 50px;
+        }
+        .card-link {
+          font-size: 12px;
+          line-height: 1.2;
         }
       }
     }
@@ -3014,19 +3064,22 @@ export default {
       grid-template-columns: 1fr 1fr 1fr;
       gap: 15px;
       position: relative;
-      .img-item{
-          &:hover,&:focus-within{
-              &:nth-child(1),&:nth-child(4){
-                  transform: scale(3.27) translate(38px,0);
-              }
-              &:nth-child(2),&:nth-child(5){
-                  transform: scale(3.27);
-              }
-              &:nth-child(3),&:nth-child(6){
-                  transform: scale(3.27) translate(-38px,0);
-              }
-
+      .img-item {
+        &:hover,
+        &:focus-within {
+          &:nth-child(1),
+          &:nth-child(4) {
+            transform: scale(3.27) translate(38px, 0);
           }
+          &:nth-child(2),
+          &:nth-child(5) {
+            transform: scale(3.27);
+          }
+          &:nth-child(3),
+          &:nth-child(6) {
+            transform: scale(3.27) translate(-38px, 0);
+          }
+        }
       }
     }
     .img-1251 {
