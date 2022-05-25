@@ -2229,6 +2229,16 @@ class Certification_lib{
 
 	private function email_success($info){
 		if($info){
+            if (empty($info->content))
+            {
+                log_message('error', json_encode(['function_name' => 'email_success', 'message' => "Content of use_certification which id is {$info->id} is empty."]));
+            }
+
+            if (empty($content['email']))
+            {
+                return FALSE;
+            }
+
 			$content 	= $info->content;
 			$data 		= array(
 				'email_status'	=> 1,
