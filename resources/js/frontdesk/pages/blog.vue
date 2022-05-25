@@ -62,8 +62,8 @@
                         <div class="panel-body">
                             <div class="row mb-3">
                                 <div class="col">
-                                    <a href="/skbank" class="ad_aside" target="_blank">
-                                        <img src="~images/skbank-blog-ad.jpg" />
+                                    <a href="/5th-anniversary" class="ad_aside" target="_blank">
+                                        <img src="~images/5th-anniversary-ad.jpg" class="img-fluid" />
                                     </a>
                                 </div>
                             </div>
