@@ -116,28 +116,30 @@ class Cert_social extends Certification_base
                                 $allFollowerCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
                                 $postsIn3Months = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
                                 $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['postsWithKeyWords'] : '';
+                                
                                 // 帳號是否存在
                                 if ($usernameExist === TRUE)
                                 {
                                     $usernameExist = '是';
-                                    $this->result->setStatus(CERTIFICATION_STATUS_SUCCEED);
                                 }
                                 else if ($usernameExist === FALSE)
                                 {
                                     $usernameExist = '否';
-                                    $this->result->addMessage('IG未爬到正確資訊(帳號不存在)', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
-                                    $this->result->addMessage('IG提供帳號無效請確認', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+                                    $this->result->addMessage('Instagram 帳號不存在)', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                                    $this->result->addMessage('Instagram 帳號無效，請確認', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
                                 }
                                 else
                                 {
-                                    $this->result->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                                    $this->result->addMessage('無法確認 Instagram 帳號是否存在，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                 }
+
                                 // 是否為私人帳號判斷
                                 if ($isPrivate === TRUE)
                                 {
                                     if ($followStatus == 'unfollowed')
                                     {
                                         $this->CI->instagram_lib->autoFollow($this->certification['user_id'], $ig_username);
+                                        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
                                         return FALSE;
                                     }
                                     else if ($followStatus == 'waitingFollowAccept')
@@ -149,20 +151,21 @@ class Cert_social extends Certification_base
                                             {
                                                 if ($follow_status['response']['result']['status'] !== 'finished')
                                                 {
-                                                    return FALSE;
+                                                    // 待追蹤、重新爬取流程確定
                                                 }
                                             }
                                             else
                                             {
-                                                $this->result->addMessage('IG爬蟲結果回應錯誤(子系統回應非200)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                                                $this->result->addMessage('IG爬蟲子系統回應非 200 (follow_status)，請洽工程師)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                             }
                                         }
                                         else
                                         {
-                                            $this->result->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                                            $this->result->addMessage('IG爬蟲子系統無回應(follow_status)，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                         }
                                     }
                                 }
+
                                 // 是否為活躍社交帳號判斷
                                 if (is_numeric($allFollowerCount) && is_numeric($allFollowingCount))
                                 {
@@ -188,6 +191,9 @@ class Cert_social extends Certification_base
                                     'posts_in_3months' => $postsIn3Months,
                                     'key_word' => $postsWithKeyWords
                                 ];
+
+                                $this->result->setStatus(CERTIFICATION_STATUS_SUCCEED);
+
                             }
                             else
                             {
@@ -209,7 +215,7 @@ class Cert_social extends Certification_base
                     else if ($log_status['status'] == SCRAPER_STATUS_NO_CONTENT)
                     {
                         $this->CI->instagram_lib->updateRiskControlInfo($this->certification['user_id'], $ig_username);
-                        return FALSE;
+                        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
                     }
                     else
                     {
@@ -234,6 +240,10 @@ class Cert_social extends Certification_base
         if ($this->result->getStatus() == CERTIFICATION_STATUS_FAILED)
         {
             $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_VERIFY_FAILED);
+            return FALSE;
+        }
+        else if ($this->result->getStatus() == CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
+        {
             return FALSE;
         }
 
