@@ -22,13 +22,13 @@ class Joint_credit_lib{
 	}
 
 	// 找身分證號
-	private function getIdCardNumber($text){
-		preg_match('/身分證號：.*[a-z,A-Z]{1}[0-9]{9}/',$text,$id_card);
-		$id_card = isset($id_card[0]) ? $id_card[0] : [];
-		preg_match('/[a-z,A-Z]{1}[0-9]{9}/',$id_card,$id_card);
-		$id_card = isset($id_card[0]) ? $id_card[0] : [];
-		return $id_card;
-	}
+    private function getIdCardNumber($text)
+    {
+        preg_match('/身分證號：[^\w]*[a-z,A-Z]{1}[0-9]{9}/', $text, $id_card);
+        $id_card = $id_card[0] ?? '';
+        preg_match('/[a-z,A-Z]{1}[0-9]{9}/', $id_card, $id_card);
+        return $id_card[0] ?? '';
+    }
 
 	// 找印表日期
 	private function getReportTime($text){
