@@ -10,8 +10,9 @@
                   <div class="col-auto">
                     <div class="text-bg">
                       <img
-                        src="@/asset/images/index/header/anniversary-text-phone.png"
+                        src="@/asset/images/index/header/anniversary-text.png"
                         alt="普匯5週年"
+                        style="width:313px;"
                       />
                     </div>
                     <div class="links">
@@ -43,6 +44,7 @@
                       <img
                         src="@/asset/images/index/header/general-phone.png"
                         alt="普匯influx"
+                        style="width:178px;"
                       />
                     </div>
                     <div class="solgan">提供公開 透明 安全的金融科技服務</div>
@@ -50,6 +52,7 @@
                   <div class="col position-releative">
                     <img
                       src="@/asset/images/index/header/general-man-phone.png"
+                      style="width:206.56px;"
                       class="man"
                     />
                   </div>
@@ -71,6 +74,7 @@
                       <img
                         src="@/asset/images/index/header/anniversary-text.png"
                         alt="普匯5週年"
+                        style="width:656px;"
                       />
                     </div>
                     <div class="links">
@@ -2353,6 +2357,8 @@ export default {
     .intro-content {
       background-image: url('~images/index/header-bg-phone.jpg');
       background-position: initial;
+      background-size: cover;
+      background-repeat: no-repeat;
       .sw-headers {
         min-height: 300px;
         .swiper-slide {
@@ -2441,7 +2447,7 @@ export default {
             '. image'
             'subtitle image'
             'link image';
-          grid-template-columns: 1fr 90px;
+          grid-template-columns: 250px 1fr;
           grid-template-rows: auto auto;
           font-size: 12px;
           line-height: 1.5;
@@ -2465,7 +2471,7 @@ export default {
         }
         .card-image {
           position: relative;
-          margin: 0 auto;
+          margin: 0 0 0 auto;
           width: 50px;
         }
         .card-link {
