@@ -116,7 +116,8 @@ class Campaign2022Controller extends Controller
 
             Campaign2022_vote::create([
                 'vote_from' => $response['data']['id'],
-                'vote_to' => $campaign2022['user_id']
+                'vote_to' => $campaign2022['user_id'],
+                'created_ip' => $request->ip(),
             ]);
             $campaign2022::where('id', $inputs['id'])->update([
                 'votes' => DB::raw('votes+1')
