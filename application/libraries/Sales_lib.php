@@ -98,6 +98,10 @@ class Sales_lib
 
     private function _data_parser($type, $goals, $type_datas)
     {
+        if (empty($goals['goal_a_month'][$type]))
+        {
+            return [];
+        }
         $goal_per_day = $goals['goal_per_day'][$type];
         $goal_a_month = $goals['goal_a_month'][$type];
         $real_a_month = 0;
@@ -160,7 +164,13 @@ class Sales_lib
     {
         $goals = $this->CI->sale_goals_model->get_goals_number_at_this_month($this->at_month);
 
-        $goal_a_month = array_column($goals, 'number', 'type');
+        $goal_a_month = [];
+        array_walk($goals, function ($element) use (&$goal_a_month) {
+            if ( ! empty($element['status']) && $element['status'] == 1)
+            {
+                $goal_a_month[$element['type']] = $element['number'];
+            }
+        });
         $goal_per_day = array_map(
             function ($n)
             {

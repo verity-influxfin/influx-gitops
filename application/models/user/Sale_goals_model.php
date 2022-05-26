@@ -83,7 +83,7 @@ class Sale_goals_model extends MY_Model
     private function _goals_at($at_month)
     {
         return $this->db
-            ->select('id, type, number')
+            ->select('id, type, number, status')
             ->get_where('p2p_user.sale_goals', [
                 'at_month' => $at_month,
             ])->result_array();
@@ -103,12 +103,14 @@ class Sale_goals_model extends MY_Model
                 'at_month' => $at_month,
                 'type' => $value['type'],
                 'number' => $value['number'],
+                'status' => $value['status']
             ]);
 
             $goals[] = [
                 'id' => $insert_id,
                 'type' => $value['type'],
                 'number' => $value['number'],
+                'status' => $value['status']
             ];
         }
 

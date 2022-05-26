@@ -1277,6 +1277,10 @@ class Sales extends MY_Admin_Controller {
         // 將資料做轉換處理 array -> string
         foreach ($datas as $key => $value)
         {
+            if (empty($value['goal'][0]))
+            {
+                continue;
+            }
             if (is_numeric($key))
             {
                 $value['goal'][0] = $this->_parse_goal_number_add_href($goals_id[$key], $value['goal'][0]);
@@ -1391,6 +1395,7 @@ class Sales extends MY_Admin_Controller {
             $struct = [
                 'id' => $value['id'],
                 'number' => $value['number'],
+                'status' => $value['status']
             ];
             $data[$value['type']] = $struct;
         }
@@ -2211,16 +2216,30 @@ class Sales extends MY_Admin_Controller {
         $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
 
         $goals = $this->sale_goals_model->get_goals_number_at_this_month($at_month);
-        $db_goals = array_column($goals, 'number', 'id');
+        $db_goals = array_column($goals, null, 'id');
 
         if ($this->_is_input_vaild($input, $db_goals))
         {
-            $updated_data = array_diff($input, $db_goals);
+            $updated_data = [];
+            array_walk($input, function ($element, $key) use ($db_goals, &$updated_data) {
+                if ( ! empty($db_goals[$key]))
+                {
+                    if (empty($element['status']))
+                    {
+                        $element['status'] = 0;
+                    }
+                    $diff_tmp = array_diff_assoc($element, $db_goals[$key]);
+                    if ( ! empty($diff_tmp))
+                    {
+                        $updated_data[$key] = $diff_tmp;
+                    }
+                }
+            });
             if ($updated_data)
             {
                 foreach ($updated_data as $key => $value)
                 {
-                    $this->sale_goals_model->update($key, ['number' => $value]);
+                    $this->sale_goals_model->update($key, $value);
                 }
             }
         }
@@ -2262,36 +2281,101 @@ class Sales extends MY_Admin_Controller {
 
         // 依照 excel 需要的匯出順序塞入 content
         $sort1 = [
-            sale_goals_model::GOAL_WEB_TRAFFIC,
-            sale_goals_model::GOAL_USER_REGISTER,
-            sale_goals_model::GOAL_APP_DOWNLOAD,
-            sale_goals_model::GOAL_LOAN_TOTAL,
+            [
+                'title' => '業務推廣',
+                'items' => [
+                    [
+                        'key' => sale_goals_model::GOAL_WEB_TRAFFIC,
+                        'kpi' => ['目標流量', '實際流量', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_USER_REGISTER,
+                        'kpi' => ['目標會員數', '實際總會員數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_APP_DOWNLOAD,
+                        'kpi' => ['目標下載數', '實際下載數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_TOTAL,
+                        'kpi' => ['目標申貸戶數', '實際完成申貸戶數', '達成率']
+                    ]
+                ]
+            ]
         ];
-        foreach ($sort1 as $value)
+        foreach ($sort1 as $sort_key => $sort_value)
         {
-            $content1[] = $datas[$value]['goal'];
-            $content1[] = $datas[$value]['real'];
-            $content1[] = $datas[$value]['rate'];
+            foreach ($sort_value['items'] as $item_key => $item_value)
+            {
+                if (empty($datas[$item_value['key']]['goal']))
+                {
+                    unset($sort1[$sort_key]['items'][$item_key]);
+                    continue;
+                }
+                $content1[] = $datas[$item_value['key']]['goal'];
+                $content1[] = $datas[$item_value['key']]['real'];
+                $content1[] = $datas[$item_value['key']]['rate'];
+            }
         }
 
         // 第二頁
         $sort2 = [
-            sale_goals_model::GOAL_LOAN_SALARY_MAN,
-            sale_goals_model::GOAL_LOAN_STUDENT,
-            sale_goals_model::GOAL_LOAN_SMART_STUDENT,
-            sale_goals_model::GOAL_LOAN_CREDIT_INSURANCE,
-            sale_goals_model::GOAL_LOAN_SME,
-            sale_goals_model::GOAL_DEAL_SALARY_MAN,
-            sale_goals_model::GOAL_DEAL_STUDENT,
-            sale_goals_model::GOAL_DEAL_SMART_STUDENT,
-            sale_goals_model::GOAL_DEAL_CREDIT_INSURANCE,
-            sale_goals_model::GOAL_DEAL_SME,
+            [
+                'title' => '申貸指標',
+                'items' => [
+                    [
+                        'key' => sale_goals_model::GOAL_LOAN_SALARY_MAN,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_STUDENT,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_SMART_STUDENT,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_CREDIT_INSURANCE,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_SME,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ]
+                ]
+            ], [
+                'title' => '成交指標',
+                'items' => [
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_SALARY_MAN,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_STUDENT,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_SMART_STUDENT,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_CREDIT_INSURANCE,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_SME,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                ]
+            ]
         ];
-        foreach ($sort2 as $value)
+        foreach ($sort2 as $sort_key => $sort_value)
         {
-            $content2[] = $datas[$value]['goal'];
-            $content2[] = $datas[$value]['real'];
-            $content2[] = $datas[$value]['rate'];
+            foreach ($sort_value['items'] as $item_key => $item_value)
+            {
+                if (empty($datas[$item_value['key']]['goal']))
+                {
+                    unset($sort2[$sort_key]['items'][$item_key]);
+                    continue;
+                }
+                $content2[] = $datas[$item_value['key']]['goal'];
+                $content2[] = $datas[$item_value['key']]['real'];
+                $content2[] = $datas[$item_value['key']]['rate'];
+            }
         }
 
         // 最後補上 成交總計
@@ -2324,28 +2408,10 @@ class Sales extends MY_Admin_Controller {
                 $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
                 $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
-                $spreadsheet->getActiveSheet()->mergeCells('A3:A14');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A3', '業務推廣');
-                $spreadsheet->getActiveSheet()->mergeCells('B3:B5');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B3', '官網流量');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C3', '目標流量');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C4', '實際流量');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C5', '達成率');
-                $spreadsheet->getActiveSheet()->mergeCells('B6:B8');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B6', '會員註冊');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C6', '目標會員數');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C7', '實際總會員數');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C8', '達成率');
-                $spreadsheet->getActiveSheet()->mergeCells('B9:B11');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B9', 'APP下載');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C9', '目標下載數');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C10', '實際下載數');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C11', '達成率');
-                $spreadsheet->getActiveSheet()->mergeCells('B12:B14');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B12', '申貸總計');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C12', '目標申貸戶數');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C13', '實際完成申貸戶數');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C14', '達成率');
+
+                $index_a = 3;
+                $index_b = 3;
+                $spreadsheet = $this->_draw_title($spreadsheet, $sheet, $sort1, $index_a, $index_b);
             }
             else
             {
@@ -2354,48 +2420,12 @@ class Sales extends MY_Admin_Controller {
                 $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
                 $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
 
-                $spreadsheet->getActiveSheet()->mergeCells('A3:A17');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A3', '申貸指標');
-                $spreadsheet->getActiveSheet()->mergeCells('B3:B5');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B3', '上班族貸');
-                $spreadsheet->getActiveSheet()->mergeCells('B6:B8');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B6', '學生貸');
-                $spreadsheet->getActiveSheet()->mergeCells('B9:B11');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B9', '3S名校貸');
-                $spreadsheet->getActiveSheet()->mergeCells('B12:B14');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B12', '信保專案');
-                $spreadsheet->getActiveSheet()->mergeCells('B15:B17');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B15', '中小企業');
+                $index_a = 3;
+                $index_b = 3;
+                $spreadsheet = $this->_draw_title($spreadsheet, $sheet, $sort2, $index_a, $index_b);
 
-                $spreadsheet->getActiveSheet()->mergeCells('A18:A33');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A18', '成交指標');
-                $spreadsheet->getActiveSheet()->mergeCells('B18:B20');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B18', '上班族貸');
-                $spreadsheet->getActiveSheet()->mergeCells('B21:B23');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B21', '學生貸');
-                $spreadsheet->getActiveSheet()->mergeCells('B24:B26');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B24', '3S名校貸');
-                $spreadsheet->getActiveSheet()->mergeCells('B27:B29');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B27', '信保專案');
-                $spreadsheet->getActiveSheet()->mergeCells('B30:B32');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B30', '中小企業');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B33', '總數');
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C33', '總成交數');
-
-                // 蔡蔡表示此文案是老闆寫的，必須要一模且一樣
-                $kpi_loan = ['目標申貸戶數', '實際申貸戶數', '達成率'];
-                $kpi_deal = ['目標成交筆數', '實際成交筆數', '達成率'];
-                for ($i = 3; $i < 33; $i++)
-                {
-                    if ($i <= 17)
-                    {
-                        $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . $i, $kpi_loan[$i % 3]);
-                    }
-                    else
-                    {
-                        $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . $i, $kpi_deal[$i % 3]);
-                    }
-                }
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, '總數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . $index_b, '總成交數');
             }
 
             // 從 D 行開始塞入上面整理的內容
@@ -2421,6 +2451,33 @@ class Sales extends MY_Admin_Controller {
 
         $writer->save('php://output');
         exit;
+    }
+
+    private function _draw_title($spreadsheet, $sheet, $sort_list, &$index_a, &$index_b)
+    {
+        $rowspan = 2;
+        foreach ($sort_list as $sort)
+        {
+            $merge_col = count($sort['items']) * ($rowspan + 1);
+            $spreadsheet->getActiveSheet()->mergeCells('A' . $index_a . ':A' . ($index_a + $merge_col - 1));
+            $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A' . $index_a, $sort['title']);
+            $index_a = $index_a + $merge_col;
+
+            foreach ($sort['items'] as $item)
+            {
+                $kpi = $item['kpi'];
+                $spreadsheet->getActiveSheet()->mergeCells('B' . $index_b . ':B' . ($index_b + $rowspan));
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, $this->sale_goals_model->type_name_mapping()[$item['key']]);
+
+                for ($i = 0; $i < count($kpi); $i++)
+                {
+                    $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . ($index_b + $i), $kpi[$i]);
+                }
+
+                $index_b += $rowspan + 1;
+            }
+        }
+        return $spreadsheet;
     }
 
     private function _parse_goal_ym_to_at_month($goal_ym)
