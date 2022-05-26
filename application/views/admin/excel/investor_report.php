@@ -110,10 +110,10 @@
                     <th><?= $info['delayed_interest'] ?></th>
                     <th><?= $info['allowance'] ?></th>
                     <th><?= $info['platform_fee'] ?></th>
-                    <th>=SUM(C<?=$idx?>:G<?=$idx?>)-H<?=$idx?></th>
-                    <th>=I<?=$idx?>/B<?=$idx?>/<?=$info['diff_month']?>*12</th>
-                    <!--                    <th>--><?//= $info['total_income'] ?><!--</th>-->
-                    <!--                    <th>--><?//= $info['rate_of_return'] ?><!--</th>-->
+<!--                    <th>=SUM(C--><?//=$idx?><!--:G--><?//=$idx?><!--)-H--><?//=$idx?><!--</th>-->
+<!--                    <th>=I--><?//=$idx?><!--/B--><?//=$idx?><!--/--><?//=$info['diff_month']?><!--*12</th>-->
+                    <th><?= $info['total_income'] ?></th>
+                    <th><?= $info['rate_of_return']/100 ?></th>
                 </tr>
             <? } ?>
             <tr>

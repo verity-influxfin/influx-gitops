@@ -957,7 +957,8 @@ class User_lib {
     {
         // 產品列表名稱
         $product_list = $this->CI->config->item('product_list');
-        $display_product_ids = ! empty($product_id_list) ? $product_id_list : [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN];
+        $display_product_ids = ! empty($product_id_list) ? $product_id_list : [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
+        $combine_product_ids = [PRODUCT_ID_STUDENT_ORDER => PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN_ORDER => PRODUCT_ID_SALARY_MAN];
 
         $data = [
             "basic_info" => [
@@ -1033,12 +1034,29 @@ class User_lib {
             $amount_not_delay = isset($principal_balance[$product_id]) && is_numeric($principal_balance[$product_id]) ? $principal_balance[$product_id] : 0;
             $amount_delay = isset($principal_balance_delay[$product_id]) && is_numeric($principal_balance_delay[$product_id]) ? $principal_balance_delay[$product_id] : 0;
             $total_amount = $amount_not_delay + $amount_delay;
-            $data['assets_description'][$product_list[$product_id]['alias']] = [
-                'name' => $product_list[$product_id]['name'],
-                'amount_not_delay' => $amount_not_delay,
-                'amount_delay' => $amount_delay,
-                'total_amount' => $total_amount,
-            ];
+
+            if (array_key_exists($product_id, $combine_product_ids))
+            {
+                $product_id = $combine_product_ids[$product_id];
+            }
+
+            $alias_name = $product_list[$product_id]['alias'];
+            if (isset($data['assets_description'][$alias_name]))
+            {
+                $data['assets_description'][$alias_name]['amount_not_delay'] += $amount_not_delay;
+                $data['assets_description'][$alias_name]['amount_delay'] += $amount_delay;
+                $data['assets_description'][$alias_name]['total_amount'] += $total_amount;
+            }
+            else
+            {
+                $data['assets_description'][$alias_name] = [
+                    'name' => $product_list[$product_id]['name'],
+                    'amount_not_delay' => $amount_not_delay,
+                    'amount_delay' => $amount_delay,
+                    'total_amount' => $total_amount,
+                ];
+            }
+
             // 全部總和
             $amount_not_delay_all += $amount_not_delay;
             $amount_delay_all += $amount_delay;
