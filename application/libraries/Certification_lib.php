@@ -3883,7 +3883,7 @@ class Certification_lib{
         $rs = TRUE;
         foreach ($repayment_capacity_list as $info)
         {
-            $cert = (new Certification_factory())::get_instance_by_model_resource($info);
+            $cert = Certification_factory::get_instance_by_model_resource($info);
             if ( ! empty($msg_backend))
                 $cert->result->addMessage($msg_backend, CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
             if ( ! empty($msg_client))
