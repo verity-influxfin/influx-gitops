@@ -12,7 +12,7 @@
                       <img
                         src="@/asset/images/index/header/anniversary-text.png"
                         alt="普匯5週年"
-                        style="width:313px;"
+                        style="width: 313px"
                       />
                     </div>
                     <div class="links">
@@ -44,7 +44,7 @@
                       <img
                         src="@/asset/images/index/header/general-phone.png"
                         alt="普匯influx"
-                        style="width:178px;"
+                        style="width: 178px"
                       />
                     </div>
                     <div class="solgan">提供公開 透明 安全的金融科技服務</div>
@@ -52,7 +52,7 @@
                   <div class="col position-releative">
                     <img
                       src="@/asset/images/index/header/general-man-phone.png"
-                      style="width:206.56px;"
+                      style="width: 206.56px"
                       class="man"
                     />
                   </div>
@@ -74,7 +74,7 @@
                       <img
                         src="@/asset/images/index/header/anniversary-text.png"
                         alt="普匯5週年"
-                        style="width:656px;"
+                        style="width: 656px"
                       />
                     </div>
                     <div class="links">
@@ -126,11 +126,17 @@
             <router-link to="/collegeLoan" class="product-item">
               <div class="card">
                 <div class="card-title">學生貸</div>
-                <div class="card-content p1">
+                <div class="card-content">
                   <div class="card-subtitle">
                     台灣最大學生貸平台進修、學雜費、3C、機車
                   </div>
-                  <div class="card-image p1"></div>
+                  <div class="card-image">
+                    <img
+                      class="p1"
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt=""
+                    />
+                  </div>
                   <router-link to="/collegeLoan" class="card-link">
                     了解更多
                   </router-link>
@@ -144,7 +150,9 @@
                   <div class="card-subtitle">
                     公開透明，無人化自動審核信用評分，申辦不收手續費
                   </div>
-                  <div class="card-image p2"></div>
+                  <div class="card-image">
+                    <img class="p2" src="@/asset/images/index/id1.png" />
+                  </div>
                   <router-link to="/workLoan" class="card-link">
                     了解更多
                   </router-link>
@@ -158,7 +166,13 @@
                   <div class="card-subtitle">
                     工程師最優惠貸款，就在普匯 只要你•工程師
                   </div>
-                  <div class="card-image p3"></div>
+                  <div class="card-image">
+                    <img
+                      class="p3"
+                      src="@/asset/images/index/computer1.png"
+                      alt=""
+                    />
+                  </div>
                   <router-link to="/engineerLoan" class="card-link">
                     了解更多
                   </router-link>
@@ -172,7 +186,9 @@
                   <div class="card-subtitle">
                     只要你有車，貸給你車商、購車，都能貸
                   </div>
-                  <div class="card-image p4"></div>
+                  <div class="card-image">
+                    <img src="@/asset/images/index/car1.png" class="p4" />
+                  </div>
                   <div style="grid-area: link">coming soon</div>
                 </div>
               </div>
@@ -184,7 +200,9 @@
                   <div class="card-subtitle">
                     小額、分期，最佳投資心法低風險、高報酬，複利滾投
                   </div>
-                  <div class="card-image p5"></div>
+                  <div class="card-image">
+                    <img src="@/asset/images/index/line-chart.png" class="p5" />
+                  </div>
                   <router-link to="/invest" class="card-link">
                     了解更多
                   </router-link>
@@ -198,7 +216,13 @@
                   <div class="card-subtitle">
                     速速來貸，最高額度100萬 歡迎新創、微企，快速貸給你
                   </div>
-                  <div class="card-image p6"></div>
+                  <div class="card-image">
+                    <img
+                      src="@/asset/images/index/clock1.png"
+                      alt=""
+                      class="p6"
+                    />
+                  </div>
                   <div>coming soon</div>
                 </div>
               </div>
@@ -210,7 +234,13 @@
                   <div class="card-subtitle">
                     普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
                   </div>
-                  <div class="card-image p7"></div>
+                  <div class="card-image">
+                    <img
+                      src="@/asset/images/index/bank1.png"
+                      alt=""
+                      class="p7"
+                    />
+                  </div>
                   <div>coming soon</div>
                 </div>
               </div>
@@ -220,7 +250,9 @@
                 <div class="card-title">中小企業信貸</div>
                 <div class="card-content">
                   <div class="card-subtitle">專為中小企業，最高信貸2000萬</div>
-                  <div class="card-image p8"></div>
+                  <div class="card-image">
+                    <img src="@/asset/images/index/building1.png" class="p8" />
+                  </div>
                   <div>coming soon</div>
                 </div>
               </div>
@@ -234,7 +266,9 @@
                     <div>張鈞甯、鍾欣凌，</div>
                     <div>聯合勸募</div>
                   </div>
-                  <div class="card-image p9"></div>
+                  <div class="card-image">
+                    <img src="@/asset/images/index/love1.png" class="p9" />
+                  </div>
                   <router-link to="/charitable" class="card-link">
                     了解更多
                   </router-link>
@@ -248,7 +282,9 @@
                   <div class="card-subtitle">
                     <div>取得普匯QR，分享爽賺 會員、特約商管理專區</div>
                   </div>
-                  <div class="card-image p10"></div>
+                  <div class="card-image">
+                    <img src="@/asset/images/index/qr1.png" class="p10" />
+                  </div>
                   <router-link to="/promote-code-intro" class="card-link">
                     了解更多
                   </router-link>
@@ -1435,42 +1471,13 @@ export default {
       }
     }
     .product-item {
-      &:focus-within,
-      &:hover {
-        .card-image.p1 {
-          background-image: url('~images/index/mortarboard.gif');
-        }
-        .card-image.p2 {
-          background-image: url('~images/index/id.gif');
-        }
-        .card-image.p3 {
-          background-image: url('~images/index/computer.gif');
-        }
-        .card-image.p4 {
-          background-image: url('~images/index/car.gif');
-        }
-        .card-image.p5 {
-          background-image: url('~images/index/line-chart.gif');
-        }
-        .card-image.p6 {
-          background-image: url('~images/index/handshake.gif');
-        }
-        .card-image.p7 {
-          background-image: url('~images/index/university.gif');
-        }
-        .card-image.p8 {
-          background-image: url('~images/index/building.gif');
-        }
-        .card-image.p9 {
-          background-image: url('~images/index/love.gif');
-        }
-        .card-image.p10 {
-          background-image: url('~images/index/money-bag.gif');
-        }
-      }
       .card {
         padding: 12px;
         border-radius: 4px;
+        overflow: hidden;
+        background-image: url('~images/index/product-card-bg.png');
+        background-repeat: no-repeat;
+        background-position: top right;
       }
       .card-title {
         font-weight: 700;
@@ -1481,7 +1488,7 @@ export default {
       .card-content {
         display: grid;
         grid-template-columns: 10fr 7fr;
-        grid-template-rows: 74px 30px;
+        grid-template-rows: 60px 30px;
         grid-template-areas:
           'subtitle image'
           'link image';
@@ -1503,38 +1510,56 @@ export default {
       }
       .card-image {
         grid-area: image;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        &.p1 {
-          background-image: url('~images/index/mortarboard1.png');
+        position: relative;
+        .p1 {
+          position: absolute;
+          left: 13px;
+          top: 16px;
         }
-        &.p2 {
-          background-image: url('~images/index/id1.png');
+        .p2 {
+          position: absolute;
+          left: -20px;
+          top: -8px;
         }
-        &.p3 {
-          background-image: url('~images/index/computer1.png');
+        .p3 {
+          position: absolute;
+          left: 0px;
+          top: 12px;
         }
-        &.p4 {
-          background-image: url('~images/index/car1.png');
+        .p4 {
+          position: absolute;
+          left: 0px;
+          top: 12px;
         }
-        &.p5 {
-          background-image: url('~images/index/line-chart.png');
+        .p5 {
+          position: absolute;
+          left: 12px;
+          top: 14px;
         }
-        &.p6 {
-          background-image: url('~images/index/handshake1.png');
+        .p6 {
+          position: absolute;
+          left: 16px;
+          top: 16px;
         }
-        &.p7 {
-          background-image: url('~images/index/university1.png');
+        .p7 {
+          position: absolute;
+          left: 15px;
+          top: 13px;
         }
-        &.p8 {
-          background-image: url('~images/index/building1.png');
+        .p8 {
+          position: absolute;
+          left: 13px;
+          top: 13px;
         }
-        &.p9 {
-          background-image: url('~images/index/love1.png');
+        .p9 {
+          position: absolute;
+          left: 10px;
+          top: 1px;
         }
-        &.p10 {
-          background-image: url('~images/index/money-bag.png');
+        .p10 {
+          position: absolute;
+          left: 17px;
+          top: 15px;
         }
       }
     }
