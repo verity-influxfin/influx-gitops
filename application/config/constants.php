@@ -230,6 +230,7 @@ defined('CERTIFICATION_PROFILEJUDICIAL') or define('CERTIFICATION_PROFILEJUDICIA
 defined('CERTIFICATION_COMPANYEMAIL') or define('CERTIFICATION_COMPANYEMAIL', 1019);
 defined('CERTIFICATION_JUDICIALGUARANTEE') or define('CERTIFICATION_JUDICIALGUARANTEE', 1020);
 defined('CERTIFICATION_PASSBOOK') or define('CERTIFICATION_PASSBOOK', 1021);
+defined('CERTIFICATION_TARGET_APPLY') or define('CERTIFICATION_TARGET_APPLY', 1022); // 法人可否認購債權（僅人工）
 
 defined('CERTIFICATION_SALESDETAIL') or define('CERTIFICATION_SALESDETAIL', 2000);
 
@@ -376,6 +377,8 @@ defined('PRODUCT_FOR_JUDICIAL') or define('PRODUCT_FOR_JUDICIAL', 1000); //法�
 defined('SUBPRODUCT_INTELLIGENT_STUDENT') or define('SUBPRODUCT_INTELLIGENT_STUDENT', 6); // 3S名校貸
 
 defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN'		, 1000); //最小投資額
+defined('TARGET_AMOUNT_MAX_COMPANY') or define('TARGET_AMOUNT_MAX_COMPANY', 500000); // 法人最大投資額
+defined('TARGET_AMOUNT_MAX_COMPANY_DAILY') or define('TARGET_AMOUNT_MAX_COMPANY_DAILY', 3000000); // 法人單日最大投資額
 defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE'	, '9'); //virtual_account
 defined('BORROWER_VIRTUAL_CODE')    OR define('BORROWER_VIRTUAL_CODE'	, '1'); //virtual_account
 defined('LAW_VIRTUAL_CODE')    OR define('LAW_VIRTUAL_CODE'	, '8'); //virtual_account

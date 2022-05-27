@@ -419,6 +419,19 @@ class User extends REST_Controller {
                 ];
                 $new_id = $this->user_model->insert($new_company_user_param);
 
+                if ($new_id)
+                {
+                    $this->load->model('user/user_certification_model');
+                    $this->user_certification_model->insert([
+                        'user_id' => $new_id,
+                        'certification_id' => CERTIFICATION_TARGET_APPLY,
+                        'investor' => USER_INVESTOR,
+                        'content' => '',
+                        'remark' => '',
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+                    ]);
+                }
+
                 // 若該法人之自然人帳號不存在，則自動建立其自然人帳號
                 $company_user_already_exist = $this->user_model->get_by([
                     'phone' => $input['phone'],
