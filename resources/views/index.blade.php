@@ -169,17 +169,17 @@
                                             <div class="function-list-items">
                                                 <div class="link-title">企業融資</div>
                                                 <div class="link-item">
-                                                    <a href="/business-loan/sme" class="link-text">微企e秒貸</a>
+                                                    <a href="/business-loan/sme" class="link-text">企業主速貸</a>
                                                 </div>
                                                 <div class="link-item">
                                                     <div class="link-text">
-                                                        <div>信保專案融資</div>
+                                                        <div>信保專案(銀行合作)</div>
                                                         <div class="link-coming-soon">(coming soon)</div>
                                                     </div>
                                                 </div>
                                                 <div class="link-item">
                                                     <div class="link-text">
-                                                        <div>一般企業融資</div>
+                                                        <div>中小企業信貸</div>
                                                         <div class="link-coming-soon">(coming soon)</div>
                                                     </div>
                                                 </div>
@@ -200,7 +200,7 @@
                                                 </div>
                                             </div>
                                             <div class="function-list-items">
-                                                <div class="link-title">分享QR</div>
+                                                <div class="link-title">分享QR賺外快</div>
                                                 <div class="link-item">
                                                     <div class="link-text">
                                                         <a href="/promote-code-intro" class="link-text">我是推薦者</a>
