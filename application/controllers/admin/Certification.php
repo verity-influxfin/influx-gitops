@@ -300,6 +300,20 @@ class Certification extends MY_Admin_Controller {
                             alert('更新失敗', $back_url);
                         }
                         break;
+                    case CERTIFICATION_TARGET_APPLY: // 開通法人認購債權
+                        if (empty($post['id']))
+                        {
+                            alert('更新失敗，無此id', $back_url);
+                        }
+                        $res = $this->user_certification_model->update($post['id'], [
+                            'status' => $post['status']
+                        ]);
+                        if ( ! $res)
+                        {
+                            alert('更新失敗，請洽工程師', $back_url);
+                        }
+                        alert('更新成功', $back_url);
+                        break;
                 }
             }
 

@@ -136,4 +136,24 @@ class Investment_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
+    /**
+     * 取得當日投資的總金額
+     * @param $user_id
+     * @return int|mixed
+     */
+    public function get_invest_amount_today($user_id)
+    {
+        $res = $this->db
+            ->select('SUM(amount) AS amount')
+            ->from('p2p_loan.investments')
+            ->where('user_id', $user_id)
+            ->where('status', INVESTMENT_STATUS_TO_BE_PAYMENT)
+            ->where('created_at >=', strtotime('today'))
+            ->where('created_at <', strtotime('today +1 day'))
+            ->get()
+            ->first_row('array');
+
+        return $res['amount'] ?? 0;
+    }
 }

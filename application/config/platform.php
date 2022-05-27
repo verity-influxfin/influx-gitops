@@ -2087,6 +2087,7 @@ $config['certifications'] = [
     1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '公司授權核實', 'status' => 1, 'description' => '公司授權核實', 'optional' => []],
 
     1021 => ['id' => CERTIFICATION_PASSBOOK, 'alias' => 'passbook', 'name' => '主要往來存摺', 'status' => 1, 'description' => '提供主要往來存摺', 'optional' => []],
+    1022 => ['id' => CERTIFICATION_TARGET_APPLY, 'alias' => 'target_apply', 'name' => '開通法人認購債權', 'status' => 1, 'description' => '人工審核是否開通法人認購債權', 'optional' => []],
 
     2000 => ['id' => CERTIFICATION_SALESDETAIL, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
