@@ -420,7 +420,7 @@ class Target_model extends MY_Model
 				a1.user_id AS lender,
 				CONCAT(a1.target_id,"-",a1.user_id) AS ary_key,
 				tr.entering_date,
-				DATEDIFF(NOW(), tr.entering_date) AS delayed_days,
+				t.delay_days AS delayed_days,
 				a6.user_meta_1,
 				a7.meta_value AS school_department,
 				a8.meta_value AS job_position
