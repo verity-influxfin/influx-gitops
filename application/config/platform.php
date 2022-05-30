@@ -106,7 +106,8 @@ $config['admin_menu'] = [
         'promote_list'  => '推薦有賞',
         'promote_reward_list'  => '推薦有賞放款',
         'qrcode_projects'     => 'QRcode方案設定',
-        'qrcode_contracts'    => 'QRcode合約審核'
+        'qrcode_contracts'    => 'QRcode合約審核',
+        'sales_report' => '績效統計表',
     ],
     'Account' => [
         'parent_name' => '財務作業',

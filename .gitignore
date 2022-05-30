@@ -6,6 +6,9 @@ application/cache/*
 application/logs/*
 !application/logs/index.html
 
+application/tests/.phpunit.result.cache
+application/tests/build/*
+
 !application/*/.htaccess
 
 composer.lock

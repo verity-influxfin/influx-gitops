@@ -31,7 +31,7 @@
 	},
 	"require-dev": {
 		"mikey179/vfsstream": "1.1.*",
-		"kenjis/ci-phpunit-test": "^0.17.0",
-		"phpunit/phpunit": "^7"
+		"kenjis/ci-phpunit-test": "^2.0",
+		"phpunit/phpunit": "^8"
 	}
 }
