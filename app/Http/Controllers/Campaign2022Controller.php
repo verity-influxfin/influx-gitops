@@ -26,7 +26,10 @@ class Campaign2022Controller extends Controller
     public function get_all(): JsonResponse
     {
         $result = Campaign2022::rankingDesc()->getColumns()->get()->toArray();
-        $result_add = Campaign2022_add::groupBy('campaign2022s_id')->selectRaw('campaign2022s_id,sum(votes) AS votes')->get()->toArray();
+        $result_add = Campaign2022_add::groupBy('campaign2022s_id')
+            ->selectRaw('campaign2022s_id,sum(votes) AS votes, created_at')
+            ->where('created_at', '<=', date('Y-m-d H:i:s'))
+            ->get()->toArray();
         $result_add = array_column($result_add, 'votes', 'campaign2022s_id');
         array_walk($result, function (&$item) use ($result_add) {
             if (!empty($result_add[$item['id']])) {
