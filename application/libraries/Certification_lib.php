@@ -879,6 +879,10 @@ class Certification_lib{
                         {
                             $verifiedResult->addMessage('SIP學校為黑名單，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                         }
+                        else if ($sip_log['response']['status'] == 'university_not_crawlable')
+                        {
+                            $verifiedResult->addMessage('SIP學校無法爬取，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                        }
                         // 爬蟲未跑完
                         else if ($sip_log['response']['status'] == 'started' || $sip_log['response']['status'] == 'retry' || $sip_log['response']['status'] == 'requested')
                         {
