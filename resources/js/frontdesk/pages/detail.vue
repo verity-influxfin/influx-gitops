@@ -105,6 +105,7 @@
 
 <script>
 import statement from "../component/statementComponent";
+import { gsap } from 'gsap/dist/gsap'
 
 export default {
   components: {
