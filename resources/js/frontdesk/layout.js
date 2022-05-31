@@ -25,7 +25,7 @@ $(() => {
         });
     };
 
-    const timeLineMax = new TimelineMax({ paused: true, reversed: true });
+    // const timeLineMax = new TimelineMax({ paused: true, reversed: true });
 
     const router = new VueRouter({
         routes: routers,

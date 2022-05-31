@@ -3468,6 +3468,7 @@
 </template>
 
 <script>
+import { gsap } from 'gsap/dist/gsap'
 export default {
   props: ["amount", "color", "minRate", "maxRate"],
   data: () => ({

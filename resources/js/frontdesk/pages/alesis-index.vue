@@ -427,7 +427,11 @@
             </div>
           </div>
         </div>
-        <div class="block-info concept-2">
+        <div
+          class="block-info concept-2"
+          data-aos="fade-left"
+          data-aos-duration="2000"
+        >
           <div class="op">
             集人才：開發創新科技，建構AI無人自動化，打造最有溫度的金融新生態，呈現綠色金融科技新環境。
           </div>
@@ -640,7 +644,7 @@
         <div class="swiper-container cert-swiper">
           <div class="swiper-wrapper">
             <div class="swiper-slide cert-cards">
-              <div class="card">
+              <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
                     <img
@@ -658,7 +662,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card">
+              <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
                     <img
@@ -674,7 +678,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card">
+              <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
                     <img
@@ -690,7 +694,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card">
+              <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
                     <img
@@ -1267,7 +1271,8 @@ export default {
     gsap.from('#img58', {
       scrollTrigger: {
         trigger: '.index-loan',
-        start: '-240px top'
+        start: '-300px top',
+        toggleActions: 'play pause resume reset'
         // markers:true,
       },
       x: -1200,
@@ -1276,7 +1281,8 @@ export default {
     gsap.from('#img57', {
       scrollTrigger: {
         trigger: '.index-loan',
-        start: '-240px top'
+        start: '-300px top',
+        toggleActions: 'play pause resume reset'
       },
       x: 1200,
       duration: 2
@@ -1284,7 +1290,8 @@ export default {
     gsap.from('#img56', {
       scrollTrigger: {
         trigger: '.index-loan',
-        start: '-240px top'
+        start: '-300px top',
+        toggleActions: 'play play resume reset'
       },
       y: 1200,
       duration: 2
@@ -1292,7 +1299,8 @@ export default {
     gsap.from('#s1', {
       scrollTrigger: {
         trigger: '.service-imgs',
-        start: '-240px top'
+        start: '-300px top',
+        toggleActions: 'play pause resume reset'
       },
       y: 1200,
       duration: 2
@@ -1300,7 +1308,8 @@ export default {
     gsap.from('#s2', {
       scrollTrigger: {
         trigger: '.service-imgs',
-        start: '-240px top'
+        start: '-300px top',
+        toggleActions: 'play pause resume reset'
       },
       x: -1200,
       duration: 2
@@ -1308,7 +1317,8 @@ export default {
     gsap.from('#s3', {
       scrollTrigger: {
         trigger: '.service-imgs',
-        start: '-240px top'
+        start: '-300px top',
+        toggleActions: 'play pause resume reset'
       },
       x: 1200,
       duration: 2
@@ -1316,7 +1326,8 @@ export default {
     gsap.from('#s4', {
       scrollTrigger: {
         trigger: '.service-imgs',
-        start: '-240px top'
+        start: '-300px top',
+        toggleActions: 'play pause resume reset'
       },
       y: 1200,
       duration: 2
