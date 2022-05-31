@@ -79,6 +79,7 @@ import credit from "../component/creditComponent";
 import target from "../component/targetComponent";
 import experience from "../component/experienceComponent";
 import float from "../component/floatComponent";
+import { gsap } from 'gsap/dist/gsap'
 
 export default {
   components: {
@@ -156,13 +157,12 @@ export default {
       let dir = index * angle - (window.outerWidth >= 767 ? 90 : 96);
 
       this.credit = this.creditList[index].rate;
-
       gsap.to(".pointer", 0.5, {
         rotate: `${dir}dge`,
       });
     },
     transform($event) {
-      this.timeLineMax = new TimelineMax({ paused: true, reversed: true });
+      this.timeLineMax = gsap.timeline({ paused: true, reversed: true });
       this.timeLineMax.to($event.target, { scale: 1.2 });
       this.timeLineMax.play();
     },
