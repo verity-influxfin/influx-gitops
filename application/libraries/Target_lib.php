@@ -279,14 +279,8 @@ class Target_lib
             $product_list = $this->CI->config->item('product_list');
             $user_id = $target->user_id;
             $product_id = $target->product_id;
-            if($renew){
-                $sub_product_id = $target->sub_product_id;
-            }
-            else{
-                $sub_product_id = $stage_cer == 0
-                    ? ($target->sub_product_id == STAGE_CER_TARGET ? 0 : $target->sub_product_id)
-                    : STAGE_CER_TARGET;
-            }
+            $sub_product_id = $target->sub_product_id;
+
             $product_info = $product_list[$product_id];
             if ($this->is_sub_product($product_info, $sub_product_id)) {
                 $product_info = $this->trans_sub_product($product_info, $sub_product_id);
