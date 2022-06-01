@@ -194,7 +194,7 @@ class Cert_job extends Certification_base
         }
         else
         {
-            $this->expired_timestamp = strtotime('+ 30 days', time());
+            $this->expired_timestamp = strtotime("+ {$this->valid_month} month", time());
         }
         return TRUE;
     }
