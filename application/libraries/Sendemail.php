@@ -128,15 +128,6 @@ class Sendemail
                         $this->CI->email->attach($value,"",$key);
                     }
                     $rs = $this->CI->email->send();
-                    $this->CI->load->model('log/log_send_email_model');
-                    $insert_data = [
-                        'email_to' => $email_to,
-                        'email_from' => GMAIL_SMTP_ACCOUNT,
-                        'subject' => $title,
-                        'content' => $content,
-                        'sent_status' => $rs ? 1 : 0
-                    ];
-                    $this->CI->log_send_email_model->insert($insert_data);
                 }
 				else{
                     $rs = $this->send($email_to,$title,$content,$replay_to,$replay_to_name);
@@ -188,15 +179,7 @@ class Sendemail
 			}
 
 			$rs = $this->CI->email->send();
-            $this->CI->load->model('log/log_send_email_model');
-            $insert_data = [
-                'email_to' => $email,
-                'email_from' => GMAIL_SMTP_ACCOUNT,
-                'subject' => $title,
-                'content' => $content,
-                'sent_status' => $rs ? 1 : 0
-            ];
-            $this->CI->log_send_email_model->insert($insert_data);
+
 			if($rs){
 				return true;
 			}else{
