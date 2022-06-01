@@ -146,7 +146,7 @@
             <alesis-section>
                 <alesis-space size="tiny"></alesis-space>
                 <alesis-space size="medium"></alesis-space>
-                <form class="表單" ref="borrowReport">
+                <form class="表單" ref="borrowReport" @submit.prevent="calculateForm">
                     <div class="列">
                         <div class="標籤">1.就讀學校：</div>
                         <div class="輸入欄位">
@@ -214,7 +214,7 @@
                     <div class="列">
                         <div class="標籤"></div>
                         <div class="輸入欄位">
-                            <button @click="calculateForm" type="button" :disabled="!isFormValid">取得報告</button>
+                            <button type="submit" :disabled="!isFormValid">取得報告</button>
                         </div>
                     </div>
                 </form>
@@ -429,7 +429,7 @@ export default {
     },
     filters: {
         amount: (value) => {
-              return Number(parseFloat(value).toFixed(3)).toLocaleString('en')
+            return Number(parseFloat(value).toFixed(3)).toLocaleString('en')
         }
     },
     data: () => ({
@@ -530,10 +530,10 @@ export default {
                     'Accept': 'application/json',
                 }
             }).then((res) => {
-                this.borrowReportResult.amount = res.data.amount
-                this.borrowReportResult.rate = res.data.rate
-                this.borrowReportResult.platform_fee = res.data.platform_fee
-                this.borrowReportResult.repayment = res.data.repayment
+                this.borrowReportResult.amount = res.data.amount ?? 0
+                this.borrowReportResult.rate = res.data.rate ?? 0
+                this.borrowReportResult.platform_fee = res.data.platform_fee ?? 0
+                this.borrowReportResult.repayment = res.data.repayment ?? 0
                 this.formCalculated = true
                 this.isFormValid = true
             })
