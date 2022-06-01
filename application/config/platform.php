@@ -2306,6 +2306,8 @@ $config['certifications_msg'] = [
         '請提供半年內之良民證，謝謝您！',
         '未上傳良民證資料',
     ],
+    CERTIFICATION_SIMPLIFICATIONFINANCIAL => [],
+    CERTIFICATION_SIMPLIFICATIONJOB => [],
 
     1000 => [],
     1001 => [],
