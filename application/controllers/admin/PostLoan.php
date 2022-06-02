@@ -167,7 +167,11 @@ class PostLoan extends MY_Admin_Controller {
 						foreach ($name as $k => $v) {
 							$target_where['user_id'][] = $v->id;
 						}
-					}
+                    }
+                    else
+                    {
+                        $target_where['user_id'] = 0;
+                    }
 				} else {
 					if (preg_match_all('/[A-Za-z]/', $tsearch) == 1) {
 						$id_number = $this->user_model->get_many_by(array(

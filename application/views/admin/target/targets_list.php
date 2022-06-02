@@ -113,6 +113,7 @@
                                             <th>申請金額</th>
                                             <th>核准金額</th>
                                             <th>動用金額</th>
+                                            <th>可動用額度</th>
 											<th>本金餘額</th>
 											<th>年化利率</th>
                                             <th>貸放期間</th>
@@ -147,6 +148,9 @@
                                             <td><?=isset($value->amount)?$value->amount:'' ?></td>
                                             <td><?=isset($value->credit->amount)?$value->credit->amount:'' ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
+                                            <td><?php // 可動用額度
+                                                echo $value->remain_amount ?? ''; ?>
+                                            </td>
                                             <td><?=isset($value->remaining_principal)?$value->remaining_principal:'' ?></td>
                                             <td><?=isset($value->interest_rate)&&$value->interest_rate?floatval($value->interest_rate):'' ?></td>
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>

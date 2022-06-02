@@ -89,6 +89,38 @@
 		return $rs;
 	}
 
+    function curl_put($url, $data = array(), $header = array(), $timeout = NULL)
+    {
+        $curl = curl_init($url);
+        if (ENVIRONMENT == "production")
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        }
+        else
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //不直接顯示回傳結果
+        if (isset($timeout))
+            curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+        if ( ! empty($data))
+        {
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+
+        if ( ! empty($header))
+        {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        }
+
+        $rs = curl_exec($curl);
+        curl_close($curl);
+        return $rs;
+    }
+
     function curl_get_statuscode($url, $data = array(), $header = array(), $timeout = NULL)
     {
         $curl = curl_init($url);
@@ -161,6 +193,10 @@
 	{
 		$CI 	=& get_instance();
 		$list 	= $CI->config->item('access_ip_list');
+        if (ENVIRONMENT === 'development')
+        {
+            return TRUE;
+        }
 		foreach($list as $ip){
 			if(preg_match('/\.\*$/',$ip)){
 				list($main, $sub) = explode('.*', $ip);
@@ -228,7 +264,6 @@
 		}
 		return rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
 	}
-
 
 	function make_promote_code($length=8) {
 		$code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -483,4 +518,64 @@
 		}
 		return $date;
 	}
+
+	function pagination_config($config=[]) {
+		if(empty($config))
+			$config = [];
+
+		$config['num_links'] = 2;
+		$config['use_page_numbers'] = TRUE;
+		$config['reuse_query_string'] = TRUE;
+		$config['page_query_string'] = TRUE;
+
+		$config['full_tag_open'] = '<nav aria-label="Page navigation"><ul class="pagination">';
+		$config['full_tag_close'] = '</ul></nav>';
+
+		$config['first_link'] = '第一頁';
+		$config['first_tag_open'] = '<li class="page-item">';
+		$config['first_tag_close'] = '</li>';
+
+		$config['last_link'] = '最後一頁';
+		$config['last_tag_open'] = '<li class="page-item">';
+		$config['last_tag_close'] = '</li>';
+
+		$config['next_link'] = '下一頁';
+		$config['next_tag_open'] = '<li class="page-item">';
+		$config['next_tag_close'] = '</li>';
+
+		$config['prev_link'] = '上一頁';
+		$config['prev_tag_open'] = '<li class="page-item">';
+		$config['prev_tag_close'] = '</li>';
+
+		$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+		$config['cur_tag_close'] = '</a</li>';
+
+		$config['num_tag_open'] = '<li class="page-item">';
+		$config['num_tag_close'] = '</li>';
+
+		return $config;
+	}
+
+
+    function array_sum_identical_keys() {
+        $arrays = func_get_args();
+        $keys = array_keys(array_reduce($arrays, function ($keys, $arr) { return $keys + $arr; }, array()));
+        $sums = [];
+
+        foreach ($keys as $key) {
+            $sums[$key] = array_reduce($arrays, function ($sum, $arr) use ($key) {
+                return $sum + $arr[$key];
+            }, is_numeric($arrays[0][$key]) ? 0 : []);
+        }
+
+        return $sums;
+    }
+
+    function log_msg($level, $message)
+    {
+        $backtrace = debug_backtrace();
+        log_message($level, $backtrace[0]['file'] .'(' . $backtrace[0]['line']  . ') :: ' . $message . '\n' .
+            (!empty($backtrace[1]) ? $backtrace[1]['file'] .'(' . $backtrace[1]['line'] : ''));
+    }
+
 ?>

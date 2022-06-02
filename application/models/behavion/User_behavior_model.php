@@ -41,7 +41,7 @@ class User_behavior_model extends MY_Model
 
         $subQuery = $this->db->get_compiled_select('', TRUE);
         $this->db
-            ->select('r.promote_code, COUNT(r.promote_code) as count')
+            ->select('uq.id AS user_qrcode_id, r.promote_code, COUNT(r.promote_code) as count')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
             ->join("($subQuery) as `r`", "`r`.`promote_code` = `uq`.`promote_code`")
             ->where('`uq`.`status`', 1)
@@ -51,7 +51,7 @@ class User_behavior_model extends MY_Model
         if($startTime!='')
             $this->db->where("`r`.`created_at` >=",  $startTime);
         if($endTime!='')
-            $this->db->where("`r`.`created_at` <=",  $endTime);
+            $this->db->where("`r`.`created_at` <",  $endTime);
 
         return $this->db->get()->result_array();
     }

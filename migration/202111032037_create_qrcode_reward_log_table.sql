@@ -1,4 +1,4 @@
-CREATE TABLE `p2p_log`.`promote_reward_log` (
+CREATE TABLE `p2p_log`.`qrcode_reward_log` (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `amount` DECIMAL(12,3) NOT NULL,
     `ids` JSON NULL,

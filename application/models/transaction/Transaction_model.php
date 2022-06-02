@@ -336,7 +336,7 @@ class Transaction_model extends MY_Model
 
     public function get_delayed_ar_transaction($source_list, $user_to_list = [], $product_id_list = [], bool $is_group = TRUE): array
     {
-        return $this->_get_delayed_transaction($source_list, $user_to_list, $product_id_list, $is_group, $status=TRANSACTION_STATUS_TO_BE_PAID);
+        return $this->_get_delayed_transaction($source_list, $user_to_list, $product_id_list, $is_group, $status=TRANSACTION_STATUS_TO_BE_PAID, $only_over_delayed_date=FALSE);
     }
 
     /**
@@ -345,10 +345,11 @@ class Transaction_model extends MY_Model
      * @param mixed $user_to_list
      * @param mixed $product_id_list
      * @param bool $is_group
-     * @param mixed $status
+     * @param mixed $status 交易紀錄的狀態
+     * @param bool $only_over_delayed_date 只撈取超過逾期日的交易紀錄
      * @return array
      */
-    public function _get_delayed_transaction($source_list, $user_to_list = [], $product_id_list = [], bool $is_group = TRUE, $status = TRANSACTION_STATUS_PAID_OFF): array
+    public function _get_delayed_transaction($source_list, $user_to_list = [], $product_id_list = [], bool $is_group = TRUE, $status = TRANSACTION_STATUS_PAID_OFF, bool $only_over_delayed_date = TRUE): array
     {
         $this->db
             ->select('tra.investment_id, MIN(tra.entering_date) AS entering_date')
@@ -373,8 +374,12 @@ class Transaction_model extends MY_Model
             ->from('`p2p_transaction`.`transactions` AS `tra`')
             ->join("({$delayed_query}) AS `r`", 'r.investment_id = tra.investment_id')
             ->where_in('tra.source', $source_list)
-            ->where_in('tra.status', $status)
-            ->where('tra.entering_date >= r.entering_date', NULL, TRUE);
+            ->where_in('tra.status', $status);
+
+        if($only_over_delayed_date)
+        {
+            $this->db->where('tra.entering_date >= r.entering_date', NULL, TRUE);
+        }
 
         if ($is_group)
         {

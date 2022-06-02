@@ -119,6 +119,7 @@
 														{content}
 													</td>
 												</tr>
+                                                <?php if(isset($app_icon) && $app_icon == TRUE) {?>
                                                 <tr>
                                                     <td align="center" style="margin-left: 30px;">
                                                         <?php if(isset($investor_status)){?>
@@ -138,6 +139,7 @@
                                                         <?php }?>
                                                     </td>
                                                 </tr>
+                                                <?php }?>
 											</table>
 										</td>
 									</tr>

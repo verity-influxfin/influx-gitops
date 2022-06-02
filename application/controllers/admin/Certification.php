@@ -300,6 +300,20 @@ class Certification extends MY_Admin_Controller {
                             alert('更新失敗', $back_url);
                         }
                         break;
+                    case CERTIFICATION_TARGET_APPLY: // 開通法人認購債權
+                        if (empty($post['id']))
+                        {
+                            alert('更新失敗，無此id', $back_url);
+                        }
+                        $res = $this->user_certification_model->update($post['id'], [
+                            'status' => $post['status']
+                        ]);
+                        if ( ! $res)
+                        {
+                            alert('更新失敗，請洽工程師', $back_url);
+                        }
+                        alert('更新成功', $back_url);
+                        break;
                 }
             }
 
@@ -501,7 +515,7 @@ class Certification extends MY_Admin_Controller {
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						} elseif ($info->certification_id == CERTIFICATION_CERCREDITJUDICIAL) {
 							$fail = '評估表已失效';
-						} elseif ($info->certification_id == CERTIFICATION_IDCARD) {
+						} elseif ($info->certification_id == CERTIFICATION_IDENTITY) {
 							if(isset($post['failed_type_list'])) {
 								$remark = json_decode($info->remark, TRUE);
 								if ($remark === FALSE)
@@ -520,11 +534,31 @@ class Certification extends MY_Admin_Controller {
 							'change_admin'			=> $this->login_info->id,
 						));
 
-						if($post['status']=='1'){
-							$rs = $this->certification_lib->set_success($post['id']);
-						}else if($post['status']=='2'){
-							$rs = $this->certification_lib->set_failed($post['id'],$fail);
-						}else{
+                        $cert = \Certification\Certification_factory::get_instance_by_model_resource($info);
+                        if ($post['status'] == CERTIFICATION_STATUS_SUCCEED)
+                        {
+                            if (isset($cert))
+                            {
+                                $rs = $cert->set_success(FALSE);
+                            }
+                            else
+                            {
+                                $rs = $this->certification_lib->set_success($post['id']);
+                            }
+                        }
+                        else if ($post['status'] == CERTIFICATION_STATUS_FAILED)
+                        {
+                            if (isset($cert))
+                            {
+                                $rs = $cert->set_failure(FALSE, $fail);
+                            }
+                            else
+                            {
+                                $rs = $this->certification_lib->set_failed($post['id'],$fail);
+                            }
+                        }
+                        else
+                        {
 							$rs = $this->user_certification_model->update($post['id'],array(
 								'status' => intval($post['status']),
 								'sys_check' => 0,
@@ -1145,6 +1179,7 @@ class Certification extends MY_Admin_Controller {
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
 
+        # 目前只有實名認證的頁面會 call 這
 		public function verdict(){
 			$input = $this->input->get(NULL, TRUE);
 			$name = isset($input['name']) ? $input['name'] : '';
@@ -1542,9 +1577,9 @@ class Certification extends MY_Admin_Controller {
         $this->load->library('verify/data_verify_lib');
 
         $old_data = $this->user_certification_model->get_certification_data_by_id($post_data['id']);
-        if (empty($old_data['status']) || $old_data['status'] != CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+        if (empty($old_data['status']) ||  ! in_array($old_data['status'], [CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_SUCCEED]))
         {
-            return $this->_return_error('狀態非待人工審核，更新失敗');
+            return $this->_return_error('狀態非【待人工審核】或【審核成功】，更新失敗');
         }
         $old_data_content = json_decode($old_data['content'] ?? '', TRUE);
 
@@ -1637,15 +1672,15 @@ class Certification extends MY_Admin_Controller {
             $new_data_content['debt_to_equity_ratio'] = 0;
         }
 
-        $verified_result = new InvestigationCertificationResult(CERTIFICATION_STATUS_SUCCEED);
+        $verified_result = new \CertificationResult\RepaymentCapacityCertificationResult(CERTIFICATION_STATUS_SUCCEED);
         $this->load->library('verify/data_verify_lib');
 
         // 印表日期
         $this->load->library('mapping/time');
-        $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $old_data_content['printDatetime']);
+        $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $old_data_content['printDatetime'] ?? '');
         $print_timestamp = $this->time->ROCDateToUnixTimestamp($print_timestamp);
 
-        $verified_result->addMessage('人工審核通過', CERTIFICATION_STATUS_SUCCEED, MassageDisplay::Backend);
+        $verified_result->addMessage('人工審核通過', CERTIFICATION_STATUS_SUCCEED, \CertificationResult\MessageDisplay::Backend);
         $this->certification_lib->update_repayment_certification(
             $post_data['id'],
             $print_timestamp,

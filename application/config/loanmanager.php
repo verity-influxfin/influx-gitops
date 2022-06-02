@@ -92,7 +92,7 @@ $config['contactRelationship'] = [
     2 => "朋友",
 ];
 $config['certifications'] = [
-    1 => ['id' => 1, 'alias' => 'idcard', 'name' => '實名認證', 'status' => 1],
+    1 => ['id' => 1, 'alias' => 'identity', 'name' => '實名認證', 'status' => 1],
     2 => ['id' => 2, 'alias' => 'student', 'name' => '學生身份認證', 'status' => 1],
     3 => ['id' => 3, 'alias' => 'debitcard', 'name' => '金融帳號認證', 'status' => 1],
     4 => ['id' => 4, 'alias' => 'social', 'name' => '社交認證', 'status' => 1],

@@ -1,7 +1,10 @@
-<?php
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 
-defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class Sales extends MY_Admin_Controller {
 	
@@ -12,6 +15,7 @@ class Sales extends MY_Admin_Controller {
 		$this->load->model('user/user_meta_model');
 		$this->load->model('admin/partner_model');
 		$this->load->model('admin/partner_type_model');
+		$this->load->model('user/sale_goals_model');
  	}
 	
 	public function index(){
@@ -710,6 +714,8 @@ class Sales extends MY_Admin_Controller {
 
     public function promote_list() {
         $this->load->library('user_lib');
+        $this->load->library("pagination");
+        $this->load->library('qrcode_lib');
         $this->load->model('user/qrcode_setting_model');
 
         $input 		= $this->input->get(NULL, TRUE);
@@ -757,12 +763,27 @@ class Sales extends MY_Admin_Controller {
         }
         $input['sdate'] = $input['sdate'] ?? '';
         $input['edate'] = $input['edate'] ?? '';
-        if(isset($where['alias'])) {
-            if($where['alias'] == "all")
-                unset($where['alias']);
 
-            $list = $this->user_lib->getPromotedRewardInfo($where, $input['sdate'], $input['edate']);
+        if (($where['alias'] ?? "") == "all")
+        {
+            unset($where['alias']);
         }
+        $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
+
+        $fullPromoteList = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'], $input['edate']);
+
+        $config = pagination_config();
+        $config['per_page'] = 40; //每頁顯示的資料數
+        $config['base_url'] = admin_url('sales/promote_list');
+        $config["total_rows"] = count($fullPromoteList);
+
+        $this->pagination->initialize($config);
+        $page_data["links"] = $this->pagination->create_links();
+
+        $current_page = max(1, intval($input['per_page'] ?? '1'));
+        $offset = ($current_page - 1) * $config['per_page'];
+
+        $list = array_slice($fullPromoteList, $offset, $config['per_page']);
 
         $qrcodeSettingList = $this->qrcode_setting_model->get_all();
         $alias_list = ['all' => "全部方案"];
@@ -772,16 +793,18 @@ class Sales extends MY_Admin_Controller {
         $page_data['alias_list'] = $alias_list;
 
         $this->load->view('admin/_header');
-        $this->load->view('admin/_title',$this->menu);
-        $this->load->view('admin/promote_list',$page_data);
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/promote_code/promote_list', $page_data);
         $this->load->view('admin/_footer');
-
     }
 
-    public function promote_edit() {
+    public function promote_edit()
+    {
         $this->load->library('user_lib');
         $this->load->model('user/qrcode_setting_model');
+        $this->load->model('user/qrcode_collaborator_model');
         $this->load->library('contract_lib');
+        $this->load->library('qrcode_lib');
 
         $input 		= $this->input->get(NULL, TRUE);
         $where		= [];
@@ -793,23 +816,26 @@ class Sales extends MY_Admin_Controller {
                 $where[$field] = $input[$field];
             }
         }
+        $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
-        $list = $this->user_lib->getPromotedRewardInfo($where, $input['sdate']??'', $input['edate']??'');
-
+        $list = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'] ?? '', $input['edate'] ?? '');
+        $page_data['collaborator_list'] = json_decode(json_encode($this->qrcode_collaborator_model->get_all(['status' => 1])), TRUE) ?? [];
         $page_data['data'] = reset($list);
 
         $contract = $this->contract_lib->get_contract(isset($page_data['data']['info']) ? $page_data['data']['info']['contract_id'] : 0);
         $page_data['contract'] = $contract ? $contract['content'] : "";
 
         $this->load->view('admin/_header');
-        $this->load->view('admin/_title',$this->menu);
-        $this->load->view('admin/promote_edit',$page_data);
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/promote_code/promote_edit', $page_data);
         $this->load->view('admin/_footer');
 
     }
 
-    public function promote_reward_loan() {
-        if (!$this->input->is_ajax_request()) {
+    public function promote_reward_loan()
+    {
+        if ( ! $this->input->is_ajax_request())
+        {
             alert('ERROR, 只接受Ajax', admin_url('sales/promote_reward_list'));
         }
         $this->load->model('user/user_qrcode_model');
@@ -817,7 +843,7 @@ class Sales extends MY_Admin_Controller {
         $this->load->model('transaction/qrcode_reward_model');
         $this->load->model('transaction/transaction_model');
         $this->load->model('transaction/virtual_passbook_model');
-        $this->load->model('log/log_promote_reward_model');
+        $this->load->model('log/log_qrcode_reward_model');
         $this->load->library('passbook_lib');
         $this->load->library('output/json_output');
 
@@ -826,11 +852,14 @@ class Sales extends MY_Admin_Controller {
         $totalAmount = 0;
         $successIdList = [];
 
-        if(!empty($ids)) {
+        if ( ! empty($ids))
+        {
             $date = get_entering_date();
             $list = $this->qrcode_reward_model->getSettlementRewardList(['id' => $ids, 'status' => PROMOTE_REWARD_STATUS_TO_BE_PAID, 'amount > ' => 0]);
-            if(empty($list))
-                $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "放款失敗，找不到對應的獎勵紀錄。"])->send();
+            if (empty($list))
+            {
+                $this->json_output->setStatusCode(200)->setResponse(['success' => TRUE, 'msg' => "放款失敗，找不到對應的獎勵紀錄。"])->send();
+            }
 
             $rollback = function () {
                 $this->user_qrcode_model->trans_rollback();
@@ -845,16 +874,19 @@ class Sales extends MY_Admin_Controller {
                 'status'	=> 1,
                 'virtual_account like ' => CATHAY_VIRTUAL_CODE . "%",
             ]);
-            foreach ($bankAccountRs as $bankAccount) {
+            foreach ($bankAccountRs as $bankAccount)
+            {
                 $bankAccountList[$bankAccount->user_id][$bankAccount->investor] = $bankAccount;
             }
 
-            foreach ($list as $value) {
+            foreach ($list as $value)
+            {
                 // 找不到虛擬帳號
                 $settings = json_decode($value['settings'], TRUE);
-                if($settings === FALSE || !isset($bankAccountList[$value['user_id']]) ||
-                    !isset($settings['investor']) || !isset($bankAccountList[$value['user_id']][$settings['investor']])
-                ) {
+                if ($settings === FALSE || ! isset($bankAccountList[$value['user_id']]) ||
+                    ! isset($settings['investor']) || ! isset($bankAccountList[$value['user_id']][$settings['investor']])
+                )
+                {
                     continue;
                 }
                 $bankAccount = $bankAccountList[$value['user_id']][$settings['investor']];
@@ -863,18 +895,23 @@ class Sales extends MY_Admin_Controller {
                 $virtual_account = $this->virtual_account_model->setVirtualAccount($value['user_id'], $settings['investor'],
                     VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING, $bankAccount->virtual_account);
                 if (empty($virtual_account))
+                {
                     continue;
+                }
 
                 // 推薦碼結算中，直接跳過
                 $promoteCode = $this->user_qrcode_model->setUserPromoteLock($value['promote_code'], PROMOTE_IS_NOT_SETTLEMENT, PROMOTE_IS_SETTLEMENT);
                 if (empty($promoteCode))
+                {
                     continue;
+                }
 
                 $this->user_qrcode_model->trans_begin();
                 $this->qrcode_reward_model->trans_begin();
                 $this->transaction_model->trans_begin();
                 $this->virtual_passbook_model->trans_begin();
-                try {
+                try
+                {
                     $amount = intval(round($value['amount'], 0));
                     $transaction_param = [
                         'source' => SOURCE_PROMOTE_REWARD,
@@ -898,22 +935,29 @@ class Sales extends MY_Admin_Controller {
                         $data['transaction_id'] = $trans_rs;
                         $this->qrcode_reward_model->update_by(['id' => $value['id']], ['status' => PROMOTE_REWARD_STATUS_PAID_OFF,
                             'json_data' => json_encode($data), 'settlement_time' => date('Y-m-d H:i:s')]);
-                    }else{
+                    }
+                    else
+                    {
                         throw new Exception("The list of insertions is empty.");
                     }
 
                     if ($this->user_qrcode_model->trans_status() === TRUE && $this->qrcode_reward_model->trans_status() === TRUE &&
-                        $this->transaction_model->trans_status() === TRUE && $this->virtual_passbook_model->trans_status() === TRUE) {
+                        $this->transaction_model->trans_status() === TRUE && $this->virtual_passbook_model->trans_status() === TRUE)
+                    {
                         $this->user_qrcode_model->trans_commit();
                         $this->qrcode_reward_model->trans_commit();
                         $this->transaction_model->trans_commit();
                         $this->virtual_passbook_model->trans_commit();
                         $totalAmount += $amount;
                         $successIdList[] = $value['id'];
-                    }else{
+                    }
+                    else
+                    {
                         throw new Exception("transaction_status is invalid.");
                     }
-                } catch (Exception $e) {
+                }
+                catch (Exception $e)
+                {
                     $rollback();
                 }
                 $this->user_qrcode_model->setUserPromoteLock($value['promote_code'], PROMOTE_IS_SETTLEMENT, PROMOTE_IS_NOT_SETTLEMENT);
@@ -921,24 +965,29 @@ class Sales extends MY_Admin_Controller {
                     VIRTUAL_ACCOUNT_STATUS_USING, VIRTUAL_ACCOUNT_STATUS_AVAILABLE, $bankAccount->virtual_account);
             }
 
-            $this->log_promote_reward_model->insert(['amount' => $totalAmount, 'ids' => json_encode($successIdList),
+            $this->log_qrcode_reward_model->insert(['amount' => $totalAmount, 'ids' => json_encode($successIdList),
                 'admin_id' => $this->login_info->id]);
         }
 
-        $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "放款成功 ".count($successIdList)." 筆，共 ".$totalAmount." 元。"])->send();
+        $this->json_output->setStatusCode(200)->setResponse(['success' => TRUE, 'msg' => "放款成功 " . count($successIdList) . " 筆，共 " . $totalAmount . " 元。"])->send();
     }
 
-    public function promote_reward_list() {
+    public function promote_reward_list()
+    {
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('transaction/qrcode_reward_model');
+        $this->load->model('user/virtual_account_model');
 
-        $input 		= $this->input->get(NULL, TRUE);
-        $where		= [];
-        $list   	= [];
-        $fields 	= ['alias'];
+        $input = $this->input->get(NULL, TRUE);
+        $where = [];
+        $list = [];
+        $virtual_account_list = [];
+        $fields = ['alias'];
 
-        foreach ($fields as $field) {
-            if (isset($input[$field])&&$input[$field]!='') {
+        foreach ($fields as $field)
+        {
+            if (isset($input[$field]) && $input[$field] != '')
+            {
                 $where[$field] = $input[$field];
             }
         }
@@ -988,18 +1037,50 @@ class Sales extends MY_Admin_Controller {
                 $reward_where['end_time <= '] = $input['edate'];
 
             $list = $this->qrcode_reward_model->getSettlementRewardList($reward_where, $where);
+
+            // 確認虛擬帳號
+            $user_ids = array_column($list, 'user_id');
+            if ( ! empty($user_ids))
+            {
+                $virtual_account_rs = $this->virtual_account_model->get_many_by([
+                    'user_id' => $user_ids,
+                    'status' => [VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING],
+                    'virtual_account like ' => CATHAY_VIRTUAL_CODE . "%",
+                ]);
+
+                foreach ($virtual_account_rs as $virtual_account)
+                {
+                    $virtual_account_list[$virtual_account->user_id][$virtual_account->investor] = $virtual_account;
+                }
+            }
+
+            foreach ($list as $key => $value)
+            {
+                // 找不到虛擬帳號
+                $settings = json_decode($value['settings'], TRUE);
+                if ($settings === FALSE || ! isset($virtual_account_list[$value['user_id']]) ||
+                    ! isset($settings['investor']) || ! isset($virtual_account_list[$value['user_id']][$settings['investor']])
+                )
+                {
+                    $list[$key]['has_virtual_account'] = FALSE;
+                }
+                else
+                {
+                    $list[$key]['has_virtual_account'] = TRUE;
+                }
+            }
         }
 
-        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+        $qrcode_setting_list = $this->qrcode_setting_model->get_all();
         $alias_list = ['all' => "全部方案"];
-        $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
+        $alias_list = array_merge($alias_list, array_combine(array_column($qrcode_setting_list, 'alias'), array_column($qrcode_setting_list, 'description')));
 
         $page_data['list'] = $list;
         $page_data['alias_list'] = $alias_list;
 
         $this->load->view('admin/_header');
-        $this->load->view('admin/_title',$this->menu);
-        $this->load->view('admin/promote_reward_list',$page_data);
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/promote_code/promote_reward_list', $page_data);
         $this->load->view('admin/_footer');
 
     }
@@ -1076,7 +1157,7 @@ class Sales extends MY_Admin_Controller {
                     'user_id' => $user_ids,
                     'status' => CERTIFICATION_STATUS_SUCCEED,
                     'investor' => USER_BORROWER,
-                    'certification_id' => [CERTIFICATION_IDCARD, CERTIFICATION_STUDENT]
+                    'certification_id' => [CERTIFICATION_IDENTITY, CERTIFICATION_STUDENT]
                 ]);
 
                 $cert_passed_list = array_reduce($cert_passed_list, function ($list, $item) {
@@ -1137,7 +1218,7 @@ class Sales extends MY_Admin_Controller {
                         }
                     }
 
-                    $list[$user_id]['identity'] = isset($cert_passed_list[$user_id][CERTIFICATION_IDCARD]) ? '有' : '無';
+                    $list[$user_id]['identity'] = isset($cert_passed_list[$user_id][CERTIFICATION_IDENTITY]) ? '有' : '無';
                     $list[$user_id]['student'] = isset($cert_passed_list[$user_id][CERTIFICATION_STUDENT]) ? '有' : '無';
                 }
             }
@@ -1155,7 +1236,9 @@ class Sales extends MY_Admin_Controller {
                     'identity' => ['name' => '通過實名', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']],
                     'student' => ['name' => '通過學生認證', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']]
                 ];
-                $this->spreadsheet_lib->save($title_rows, $list, "{$product_info['name']}_高價值用戶_{$start_date}_{$end_date}.xlsx");
+
+                $spreadsheet = $this->spreadsheet_lib->load($title_rows, $list);
+                $this->spreadsheet_lib->download("{$product_info['name']}_高價值用戶_{$start_date}_{$end_date}.xlsx", $spreadsheet);
                 return;
             }
         }
@@ -1167,8 +1250,1247 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_title', $this->menu);
         $this->load->view('admin/valuable_list', $page_data);
         $this->load->view('admin/_footer');
+    }
 
+    public function sales_report()
+    {
+        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
+
+        // 把大部分的東西都改寫到 library 裡面
+        $this->load->library('Sales_lib', ['at_month' => $at_month]);
+
+        // 處理日期列
+        $days_info = $this->sales_lib->get_days();
+        $title_dates = $this->_parse_day_week_for_admin_dashboard($days_info);
+        array_unshift($title_dates, '總和');
+        $trtd_date = $this->_parse_array_to_trtd_string($title_dates);
+
+        $return_trtd_datas = [];
+
+        // 取得此月份的績效相關資料
+        $datas = $this->sales_lib->calculate();
+
+        // 取得各目標的 id 才能組成進入編輯頁的連結
+        $goals_id = $this->sales_lib->get_goals_id();
+
+        // 將資料做轉換處理 array -> string
+        foreach ($datas as $key => $value)
+        {
+            if (empty($value['goal'][0]))
+            {
+                continue;
+            }
+            if (is_numeric($key))
+            {
+                $value['goal'][0] = $this->_parse_goal_number_add_href($goals_id[$key], $value['goal'][0]);
+                $return_trtd_datas[$key]['goal'] = $this->_parse_array_to_trtd_string($value['goal']);
+                $return_trtd_datas[$key]['real'] = $this->_parse_array_to_trtd_string($value['real']);
+                $return_trtd_datas[$key]['rate'] = $this->_parse_array_to_trtd_string($value['rate']);
+            }
+        }
+
+        $page_data = [
+            'trtd_date' => $trtd_date,
+            'goal_ym' => $goal_ym,
+            'datas' => $return_trtd_datas,
+            'total_deals' => $this->_parse_array_to_trtd_string($datas['total_deals']),
+        ];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/sales_target_setting', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    // 將 月日 跟 星期 結合 => X月Y日(六) ，呈現在後台的樣式跟報表不一樣
+    private function _parse_day_week_for_admin_dashboard($days_info)
+    {
+        $data = [];
+        for ($i = 0; $i < count($days_info['date']); $i++)
+        {
+            array_push($data, $days_info['date'][$i] . '(' . $days_info['week'][$i] . ')');
+        }
+
+        return $data;
+    }
+
+    // 將陣列資料掛上 td 標籤組成可以直接塞回 html table 的字串
+    private function _parse_array_to_trtd_string($datas)
+    {
+        return '<td>' . implode('</td><td>', $datas) . '</td>';
+    }
+
+    // 業績目標的數字在上 td 標籤前先包 a 標籤
+    private function _parse_goal_number_add_href($id, $number)
+    {
+        return "<a href='/admin/Sales/goal_edit/{$id}' target='_blank'>{$number}</a>";
+    }
+
+    // 載入更新單一目標頁
+    public function goal_edit($id)
+    {
+        $goal_info = $this->sale_goals_model->as_array()->get($id);
+
+        // 檢查只有當月的績效目標才可以修改
+        $at_month = date('Ym');
+
+        if (empty($goal_info) ||
+            $goal_info['at_month'] < $at_month)
+        {
+            // 直接回傳 alert
+            echo "<script>alert('請勿更新本月以前的目標');parent.location.href='/admin/AdminDashboard';</script>";
+            exit;
+        }
+
+        $page_data['id'] = $goal_info['id'];
+        $page_data['name'] = $this->sale_goals_model->type_name_mapping()[$goal_info['type']];
+        $page_data['number'] = $goal_info['number'];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/sales_goal_edit', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    // 更新單一目標
+    public function set_goal($goal_id)
+    {
+        $number = $this->input->get('number');
+        if (is_numeric($number))
+        {
+            $this->sale_goals_model->update($goal_id, ['number' => $number]);
+            echo "<script>alert('更新成功');parent.location.href='/admin/Sales/sales_report';</script>";
+            exit;
+        }
+
+        echo "<script>alert('績效請勿亂填');parent.location.href='/admin/AdminDashboard';</script>";
+    }
+
+    // 載入更新整月目標頁
+    public function monthly_goals_edit()
+    {
+        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
+
+        $goals = $this->sale_goals_model->get_goals_number_at_this_month($at_month);
+
+        $page_data = [
+            'goal_ym' => $goal_ym,
+            'goal_items' => $this->sale_goals_model->type_name_mapping(),
+            'goal_number' => $this->_parse_goal_struct($goals),
+        ];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/sales_monthly_goals_edit', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    private function _parse_goal_struct($goals)
+    {
+        $data = [];
+        foreach ($goals as $value)
+        {
+            $struct = [
+                'id' => $value['id'],
+                'number' => $value['number'],
+                'status' => $value['status']
+            ];
+            $data[$value['type']] = $struct;
+        }
+
+        return $data;
+    }
+
+    public function qrcode_modify_settings()
+    {
+        if ( ! $this->input->is_ajax_request())
+        {
+            alert('ERROR, 只接受Ajax', admin_url('sales/promote_reward_list'));
+        }
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('log/log_qrcode_modify_model');
+        $this->load->library('user_lib');
+        $this->load->library('output/json_output');
+
+        $input = $this->input->post(NULL, TRUE);
+        $qrcode_id = isset($input['id']) ? (int) $input['id'] : 0;
+        $formula_list = $input['data'] ?? [];
+        if ($qrcode_id)
+        {
+            $qrcode = $this->user_qrcode_model->get($qrcode_id);
+            if ( ! $qrcode)
+            {
+                $this->json_output->setStatusCode(400)->setResponse(['success' => FALSE, 'msg' => "找不到對應的 promote_code, ID: " . $qrcode_id])->send();
+            }
+            $settings = json_decode($qrcode->settings, TRUE);
+            if ($settings === FALSE)
+            {
+                $this->json_output->setStatusCode(400)->setResponse(['success' => FALSE, 'msg' => "promote_code 的設定有誤, 無法解析, ID: " . $qrcode_id])->send();
+            }
+
+            foreach ($formula_list as $category => $info)
+            {
+                foreach ($info as $type => $value)
+                {
+                    switch ($type)
+                    {
+                        case 'amount':
+                            $value = (int) $value;
+                            break;
+                        case 'percent':
+                            $value = (float) $value;
+                            break;
+                    }
+
+                    if (array_key_exists($category, $this->user_lib->rewardCategories))
+                    {
+                        $settings['reward']['product'][$category] = ['product_id' => $this->user_lib->rewardCategories[$category]];
+                        $settings['reward']['product'][$category][$type] = $value;
+                    }
+                    else
+                    {
+                        $settings['reward'][$category][$type] = $value;
+                    }
+                }
+            }
+
+            $this->log_qrcode_modify_model->insert([
+                'qrcode_id' => $qrcode_id,
+                'settings' => json_encode($formula_list),
+                'admin_id' => $this->login_info->id,
+            ]);
+            $this->user_qrcode_model->update_by(['id' => $qrcode_id], [
+                'settings' => json_encode($settings)
+            ]);
+            $this->json_output->setStatusCode(200)->setResponse(['success' => TRUE, 'msg' => "修改成功。"])->send();
+        }
+
+        $this->json_output->setStatusCode(400)->setResponse(['success' => FALSE, 'msg' => "沒有輸入對應的 promote_code ID: "])->send();
+    }
+
+    public function promote_import_report()
+    {
+        if ( ! $this->input->is_ajax_request())
+        {
+            alert('ERROR, 只接受Ajax', admin_url('sales/promote_reward_list'));
+        }
+        $this->load->library('output/json_output');
+        $this->load->model('user/qrcode_collaborator_model');
+        $this->load->model('user/user_qrcode_collaboration_model');
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('log/log_qrcode_import_collaboration_model');
+
+        $keyword_list = ['promote_code' => '推薦碼', 'collaborator' => '合作對象', 'datetime' => '時間'];
+        $col_num_list = array_combine(array_keys($keyword_list), array_fill(0, count($keyword_list), -1));
+        $col_str_list = array_combine(array_keys($keyword_list), array_fill(0, count($keyword_list), ''));
+
+        if ( ! isset($_FILES['file']))
+        {
+            $this->json_output->setStatusCode(400)->setResponse(['success' => FALSE, 'msg' => "沒有選擇的檔案，無法上傳。"])->send();
+        }
+
+        if ($_FILES['file']['error'] == 0)
+        {
+            $tmpName = $_FILES['file']['tmp_name'];
+
+            try
+            {
+                $input_file_type = IOFactory::identify($tmpName);
+                $reader = IOFactory::createReader($input_file_type);
+                $spreadsheet = $reader->load($tmpName);
+                $sheet = $spreadsheet->getActiveSheet();
+            }
+            catch (\PhpOffice\PhpSpreadsheet\Exception $e)
+            {
+                $this->json_output->setStatusCode(400)->setResponse(['success' => FALSE, 'msg' => "無法匯入檔案，請檢查檔案格式是否有誤。"])->send();
+            }
+
+            // 獲取內容的最大列 如:D
+            $max_column_index = Coordinate::columnIndexFromString($sheet->getHighestColumn());
+
+            // 獲取內容的最大行 如:4
+            $row = $sheet->getHighestRow();
+
+            // 建立欄位名稱與 Excel 欄位索引的對應
+            for ($i = 1; $i <= $max_column_index; $i++)
+            {
+                $key = $sheet->getCellByColumnAndRow($i, 1)->getValue();
+                foreach ($keyword_list as $idx => $keyword)
+                {
+                    if ($key == $keyword)
+                    {
+                        $col_num_list[$idx] = $i;
+                        $col_str_list[$idx] = Coordinate::stringFromColumnIndex($i);
+                    }
+                }
+            }
+
+            $nof_found_list = [];
+            foreach ($col_num_list as $idx => $col_num)
+            {
+                if ($col_num < 0)
+                {
+                    $nof_found_list[] = $keyword_list[$idx];
+                }
+            }
+            if ( ! empty($nof_found_list))
+            {
+                $this->json_output->setStatusCode(400)->setResponse(['success' => FALSE, 'msg' => "第一列找不到關鍵欄位，匯入失敗。(需有欄位：" . implode('/', $nof_found_list) . ")"])->send();
+            }
+
+            // 轉成 JSON 格式並去除標題列
+            $sheet_data = $spreadsheet->getActiveSheet()->toArray(NULL, TRUE, TRUE, TRUE);
+            $sheet_data = array_slice($sheet_data, 1);
+
+            $insert_list = [];
+            $log_list = [];
+            $user_qrcode_list = $this->user_qrcode_model->db->where(['status' => 1])->get('user_qrcode')->result_array();
+            $user_qrcode_list = array_column($user_qrcode_list, NULL, 'promote_code');
+            $collaborator_list = $this->qrcode_collaborator_model->db->where(['status' => 1])->get('qrcode_collaborator')->result_array();
+            $collaborator_list = array_combine(array_column($collaborator_list, 'id'), array_column($collaborator_list, 'collaborator'));
+
+            $data = array_columns($sheet_data, array_values($col_str_list));
+            foreach ($data as $i => $info)
+            {
+                // 整理資料 (將 Excel 欄位轉成對應欄位名稱)
+                $data[$i] = array_combine(array_keys($keyword_list), array_values($info));
+                $data[$i]['datetime'] = date('Y-m-d H:i:s', strtotime($data[$i]['datetime']));
+
+                $collaborator_idx = array_search($data[$i]['collaborator'], $collaborator_list);
+                if ($collaborator_idx === FALSE)
+                {
+                    $this->json_output->setStatusCode(400)->setResponse(['success' => FALSE, 'msg' => "上傳的檔案內有不合作之對象，請刪除後再試。(錯誤對象:" . $data[$i]['collaborator'] . ")"])->send();
+                }
+                else if ( ! array_key_exists($data[$i]['promote_code'], $user_qrcode_list))
+                {
+                    $this->json_output->setStatusCode(400)->setResponse(['success' => FALSE, 'msg' => "上傳的檔案內有不存在之推薦碼，請刪除後再試。(錯誤推薦碼:" . $data[$i]['promote_code'] . ")"])->send();
+                }
+                else
+                {
+                    $imported_info = [
+                        'user_qrcode_id' => $user_qrcode_list[$data[$i]['promote_code']]['id'],
+                        'qrcode_collaborator_id' => $collaborator_idx,
+                        'loan_time' => $data[$i]['datetime']
+                    ];
+                    $insert_list[] = $imported_info;
+                    $log_list[$collaborator_idx][] = $imported_info;
+                }
+            }
+
+            $rs = $this->user_qrcode_collaboration_model->insert_many($insert_list);
+
+            // 新增匯入紀錄
+            foreach ($log_list as $collaborator_idx => $info)
+            {
+                $this->log_qrcode_import_collaboration_model->insert([
+                    'qrcode_collaboration_id' => $collaborator_idx,
+                    'count' => count($info),
+                    'content' => json_encode($info),
+                    'admin_id' => $this->login_info->id,
+                ]);
+            }
+            $this->json_output->setStatusCode(200)->setResponse(['success' => TRUE, 'msg' => "匯入成功，共匯入 " . count($rs) . " 筆。"])->send();
+        }
+        else
+        {
+            $this->json_output->setStatusCode(400)->setResponse(['success' => FALSE, 'msg' => "上傳檔案出現錯誤，請洽工程師。(錯誤編號:" . $_FILES['file']['error'] . ")"])->send();
+        }
+    }
+
+    public function promote_import_list()
+    {
+        $this->load->library('user_lib');
+        $this->load->library("pagination");
+        $this->load->model('log/log_qrcode_import_collaboration_model');
+        $this->load->model('user/qrcode_collaborator_model');
+
+        $input = $this->input->get(NULL, TRUE);
+        $where = [];
+        $fields = ['collaboration_id'];
+
+        foreach ($fields as $field)
+        {
+            if (isset($input[$field]) && $input[$field] != '')
+            {
+                $where[$field] = $input[$field];
+            }
+        }
+        $input['sdate'] = $input['sdate'] ?? '';
+        $input['edate'] = $input['edate'] ?? '';
+        if ( ! empty($input['sdate']))
+            $where['created_at >= '] = $input['sdate'];
+        if ( ! empty($input['edate']))
+            $where['created_at <= '] = $input['edate'];
+
+        if (isset($where['collaboration_id']))
+        {
+            if ($where['collaboration_id'] != "all")
+            {
+                $where['qrcode_collaboration_id'] = $where['collaboration_id'];
+            }
+            unset($where['collaboration_id']);
+        }
+
+        $imported_list = $this->log_qrcode_import_collaboration_model->get_imported_log_list($where);
+
+        $config = pagination_config();
+        $config['per_page'] = 40; //每頁顯示的資料數
+        $config['base_url'] = admin_url('sales/promote_import_list');
+        $config["total_rows"] = count($imported_list);
+
+        $this->pagination->initialize($config);
+        $page_data["links"] = $this->pagination->create_links();
+
+        $current_page = max(1, intval($input['per_page'] ?? '1'));
+        $offset = ($current_page - 1) * $config['per_page'];
+
+        $list = array_slice($imported_list, $offset, $config['per_page']);
+
+        $collaborator_rs = $this->qrcode_collaborator_model->get_many_by(['status' => 1]);
+        $collaborator_list = ['all' => "全部對象"];
+        $collaborator_list = array_replace_recursive($collaborator_list, array_combine(array_column($collaborator_rs, 'id'), array_column($collaborator_rs, 'collaborator')));
+
+        $page_data['list'] = $list;
+        $page_data['collaborator_list'] = $collaborator_list;
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/promote_code/promote_import_list', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    public function promote_review_contract()
+    {
+        $this->load->model('user/user_qrcode_apply_model');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->model('admin/contract_format_model');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->library('qrcode_lib');
+        $this->load->library('output/json_output');
+
+        $list = [];
+        $where = [];
+        $input = $this->input->get(NULL, TRUE);
+
+        if (isset($input['qrcode_apply_id']))
+        {
+            $where['id'] = $input['qrcode_apply_id'];
+        }
+        else
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數 qrcode_apply_id'))->send();
+        }
+
+        $review_list = $this->user_qrcode_apply_model->get_review_list([], $where);
+        $keys = array_flip(['qrcode_apply_id', 'user_id']);
+        if ( ! empty($review_list))
+        {
+            $review_list = reset($review_list);
+            $list = array_intersect_key($review_list, $keys);
+            $contract_format = $this->contract_format_model->order_by('created_at', 'desc')->get_by(['id' => $review_list['contract_format_id']]);
+            $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($review_list['alias']);
+            $contract_content = json_decode($review_list['contract_content'], TRUE);
+            $content = $this->qrcode_lib->get_contract_format_content($contract_type_name, $contract_content[0] ?? '', $contract_content[10] ?? '', []);
+            $list['content'] = array_slice(json_decode($review_list['contract_content'], TRUE) ?? [], 4, 4);
+            $content[4] = '%platform_fee%';
+            $content[5] = '%interest%';
+            $content[6] = '%collaboration_person%';
+            $content[7] = '%collaboration_enterprise%';
+            $list['contract'] = '';
+            if (isset($contract_format->content))
+            {
+                $list['contract'] = vsprintf($contract_format->content, $content);
+            }
+        }
+        else
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT))->send();
+        }
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS', 'data' => $list))->send();
+    }
+
+    public function promote_apply_list()
+    {
+        $this->load->library('output/json_output');
+        $this->load->library('user_lib');
+        $this->load->library("pagination");
+        $this->load->library('contract_lib');
+        $this->load->model('admin/contract_format_model');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->model('log/log_qrcode_import_collaboration_model');
+        $this->load->model('user/qrcode_collaborator_model');
+        $this->load->model('user/user_qrcode_apply_model');
+
+        $input = $this->input->get(NULL, TRUE);
+        $list = [];
+        $where = [];
+        $user_where = [];
+        $fields = ['alias'];
+
+        foreach ($fields as $field)
+        {
+            if (isset($input[$field]) && $input[$field] != '')
+            {
+                $user_where[$field] = $input[$field];
+            }
+            else
+            {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數' . $field))->send();
+            }
+        }
+        $input['sdate'] = $input['sdate'] ?? '';
+        $input['edate'] = $input['edate'] ?? '';
+
+        if (($user_where['alias'] ?? "") == "all")
+        {
+            unset($user_where['alias']);
+        }
+
+        if ( ! empty($input['sdate']))
+            $where['created_at >= '] = $input['sdate'];
+        if ( ! empty($input['edate']))
+            $where['created_at <= '] = $input['edate'];
+        if ( ! empty($input['user_id']))
+            $user_where['user_id'] = $input['user_id'];
+
+        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+        $alias_list = ['all' => "全部方案"];
+        $alias_list = array_replace_recursive($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
+
+        $keys = array_flip(['qrcode_apply_id', 'user_id', 'alias', 'status', 'created_at']);
+        $review_list = $this->user_qrcode_apply_model->get_review_list($user_where, $where);
+        foreach ($review_list as $key => $info)
+        {
+            $list[$key] = array_intersect_key($info, $keys);
+            $list[$key]['status_name'] = $this->user_qrcode_apply_model->status_list[$info['status']];
+            $list[$key]['alias_chinese_name'] = $alias_list[$info['alias']];
+            $list[$key]['created_at'] = date('Y-m-d', strtotime($info['created_at']));
+        }
+
+        $config = [];
+        $config['per_page'] = 40; //每頁顯示的資料數
+        $config["total_rows"] = count($review_list);
+
+        $current_page = max(1, intval($input['current_page'] ?? '1'));
+        $offset = ($current_page - 1) * $config['per_page'];
+
+        $list = array_slice($list, $offset, $config['per_page']);
+
+        $data['pagination'] = [];
+        $data['pagination']['total_rows'] = $config["total_rows"];
+        $data['pagination']['per_page'] = $config['per_page'];
+        $data['pagination']['last_page'] = max((int) ($config["total_rows"] / $config['per_page']), 1);
+        $data['pagination']['current_page'] = $current_page;
+
+        $data['list'] = $list;
+        $data['alias_list'] = $alias_list;
+
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS', 'data' => $data))->send();
+    }
+
+    public function promote_review_list()
+    {
+        $this->load->library('output/json_output');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->model('user/user_qrcode_apply_model');
+
+        $input = $this->input->get(NULL, TRUE);
+        $list = [];
+        $where = [];
+        $user_where = [];
+        $fields = ['status'];
+
+        foreach ($fields as $field)
+        {
+            if (isset($input[$field]) && $input[$field] != '')
+            {
+                $where[$field] = $input[$field];
+            }
+            else
+            {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數' . $field))->send();
+            }
+        }
+        $input['sdate'] = $input['sdate'] ?? '';
+        $input['edate'] = $input['edate'] ?? '';
+
+        if ( ! empty($input['sdate']))
+            $where['draw_up_at >= '] = $input['sdate'];
+        if ( ! empty($input['edate']))
+            $where['draw_up_at <= '] = $input['edate'];
+        if ( ! empty($input['user_id']))
+            $user_where['user_id'] = $input['user_id'];
+
+        $status_list = [PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW => "待審核", PROMOTE_REVIEW_STATUS_SUCCESS => '審核完成'];
+        if ( ! in_array($where['status'], array_keys($status_list)))
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '不合法的狀態'))->send();
+        }
+        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+        $alias_list = array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description'));
+
+        $keys = array_flip(['qrcode_apply_id', 'user_id', 'alias', 'status', 'created_at', 'draw_up_at']);
+        $review_list = $this->user_qrcode_apply_model->get_review_list($user_where, $where);
+        foreach ($review_list as $key => $info)
+        {
+            $list[$key] = array_intersect_key($info, $keys);
+            $list[$key]['alias_chinese_name'] = $alias_list[$info['alias']];
+            $list[$key]['status_name'] = $this->user_qrcode_apply_model->status_list[$info['status']];
+            $list[$key]['content'] = array_slice(json_decode($info['contract_content'], TRUE) ?? [], 4, 4);
+            $list[$key]['draw_up_at'] = date('Y-m-d', strtotime($info['draw_up_at']));
+            $list[$key]['created_at'] = date('Y-m-d', strtotime($info['created_at']));
+        }
+
+        $config = [];
+        $config['per_page'] = 40; //每頁顯示的資料數
+        $config["total_rows"] =
+
+        $current_page = max(1, intval($input['current_page'] ?? '1'));
+        $offset = ($current_page - 1) * $config['per_page'];
+
+        $list = array_slice($list, $offset, $config['per_page']);
+
+        $data['pagination'] = [];
+        $data['pagination']['total_rows'] = count($review_list);
+        $data['pagination']['per_page'] = 40;
+        $data['pagination']['last_page'] = max((int) ($config["total_rows"] / $config['per_page']), 1);
+        $data['pagination']['current_page'] = $current_page;
+
+        $data['list'] = $list;
+        $data['alias_list'] = $status_list;
+
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS', 'data' => $data))->send();
+    }
+
+    public function promote_modify_contract()
+    {
+        $this->load->library('output/json_output');
+        $this->load->model('user/user_qrcode_apply_model');
+
+        $input = $this->input->post(NULL, TRUE);
+        $data = [];
+        $fields = ['qrcode_apply_id', 'platform_fee', 'interest', 'collaboration_person', 'collaboration_enterprise'];
+
+        foreach ($fields as $field)
+        {
+            if (isset($input[$field]) && $input[$field] != '')
+            {
+                $data[$field] = $input[$field];
+            }
+        }
+
+        if ( ! isset($data['qrcode_apply_id']))
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數 qrcode_apply_id'))->send();
+        }
+
+        $apply_info = $this->user_qrcode_apply_model->get($data['qrcode_apply_id']);
+        if ( ! isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP)
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
+        }
+        $contract_content = json_decode($apply_info->contract_content, TRUE);
+        $fields = ['platform_fee' => 4, 'interest' => 5, 'collaboration_person' => 6, 'collaboration_enterprise' => 7];
+        foreach ($fields as $field => $idx)
+        {
+            if (isset($data[$field]))
+            {
+                $contract_content[$idx] = $data[$field];
+            }
+        }
+        $rs = $this->user_qrcode_apply_model->update_by(['id' => $data['qrcode_apply_id']],
+            ['contract_content' => json_encode($contract_content)]);
+        if ( ! $rs)
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();
+        }
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS', 'data' => []))->send();
+    }
+
+    public function promote_contract_submit()
+    {
+        $this->load->library('output/json_output');
+        $this->load->library('notification_lib');
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('user/user_qrcode_apply_model');
+
+        $input = $this->input->post(NULL, TRUE);
+        $where = [];
+        $fields = ['qrcode_apply_id'];
+
+        foreach ($fields as $field)
+        {
+            if (isset($input[$field]) && $input[$field] != '')
+            {
+                $where[$field] = $input[$field];
+            }
+            else
+            {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數' . $field))->send();
+            }
+        }
+
+        $apply_info = $this->user_qrcode_apply_model->get($where['qrcode_apply_id']);
+        if ( ! isset($apply_info) || ! in_array($apply_info->status, [PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP]))
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
+        }
+
+        $rs = $this->user_qrcode_apply_model->update_by(['id' => $where['qrcode_apply_id']],
+            ['status' => PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW]);
+        if ( ! $rs)
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();
+        }
+
+        // 通知管理員審核
+        $admin = $this->admin_model->get(1);
+        if (isset($admin))
+        {
+            $user_qrcode = $this->user_qrcode_model->get($apply_info->user_qrcode_id);
+            if (isset($user_qrcode))
+            {
+                $this->notification_lib->promote_contract_review($admin->email, $user_qrcode->user_id);
+            }
+        }
+
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS', 'data' => []))->send();
+    }
+
+
+    public function promote_contract_approve()
+    {
+        $rs = $this->promote_contract_set(PROMOTE_REVIEW_STATUS_SUCCESS);
+        if ($rs['result'] == "ERROR")
+        {
+            $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+        }
+        $this->load->model('user/user_qrcode_apply_model');
+        $this->load->model('user/user_qrcode_model');
+        $this->load->library('notification_lib');
+        $this->load->library('user_lib');
+        $this->load->library('contract_lib');
+        $input = $this->input->post(NULL, TRUE);
+        $apply_info = $this->user_qrcode_apply_model->get_by(['id' => $input['qrcode_apply_id'], 'status' => PROMOTE_REVIEW_STATUS_SUCCESS]);
+        if (isset($apply_info))
+        {
+            $qrcode_code = $this->user_qrcode_model->get($apply_info->user_qrcode_id);
+            if ( ! isset($qrcode_code))
+            {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE, 'msg' => '找不到對應的推薦碼'))->send();
+            }
+            $settings = json_decode($qrcode_code->settings, TRUE);
+
+            $contract_content = json_decode($apply_info->contract_content, TRUE);
+            $this->contract_lib->update_contract($qrcode_code->contract_id, $contract_content);
+            $content = array_slice($contract_content, 4, 4);
+
+            foreach ($this->user_lib->appointedRewardCategories as $category)
+            {
+                $settings['reward']['product'][$category]['borrower_percent'] = (float) $content[0] ?? 0;
+                $settings['reward']['product'][$category]['investor_percent'] = (float) $content[1] ?? 0;
+            }
+            $settings['reward']['collaboration_person'] = ['amount' => (int) $content[2] ?? 0];
+            $settings['reward']['collaboration_enterprise'] = ['amount' => (int) $content[3] ?? 0];
+            $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], ['settings' => json_encode($settings)]);
+
+            $this->load->model('user/user_certification_model');
+            $this->load->library('certification_lib');
+
+            // 通知審核合約成功
+            if (isset($settings) && isset($settings['investor']))
+            {
+                $this->load->library('judicialperson_lib');
+                $emails = $this->judicialperson_lib->get_company_email_list($qrcode_code->user_id);
+                $emails = array_flip($emails);
+                foreach ($emails as $email => $user_id)
+                {
+                    $this->notification_lib->promote_contract_done($qrcode_code->user_id, $settings['investor'], 1);
+                }
+            }
+        }
+        $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+    }
+
+    public function promote_contract_withdraw()
+    {
+        $rs = $this->promote_contract_set(PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP);
+        $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+    }
+
+    public function promote_contract_reject()
+    {
+        $rs = $this->promote_contract_set(PROMOTE_REVIEW_STATUS_WITHDRAW);
+        if ($rs['result'] == "ERROR")
+        {
+            $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+        }
+
+        // 通知合約失敗
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('user/user_qrcode_apply_model');
+        $this->load->library('notification_lib');
+        $input = $this->input->post(NULL, TRUE);
+        $apply_info = $this->user_qrcode_apply_model->get_by(['id' => $input['qrcode_apply_id'], 'status' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
+        if (isset($apply_info))
+        {
+            $qrcode_code = $this->user_qrcode_model->get($apply_info->user_qrcode_id);
+            if ( ! isset($qrcode_code))
+            {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE, 'msg' => '找不到對應的推薦碼'))->send();
+            }
+            $this->user_qrcode_model->update_by(['id' => $apply_info->user_qrcode_id], ['status' => PROMOTE_STATUS_PENDING_TO_SENT]);
+            $settings = json_decode($qrcode_code->settings, TRUE);
+            if (isset($settings) && isset($settings['investor']))
+            {
+                $this->load->library('judicialperson_lib');
+                $emails = $this->judicialperson_lib->get_company_email_list($qrcode_code->user_id);
+                $emails = array_flip($emails);
+                foreach ($emails as $email => $user_id)
+                {
+                    $this->notification_lib->promote_contract_done($user_id, $settings['investor'], 2);
+                }
+            }
+        }
+        $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+    }
+
+    private function promote_contract_set($status): array
+    {
+        $this->load->library('output/json_output');
+        $this->load->model('user/user_qrcode_apply_model');
+        $this->load->model('log/log_qrcode_apply_review_model');
+
+        $input = $this->input->post(NULL, TRUE);
+        $where = [];
+        $fields = ['qrcode_apply_id'];
+
+        foreach ($fields as $field)
+        {
+            if (isset($input[$field]) && $input[$field] != '')
+            {
+                $where[$field] = $input[$field];
+            }
+            else
+            {
+                return array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數' . $field);
+            }
+        }
+
+        $apply_info = $this->user_qrcode_apply_model->get($where['qrcode_apply_id']);
+        if ( ! isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW)
+        {
+            return array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態');
+        }
+
+        $rs = $this->user_qrcode_apply_model->update_by(['id' => $where['qrcode_apply_id']],
+            ['status' => $status]);
+        if ( ! $rs)
+        {
+            return array('result' => 'ERROR', 'error' => EXIT_DATABASE);
+        }
+        $this->log_qrcode_apply_review_model->insert([
+            'admin_id' => $this->login_info->id,
+            'qrcode_apply_id' => $where['qrcode_apply_id'],
+            'status' => $status,
+        ]);
+        return array('result' => 'SUCCESS', 'data' => []);
+    }
+
+    public function promote_set_status(): array
+    {
+        if ( ! $this->input->is_ajax_request())
+        {
+            alert('ERROR, 只接受Ajax', admin_url('sales/promote_edit'));
+        }
+        $this->load->model('user/user_qrcode_model');
+        $this->load->library('output/json_output');
+        $this->load->model('user/user_qrcode_apply_model');
+        $this->load->model('log/log_qrcode_modify_model');
+
+        $input = $this->input->post(NULL, TRUE);
+        $where = [];
+        $fields = ['user_qrcode_id', 'status'];
+
+        foreach ($fields as $field)
+        {
+            if (isset($input[$field]) && $input[$field] != '')
+            {
+                $where[$field] = $input[$field];
+            }
+            else
+            {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數' . $field))->send();
+            }
+        }
+
+        $target_status = $where['status'];
+        if ( ! in_array($target_status, [PROMOTE_STATUS_DISABLED, PROMOTE_STATUS_AVAILABLE]))
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '不合法的目標狀態'))->send();
+        }
+        $user_qrcode = $this->user_qrcode_model->get($where['user_qrcode_id']);
+        if ( ! isset($user_qrcode) ||
+            ($target_status == PROMOTE_STATUS_DISABLED && $user_qrcode->status != PROMOTE_STATUS_AVAILABLE) ||
+            ($target_status == PROMOTE_STATUS_AVAILABLE && $user_qrcode->status != PROMOTE_STATUS_DISABLED))
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
+        }
+
+        // For update
+        $param = ['status' => $target_status];
+        switch ($target_status)
+        {
+            case PROMOTE_STATUS_DISABLED:
+                $param['end_time'] = date('Y-m-d H:i:s');
+                break;
+            case PROMOTE_STATUS_AVAILABLE:
+                $user_qrcode_rs = $this->user_qrcode_model->get_many_by([
+                    'user_id' => $user_qrcode->user_id, 'status' => PROMOTE_STATUS_AVAILABLE]);
+                if ( ! empty($user_qrcode_rs))
+                {
+                    $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '該使用者已有啟用中的推薦碼，不能同時啟用兩個以上的推薦碼。'))->send();
+                }
+                $param['end_time'] = $user_qrcode->contract_end_time;
+                break;
+        }
+
+        $rs = $this->user_qrcode_model->update_by(['id' => $where['user_qrcode_id']], $param);
+        if ( ! $rs)
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();
+        }
+        $this->log_qrcode_modify_model->insert([
+            'admin_id' => $this->login_info->id,
+            'qrcode_id' => $where['user_qrcode_id'],
+            'status' => $target_status,
+        ]);
+        $this->json_output->setStatusCode(200)->setResponse(['success' => TRUE, 'msg' => "修改成功。"])->send();
+    }
+
+    /**
+     * QR Code 方案設定頁面
+     *
+     * @created_at        2021-12-13
+     * @created_by        Jack
+     */
+    public function qrcode_projects()
+    {
+        $this->load->view(
+            'admin/sales/qrcode_projects',
+            $data = [
+                'menu' => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts' => [
+                    '/assets/admin/js/sales/qrcode_projects.js'
+                ]
+            ]
+        );
+    }
+
+    /**
+     * QR Code 合約審核頁面
+     *
+     * @created_at        2021-12-13
+     * @created_by        Jack
+     */
+    public function qrcode_contracts()
+    {
+        $this->load->view(
+            'admin/sales/qrcode_contracts',
+            $data = [
+                'menu' => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts' => [
+                    '/assets/admin/js/sales/qrcode_contracts.js'
+                ]
+            ]
+        );
+    }
+
+    public function set_monthly_goals($goal_ym)
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
+
+        $goals = $this->sale_goals_model->get_goals_number_at_this_month($at_month);
+        $db_goals = array_column($goals, null, 'id');
+
+        if ($this->_is_input_vaild($input, $db_goals))
+        {
+            $updated_data = [];
+            array_walk($input, function ($element, $key) use ($db_goals, &$updated_data) {
+                if ( ! empty($db_goals[$key]))
+                {
+                    if (empty($element['status']))
+                    {
+                        $element['status'] = 0;
+                    }
+                    $diff_tmp = array_diff_assoc($element, $db_goals[$key]);
+                    if ( ! empty($diff_tmp))
+                    {
+                        $updated_data[$key] = $diff_tmp;
+                    }
+                }
+            });
+            if ($updated_data)
+            {
+                foreach ($updated_data as $key => $value)
+                {
+                    $this->sale_goals_model->update($key, $value);
+                }
+            }
+        }
+
+        redirect('/admin/Sales/sales_report', 'refresh');
+    }
+
+    private function _is_input_vaild($input, $db_goals)
+    {
+        $same_key = array_intersect_key($input, $db_goals);
+        return (count($same_key) == count($input)) ? TRUE : FALSE;
+    }
+
+    public function goals_export()
+    {
+        $goal_ym = $this->input->get('goal_ym');
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
+
+        $this->load->library('Sales_lib', ['at_month' => $at_month]);
+        $days_info = $this->sales_lib->get_days();
+
+        // 整理日期的匯出格式
+        $first_row = $days_info['date'];
+        array_unshift($first_row, '日期');
+        $second_row = $days_info['week'];
+        array_unshift($second_row, '總和');
+
+        $content1 = [];
+        $content2 = [];
+
+        // 內容先塞月日星期
+        $content1[] = $first_row;
+        $content1[] = $second_row;
+        $content2[] = $first_row;
+        $content2[] = $second_row;
+
+        // 取出該月資料
+        $datas = $this->sales_lib->calculate();
+
+        // 依照 excel 需要的匯出順序塞入 content
+        $sort1 = [
+            [
+                'title' => '業務推廣',
+                'items' => [
+                    [
+                        'key' => sale_goals_model::GOAL_WEB_TRAFFIC,
+                        'kpi' => ['目標流量', '實際流量', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_USER_REGISTER,
+                        'kpi' => ['目標會員數', '實際總會員數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_APP_DOWNLOAD,
+                        'kpi' => ['目標下載數', '實際下載數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_TOTAL,
+                        'kpi' => ['目標申貸戶數', '實際完成申貸戶數', '達成率']
+                    ]
+                ]
+            ]
+        ];
+        foreach ($sort1 as $sort_key => $sort_value)
+        {
+            foreach ($sort_value['items'] as $item_key => $item_value)
+            {
+                if (empty($datas[$item_value['key']]['goal']))
+                {
+                    unset($sort1[$sort_key]['items'][$item_key]);
+                    continue;
+                }
+                $content1[] = $datas[$item_value['key']]['goal'];
+                $content1[] = $datas[$item_value['key']]['real'];
+                $content1[] = $datas[$item_value['key']]['rate'];
+            }
+        }
+
+        // 第二頁
+        $sort2 = [
+            [
+                'title' => '申貸指標',
+                'items' => [
+                    [
+                        'key' => sale_goals_model::GOAL_LOAN_SALARY_MAN,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_STUDENT,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_SMART_STUDENT,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_CREDIT_INSURANCE,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_SME,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ]
+                ]
+            ], [
+                'title' => '成交指標',
+                'items' => [
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_SALARY_MAN,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_STUDENT,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_SMART_STUDENT,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_CREDIT_INSURANCE,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_SME,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                ]
+            ]
+        ];
+        foreach ($sort2 as $sort_key => $sort_value)
+        {
+            foreach ($sort_value['items'] as $item_key => $item_value)
+            {
+                if (empty($datas[$item_value['key']]['goal']))
+                {
+                    unset($sort2[$sort_key]['items'][$item_key]);
+                    continue;
+                }
+                $content2[] = $datas[$item_value['key']]['goal'];
+                $content2[] = $datas[$item_value['key']]['real'];
+                $content2[] = $datas[$item_value['key']]['rate'];
+            }
+        }
+
+        // 最後補上 成交總計
+        $content2[] = $datas['total_deals'];
+
+        // 匯出資料內容
+        $excel_contents = [
+            [
+                'sheet' => '貸前指標',
+                'content' => $content1,
+            ],
+            [
+                'sheet' => '貸中指標',
+                'content' => $content2,
+            ],
+        ];
+        $sheet_highlight = 'KPI指標-' . $days_info['int_month'] . '月';
+
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getProperties()->setTitle('績效統計表');
+
+        foreach ($excel_contents as $sheet => $contents)
+        {
+            $sheet > 0 ? $spreadsheet->createSheet() : '';
+            $row = 1;
+
+            // 前幾行合併儲存格的項目先處理
+            if (empty($sheet))
+            {
+                $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
+                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+                $index_a = 3;
+                $index_b = 3;
+                $spreadsheet = $this->_draw_title($spreadsheet, $sheet, $sort1, $index_a, $index_b);
+            }
+            else
+            {
+                // 這邊反過來是因為要先設定 Sheet 不然會合併到前一個 sheet 的格子
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
+                $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
+                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+                $index_a = 3;
+                $index_b = 3;
+                $spreadsheet = $this->_draw_title($spreadsheet, $sheet, $sort2, $index_a, $index_b);
+
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, '總數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . $index_b, '總成交數');
+            }
+
+            // 從 D 行開始塞入上面整理的內容
+            foreach ($contents['content'] as $key => $row_content)
+            {
+                foreach ($row_content as $content_index => $value)
+                {
+                    $column = Coordinate::stringFromColumnIndex($content_index + 4); // A = 1
+                    $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $value);
+                    $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
+                }
+                $row++;
+            }
+
+            $spreadsheet->setActiveSheetIndex($sheet)->setTitle($contents['sheet']);
+        }
+        $spreadsheet->setActiveSheetIndex(0);
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=' . 'testMergeCell' . '.xlsx');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
+    }
+
+    private function _draw_title($spreadsheet, $sheet, $sort_list, &$index_a, &$index_b)
+    {
+        $rowspan = 2;
+        foreach ($sort_list as $sort)
+        {
+            $merge_col = count($sort['items']) * ($rowspan + 1);
+            $spreadsheet->getActiveSheet()->mergeCells('A' . $index_a . ':A' . ($index_a + $merge_col - 1));
+            $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A' . $index_a, $sort['title']);
+            $index_a = $index_a + $merge_col;
+
+            foreach ($sort['items'] as $item)
+            {
+                $kpi = $item['kpi'];
+                $spreadsheet->getActiveSheet()->mergeCells('B' . $index_b . ':B' . ($index_b + $rowspan));
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, $this->sale_goals_model->type_name_mapping()[$item['key']]);
+
+                for ($i = 0; $i < count($kpi); $i++)
+                {
+                    $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . ($index_b + $i), $kpi[$i]);
+                }
+
+                $index_b += $rowspan + 1;
+            }
+        }
+        return $spreadsheet;
+    }
+
+    private function _parse_goal_ym_to_at_month($goal_ym)
+    {
+        try
+        {
+            $day = new DateTimeImmutable($goal_ym);
+        }
+        catch (Exception $e)
+        {
+            return date('Ym');
+        }
+
+        return $day->format('Ym');
     }
 }
-
-?>
