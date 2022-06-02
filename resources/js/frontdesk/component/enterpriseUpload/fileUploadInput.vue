@@ -15,7 +15,7 @@
         <div class="filename" v-for="item in fileNames">{{ item }}</div>
       </div>
     </div>
-    <div class="row no-gutters">
+    <div class="row no-gutters justify-content-center">
       <div class="col-auto mr-2">
         <button class="btn btn-upload-primary" @click="onClickFile">上傳檔案</button>
       </div>
