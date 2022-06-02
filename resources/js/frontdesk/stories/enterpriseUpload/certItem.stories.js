@@ -3,6 +3,13 @@ import imageFile from '@/asset/images/enterpriseUpload/company-1.svg'
 export default {
     title: '企金/驗證項目 (certItem)',
     component: certItem,
+    argTypes: {
+        icon: {
+            control: {
+                type: 'file'
+            }
+        }
+    }
 };
 const Template = (args, { argTypes }) => ({
     components: { certItem },
@@ -40,5 +47,5 @@ export const 自定義內容 = (args, { argTypes }) => ({
   </cert-item>`
 })
 自定義內容.args = {
-    iconText:'聯合徵信報告'
+    iconText: '聯合徵信報告'
 }
