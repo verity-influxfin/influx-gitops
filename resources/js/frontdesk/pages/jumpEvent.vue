@@ -456,9 +456,9 @@
             </button>
           </div>
           <div class="modal-body modal-info">
-            <div>五週年活動『INFLUX一起跳躍世界』</div>
-            <div>蒙太奇在大家踴躍參與下拼湊完成囉～</div>
-            <div>因此活動將於6/7(二)提前結束，請各參賽者把握最後黃金時間～</div>
+            <div>5週年活動『INFLUX 跳躍世界』蒙太奇</div>
+            <div>在大家的踴躍參與下提前拼湊完成囉～</div>
+            <div>活動將於6/7(二)提前結束，請各參賽者把握最後的黃金時間～</div>
             <div>衝票數！拿獎金！</div>
           </div>
         </div>
