@@ -275,7 +275,7 @@
             3. 每一會員每天有3票，不限同件作品。(投票者須先成為官方會員)
           </div>
           <div>
-            4. 得獎者請於2022/7/15 (五)
+            4. 得獎者請於2022/6/15 (三)
             前主動聯繫主辦單位，提供「我的使用者編號」及「照片電子檔」驗證獲獎資格，逾期視同放棄。
           </div>
           <div class="mt-3">四、主辦單位聯繫方式：</div>
@@ -450,7 +450,7 @@
               type="button"
               class="close"
               data-dismiss="modal"
-              aria-label="Close"
+              aria-label="Close"ㄔㄛ
             >
               <span aria-hidden="true">&times;</span>
             </button>
@@ -458,7 +458,7 @@
           <div class="modal-body modal-info">
             <div>5週年活動『INFLUX 跳躍世界』蒙太奇</div>
             <div>在大家的踴躍參與下提前拼湊完成囉～</div>
-            <div>活動將於6/7(二)提前結束，請各參賽者把握最後的黃金時間～</div>
+            <div>活動將於6/7(二)結束，請各參賽者把握最後的黃金時間～</div>
             <div>衝票數！拿獎金！</div>
           </div>
         </div>
