@@ -92,10 +92,10 @@
       <div class="block-content">
         <div class="method-title">活動時間</div>
         <div class="method-time">
-          22.5.13 (五) 12：00 AM ~ 6.30 (四) 23：59 PM
+          22.5.13 (五) 12：00 AM ~ 6.7 (二) 23：59 PM
         </div>
         <div class="method-title">活動結果公布</div>
-        <div class="method-time">22.7.4 (一) 15：00 PM</div>
+        <div class="method-time">22.6.8 (三)</div>
         <div class="method-title">如何參加？</div>
         <div class="method-step">
           <div class="method-step-item">
@@ -259,8 +259,8 @@
         <div class="bouns-title mt-3">活動詳情</div>
         <div class="bouns-info">
           <div>一、活動日期：</div>
-          <div>2022/5/13(五)中午12:00整至2022/6/30(四)晚間23:59整，</div>
-          <div>並於2022/7/4(一)下午15:00於官網公佈本次活動獲獎者。</div>
+          <div>2022/5/13(五)中午12:00整至2022/6/7(二)晚間23:59整，</div>
+          <div>並於2022/6/8(三)於官網公佈本次活動獲獎者。</div>
           <div class="mt-3">二、活動規範：</div>
           <div>
             拍攝主題為『跳躍』，上傳跳躍動作之直式4:3照片，加入慶生祝褔(ex：祝賀語、生日圖示、普匯特色等)，參賽者可自行加入創意與各式元素。(唯主辦單位保有審核參加資格之權利，若有不適當圖片主辦單位有權刪除其內容並取消參賽資格)
@@ -275,7 +275,7 @@
             3. 每一會員每天有3票，不限同件作品。(投票者須先成為官方會員)
           </div>
           <div>
-            4. 得獎者請於2022/7/15 (五)
+            4. 得獎者請於2022/6/15 (三)
             前主動聯繫主辦單位，提供「我的使用者編號」及「照片電子檔」驗證獲獎資格，逾期視同放棄。
           </div>
           <div class="mt-3">四、主辦單位聯繫方式：</div>
@@ -441,6 +441,29 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="infoModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">公告</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"ㄔㄛ
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body modal-info">
+            <div>5週年活動『INFLUX 跳躍世界』蒙太奇</div>
+            <div>在大家的踴躍參與下提前拼湊完成囉～</div>
+            <div>活動將於6/7(二)結束，請各參賽者把握最後的黃金時間～</div>
+            <div>衝票數！拿獎金！</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -485,6 +508,7 @@ export default {
     alesisIndexCounter().then(v => {
       this.indexCounter = v
     })
+    $('#infoModal').modal('show')
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
   },
   methods: {
@@ -1453,6 +1477,17 @@ export default {
       &-vote {
         font-size: 24px;
       }
+    }
+  }
+  #infoModal {
+    .modal-title {
+      font-size: 32px;
+      line-height: 1.6;
+    }
+    .modal-info {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 20px;
     }
   }
 }
