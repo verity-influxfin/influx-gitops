@@ -136,9 +136,6 @@
                       src="@/asset/images/index/mortarboard1.png"
                     />
                   </div>
-                  <router-link to="/collegeLoan" class="card-link">
-                    了解更多
-                  </router-link>
                 </div>
               </div>
             </router-link>
@@ -152,9 +149,6 @@
                   <div class="card-image">
                     <img class="p2" src="@/asset/images/index/id1.png" />
                   </div>
-                  <router-link to="/workLoan" class="card-link">
-                    了解更多
-                  </router-link>
                 </div>
               </div>
             </router-link>
@@ -168,9 +162,6 @@
                   <div class="card-image">
                     <img class="p3" src="@/asset/images/index/computer1.png" />
                   </div>
-                  <router-link to="/engineerLoan" class="card-link">
-                    了解更多
-                  </router-link>
                 </div>
               </div>
             </router-link>
@@ -184,7 +175,6 @@
                   <div class="card-image">
                     <img src="@/asset/images/index/car1.png" class="p4" />
                   </div>
-                  <div style="grid-area: link">coming soon</div>
                 </div>
               </div>
             </div>
@@ -198,9 +188,6 @@
                   <div class="card-image">
                     <img src="@/asset/images/index/line-chart.png" class="p5" />
                   </div>
-                  <router-link to="/invest" class="card-link">
-                    了解更多
-                  </router-link>
                 </div>
               </div>
             </router-link>
@@ -214,7 +201,6 @@
                   <div class="card-image">
                     <img src="@/asset/images/index/clock1.png" class="p6" />
                   </div>
-                  <div>coming soon</div>
                 </div>
               </div>
             </div>
@@ -228,7 +214,6 @@
                   <div class="card-image">
                     <img src="@/asset/images/index/bank1.png" class="p7" />
                   </div>
-                  <div>coming soon</div>
                 </div>
               </div>
             </div>
@@ -240,7 +225,6 @@
                   <div class="card-image">
                     <img src="@/asset/images/index/building1.png" class="p8" />
                   </div>
-                  <div>coming soon</div>
                 </div>
               </div>
             </div>
@@ -256,9 +240,6 @@
                   <div class="card-image">
                     <img src="@/asset/images/index/love1.png" class="p9" />
                   </div>
-                  <router-link to="/charitable" class="card-link">
-                    了解更多
-                  </router-link>
                 </div>
               </div>
             </router-link>
@@ -272,9 +253,6 @@
                   <div class="card-image">
                     <img src="@/asset/images/index/qr1.png" class="p10" />
                   </div>
-                  <router-link to="/promote-code-intro" class="card-link">
-                    了解更多
-                  </router-link>
                 </div>
               </div>
             </router-link>
@@ -289,9 +267,6 @@
                 <div class="card-subtitle">
                   台灣最大學生貸平台進修、學雜費、3C、機車
                 </div>
-                <router-link to="/collegeLoan" class="card-link">
-                  了解更多
-                </router-link>
               </div>
             </router-link>
             <router-link to="/workLoan" class="product-item">
@@ -303,9 +278,6 @@
                 <div class="card-subtitle">
                   公開透明，無人化自動審核信用評分，申辦不收手續費
                 </div>
-                <router-link to="/workLoan" class="card-link">
-                  了解更多
-                </router-link>
               </div>
             </router-link>
             <router-link to="/engineerLoan" class="product-item">
@@ -317,9 +289,6 @@
                 <div class="card-subtitle">
                   工程師最優惠貸款，就在普匯 只要你•工程師
                 </div>
-                <router-link to="/engineerLoan" class="card-link">
-                  了解更多
-                </router-link>
               </div>
             </router-link>
             <div class="product-item">
@@ -331,7 +300,6 @@
                 <div class="card-subtitle">
                   只要你有車，貸給你車商、購車，都能貸
                 </div>
-                <div style="grid-area: link">coming soon</div>
               </div>
             </div>
             <router-link to="/charitable" class="product-item">
@@ -343,9 +311,6 @@
                 <div class="card-subtitle">
                   台大兒童基金會、張鈞甯、鍾欣凌，聯合勸募
                 </div>
-                <router-link to="/charitable" class="card-link">
-                  了解更多
-                </router-link>
               </div>
             </router-link>
             <div class="product-item">
@@ -357,7 +322,6 @@
                 <div class="card-subtitle">
                   速速來貸，最高額度100萬 歡迎新創、微企，快速貸給你
                 </div>
-                <div style="grid-area: link">coming soon</div>
               </div>
             </div>
             <div class="product-item">
@@ -369,7 +333,6 @@
                 <div class="card-subtitle">
                   普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
                 </div>
-                <div style="grid-area: link">coming soon</div>
               </div>
             </div>
             <div class="product-item">
@@ -379,7 +342,6 @@
                 </div>
                 <div class="card-title">中小企業信貸</div>
                 <div class="card-subtitle">專為中小企業，最高信貸2000萬</div>
-                <div style="grid-area: link">coming soon</div>
               </div>
             </div>
             <router-link to="/invest" class="product-item">
@@ -391,9 +353,6 @@
                 <div class="card-subtitle">
                   小額、分期，最佳投資心法低風險、高報酬，複利滾投
                 </div>
-                <router-link to="/invest" class="card-link">
-                  了解更多
-                </router-link>
               </div>
             </router-link>
             <router-link to="/promote-code-intro" class="product-item">
@@ -405,9 +364,6 @@
                 <div class="card-subtitle">
                   取得普匯QR，分享爽賺 會員、特約商管理專區
                 </div>
-                <router-link to="/promote-code-intro" class="card-link">
-                  了解更多
-                </router-link>
               </div>
             </router-link>
           </div>
@@ -2507,7 +2463,7 @@ export default {
       .product-item {
         .card {
           width: auto;
-          padding: 8px;
+          padding: 8px 8px 16px;
           position: relative;
           display: grid;
           grid-template-areas:
@@ -2541,61 +2497,61 @@ export default {
             transform: scale(0.65);
             left: initial;
             right: -36px;
-            top: -11px;
+            top: -18px;
           }
           .p2 {
             transform: scale(0.65);
             left: initial;
             right: -73px;
-            top: -15px;
+            top: -22px;
           }
           .p3 {
             transform: scale(0.65);
             left: initial;
             right: -35px;
-            top: -12px;
+            top: -19px;
           }
           .p4 {
             transform: scale(0.65);
             left: initial;
             right: -48px;
-            top: -10px;
+            top: -17px;
           }
           .p5 {
             transform: scale(0.65);
             left: initial;
             right: -33px;
-            top: -1px;
+            top: -7px;
           }
           .p6 {
             transform: scale(0.65);
             left: initial;
             right: -32px;
-            top: 5px;
+            top: -2px;
           }
           .p7 {
             transform: scale(0.65);
             left: initial;
             right: -32px;
-            top: 7px;
+            top: -2px;
           }
           .p8 {
             transform: scale(0.65);
             left: initial;
             right: -30px;
-            top: -10px;
+            top: -17px;
           }
           .p9 {
             transform: scale(0.65);
             left: initial;
             right: -35px;
-            top: -25px;
+            top: -33px;
           }
           .p10 {
             transform: scale(0.65);
             left: initial;
             right: -32px;
-            top: -12px;
+            top: -19px;
           }
         }
         .card-link {

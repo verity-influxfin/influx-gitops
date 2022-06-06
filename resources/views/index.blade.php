@@ -242,7 +242,7 @@
                                 </div>
                             </div>
                             <div class="function-item">
-                                <div class="function-title">慈善捐款</div>
+                                <div class="function-title">慈善公益</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content charitable">
@@ -392,7 +392,7 @@
                     </div>
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
-                <a href="/charitable" class="item">慈善專區</a>
+                <a href="/charitable" class="item">慈善公益</a>
                 <a href="/5th-anniversary" class="item">普匯五週年</a>
                 <div class="item">
                     <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login btn"><i class="fas fa-user"></i> SIGN IN</button>
@@ -498,7 +498,7 @@
                             </div>
                         </div>
                         <div class="item">
-                            <div class="header">慈善捐款</div>
+                            <div class="header">慈善公益</div>
                             <div class="list">
                                 <a href="/charitable" class="text-white">台大兒醫</a>
                             </div>
