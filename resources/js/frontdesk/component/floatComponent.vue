@@ -17,30 +17,6 @@ export default {
             default: ''
         },
     },
-  data: () => ({
-    offset: {},
-  }),
-  created() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  mounted() {
-    this.offset = $(this.$refs.quiklink).offset();
-  },
-  methods: {
-    handleScroll() {
-      if (window.scrollY > this.offset.top) {
-        $(this.$refs.quiklink)
-          .stop()
-          .animate({
-            marginTop: window.scrollY + this.offset.top,
-          });
-      } else {
-        $(this.$refs.quiklink).stop().animate({
-          marginTop: this.offset.top,
-        });
-      }
-    },
-  },
 };
 </script>
 
@@ -60,18 +36,14 @@ export default {
     }
 }
 .blog-quiklink {
-  z-index: 100;
-  float: right;
-  margin-top: 30%;
-  margin-bottom: 1rem;
-  position: absolute;
+  position: fixed;
+  bottom: 10%;
   right: 10px;
+  z-index: 100;
   color: #ff5151;
   display: flex;
   animation: float 4s ease-in-out infinite;
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1));
-  top: 0px;
-
   .icon {
     cursor: pointer;
     width: 90px;
@@ -91,7 +63,8 @@ export default {
 
   @media screen and (max-width: 767px) {
     margin-top: 600px;
-
+    bottom: 5%;
+    right: 0;
     .icon {
       width: 80px;
       margin-top: -.8rem;
