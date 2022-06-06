@@ -1401,11 +1401,13 @@ export default {
       .swiper-button-prev,
       .swiper-button-next {
         color: #fff;
+        top: 180px;
         &::after {
           font-size: 28px;
         }
       }
       .anniversary {
+        flex-wrap: nowrap;
         .text-bg {
           height: 192px;
           width: 656px;
@@ -1449,12 +1451,13 @@ export default {
           color: #ffffff;
         }
         .img57 {
-          position: absolute;
+          position: relative;
           height: 550px;
           top: -15px;
         }
       }
       .general {
+        flex-wrap: nowrap;
         .text-bg {
           height: 192px;
           width: 472px;
@@ -1469,13 +1472,16 @@ export default {
         }
         .man {
           left: 200px;
-          position: absolute;
+          position: relative;
           height: 625px;
           top: -15px;
         }
       }
     }
     .intro-products {
+      position: relative;
+      top: -300px;
+      margin-bottom: -300px;
       .group {
         &.group-web {
           display: grid;
@@ -2388,6 +2394,12 @@ export default {
     top: 215px;
   }
 }
+@media (max-width: 1060px) {
+  .index-intro .intro-content .sw-headers .general .man {
+    transform: scale(0.8);
+    left: 60px;
+  }
+}
 
 @media (max-width: 768px) {
   .block-content {
@@ -2426,6 +2438,7 @@ export default {
           }
         }
         .anniversary {
+          flex-wrap: wrap;
           padding-top: 20px;
           .text-bg {
             height: 92px;
@@ -2450,14 +2463,15 @@ export default {
             font-size: 14px;
           }
           .img57 {
-            position: absolute;
+            position: relative;
             height: 267px;
             transform: rotate(-10deg);
-            top: 72px;
-            left: -155px;
+            top: -195px;
+            left: 144px;
           }
         }
         .general {
+          flex-wrap: wrap;
           padding-top: 20px;
           .text-bg {
             height: 104px;
@@ -2468,10 +2482,10 @@ export default {
             font-size: 14px;
           }
           .man {
-            left: -90px;
-            position: absolute;
+            left: 136px;
+            position: relative;
             height: 295px;
-            top: 85px;
+            top: -233px;
           }
         }
       }
