@@ -1569,8 +1569,8 @@ export default {
         .p9 {
           position: absolute;
           transform: scale(1.15);
-          left: 11px;
-          top: -5px;
+          left: 4px;
+          top: -6px;
         }
         .p10 {
           position: absolute;
@@ -2514,52 +2514,62 @@ export default {
         .card-image {
           .p1 {
             transform: scale(0.65);
-            left: 12px;
+            left: initial;
+            right: -36px;
             top: -11px;
           }
           .p2 {
             transform: scale(0.65);
-            left: -22px;
+            left: initial;
+            right: -73px;
             top: -15px;
           }
           .p3 {
             transform: scale(0.65);
-            left: 5px;
+            left: initial;
+            right: -35px;
             top: -12px;
           }
           .p4 {
             transform: scale(0.65);
-            left: -2px;
+            left: initial;
+            right: -48px;
             top: -10px;
           }
           .p5 {
             transform: scale(0.65);
-            left: 15px;
-            top: 0px;
+            left: initial;
+            right: -33px;
+            top: -1px;
           }
           .p6 {
             transform: scale(0.65);
-            left: 14px;
+            left: initial;
+            right: -32px;
             top: 5px;
           }
           .p7 {
             transform: scale(0.65);
-            left: 15px;
+            left: initial;
+            right: -32px;
             top: 7px;
           }
           .p8 {
             transform: scale(0.65);
-            left: 13px;
+            left: initial;
+            right: -30px;
             top: -10px;
           }
           .p9 {
             transform: scale(0.65);
-            left: -10px;
-            top: -30px;
+            left: initial;
+            right: -35px;
+            top: -25px;
           }
           .p10 {
             transform: scale(0.65);
-            left: 14px;
+            left: initial;
+            right: -32px;
             top: -12px;
           }
         }
