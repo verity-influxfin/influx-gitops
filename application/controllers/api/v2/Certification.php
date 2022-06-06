@@ -2470,11 +2470,15 @@ class Certification extends REST_Controller {
             //必填欄位
 			$fields 	= ['tax_id','industry','salary'];//,'company'
 			foreach ($fields as $field) {
-				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}else{
-					$content[$field] = $input[$field];
-				}
+                if ( ! isset($input[$field]))
+                {
+                    log_message('error', "[job_post][{$user_id}]The argument {$field} is not settled.");
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                }
+                else
+                {
+                    $content[$field] = $input[$field];
+                }
 			}
 
 			// to do : 加入商業司爬蟲相關機制
