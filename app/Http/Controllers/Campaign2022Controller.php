@@ -93,6 +93,9 @@ class Campaign2022Controller extends Controller
     // 使用者投票
     public function save_vote(Request $request): JsonResponse
     {
+        if ($this->_chk_campaign_time() !== true) {
+            return $this->_return_success([], '活動已結束，感謝您的支持！');
+        }
         $response = $this->_connect_deus('GET');
         if ($response['status'] != 200) {
             return $this->_return_failed($response['data'], $response['status']);
@@ -137,6 +140,9 @@ class Campaign2022Controller extends Controller
     // 使用者上傳檔案
     public function save_file(Request $request): JsonResponse
     {
+        if ($this->_chk_campaign_time() !== true) {
+            return $this->_return_success([], '活動已結束，感謝您的支持！');
+        }
         $response = $this->_connect_deus('GET');
         if ($response['status'] != 200) {
             return $this->_return_failed($response['data'], $response['status']);
@@ -217,5 +223,16 @@ class Campaign2022Controller extends Controller
     private function _return_failed(string $msg, $status = 400): JsonResponse
     {
         return response()->json(['success' => false, 'data' => null, 'msg' => $msg], $status);
+    }
+
+    private function _chk_campaign_time(): bool
+    {
+        $now = (new \DateTime())->setTimezone(new \DateTimeZone('+8'))->getTimestamp();
+        $end = (new \DateTime())->setTimezone(new \DateTimeZone('+8'))->setDate(2022, 6, 7)->setTime(0,0)->getTimestamp();
+        if ($now >= $end)
+        {
+            return false;
+        }
+        return true;
     }
 }
