@@ -628,7 +628,9 @@ class Controller extends BaseController
 
     public function getNewsData(Request $request)
     {
-        $news = DB::table('news')->select('*','id as ID')->where('isActive', '=', 'on')->orderBy('id', 'desc')->get();
+        $news = DB::table('news')->select('*','id as ID')->where('isActive', '=', 'on')
+            ->orderBy('pinned', 'desc')
+            ->orderBy('id', 'desc')->get();
 
         return response()->json($news, 200);
     }

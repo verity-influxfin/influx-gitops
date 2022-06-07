@@ -82,7 +82,7 @@ class NewsController extends Controller
     protected function grid()
     {
         $grid = new Grid(new News);
-
+        $grid->model()->orderBy('pinned', 'desc');
         $grid->model()->orderBy('id', 'desc');
 
 		// 關閉選擇器
@@ -102,6 +102,12 @@ class NewsController extends Controller
                     'on'    => '是',
                     'off'    => '否',
                 ]);
+
+            $filter->equal('pinned', '是否置頂')->radio([
+                '' => '全部',
+                1 => '是',
+                0 => '否',
+            ]);
 		});
 		$grid->actions(function ($actions) {
 
@@ -119,6 +125,7 @@ class NewsController extends Controller
         $grid->column('post_title', '標題');
 		$grid->column('image_url', '圖片連結')->image('/', 400, 400);
         $grid->column('isActive', '是否呈現')->using(['on' => '是','off'=>'否']);
+        $grid->column('pinned', '是否置頂')->using(['<div style="color:red;text-align: center;">否</div>', '<div style="color:blue;text-align: center;">是</div>']);
         $grid->column('created_at', '創建日期')->sortable();
         $grid->column('updated_at', '最後更新日期')->sortable();
         return $grid;
@@ -183,6 +190,10 @@ class NewsController extends Controller
 			'on'  => ['value' => 'on', 'text' => '是', 'color' => 'primary'],
 			'off' => ['value' => 'off', 'text' => '否', 'color' => 'default'],
 		])->default('on');
+        $form->switch('pinned', '是否置頂')->states([
+            'on' => ['value' => 1, 'text' => '是', 'color' => 'primary'],
+            'off' => ['value' => 0, 'text' => '否', 'color' => 'default'],
+        ])->default('off');
         return $form;
     }
 
