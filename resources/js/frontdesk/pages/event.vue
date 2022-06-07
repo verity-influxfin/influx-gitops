@@ -183,6 +183,7 @@
 </template>
 
 <script>
+import { gsap } from 'gsap/dist/gsap'
 export default {
   data: () => ({
     isSended: false,
@@ -624,7 +625,7 @@ export default {
     .modal-dialog {
       top: 35%;
     }
-    
+
     .login-logo {
       margin: 0px auto;
     }

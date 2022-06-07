@@ -270,6 +270,7 @@ import experience from "../component/experienceComponent";
 import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
 import float from "../component/floatComponent";
+import { gsap } from 'gsap/dist/gsap'
 
 export default {
   components: {

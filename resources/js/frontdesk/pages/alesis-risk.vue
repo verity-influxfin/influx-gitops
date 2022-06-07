@@ -92,7 +92,7 @@ export default {
     },
     data: () => {
         return {
-            current_risk_month : '2022年02月',
+            current_risk_month : '2022年05月',
             report_list: [
                 {
                     month:'2021年07月',
@@ -126,6 +126,18 @@ export default {
                     month:'2022年02月',
                     image:require('../asset/images/risk/risk-2202.jpg'),
                 },
+                {
+                    month:'2022年03月',
+                    image:require('../asset/images/risk/risk-2203.jpg'),
+                },
+                {
+                    month:'2022年04月',
+                    image:require('../asset/images/risk/risk-2204.jpg'),
+                },
+                {
+                    month:'2022年05月',
+                    image:require('../asset/images/risk/risk-2205.jpg'),
+                }
             ]
         }
     },
