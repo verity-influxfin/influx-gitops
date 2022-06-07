@@ -502,7 +502,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a')
         link.href = url
-        link.setAttribute('download', '投資人報告書.xlsx')
+        link.setAttribute('download', `普匯投資報告書(${this.invest_report.basic_info.id}).xlsx`)
         document.body.appendChild(link)
         link.click()
       }).catch(err=>{

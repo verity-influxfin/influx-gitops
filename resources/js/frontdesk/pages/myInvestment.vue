@@ -96,7 +96,7 @@
 
 <script>
 import userInfo from "../component/userInfoComponent";
-
+import { gsap } from 'gsap/dist/gsap'
 export default {
   beforeRouteEnter (to, from, next) {
     if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {

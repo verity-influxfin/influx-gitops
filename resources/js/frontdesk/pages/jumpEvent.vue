@@ -3,7 +3,7 @@
     <nav id="top">
       <div class="row no-gutters">
         <div class="col-auto p-1">
-          <img src="/images/logo.svg" alt="influx-logo" />
+          <img src="/images/logo.png" alt="influx-logo" style="height: 30px" />
         </div>
         <div class="col"></div>
         <div class="top-method col-auto">
@@ -92,10 +92,10 @@
       <div class="block-content">
         <div class="method-title">活動時間</div>
         <div class="method-time">
-          22.5.13 (五) 12：00 AM ~ 6.30 (四) 23：59 PM
+          22.5.13 (五) 12：00 AM ~ 6.7 (二) 23：59 PM
         </div>
         <div class="method-title">活動結果公布</div>
-        <div class="method-time">22.7.4 (一) 15：00 PM</div>
+        <div class="method-time">22.6.8 (三)</div>
         <div class="method-title">如何參加？</div>
         <div class="method-step">
           <div class="method-step-item">
@@ -157,7 +157,7 @@
       <div class="block-content">
         <div class="bouns-title d-md-block d-none">活動獎金</div>
         <div class="bouns-info d-md-flex d-none no-gutters">
-          <div class="col-6">
+          <div class="col-auto pr-5">
             <div>
               第1名：
               <span class="em">＄55,555 </span>
@@ -176,18 +176,13 @@
             <div>
               人氣獎 (6~10名)：&emsp;&emsp; <span class="em">＄1,500 元</span>
             </div>
-
-            <div class="mt-3">沒有名次嗎？創意和搞笑也可以！</div>
+          </div>
+          <div class="col-auto pl-5">
+            <div>沒有名次嗎？創意和搞笑也可以！</div>
             <div>特別獎</div>
             <div>執行長青睞獎：<span class="em">＄1,000</span> 元</div>
             <div>風格創意獎：<span class="em">＄1,000</span> 元</div>
             <div>捧腹大笑獎：<span class="em">＄1,000</span> 元</div>
-          </div>
-          <div class="pl-5 col-6">
-            <div>凡參與本次活動(含參賽者及投票者)，皆獲抽獎資格！</div>
-            <div>頭獎：Airpods 3代</div>
-            <div>貳獎：<span class="em">1,000</span> 元禮券*2份，共2,000元</div>
-            <div>參獎：<span class="em">500</span> 元禮券*3份，共1,500元</div>
           </div>
         </div>
       </div>
@@ -230,11 +225,6 @@
             </div>
           </div>
         </div>
-        <div class="text-center" v-if="!isLast">
-          <button class="btn" @click="doSearch">
-            <img src="@/asset/images/jump/load-more.svg" />
-          </button>
-        </div>
       </div>
     </div>
     <div id="bouns-nav"></div>
@@ -265,18 +255,12 @@
           <div>執行長青睞獎：<span class="em">＄1,000</span> 元</div>
           <div>風格創意獎：<span class="em">＄1,000</span> 元</div>
           <div>捧腹大笑獎：<span class="em">＄1,000</span> 元</div>
-          <div class="mt-3">
-            凡參與本次活動(含參賽者及投票者)，皆獲抽獎資格！
-          </div>
-          <div>頭獎：Airpods 3代</div>
-          <div>貳獎：<span class="em">1,000</span> 元禮券*2份，共2,000元</div>
-          <div>參獎：<span class="em">500</span> 元禮券*3份，共1,500元</div>
         </div>
         <div class="bouns-title mt-3">活動詳情</div>
         <div class="bouns-info">
           <div>一、活動日期：</div>
-          <div>2022/5/13(五)中午12:00整至2022/6/30(四)晚間23:59整，</div>
-          <div>並於2022/7/4(一)下午15:00於官網公佈本次活動獲獎者。</div>
+          <div>2022/5/13(五)中午12:00整至2022/6/7(二)晚間23:59整，</div>
+          <div>並於2022/6/8(三)於官網公佈本次活動獲獎者。</div>
           <div class="mt-3">二、活動規範：</div>
           <div>
             拍攝主題為『跳躍』，上傳跳躍動作之直式4:3照片，加入慶生祝褔(ex：祝賀語、生日圖示、普匯特色等)，參賽者可自行加入創意與各式元素。(唯主辦單位保有審核參加資格之權利，若有不適當圖片主辦單位有權刪除其內容並取消參賽資格)
@@ -291,7 +275,7 @@
             3. 每一會員每天有3票，不限同件作品。(投票者須先成為官方會員)
           </div>
           <div>
-            4. 得獎者請於2022/7/15 (五)
+            4. 得獎者請於2022/6/15 (三)
             前主動聯繫主辦單位，提供「我的使用者編號」及「照片電子檔」驗證獲獎資格，逾期視同放棄。
           </div>
           <div class="mt-3">四、主辦單位聯繫方式：</div>
@@ -457,6 +441,29 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="infoModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">公告</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"ㄔㄛ
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body modal-info">
+            <div>5週年活動『INFLUX 跳躍世界』蒙太奇</div>
+            <div>在大家的踴躍參與下提前拼湊完成囉～</div>
+            <div>活動將於6/7(二)結束，請各參賽者把握最後的黃金時間～</div>
+            <div>衝票數！拿獎金！</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -467,6 +474,7 @@ import Axios from 'axios'
 export default {
   data() {
     return {
+      isExpire:0,
       indexCounter: {},
       nickNameInput: '',
       searchInput: '',
@@ -477,7 +485,7 @@ export default {
       file: new File([], ''),
       workList: [],
       fullList: [],
-      total:0,
+      total: 0,
       userId: '',
       workModalData: {
         id: 0,
@@ -495,12 +503,18 @@ export default {
       x: 500,
       duration: 2
     })
+    // 06/08結束
+    this.isExpire = new Date('2022/06/08') - new Date() < 0
     this.doSearch()
     this.getList()
     this.getMontage()
     alesisIndexCounter().then(v => {
       this.indexCounter = v
     })
+    if(!Boolean(sessionStorage.getItem('5th-info'))){
+        $('#infoModal').modal('show')
+    }
+    sessionStorage.setItem('5th-info','true')
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
   },
   methods: {
@@ -551,6 +565,10 @@ export default {
       this.fileName = ''
     },
     doJump() {
+      if(this.isExpire){
+          alert('活動已結束，感謝您的支持！')
+          return
+      }
       if (this.flag === 'login') {
         if (this.checkUpload()) {
           if (!confirm('您的照片已出現在跳躍作品集裡，如重新上傳將更換您的照片，並重新計算票數')) {
@@ -563,6 +581,11 @@ export default {
       }
     },
     doVote(id) {
+      // 活動結束
+      if(this.isExpire){
+          alert('活動已結束，感謝您的支持！')
+          return
+      }
       if (this.flag !== 'login') {
         this.$store.commit('mutation5thLogin')
         return
@@ -581,7 +604,7 @@ export default {
       }
     },
     getList() {
-      Axios.get('/api/v1/campaign2022/list').then(({ data }) => {
+      return Axios.get('/api/v1/campaign2022/list').then(({ data }) => {
         this.fullList = data.data
       })
     },
@@ -595,6 +618,10 @@ export default {
       })
     },
     async doUpload() {
+      if(this.isExpire){
+          alert('活動已結束')
+          return
+      }
       if (!this.fileName) {
         alert('請上傳檔案')
       } else {
@@ -623,12 +650,8 @@ export default {
       if (this.currentPage > this.maxPage) {
         return
       }
-      Axios.get('/api/v1/campaign2022/list/page/' + this.currentPage).then(({ data }) => {
-        if (data.success) {
-          this.workList = [...this.workList, ...data.data.list]
-          this.maxPage = Math.ceil(data.data.total / 3)
-          this.currentPage = this.currentPage + 1
-        }
+      this.getList().then(() => {
+        this.workList = this.fullList
       })
     },
     doSearch() {
@@ -667,11 +690,6 @@ export default {
       }
     }
   },
-  computed:{
-      isLast(){
-          return this.total <= this.workList.length
-      }
-  }
 }
 </script>
 
@@ -961,6 +979,7 @@ export default {
     &-img {
       display: flex;
       min-height: 210px;
+      max-height: 210px;
       margin: 5px 0;
       border-radius: 10px;
       min-width: 120px;
@@ -1362,6 +1381,7 @@ export default {
       &-img {
         display: flex;
         min-height: 448px;
+        max-height: 448px;
         margin: 5px 0;
         border-radius: 10px;
         min-width: 120px;
@@ -1476,6 +1496,17 @@ export default {
       &-vote {
         font-size: 24px;
       }
+    }
+  }
+  #infoModal {
+    .modal-title {
+      font-size: 32px;
+      line-height: 1.6;
+    }
+    .modal-info {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 20px;
     }
   }
 }
