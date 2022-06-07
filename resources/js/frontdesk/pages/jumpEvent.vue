@@ -467,6 +467,7 @@ import Axios from 'axios'
 export default {
   data() {
     return {
+      isExpire:0,
       indexCounter: {},
       nickNameInput: '',
       searchInput: '',
@@ -495,12 +496,18 @@ export default {
       x: 500,
       duration: 2
     })
+    // 06/08結束
+    this.isExpire = new Date('2022/06/08') - new Date() < 0
     this.doSearch()
     this.getList()
     this.getMontage()
     alesisIndexCounter().then(v => {
       this.indexCounter = v
     })
+    if(!Boolean(sessionStorage.getItem('5th-info'))){
+        $('#infoModal').modal('show')
+    }
+    sessionStorage.setItem('5th-info','true')
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
   },
   methods: {
@@ -551,6 +558,10 @@ export default {
       this.fileName = ''
     },
     doJump() {
+      if(this.isExpire){
+          alert('活動已結束')
+          return
+      }
       if (this.flag === 'login') {
         if (this.checkUpload()) {
           if (!confirm('您的照片已出現在跳躍作品集裡，如重新上傳將更換您的照片，並重新計算票數')) {
@@ -563,6 +574,11 @@ export default {
       }
     },
     doVote(id) {
+      // 活動結束
+      if(this.isExpire){
+          alert('活動已結束')
+          return
+      }
       if (this.flag !== 'login') {
         this.$store.commit('mutation5thLogin')
         return
@@ -595,6 +611,10 @@ export default {
       })
     },
     async doUpload() {
+      if(this.isExpire){
+          alert('活動已結束')
+          return
+      }
       if (!this.fileName) {
         alert('請上傳檔案')
       } else {
