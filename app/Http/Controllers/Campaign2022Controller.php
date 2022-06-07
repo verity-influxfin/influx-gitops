@@ -228,7 +228,7 @@ class Campaign2022Controller extends Controller
     private function _chk_campaign_time(): bool
     {
         $now = (new \DateTime())->setTimezone(new \DateTimeZone('+8'))->getTimestamp();
-        $end = (new \DateTime())->setTimezone(new \DateTimeZone('+8'))->setDate(2022, 6, 7)->setTime(0,0)->getTimestamp();
+        $end = (new \DateTime())->setTimezone(new \DateTimeZone('+8'))->setDate(2022, 6, 8)->setTime(0,0)->getTimestamp();
         if ($now >= $end)
         {
             return false;
