@@ -566,7 +566,7 @@ export default {
     },
     doJump() {
       if(this.isExpire){
-          alert('活動已結束')
+          alert('活動已結束，感謝您的支持！')
           return
       }
       if (this.flag === 'login') {
@@ -583,7 +583,7 @@ export default {
     doVote(id) {
       // 活動結束
       if(this.isExpire){
-          alert('活動已結束')
+          alert('活動已結束，感謝您的支持！')
           return
       }
       if (this.flag !== 'login') {
