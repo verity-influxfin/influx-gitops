@@ -442,6 +442,23 @@ class Cron extends CI_Controller
 		die('1');
 	}
 
+    public function daily_tax_for_puhui()
+    {
+        $this->load->library('payment_lib');
+        $input = $this->input->get(['dstart', 'dend'], TRUE);
+        $start_time = time();
+        $count = $this->payment_lib->script_daily_tax_for_puhui($input['dstart'], $input['dend']);
+        $end_time = time();
+        $data = [
+            'script_name' => __FUNCTION__,
+            'num' => $count,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
+
 	public function create_estatement_pdf()
 	{	//每五分鐘
 		$this->load->library('Estatement_lib');
