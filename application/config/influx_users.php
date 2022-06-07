@@ -32,20 +32,14 @@ $config['influx_user_list'] = [
         'user_id' => 72774],
     [ // Peter
         'user_id' => 76574],
-    [ // Willy
-        'user_id' => 78139],
-    [ // Miles
-        'user_id' => 79054],
-    [ // 雪玉
-        'user_id' => 79329],
     [ // 李奕伽
         'user_id' => 83929],
-    [ // 王柏勝
-        'user_id' => 83340],
     [ // 劉政國
         'user_id' => 83529],
     [ // 汪芸瑄
         'user_id' => 83848],
     [ // 蔡泓霖
         'user_id' => 51365],
+    [ // 黃偉銘John
+        'user_id' => 84644],
 ];
