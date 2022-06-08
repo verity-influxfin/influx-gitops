@@ -27,7 +27,7 @@ class User_behavior_model extends MY_Model
      * @param bool $group_by_code
      * @return array
      */
-    public function getFirstOpenCountByPromoteCode($promoteCode, $startTime, $endTime, bool $group_by_code = TRUE): array
+    public function getFirstOpenCountByPromoteCode($promoteCode, $startTime, $endTime, $is_group_by_code = TRUE): array
     {
 	    if(empty($promoteCode))
 	        return [];
@@ -51,9 +51,9 @@ class User_behavior_model extends MY_Model
             ->where('`r`.`created_at` >= `uq`.`start_time`')
             ->where('`r`.`created_at` < `uq`.`end_time`');
 
-        if ($group_by_code)
+        if ($is_group_by_code)
         {
-            $this->db->select('COUNT(1) as count')
+            $this->db->select('COUNT(r.promote_code) as count')
                 ->group_by('`r`.`promote_code`');
         }
         else
