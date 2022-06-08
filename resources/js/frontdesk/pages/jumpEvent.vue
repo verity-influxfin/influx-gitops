@@ -189,38 +189,29 @@
     </div>
     <div id="vote">
       <div class="block-content">
-        <div class="vote-title">跳躍作品集</div>
-        <form class="search-input-group" @submit.prevent>
-          <img class="loupe" src="../asset/images/loupe.svg" />
-          <input
-            class="search-input"
-            type="text"
-            v-model="searchInput"
-            maxlength="10"
-            @change="doSearch"
-            placeholder="搜尋暱稱"
-          />
-        </form>
+        <div class="vote-title">普匯五週年跳躍得獎作品</div>
         <div class="works">
           <div
             class="work-item"
             :class="{ normal: Boolean(lastSearch) }"
-            v-for="item in workList"
+            v-for="(item, index) in prizePieces"
             :key="item.id"
-            @click="openWorkModal(item)"
+            @click="openWorkModal(item, prizeArray[index])"
           >
             <div class="work-item-title">{{ item.nick_name }}</div>
             <div class="work-item-img">
               <img class="img-fluid" :src="'/' + item.file_name" alt="" />
             </div>
-            <div class="work-item-num">NO.{{ item.id }}</div>
+            <div class="work-item-num">
+              {{ prizeArray[index] }}
+            </div>
             <div class="work-item-vote">
-              <button class="btn p-0" @click.stop="doVote(item.id)">
+              <span>
                 <img
                   class="vote-img"
                   src="@/asset/images/jump/seo-internet-like.svg"
                 />
-              </button>
+              </span>
               <span class="vote-num">{{ item.votes }}票</span>
             </div>
           </div>
@@ -419,14 +410,14 @@
           <div class="modal-body">
             <div class="work-item">
               <div class="work-item-title">{{ workModalData.nick_name }}</div>
-              <div class="work-item-img">
+              <div class="work-item-img modal-item">
                 <img
                   class="img-fluid"
                   :src="'/' + workModalData.file_name"
                   alt=""
                 />
               </div>
-              <div class="work-item-num">NO.{{ workModalData.id }}</div>
+              <div class="work-item-num">{{ workModalPrize }}</div>
               <div class="work-item-vote">
                 <button class="btn p-0" @click="doVote(workModalData.id)">
                   <img
@@ -450,16 +441,23 @@
               type="button"
               class="close"
               data-dismiss="modal"
-              aria-label="Close"ㄔㄛ
+              aria-label="Close"
             >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body modal-info">
-            <div>5週年活動『INFLUX 跳躍世界』蒙太奇</div>
-            <div>在大家的踴躍參與下提前拼湊完成囉～</div>
-            <div>活動將於6/7(二)結束，請各參賽者把握最後的黃金時間～</div>
-            <div>衝票數！拿獎金！</div>
+            <div>5週年活動線上投票活動告一段落囉！</div>
+            <div>恭喜所有的得獎者～～～</div>
+            <div>也感謝所有會員對於5週年活動的支持！</div>
+            <div>
+              得獎者需先加入普匯LINE官方客服，提供使用者編號及參賽作品電子檔，驗證得獎身份。
+            </div>
+            <div>LINE ID：@influxfin</div>
+            <div>2022/6/15 (三) 前主動聯繫LINE官方客服</div>
+            <div>2022/6/17 (五) 主辦單位寄送領獎資訊</div>
+            <div>2022/6/24 (五) 前繳交領獎相關資料(紙本)</div>
+            <div>2022/7/10 (日) 得獎獎金入帳</div>
           </div>
         </div>
       </div>
@@ -474,7 +472,7 @@ import Axios from 'axios'
 export default {
   data() {
     return {
-      isExpire:0,
+      isExpire: 0,
       indexCounter: {},
       nickNameInput: '',
       searchInput: '',
@@ -494,6 +492,7 @@ export default {
         votes: 0,
         file_name: ''
       },
+      workModalPrize: '',
       currentPage: 1,
       maxPage: 1
     }
@@ -511,10 +510,10 @@ export default {
     alesisIndexCounter().then(v => {
       this.indexCounter = v
     })
-    if(!Boolean(sessionStorage.getItem('5th-info'))){
-        $('#infoModal').modal('show')
+    if (!Boolean(sessionStorage.getItem('5th-info'))) {
+      $('#infoModal').modal('show')
     }
-    sessionStorage.setItem('5th-info','true')
+    sessionStorage.setItem('5th-info', 'true')
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
   },
   methods: {
@@ -565,9 +564,9 @@ export default {
       this.fileName = ''
     },
     doJump() {
-      if(this.isExpire){
-          alert('活動已結束，感謝您的支持！')
-          return
+      if (this.isExpire) {
+        alert('活動已結束，感謝您的支持！')
+        return
       }
       if (this.flag === 'login') {
         if (this.checkUpload()) {
@@ -582,9 +581,9 @@ export default {
     },
     doVote(id) {
       // 活動結束
-      if(this.isExpire){
-          alert('活動已結束，感謝您的支持！')
-          return
+      if (this.isExpire) {
+        alert('活動已結束，感謝您的支持！')
+        return
       }
       if (this.flag !== 'login') {
         this.$store.commit('mutation5thLogin')
@@ -618,9 +617,9 @@ export default {
       })
     },
     async doUpload() {
-      if(this.isExpire){
-          alert('活動已結束')
-          return
+      if (this.isExpire) {
+        alert('活動已結束')
+        return
       }
       if (!this.fileName) {
         alert('請上傳檔案')
@@ -680,14 +679,24 @@ export default {
         }
       })
     },
-    openWorkModal(item) {
+    openWorkModal(item, prize = '') {
       if (item) {
         this.workModalData = { ...item }
+        this.workModalPrize = prize
         $('#workModal').modal('show')
         return
       } else {
         // get from api
       }
+    }
+  },
+  computed: {
+    prizePieces() {
+      const special = this.workList.filter(x => x.id == 53 || x.id == 1 || x.id == 139).sort((a,b)=>b.votes - a.votes)
+      return this.workList.slice(0, 9).concat(...special)
+    },
+    prizeArray() {
+      return ['第一名', '第二名', '第三名', '第四名', '第五名', '人氣獎', '人氣獎', '人氣獎', '人氣獎', '人氣獎', '風格創意獎', '執行長獎', '捧腹大笑獎']
     }
   },
 }
@@ -989,6 +998,7 @@ export default {
       font-size: 12px;
       line-height: 1.4;
       color: #393939;
+      text-align: center;
     }
     &-vote {
       margin-top: 8px;
@@ -1344,11 +1354,11 @@ export default {
       .works {
         padding: 15px 0;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         grid-template-areas:
-          'champion . . .'
-          '. . . .';
-        gap: 20px;
+          'champion . . . .'
+          '. . . . .';
+        gap: 15px;
         grid-auto-rows: auto;
         .work-item:nth-child(1) {
           &:not(.normal) {
@@ -1379,9 +1389,13 @@ export default {
         color: #083a6e;
       }
       &-img {
+        &.modal-item {
+          min-height: 448px;
+          max-height: 448px;
+        }
         display: flex;
-        min-height: 448px;
-        max-height: 448px;
+        min-height: 320px;
+        max-height: 320px;
         margin: 5px 0;
         border-radius: 10px;
         min-width: 120px;
