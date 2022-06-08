@@ -141,7 +141,13 @@
                     </div>
 					<div class="row">
 						<div class="col-lg-8">
-							<h2>統計資訊</h2>
+                            <div style="display: flex; align-items: center;">
+                                <h2>統計資訊</h2>
+                                <div class="mt-3 ml-3">
+                                    <a href="<?= admin_url('sales/promote_report_export?' . http_build_query($_GET)) ?>" target="_blank">
+                                        <button class="btn btn-primary">下載統計報表</button></a>
+                                </div>
+                            </div>
 							<div class="table-responsive">
 								<table class="table table-bordered table-hover table-striped">
 									<tbody>

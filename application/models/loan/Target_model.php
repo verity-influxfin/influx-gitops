@@ -863,4 +863,32 @@ class Target_model extends MY_Model
         }
         return FALSE;
     }
+
+    /**
+     * 取得案件詳細相關資訊
+     * @param $conditions
+     * @return array
+     */
+    public function get_targets_detail($conditions): array
+    {
+        if ( ! empty($conditions))
+        {
+            $this->_set_where([$conditions]);
+        }
+
+        $this->_database->select('*')
+            ->from('`p2p_loan`.`targets`');
+        $target_query = $this->_database->get_compiled_select('', TRUE);
+
+        $rs = $this->_database
+            ->select('`r`.*, `c`.`level`, `c`.`points`, `c`.`amount` AS `credit_amount`, `c`.`status` AS `credit_status`')
+            ->select('`c`.`expire_time` AS `credit_expire_time`, `c`.`created_at` AS `credit_created_at`')
+            ->select('`cs`.`unused_credit_line`')
+            ->from('`p2p_loan`.`credit_sheet` AS `cs`')
+            ->join("($target_query) as `r`", '`cs`.`target_id` = `r`.`id`', 'right')
+            ->join('`p2p_loan`.`credits` AS `c`', '`c`.`id` = `cs`.`credit_id`', 'left');
+
+        return $rs->get()->result_array();
+    }
+
 }
