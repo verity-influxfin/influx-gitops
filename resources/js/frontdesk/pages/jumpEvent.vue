@@ -419,12 +419,12 @@
               </div>
               <div class="work-item-num">{{ workModalPrize }}</div>
               <div class="work-item-vote">
-                <button class="btn p-0" @click="doVote(workModalData.id)">
+                <span>
                   <img
                     class="vote-img"
                     src="@/asset/images/jump/seo-internet-like.svg"
                   />
-                </button>
+                </span>
                 <span class="vote-num">{{ workModalData.votes }}票</span>
               </div>
             </div>
@@ -693,7 +693,7 @@ export default {
   computed: {
     prizePieces() {
       const special = this.workList.filter(x => x.id == 53 || x.id == 1 || x.id == 139).sort((a,b)=>b.votes - a.votes)
-      return this.workList.slice(0, 9).concat(...special)
+      return this.workList.slice(0, 10).concat(...special)
     },
     prizeArray() {
       return ['第一名', '第二名', '第三名', '第四名', '第五名', '人氣獎', '人氣獎', '人氣獎', '人氣獎', '人氣獎', '風格創意獎', '執行長獎', '捧腹大笑獎']
