@@ -6,38 +6,6 @@
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
-                <div class="row no-gutters anniversary">
-                  <div class="col-auto">
-                    <div class="text-bg">
-                      <img
-                        src="@/asset/images/index/header/anniversary-text.png"
-                        alt="普匯5週年"
-                        style="width: 313px"
-                      />
-                    </div>
-                    <div class="links">
-                      <a href="/5th-anniversary#method-nav">
-                        <button class="btn btn-join">
-                          立即參與 <i class="fa fa-chevron-right"></i>
-                        </button>
-                      </a>
-                      <a href="/5th-anniversary#vote-nav">
-                        <button class="btn btn-vote">
-                          立即投票 <i class="fa fa-chevron-right"></i>
-                        </button>
-                      </a>
-                    </div>
-                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
-                  </div>
-                  <div class="col position-releative">
-                    <img
-                      src="@/asset/images/index/header/img57-phone.png"
-                      class="img57"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="swiper-slide">
                 <div class="row no-gutters general">
                   <div class="col-auto">
                     <div class="text-bg">
@@ -67,35 +35,6 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <div class="row no-gutters anniversary">
-                  <div class="col-auto">
-                    <div class="text-bg">
-                      <img
-                        src="@/asset/images/index/header/anniversary-text.png"
-                        alt="普匯5週年"
-                        style="width: 656px"
-                      />
-                    </div>
-                    <div class="links">
-                      <a href="/5th-anniversary#method-nav">
-                        <button class="btn btn-join">
-                          立即參與 <i class="fa fa-chevron-right"></i>
-                        </button>
-                      </a>
-                      <a href="/5th-anniversary#vote-nav">
-                        <button class="btn btn-vote">
-                          立即投票 <i class="fa fa-chevron-right"></i>
-                        </button>
-                      </a>
-                    </div>
-                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
-                  </div>
-                  <div class="col position-releative">
-                    <img src="@/asset/images/index/img57.png" class="img57" />
-                  </div>
-                </div>
-              </div>
               <div class="swiper-slide">
                 <div class="row no-gutters general">
                   <div class="col-auto">
@@ -1302,10 +1241,6 @@ export default {
     // banner
     new Swiper('.sw-headers', {
       loop: true,
-      speed: 2500,
-      autoplay: {
-        delay: 5000,
-      },
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev'
@@ -1360,56 +1295,6 @@ export default {
         top: 180px;
         &::after {
           font-size: 28px;
-        }
-      }
-      .anniversary {
-        flex-wrap: nowrap;
-        .text-bg {
-          height: 192px;
-          width: 656px;
-        }
-        .links {
-          margin: 20px 0;
-          display: flex;
-          gap: 36px;
-          .btn-join {
-            border-radius: 12px;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            color: #fff;
-            background: #083a6e;
-            box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
-            width: 250px;
-            font-size: 28px;
-          }
-          .btn-vote {
-            border-radius: 12px;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            color: #fff;
-            background: #ffc535;
-            box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
-            width: 250px;
-            font-size: 28px;
-          }
-        }
-        .solgan {
-          font-style: normal;
-          font-weight: 700;
-          font-size: 24px;
-          letter-spacing: 0.04em;
-          color: #ffffff;
-        }
-        .img57 {
-          position: relative;
-          height: 550px;
-          top: -15px;
         }
       }
       .general {
