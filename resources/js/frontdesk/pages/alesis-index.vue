@@ -10,7 +10,7 @@
                   <div class="col-auto">
                     <div class="text-bg">
                       <img
-                        src="@/asset/images/index/header/general-phone.png"
+                        src="@/asset/images/index/header/general.png"
                         alt="普匯influx"
                         style="width: 178px"
                       />
@@ -65,6 +65,7 @@
             <router-link to="/collegeLoan" class="product-item">
               <div class="card">
                 <div class="card-title">學生貸</div>
+                <div class="card-sub">最大的學生貸</div>
                 <div class="card-content">
                   <div class="card-subtitle">
                     台灣最大學生貸平台進修、學雜費、3C、機車
@@ -81,6 +82,7 @@
             <router-link to="/workLoan" class="product-item">
               <div class="card">
                 <div class="card-title">上班族貸</div>
+                <div class="card-sub">公開透明借貸</div>
                 <div class="card-content">
                   <div class="card-subtitle">
                     公開透明，無人化自動審核信用評分，申辦不收手續費
@@ -94,6 +96,7 @@
             <router-link to="/engineerLoan" class="product-item">
               <div class="card">
                 <div class="card-title">資訊工程師貸</div>
+                <div class="card-sub">最優惠貸款</div>
                 <div class="card-content">
                   <div class="card-subtitle">
                     工程師最優惠貸款，就在普匯 只要你•工程師
@@ -107,6 +110,7 @@
             <div class="product-item">
               <div class="card">
                 <div class="card-title">汽車貸款</div>
+                <div class="card-sub">只要有車</div>
                 <div class="card-content">
                   <div class="card-subtitle">
                     只要你有車，貸給你車商、購車，都能貸
@@ -120,6 +124,7 @@
             <router-link to="/invest" class="product-item">
               <div class="card">
                 <div class="card-title">投資人專區</div>
+                <div class="card-sub">小額分散 低風險</div>
                 <div class="card-content">
                   <div class="card-subtitle">
                     小額、分期，最佳投資心法低風險、高報酬，複利滾投
@@ -133,6 +138,7 @@
             <div class="product-item">
               <div class="card">
                 <div class="card-title">企業主速貸</div>
+                <div class="card-sub">新創獨惠</div>
                 <div class="card-content">
                   <div class="card-subtitle">
                     速速來貸，最高額度100萬 歡迎新創、微企，快速貸給你
@@ -146,6 +152,7 @@
             <div class="product-item">
               <div class="card">
                 <div class="card-title">信保專案(銀行合作)</div>
+                <div class="card-sub">銀行放款</div>
                 <div class="card-content">
                   <div class="card-subtitle">
                     普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
@@ -159,6 +166,7 @@
             <div class="product-item">
               <div class="card">
                 <div class="card-title">中小企業信貸</div>
+                <div class="card-sub">中小企業專屬</div>
                 <div class="card-content">
                   <div class="card-subtitle">專為中小企業，最高信貸2000萬</div>
                   <div class="card-image">
@@ -170,6 +178,7 @@
             <router-link to="/charitable" class="product-item">
               <div class="card">
                 <div class="card-title">慈善公益</div>
+                <div class="card-sub">一生為你</div>
                 <div class="card-content">
                   <div class="card-subtitle">
                     <div>台大兒童基金會、</div>
@@ -185,6 +194,7 @@
             <router-link to="/promote-code-intro" class="product-item">
               <div class="card">
                 <div class="card-title">分享QR賺外快</div>
+                <div class="card-sub">歡迎OA、兼差</div>
                 <div class="card-content">
                   <div class="card-subtitle">
                     <div>取得普匯QR，分享爽賺 會員、特約商管理專區</div>
@@ -203,6 +213,7 @@
                   <img class="p1" src="@/asset/images/index/mortarboard1.png" />
                 </div>
                 <div class="card-title">學生貸</div>
+                <div class="card-sub">最大的學生貸</div>
                 <div class="card-subtitle">
                   台灣最大學生貸平台進修、學雜費、3C、機車
                 </div>
@@ -214,6 +225,7 @@
                   <img class="p2" src="@/asset/images/index/id1.png" />
                 </div>
                 <div class="card-title">上班族貸</div>
+                <div class="card-sub">公開透明借貸</div>
                 <div class="card-subtitle">
                   公開透明，無人化自動審核信用評分，申辦不收手續費
                 </div>
@@ -225,6 +237,7 @@
                   <img class="p3" src="@/asset/images/index/computer1.png" />
                 </div>
                 <div class="card-title">資訊工程師貸</div>
+                <div class="card-sub">最優惠貸款</div>
                 <div class="card-subtitle">
                   工程師最優惠貸款，就在普匯 只要你•工程師
                 </div>
@@ -236,6 +249,7 @@
                   <img src="@/asset/images/index/car1.png" class="p4" />
                 </div>
                 <div class="card-title">汽車貸款</div>
+                <div class="card-sub">只要有車</div>
                 <div class="card-subtitle">
                   只要你有車，貸給你車商、購車，都能貸
                 </div>
@@ -247,6 +261,7 @@
                   <img src="@/asset/images/index/love1.png" class="p9" />
                 </div>
                 <div class="card-title">慈善公益</div>
+                <div class="card-sub">一生為你</div>
                 <div class="card-subtitle">
                   台大兒童基金會、張鈞甯、鍾欣凌，聯合勸募
                 </div>
@@ -258,6 +273,7 @@
                   <img src="@/asset/images/index/clock1.png" class="p6" />
                 </div>
                 <div class="card-title">企業主速貸</div>
+                <div class="card-sub">新創獨惠</div>
                 <div class="card-subtitle">
                   速速來貸，最高額度100萬 歡迎新創、微企，快速貸給你
                 </div>
@@ -269,6 +285,7 @@
                   <img src="@/asset/images/index/bank1.png" class="p7" />
                 </div>
                 <div class="card-title">信保專案</div>
+                <div class="card-sub">銀行放款</div>
                 <div class="card-subtitle">
                   普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
                 </div>
@@ -280,6 +297,7 @@
                   <img src="@/asset/images/index/building1.png" class="p8" />
                 </div>
                 <div class="card-title">中小企業信貸</div>
+                <div class="card-sub">中小企業專屬</div>
                 <div class="card-subtitle">專為中小企業，最高信貸2000萬</div>
               </div>
             </div>
@@ -289,6 +307,7 @@
                   <img src="@/asset/images/index/line-chart.png" class="p5" />
                 </div>
                 <div class="card-title">投資人專區</div>
+                <div class="card-sub">小額分散 低風險</div>
                 <div class="card-subtitle">
                   小額、分期，最佳投資心法低風險、高報酬，複利滾投
                 </div>
@@ -300,6 +319,7 @@
                   <img src="@/asset/images/index/qr1.png" class="p10" />
                 </div>
                 <div class="card-title">分享QR賺外快</div>
+                <div class="card-sub">歡迎OA、兼差</div>
                 <div class="card-subtitle">
                   取得普匯QR，分享爽賺 會員、特約商管理專區
                 </div>
@@ -1277,7 +1297,7 @@ export default {
 .index-intro {
   background-image: url('~images/index/index-header-bg.png');
   background-position: center;
-  padding: 80px 0 30px;
+  padding: 100px 0 15px;
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 750px;
@@ -1314,15 +1334,15 @@ export default {
         .man {
           left: 200px;
           position: relative;
-          height: 625px;
-          top: -15px;
+          height: 695px;
+          top: -76px;
         }
       }
     }
     .intro-products {
       position: relative;
-      top: -300px;
-      margin-bottom: -300px;
+      top: -360px;
+      margin-bottom: -360px;
       .group {
         &.group-web {
           display: grid;
@@ -1330,7 +1350,7 @@ export default {
         &.group-phone {
           display: none;
         }
-        margin: 16px 45px 16px 30px;
+        margin: 15px 45px 16px 30px;
         grid-template-columns: repeat(5, 1fr);
         gap: 20px;
       }
@@ -1346,95 +1366,86 @@ export default {
       }
       .card-title {
         font-weight: 700;
-        font-size: 22px;
-        line-height: 32px;
+        font-size: 24px;
+        line-height: 35px;
         color: #393939;
+        margin-bottom: 0;
+      }
+      .card-sub {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 23px;
+        color: #036eb7;
       }
       .card-content {
         display: grid;
+        margin-top: 10px;
         grid-template-columns: 10fr 7fr;
-        grid-template-rows: 60px 30px;
-        grid-template-areas:
-          'subtitle image'
-          'link image';
+        grid-template-rows: 60px;
+        grid-template-areas: 'subtitle image';
       }
       .card-subtitle {
         grid-area: subtitle;
         font-style: normal;
         font-weight: 400;
-        font-size: 14px;
-        line-height: 20px;
+        font-size: 13px;
+        line-height: 19px;
         color: #707070;
-      }
-      .card-link {
-        grid-area: link;
-        font-size: 15px;
-        line-height: 22px;
-        text-decoration-line: underline;
-        color: #036eb7;
+        opacity: 0.75;
       }
       .card-image {
         grid-area: image;
         position: relative;
         .p1 {
           position: absolute;
-          transform: scale(1.15);
-          left: 9px;
-          top: 10px;
+          left: 12px;
+          top: -15px;
         }
         .p2 {
           position: absolute;
-          transform: scale(1.15);
-          left: -22px;
-          top: -15px;
+          left: -19px;
+          top: -38px;
         }
         .p3 {
           position: absolute;
-          transform: scale(1.15);
-          left: 1px;
-          top: 9px;
+          left: 2px;
+          top: -13px;
         }
         .p4 {
           position: absolute;
-          transform: scale(1.15);
           left: 0px;
-          top: 12px;
+          top: -15px;
         }
         .p5 {
           position: absolute;
-          transform: scale(1.15);
-          left: 12px;
-          top: 14px;
+          left: 17px;
+          top: -13px;
         }
         .p6 {
           position: absolute;
-          transform: scale(1.15);
-          left: 12px;
-          top: 10px;
+          left: 15px;
+          top: -16px;
         }
         .p7 {
           position: absolute;
-          transform: scale(1.15);
-          left: 12px;
-          top: 13px;
+          left: 17px;
+          top: -17px;
         }
         .p8 {
           position: absolute;
-          transform: scale(1.15);
-          left: 13px;
-          top: 13px;
+          left: 17px;
+          top: -17px;
         }
         .p9 {
           position: absolute;
-          transform: scale(1.15);
-          left: 4px;
-          top: -6px;
+          left: 9px;
+          top: -32px;
         }
         .p10 {
           position: absolute;
-          transform: scale(1.15);
-          left: 11px;
-          top: 10px;
+          left: 16px;
+          top: -16px;
         }
       }
     }
@@ -1482,7 +1493,7 @@ export default {
       &.concept-2::before {
         display: inline-block;
         content: '「匯」';
-        color: #f29600;
+        color: #ffe200;
         opacity: 1;
         font-size: 40px;
         line-height: 45px;
@@ -1497,7 +1508,7 @@ export default {
       opacity: 1;
     }
     .f-yellow {
-      color: #f29600;
+      color: #ffe200;
       opacity: 1;
     }
   }
@@ -2333,6 +2344,8 @@ export default {
       .intro-products {
         margin-top: -10px;
         padding-bottom: 45px;
+        top: -300px;
+        margin-bottom: -300px;
         .group {
           &.group-web {
             display: none;
@@ -2348,13 +2361,13 @@ export default {
       .product-item {
         .card {
           width: auto;
-          padding: 8px 8px 16px;
+          padding: 8px;
           position: relative;
           display: grid;
           grid-template-areas:
             '. image'
-            'subtitle image'
-            'link image';
+            'sub image'
+            'subtitle image';
           grid-template-columns: 250px 1fr;
           grid-template-rows: auto auto;
           font-size: 12px;
@@ -2370,6 +2383,10 @@ export default {
             padding-bottom: 15px;
           }
         }
+        .card-sub {
+          grid-area: sub;
+          font-size: 13px;
+        }
         .card-subtitle {
           margin: 0;
           font-size: 12px;
@@ -2382,61 +2399,61 @@ export default {
             transform: scale(0.65);
             left: initial;
             right: -36px;
-            top: -18px;
+            top: -3px;
           }
           .p2 {
             transform: scale(0.65);
             left: initial;
             right: -73px;
-            top: -22px;
+            top: -7px;
           }
           .p3 {
             transform: scale(0.65);
             left: initial;
             right: -35px;
-            top: -19px;
+            top: -4px;
           }
           .p4 {
             transform: scale(0.65);
             left: initial;
             right: -48px;
-            top: -17px;
+            top: -4px;
           }
           .p5 {
             transform: scale(0.65);
             left: initial;
             right: -33px;
-            top: -7px;
+            top: 5px;
           }
           .p6 {
             transform: scale(0.65);
             left: initial;
             right: -32px;
-            top: -2px;
+            top: 11px;
           }
           .p7 {
             transform: scale(0.65);
             left: initial;
             right: -32px;
-            top: -2px;
+            top: 10px;
           }
           .p8 {
             transform: scale(0.65);
             left: initial;
             right: -30px;
-            top: -17px;
+            top: -4px;
           }
           .p9 {
             transform: scale(0.65);
             left: initial;
             right: -35px;
-            top: -33px;
+            top: -18px;
           }
           .p10 {
             transform: scale(0.65);
             left: initial;
             right: -32px;
-            top: -19px;
+            top: -4px;
           }
         }
         .card-link {
