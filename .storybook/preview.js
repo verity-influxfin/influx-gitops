@@ -1,4 +1,5 @@
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
+import '!style-loader!css-loader!sass-loader!../resources/scss/frontdesk/layout.scss';
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
