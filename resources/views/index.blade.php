@@ -306,7 +306,7 @@
                                 <div class="clear-icon" @click="doClear">x</div>
                             </div>
                             <div class="item ml-3 d-flex align-items-center">
-                                <button @click="openLoginModal" class="login-btn btn d-none" :class="{'d-block':!flag || flag === 'logout'}">登入/加入會員</button>
+                                <button @click="openLoginModal" class="login-btn btn d-none" :class="{'d-block':!flag || flag === 'logout'}">註冊/登入<i class="ml-2 fa fa-arrow-right"></i></button>
                                 <div class="nav-item dropdown d-none" :class="{'d-block':Object.keys(userData).length !== 0}">
                                     <a class="nav-link dropdown-toggle" style="color: #036EB7;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                                     <ul class="dropdown-menu" style="min-width: 5rem;">
@@ -395,7 +395,7 @@
                 <a href="/charitable" class="item">慈善公益</a>
                 <a href="/5th-anniversary" class="item">普匯五週年</a>
                 <div class="item">
-                    <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login btn"><i class="fas fa-user"></i> SIGN IN</button>
+                    <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login-btn btn">註冊/登入<i class="ml-2 fa fa-arrow-right"></i></button>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                         <ul class="dropdown-menu" style="min-width: 5rem;">

@@ -687,10 +687,12 @@ $ci-color: #153a71;
             }
         }
 
-        .login {
-            border-radius: 6px;
-            padding: 5px;
-            border: 1.5px solid #1d82be;
+        .login-btn{
+            padding: 3px 14px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #036EB7;
+            border-radius: 4px;
         }
     }
 }
