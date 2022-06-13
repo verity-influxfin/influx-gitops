@@ -130,7 +130,7 @@ export default {
     },
   },
   created() {
-    $('title').text('小學堂金融科技 - inFlux普匯金融科技');
+    $('title').text('普匯小學堂 - inFlux普匯金融科技');
     let self = this;
     this.$store.dispatch('getKnowledgeData').then(() => {
         self.latest_articles = self.knowledge.map(item => {
