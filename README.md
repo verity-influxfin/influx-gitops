@@ -28,6 +28,12 @@ client
 
 `production:npm run production`
 
+storybook
+
+`develop:npm run storybook or yarn storybook `
+
+`production:npm run build-storybook or yarn build-storybook`
+
 ## 設定更新 elasticsearch 索引
 ```PHP
 php artisan elastic:create-index "App\Es\KnowledgeArticleIndexConfigurator"
