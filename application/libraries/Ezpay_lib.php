@@ -147,9 +147,10 @@ class Ezpay_lib
 		return false;
 	}
 
+    // 取得商店自訂訂單編號(20位)
     private function get_order_no($prefix)
     {
-        return $prefix . round(microtime(TRUE) * 100) . rand(0, 9) . rand(0, 9);
+        return str_pad(($prefix . round(microtime(TRUE) * 100)), 20, rand(0, 9));
     }
 
     private function get_item_info(): bool
