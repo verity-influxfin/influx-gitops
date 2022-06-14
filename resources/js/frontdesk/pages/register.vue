@@ -56,6 +56,15 @@
               />
             </div>
             <div class="input-group">
+              <span class="input-group-addon label-text">推薦碼：</span>
+              <input
+                type="text"
+                class="form-control label-input"
+                placeholder="請輸入推薦碼（選填）"
+                v-model="promoteCode"
+              />
+            </div>
+            <div class="input-group">
               <span class="input-group-addon label-text">驗證碼：</span>
               <div class="captcha-row" style="display: flex">
                 <input
@@ -192,6 +201,7 @@ export default {
     password: "",
     confirmPassword: "",
     code: "",
+    promoteCode:"",
     termsTitle: "",
     termsContent: "",
     message: "",
@@ -212,6 +222,9 @@ export default {
     code (newdata) {
       this.code = newdata.replace(/[^\d]/g, "");
     },
+    promoteCode(newdata){
+        this.promoteCode = newdata.replace(/[^\da-zA-z]/g, "");
+    }
   },
   methods: {
     getCaptcha (type) {
@@ -259,6 +272,7 @@ export default {
       let password = this.password;
       let password_confirmation = this.confirmPassword;
       let code = this.code;
+      let promo = this.promoteCode
       axios
         // do Register => eventRegister
         .post(`${location.origin}/eventRegister`, {
@@ -266,6 +280,7 @@ export default {
           password,
           password_confirmation,
           code,
+          promo
         })
         .then((res) => {
           this.isRegisterSuccess = true;
