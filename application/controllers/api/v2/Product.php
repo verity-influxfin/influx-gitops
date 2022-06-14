@@ -3708,4 +3708,80 @@ class Product extends REST_Controller {
         );
         $this->response(['result' => 'SUCCESS']);
     }
+
+    /**
+     * @api {post} /v2/product/skip_certification_post 借款方 略過徵信項資料上傳
+     * @apiVersion 0.2.0
+     * @apiName PostProductSkipCertification
+     * @apiGroup Product
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {Number} target_id 案件編號
+     * @apiParam {String} certification_ids 欲略過的徵信項號碼 (以,分隔)
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     *     'result':'SUCCESS',
+     * }
+     *
+     * @apiError 200 參數錯誤
+     * @apiErrorExample {Object} 200
+     *     {
+     *       "result": "ERROR",
+     *       "error": "200"
+     *     }
+     *
+     * @apiError 801 標的不存在
+     * @apiErrorExample {Object} 801
+     *     {
+     *       'result': 'ERROR',
+     *       'error': '801'
+     *     }
+     *
+     * @apiError 807 此申請狀態不符
+     * @apiErrorExample {Object} 807
+     *     {
+     *       'result': 'ERROR',
+     *       'error': '807'
+     *     }
+     */
+    public function skip_certification_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        if (empty($input['target_id']) || empty($input['certification_ids']))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $target = $this->target_model->get_by([
+            'id' => $input['target_id'],
+            'user_id' => $this->user_info->id
+        ]);
+        if (empty($target))
+        {
+            $this->response(['result' => 'ERROR', 'error' => TARGET_NOT_EXIST]);
+        }
+        if ($target->status != TARGET_WAITING_APPROVE)
+        {
+            $this->response(['result' => 'ERROR', 'error' => TARGET_APPLY_STATUS_ERROR]);
+        }
+
+        $product = $this->target_lib->get_product_info($target->product_id, $target->sub_product_id);
+        $option_cert_ids = $product['backend_option_certifications'] ?? [];
+        $skip_cert_ids = explode(',', $input['certification_ids']);
+        if(empty($skip_cert_ids) || count(array_intersect($option_cert_ids, $skip_cert_ids)) != count($skip_cert_ids)) {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '欲略過的徵信資料編號有誤']);
+        }
+
+        $target_data = isJson($target->target_data) ? json_decode($target->target_data, TRUE) : [];
+        $target_data = is_array($target_data) ? $target_data : [];
+        $target_data['skip_certification_ids'] = json_encode($skip_cert_ids);
+
+        $this->target_model->update(
+            $input['target_id'], [
+                'target_data' => json_encode($target_data)
+            ]
+        );
+        $this->response(['result' => 'SUCCESS']);
+    }
 }

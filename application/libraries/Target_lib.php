@@ -2222,7 +2222,7 @@ class Target_lib
             'secondInstance' => $sub_product['secondInstance'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
-            'checkOwner' => isset($product['checkOwner']) ? $product['checkOwner'] : false,
+            'checkOwner' => $product['checkOwner'] ?? FALSE,
             'status' => $sub_product['status'],
         );
     }
@@ -2487,4 +2487,19 @@ class Target_lib
         }
         return $date;
     }
+
+    public function get_product_info($product_id, $sub_product_id)
+    {
+        $product_list = $this->CI->config->item('product_list');
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        $product = $product_list[$product_id];
+        if (isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product']))
+        {
+            $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+            $product = $this->sub_product_profile($product, $sub_product_data);
+
+        }
+        return $product;
+    }
+
 }

@@ -318,8 +318,8 @@ class Certification_lib{
 			$info = $this->CI->user_certification_model->get($id);
             if ($info && $info->status != CERTIFICATION_STATUS_FAILED)
             {
-				$info->content 			= json_decode($info->content,true);
-                $info->remark           = $info->remark!=''?json_decode($info->remark,true):[];
+                $info->content = isJson($info->content) ? json_decode($info->content, TRUE) : [];
+                $info->remark = isJson($info->remark) ? json_decode($info->remark, TRUE) : [];
 				$info->remark['fail'] 	= $fail;
 				$certification 	= $this->certification[$info->certification_id];
 				$param = [
@@ -2555,19 +2555,20 @@ class Certification_lib{
 	private function diploma_success($info){
 		if($info){
 			$content 	= $info->content;
-			$data 		= array(
-				'diploma_status'	=> 1,
-				'diploma_name'		=> $content['school'],
-                'diploma_major'		=> $content['major'],
-                'diploma_department'=> $content['department'],
-                'diploma_system'	=> $content['system'],
-				'diploma_image'		=> $content['diploma_image'][0],
-			);
+            if ( ! empty($content) && ! empty($content['school']))
+            {
+                $data = array(
+                    'diploma_status' => 1,
+                    'diploma_name' => $content['school'],
+                    'diploma_major' => $content['major'],
+                    'diploma_department' => $content['department'],
+                    'diploma_system' => $content['system'],
+                    'diploma_image' => $content['diploma_image'][0],
+                );
 
-            $rs = $this->user_meta_progress($data,$info);
-			if($rs){
-                return $this->fail_other_cer($info);
-			}
+                $this->user_meta_progress($data, $info);
+            }
+			return $this->fail_other_cer($info);
 		}
 		return false;
 	}
@@ -3168,6 +3169,14 @@ class Certification_lib{
                 }
             }
 
+            $skip_certification_ids = [];
+            if (isset($target))
+            {
+                $target_data = json_decode($target->target_data ?? '[]', TRUE);
+                $skip_certification_ids = json_decode($target_data['skip_certification_ids']  ?? '[]', TRUE);
+                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
+            }
+
 			foreach($certification as $key => $value){
 				$userId = $user_id;
 				if($company){
@@ -3184,13 +3193,20 @@ class Certification_lib{
                     $value['certificate_status'] = $user_certification->certificate_status;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
-				}else{
-					$value['user_status'] 		 = null;
-					$value['certification_id'] 	 = null;
-					$value['updated_at'] 		 = null;
 				}
+                else
+                {
+                    $value['user_status'] = NULL;
+                    $value['certification_id'] = NULL;
+                    $value['updated_at'] = NULL;
+                }
 
-                    $certification_list[$key] = $value;
+                if (in_array($key, $skip_certification_ids))
+                {
+                    $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                }
+
+                $certification_list[$key] = $value;
             }
 			return $certification_list;
 		}
@@ -3298,7 +3314,7 @@ class Certification_lib{
         isset($productList[$target->product_id]['certifications_stage']) ?
             $productList[$target->product_id]['certifications_stage'] : null;
 
-        $option_cert = $productList['option_certifications'] ?? [];
+        $option_cert = $productList[$target->product_id]['option_certifications'] ?? [];
         if ($target->sub_product_id != 0)
         {
             $this->CI->load->library('loanmanager/product_lib.php');
