@@ -1492,7 +1492,7 @@ class Payment_lib{
 		return $count;
 	}
 
-    public function script_daily_tax_for_puhui($start = '', $end = '')
+    public function script_daily_tax_for_leasing($start = '', $end = '')
     {
         $count = 0;
         if ( ! empty($start) && ! empty($end))
@@ -1506,7 +1506,7 @@ class Payment_lib{
             {
                 $cdate = date('Y-m-d', strtotime("+{$s} day", strtotime($start)));
                 $mdate[] = $cdate;
-                if ($end == $cdate)
+                if (strtotime($end) == strtotime($cdate))
                 {
                     break;
                 }
@@ -1521,7 +1521,7 @@ class Payment_lib{
         $this->CI->load->library('financial_lib');
         $this->CI->load->library('ezpay_lib');
         $this->CI->load->model('transaction/transaction_model');
-        $this->CI->load->model('transaction/receipts_puhui_model');
+        $this->CI->load->model('transaction/receipts_leasing_model');
 
         $receipt_item_name = [
             SOURCE_INTEREST => '還款利息',
@@ -1535,7 +1535,7 @@ class Payment_lib{
                 'entering_date' => $date,
                 'source' => array_keys($receipt_item_name),
                 'status <>' => TRANSACTION_STATUS_DELETED,
-                'user_to' => PUHUI_USERID
+                'user_to' => LEASING_USERID
             ]);
             if (empty($data))
             {
@@ -1552,10 +1552,10 @@ class Payment_lib{
             }
             if ( ! empty($tax_list))
             {
-                $this->CI->ezpay_lib->order_no_prefix = 'puhui';
+                $this->CI->ezpay_lib->order_no_prefix = 'leasing';
                 foreach ($tax_list as $user_id => $tax)
                 {
-                    $today = $this->CI->receipts_puhui_model->get_by(array(
+                    $today = $this->CI->receipts_leasing_model->get_by(array(
                         'entering_date' => $date,
                         'user_id' => $user_id,
                     ));
@@ -1588,7 +1588,7 @@ class Payment_lib{
                         $tax_info = $this->CI->ezpay_lib->send($user_id, TRUE);
                         if ($tax_info)
                         {
-                            $this->CI->receipts_puhui_model->insert(array(
+                            $this->CI->receipts_leasing_model->insert(array(
                                 'entering_date' => $date,
                                 'user_id' => $user_id,
                                 'amount' => $tax_info['amount'],

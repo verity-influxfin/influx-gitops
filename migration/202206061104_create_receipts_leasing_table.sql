@@ -1,4 +1,4 @@
-CREATE TABLE `p2p_transaction`.`receipts_puhui` (
+CREATE TABLE `p2p_transaction`.`receipts_leasing` (
                             `id` bigint(20) NOT NULL AUTO_INCREMENT,
                             `entering_date` date DEFAULT NULL COMMENT '入帳日',
                             `user_id` int(11) NOT NULL DEFAULT '0',

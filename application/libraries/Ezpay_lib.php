@@ -33,7 +33,7 @@ class Ezpay_lib
         $this->item_amt = 0;
     }
 
-    public function send($user_id, $from_puhui = FALSE)
+    public function send($user_id, $from_leasing = FALSE)
     {
         $this->tax_amt = (int) $this->tax_amt;
         $this->total_amt = (int) $this->total_amt;
@@ -44,7 +44,7 @@ class Ezpay_lib
             {
                 return FALSE;
             }
-            if ($user_id === 0 && $from_puhui === TRUE)
+            if ($user_id === 0 && $from_leasing === TRUE)
             { // 普匯租賃開發票
                 $user_info = new stdClass();
                 $user_info->name = COMPANY_NAME;
@@ -57,14 +57,14 @@ class Ezpay_lib
                 $user_info = $this->CI->user_model->get($user_id);
             }
 
-            if ($from_puhui === TRUE)
+            if ($from_leasing === TRUE)
             {
-                $this->merchant_id = EZPAY_ID_PUHUI;
-                $this->hash_key = EZPAY_KEY_PUHUI;
-                $this->hash_iv = EZPAY_IV_PUHUI;
+                $this->merchant_id = EZPAY_ID_LEASING;
+                $this->hash_key = EZPAY_KEY_LEASING;
+                $this->hash_iv = EZPAY_IV_LEASING;
             }
 
-            if ($user_info && (($user_info->email && $from_puhui !== TRUE) || $from_puhui === TRUE))
+            if ($user_info && (($user_info->email && $from_leasing !== TRUE) || $from_leasing === TRUE))
             {
 				$MerchantID = $this->merchant_id;
 				$hashkey 	= $this->hash_key;

@@ -1,8 +1,8 @@
 <?php
 
-class Receipts_puhui_model extends MY_Model
+class Receipts_leasing_model extends MY_Model
 {
-    public $_table = 'receipts_puhui';
+    public $_table = 'receipts_leasing';
     public $before_create = array('before_data_c');
 
     public function __construct()
