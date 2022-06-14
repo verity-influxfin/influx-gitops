@@ -444,10 +444,9 @@ class Scraper extends MY_Admin_Controller
         }
 
         $response = $this->sip_lib->getDeepData($input['university'], $input['account']);
-        if (empty($response['response']))
+        if (empty($response['response']) || ! isset($response['response']))
         {
-            $response = isset($response) ? $response['response'] : ['message' => 'sip not response'];
-            $this->json_output->setStatusCode(401)->setResponse($response)->send();
+            $this->json_output->setStatusCode(401)->setResponse(['message' => 'sip not response'])->send();
         }
         
         $school_status = $this->sip_lib->getUniversityModel($input['university'], $input['account']);
