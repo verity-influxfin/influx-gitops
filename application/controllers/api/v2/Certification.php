@@ -3254,16 +3254,13 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['return_type'];
-            foreach ($fields as $field) {
-                if (! isset($input[$field])) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }else{
-                    $content[$field] = $input[$field];
-                }
+            if (empty($input['receipt_jcic_image']) && empty($input['receipt_postal_image']))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
             }
+            $content = $input;
 
-            $file_fields = ['legal_person_mq_image','postal_image'];
+            $file_fields = ['receipt_jcic_image','receipt_postal_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 if(isset($input[$field])){
@@ -3296,6 +3293,20 @@ class Certification extends REST_Controller {
             ];
             $insert = $this->user_certification_model->insert($param);
             if($insert){
+                $target_info = $this->target_model->order_by('created_at', 'DESC')->get_by([
+                    'user_id' => $user_id,
+                    'status' => TARGET_WAITING_APPROVE,
+                    'product_id' => PRODUCT_SK_MILLION_SMEG
+                ]);
+                if ( ! empty($target_info->id))
+                {
+                    $a11_param = $this->_get_investigationa11($target_info->id);
+                    if ($a11_param && ! $this->user_certification_model->insert_many($a11_param))
+                    {
+                        $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
+                    }
+                }
+
                 $this->response(['result' => 'SUCCESS']);
             }else{
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
