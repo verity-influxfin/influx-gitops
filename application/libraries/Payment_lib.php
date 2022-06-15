@@ -1534,7 +1534,8 @@ class Payment_lib{
             $data = $this->CI->transaction_model->order_by('user_from', 'ASC')->get_many_by([
                 'entering_date' => $date,
                 'source' => array_keys($receipt_item_name),
-                'status <>' => TRANSACTION_STATUS_DELETED,
+                'status' => TRANSACTION_STATUS_PAID_OFF,
+                'passbook_status' => 1,
                 'user_to' => LEASING_USERID
             ]);
             if (empty($data))
