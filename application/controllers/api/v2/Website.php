@@ -990,7 +990,7 @@ class Website extends REST_Controller {
         $report_data = $this->user_lib->get_investor_report($token_data->id, [], date('Y-m-d'));
         $html = $this->load->view('admin/excel/investor_report', ['data' => $report_data], TRUE);
         $spreadsheet = $this->spreadsheet_lib->get_investor_report_from_html($html, $report_data);
-        $this->spreadsheet_lib->download('投資人報告書.xlsx', $spreadsheet);
+        $this->spreadsheet_lib->download('普匯投資報告書('.$token_data->id.').xlsx', $spreadsheet);
         exit(1);
     }
 

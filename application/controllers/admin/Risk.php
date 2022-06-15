@@ -100,10 +100,7 @@ class Risk extends MY_Admin_Controller {
         {
             if ( ! isset($user_prod_list[$target->product_id][$target->sub_product_id]))
             {
-                if ( ! in_array($target->sub_product_id, [STAGE_CER_TARGET, 0]))
-                {
-                    $product_info = $this->product_lib->getProductInfo($product_id, $target->sub_product_id);
-                }
+                $product_info = $this->product_lib->getProductInfo($product_id, $target->sub_product_id);
                 $user_prod_list[$target->product_id][$target->sub_product_id] = $product_info['name'];
             }
 

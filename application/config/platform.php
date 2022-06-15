@@ -108,7 +108,8 @@ $config['admin_menu'] = [
         'promote_list'  => '推薦有賞',
         'promote_reward_list'  => '推薦有賞放款',
         'qrcode_projects'     => 'QRcode方案設定',
-        'qrcode_contracts'    => 'QRcode合約審核'
+        'qrcode_contracts'    => 'QRcode合約審核',
+        'sales_report' => '績效統計表',
     ],
     'Account' => [
         'parent_name' => '財務作業',
@@ -2090,6 +2091,7 @@ $config['certifications'] = [
     1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '公司授權核實', 'status' => 1, 'description' => '公司授權核實', 'optional' => []],
 
     1021 => ['id' => CERTIFICATION_PASSBOOK, 'alias' => 'passbook', 'name' => '主要往來存摺', 'status' => 1, 'description' => '提供主要往來存摺', 'optional' => []],
+    1022 => ['id' => CERTIFICATION_TARGET_APPLY, 'alias' => 'target_apply', 'name' => '開通法人認購債權', 'status' => 1, 'description' => '人工審核是否開通法人認購債權', 'optional' => []],
 
     2000 => ['id' => CERTIFICATION_SALESDETAIL, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
@@ -2307,6 +2309,8 @@ $config['certifications_msg'] = [
         '請提供半年內之良民證，謝謝您！',
         '未上傳良民證資料',
     ],
+    CERTIFICATION_SIMPLIFICATIONFINANCIAL => [],
+    CERTIFICATION_SIMPLIFICATIONJOB => [],
 
     1000 => [],
     1001 => [],

@@ -845,6 +845,28 @@ class Product extends REST_Controller {
                 }
             }
 
+            // 舊版一鍵送出流程殘留的狀態，在起案的時候應改回待驗證
+            $this->load->model('user/user_certification_model');
+            $cert_ids = array_column($this->user_certification_model->as_array()->get_many_by(['user_id' => $user_id,
+                'status' => [CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION, CERTIFICATION_STATUS_AUTHENTICATED]]), 'id');
+            if ( ! empty($cert_ids))
+            {
+                $this->user_certification_model->update_by(['id' => $cert_ids],
+                    ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE, 'sys_check' => 0]);
+
+                $insert_params = [];
+                foreach ($cert_ids as $cert_id)
+                {
+                    $insert_params[] = [
+                        'user_certification_id' => $cert_id,
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+                        'change_admin' => 0
+                    ];
+                }
+                $this->load->model('log/log_usercertification_model');
+                $this->log_usercertification_model->insert_many($insert_params);
+            }
+
             if(method_exists($this, $method)){
                 $this->$method($param,$product,$input);
             }

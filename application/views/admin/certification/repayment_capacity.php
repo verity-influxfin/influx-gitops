@@ -1,5 +1,5 @@
 <?php
-if ($status != CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+if ( ! in_array($status, [CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_SUCCEED]))
 {
     $disabled = 'disabled';
     $btn_hidden = 'hidden';

@@ -513,9 +513,6 @@ class Credit_lib{
             }
         }
 
-        if($stage_cer != 0) {
-            $expire_time = strtotime('+1 days', $time);
-        }
         $param['expire_time'] = $expire_time;
 
         // 月薪低於特定值，不能超過特定倍數的額度

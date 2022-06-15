@@ -2484,11 +2484,15 @@ class Certification extends REST_Controller {
             //必填欄位
 			$fields 	= ['tax_id','industry','salary'];//,'company'
 			foreach ($fields as $field) {
-				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}else{
-					$content[$field] = $input[$field];
-				}
+                if ( ! isset($input[$field]))
+                {
+                    log_message('error', "[job_post][{$user_id}]The argument {$field} is not settled.");
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                }
+                else
+                {
+                    $content[$field] = $input[$field];
+                }
 			}
 
 			// to do : 加入商業司爬蟲相關機制
@@ -2525,7 +2529,8 @@ class Certification extends REST_Controller {
 			$content['LaborInsSalary'] = isset($input['LaborInsSalary']) ? $input['LaborInsSalary'] : '';
 
 			if(!array_key_exists($input['industry'],$industry_name)){
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                log_message('error', "[job_post][{$user_id}]The industry {$input['industry']} is not existed.");
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 
             isset($input['incomeDate'])?$content['incomeDate']=($input['incomeDate']>=1&&$input['incomeDate']<=31?$input['incomeDate']:5):"";
@@ -2585,6 +2590,8 @@ class Certification extends REST_Controller {
     						$content[$field][] = $v->url;
     					}
     				}else{
+                        log_message('error', "[job_post][{$user_id}]File fields are ".implode(",", $file_fields).".");
+                        log_message('error', "[job_post][{$user_id}]The parameter {$field}({$input[$field]}) lack of the image.");
     					$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
     				}
                 }

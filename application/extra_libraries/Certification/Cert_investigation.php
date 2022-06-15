@@ -234,7 +234,8 @@ class Cert_investigation extends Certification_base
      * @return bool
      */
     public function post_failure($sys_check): bool {
-        return TRUE;
+        // 退聯徵時，需退掉所有還款力計算
+        return $this->CI->certification_lib->set_fail_repayment_capacity($this->certification['user_id'], '因聯合徵信報告審核失敗');
     }
 
     /**

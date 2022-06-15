@@ -485,7 +485,7 @@ class Certification_lib{
         $images = [];
 
         $client = new GuzzleHttp\Client();
-        try 
+        try
         {
             foreach ($image_types as $key => $type)
             {
@@ -880,6 +880,10 @@ class Certification_lib{
                         else if ($sip_log['response']['status'] == 'university_not_enabled')
                         {
                             $verifiedResult->addMessage('SIP學校為黑名單，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                        }
+                        else if ($sip_log['response']['status'] == 'university_not_crawlable')
+                        {
+                            $verifiedResult->addMessage('SIP學校無法爬取，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                         }
                         // 爬蟲未跑完
                         else if ($sip_log['response']['status'] == 'started' || $sip_log['response']['status'] == 'retry' || $sip_log['response']['status'] == 'requested')
@@ -2231,6 +2235,16 @@ class Certification_lib{
 
 	private function email_success($info){
 		if($info){
+            if (empty($info->content))
+            {
+                log_message('error', json_encode(['function_name' => 'email_success', 'message' => "Content of use_certification which id is {$info->id} is empty."]));
+            }
+
+            if (empty($content['email']))
+            {
+                return FALSE;
+            }
+
 			$content 	= $info->content;
 			$data 		= array(
 				'email_status'	=> 1,
@@ -2247,12 +2261,16 @@ class Certification_lib{
                 }
 
 				$this->CI->user_model->update($info->user_id,array('email'=> $content['email']));
-
-                $this->CI->user_meta_model->insert([
-                    'user_id' => $info->user_id,
-                    'meta_key' => $info->investor == INVESTOR ? 'email_investor' : 'email_borrower',
-                    'meta_value' => $content['email'],
-                ]);
+                $meta_key = $info->investor == INVESTOR ? 'email_investor' : 'email_borrower';
+                $param = ['user_id' => $info->user_id, 'meta_key' => $meta_key];
+                if ($this->CI->user_meta_model->get_by($param))
+                {
+                    $this->CI->user_meta_model->update_by($param, ['meta_value' => $content['email']]);
+                }
+                else
+                {
+                    $this->CI->user_meta_model->insert(array_merge($param, ['meta_value' => $content['email']]));
+                }
                 return $this->fail_other_cer($info);
 			}
 		}
@@ -2468,7 +2486,7 @@ class Certification_lib{
                 isset($content['meta']['posts_in_3months']) ? $data['posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
                 isset($content['meta']['key_word']) ? $data['key_word'] = $content['meta']['key_word'] : '';
             }
-            
+
             // 社交認證完成，觸發 ig 司法院爬蟲
             $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($data['ig_username']);
             if(isset($verdicts_statuses['status']))
@@ -3867,6 +3885,41 @@ class Certification_lib{
             $credit_card * 0.1 / 1000,
             2
         );
+    }
+
+    public function set_fail_repayment_capacity(int $user_id, string $msg_backend = '', string $msg_client = ''): bool
+    {
+        $repayment_capacity_list = $this->CI->user_certification_model->get_many_by([
+            'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
+            'user_id' => $user_id,
+            'status !=' => CERTIFICATION_STATUS_FAILED
+        ]);
+
+        if (empty($repayment_capacity_list))
+        {
+            return TRUE;
+        }
+
+        $rs = TRUE;
+        foreach ($repayment_capacity_list as $info)
+        {
+            $cert = Certification_factory::get_instance_by_model_resource($info);
+            if ( ! empty($msg_backend))
+                $cert->result->addMessage($msg_backend, CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+            if ( ! empty($msg_client))
+                $cert->result->addMessage($msg_client, CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+
+            $remark = json_decode($info->remark, TRUE);
+            $remark['fail'] = implode("、", $cert->result->getAPPMessage(CERTIFICATION_STATUS_FAILED));
+            $remark['verify_result'] = $cert->result->getAllMessage(MessageDisplay::Backend);
+            $remark['verify_result_json'] = $cert->result->jsonDump();
+
+            $this->CI->user_certification_model->update($info->id, [
+                'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
+            ]);
+            $rs = $rs && $cert->set_failure(TRUE);
+        }
+        return $rs;
     }
 
     public function get_content($user_id, $investor, $certification_id_list) {

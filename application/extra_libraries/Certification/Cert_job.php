@@ -179,15 +179,22 @@ class Cert_job extends Certification_base
     {
         // 更新過期時間
         $this->CI->load->library('certification_lib');
-        preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/',
-            $this->transform_data['report_date'], $regexResult);
-        if ( ! empty($regexResult))
+        if ( ! empty($this->transform_data['report_date']))
         {
-            $date = sprintf("%d-%'.02d-%'.02d", intval($regexResult['year']) + 1911,
-                intval($regexResult['month']), intval($regexResult['day']));
-            $expire_time = \DateTime::createFromFormat('Y-m-d', $date);
-            $expire_time->modify("+ {$this->valid_month} month");
-            $this->expired_timestamp = $expire_time->getTimestamp();
+            preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/',
+                $this->transform_data['report_date'], $regexResult);
+            if ( ! empty($regexResult))
+            {
+                $date = sprintf("%d-%'.02d-%'.02d", intval($regexResult['year']) + 1911,
+                    intval($regexResult['month']), intval($regexResult['day']));
+                $expire_time = \DateTime::createFromFormat('Y-m-d', $date);
+                $expire_time->modify("+ {$this->valid_month} month");
+                $this->expired_timestamp = $expire_time->getTimestamp();
+            }
+        }
+        else
+        {
+            $this->expired_timestamp = strtotime("+ {$this->valid_month} month", time());
         }
         return TRUE;
     }
@@ -249,7 +256,8 @@ class Cert_job extends Certification_base
             $this->CI->certification_lib->withdraw_investigation($this->certification['user_id'], $this->certification['investor']);
         }
 
-        return TRUE;
+        // 退工作收入證明時，需退掉所有還款力計算
+        return $this->CI->certification_lib->set_fail_repayment_capacity($this->certification['user_id'], '因工作收入證明審核失敗');
     }
 
     /**

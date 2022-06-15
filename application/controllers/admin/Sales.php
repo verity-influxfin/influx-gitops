@@ -1,624 +1,529 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-require(APPPATH . '/libraries/MY_Admin_Controller.php');
+require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
-class Sales extends MY_Admin_Controller
-{
+class Sales extends MY_Admin_Controller {
+	
+	protected $edit_method = array('promote_reward_loan');
 
-    protected $edit_method = array('promote_reward_loan');
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('user/user_meta_model');
+		$this->load->model('admin/partner_model');
+		$this->load->model('admin/partner_type_model');
+		$this->load->model('user/sale_goals_model');
+ 	}
+	
+	public function index(){
+		$get 			= $this->input->get(NULL, TRUE);
+		$sdate 			= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate 			= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$page_data 		= array('sdate'=>$sdate,'edate'=>$edate);	
+		$list			= array();
+		$count 			= 0;
+		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
+		$admins_name 	= $this->admin_model->get_name_list();
+		$partner_type 	= $this->partner_type_model->get_name_list();
+		$partner_list 	= $this->partner_model->get_many_by(array('status'=>1));
+		$partner_list_byid = array();
+		if($partner_list){
+			$partner_qrcode = array();
+			foreach($partner_list as $key => $value){
+				$partner_qrcode[$value->my_promote_code] = $value->id;
+				$partner_list_byid[$value->id] = $value;
+			}
+		}
+		
+		
+		if($sdate=='all' || $edate=='all'){
+			$target_list	= $this->target_model->get_all();
+		}else{
+			$target_list	= $this->target_model->get_many_by(array(
+				'created_at >='	=> strtotime($sdate.' 00:00:00'),
+				'created_at <='	=> strtotime($edate.' 23:59:59'),
+			));
+		}
+		if(!empty($target_list)){
+			foreach($target_list as $key => $value){
+				$count++;
+				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
+					$list['partner'][$partner_qrcode[$value->promote_code]][$value->status][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
+						'created_date'	=> date('Y-m-d',$value->created_at),
+					);
+				}
+				
+				if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
+					$list['sales'][$admins_qrcode[$value->promote_code]][$value->status][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
+						'created_date'	=> date('Y-m-d',$value->created_at),
+					);
+				}
+				
+				if($value->promote_code=='' || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+					$list['platform'][$value->status][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
+						'created_date'	=> date('Y-m-d',$value->created_at),
+					);
+				}
+			}
+		}
+		$page_data['list'] 			= $list;
+		$page_data['count'] 		= $count;
+		$page_data['partner_list'] 	= $partner_list_byid;
+		$page_data['admins_name'] 	= $admins_name;
+		$page_data['partner_type'] 	= $partner_type;
+		$page_data['target_status'] = $this->target_model->status_list;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model('user/user_meta_model');
-        $this->load->model('admin/partner_model');
-        $this->load->model('admin/partner_type_model');
-    }
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/sales_loan',$page_data);
+		$this->load->view('admin/_footer');
+	}
 
-    public function index()
-    {
-        $get = $this->input->get(NULL, TRUE);
-        $sdate = isset($get['sdate']) && $get['sdate'] ? $get['sdate'] : date('Y-m-d');
-        $edate = isset($get['edate']) && $get['edate'] ? $get['edate'] : date('Y-m-d');
-        $page_data = array('sdate' => $sdate, 'edate' => $edate);
-        $list = array();
-        $count = 0;
-        $admins_qrcode = $this->admin_model->get_qrcode_list();
-        $admins_name = $this->admin_model->get_name_list();
-        $partner_type = $this->partner_type_model->get_name_list();
-        $partner_list = $this->partner_model->get_many_by(array('status' => 1));
-        $partner_list_byid = array();
-        if ($partner_list)
-        {
-            $partner_qrcode = array();
-            foreach ($partner_list as $key => $value)
-            {
-                $partner_qrcode[$value->my_promote_code] = $value->id;
-                $partner_list_byid[$value->id] = $value;
-            }
-        }
+	public function register_report(){
+		$get 			= $this->input->get(NULL, TRUE);
+		$sdate 			= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate 			= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$page_data 		= ['sdate'=>$sdate,'edate'=>$edate];	
+		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
+		$partner_list 	= $this->partner_model->get_many_by(['status'=>1]);
+		$partner_id_list = [];
+		$partner_qrcode = [];
+		$count 			= 0;
+		if($partner_list){
+			foreach($partner_list as $key => $value){
+				$partner_qrcode[$value->my_promote_code] = $value->id;
+				$partner_id_list[$value->id] = $value;
+			}
+		}
+		
+		$list = [
+			'platform'	=>['count'=>0,'name'=>0,'school'=>0,'fb'=>0],
+			'partner' 	=>[],
+			'marketing' =>[],
+			'sales' 	=>[],
+		];
+		$user_list		= $this->user_model->get_many_by([
+			'status' 		=> 1,
+			'created_at >='	=> strtotime($sdate.' 00:00:00'),
+			'created_at <='	=> strtotime($edate.' 23:59:59'),
+		]);
+		if(!empty($user_list)){
+			$total_list = [];
+			$user_ids 	= [];
+			foreach($user_list as $key => $value){
+				$user_ids[] = $value->id;
+				$total_list[$value->id] 		= $value;
+				$total_list[$value->id]->school = 0;
+			}
+			
+			$school_list 	= $this->user_meta_model->get_many_by([
+				'user_id' =>$user_ids,
+				'meta_key'=>'student_status',
+			]);
+			if(!empty($school_list)){
+				foreach($school_list as $key => $value){
+					$total_list[$value->user_id]->school = 1;
+				}
+			}
+			
+			foreach($total_list as $key => $value){
+				$count++;
+				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
+					$id = $partner_qrcode[$value->promote_code];
+					if(!isset($list['partner'][$id])){
+						$list['partner'][$id] = ['count'=>0,'name'=>0,'school'=>0,'fb'=>0];
+					}
+					
+					$list['partner'][$id]['count'] ++;
+					if($value->school)
+						$list['partner'][$id]['school'] ++;
+					if(!empty($value->nickname))
+						$list['partner'][$id]['fb'] ++;
+					if(!empty($value->name))
+						$list['partner'][$id]['name'] ++;
+					
+				}else if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
+					$id = $admins_qrcode[$value->promote_code];
+					if(!isset($list['sales'][$id])){
+						$list['sales'][$id] = ['count'=>0,'name'=>0,'school'=>0,'fb'=>0];
+					}
+					
+					$list['sales'][$id]['count'] ++;
+					if($value->school)
+						$list['sales'][$id]['school'] ++;
+					if(!empty($value->nickname))
+						$list['sales'][$id]['fb'] ++;
+					if(!empty($value->name))
+						$list['sales'][$id]['name'] ++;
+					
+				} elseif ($value->promote_code) {
+					if (!isset($list['marketing'][$value->promote_code])) {
+						$list['marketing'][$value->promote_code] = ['count'=>0,'name'=>0,'school'=>0,'fb'=>0];
+					}
 
+					$list['marketing'][$value->promote_code]['count'] ++;
+					if($value->school)
+						$list['marketing'][$value->promote_code]['school'] ++;
+					if(!empty($value->nickname))
+						$list['marketing'][$value->promote_code]['fb'] ++;
+					if(!empty($value->name))
+						$list['marketing'][$value->promote_code]['name'] ++;
+				} else{
+					$list['platform']['count'] ++;
+					if($value->school)
+						$list['platform']['school'] ++;
+					if(!empty($value->nickname))
+						$list['platform']['fb'] ++;
+					if(!empty($value->name))
+						$list['platform']['name'] ++;
+				}
+				
+			}
+		}
 
-        if ($sdate == 'all' || $edate == 'all')
-        {
-            $target_list = $this->target_model->get_all();
-        }
-        else
-        {
-            $target_list = $this->target_model->get_many_by(array(
-                'created_at >=' => strtotime($sdate . ' 00:00:00'),
-                'created_at <=' => strtotime($edate . ' 23:59:59'),
-            ));
-        }
-        if ( ! empty($target_list))
-        {
-            foreach ($target_list as $key => $value)
-            {
-                $count++;
-                if (isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code])
-                {
-                    $list['partner'][$partner_qrcode[$value->promote_code]][$value->status][] = array(
-                        'id' => $value->id,
-                        'amount' => $value->amount,
-                        'loan_amount' => $value->loan_amount,
-                        'platform_fee' => $value->platform_fee,
-                        'loan_date' => $value->loan_date,
-                        'status' => $value->status,
-                        'promote_code' => $value->promote_code,
-                        'created_date' => date('Y-m-d', $value->created_at),
-                    );
-                }
+		$page_data['list'] 			= $list;
+		$page_data['partner_list'] 	= $partner_id_list;
+		$page_data['admins_name'] 	= $this->admin_model->get_name_list();
+		$page_data['partner_type'] 	= $this->partner_type_model->get_name_list();
+		$page_data['count'] 		= $count;
 
-                if (isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code])
-                {
-                    $list['sales'][$admins_qrcode[$value->promote_code]][$value->status][] = array(
-                        'id' => $value->id,
-                        'amount' => $value->amount,
-                        'loan_amount' => $value->loan_amount,
-                        'platform_fee' => $value->platform_fee,
-                        'loan_date' => $value->loan_date,
-                        'status' => $value->status,
-                        'promote_code' => $value->promote_code,
-                        'created_date' => date('Y-m-d', $value->created_at),
-                    );
-                }
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/sales_register',$page_data);
+		$this->load->view('admin/_footer');
+	}
+	
+	public function bonus_report(){
+		$get 		= $this->input->get(NULL, TRUE);
+		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$page_data 		= array('sdate'=>$sdate,'edate'=>$edate);	
+		$list			= array();
+		$count 			= 0;
+		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
+		$admins_name 	= $this->admin_model->get_name_list();
+		$partner_type 	= $this->partner_type_model->get_name_list();
+		$partner_list 	= $this->partner_model->get_many_by(array('status'=>1));
+		$partner_list_byid = array();
+		if($partner_list){
+			$partner_qrcode = array();
+			foreach($partner_list as $key => $value){
+				$partner_qrcode[$value->my_promote_code] = $value->id;
+				$partner_list_byid[$value->id] = $value;
+			}
+		}
+		
+		$target_list	= $this->target_model->get_many_by(array(
+			'status'		=> array(5,10),
+			'loan_date >='	=> $sdate,
+			'loan_date <='	=> $edate,
+		));
 
-                if ($value->promote_code == '' || ( ! isset($admins_qrcode[$value->promote_code]) && ! isset($partner_qrcode[$value->promote_code])))
-                {
-                    $list['platform'][$value->status][] = array(
-                        'id' => $value->id,
-                        'amount' => $value->amount,
-                        'loan_amount' => $value->loan_amount,
-                        'platform_fee' => $value->platform_fee,
-                        'loan_date' => $value->loan_date,
-                        'status' => $value->status,
-                        'promote_code' => $value->promote_code,
-                        'created_date' => date('Y-m-d', $value->created_at),
-                    );
-                }
-            }
-        }
-        $page_data['list'] = $list;
-        $page_data['count'] = $count;
-        $page_data['partner_list'] = $partner_list_byid;
-        $page_data['admins_name'] = $admins_name;
-        $page_data['partner_type'] = $partner_type;
-        $page_data['target_status'] = $this->target_model->status_list;
+		if(!empty($target_list)){
+			foreach($target_list as $key => $value){
+				$count++;
+				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
+					$list['partner'][$partner_qrcode[$value->promote_code]][] = array(
+						'id'			=> $value->id,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
+					);
+				}
+				
+				if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
+					$list['sales'][$admins_qrcode[$value->promote_code]][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
+					);
+				} elseif ($value->promote_code) {
+					if (!isset($list['marketing'][$value->promote_code])) {
+						$list['marketing'][$value->promote_code] = [];
+					}
+					$list['marketing'][$value->promote_code][] = [
+						'id' => $value->id,
+						'amount' => $value->amount,
+						'loan_amount' => $value->loan_amount,
+						'platform_fee' => $value->platform_fee,
+						'loan_date' => $value->loan_date,
+						'status' => $value->status,
+						'promote_code' => $value->promote_code,
+					];
+				}
+				
+				if($value->promote_code=='' || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+					$list['platform'][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
+					);
+				}
+			}
+		}
+		$page_data['list'] 			= $list;
+		$page_data['count'] 		= $count;
+		$page_data['partner_list'] 	= $partner_list_byid;
+		$page_data['admins_name'] 	= $admins_name;
+		$page_data['partner_type'] 	= $partner_type;
+		$page_data['target_status'] = $this->target_model->status_list;
 
-        $this->load->view('admin/_header');
-        $this->load->view('admin/_title', $this->menu);
-        $this->load->view('admin/sales_loan', $page_data);
-        $this->load->view('admin/_footer');
-    }
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/sales_bonus',$page_data);
+		$this->load->view('admin/_footer');
+	}
 
-    public function register_report()
-    {
-        $get = $this->input->get(NULL, TRUE);
-        $sdate = isset($get['sdate']) && $get['sdate'] ? $get['sdate'] : date('Y-m-d');
-        $edate = isset($get['edate']) && $get['edate'] ? $get['edate'] : date('Y-m-d');
-        $page_data = ['sdate' => $sdate, 'edate' => $edate];
-        $admins_qrcode = $this->admin_model->get_qrcode_list();
-        $partner_list = $this->partner_model->get_many_by(['status' => 1]);
-        $partner_id_list = [];
-        $partner_qrcode = [];
-        $count = 0;
-        if ($partner_list)
-        {
-            foreach ($partner_list as $key => $value)
-            {
-                $partner_qrcode[$value->my_promote_code] = $value->id;
-                $partner_id_list[$value->id] = $value;
-            }
-        }
+	public function bonus_report_detail(){
+		$get 		= $this->input->get(NULL, TRUE);
+		$type 		= isset($get['type'])&&$get['type']?$get['type']:date('Y-m-d');
+		$id 		= isset($get['id'])&&$get['id']?$get['id']:0;
+		$code		= isset($get['code'])&&$get['code']?$get['code'] : '';
+		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$list		= array();
+		$target_list = array();
+		$name 		 = '';
 
-        $list = [
-            'platform' => ['count' => 0, 'name' => 0, 'school' => 0, 'fb' => 0],
-            'partner' => [],
-            'marketing' => [],
-            'sales' => [],
-        ];
-        $user_list = $this->user_model->get_many_by([
-            'status' => 1,
-            'created_at >=' => strtotime($sdate . ' 00:00:00'),
-            'created_at <=' => strtotime($edate . ' 23:59:59'),
-        ]);
-        if ( ! empty($user_list))
-        {
-            $total_list = [];
-            $user_ids = [];
-            foreach ($user_list as $key => $value)
-            {
-                $user_ids[] = $value->id;
-                $total_list[$value->id] = $value;
-                $total_list[$value->id]->school = 0;
-            }
+		if($type=='partner' && $id){
+			$info  = $this->partner_model->get($id);
+			if($info){
+				$name			= $info->company;
+				$target_list	= $this->target_model->order_by('loan_date')->get_many_by(array(
+					'status'		=> array(5,10),
+					'loan_date >='	=> $sdate,
+					'loan_date <='	=> $edate,
+					'promote_code'  => $info->my_promote_code,
+				));
+			}
+		}
 
-            $school_list = $this->user_meta_model->get_many_by([
-                'user_id' => $user_ids,
-                'meta_key' => 'student_status',
-            ]);
-            if ( ! empty($school_list))
-            {
-                foreach ($school_list as $key => $value)
-                {
-                    $total_list[$value->user_id]->school = 1;
-                }
-            }
+		if($type=='sales' && $id){
+			$info  = $this->admin_model->get($id);
+			if($info){
+				$name			= $info->name;
+				$target_list	= $this->target_model->order_by('loan_date')->get_many_by(array(
+					'status'		=> array(5,10),
+					'loan_date >='	=> $sdate,
+					'loan_date <='	=> $edate,
+					'promote_code'  => $info->my_promote_code,
+				));
+			}
+		}
+		
+		if ($type == 'marketing' && $code) {
+			$target_list = $this->target_model->order_by('loan_date')->get_many_by(array(
+				'status' => array(5,10),
+				'loan_date >=' => $sdate,
+				'loan_date <=' => $edate,
+				'promote_code' => $code,
+			));
+		}
 
-            foreach ($total_list as $key => $value)
-            {
-                $count++;
-                if (isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code])
-                {
-                    $id = $partner_qrcode[$value->promote_code];
-                    if ( ! isset($list['partner'][$id]))
-                    {
-                        $list['partner'][$id] = ['count' => 0, 'name' => 0, 'school' => 0, 'fb' => 0];
-                    }
+		if($type=='platform'){
+			$name			= '無分類';
+			$admins_qrcode 	= $this->admin_model->get_qrcode_list();
+			$partner_list 	= $this->partner_model->get_many_by(array('status'=>1));
+			$partner_qrcode = array();
+			if($partner_list){
+				foreach($partner_list as $key => $value){
+					$partner_qrcode[$value->my_promote_code] = $value->id;
+				}
+			}
+			
+			$target_list	= $this->target_model->order_by('loan_date')->get_many_by(array(
+				'status'			=> [5,10],
+				'loan_date >='		=> $sdate,
+				'loan_date <='		=> $edate,
+				'promote_code NOT' 	=> array_merge(array_keys($admins_qrcode),array_keys($partner_qrcode)),
+			));
+		}
+		
+		if(!empty($target_list)){
+			foreach($target_list as $key => $value){
+				if ($type == "platform" && isset($value->promote_code) && $value->promote_code) {
+					continue;
+				}
+				$list[] = $value;
+			}
+		}
+		
+		$page_data = array(
+			'list'			=> $list,
+			'name'			=> $name,
+			'sdate'			=> $sdate,
+			'edate'			=> $edate,
+			'product_list'	=> $this->config->item('product_list'),
+		);
 
-                    $list['partner'][$id]['count']++;
-                    if ($value->school)
-                        $list['partner'][$id]['school']++;
-                    if ( ! empty($value->nickname))
-                        $list['partner'][$id]['fb']++;
-                    if ( ! empty($value->name))
-                        $list['partner'][$id]['name']++;
+		$this->load->view('admin/_header');
+		$this->load->view('admin/sales_bonus_detail',$page_data);
+		$this->load->view('admin/_footer');
+	}
 
-                }
-                else if (isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code])
-                {
-                    $id = $admins_qrcode[$value->promote_code];
-                    if ( ! isset($list['sales'][$id]))
-                    {
-                        $list['sales'][$id] = ['count' => 0, 'name' => 0, 'school' => 0, 'fb' => 0];
-                    }
+	public function accounts()
+	{
+		if (!$this->input->is_ajax_request()) {
+			$this->load->view('admin/_header');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/sales_accounts');
+			$this->load->view('admin/_footer');
+			return;
+		}
 
-                    $list['sales'][$id]['count']++;
-                    if ($value->school)
-                        $list['sales'][$id]['school']++;
-                    if ( ! empty($value->nickname))
-                        $list['sales'][$id]['fb']++;
-                    if ( ! empty($value->name))
-                        $list['sales'][$id]['name']++;
+		$get = $this->input->get(NULL, TRUE);
+		$type = isset($get["type"]) ? $get["type"] : "";
+		$sdate = isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate = isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$category = isset($get["category"]) ? $get["category"] : "";
+		$partnerId = isset($get["partner_id"]) ? $get["partner_id"] : "";
+		$code = isset($get["code"]) ? $get["code"] : "";
+		$adminId = isset($get["admin_id"]) ? $get["admin_id"] : "";
+		$offset = isset($get["offset"]) && $get["offset"] >= 1 ? ($get["offset"] - 1) * 20 : 0;
+		$limit = 20;
 
-                }
-                elseif ($value->promote_code)
-                {
-                    if ( ! isset($list['marketing'][$value->promote_code]))
-                    {
-                        $list['marketing'][$value->promote_code] = ['count' => 0, 'name' => 0, 'school' => 0, 'fb' => 0];
-                    }
+		$this->load->library('output/json_output');
+		if ($category == "partner" || $category == "sales-marketing") {
+			$partners 	= $this->partner_model->get_many_by(['status'=>1]);
+			$partnerQrCode = null;
+			$partnerQrCodes = [];
+			if($partners){
+				foreach($partners as $key => $value){
+					if ($partnerId) {
+						if ($partnerId == $value->id) {
+							$partnerQrCode = $value->my_promote_code;
+						}
+					} else {
+						$partnerQrCodes[] = $value->my_promote_code;
+					}
+				}
+			}
+		}
 
-                    $list['marketing'][$value->promote_code]['count']++;
-                    if ($value->school)
-                        $list['marketing'][$value->promote_code]['school']++;
-                    if ( ! empty($value->nickname))
-                        $list['marketing'][$value->promote_code]['fb']++;
-                    if ( ! empty($value->name))
-                        $list['marketing'][$value->promote_code]['name']++;
-                }
-                else
-                {
-                    $list['platform']['count']++;
-                    if ($value->school)
-                        $list['platform']['school']++;
-                    if ( ! empty($value->nickname))
-                        $list['platform']['fb']++;
-                    if ( ! empty($value->name))
-                        $list['platform']['name']++;
-                }
+		$adminQrCode = "";
+		if ($category == "sales") {
+			if (!$adminId) {
+				$this->json_output->setStatusCode(400)->send();
+			}
+			$adminQrCodes = $this->admin_model->get_qrcode_list();
+			if ($adminQrCodes) {
+				foreach ($adminQrCodes as $qrCode => $id) {
+					if ($id == $adminId) {
+						$adminQrCode = $qrCode;
+						break;
+					}
+				}
+			}
+		}
 
-            }
-        }
+		if ($type == "student") {
+			$filters = [
+				['status', '=', 1],
+				['created_at', '>=', strtotime($sdate.' 00:00:00')],
+				['created_at', '<=', strtotime($edate.' 23:59:59')],
+				['meta_key', '=', 'student_status']
+			];
+			if ($category == "others") {
+				$filters[] = ['promote_code', '=', ''];
+			} elseif ($category == "partner") {
+				if ($partnerQrCode) {
+					$filters[] = ['promote_code', '=', $partnerQrCode];
+				}
+				if ($partnerQrCodes) {
+					$filters[] = ['promote_code', 'in', $partnerQrCodes];
+				}
+			} elseif ($category == 'sales-marketing') {
+				$filters[] = ['promote_code', '!=', ''];
+				$filters[] = ['promote_code', "not in" ,$partnerQrCodes];
+			} elseif ($category == "marketing") {
+				$filters[] = ['promote_code', '=', $code];
+			} elseif ($category == "sales") {
+				$filters[] = ['promote_code', '=', $adminQrCode];
+			}
 
-        $page_data['list'] = $list;
-        $page_data['partner_list'] = $partner_id_list;
-        $page_data['admins_name'] = $this->admin_model->get_name_list();
-        $page_data['partner_type'] = $this->partner_type_model->get_name_list();
-        $page_data['count'] = $count;
+			$users = $this->user_model->getStudents($filters, $offset, $limit);
+		} else {
+			$filters = [
+				'status' => 1,
+				'created_at >='	=> strtotime($sdate.' 00:00:00'),
+				'created_at <='	=> strtotime($edate.' 23:59:59'),
+			];
+			if ($type == "fb") {
+				$filters["nickname !="] = "";
+			}
+			if ($type == "name") {
+				$filters["name !="] = "";
+			}
+			if ($category == "others") {
+				$filters["promote_code"] = "";
+			} elseif ($category == "partner") {
+				if ($partnerQrCode) {
+					$filters['promote_code'] = $partnerQrCode;
+				}
+				if ($partnerQrCodes) {
+					$filters['promote_code'] = $partnerQrCodes;
+				}
+			} elseif ($category == 'sales-marketing') {
+				$filters['promote_code !='] = '';
+				$filters['promote_code NOT'] = $partnerQrCodes;
+			} elseif ($category == "marketing") {
+				$filters['promote_code'] = $code;
+			} elseif ($category == "sales") {
+				$filters['promote_code'] = $adminQrCode;
+			}
 
-        $this->load->view('admin/_header');
-        $this->load->view('admin/_title', $this->menu);
-        $this->load->view('admin/sales_register', $page_data);
-        $this->load->view('admin/_footer');
-    }
+			$users = $this->user_model->limit($limit, $offset)->get_many_by($filters);
+		}
 
-    public function bonus_report()
-    {
-        $get = $this->input->get(NULL, TRUE);
-        $sdate = isset($get['sdate']) && $get['sdate'] ? $get['sdate'] : date('Y-m-d');
-        $edate = isset($get['edate']) && $get['edate'] ? $get['edate'] : date('Y-m-d');
-        $page_data = array('sdate' => $sdate, 'edate' => $edate);
-        $list = array();
-        $count = 0;
-        $admins_qrcode = $this->admin_model->get_qrcode_list();
-        $admins_name = $this->admin_model->get_name_list();
-        $partner_type = $this->partner_type_model->get_name_list();
-        $partner_list = $this->partner_model->get_many_by(array('status' => 1));
-        $partner_list_byid = array();
-        if ($partner_list)
-        {
-            $partner_qrcode = array();
-            foreach ($partner_list as $key => $value)
-            {
-                $partner_qrcode[$value->my_promote_code] = $value->id;
-                $partner_list_byid[$value->id] = $value;
-            }
-        }
+		if (!$users) {
+			$this->json_output->setStatusCode(204)->send();
+		}
 
-        $target_list = $this->target_model->get_many_by(array(
-            'status' => array(5, 10),
-            'loan_date >=' => $sdate,
-            'loan_date <=' => $edate,
-        ));
+		$this->load->library('output/user/user_output', ["data" => $users]);
 
-        if ( ! empty($target_list))
-        {
-            foreach ($target_list as $key => $value)
-            {
-                $count++;
-                if (isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code])
-                {
-                    $list['partner'][$partner_qrcode[$value->promote_code]][] = array(
-                        'id' => $value->id,
-                        'loan_amount' => $value->loan_amount,
-                        'platform_fee' => $value->platform_fee,
-                        'loan_date' => $value->loan_date,
-                        'status' => $value->status,
-                        'promote_code' => $value->promote_code,
-                    );
-                }
+		$userOutputs = $this->user_output->toMany("mapForSales");
 
-                if (isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code])
-                {
-                    $list['sales'][$admins_qrcode[$value->promote_code]][] = array(
-                        'id' => $value->id,
-                        'amount' => $value->amount,
-                        'loan_amount' => $value->loan_amount,
-                        'platform_fee' => $value->platform_fee,
-                        'loan_date' => $value->loan_date,
-                        'status' => $value->status,
-                        'promote_code' => $value->promote_code,
-                    );
-                }
-                elseif ($value->promote_code)
-                {
-                    if ( ! isset($list['marketing'][$value->promote_code]))
-                    {
-                        $list['marketing'][$value->promote_code] = [];
-                    }
-                    $list['marketing'][$value->promote_code][] = [
-                        'id' => $value->id,
-                        'amount' => $value->amount,
-                        'loan_amount' => $value->loan_amount,
-                        'platform_fee' => $value->platform_fee,
-                        'loan_date' => $value->loan_date,
-                        'status' => $value->status,
-                        'promote_code' => $value->promote_code,
-                    ];
-                }
-
-                if ($value->promote_code == '' || ( ! isset($admins_qrcode[$value->promote_code]) && ! isset($partner_qrcode[$value->promote_code])))
-                {
-                    $list['platform'][] = array(
-                        'id' => $value->id,
-                        'amount' => $value->amount,
-                        'loan_amount' => $value->loan_amount,
-                        'platform_fee' => $value->platform_fee,
-                        'loan_date' => $value->loan_date,
-                        'status' => $value->status,
-                        'promote_code' => $value->promote_code,
-                    );
-                }
-            }
-        }
-        $page_data['list'] = $list;
-        $page_data['count'] = $count;
-        $page_data['partner_list'] = $partner_list_byid;
-        $page_data['admins_name'] = $admins_name;
-        $page_data['partner_type'] = $partner_type;
-        $page_data['target_status'] = $this->target_model->status_list;
-
-        $this->load->view('admin/_header');
-        $this->load->view('admin/_title', $this->menu);
-        $this->load->view('admin/sales_bonus', $page_data);
-        $this->load->view('admin/_footer');
-    }
-
-    public function bonus_report_detail()
-    {
-        $get = $this->input->get(NULL, TRUE);
-        $type = isset($get['type']) && $get['type'] ? $get['type'] : date('Y-m-d');
-        $id = isset($get['id']) && $get['id'] ? $get['id'] : 0;
-        $code = isset($get['code']) && $get['code'] ? $get['code'] : '';
-        $sdate = isset($get['sdate']) && $get['sdate'] ? $get['sdate'] : date('Y-m-d');
-        $edate = isset($get['edate']) && $get['edate'] ? $get['edate'] : date('Y-m-d');
-        $list = array();
-        $target_list = array();
-        $name = '';
-
-        if ($type == 'partner' && $id)
-        {
-            $info = $this->partner_model->get($id);
-            if ($info)
-            {
-                $name = $info->company;
-                $target_list = $this->target_model->order_by('loan_date')->get_many_by(array(
-                    'status' => array(5, 10),
-                    'loan_date >=' => $sdate,
-                    'loan_date <=' => $edate,
-                    'promote_code' => $info->my_promote_code,
-                ));
-            }
-        }
-
-        if ($type == 'sales' && $id)
-        {
-            $info = $this->admin_model->get($id);
-            if ($info)
-            {
-                $name = $info->name;
-                $target_list = $this->target_model->order_by('loan_date')->get_many_by(array(
-                    'status' => array(5, 10),
-                    'loan_date >=' => $sdate,
-                    'loan_date <=' => $edate,
-                    'promote_code' => $info->my_promote_code,
-                ));
-            }
-        }
-
-        if ($type == 'marketing' && $code)
-        {
-            $target_list = $this->target_model->order_by('loan_date')->get_many_by(array(
-                'status' => array(5, 10),
-                'loan_date >=' => $sdate,
-                'loan_date <=' => $edate,
-                'promote_code' => $code,
-            ));
-        }
-
-        if ($type == 'platform')
-        {
-            $name = '無分類';
-            $admins_qrcode = $this->admin_model->get_qrcode_list();
-            $partner_list = $this->partner_model->get_many_by(array('status' => 1));
-            $partner_qrcode = array();
-            if ($partner_list)
-            {
-                foreach ($partner_list as $key => $value)
-                {
-                    $partner_qrcode[$value->my_promote_code] = $value->id;
-                }
-            }
-
-            $target_list = $this->target_model->order_by('loan_date')->get_many_by(array(
-                'status' => [5, 10],
-                'loan_date >=' => $sdate,
-                'loan_date <=' => $edate,
-                'promote_code NOT' => array_merge(array_keys($admins_qrcode), array_keys($partner_qrcode)),
-            ));
-        }
-
-        if ( ! empty($target_list))
-        {
-            foreach ($target_list as $key => $value)
-            {
-                if ($type == "platform" && isset($value->promote_code) && $value->promote_code)
-                {
-                    continue;
-                }
-                $list[] = $value;
-            }
-        }
-
-        $page_data = array(
-            'list' => $list,
-            'name' => $name,
-            'sdate' => $sdate,
-            'edate' => $edate,
-            'product_list' => $this->config->item('product_list'),
-        );
-
-        $this->load->view('admin/_header');
-        $this->load->view('admin/sales_bonus_detail', $page_data);
-        $this->load->view('admin/_footer');
-    }
-
-    public function accounts()
-    {
-        if ( ! $this->input->is_ajax_request())
-        {
-            $this->load->view('admin/_header');
-            $this->load->view('admin/_title', $this->menu);
-            $this->load->view('admin/sales_accounts');
-            $this->load->view('admin/_footer');
-            return;
-        }
-
-        $get = $this->input->get(NULL, TRUE);
-        $type = isset($get["type"]) ? $get["type"] : "";
-        $sdate = isset($get['sdate']) && $get['sdate'] ? $get['sdate'] : date('Y-m-d');
-        $edate = isset($get['edate']) && $get['edate'] ? $get['edate'] : date('Y-m-d');
-        $category = isset($get["category"]) ? $get["category"] : "";
-        $partnerId = isset($get["partner_id"]) ? $get["partner_id"] : "";
-        $code = isset($get["code"]) ? $get["code"] : "";
-        $adminId = isset($get["admin_id"]) ? $get["admin_id"] : "";
-        $offset = isset($get["offset"]) && $get["offset"] >= 1 ? ($get["offset"] - 1) * 20 : 0;
-        $limit = 20;
-
-        $this->load->library('output/json_output');
-        if ($category == "partner" || $category == "sales-marketing")
-        {
-            $partners = $this->partner_model->get_many_by(['status' => 1]);
-            $partnerQrCode = NULL;
-            $partnerQrCodes = [];
-            if ($partners)
-            {
-                foreach ($partners as $key => $value)
-                {
-                    if ($partnerId)
-                    {
-                        if ($partnerId == $value->id)
-                        {
-                            $partnerQrCode = $value->my_promote_code;
-                        }
-                    }
-                    else
-                    {
-                        $partnerQrCodes[] = $value->my_promote_code;
-                    }
-                }
-            }
-        }
-
-        $adminQrCode = "";
-        if ($category == "sales")
-        {
-            if ( ! $adminId)
-            {
-                $this->json_output->setStatusCode(400)->send();
-            }
-            $adminQrCodes = $this->admin_model->get_qrcode_list();
-            if ($adminQrCodes)
-            {
-                foreach ($adminQrCodes as $qrCode => $id)
-                {
-                    if ($id == $adminId)
-                    {
-                        $adminQrCode = $qrCode;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if ($type == "student")
-        {
-            $filters = [
-                ['status', '=', 1],
-                ['created_at', '>=', strtotime($sdate . ' 00:00:00')],
-                ['created_at', '<=', strtotime($edate . ' 23:59:59')],
-                ['meta_key', '=', 'student_status']
-            ];
-            if ($category == "others")
-            {
-                $filters[] = ['promote_code', '=', ''];
-            }
-            elseif ($category == "partner")
-            {
-                if ($partnerQrCode)
-                {
-                    $filters[] = ['promote_code', '=', $partnerQrCode];
-                }
-                if ($partnerQrCodes)
-                {
-                    $filters[] = ['promote_code', 'in', $partnerQrCodes];
-                }
-            }
-            elseif ($category == 'sales-marketing')
-            {
-                $filters[] = ['promote_code', '!=', ''];
-                $filters[] = ['promote_code', "not in", $partnerQrCodes];
-            }
-            elseif ($category == "marketing")
-            {
-                $filters[] = ['promote_code', '=', $code];
-            }
-            elseif ($category == "sales")
-            {
-                $filters[] = ['promote_code', '=', $adminQrCode];
-            }
-
-            $users = $this->user_model->getStudents($filters, $offset, $limit);
-        }
-        else
-        {
-            $filters = [
-                'status' => 1,
-                'created_at >=' => strtotime($sdate . ' 00:00:00'),
-                'created_at <=' => strtotime($edate . ' 23:59:59'),
-            ];
-            if ($type == "fb")
-            {
-                $filters["nickname !="] = "";
-            }
-            if ($type == "name")
-            {
-                $filters["name !="] = "";
-            }
-            if ($category == "others")
-            {
-                $filters["promote_code"] = "";
-            }
-            elseif ($category == "partner")
-            {
-                if ($partnerQrCode)
-                {
-                    $filters['promote_code'] = $partnerQrCode;
-                }
-                if ($partnerQrCodes)
-                {
-                    $filters['promote_code'] = $partnerQrCodes;
-                }
-            }
-            elseif ($category == 'sales-marketing')
-            {
-                $filters['promote_code !='] = '';
-                $filters['promote_code NOT'] = $partnerQrCodes;
-            }
-            elseif ($category == "marketing")
-            {
-                $filters['promote_code'] = $code;
-            }
-            elseif ($category == "sales")
-            {
-                $filters['promote_code'] = $adminQrCode;
-            }
-
-            $users = $this->user_model->limit($limit, $offset)->get_many_by($filters);
-        }
-
-        if ( ! $users)
-        {
-            $this->json_output->setStatusCode(204)->send();
-        }
-
-        $this->load->library('output/user/user_output', ["data" => $users]);
-
-        $userOutputs = $this->user_output->toMany("mapForSales");
-
-        $response = ["users" => $userOutputs];
-        $this->json_output->setStatusCode(200)->setResponse($response)->send();
-    }
+		$response = ["users" => $userOutputs];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
 
     public function loan_overview()
     {
-        if ( ! $this->input->is_ajax_request())
-        {
+        if (!$this->input->is_ajax_request()) {
             $this->load->view('admin/_header');
             $this->load->view('admin/_title', $this->menu);
             $this->load->view('admin/sales_loan_overview');
@@ -633,8 +538,7 @@ class Sales extends MY_Admin_Controller
         $convertEndAt = isset($get["conversion_edate"]) ? $get["conversion_edate"] : "";
 
         $this->load->library('output/json_output');
-        if ( ! $loanStartAt || ! $loanEndAt || ! $convertStartAt || ! $convertEndAt)
-        {
+        if (!$loanStartAt || !$loanEndAt || !$convertStartAt || !$convertEndAt) {
             $this->json_output->setStatusCode(400)->send();
         }
 
@@ -650,8 +554,7 @@ class Sales extends MY_Admin_Controller
 
         $tableTypes = ['total', 'creditLoan', 'techiLoan', 'mobilePhoneLoan'];
         $tables = [];
-        foreach ($tableTypes as $tableType)
-        {
+        foreach ($tableTypes as $tableType) {
             $this->load->library('report/loan/loan_table', ["type" => $tableType], "{$tableType}Table");
             $tableName = "{$tableType}Table";
             $$tableName = $this->$tableName;
@@ -717,8 +620,8 @@ class Sales extends MY_Admin_Controller
             '4-4' => 'NewOfficeWorkers',
         ];
 
-        $newApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, TRUE, $createdRange, $convertedRange);
-        $existingApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, FALSE, $createdRange, $convertedRange);
+        $newApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, true, $createdRange, $convertedRange);
+        $existingApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, false, $createdRange, $convertedRange);
 
         $applicationCountByStatus = $this->target_model->getApplicationCountByStatus([], $createdRange, $convertedRange);
         $matchedCountByStatus = $this->target_model->getApplicationCountByStatus([5, 10], $createdRange, $convertedRange);
@@ -733,73 +636,55 @@ class Sales extends MY_Admin_Controller
             $applicationAmounts
         ];
 
-        for ($i = 0; $i < count($rowsByApplicantType); $i++)
-        {
+        for ($i = 0; $i < count($rowsByApplicantType); $i++) {
             $rows = $rowsByApplicantType[$i];
-            foreach ($rows as $row)
-            {
-                if ( ! isset($productToTableMapping[$row->product_id]))
-                {
+            foreach ($rows as $row) {
+                if (!isset($productToTableMapping[$row->product_id])) {
                     continue;
                 }
                 $key = "{$row->product_id}-{$i}";
-                if ($i < 2 && ! isset($productAndTypeToRowMapping[$key]))
-                {
+                if ($i < 2 && !isset($productAndTypeToRowMapping[$key])) {
                     continue;
                 }
                 $tables = $productToTableMapping[$row->product_id];
 
                 $productAndSubProduct = "{$row->product_id}-{$row->sub_product_id}";
-                if (isset($subProductToTableMapping[$productAndSubProduct]))
-                {
+                if (isset($subProductToTableMapping[$productAndSubProduct])) {
                     $tables = $subProductToTableMapping[$productAndSubProduct];
                 }
 
                 $key = "{$row->product_id}-{$i}";
                 $getRowMethod = "get" . $productAndTypeToRowMapping[$key];
 
-                if ($i < 2)
-                {
+                if ($i < 2) {
                     $getMethod = 'get' . $statusToApplicantMethodMapping[$row->status];
                     $setMethod = 'set' . $statusToApplicantMethodMapping[$row->status];
 
 
-                }
-                elseif ($i == 2)
-                {
+                } elseif ($i == 2) {
                     $getMethod = 'getApplications';
                     $setMethod = 'setApplications';
-                }
-                elseif ($i == 3)
-                {
+                } elseif ($i == 3) {
                     $getMethod = 'getMatchedApplications';
                     $setMethod = 'setMatchedApplications';
-                }
-                elseif ($i == 4)
-                {
-                    if (isset($statusToApplicationAmountMapping[$row->status]))
-                    {
+                } elseif ($i == 4) {
+                    if (isset($statusToApplicationAmountMapping[$row->status])) {
                         $amountMethod = $statusToApplicationAmountMapping[$row->status];
                         $getAmountMethod = "get{$amountMethod}";
                         $setAmountMethod = "set{$amountMethod}";
                     }
                 }
 
-                foreach ($tables as $table)
-                {
-                    if ($i < 4)
-                    {
+                foreach ($tables as $table) {
+                    if ($i < 4) {
                         $current = $$table->$getRowMethod()->$getMethod() + intval($row->count);
                         $$table->$getRowMethod()->$setMethod($current);
 
-                        if ($row->status != 0)
-                        {
+                        if ($row->status != 0) {
                             $current = $$table->$getRowMethod()->getApplicants() + intval($row->count);
                             $$table->$getRowMethod()->setApplicants($current);
                         }
-                    }
-                    elseif ($i == 4 && isset($statusToApplicationAmountMapping[$row->status]))
-                    {
+                    } elseif ($i == 4 && isset($statusToApplicationAmountMapping[$row->status])) {
                         $currentAmount = $$table->$getRowMethod()->$getAmountMethod() + intval($row->sumAmount);
                         $$table->$getRowMethod()->$setAmountMethod($currentAmount);
                     }
@@ -807,8 +692,7 @@ class Sales extends MY_Admin_Controller
             }
         }
 
-        foreach ($tableTypes as $tableType)
-        {
+        foreach ($tableTypes as $tableType) {
             $tableName = "{$tableType}Table";
             $this->$tableName->aggregate();
         }
@@ -828,65 +712,52 @@ class Sales extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
-    public function promote_list()
-    {
+    public function promote_list() {
         $this->load->library('user_lib');
         $this->load->library("pagination");
         $this->load->library('qrcode_lib');
         $this->load->model('user/qrcode_setting_model');
 
-        $input = $this->input->get(NULL, TRUE);
-        $where = [];
-        $list = [];
-        $fields = ['alias'];
+        $input 		= $this->input->get(NULL, TRUE);
+        $where		= [];
+        $list   	= [];
+        $fields 	= ['alias'];
 
-        foreach ($fields as $field)
-        {
-            if (isset($input[$field]) && $input[$field] != '')
-            {
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
                 $where[$field] = $input[$field];
             }
         }
-        if (isset($input['tsearch']) && $input['tsearch'] != '')
-        {
+        if(isset($input['tsearch'])&&$input['tsearch']!=''){
             $tsearch = $input['tsearch'];
-            if (preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
+            if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
             {
                 $name = $this->user_model->get_many_by(array(
-                    'name like ' => '%' . $tsearch . '%',
-                    'status' => 1
+                    'name like '    => '%'.$tsearch.'%',
+                    'status'	    => 1
                 ));
-                if ($name)
-                {
-                    foreach ($name as $k => $v)
-                    {
+                if($name){
+                    foreach($name as $k => $v){
                         $where['user_id'][] = $v->id;
                     }
                 }
-            }
-            else
-            {
-                if (preg_match_all('/[A-Za-z]/', $tsearch) == 1)
-                {
-                    $id_number = $this->user_model->get_many_by(array(
-                        'id_number  like' => '%' . $tsearch . '%',
-                        'status' => 1
+            }else{
+                if(preg_match_all('/[A-Za-z]/', $tsearch)==1){
+                    $id_number	= $this->user_model->get_many_by(array(
+                        'id_number  like'	=> '%'.$tsearch.'%',
+                        'status'	        => 1
                     ));
-                    if ($id_number)
-                    {
-                        foreach ($id_number as $k => $v)
-                        {
+                    if($id_number){
+                        foreach($id_number as $k => $v){
                             $where['user_id'][] = $v->id;
                         }
                     }
                 }
-                elseif (preg_match_all('/\D/', $tsearch) == 0)
-                {
+                elseif(preg_match_all('/\D/', $tsearch)==0){
                     $where['user_id'] = $tsearch;
                 }
-                else
-                {
-                    $where['promote_code like'] = '%' . $tsearch . '%';
+                else{
+                    $where['promote_code like'] = '%'.$tsearch.'%';
                 }
             }
         }
@@ -935,15 +806,13 @@ class Sales extends MY_Admin_Controller
         $this->load->library('contract_lib');
         $this->load->library('qrcode_lib');
 
-        $input = $this->input->get(NULL, TRUE);
-        $where = [];
-        $page_data = [];
+        $input 		= $this->input->get(NULL, TRUE);
+        $where		= [];
+        $page_data  = [];
 
-        $fields = ['id'];
-        foreach ($fields as $field)
-        {
-            if (isset($input[$field]) && $input[$field] != '')
-            {
+        $fields 	= ['id'];
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
                 $where[$field] = $input[$field];
             }
         }
@@ -978,8 +847,8 @@ class Sales extends MY_Admin_Controller
         $this->load->library('passbook_lib');
         $this->load->library('output/json_output');
 
-        $input = $this->input->post(NULL, TRUE);
-        $ids = $input['ids'] ?? [];
+        $input 		= $this->input->post(NULL, TRUE);
+        $ids 		= $input['ids'] ?? [];
         $totalAmount = 0;
         $successIdList = [];
 
@@ -1000,9 +869,9 @@ class Sales extends MY_Admin_Controller
             };
 
             $bankAccountList = [];
-            $bankAccountRs = $this->virtual_account_model->get_many_by([
-                'user_id' => array_column($list, 'user_id'),
-                'status' => 1,
+            $bankAccountRs 	= $this->virtual_account_model->get_many_by([
+                'user_id'	=> array_column($list, 'user_id'),
+                'status'	=> 1,
                 'virtual_account like ' => CATHAY_VIRTUAL_CODE . "%",
             ]);
             foreach ($bankAccountRs as $bankAccount)
@@ -1122,60 +991,49 @@ class Sales extends MY_Admin_Controller
                 $where[$field] = $input[$field];
             }
         }
-        if (isset($input['tsearch']) && $input['tsearch'] != '')
-        {
+        if(isset($input['tsearch'])&&$input['tsearch']!=''){
             $tsearch = $input['tsearch'];
-            if (preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
+            if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
             {
                 $name = $this->user_model->get_many_by(array(
-                    'name like ' => '%' . $tsearch . '%',
-                    'status' => 1
+                    'name like '    => '%'.$tsearch.'%',
+                    'status'	    => 1
                 ));
-                if ($name)
-                {
-                    foreach ($name as $k => $v)
-                    {
+                if($name){
+                    foreach($name as $k => $v){
                         $where['user_id'][] = $v->id;
                     }
                 }
-            }
-            else
-            {
-                if (preg_match_all('/[A-Za-z]/', $tsearch) == 1)
-                {
-                    $id_number = $this->user_model->get_many_by(array(
-                        'id_number  like' => '%' . $tsearch . '%',
-                        'status' => 1
+            }else{
+                if(preg_match_all('/[A-Za-z]/', $tsearch)==1){
+                    $id_number	= $this->user_model->get_many_by(array(
+                        'id_number  like'	=> '%'.$tsearch.'%',
+                        'status'	        => 1
                     ));
-                    if ($id_number)
-                    {
-                        foreach ($id_number as $k => $v)
-                        {
+                    if($id_number){
+                        foreach($id_number as $k => $v){
                             $where['user_id'][] = $v->id;
                         }
                     }
                 }
-                elseif (preg_match_all('/\D/', $tsearch) == 0)
-                {
+                elseif(preg_match_all('/\D/', $tsearch)==0){
                     $where['user_id'] = $tsearch;
                 }
-                else
-                {
-                    $where['promote_code like'] = '%' . $tsearch . '%';
+                else{
+                    $where['promote_code like'] = '%'.$tsearch.'%';
                 }
             }
         }
         $input['sdate'] = $input['sdate'] ?? '';
         $input['edate'] = $input['edate'] ?? '';
-        if (isset($where['alias']))
-        {
-            if ($where['alias'] == "all")
+        if(isset($where['alias'])) {
+            if($where['alias'] == "all")
                 unset($where['alias']);
 
             $reward_where = ['status' => PROMOTE_REWARD_STATUS_TO_BE_PAID, 'amount > ' => 0];
-            if ($input['sdate'] != "")
+            if($input['sdate'] != "")
                 $reward_where['start_time >= '] = $input['sdate'];
-            if ($input['edate'] != "")
+            if($input['edate'] != "")
                 $reward_where['end_time <= '] = $input['edate'];
 
             $list = $this->qrcode_reward_model->getSettlementRewardList($reward_where, $where);
@@ -1392,7 +1250,157 @@ class Sales extends MY_Admin_Controller
         $this->load->view('admin/_title', $this->menu);
         $this->load->view('admin/valuable_list', $page_data);
         $this->load->view('admin/_footer');
+    }
 
+    public function sales_report()
+    {
+        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
+
+        // 把大部分的東西都改寫到 library 裡面
+        $this->load->library('Sales_lib', ['at_month' => $at_month]);
+
+        // 處理日期列
+        $days_info = $this->sales_lib->get_days();
+        $title_dates = $this->_parse_day_week_for_admin_dashboard($days_info);
+        array_unshift($title_dates, '總和');
+        $trtd_date = $this->_parse_array_to_trtd_string($title_dates);
+
+        $return_trtd_datas = [];
+
+        // 取得此月份的績效相關資料
+        $datas = $this->sales_lib->calculate();
+
+        // 取得各目標的 id 才能組成進入編輯頁的連結
+        $goals_id = $this->sales_lib->get_goals_id();
+
+        // 將資料做轉換處理 array -> string
+        foreach ($datas as $key => $value)
+        {
+            if (empty($value['goal'][0]))
+            {
+                continue;
+            }
+            if (is_numeric($key))
+            {
+                $value['goal'][0] = $this->_parse_goal_number_add_href($goals_id[$key], $value['goal'][0]);
+                $return_trtd_datas[$key]['goal'] = $this->_parse_array_to_trtd_string($value['goal']);
+                $return_trtd_datas[$key]['real'] = $this->_parse_array_to_trtd_string($value['real']);
+                $return_trtd_datas[$key]['rate'] = $this->_parse_array_to_trtd_string($value['rate']);
+            }
+        }
+
+        $page_data = [
+            'trtd_date' => $trtd_date,
+            'goal_ym' => $goal_ym,
+            'datas' => $return_trtd_datas,
+            'total_deals' => $this->_parse_array_to_trtd_string($datas['total_deals']),
+        ];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/sales_target_setting', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    // 將 月日 跟 星期 結合 => X月Y日(六) ，呈現在後台的樣式跟報表不一樣
+    private function _parse_day_week_for_admin_dashboard($days_info)
+    {
+        $data = [];
+        for ($i = 0; $i < count($days_info['date']); $i++)
+        {
+            array_push($data, $days_info['date'][$i] . '(' . $days_info['week'][$i] . ')');
+        }
+
+        return $data;
+    }
+
+    // 將陣列資料掛上 td 標籤組成可以直接塞回 html table 的字串
+    private function _parse_array_to_trtd_string($datas)
+    {
+        return '<td>' . implode('</td><td>', $datas) . '</td>';
+    }
+
+    // 業績目標的數字在上 td 標籤前先包 a 標籤
+    private function _parse_goal_number_add_href($id, $number)
+    {
+        return "<a href='/admin/Sales/goal_edit/{$id}' target='_blank'>{$number}</a>";
+    }
+
+    // 載入更新單一目標頁
+    public function goal_edit($id)
+    {
+        $goal_info = $this->sale_goals_model->as_array()->get($id);
+
+        // 檢查只有當月的績效目標才可以修改
+        $at_month = date('Ym');
+
+        if (empty($goal_info) ||
+            $goal_info['at_month'] < $at_month)
+        {
+            // 直接回傳 alert
+            echo "<script>alert('請勿更新本月以前的目標');parent.location.href='/admin/AdminDashboard';</script>";
+            exit;
+        }
+
+        $page_data['id'] = $goal_info['id'];
+        $page_data['name'] = $this->sale_goals_model->type_name_mapping()[$goal_info['type']];
+        $page_data['number'] = $goal_info['number'];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/sales_goal_edit', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    // 更新單一目標
+    public function set_goal($goal_id)
+    {
+        $number = $this->input->get('number');
+        if (is_numeric($number))
+        {
+            $this->sale_goals_model->update($goal_id, ['number' => $number]);
+            echo "<script>alert('更新成功');parent.location.href='/admin/Sales/sales_report';</script>";
+            exit;
+        }
+
+        echo "<script>alert('績效請勿亂填');parent.location.href='/admin/AdminDashboard';</script>";
+    }
+
+    // 載入更新整月目標頁
+    public function monthly_goals_edit()
+    {
+        $goal_ym = $this->input->get('goal_ym') ?? date('Y-m');
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
+
+        $goals = $this->sale_goals_model->get_goals_number_at_this_month($at_month);
+
+        $page_data = [
+            'goal_ym' => $goal_ym,
+            'goal_items' => $this->sale_goals_model->type_name_mapping(),
+            'goal_number' => $this->_parse_goal_struct($goals),
+        ];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/sales_monthly_goals_edit', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    private function _parse_goal_struct($goals)
+    {
+        $data = [];
+        foreach ($goals as $value)
+        {
+            $struct = [
+                'id' => $value['id'],
+                'number' => $value['number'],
+                'status' => $value['status']
+            ];
+            $data[$value['type']] = $struct;
+        }
+
+        return $data;
     }
 
     public function qrcode_modify_settings()
@@ -2200,5 +2208,289 @@ class Sales extends MY_Admin_Controller
                 ]
             ]
         );
+    }
+
+    public function set_monthly_goals($goal_ym)
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
+
+        $goals = $this->sale_goals_model->get_goals_number_at_this_month($at_month);
+        $db_goals = array_column($goals, null, 'id');
+
+        if ($this->_is_input_vaild($input, $db_goals))
+        {
+            $updated_data = [];
+            array_walk($input, function ($element, $key) use ($db_goals, &$updated_data) {
+                if ( ! empty($db_goals[$key]))
+                {
+                    if (empty($element['status']))
+                    {
+                        $element['status'] = 0;
+                    }
+                    $diff_tmp = array_diff_assoc($element, $db_goals[$key]);
+                    if ( ! empty($diff_tmp))
+                    {
+                        $updated_data[$key] = $diff_tmp;
+                    }
+                }
+            });
+            if ($updated_data)
+            {
+                foreach ($updated_data as $key => $value)
+                {
+                    $this->sale_goals_model->update($key, $value);
+                }
+            }
+        }
+
+        redirect('/admin/Sales/sales_report', 'refresh');
+    }
+
+    private function _is_input_vaild($input, $db_goals)
+    {
+        $same_key = array_intersect_key($input, $db_goals);
+        return (count($same_key) == count($input)) ? TRUE : FALSE;
+    }
+
+    public function goals_export()
+    {
+        $goal_ym = $this->input->get('goal_ym');
+        $at_month = $this->_parse_goal_ym_to_at_month($goal_ym);
+
+        $this->load->library('Sales_lib', ['at_month' => $at_month]);
+        $days_info = $this->sales_lib->get_days();
+
+        // 整理日期的匯出格式
+        $first_row = $days_info['date'];
+        array_unshift($first_row, '日期');
+        $second_row = $days_info['week'];
+        array_unshift($second_row, '總和');
+
+        $content1 = [];
+        $content2 = [];
+
+        // 內容先塞月日星期
+        $content1[] = $first_row;
+        $content1[] = $second_row;
+        $content2[] = $first_row;
+        $content2[] = $second_row;
+
+        // 取出該月資料
+        $datas = $this->sales_lib->calculate();
+
+        // 依照 excel 需要的匯出順序塞入 content
+        $sort1 = [
+            [
+                'title' => '業務推廣',
+                'items' => [
+                    [
+                        'key' => sale_goals_model::GOAL_WEB_TRAFFIC,
+                        'kpi' => ['目標流量', '實際流量', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_USER_REGISTER,
+                        'kpi' => ['目標會員數', '實際總會員數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_APP_DOWNLOAD,
+                        'kpi' => ['目標下載數', '實際下載數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_TOTAL,
+                        'kpi' => ['目標申貸戶數', '實際完成申貸戶數', '達成率']
+                    ]
+                ]
+            ]
+        ];
+        foreach ($sort1 as $sort_key => $sort_value)
+        {
+            foreach ($sort_value['items'] as $item_key => $item_value)
+            {
+                if (empty($datas[$item_value['key']]['goal']))
+                {
+                    unset($sort1[$sort_key]['items'][$item_key]);
+                    continue;
+                }
+                $content1[] = $datas[$item_value['key']]['goal'];
+                $content1[] = $datas[$item_value['key']]['real'];
+                $content1[] = $datas[$item_value['key']]['rate'];
+            }
+        }
+
+        // 第二頁
+        $sort2 = [
+            [
+                'title' => '申貸指標',
+                'items' => [
+                    [
+                        'key' => sale_goals_model::GOAL_LOAN_SALARY_MAN,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_STUDENT,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_SMART_STUDENT,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_CREDIT_INSURANCE,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ], [
+                        'key' => sale_goals_model::GOAL_LOAN_SME,
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                    ]
+                ]
+            ], [
+                'title' => '成交指標',
+                'items' => [
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_SALARY_MAN,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_STUDENT,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_SMART_STUDENT,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_CREDIT_INSURANCE,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                    [
+                        'key' => sale_goals_model::GOAL_DEAL_SME,
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                    ],
+                ]
+            ]
+        ];
+        foreach ($sort2 as $sort_key => $sort_value)
+        {
+            foreach ($sort_value['items'] as $item_key => $item_value)
+            {
+                if (empty($datas[$item_value['key']]['goal']))
+                {
+                    unset($sort2[$sort_key]['items'][$item_key]);
+                    continue;
+                }
+                $content2[] = $datas[$item_value['key']]['goal'];
+                $content2[] = $datas[$item_value['key']]['real'];
+                $content2[] = $datas[$item_value['key']]['rate'];
+            }
+        }
+
+        // 最後補上 成交總計
+        $content2[] = $datas['total_deals'];
+
+        // 匯出資料內容
+        $excel_contents = [
+            [
+                'sheet' => '貸前指標',
+                'content' => $content1,
+            ],
+            [
+                'sheet' => '貸中指標',
+                'content' => $content2,
+            ],
+        ];
+        $sheet_highlight = 'KPI指標-' . $days_info['int_month'] . '月';
+
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getProperties()->setTitle('績效統計表');
+
+        foreach ($excel_contents as $sheet => $contents)
+        {
+            $sheet > 0 ? $spreadsheet->createSheet() : '';
+            $row = 1;
+
+            // 前幾行合併儲存格的項目先處理
+            if (empty($sheet))
+            {
+                $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
+                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+                $index_a = 3;
+                $index_b = 3;
+                $spreadsheet = $this->_draw_title($spreadsheet, $sheet, $sort1, $index_a, $index_b);
+            }
+            else
+            {
+                // 這邊反過來是因為要先設定 Sheet 不然會合併到前一個 sheet 的格子
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
+                $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
+                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+                $index_a = 3;
+                $index_b = 3;
+                $spreadsheet = $this->_draw_title($spreadsheet, $sheet, $sort2, $index_a, $index_b);
+
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, '總數');
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . $index_b, '總成交數');
+            }
+
+            // 從 D 行開始塞入上面整理的內容
+            foreach ($contents['content'] as $key => $row_content)
+            {
+                foreach ($row_content as $content_index => $value)
+                {
+                    $column = Coordinate::stringFromColumnIndex($content_index + 4); // A = 1
+                    $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $value);
+                    $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
+                }
+                $row++;
+            }
+
+            $spreadsheet->setActiveSheetIndex($sheet)->setTitle($contents['sheet']);
+        }
+        $spreadsheet->setActiveSheetIndex(0);
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=' . 'testMergeCell' . '.xlsx');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
+    }
+
+    private function _draw_title($spreadsheet, $sheet, $sort_list, &$index_a, &$index_b)
+    {
+        $rowspan = 2;
+        foreach ($sort_list as $sort)
+        {
+            $merge_col = count($sort['items']) * ($rowspan + 1);
+            $spreadsheet->getActiveSheet()->mergeCells('A' . $index_a . ':A' . ($index_a + $merge_col - 1));
+            $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A' . $index_a, $sort['title']);
+            $index_a = $index_a + $merge_col;
+
+            foreach ($sort['items'] as $item)
+            {
+                $kpi = $item['kpi'];
+                $spreadsheet->getActiveSheet()->mergeCells('B' . $index_b . ':B' . ($index_b + $rowspan));
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, $this->sale_goals_model->type_name_mapping()[$item['key']]);
+
+                for ($i = 0; $i < count($kpi); $i++)
+                {
+                    $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . ($index_b + $i), $kpi[$i]);
+                }
+
+                $index_b += $rowspan + 1;
+            }
+        }
+        return $spreadsheet;
+    }
+
+    private function _parse_goal_ym_to_at_month($goal_ym)
+    {
+        try
+        {
+            $day = new DateTimeImmutable($goal_ym);
+        }
+        catch (Exception $e)
+        {
+            return date('Ym');
+        }
+
+        return $day->format('Ym');
     }
 }

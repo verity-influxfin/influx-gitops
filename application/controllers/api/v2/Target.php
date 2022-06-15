@@ -51,6 +51,12 @@ class Target extends REST_Controller {
 			$this->user_info->incharge 		= $tokenData->incharge;
 			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
+
+            if (isset($tokenData->company) && $tokenData->company != 0)
+            {
+                $this->load->library('judicialperson_lib');
+                $this->user_info->naturalPerson = $this->judicialperson_lib->getNaturalPerson($tokenData->id);
+            }
         }
     }
 
@@ -1124,9 +1130,29 @@ class Target extends REST_Controller {
 		$investor 	= $this->user_info->investor;
 		$param		= ['user_id' => $user_id];
 
-        //暫不開放法人
+        // 僅開放特定法人
+        $valid_company_cert = FALSE;
         if(isset($this->user_info->company)&&$this->user_info->company != 0){
-            $this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+            $necessary_certs = [CERTIFICATION_TARGET_APPLY, CERTIFICATION_JUDICIALGUARANTEE, CERTIFICATION_GOVERNMENTAUTHORITIES];
+            $this->load->model('user/user_certification_model');
+            $user_certification_info = $this->user_certification_model->get_many_by([
+                'certification_id' => $necessary_certs,
+                'user_id' => $user_id,
+                'status' => CERTIFICATION_STATUS_SUCCEED,
+                'investor' => USER_INVESTOR
+            ]);
+
+            if (count($user_certification_info) <> count($necessary_certs) || empty($this->user_info->transaction_password))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => IS_COMPANY));
+            }
+
+            $company_user_info = $this->user_info;
+            $this->user_info = $this->user_info->naturalPerson;
+            $this->user_info->company = $company_user_info->company;
+            $this->user_info->investor = $company_user_info->investor;
+
+            $valid_company_cert = TRUE;
         }
 
 		//必填欄位
@@ -1145,6 +1171,18 @@ class Target extends REST_Controller {
 			if( $param['amount'] < TARGET_AMOUNT_MIN || $param['amount'] > $target->loan_amount ){
 				$this->response(array('result' => 'ERROR','error' => TARGET_AMOUNT_RANGE ));
 			}
+            elseif ($valid_company_cert === TRUE)
+            {
+                if ($param['amount'] > TARGET_AMOUNT_MAX_COMPANY)
+                { // 不得高於法人單筆金額上限
+                    $this->response(array('result' => 'ERROR','error' => TARGET_AMOUNT_RANGE ));
+                }
+                $today_investment = $this->investment_model->get_invest_amount_today($user_id);
+                if (($today_investment + $param['amount']) > TARGET_AMOUNT_MAX_COMPANY)
+                { // 不得高於法人單日金額上限
+                    $this->response(array('result' => 'ERROR','error' => TARGET_AMOUNT_RANGE ));
+                }
+            }
 
 			if( $user_id == $target->user_id ){
 				$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));

@@ -330,6 +330,20 @@ class Certification extends MY_Admin_Controller {
                             alert('更新失敗', $back_url);
                         }
                         break;
+                    case CERTIFICATION_TARGET_APPLY: // 開通法人認購債權
+                        if (empty($post['id']))
+                        {
+                            alert('更新失敗，無此id', $back_url);
+                        }
+                        $res = $this->user_certification_model->update($post['id'], [
+                            'status' => $post['status']
+                        ]);
+                        if ( ! $res)
+                        {
+                            alert('更新失敗，請洽工程師', $back_url);
+                        }
+                        alert('更新成功', $back_url);
+                        break;
                 }
             }
 
@@ -1644,9 +1658,9 @@ class Certification extends MY_Admin_Controller {
         $this->load->library('verify/data_verify_lib');
 
         $old_data = $this->user_certification_model->get_certification_data_by_id($post_data['id']);
-        if (empty($old_data['status']) || $old_data['status'] != CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+        if (empty($old_data['status']) ||  ! in_array($old_data['status'], [CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_SUCCEED]))
         {
-            return $this->_return_error('狀態非待人工審核，更新失敗');
+            return $this->_return_error('狀態非【待人工審核】或【審核成功】，更新失敗');
         }
         $old_data_content = json_decode($old_data['content'] ?? '', TRUE);
 
