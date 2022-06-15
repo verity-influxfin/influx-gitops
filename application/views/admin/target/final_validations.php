@@ -554,6 +554,61 @@
 			</div>
 		</div>
 
+        <div class="col-lg-12" style="display: flex;">
+            <div style="width: 32.33%;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        其他資訊
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">項目名稱</th>
+                                            <th class="center-text" width="60%">項目值</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="meta-table-body">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 32.33%;" class="ml-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        上傳合約
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">合約名稱</th>
+                                            <th class="center-text" width="60%">合約內容</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="uploaded-contract-table">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 		<!-- <div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -1343,6 +1398,8 @@
 					targets.push(new Target(targetsJson[i]));
 				}
 				fillTargets(targets);
+				fillTargetMeta(response.response.target_meta);
+				fillUploadedContract(response.response.contract_list);
 
 			},
 			error: function (error) {
@@ -1926,6 +1983,30 @@
 				).appendTo("#targets");
 			}
 		}
+
+        function fillTargetMeta(meta) {
+            for (let i = 0; i < meta.length; i++) {
+                pTag = '<p class="form-control-static">' + meta[i]['meta_key_alias'] + '</p>';
+                pTag2 = '<p class="form-control-static">' + meta[i]['meta_value_alias'] + '</p>';
+                $("<tr>").append(
+                    $('<td class="table-field center-text">').append(pTag),
+                    $('<td class="center-text">').append(pTag2),
+                ).appendTo("#meta-table-body");
+            }
+        }
+
+        function fillUploadedContract(contracts) {
+            for (let i = 0; i < contracts.length; i++) {
+                pTag = '<p class="form-control-static">' + contracts[i]['contract_name'] + '</p>';
+                aTag = '<p class="form-control-static"><a class="btn btn-default" href="/admin/target/uploaded_contract?id=' + caseId +
+                    "&meta_name=" + contracts[i]['meta_name'] + '" target="_blank">查看合約</a></p>';
+                $("<tr>").append(
+                    $('<td class="table-field center-text">').append(pTag),
+                    $('<td class="center-text">').append(aTag)
+                ).appendTo("#uploaded-contract-table");
+            }
+        }
+
 
 		function getCenterTextCell(value, additionalCssClass = "") {
 			return '<td class="center-text ' + additionalCssClass + '">' + value + '</td>';

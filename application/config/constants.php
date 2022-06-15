@@ -375,6 +375,9 @@ defined('PRODUCT_FOR_JUDICIAL') or define('PRODUCT_FOR_JUDICIAL', 1000); //法�
 
 // sub-product
 defined('SUBPRODUCT_INTELLIGENT_STUDENT') or define('SUBPRODUCT_INTELLIGENT_STUDENT', 6); // 3S名校貸
+defined('SUB_PRODUCT_ID_SALARY_MAN_CAR') or define('SUB_PRODUCT_ID_SALARY_MAN_CAR', 7); // 上班族貸(購車)
+defined('SUB_PRODUCT_ID_SALARY_MAN_HOUSE') or define('SUB_PRODUCT_ID_SALARY_MAN_HOUSE', 8); // 上班族貸(購房)
+defined('SUB_PRODUCT_ID_SALARY_MAN_RENOVATION') or define('SUB_PRODUCT_ID_SALARY_MAN_RENOVATION', 9); // 上班族貸(裝修)
 
 defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN'		, 1000); //最小投資額
 defined('TARGET_AMOUNT_MAX_COMPANY') or define('TARGET_AMOUNT_MAX_COMPANY', 500000); // 法人最大投資額
@@ -750,3 +753,18 @@ defined('LEASING_USERID') or define('LEASING_USERID', 73628);
 defined('COMPANY_NAME') or define('COMPANY_NAME', '普匯金融科技股份有限公司');
 defined('COMPANY_ID_NUMBER') or define('COMPANY_ID_NUMBER', '68566881');
 defined('COMPANY_SERVICE_EMAIL') or define('COMPANY_SERVICE_EMAIL', 'service@influxfin.com');
+
+// 就職公司代號
+defined('COMPANY_CATEGORY_NORMAL') or define('COMPANY_CATEGORY_NORMAL', 1);
+defined('COMPANY_CATEGORY_FINANCIAL') or define('COMPANY_CATEGORY_FINANCIAL', 2);
+defined('COMPANY_CATEGORY_GOVERNMENT') or define('COMPANY_CATEGORY_GOVERNMENT', 3);
+defined('COMPANY_CATEGORY_LISTED') or define('COMPANY_CATEGORY_LISTED', 4);
+defined('COMPANY_CATEGORY_NAME_NORMAL') or define('COMPANY_CATEGORY_NAME_NORMAL', '一般上班族');
+defined('COMPANY_CATEGORY_NAME_FINANCIAL') or define('COMPANY_CATEGORY_NAME_FINANCIAL', '金融機構員工');
+defined('COMPANY_CATEGORY_NAME_GOVERNMENT') or define('COMPANY_CATEGORY_NAME_GOVERNMENT', '公家機關員工');
+defined('COMPANY_CATEGORY_NAME_LISTED') or define('COMPANY_CATEGORY_NAME_LISTED', '上市櫃企業員工');
+
+// mata name
+defined('TARGET_META_COMPANY_CATEGORY_NUMBER') or define('TARGET_META_COMPANY_CATEGORY_NUMBER', 'company_category_number'); // 就職公司代號 meta name
+
+

@@ -22550,6 +22550,34 @@ define({
                             "type": "Number",
                             "field": "repayment",
                             "description" : "<p>還款方式<br/>1:本息均攤<br/>2:繳息不還本</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "company_category",
+                            "description" : "<p>選擇職業<br/>1:一般企業<br/>2:金融機構<br/>3:公家機關<br/>4:上市櫃</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_contract_images",
+                            "description" : "<p>購車合約照片 (多張使用逗號,隔開)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "house_contract_images",
+                            "description" : "<p>購屋合約照片 (多張使用逗號,隔開)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "renovation_contract_images",
+                            "description" : "<p>裝修合約照片 (多張使用逗號,隔開)</p>"
                         }
                     ]
                 }
