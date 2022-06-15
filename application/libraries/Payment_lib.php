@@ -1471,7 +1471,7 @@ class Payment_lib{
                         if (!$today) {
                             $tax = $this->CI->financial_lib->get_tax_amount($amount);
                             $this->CI->ezpay_lib->set_amt($tax, $amount);
-                            $this->CI->ezpay_lib->set_item();
+                            $this->CI->ezpay_lib->set_item('influx', '平台服務費', 1, '筆', $amount);
                             $tax_info = $this->CI->ezpay_lib->send($user_id);
                             if ($tax_info) {
                                 $this->CI->receipt_model->insert(array(
