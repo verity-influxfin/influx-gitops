@@ -64,7 +64,7 @@ export default {
         state.investAccountData = data.data;
     },
     // 5th
-    mutation5thLogin(state) {
+    mutationLogin(state) {
         state.openLogin = !state.openLogin
     },
     mutationloginHideOption(state, data) {

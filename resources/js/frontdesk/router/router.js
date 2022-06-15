@@ -132,9 +132,9 @@ let routers = [
             { path: '/debt', component: debt },
             { path: '/closedcase', component: closedcase },
             { path: '/detail', component: detail },
-            { path: '/invest-report', component: investReport }
         ]
     },
+    { path: '/invest-report', component: investReport },
     { path: '/recruiting', component: recruiting },
     { path: '/campuspartner', component: campusPartner },
     { path: '/clubcooperation', component: clubCooperation },
