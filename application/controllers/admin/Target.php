@@ -78,6 +78,10 @@ class Target extends MY_Admin_Controller {
                         $where['user_id'][] = $v->id;
                     }
                 }
+                else
+                {
+                    $where['user_id'][] = 0;
+                }
             }else{
                 if(preg_match_all('/[A-Za-z]/', $tsearch)==1){
                     $id_number	= $this->user_model->get_many_by(array(
@@ -88,6 +92,10 @@ class Target extends MY_Admin_Controller {
                         foreach($id_number as $k => $v){
                             $where['user_id'][] = $v->id;
                         }
+                    }
+                    else
+                    {
+                        $where['user_id'][] = 0;
                     }
                 }
                 elseif(preg_match_all('/\D/', $tsearch)==0){
