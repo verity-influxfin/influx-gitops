@@ -1470,8 +1470,8 @@ class Payment_lib{
 
                         if (!$today) {
                             $tax = $this->CI->financial_lib->get_tax_amount($amount);
-                            $this->CI->ezpay_lib->tax_amt = $tax;
-                            $this->CI->ezpay_lib->total_amt = $amount;
+                            $this->CI->ezpay_lib->set_amt($tax, $amount);
+                            $this->CI->ezpay_lib->set_item();
                             $tax_info = $this->CI->ezpay_lib->send($user_id);
                             if ($tax_info) {
                                 $this->CI->receipt_model->insert(array(
@@ -1552,7 +1552,6 @@ class Payment_lib{
             }
             if ( ! empty($tax_list))
             {
-                $this->CI->ezpay_lib->order_no_prefix = 'leasing';
                 foreach ($tax_list as $user_id => $tax)
                 {
                     $today = $this->CI->receipts_leasing_model->get_by(array(
@@ -1563,28 +1562,26 @@ class Payment_lib{
                     if ( ! $today)
                     {
                         // 發票金額
-                        $this->CI->ezpay_lib->total_amt = 0;
+                        $total_amt = 0;
 
-                        if ( ! empty($tax))
-                        {
-                            unset($this->CI->ezpay_lib->item_name);
-                            unset($this->CI->ezpay_lib->item_count);
-                            unset($this->CI->ezpay_lib->item_unit);
-                            unset($this->CI->ezpay_lib->item_price);
-                        }
+                        $item_name = [];
+                        $item_count = [];
+                        $item_unit = [];
+                        $item_price = [];
                         foreach ($tax as $source => $amount)
                         {
                             if (empty($receipt_item_name[$source])) continue;
-                            $this->CI->ezpay_lib->item_name[] = $receipt_item_name[$source];
-                            $this->CI->ezpay_lib->item_count[] = 1;
-                            $this->CI->ezpay_lib->item_unit[] = '筆';
-                            $this->CI->ezpay_lib->item_price[] = $amount;
-                            $this->CI->ezpay_lib->total_amt += $amount;
+                            $item_name[] = $receipt_item_name[$source];
+                            $item_count[] = 1;
+                            $item_unit[] = '筆';
+                            $item_price[] = $amount;
+                            $total_amt += $amount;
                         }
 
                         // 稅額
-                        $this->CI->ezpay_lib->tax_amt = $this->CI->financial_lib->get_tax_amount($this->CI->ezpay_lib->total_amt);
-
+                        $tax_amt = $this->CI->financial_lib->get_tax_amount($total_amt);
+                        $this->CI->ezpay_lib->set_amt($tax_amt, $total_amt);
+                        $this->CI->ezpay_lib->set_item('leasing', $item_name, $item_count, $item_unit, $item_price);
                         $tax_info = $this->CI->ezpay_lib->send($user_id, TRUE);
                         if ($tax_info)
                         {

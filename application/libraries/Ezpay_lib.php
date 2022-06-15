@@ -4,36 +4,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Ezpay_lib
 {
-    public $merchant_id;
-    public $hash_key;
-    public $hash_iv;
+    private $merchant_list;
     public $order_no_prefix;
-    public $tax_amt;
-    public $total_amt;
-    public $item_name;
-    public $item_count;
-    public $item_unit;
-    public $item_price;
+    private $tax_amt;
+    private $total_amt;
+    private $item_name;
+    private $item_count;
+    private $item_unit;
+    private $item_price;
     private $item_amt;
 	public function __construct()
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('log/log_ezpay_model');
-
-        $this->merchant_id = EZPAY_ID;
-        $this->hash_key = EZPAY_KEY;
-        $this->hash_iv = EZPAY_IV;
-        $this->order_no_prefix = 'influx';
-        $this->tax_amt = 0;
-        $this->total_amt = 0;
-        $this->item_name = '平台服務費';
-        $this->item_count = 1;
-        $this->item_unit = '筆';
-        $this->item_price = 0;
-        $this->item_amt = 0;
+        $this->merchant_list = [
+            'influx' => ['merchant_id' => EZPAY_ID, 'hash_key' => EZPAY_KEY, 'hash_iv' => EZPAY_IV],
+            'leasing' => ['merchant_id' => EZPAY_ID_LEASING, 'hash_key' => EZPAY_KEY_LEASING, 'hash_iv' => EZPAY_IV_LEASING],
+        ];
     }
 
-    public function send($user_id, $from_leasing = FALSE)
+    // 設定金額
+    public function set_amt(int $tax_amt, int $total_amt)
+    {
+        $this->tax_amt = $tax_amt;
+        $this->total_amt = $total_amt;
+    }
+
+    // 設定品項
+    public function set_item($order_no_prefix = 'influx', $item_name = '平台服務費', $item_count = 1, $item_unit = '筆', $item_price = 0, $item_amt = 0)
+    {
+        $this->order_no_prefix = $order_no_prefix;
+        $this->item_name = $item_name;
+        $this->item_count = $item_count;
+        $this->item_unit = $item_unit;
+        $this->item_price = $item_price;
+        $this->item_amt = $item_amt;
+    }
+
+    /**
+     * @param $user_id
+     * @param $include_influx : 開發票對象是否包含普匯金融
+     * @return array|false
+     */
+    public function send($user_id, $include_influx = FALSE)
     {
         $this->tax_amt = (int) $this->tax_amt;
         $this->total_amt = (int) $this->total_amt;
@@ -44,7 +57,7 @@ class Ezpay_lib
             {
                 return FALSE;
             }
-            if ($user_id === 0 && $from_leasing === TRUE)
+            if ($user_id === 0 && $include_influx === TRUE)
             { // 普匯租賃開發票
                 $user_info = new stdClass();
                 $user_info->name = COMPANY_NAME;
@@ -57,18 +70,11 @@ class Ezpay_lib
                 $user_info = $this->CI->user_model->get($user_id);
             }
 
-            if ($from_leasing === TRUE)
+            if ($user_info && (($user_info->email && $include_influx !== TRUE) || $include_influx === TRUE))
             {
-                $this->merchant_id = EZPAY_ID_LEASING;
-                $this->hash_key = EZPAY_KEY_LEASING;
-                $this->hash_iv = EZPAY_IV_LEASING;
-            }
-
-            if ($user_info && (($user_info->email && $from_leasing !== TRUE) || $from_leasing === TRUE))
-            {
-				$MerchantID = $this->merchant_id;
-				$hashkey 	= $this->hash_key;
-				$hashiv		= $this->hash_iv;
+				$MerchantID = $this->merchant_list[$this->order_no_prefix]['merchant_id'];
+				$hashkey 	= $this->merchant_list[$this->order_no_prefix]['hash_key'];
+				$hashiv		= $this->merchant_list[$this->order_no_prefix]['hash_iv'];
 				$order_no	= $this->get_order_no($this->order_no_prefix);
 				if(is_development()){
 					$url 		= 'https://cinv.ezpay.com.tw/Api/invoice_issue';		
