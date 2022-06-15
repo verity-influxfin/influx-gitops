@@ -533,6 +533,11 @@ defined('EZPAY_ID')     			OR define('EZPAY_ID'				, getenv('ENV_EZPAY_ID'));
 defined('EZPAY_KEY')     			OR define('EZPAY_KEY'				, getenv('ENV_EZPAY_KEY'));
 defined('EZPAY_IV')     			OR define('EZPAY_IV'				, getenv('ENV_EZPAY_IV'));
 
+// Ezpay（普匯租賃）
+defined('EZPAY_ID_LEASING') or define('EZPAY_ID_LEASING', getenv('ENV_EZPAY_ID_LEASING'));
+defined('EZPAY_KEY_LEASING') or define('EZPAY_KEY_LEASING', getenv('ENV_EZPAY_KEY_LEASING'));
+defined('EZPAY_IV_LEASING') or define('EZPAY_IV_LEASING', getenv('ENV_EZPAY_IV_LEASING'));
+
 //OCR
 defined('OCR_API_URL')      		OR define('OCR_API_URL'				,'http://52.194.4.73:8888/cxfServerX/ImgReconCard?wsdl');
 
@@ -749,6 +754,13 @@ defined('CHECK_SECOND_INSTANCE')   OR define('CHECK_SECOND_INSTANCE', 1);
 defined('MONTAGE_USER_STATUS_EXISTS') or define('MONTAGE_USER_STATUS_EXISTS', 1); // 已上傳過
 defined('MONTAGE_USER_STATUS_NO_REFERENCE') or define('MONTAGE_USER_STATUS_NO_REFERENCE', 2); // 找不到reference的圖
 defined('MONTAGE_USER_STATUS_NO_USER') or define('MONTAGE_USER_STATUS_NO_USER', 3); // 找不到user的圖
+
+// 普匯租賃 user id
+defined('LEASING_USERID') or define('LEASING_USERID', 73628);
+
+defined('COMPANY_NAME') or define('COMPANY_NAME', '普匯金融科技股份有限公司');
+defined('COMPANY_ID_NUMBER') or define('COMPANY_ID_NUMBER', '68566881');
+defined('COMPANY_SERVICE_EMAIL') or define('COMPANY_SERVICE_EMAIL', 'service@influxfin.com');
 
 // target loan mapping msg_no bank
 defined('MAPPING_MSG_NO_NO_BANK') or define('MAPPING_MSG_NO_NO_BANK', 0);

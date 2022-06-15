@@ -2,22 +2,80 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Ezpay_lib{
-	
+class Ezpay_lib
+{
+    private $merchant_list;
+    public $order_no_prefix;
+    private $tax_amt;
+    private $total_amt;
+    private $item_name;
+    private $item_count;
+    private $item_unit;
+    private $item_price;
+    private $item_amt;
 	public function __construct()
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('log/log_ezpay_model');
+        $this->merchant_list = [
+            'influx' => ['merchant_id' => EZPAY_ID, 'hash_key' => EZPAY_KEY, 'hash_iv' => EZPAY_IV],
+            'leasing' => ['merchant_id' => EZPAY_ID_LEASING, 'hash_key' => EZPAY_KEY_LEASING, 'hash_iv' => EZPAY_IV_LEASING],
+        ];
     }
-	
-	public function send($user_id=0,$amount=0,$tax=0){
-		if($user_id && $amount>0 && $amount > $tax ){
-			$user_info = $this->CI->user_model->get($user_id);
-			if($user_info && $user_info->email){
-				$MerchantID = EZPAY_ID;
-				$hashkey 	= EZPAY_KEY;
-				$hashiv		= EZPAY_IV;
-				$order_no	= $this->get_order_no();
+
+    // 設定金額
+    public function set_amt(int $tax_amt, int $total_amt)
+    {
+        $this->tax_amt = $tax_amt;
+        $this->total_amt = $total_amt;
+    }
+
+    // 設定品項
+    public function set_item($order_no_prefix = 'influx', $item_name = '平台服務費', $item_count = 1, $item_unit = '筆', $item_price = 0, $item_amt = 0)
+    {
+        $this->order_no_prefix = $order_no_prefix;
+        $this->item_name = $item_name;
+        $this->item_count = $item_count;
+        $this->item_unit = $item_unit;
+        $this->item_price = $item_price;
+        $this->item_amt = $item_amt;
+    }
+
+    /**
+     * @param $user_id
+     * @param $include_influx : 開發票對象是否包含普匯金融
+     * @return array|false
+     */
+    public function send($user_id, $include_influx = FALSE)
+    {
+        $this->tax_amt = (int) $this->tax_amt;
+        $this->total_amt = (int) $this->total_amt;
+
+        if ($this->total_amt > 0 && $this->total_amt > $this->tax_amt)
+        {
+            if ($this->get_item_info() !== TRUE)
+            {
+                return FALSE;
+            }
+            if ($user_id === 0 && $include_influx === TRUE)
+            { // 普匯租賃開發票
+                $user_info = new stdClass();
+                $user_info->name = COMPANY_NAME;
+                $user_info->id_number = COMPANY_ID_NUMBER;
+                $user_info->email = COMPANY_SERVICE_EMAIL;
+                $user_info->phone = '';
+            }
+            else
+            {
+                $user_info = $this->CI->user_model->get($user_id);
+            }
+
+            if ($user_info && (($user_info->email && $include_influx !== TRUE) || $include_influx === TRUE))
+            {
+				$MerchantID = $this->merchant_list[$this->order_no_prefix]['merchant_id'];
+				$hashkey 	= $this->merchant_list[$this->order_no_prefix]['hash_key'];
+				$hashiv		= $this->merchant_list[$this->order_no_prefix]['hash_iv'];
+				$order_no	= $this->get_order_no($this->order_no_prefix);
 				if(is_development()){
 					$url 		= 'https://cinv.ezpay.com.tw/Api/invoice_issue';		
 				}else{
@@ -38,14 +96,14 @@ class Ezpay_lib{
 					'PrintFlag'			=> 'N',//索取紙本發票
 					'TaxType'			=> '1',//課稅別
 					'TaxRate'			=> TAX_RATE,//稅率
-					'Amt'				=> intval($amount-$tax),//銷售額合計
-					'TaxAmt'			=> $tax,//稅額
-					'TotalAmt'			=> intval($amount),//發票金額
-					'ItemName'			=> '平台服務費',//商品名稱
-					'ItemCount'			=> '1',//商品數量
-					'ItemUnit'			=> '筆',//商品單位
-					'ItemPrice'			=> intval($amount),//商品單價
-					'ItemAmt'			=> intval($amount),//商品小計
+					'Amt'				=> $this->total_amt - $this->tax_amt,//銷售額合計
+					'TaxAmt'			=> $this->tax_amt,//稅額
+					'TotalAmt'			=> $this->total_amt,//發票金額
+					'ItemName'			=> $this->item_name,//商品名稱
+					'ItemCount'			=> $this->item_count,//商品數量
+					'ItemUnit'			=> $this->item_unit,//商品單位
+					'ItemPrice'			=> $this->item_price,//商品單價
+					'ItemAmt'			=> $this->item_amt,//商品小計
 				);
 				if (strlen($user_info->id_number) === 8) {
 					$data['Category'] = 'B2B';
@@ -78,8 +136,8 @@ class Ezpay_lib{
 							"user_id"		=> $user_id,
 							"tax_id"		=> $tax_id,
 							"order_no"		=> $order_no,
-							"amount"		=> $amount,
-							"tax_amount"	=> $tax,
+							"amount"		=> $this->total_amt,
+							"tax_amount"	=> $this->tax_amt,
 						);
 					}
 				}
@@ -94,11 +152,61 @@ class Ezpay_lib{
 		}
 		return false;
 	}
-	
-	private function get_order_no(){
-		return 'influx'.round(microtime(true) * 100).rand(0, 9).rand(0, 9);
-	}
-	
+
+    // 取得商店自訂訂單編號(20位)
+    private function get_order_no($prefix)
+    {
+        return str_pad(($prefix . round(microtime(TRUE) * 100)), 20, rand(0, 9));
+    }
+
+    private function get_item_info(): bool
+    {
+        $result = FALSE;
+
+        // 多項商品
+        if (is_array($this->item_name) && is_array($this->item_count) && is_array($this->item_unit) && is_array($this->item_price))
+        {
+            if (count($this->item_name) == count($this->item_count) &&
+                count($this->item_count) == count($this->item_unit) &&
+                count($this->item_unit) == count($this->item_price) &&
+                count($this->item_price) == count($this->item_name)
+            )
+            {
+                $this->item_name = implode('|', $this->item_name); // 商品名稱
+                $this->item_unit = implode('|', $this->item_unit); // 商品單位
+
+                $this->intval_number_ary($this->item_count); // 商品數量
+                $this->intval_number_ary($this->item_price); // 商品單價
+
+                $this->item_amt = array_map(function ($x, $y) { // 商品小計
+                    return $x * $y;
+                }, $this->item_count, $this->item_price);
+
+                $this->item_count = implode('|', $this->item_count);
+                $this->item_price = implode('|', $this->item_price);
+                $this->item_amt = implode('|', $this->item_amt);
+
+                $result = TRUE;
+            }
+        }
+        // 單項商品
+        elseif (is_string($this->item_name) && is_numeric($this->item_count) && is_string($this->item_unit) && is_numeric($this->item_price))
+        {
+            $this->item_count = (int) $this->item_count;
+            $this->item_price = (int) $this->item_price;
+            $this->item_amt = $this->item_price;
+            $result = TRUE;
+        }
+        return $result;
+    }
+
+    private function intval_number_ary(array &$number_list): void
+    {
+        $number_list = array_map(function ($element) {
+            return (int) $element;
+        }, $number_list);
+    }
+
 	private function addpadding($string, $blocksize = 32){
 		$len = strlen($string);
 		$pad = $blocksize - ($len % $blocksize);

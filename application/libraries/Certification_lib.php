@@ -3741,7 +3741,7 @@ class Certification_lib{
         $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE]);
         foreach ($user_lists as $user)
         {
-            $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY);
+            $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY, USER_BORROWER, FALSE, TRUE);
             if (empty($info))
             {
                 $this->CI->user_certification_model->insert([
