@@ -2559,6 +2559,10 @@ class Certification extends REST_Controller {
 			foreach ($file_fields as $field) {
                 $list = false;
     			$image_ids = isset($input[$field]) && !empty($input[$field]) ? explode(',',$input[$field]) : [];
+
+                // All empty entries of array will be removed
+                $image_ids = array_filter($image_ids);
+
                 if(!empty($image_ids)){
                     if(count($image_ids) > 0){
                         if(count($image_ids)>15){
