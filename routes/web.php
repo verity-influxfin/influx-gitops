@@ -118,7 +118,8 @@ Route::post('/getRecoveriesInfo', 'Membercentrecontroller@getRecoveriesInfo');
 
 Route::get('/downloadStatement', 'Membercentrecontroller@downloadStatement');
 
-Route::post('/getInvestReport', 'Membercentrecontroller@getInvestReport');
+Route::post('/getInvestReport', 'Membercentrecontroller@getInvestReport')
+    ->middleware('cert.chk:identity');
 
 Route::get('/downloadInvestReport', 'Membercentrecontroller@downloadInvestReport');
 
@@ -371,4 +372,12 @@ Route::get('/event/charity/donation', 'CharityController@getDonation');
 Route::post('/charity/donate/anonymous', 'CharityController@visitorDonate');
 Route::get('/charity/donate/anonymous', 'CharityController@visitorSearch');
 
+
+Route::prefix('/chk/cert')->group(function () {
+    // 個別檢查徵信項
+    Route::get('/{cert_alias}', [
+        'middleware' => 'cert.chk',
+        'uses' => 'CertController@chk_status'
+    ]);
+});
 
