@@ -538,8 +538,12 @@ export default {
     getData() {
       return Axios.post('/getInvestReport')
         .then(({ data }) => {
+          if(data.error && data.error == 2002){
+            // 實名認證未通過
+            alert('需通過實名認證才可查看本頁面')
+            this.$router.back()
+          }
           this.invest_report = data.data
-          console.log(data)
         })
         .catch(err => {
           console.error(err)

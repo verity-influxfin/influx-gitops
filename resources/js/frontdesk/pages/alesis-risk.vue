@@ -16,7 +16,7 @@
                 <div class="標題">違約率報告書</div>
             </alesis-header>
             <alesis-space size="medium"></alesis-space>
-            <alesis-section>
+            <alesis-section v-if="isLogin">
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <img :src="img_path" class="圖片">
@@ -69,6 +69,8 @@ import "swiper/components/navigation/navigation.min.css"
 import SwiperCore, {
   Navigation
 } from 'swiper/core';
+import axios from 'axios';
+
 
 export default {
     components: {
@@ -138,7 +140,8 @@ export default {
                     month:'2022年05月',
                     image:require('../asset/images/risk/risk-2205.jpg'),
                 }
-            ]
+            ],
+            isLogin:false,
         }
     },
     computed: {
@@ -156,8 +159,13 @@ export default {
         }
     },
     created() {
-        console.log(this.renderList)
         $("title").text(`風險報告書 - inFlux普匯金融科技`);
+        if (sessionStorage.length === 0 || sessionStorage.flag === 'logout') {
+          this.$store.commit('mutationLogin')
+          this.isLogin = false
+        }else{
+          this.checkCert()
+        }
     },
     mounted () {
         SwiperCore.use([Navigation]);
@@ -168,6 +176,18 @@ export default {
                 prevEl: '.swiper-button-prev',
             },
         });
+    },
+    methods: {
+      checkCert() {
+        axios.get('/chk/cert/identity').then(({data})=>{
+          if(data.error && data.error==2002){
+            alert('需通過實名認證才可查看本頁面')
+            this.$router.back()
+          }else{
+            this.isLogin = true
+          }
+        })
+      }
     },
 };
 </script>
@@ -251,6 +271,7 @@ export default {
 .報告書 {
     position: relative;
     margin-top: 8rem;
+    min-height: 100vh;
 }
 
 .報告書 .包裹容器 {
