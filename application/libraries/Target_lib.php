@@ -2222,7 +2222,7 @@ class Target_lib
             'secondInstance' => $sub_product['secondInstance'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
-            'checkOwner' => isset($product['checkOwner']) ? $product['checkOwner'] : false,
+            'checkOwner' => $product['checkOwner'] ?? FALSE,
             'status' => $sub_product['status'],
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,
             'available_company_categories' => $sub_product['available_company_categories'] ?? null

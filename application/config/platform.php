@@ -460,10 +460,12 @@ $config['product_list'] = [
         ],
         // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
-            CERTIFICATION_REPAYMENT_CAPACITY
+            CERTIFICATION_REPAYMENT_CAPACITY,
+            CERTIFICATION_DIPLOMA,
         ],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
+            CERTIFICATION_DIPLOMA
         ],
         'certifications_stage' => [
             [
@@ -1721,10 +1723,12 @@ $config['sub_product_list'] = [
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_DIPLOMA
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
+                    CERTIFICATION_DIPLOMA
                 ],
                 'certifications_stage' => [
                     [
@@ -1807,10 +1811,12 @@ $config['sub_product_list'] = [
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_DIPLOMA
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
+                    CERTIFICATION_DIPLOMA
                 ],
                 'certifications_stage' => [
                     [
@@ -1893,10 +1899,12 @@ $config['sub_product_list'] = [
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_DIPLOMA
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
+                    CERTIFICATION_DIPLOMA
                 ],
                 'certifications_stage' => [
                     [
@@ -2021,6 +2029,7 @@ $config['sub_product_list'] = [
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
+                    CERTIFICATION_DIPLOMA
                 ],
                 'certifications_stage' => [
                     [
@@ -2203,7 +2212,7 @@ $config['sub_product_list'] = [
                 'targetData' => [],
                 'secondInstance' => false,
                 'weight' => [],
-                'status' => 1,
+                'status' => 0,
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [20, 45],
