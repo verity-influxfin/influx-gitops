@@ -49,11 +49,11 @@
       <div class="invest-content">
         <div class="invest-item">
           <div class="item-title">應收款項</div>
-          <div class="item-info">${{ formate(tweenedPrincipal) }}</div>
+          <div class="item-info">${{ formate(tweenedAccountReceivable) }}</div>
         </div>
         <div class="invest-item">
           <div class="item-title">持有債權本金餘額</div>
-          <div class="item-info">${{ formate(tweenedReceivable) }}</div>
+          <div class="item-info">${{ formate(tweenedPrincipal) }}</div>
         </div>
         <div class="invest-item">
           <div class="item-title">得標/處理中</div>
@@ -445,13 +445,12 @@ export default {
       userData: {},
       isLogin: null,
       loading: true,
+      accountReceivable: 0,
       principal: 0,
       frozen: 0,
       insufficient: 0,
-      principal: 0,
-      tweenedReceivable: 0,
+      tweenedAccountReceivable: 0,
       tweenedPrincipal: 0,
-      tweenedReceivable: 0,
       tweenedFrozen: 0,
       tweenedInsufficient: 0,
     }
@@ -574,11 +573,11 @@ export default {
         money = this.myInvsetment.payable - (this.myInvsetment.funds.total - totalFrozen);
       }
 
-      this.principal =
+      this.accountReceivable =
         this.myInvsetment.accounts_receivable.principal +
         this.myInvsetment.accounts_receivable.interest +
         this.myInvsetment.accounts_receivable.delay_interest;
-      this.receivable = this.myInvsetment.accounts_receivable.principal;
+      this.principal = this.myInvsetment.accounts_receivable.principal;
       this.available = this.myInvsetment.funds.total - totalFrozen;
       this.frozen = totalFrozen;
       this.insufficient = money;
@@ -588,11 +587,11 @@ export default {
     myInvsetment() {
       this.getInvestmentData();
     },
+    accountReceivable(newValue) {
+      gsap.to(this.$data, { duration: 1, tweenedAccountReceivable: newValue });
+    },
     principal(newValue) {
       gsap.to(this.$data, { duration: 1, tweenedPrincipal: newValue });
-    },
-    receivable(newValue) {
-      gsap.to(this.$data, { duration: 1, tweenedReceivable: newValue });
     },
     available(newValue) {
       gsap.to(this.$data, { duration: 1, tweenedAvailable: newValue });

@@ -41,20 +41,20 @@
         </div>
       </div>
     </div>
-    <div class="member-menu" v-if="getChild!=='/invest-report'">
+    <div class="member-menu" v-if="getChild !== '/invest-report'">
       <div class="invest-card">
         <div class="invest-box">
           <div class="header">投資總覽</div>
           <div style="overflow: hidden">
             <div class="detial-row">
               <div>
-                <span>{{ format(tweenedPrincipal) }}$</span>
+                <span>{{ format(tweenedAccountReceivable) }}$</span>
                 <label>應收款項</label>
               </div>
             </div>
             <div class="detial-row">
               <div>
-                <span>{{ format(tweenedReceivable) }}$</span>
+                <span>{{ format(tweenedPrincipal) }}$</span>
                 <label>持有債權本金餘額</label>
               </div>
             </div>
@@ -98,7 +98,7 @@
 import userInfo from "../component/userInfoComponent";
 import { gsap } from 'gsap/dist/gsap'
 export default {
-  beforeRouteEnter (to, from, next) {
+  beforeRouteEnter(to, from, next) {
     if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {
       next("/index");
     } else {
@@ -114,10 +114,10 @@ export default {
     pageTitle: "",
     pageIcon: "",
     pagedesc: "",
+    accountReceivable: 0,
+    tweenedAccountReceivable: 0,
     principal: 0,
     tweenedPrincipal: 0,
-    receivable: 0,
-    tweenedReceivable: 0,
     available: 0,
     tweenedAvailable: 0,
     frozen: 0,
@@ -127,14 +127,14 @@ export default {
     unreadCount: 0,
   }),
   computed: {
-    myInvsetment () {
+    myInvsetment() {
       return this.$store.getters.InvestAccountData;
     },
-    getChild(){
-        return this.$route.path
+    getChild() {
+      return this.$route.path
     }
   },
-  created () {
+  created() {
     this.$store.dispatch("getRecoveriesList");
     this.$store.dispatch("getRecoveriesFinished");
     this.$store.dispatch("getMyInvestment");
@@ -164,31 +164,31 @@ export default {
     );
   },
   watch: {
-    myInvsetment () {
+    myInvsetment() {
       this.getInvestmentData();
     },
-    principal (newValue) {
+    accountReceivable(newValue) {
+      gsap.to(this.$data, { duration: 1, tweenedAccountReceivable: newValue });
+    },
+    principal(newValue) {
       gsap.to(this.$data, { duration: 1, tweenedPrincipal: newValue });
     },
-    receivable (newValue) {
-      gsap.to(this.$data, { duration: 1, tweenedReceivable: newValue });
-    },
-    available (newValue) {
+    available(newValue) {
       gsap.to(this.$data, { duration: 1, tweenedAvailable: newValue });
     },
-    frozen (newValue) {
+    frozen(newValue) {
       gsap.to(this.$data, { duration: 1, tweenedFrozen: newValue });
     },
-    insufficient (newValue) {
+    insufficient(newValue) {
       gsap.to(this.$data, { duration: 1, tweenedInsufficient: newValue });
     },
   },
   methods: {
-    format (data) {
+    format(data) {
       let l10nEN = new Intl.NumberFormat("en-US");
       return l10nEN.format(data.toFixed(0));
     },
-    getInvestmentData () {
+    getInvestmentData() {
       let totalFrozen = 0;
       for (let key in this.myInvsetment.funds.frozenes) {
         totalFrozen += this.myInvsetment.funds.frozenes[key];
@@ -199,11 +199,11 @@ export default {
         money = this.myInvsetment.payable - (this.myInvsetment.funds.total - totalFrozen);
       }
 
-      this.principal =
+      this.accountReceivable =
         this.myInvsetment.accounts_receivable.principal +
         this.myInvsetment.accounts_receivable.interest +
         this.myInvsetment.accounts_receivable.delay_interest;
-      this.receivable = this.myInvsetment.accounts_receivable.principal;
+      this.principal = this.myInvsetment.accounts_receivable.principal;
       this.available = this.myInvsetment.funds.total - totalFrozen;
       this.frozen = totalFrozen;
       this.insufficient = money;
@@ -216,7 +216,7 @@ export default {
 .investment-wrapper {
   background-color: #f5f5f5;
   .invest-header {
-    background-image: url("../asset/images/header_bg.png");
+    background-image: url('../asset/images/header_bg.png');
     background-repeat: no-repeat;
     background-size: contain;
     padding: 25px 5%;
@@ -415,8 +415,8 @@ export default {
       }
     }
   }
-  .main-content{
-      overflow-x: auto;
+  .main-content {
+    overflow-x: auto;
   }
 
   @media screen and (max-width: 767px) {
