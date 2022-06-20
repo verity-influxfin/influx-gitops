@@ -1254,7 +1254,7 @@ $config['visul_id_des'] = [
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
     ],
     'LF2' => [
-        'name' => '購新車，頭貸款',
+        'name' => '購新車，貸頭款',
         'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供購車合約上傳</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
@@ -1262,7 +1262,7 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'LF3' => [
-        'name' => '購新屋，貸你幸福',
+        'name' => '購新房，貸你幸福',
         'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供購屋合約上傳</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
