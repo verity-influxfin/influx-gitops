@@ -849,4 +849,18 @@ class Target_model extends MY_Model
         return $result;
     }
 
+    public function chk_exist_by_status($condition): bool
+    {
+        $this->_database
+            ->from('`p2p_loan`.`targets`');
+        if ( ! empty($condition))
+        {
+            $this->_set_where([0 => $condition]);
+        }
+        if ( ! empty($this->_database->get()->first_row()))
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
 }
