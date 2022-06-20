@@ -3170,7 +3170,7 @@ class Certification_lib{
             }
 
             $skip_certification_ids = [];
-            if (isset($target))
+            if ( ! empty($target))
             {
                 $this->CI->load->model('loan/target_meta_model');
                 $target_meta = $this->CI->target_meta_model->as_array()->get_by([
