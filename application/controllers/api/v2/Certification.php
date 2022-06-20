@@ -4469,8 +4469,14 @@ class Certification extends REST_Controller {
         if(isset($this->user_info->naturalPerson) && $certification_id < 1000) {
             $this->user_info->id = $this->user_info->naturalPerson->id;
         }
-        $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor);
-        if($user_certification){
+        $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor, TRUE, TRUE);
+
+        $this->load->helper('target');
+        $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
+        $this->load->helper('user_certification');
+        $truly_failed = certification_truly_failed($exist_target_submitted, $user_certification->certificate_status ?? 0, $user_certification->status, $user_certification->expire_time ?? '');
+
+        if($user_certification && ! $truly_failed){
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
         }
     }
