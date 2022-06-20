@@ -2284,6 +2284,9 @@ $config['certifications_msg'] = [
         '您的身份非平台服務範圍，我們無法提供服務給您，造成不便，敬請見諒！',
         '填寫的學制與證書不符',
     ],
+    CERTIFICATION_FINANCIALWORKER => [
+        '上傳資料有誤'
+    ],
     CERTIFICATION_INVESTIGATION => [
         '請寄送完整版電子聯徵資料至credit@influxfin.com，感謝您的配合！',
         '聯徵資料與平台規範不符',
