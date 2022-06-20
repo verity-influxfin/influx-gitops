@@ -3298,7 +3298,7 @@ class Certification_lib{
         isset($productList[$target->product_id]['certifications_stage']) ?
             $productList[$target->product_id]['certifications_stage'] : null;
 
-        $option_cert = $productList['option_certifications'] ?? [];
+        $option_cert = $productList[$target->product_id]['option_certifications'] ?? [];
         if ($target->sub_product_id != 0)
         {
             $this->CI->load->library('loanmanager/product_lib.php');
