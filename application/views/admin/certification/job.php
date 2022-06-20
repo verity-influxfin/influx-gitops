@@ -40,10 +40,10 @@
                                         <label>公司</label>
                                         <p class="form-control-static"><?=isset($content['tax_id'])?$content['tax_id']:""?></p>
                                     <?
-                                    if(isset($content['company'])&&$content['company']==''&&($data->status==3||$data->status==4)){
+                                    if(($data->status==3||$data->status==4)){
                                         echo '<form role="form" method="post">
                                         <div class="form-group">
-                                            <input type="text" name="company" value="' . $content['company'] . '" />
+                                            <input type="text" name="company" value="' . ($content['company'] ?? '') . '" />
                                             <input type="hidden" name="id" value="' . $data->id . '" >
                                             <input type="hidden" name="from" value="' . $from . '" >
                                         </div>
