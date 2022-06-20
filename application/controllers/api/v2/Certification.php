@@ -128,11 +128,16 @@ class Certification extends REST_Controller {
 		$investor 			= $this->user_info->investor;
 		$company 			= $this->user_info->company;
         $incharge           = $this->user_info->incharge;
-        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company);
+        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, TRUE, FALSE, FALSE, TRUE);
 		$list				= array();
 		if(!empty($certification_list)){
 		    $sort = $this->config->item('certifications_sort');
 		    $new_list = [];
+
+            $this->load->helper('target');
+            $this->load->helper('user_certification');
+            $exist_target_submitted = exist_approving_target_submitted($user_id);
+
 		    foreach ($sort as $key => $value){
                 if(isset($certification_list[$value])
                     && (
@@ -141,6 +146,19 @@ class Certification extends REST_Controller {
                     )
                 ){
                     count($certification_list[$value]['optional']) == 0 ? $certification_list[$value]['optional'] = false : '';
+                    $truly_failed = certification_truly_failed(
+                        $exist_target_submitted,
+                        $certification_list[$value]['certificate_status'] ?? 0,
+                        $certification_list[$value]['user_status'],
+                        $certification_list[$value]['expire_time']
+                    );
+                    if ($truly_failed)
+                    {
+                        $certification_list[$value]['user_status'] = NULL;
+                        $certification_list[$value]['certification_id'] = NULL;
+                        $certification_list[$value]['remark'] = NULL;
+                        $certification_list[$value]['content'] = NULL;
+                    }
                     $new_list[$value] = $certification_list[$value];
                 }
             }
@@ -2573,6 +2591,10 @@ class Certification extends REST_Controller {
 			foreach ($file_fields as $field) {
                 $list = false;
     			$image_ids = isset($input[$field]) && !empty($input[$field]) ? explode(',',$input[$field]) : [];
+
+                // All empty entries of array will be removed
+                $image_ids = array_filter($image_ids);
+
                 if(!empty($image_ids)){
                     if(count($image_ids) > 0){
                         if(count($image_ids)>15){

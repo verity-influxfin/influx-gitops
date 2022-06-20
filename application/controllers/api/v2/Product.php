@@ -168,7 +168,7 @@ class Product extends REST_Controller {
         // }
         $login = false;
         if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
-            $certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor,$this->user_info->company);
+            $certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor,$this->user_info->company, TRUE, FALSE, FALSE, TRUE);
             $login = true;
         }else{
             $certification_list = [];
@@ -181,6 +181,17 @@ class Product extends REST_Controller {
         }
 
         if(!empty($cproduct_list)){
+            $this->load->helper('target');
+            $this->load->helper('user_certification');
+            if (isset($this->user_info->id))
+            {
+                $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
+            }
+            else
+            {
+                $exist_target_submitted = FALSE;
+            }
+
             foreach($cproduct_list as $key => $value) {
                 if (isset($value['status']) && $value['status'] == 0)
                 { // 產品關閉
@@ -234,6 +245,15 @@ class Product extends REST_Controller {
                 $certification = [];
                 if (!empty($certification_list)) {
                     foreach ($certification_list as $k => $v) {
+                        $truly_failed = certification_truly_failed($exist_target_submitted, $v['certificate_status'] ?? 0, $v['user_status'], $v['expire_time'] ?? '');
+                        if ($truly_failed)
+                        {
+                            $v['user_status'] = NULL;
+                            $v['certification_id'] = NULL;
+                            $v['content'] = NULL;
+                            $v['remark'] = NULL;
+                        }
+
                         if (in_array($k, $value['certifications'])) {
                             !is_bool($v['optional']) ? $v['optional'] = false : '';
                             $certification[] = $v;
@@ -323,6 +343,14 @@ class Product extends REST_Controller {
                                             if (!empty($certification_list)) {
                                                 $certification = [];
                                                 foreach ($certification_list as $k => $v) {
+                                                    $truly_failed = certification_truly_failed($exist_target_submitted, $v['certificate_status'] ?? 0, $v['user_status'], $v['expire_time'] ?? '');
+                                                    if ($truly_failed)
+                                                    {
+                                                        $v['user_status'] = NULL;
+                                                        $v['certification_id'] = NULL;
+                                                        $v['content'] = NULL;
+                                                        $v['remark'] = NULL;
+                                                    }
                                                     if (in_array($k, $sub_product_list[$t4]['identity'][$idekey]['certifications'])) {
                                                         $certification[] = $v;
                                                     }
@@ -1397,6 +1425,10 @@ class Product extends REST_Controller {
                 }
             }
             if(!empty($certification_list)){
+                $this->load->helper('target');
+                $this->load->helper('user_certification');
+                $exist_target_submitted = chk_target_submitted($target->certificate_status ?? 0);
+
                 foreach($certification_list as $key => $value){
 
                     // $config['certifications'] 設定 show=FALSE 則不顯示
@@ -1428,13 +1460,7 @@ class Product extends REST_Controller {
 					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
-                        if ($value['user_status'] == CERTIFICATION_STATUS_FAILED &&
-                            isset($target->certificate_status) &&
-                            (
-                                ($target->certificate_status != TARGET_CERTIFICATE_DEFAULT && $target->certificate_status != TARGET_CERTIFICATE_SUBMITTED) ||
-                                ($target->certificate_status == TARGET_CERTIFICATE_DEFAULT && isset($value['certificate_status']) && $value['certificate_status'] == 1)
-                            )
-                        )
+                        if (certification_truly_failed($exist_target_submitted, $value['certificate_status'] ?? 0, $value['user_status'], $value['expire_time'] ?? ''))
                         {
                             $value['user_status'] = NULL;
                             $value['certification_id'] = NULL;

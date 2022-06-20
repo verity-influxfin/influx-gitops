@@ -46,6 +46,39 @@ function convertARSourceToChargeSource($ARSource) : int {
     }
 }
 
+/**
+ * 確認是否有待核可案件已一鍵送出
+ * @param $user_id
+ * @return mixed
+ */
+function exist_approving_target_submitted($user_id)
+{
+    $CI =& get_instance();
+    $CI->load->model('loan/target_model');
+    return $CI->target_model->chk_exist_by_status([
+        'user_id' => $user_id,
+        'status' => TARGET_WAITING_APPROVE,
+        'certificate_status' => [TARGET_CERTIFICATE_SUBMITTED, TARGET_CERTIFICATE_RE_SUBMITTING]
+    ]);
+}
+
+/**
+ * 確認案件的提交狀態是否已提交過一次
+ * @param int $target_cert_status : 提交狀態 (target.certificate_status)
+ * @return bool
+ */
+function chk_target_submitted(int $target_cert_status): bool
+{
+    switch ($target_cert_status)
+    {
+        case TARGET_CERTIFICATE_SUBMITTED: // 已提交
+        case TARGET_CERTIFICATE_RE_SUBMITTING: // 已提交被退回，重新提交中
+            return TRUE;
+        default:
+            return FALSE;
+    }
+}
+
 function get_bank_prefix($bank_num): string
 {
     switch ($bank_num) {
