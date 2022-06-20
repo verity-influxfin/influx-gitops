@@ -3182,12 +3182,14 @@ class Certification_lib{
 					$value['content'] 		       = $user_certification->content;
                     $value['remark']		       = $user_certification->remark;
                     $value['certificate_status'] = $user_certification->certificate_status;
+                    $value['expire_time'] = $user_certification->expire_time;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
 				}else{
 					$value['user_status'] 		 = null;
 					$value['certification_id'] 	 = null;
 					$value['updated_at'] 		 = null;
+                    $value['expire_time'] = NULL;
 				}
 
                     $certification_list[$key] = $value;
