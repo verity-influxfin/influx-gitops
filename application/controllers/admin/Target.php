@@ -491,7 +491,7 @@ class Target extends MY_Admin_Controller {
 	function verify_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
-		$remark = isset($get['remark'])?$get['remark']:'';
+		$remark = $get['remark'] ?? '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務';
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && in_array($info->status,array(
