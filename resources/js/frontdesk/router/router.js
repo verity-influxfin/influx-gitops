@@ -50,7 +50,6 @@ import businessEnd from '../pages/BusinessLoan/end'
 import smeIndex from '../pages/BusinessLoan/smeLoan'
 import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
-import jumpEvent from '../pages/jumpEvent'
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -148,10 +147,6 @@ let routers = [
     {path:'/charitable',component:ntu},
     { path: '/charitable-status', component: charitableStatus},
     { path: '/search',name:'search', component: search },
-    {
-        path: '/5th-anniversary',
-        component:jumpEvent
-    }
 ];
 
 export default routers;

@@ -270,7 +270,7 @@
                                                     <a href="/news" class="link-text">最新消息</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/blog" class="link-text">AI金融科技新知</a>
+                                                    <a href="/blog" class="link-text">普匯小學堂</a>
                                                 </div>
                                                 <div class="link-item">
                                                     <a href="/faq" class="link-text">瞭解更多</a>
@@ -291,9 +291,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                             <div class="function-item">
-                                <a href="/5th-anniversary" class="function-title">普匯五週年</a>
                             </div>
                         </div>
                         <div class="col"></div>
@@ -393,7 +390,6 @@
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <a href="/charitable" class="item">慈善公益</a>
-                <a href="/5th-anniversary" class="item">普匯五週年</a>
                 <div class="item">
                     <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login-btn btn">註冊/登入<i class="ml-2 fa fa-arrow-right"></i></button>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
@@ -517,7 +513,7 @@
                             <div class="list">
                                 <a href="/company" class="text-white">關於我們</a>
                                 <a href="/news" class="text-white">最新消息</a>
-                                <a href="/blog" class="text-white">AI金融科技新知</a>
+                                <a href="/blog" class="text-white">普匯小學堂</a>
                             </div>
                         </div>
                         <div class="item">
