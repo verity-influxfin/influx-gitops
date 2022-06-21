@@ -492,6 +492,15 @@ abstract class Certification_base implements Certification_definition
     }
 
     /**
+     * 該徵信項是否曾送出審核過
+     * @return bool
+     */
+    public function is_submit_to_review(): bool
+    {
+        return $this->certification['certificate_status'] == 1;
+    }
+
+    /**
      * 退掉待簽約案件及信評分數
      */
     public function failed_target_credit()
