@@ -8,7 +8,7 @@
 function certification_truly_failed($exist_target_submitted, $certification_id): bool
 {
     $cert = \Certification\Certification_factory::get_instance_by_id($certification_id);
-    if ( ! $cert)
+    if (empty($cert))
     {
         return FALSE;
     }
