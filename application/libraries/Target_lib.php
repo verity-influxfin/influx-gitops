@@ -327,7 +327,7 @@ class Target_lib
                                 "source" => SOURCE_PRINCIPAL,
                                 "user_from" => $user_id,
                                 "target_id" => $value->id,
-                                "status" => TARGET_WAITING_VERIFY
+                                "status" => TRANSACTION_STATUS_PAID_OFF
                             ));
                             //扣除已還款金額
                             foreach ($pay_back_transactions as $key2 => $value2) {

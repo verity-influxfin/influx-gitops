@@ -916,6 +916,11 @@ class Target extends MY_Admin_Controller {
                 $where['product_id'] = $filter_product_ids;
             }
 
+            if($tab == PRODUCT_TAB_ENTERPRISE)
+            {
+                $where['status'] = TARGET_WAITING_VERIFY;
+            }
+
 			$targets = $this->target_model->get_many_by($where);
 			if (!$targets) {
 				$this->json_output->setStatusCode(204)->send();

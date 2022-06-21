@@ -262,7 +262,7 @@ END:
                     $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id,'product_id' => PRODUCT_SK_MILLION_SMEG]);
                     if($targetInfo){
                         $updateTarget = $this->target_model->update($targetInfo->id,[
-                            'status' => 500
+                            'status' => TARGET_BANK_VERIFY
                         ]);
                     }
                 }
