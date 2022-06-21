@@ -2,7 +2,7 @@
   <div class="card" data-aos="fade-up">
     <div class="card-body">
       <div class="card-cover">
-        <img class="img-fluid" :src="icon" />
+        <img class="img-fluid mx-auto" :src="icon" />
       </div>
       <div class="card-title">{{ title }}</div>
       <div class="card-divider"></div>
@@ -45,6 +45,7 @@ export default {
     padding: 24px;
   }
   .card-cover {
+    display: flex;
     width: 84px;
     margin: 0 auto 16px;
     padding: 12px;

@@ -1,25 +1,24 @@
 <template>
   <div class="college-loan">
     <div class="banner">
-      <div class="block-content">
-        <img src="" alt="學生貸" class="slogan-img" />
-        <div class="slogan-1">
-          <div>同學，只要一隻手機</div>
-          <div>普匯幫你完成夢想</div>
-        </div>
-        <div class="slogan-divider"></div>
-        <div class="slogan-2">
-          <div>年滿20歲大學生</div>
-          <div>我是文字</div>
-        </div>
-      </div>
+      <img
+        src="@/asset/images/collegeLoan/college-cover.png"
+        alt="普匯學生貸banner"
+        class="img-fluid"
+      />
     </div>
     <div class="intro">
       <div class="block-content">
         <h1 class="h1">全台大學生，資金需求找普匯</h1>
-        <h2 class="h2">善用科技 普匯金融立馬貸給你</h2>
+        <h2 class="h2">
+          <div>最受年輕人喜歡的金融科技借貸平台</div>
+          <div>立馬申請，立馬貸</div>
+        </h2>
         <div class="row no-gutters feature-cards">
-          <feature-card title="日常生活消費">
+          <feature-card
+            title="生活消費"
+            :icon="require('@/asset/images/collegeLoan/exchange-icon.png')"
+          >
             <div class="feature-card-sub">求學生活別為了資金煩惱</div>
             <ul class="feature-card-list">
               <li class="feature-card-item">
@@ -31,7 +30,10 @@
               </li>
             </ul>
           </feature-card>
-          <feature-card title="學費">
+          <feature-card
+            title="進修學雜費"
+            :icon="require('@/asset/images/collegeLoan/tuition-icon.png')"
+          >
             <div class="feature-card-sub">你的自我進修，學習成長</div>
             <ul class="feature-card-list">
               <li class="feature-card-item">
@@ -42,7 +44,10 @@
               </li>
             </ul>
           </feature-card>
-          <feature-card title="任何資金需求">
+          <feature-card
+            title="資金需求"
+            :icon="require('@/asset/images/collegeLoan/fund-icon.png')"
+          >
             <div class="feature-card-sub">資金需求，交給普匯好朋友</div>
             <ul class="feature-card-list">
               <li class="feature-card-item">
@@ -62,19 +67,35 @@
         <h2 class="h2">準備您的學生證、雙證件、金融卡帳號，手機APP拍照上傳</h2>
         <div class="row no-gutters apply-icons">
           <div class="apply-icon-item">
-            <img src="" alt="學生證" class="apply-icon-img" />
+            <img
+              src="@/asset/images/collegeLoan/student-card-icon.png"
+              alt="學生證"
+              class="apply-icon-img"
+            />
             <div class="apply-icon-text">學生證</div>
           </div>
           <div>
-            <img src="" alt="雙證件" class="apply-icon-img" />
+            <img
+              src="@/asset/images/collegeLoan/idcard-icon.png"
+              alt="雙證件"
+              class="apply-icon-img"
+            />
             <div class="apply-icon-text">雙證件</div>
           </div>
           <div>
-            <img src="" alt="金融帳號" class="apply-icon-img" />
+            <img
+              src="@/asset/images/collegeLoan/creadit-icon.png"
+              alt="金融帳號"
+              class="apply-icon-img"
+            />
             <div class="apply-icon-text">金融帳號</div>
           </div>
           <div>
-            <img src="" alt="拍照上傳" class="apply-icon-img" />
+            <img
+              src="@/asset/images/collegeLoan/upload-icon.png"
+              alt="拍照上傳"
+              class="apply-icon-img"
+            />
             <div class="apply-icon-text">拍照上傳</div>
           </div>
         </div>
@@ -176,7 +197,16 @@
               <div class="reason-intro-item">申貸利率完全公開透明不隱藏</div>
             </div>
           </div>
-          <div class="col">
+          <div class="col reason-image-group">
+            <div class="reason-item reason-item-1">安全</div>
+            <div class="reason-item reason-item-2">快速</div>
+            <div class="reason-item reason-item-3">隱私</div>
+            <div class="reason-item reason-item-4">簡單</div>
+            <img
+              src="@/asset/images/collegeLoan/logo-group.png"
+              alt="普匯logo"
+              class="img-logo"
+            />
             <img
               src="@/asset/images/outline-ball.png"
               alt=""
@@ -577,30 +607,6 @@ $color__background--primary: #f3f9fc;
   margin: 0 auto;
 }
 .college-loan {
-  .banner {
-    padding: 100px;
-    background: cornflowerblue;
-    .slogan {
-      &-img {
-        height: 150px;
-      }
-      &-1 {
-        color: #fff;
-        line-height: 1.4;
-        font-size: 40px;
-      }
-      &-divider {
-        width: 75px;
-        border-bottom: 4px solid $color--primary;
-        margin: 18px 0;
-      }
-      &-2 {
-        color: #000;
-        font-size: 28px;
-        line-height: 1.4;
-      }
-    }
-  }
   .intro {
     padding: 100px 0;
     .h1 {
@@ -881,20 +887,56 @@ $color__background--primary: #f3f9fc;
         }
       }
     }
-    .img-outline {
-      animation-duration: 100s;
-      animation-iteration-count: infinite;
-      animation-name: outline-img;
-    }
-    @keyframes outline-img {
-      0% {
-        transform: rotate(0deg);
+    .reason-image-group {
+      .reason-item {
+        &-1{
+          left: -60px;
+          top: 0;
+        }
+        &-2{
+          top: 90px;
+          right: 60px;
+        }
+        &-3{
+          bottom: 85px;
+          right: 115px;
+        }
+        &-4{
+          left: -115px;
+          bottom: 200px;
+        }
+        position: absolute;
+        font-style: normal;
+        border: 2px solid #cde5f5;
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        text-align: center;
+        font-weight: 500;
+        font-size: 36px;
+        line-height: 120px;
+        color: $color--primary;
       }
-      50% {
-        transform: rotate(180deg);
+      .img-logo{
+        position: absolute;
+        left: -7.4;
+        top: 28.5px;
       }
-      100% {
-        transform: rotate(360deg);
+      .img-outline {
+        animation-duration: 60s;
+        animation-iteration-count: infinite;
+        animation-name: outline-img;
+      }
+      @keyframes outline-img {
+        0% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
     }
   }
