@@ -243,12 +243,26 @@
     <div class="caculate">
       <h1 class="h1">試算你的普匯信用額度</h1>
       <div class="block-content">
-        <form @submit.prevent="" class="caculate-form">
+        <form @submit.prevent="calculateForm" class="caculate-form" ref="borrowReport">
           <div class="row no-gutters">
             <div class="col-6">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*就讀學校：</span>
-                <select class="item-input item-select col" required></select>
+                <select
+                  class="item-input item-select col"
+                  v-model="formSchool"
+                  name="school_name"
+                  required
+                >
+                  <option selected disabled value="">-請選擇-</option>
+                  <option
+                    v-for="(item, index) in schools"
+                    :key="index"
+                    :value="item.title"
+                  >
+                    {{ item.title }}
+                  </option>
+                </select>
               </div>
             </div>
             <div class="col">
@@ -260,7 +274,8 @@
                     <input
                       type="radio"
                       class="radio-inline"
-                      name="id-1"
+                      name="is_student_loan"
+                      value="True"
                       required
                     /><span class="outside"><span class="inside"></span></span>
                   </label>
@@ -271,7 +286,8 @@
                     <input
                       type="radio"
                       class="radio-inline"
-                      name="id-1"
+                      name="is_student_loan"
+                      value="False"
                       required
                     /><span class="outside"><span class="inside"></span></span>
                   </label>
@@ -283,19 +299,34 @@
             <div class="col-6">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*就讀科系：</span>
-                <select class="item-input item-select col" required></select>
+                <select
+                  class="item-input item-select col"
+                  name="department"
+                  required
+                >
+                  <option selected disabled value="">-請選擇-</option>
+                  <option
+                    :disabled="item.disabled"
+                    v-for="(item, index) in schoolDisciplines[formSchool]"
+                    :key="index"
+                    :value="item.value"
+                  >
+                    {{ item.title }}
+                  </option>
+                </select>
               </div>
             </div>
             <div class="col">
               <div class="d-flex align-items-center mb-4">
-                <span class="item">*是否有學貸：</span>
+                <span class="item">*打工或兼職：</span>
                 <div class="radio-custom">
                   <label class="item-label">
                     是
                     <input
                       type="radio"
                       class="radio-inline"
-                      name="id-2"
+                      name="is_part_time_job"
+                      value="True"
                       required
                     /><span class="outside"><span class="inside"></span></span>
                   </label>
@@ -306,7 +337,8 @@
                     <input
                       type="radio"
                       class="radio-inline"
-                      name="id-2"
+                      name="is_part_time_job"
+                      value="False"
                       required
                     /><span class="outside"><span class="inside"></span></span>
                   </label>
@@ -318,13 +350,13 @@
             <div class="col-6">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*每月收入：</span>
-                <input class="item-input col" />
+                <input class="item-input col" name="monthly_economy" required/>
               </div>
             </div>
             <div class="col">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*電子信箱：</span>
-                <input class="item-input col" />
+                <input class="item-input col" name="email" required/>
               </div>
             </div>
           </div>
@@ -332,21 +364,21 @@
             <div class="col-6">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*手機號碼：</span>
-                <input class="item-input col" />
+                <input class="item-input col" name="phone" maxlength="10" required/>
               </div>
             </div>
             <div class="col">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">LINE帳號：</span>
-                <input class="item-input col" />
+                <input class="item-input col" name="line"/>
               </div>
             </div>
           </div>
           <div class="row no-gutters">
             <div class="col-6">
               <div class="d-flex align-items-center mb-4">
-                <span class="item">*手機號碼：</span>
-                <input class="item-input col" />
+                <span class="item">*用戶暱稱：</span>
+                <input class="item-input col" name="name" required/>
               </div>
             </div>
           </div>
@@ -354,21 +386,25 @@
             <div class="col-12">
               <div class="d-flex mb-4">
                 <span class="item">借款原因：</span>
-                <textarea class="item-input item-textarea col"></textarea>
+                <textarea
+                  class="item-input item-textarea col"
+                  name="reason"
+                ></textarea>
               </div>
             </div>
           </div>
           <div class="row no-gutters">
             <div class="col-12">
               <div class="d-flex align-items-center mb-4">
-                <span class="item">*一對一專人聯繫服務：</span>
+                <span class="item">* 一對一專人聯繫服務：</span>
                 <div class="radio-custom">
                   <label class="item-label">
                     是
                     <input
                       type="radio"
                       class="radio-inline"
-                      name="id-3"
+                      name="is_contact"
+                      value="True"
                       required
                     /><span class="outside"><span class="inside"></span></span>
                   </label>
@@ -379,7 +415,8 @@
                     <input
                       type="radio"
                       class="radio-inline"
-                      name="id-3"
+                      name="is_contact"
+                      value="Fales"
                       required
                     /><span class="outside"><span class="inside"></span></span>
                   </label>
@@ -390,12 +427,13 @@
           <div class="row no-gutters justify-content-center">
             <div class="d-flex align-items-center col-8">
               <span class="item">方便聯繫時間：</span>
-              <input type="text" class="item-input col" />
+              <input type="text" class="item-input col" name="contact_time" />
             </div>
+            <input type="hidden" name="identity" value="1" />
             <button class="btn btn-form-submit col-auto">取得報告</button>
           </div>
         </form>
-        <div class="caculate-report row no-gutters">
+        <div class="caculate-report row no-gutters" v-if="formCalculated">
           <div class="col-6 position-relative">
             <img
               src="@/asset/images/collegeLoan/caculate-img.png"
@@ -409,25 +447,29 @@
               <div>經系統自動評估後，符合您的額度及利率區間如下：</div>
             </div>
             <div class="report-info">
-              <div class="creadit">
-                <span class="creadit-title">信用等級：</span>
-                <span class="creadit-level">1級</span>
-              </div>
               <div class="report-info">
                 <span class="report-info-title">1.可借款額度：</span>
-                <span class="report-info-value">200,000</span>
+                <span class="report-info-value">
+                  {{ amount(borrowReportResult.amount) }}
+                </span>
               </div>
               <div class="report-info">
                 <span class="report-info-title">2.借款利率區間：</span>
-                <span class="report-info-value">24</span>
+                <span class="report-info-value">
+                  {{ borrowReportResult.rate }}
+                </span>
               </div>
               <div class="report-info">
                 <span class="report-info-title">3.手續費金額：</span>
-                <span class="report-info-value">24</span>
+                <span class="report-info-value">
+                  {{ amount(borrowReportResult.platform_fee) }}
+                </span>
               </div>
               <div class="report-info">
                 <span class="report-info-title">4.每期攤還金額約：</span>
-                <span class="report-info-value">6000</span>
+                <span class="report-info-value">
+                  {{ borrowReportResult.repayment }}
+                </span>
               </div>
               <small class="report-info-hint">
                 ►僅為初步評估，實際貸款條件依照您真實提供的資料而定。
@@ -493,6 +535,7 @@ import AlesisProject from '../component/alesis/AlesisProject'
 import AlesisTaiwanMap from '../component/alesis/AlesisTaiwanMap'
 import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews"
 import axios from 'axios'
+import CollegeSchools from "../data/college_schools"
 export default {
   components: {
     featureCard,
@@ -502,15 +545,89 @@ export default {
   },
   data() {
     return {
-      collegePreviews: []
+      collegePreviews: [],
+      schools: [],
+      borrowReportResult: {
+        amount: 0,
+        rate: '',
+        platform_fee: 0,
+        repayment: ''
+      },
+      schoolDisciplines: {},
+      originalSchools: CollegeSchools,
+      collegePreviews: {},
+      borrowReportResult: {},
+      formSchool: '',
+      formSchoolDiscipline: '',
+      formCalculated: false
     }
   },
   mounted() {
+    this.initSchools()
     axios.post(`/getCase`, { status: 10, product_id: 1 }).then((res) => {
       this.collegePreviews = res.data.slice(0, 4);
     }).catch((error) => {
       console.error('getCase 發生錯誤，請稍後再試');
     });
+  },
+  methods: {
+    initSchools() {
+      // 遍歷整個學校，然後扁平化其結構。
+      Object.keys(this.originalSchools).forEach(v => {
+        // 將每個學校推入到學校清單中。
+        this.schools.push({
+          title: v,
+          value: this.originalSchools[v].shortName
+        })
+        // 替這個學校建立對應的科系陣列。
+        this.schoolDisciplines[v] = [];
+        // 遍歷這個學校的科系陣列，並將期推到對應的科系清單裡，試圖扁平化。
+        Object.keys(this.originalSchools[v].discipline).forEach(j => {
+          this.schoolDisciplines[v].push({
+            disabled: true,
+            title: j,
+            value: "",
+          })
+          // 扁平化這個科系下的子科系，但用全形空白當作 Indent。
+          this.originalSchools[v].discipline[j].forEach(k => {
+            this.schoolDisciplines[v].push({
+              disabled: false,
+              title: `　　${k}`,
+              value: k,
+            })
+          })
+        })
+      })
+    },
+    calculateForm() {
+      let data = new FormData(this.$refs.borrowReport)
+      this.formCalculated = false
+      return axios({
+        url: `/getBorrowReport`,
+        method: 'post',
+        data: data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        }
+      }).then((res) => {
+        this.borrowReportResult.amount = res.data.amount
+        this.borrowReportResult.rate = res.data.rate
+        this.borrowReportResult.platform_fee = res.data.platform_fee
+        this.borrowReportResult.repayment = res.data.repayment
+        this.formCalculated = true
+      })
+        .catch((error) => {
+          console.error('getBorrowReport 發生錯誤，請稍後再試');
+        });
+
+    },
+    amount(value) {
+      if (isNaN(Number(value))) {
+        return value
+      }
+      return Number(value).toLocaleString('en')
+    }
   },
 }
 </script>
@@ -889,19 +1006,19 @@ $color__background--primary: #f3f9fc;
     }
     .reason-image-group {
       .reason-item {
-        &-1{
+        &-1 {
           left: -60px;
           top: 0;
         }
-        &-2{
+        &-2 {
           top: 90px;
           right: 60px;
         }
-        &-3{
+        &-3 {
           bottom: 85px;
           right: 115px;
         }
-        &-4{
+        &-4 {
           left: -115px;
           bottom: 200px;
         }
@@ -917,7 +1034,7 @@ $color__background--primary: #f3f9fc;
         line-height: 120px;
         color: $color--primary;
       }
-      .img-logo{
+      .img-logo {
         position: absolute;
         left: -7.4;
         top: 28.5px;
@@ -928,13 +1045,10 @@ $color__background--primary: #f3f9fc;
         animation-name: outline-img;
       }
       @keyframes outline-img {
-        0% {
+        from {
           transform: rotate(0deg);
         }
-        50% {
-          transform: rotate(180deg);
-        }
-        100% {
+        to {
           transform: rotate(360deg);
         }
       }
