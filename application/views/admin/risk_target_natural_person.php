@@ -145,8 +145,9 @@
                     cols = [{id: '', sTitle: '', sType: ''}];
                 }
 
-                selector.DataTable({
+                var table = selector.DataTable({
                     'ordering': true,
+                    'fixedHeader': true,
                     'language': {
                         'processing': '處理中...',
                         'lengthMenu': '顯示 _MENU_ 項結果',
@@ -165,7 +166,6 @@
                     'info': false,
                     'aoColumns': cols
                 });
-
                 setTableRow(selector, cols, result.list);
                 selector.DataTable().draw();
                 selector.addClass('table-striped');
