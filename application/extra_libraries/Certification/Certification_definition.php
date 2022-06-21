@@ -188,6 +188,12 @@ interface Certification_definition
     public function is_pending_to_verify(): bool;
 
     /**
+     * 該徵信項是否曾送出審核過
+     * @return bool
+     */
+    public function is_submit_to_review(): bool;
+
+    /**
      * 是否已完成依賴的相關徵信項目
      * @return bool
      */

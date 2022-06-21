@@ -8,8 +8,10 @@
     <script src="/assets/admin/js/plugins/metisMenu/metisMenu.min.js"></script>
 
     <!-- DataTables JavaScript -->
-    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/responsive/1.0.7/js/dataTables.responsive.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" defer></script>
+    <script src="//cdn.datatables.net/responsive/1.0.7/js/dataTables.responsive.min.js" defer></script>
+		<script src="https://cdn.datatables.net/fixedheader/3.2.4/js/dataTables.fixedHeader.min.js" defer></script>
+		<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.dataTables.min.css">
 
     <!-- Morris Charts JavaScript -->
     <script src="/assets/admin/js/plugins/morris/raphael.min.js"></script>
