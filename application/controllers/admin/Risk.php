@@ -433,6 +433,7 @@ class Risk extends MY_Admin_Controller {
 			isset($input['target_id']) ? $target_parm['id'] = $input['target_id'] : '';
 			$targets = $this->target_model->order_by('user_id','desc')->get_many_by($target_parm);
 			if($targets){
+                $this->load->model('loan/target_meta_model');
 				foreach($targets as $key => $value) $list[$value->id] = $value;
 				ksort($list);
 				foreach($list as $key => $value){
@@ -487,7 +488,18 @@ class Risk extends MY_Admin_Controller {
 					$lastUpdate = max(array_column($cer_list[$value->user_id], 'updated_at'));
 					$value->lastUpdate = ! empty($lastUpdate) ? $lastUpdate : $value->updated_at;
 					$plist[$value->product_id][$key] = $value;
-				}
+
+                    // 判斷DD查核是否已填寫完
+                    $target_meta_info = $this->target_meta_model->get_required_key_value($value->id);
+                    if (count($target_meta_info) !== count($this->target_meta_model::REQUIRED_KEY))
+                    {
+                        $plist[$value->product_id][$key]->dd_edit_done = FALSE;
+                    }
+                    else
+                    {
+                        $plist[$value->product_id][$key]->dd_edit_done = TRUE;
+                    }
+                }
 			}
 		}
 

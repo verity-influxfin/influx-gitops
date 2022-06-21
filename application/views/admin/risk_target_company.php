@@ -419,9 +419,17 @@
                                                         }
                                                     }
                                                     ?>
-                                                    <td><a target="_blank"
+                                                    <td>
+                                                    <?php if ($value->dd_edit_done === TRUE) { ?>
+                                                        <a target="_blank" href="/admin/target/meta?id=<?= $value->id ?>">
+                                                            <button type="button" class="btn btn-success btn-circle nhide"><i class="fa fa-check"></i></button>
+                                                        </a>
+                                                        <span class="sword" style="display:none">完成</span>
+                                                    <?php } else { ?>
+                                                        <a target="_blank"
                                                            href="/admin/target/meta?id=<?= $value->id ?>"
-                                                           class="btn btn-default btn-md nhide">驗證</a>
+                                                           class="btn btn-default btn-md nhide">驗證<?= $value->dd_edit_done; ?></a>
+                                                    <?php } ?>
                                                     </td><?php
                                                     if(isset($input['company']) && $input['company'] == 1){ ?>
                                                     <? if($isExternalCoop){ ?>
