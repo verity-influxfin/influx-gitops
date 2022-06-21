@@ -190,9 +190,7 @@
                     this.formData = {
                         ...data.response.data.meta_info
                     };
-                    if (this.formData.changes) {
-                        this.formData.changes = JSON.parse(this.formData.changes);
-                    } else {
+                    if (!this.formData.changes) {
                         this.formData.changes = [];
                     }
                 })
