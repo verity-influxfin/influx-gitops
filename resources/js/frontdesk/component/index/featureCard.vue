@@ -6,9 +6,12 @@
       </div>
       <div class="card-title">{{ title }}</div>
       <div class="card-divider"></div>
-      <div class="card-text">
-        {{ info }}
-      </div>
+      <slot>
+        <div class="card-text">
+            {{ info }}
+        </div>
+      </slot>
+
     </div>
   </div>
 </template>
