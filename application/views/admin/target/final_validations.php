@@ -815,6 +815,7 @@
 					<form id="credit-evaluation" method="POST" action="/admin/Target/credits">
 						<div class="col-lg-12 text-center">
 							<input id="credit_test" type="text" name="score" value="0" / disabled>
+							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
 							<button class="btn btn-warning" type="submit">額度試算</button>
 							<button class="btn btn-danger" data-url="/admin/Target/verify_failed"
 								id="verify_failed">不通過</button>

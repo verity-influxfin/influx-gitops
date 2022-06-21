@@ -436,7 +436,8 @@ class Certification extends MY_Admin_Controller {
 				return false;
 			}elseif(!empty($post['id'])){
 				$from 	= isset($post['from'])?$post['from']:'';
-				$fail 	= isset($post['fail'])?$post['fail']:'';
+                $fail   = $post['fail'] ?? '';
+                $fail   = $post['fail2'] ?? $fail;
 				if(!empty($from)){
 					//$back_url = admin_url($from);
 					$back_url = admin_url('close');

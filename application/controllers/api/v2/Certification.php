@@ -128,11 +128,16 @@ class Certification extends REST_Controller {
 		$investor 			= $this->user_info->investor;
 		$company 			= $this->user_info->company;
         $incharge           = $this->user_info->incharge;
-        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company);
+        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, TRUE, FALSE, FALSE, TRUE);
 		$list				= array();
 		if(!empty($certification_list)){
 		    $sort = $this->config->item('certifications_sort');
 		    $new_list = [];
+
+            $this->load->helper('target');
+            $this->load->helper('user_certification');
+            $exist_target_submitted = exist_approving_target_submitted($user_id);
+
 		    foreach ($sort as $key => $value){
                 if(isset($certification_list[$value])
                     && (
@@ -141,6 +146,19 @@ class Certification extends REST_Controller {
                     )
                 ){
                     count($certification_list[$value]['optional']) == 0 ? $certification_list[$value]['optional'] = false : '';
+                    $truly_failed = certification_truly_failed(
+                        $exist_target_submitted,
+                        $certification_list[$value]['certificate_status'] ?? 0,
+                        $certification_list[$value]['user_status'],
+                        $certification_list[$value]['expire_time']
+                    );
+                    if ($truly_failed)
+                    {
+                        $certification_list[$value]['user_status'] = NULL;
+                        $certification_list[$value]['certification_id'] = NULL;
+                        $certification_list[$value]['remark'] = NULL;
+                        $certification_list[$value]['content'] = NULL;
+                    }
                     $new_list[$value] = $certification_list[$value];
                 }
             }
@@ -4451,8 +4469,14 @@ class Certification extends REST_Controller {
         if(isset($this->user_info->naturalPerson) && $certification_id < 1000) {
             $this->user_info->id = $this->user_info->naturalPerson->id;
         }
-        $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor);
-        if($user_certification){
+        $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor, TRUE, TRUE);
+
+        $this->load->helper('target');
+        $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
+        $this->load->helper('user_certification');
+        $truly_failed = certification_truly_failed($exist_target_submitted, $user_certification->certificate_status ?? 0, $user_certification->status, $user_certification->expire_time ?? '');
+
+        if($user_certification && ! $truly_failed){
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
         }
     }
