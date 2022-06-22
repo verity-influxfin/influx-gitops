@@ -56,8 +56,7 @@
         <div class="item">
           <div class="item-title">投資金額</div>
           <div class="item-value">
-            $
-            {{ formate(invest_report.basic_info.invest_amount) }}
+            ${{ formate(invest_report.basic_info.invest_amount) }}
           </div>
         </div>
       </div>
@@ -117,7 +116,7 @@
           <div class="header-sub-item item-rate">年化報酬率(※2)</div>
           <div class="test1">
             <div class="item-1 header-item b-right">
-              投資年資：{{ invest_report.invest_performance.years }} (年)
+              投資年資：{{ invest_report.invest_performance.years }}(年)
             </div>
             <div class="item-2 header-item b-right">收入</div>
             <div class="item-3 header-item b-right">支出</div>
@@ -212,6 +211,7 @@
         </div>
       </div>
     </div>
+    <div id="report-img"></div>
   </div>
 </template>
 
@@ -457,7 +457,7 @@ export default {
     local_realized_rate_of_return() {
       return this.invest_report.realized_rate_of_return.filter(x => x.range_title).map(x => {
         const startArray = x.start_date.split('-')
-        const newTitle = x.range_title !== '累計收益率' ? `${startArray[0]}  ${startArray[1]}-${x.end_date.split('-')[1]} (月)` : '累計收益率'
+        const newTitle = x.range_title !== '累計收益率' ? `${startArray[0]}  ${startArray[1]}-${x.end_date.split('-')[1]}(月)` : '累計收益率'
         return {
           ...x,
           range_title: newTitle
@@ -470,7 +470,7 @@ export default {
           return x
         }
         const startArray = x.start_date.split('-')
-        const newTitle = `${startArray[0]}  ${startArray[1]}-${x.end_date.split('-')[1]} (月)`
+        const newTitle = `${startArray[0]}  ${startArray[1]}-${x.end_date.split('-')[1]}(月)`
         return {
           ...x,
           range_title: newTitle
@@ -505,8 +505,8 @@ export default {
         link.setAttribute('download', `普匯投資報告書(${this.invest_report.basic_info.id}).xlsx`)
         document.body.appendChild(link)
         link.click()
-      }).catch(err=>{
-          alert('發生錯誤，請稍後再試')
+      }).catch(err => {
+        alert('發生錯誤，請稍後再試')
       })
     }
   },
@@ -543,7 +543,7 @@ export default {
   border-right: 1px solid #fff;
 }
 .my-invest {
-  width: 940px;
+  width: 964px;
   background-color: #fff;
   border-radius: 28px;
   box-shadow: 4px 4px 10px 3px rgba(0, 0, 0, 0.1);
@@ -596,8 +596,8 @@ export default {
   }
 }
 .report-main {
-  width: 940px;
-  height: 1200px;
+  width: 984px;
+  min-height: 1289px;
   margin: 30px auto;
   padding: 0 20px;
   background-size: cover;
@@ -622,10 +622,10 @@ export default {
     }
   }
   .report-intro {
-    padding-top: 140px;
-    width: 570px;
+    padding-top: 170px;
+    width: 620px;
     line-height: 1.5;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
   }
   .info-details {
@@ -668,7 +668,7 @@ export default {
     }
     .realized-table {
       display: grid;
-      grid-template-columns: 100px 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 105px;
+      grid-template-columns: 120px 100px 1fr 1fr 110px 1fr 1fr 1fr 1fr 105px;
       grid-template-rows: 42px auto;
       gap: 0px 0px;
       grid-auto-flow: row;
@@ -702,7 +702,7 @@ export default {
 
     .test1 {
       display: grid;
-      grid-template-columns: 100px 100px 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 120px 100px 1fr 1fr 110px 1fr 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       gap: 0px 0px;
       grid-auto-flow: row;
@@ -712,6 +712,8 @@ export default {
       grid-area: test1;
       .item-1 {
         grid-area: item1;
+        display: inline;
+        text-align: center;
       }
       .item-2 {
         grid-area: item2;
@@ -725,7 +727,7 @@ export default {
       grid-area: rows;
       .one-row {
         display: grid;
-        grid-template-columns: 100px 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 120px 100px 1fr 1fr 110px 1fr 1fr 1fr 1fr 1fr;
         grid-template-areas: '. . . . . . . . . .';
         .item {
           padding: 5px 0;
