@@ -475,7 +475,7 @@
                 let selector = this.$el;
                 $(selector).find('button').attr('disabled', true).text('資料更新中...');
                 return axios.post('/admin/certification/save_company_cert', {
-                    skbank_form: {...this.formData},
+                    ...this.formData,
                     id: this.pageId
                 }).then(({ data }) => {
                     alert(data.result)
@@ -488,7 +488,7 @@
                         id: this.pageId
                     }
                 }).then(({ data }) => {
-                    mergeDeep(this.formData, data.response.skbank_form)
+                    mergeDeep(this.formData, data.response)
                 })
             }
         },

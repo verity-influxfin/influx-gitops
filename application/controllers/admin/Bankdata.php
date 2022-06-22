@@ -159,11 +159,11 @@ class Bankdata extends MY_Admin_Controller
                         if(!empty($certification_info)){
                             foreach($certification_info as $info_value){
                                 $content = json_decode($info_value->content,true);
-                                if(is_array($content) && isset($content['skbank_form']) && !empty($content['skbank_form'])){
+                                if(is_array($content) && !empty($content)){
                                     $data = array_map(function($key,$values) {
                                         $key = $key.'_content';
                                         return [$key=>$values];
-                                    }, array_keys($content['skbank_form']), $content['skbank_form']);
+                                    }, array_keys($content), $content);
                                     $data = array_reduce($data, 'array_merge', array());
                                     $response = array_merge($response,$data);
                                 }

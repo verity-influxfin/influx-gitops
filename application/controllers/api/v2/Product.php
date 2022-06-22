@@ -2537,13 +2537,11 @@ class Product extends REST_Controller {
                         'certification_id' => CERTIFICATION_PROFILE,
                         'investor' => BORROWER,
                         'content' => json_encode([
-                            'skbank_form' => [
-                                'prRelationship' => $relationship_mapping[$content['relationship']] ?? '',
-                                'othRealPrStartYear' => $input['StartYear'],
-                                'othRealPrEndYear' => $input['EndYear'],
-                                'othRealPrSHRatio' => (int) ($input['SHRatio'] ?? 0),
-                                'othRealPrTitle' => $input['PrTitle'] ?? '',
-                            ]
+                            'prRelationship' => $relationship_mapping[$content['relationship']] ?? '',
+                            'othRealPrStartYear' => $input['StartYear'],
+                            'othRealPrEndYear' => $input['EndYear'],
+                            'othRealPrSHRatio' => (int) ($input['SHRatio'] ?? 0),
+                            'othRealPrTitle' => $input['PrTitle'] ?? '',
                         ]),
                         'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
                     ]);
@@ -2596,13 +2594,11 @@ class Product extends REST_Controller {
                         'certification_id' => CERTIFICATION_PROFILE,
                         'investor' => BORROWER,
                         'content' => json_encode([
-                            'skbank_form' => [
-                                'guOneRelWithPr' => $relationship_mapping[$content['relationship']] ?? '',
-                                'guOneStartYear' => $input['StartYear'],
-                                'guOneEndYear' => $input['EndYear'],
-                                'guOneSHRatio' => (int) ($input['SHRatio'] ?? 0),
-                                'guOneTitle' => $input['PrTitle'] ?? '',
-                            ]
+                            'guOneRelWithPr' => $relationship_mapping[$content['relationship']] ?? '',
+                            'guOneStartYear' => $input['StartYear'],
+                            'guOneEndYear' => $input['EndYear'],
+                            'guOneSHRatio' => (int) ($input['SHRatio'] ?? 0),
+                            'guOneTitle' => $input['PrTitle'] ?? '',
                         ]),
                         'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
                     ]);

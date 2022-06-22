@@ -1154,16 +1154,16 @@ class Certification_lib{
                       $num = 0;
                       foreach($company_user_info as $k=>$v){
                           if($num==0){
-                            $info->content['skbank_form']['PrOnboardDay'] = $k;
-                            $info->content['skbank_form']['PrOnboardName'] = $v;
+                            $info->content['PrOnboardDay'] = $k;
+                            $info->content['PrOnboardName'] = $v;
                           }
                           if($num==1){
-                            $info->content['skbank_form']['ExPrOnboardDay'] = $k;
-                        	$info->content['skbank_form']['ExPrOnboardName'] = $v;
+                            $info->content['ExPrOnboardDay'] = $k;
+                        	$info->content['ExPrOnboardName'] = $v;
                           }
                           if($num==2){
-                        	$info->content['skbank_form']['ExPrOnboardDay2'] = $k;
-                        	$info->content['skbank_form']['ExPrOnboardName2'] = $v;
+                        	$info->content['ExPrOnboardDay2'] = $k;
+                        	$info->content['ExPrOnboardName2'] = $v;
                           }
                           if($num==3){
                         	break;
@@ -2742,9 +2742,9 @@ class Certification_lib{
                 // 寫入法人基本資料
                 $this->CI->load->model('user/user_model');
                 $this->CI->user_model->update($info->user_id, array(
-                    'name' => isset($content['skbank_form']['CompName']) ? $content['skbank_form']['CompName'] : '',
+                    'name' => $content['compName'] ?? '',
                     // 地址暫時不寫入
-                    'address' => isset($content['address']) ? $content['address'] : '',
+                    'address' => $content['address'] ?? '',
                 ));
                 // 找自然人資料
                 $this->CI->load->model('user/user_model');
@@ -2755,10 +2755,10 @@ class Certification_lib{
                     // 新建法人歸戶資料
                     $param = [
                         'user_id' => $user->id,
-                        'company_type' => isset($content['skbank_form']['CompType']) ? $content['skbank_form']['CompType'] : '',
-                        'company' => isset($content['skbank_form']['CompName']) ? $content['skbank_form']['CompName'] : '',
+                        'company_type' => $content['compType'] ?? '',
+                        'company' => $content['compName'] ?? '',
                         'company_user_id' => $info->user_id,
-                        'tax_id' => isset($content['skbank_form']['CompId']) ? $content['skbank_form']['CompId'] : '',
+                        'tax_id' => $content['compId'] ?? '',
                         'status' => 3,
                         'enterprise_registration' => json_encode(['enterprise_registration_image' => $info->content['governmentauthorities_image']])
                     ];

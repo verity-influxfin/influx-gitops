@@ -245,6 +245,22 @@
                                             </select></td>
                                     </tr>
                                     <tr>
+                                        <td><span>是否擁有信用瑕疵</span></td>
+                                        <td><select v-model="formData.hasCreditFlaws" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近一年平均員工人數是否超過200人</span></td>
+                                        <td><select v-model="formData.lastOneYearOver200employees" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>關係企業(A)名稱</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAName"></td>
                                     </tr>
@@ -650,6 +666,22 @@
                                             </select></td>
                                     </tr>
                                     <tr>
+                                        <td><span>是否擁有信用瑕疵</span></td>
+                                        <td><select v-model="formData.hasCreditFlaws" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近一年平均員工人數是否超過200人</span></td>
+                                        <td><select v-model="formData.lastOneYearOver200employees" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>關係企業(A)名稱</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAName"></td>
                                     </tr>
@@ -1010,7 +1042,7 @@
                 let selector = this.$el;
                 $(selector).find('button').attr('disabled', true).text('資料更新中...');
                 return axios.post('/admin/certification/save_company_cert',{
-                    skbank_form: {...this.formData},
+                    ...this.formData,
                     id: this.pageId
                 }).then(({data})=>{
                     alert(data.result)
@@ -1023,7 +1055,7 @@
                         id: this.pageId
                     }
                 }).then(({data})=>{
-                    mergeDeep(this.formData, data.response.skbank_form)
+                    mergeDeep(this.formData, data.response)
                 })
             }
         },

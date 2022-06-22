@@ -4308,6 +4308,40 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td class="bold-right-border">是否擁有信用瑕疵</td>
+                                    <td colspan="3"><select name="HasCreditFlaws_content" class="table-input" id=""
+                                                            disabled>
+                                            <option value="" selected></option>
+                                            <option value="1">1:是</option>
+                                            <option value="0">0:否</option>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <center>
+                                            <input class="input-width" type="button"
+                                                   onclick="edit_click('HasCreditFlaws_content')" value="Edit">
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-right-border">近一年平均員工人數是否超過200人</td>
+                                    <td colspan="3"><select name="LastOneYearOver200employees_content" class="table-input" id=""
+                                                            disabled>
+                                            <option value="" selected></option>
+                                            <option value="1">1:是</option>
+                                            <option value="0">0:否</option>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <center>
+                                            <input class="input-width" type="button"
+                                                   onclick="edit_click('LastOneYearOver200employees_content')" value="Edit">
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td class="bold-right-border">關係企業(A)統一編號</td>
                                     <td colspan="3"><input name="RelatedCompAGuiNumber_content" type="text"
                                             class="table-input" disabled>

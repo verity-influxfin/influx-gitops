@@ -2915,8 +2915,11 @@ class Certification extends REST_Controller {
             $input 		= $this->input->post(NULL, TRUE);
             $user_id 	= $this->user_info->id;
             $investor 	= $this->user_info->investor;
-            $time = time();
-            $content	= [];
+
+            // 欲儲存資料欄位
+            $save_fields = ['prMobileNo', 'prEmail', 'prInChargeYear', 'prInChargeYearEnd', 'prStartYear',
+                'prEndYear', 'prEduLevel', 'realEstateOwner', 'realEstateAddress', 'realEstateUsage',
+                'realEstateMortgage', 'hasCreditFlaws'];
 
             // 必填欄位
             $fields = ['prMobileNo', 'prEmail', 'prInChargeYear', 'prStartYear', 'prEduLevel'];
@@ -2927,7 +2930,7 @@ class Certification extends REST_Controller {
                     $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
                 }
             }
-            $content['skbank_form'] = $input;
+            $content = array_intersect_key($input, array_flip($save_fields));
 
             // 年份
             $year_fields = ['prInChargeYear', 'prInChargeYearEnd', 'prStartYear', 'prEndYear'];
@@ -2937,7 +2940,7 @@ class Certification extends REST_Controller {
                 {
                     continue;
                 }
-                $content['skbank_form'][$year] = (int) $input[$year] - 1911;
+                $content[$year] = (int) $input[$year] - 1911;
             }
 
             $param = [
@@ -2982,7 +2985,7 @@ class Certification extends REST_Controller {
                 {
                     continue;
                 }
-                $content['skbank_form'][$year] = (int) $input[$year] - 1911;
+                $content[$year] = (int) $input[$year] - 1911;
             }
 
             // 金額
@@ -3016,10 +3019,10 @@ class Certification extends REST_Controller {
             {
                 if (empty($input[$amount]))
                 {
-                    $content['skbank_form'][$amount] = 0;
+                    $content[$amount] = 0;
                     continue;
                 }
-                $content['skbank_form'][$amount] = (int) $input[$amount];
+                $content[$amount] = (int) $input[$amount];
             }
 
             // 照片
@@ -3201,7 +3204,7 @@ class Certification extends REST_Controller {
             }
 
 			// 使用者手填資料
-			$content['skbank_form'] = $input;
+			$content = $input;
 
             $param		= [
                 'user_id'			=> $user_id,
@@ -3536,65 +3539,91 @@ class Certification extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
+    public function passbookcashflow2_post()
+    {
+        // 自然人存摺
+        $this->passbookcashflow(CERTIFICATION_PASSBOOKCASHFLOW_2);
+    }
+
     public function passbookcashflow_post()
     {
-        $certification_id 	= 1004;
-        $certification 		= $this->certification[$certification_id];
-        if($certification){
-            $input 		= $this->input->post(NULL, TRUE);
-            $user_id 	= $this->user_info->id;
-            $investor 	= $this->user_info->investor;
-            $content	= [];
+        // 法人存摺
+        $this->passbookcashflow(CERTIFICATION_PASSBOOKCASHFLOW);
+    }
+
+    private function passbookcashflow($certification_id)
+    {
+        $certification = $this->certification[$certification_id];
+        if ($certification)
+        {
+            $input = $this->input->post(NULL, TRUE);
+            $user_id = $this->user_info->id;
+            $investor = $this->user_info->investor;
+            $content = [];
 
             //是否驗證過
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['passbook_image'];
-            foreach ($fields as $field) {
-                if (empty($input[$field])) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }else{
+            $fields = ['passbook_image'];
+            foreach ($fields as $field)
+            {
+                if (empty($input[$field]))
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                }
+                else
+                {
                     $content[$field] = $input[$field];
                 }
             }
 
             $file_fields = ['passbook_image'];
             //多個檔案欄位
-            foreach ($file_fields as $field) {
-                $image_ids = explode(',',$content[$field]);
-                if(count($image_ids)>15){
-                    $image_ids = array_slice($image_ids,0,15);
+            foreach ($file_fields as $field)
+            {
+                $image_ids = explode(',', $content[$field]);
+                if (count($image_ids) > 15)
+                {
+                    $image_ids = array_slice($image_ids, 0, 15);
                 }
                 $list = $this->log_image_model->get_many_by([
-                    'id'		=> $image_ids,
-                    'user_id'	=> $user_id,
+                    'id' => $image_ids,
+                    'user_id' => $user_id,
                 ]);
 
-                if($list && count($list)==count($image_ids)){
+                if ($list && count($list) == count($image_ids))
+                {
                     $content[$field] = [];
-                    foreach($list as $k => $v){
+                    foreach ($list as $k => $v)
+                    {
                         $content[$field][] = $v->url;
                     }
-                }else{
-                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+                else
+                {
+                    $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
                 }
             }
 
-            $param		= [
-                'user_id'			=> $user_id,
-                'certification_id'	=> $certification_id,
-                'investor'			=> $investor,
-                'content'			=> json_encode($content),
+            $param = [
+                'user_id' => $user_id,
+                'certification_id' => $certification_id,
+                'investor' => $investor,
+                'content' => json_encode($content),
+                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
             ];
             $insert = $this->user_certification_model->insert($param);
-            if($insert){
+            if ($insert)
+            {
                 $this->response(['result' => 'SUCCESS']);
-            }else{
-                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+            else
+            {
+                $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
             }
         }
-        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+        $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
     }
 
     /**
@@ -4491,14 +4520,14 @@ class Certification extends REST_Controller {
             }
 
 			// 使用者手填資料
-            $content['skbank_form'] = [
+            $content = [
 				'ReportTime' => isset($input['ReportTime']) ? $input['ReportTime'] : '',
 				'CompName' => isset($input['CompName']) ? $input['CompName'] : '',
 				'range' => isset($input['range']) ? $input['range'] : '',
 			];
 			foreach($input as $k=>$v){
 				if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k)){
-					$content['skbank_form'][$k] = $v;
+					$content[$k] = $v;
 				}
 			}
 
@@ -4629,7 +4658,7 @@ class Certification extends REST_Controller {
                     $content[$field] = $input[$field];
                 }
             }
-            $content['skbank_form'] = $input;
+            $content = $input;
 
             $param = [
                 'user_id' => $user_id,
@@ -4658,11 +4687,12 @@ class Certification extends REST_Controller {
             'compContactName',          // 企業聯絡人姓名
             'compContactTel',           // 企業聯絡人電話
             'compContactExt',           // 企業聯絡人分機
+            'compFax',                  // 企業聯絡人傳真
             'compContact',              // 企業聯絡人職稱
             'compEmail',                // 企業Email
             'financialOfficerName',     // 企業財務主管姓名
             'financialOfficerExt',      // 企業財務主管分機
-            'employeeNum',              // 目前員工數
+            'employeeNum',              // 企業員工人數
             'hasForeignInvestment',     // 是否有海外投資
             'isCovidAffected',          // 受嚴重特殊傳染性肺炎影響之企業
             'isBizAddrEqToBizRegAddr',  // 實際營業地址是否等於營業登記地址
@@ -4684,6 +4714,8 @@ class Certification extends REST_Controller {
             'relatedCompCGuiNumber',    // 關係企業(C)統一編號
             'relatedCompCType',         // 關係企業(C)組織型態
             'relatedCompCRelationship', // 關係企業(C)與借戶之關係
+            'hasCreditFlaws',           // 是否擁有信用瑕疵
+            'lastOneYearOver200employees', // 近一年平均員工人數是否超過200人
         ];
     }
 
