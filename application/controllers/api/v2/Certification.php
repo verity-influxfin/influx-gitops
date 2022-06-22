@@ -3842,20 +3842,27 @@ class Certification extends REST_Controller {
                     foreach($list as $k => $v){
                         $content[$field][] = $v->url;
                     }
-										// 變卡為圖片多對一ID,需額外存取 group id
-										$content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
+                    // 變卡為圖片多對一ID,需額外存取 group id
+                    $content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
+
                 }else{
                     $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
                 }
             }
 
             // 寫入使用者手填資料
-            $content['skbank_form'] = [
-                'compName' => $input['compName'] ?? '',
-                'compId' => $input['compId'] ?? '',
-                'stampDate' => $input['stampDate'] ?? '',
-                'prName' => $input['prName'] ?? '',
-            ];
+            $content['compName'] = $input['CompName'] ?? '';
+            $content['compId'] = $input['CompId'] ?? '';
+            $content['compDate'] = $input['CompDate'] ?? '';
+            $content['compCapital'] = $input['CompCapital'] ?? '';
+            $content['compRegAddress'] = $input['CompRegAddress'] ?? '';
+            $content['prName'] = $input['PrName'] ?? '';
+            $content['principalId'] = $input['PrincipalId'] ?? '';
+            for ($i = ord('A'); $i <= ord('G'); $i++)
+            {
+                $content['director{' . chr($i) . 'Id'] = $input['Director{' . chr($i) . 'Id'] ?? '';;
+                $content['director{' . chr($i) . 'Name'] = $input['Director{' . chr($i) . 'Name'] ?? '';;
+            }
 
             // 商業司爬蟲
             $company_user_info = $this->user_model->get_by(array( 'id' => $this->user_info->id ));
