@@ -3,42 +3,40 @@
     <div class="invest-header">
       <userInfo :userData="userData"></userInfo>
       <div class="menu-card">
-        <div style="width: max-content; overflow: hidden">
-          <router-link class="menu-item" to="/investnotification">
-            <div class="img">
-              <img
-                src="../asset/images/icon_notification.svg"
-                class="img-fluid"
-              />
-              <span v-if="unreadCount !== 0">{{ unreadCount }}</span>
-            </div>
-            <p>通知</p>
-          </router-link>
-          <router-link class="menu-item" to="/debt">
-            <div class="img">
-              <img src="../asset/images/icon_moneyback.svg" class="img-fluid" />
-            </div>
-            <p>債權總覽</p>
-          </router-link>
-          <router-link class="menu-item" to="/closedcase">
-            <div class="img">
-              <img src="../asset/images/icon_closed.svg" class="img-fluid" />
-            </div>
-            <p>結案總覽</p>
-          </router-link>
-          <router-link class="menu-item" to="/detail">
-            <div class="img">
-              <img src="../asset/images/icon_getmoney.svg" class="img-fluid" />
-            </div>
-            <p>明細</p>
-          </router-link>
-          <router-link class="menu-item" to="/invest-report">
-            <div class="img">
-              <img src="../asset/images/report-icon.svg" class="img-fluid" />
-            </div>
-            <p>投資人報告書</p>
-          </router-link>
-        </div>
+        <router-link class="menu-item" to="/investnotification">
+          <div class="img">
+            <img
+              src="../asset/images/icon_notification.svg"
+              class="img-fluid"
+            />
+            <span v-if="unreadCount !== 0">{{ unreadCount }}</span>
+          </div>
+          <p>通知</p>
+        </router-link>
+        <router-link class="menu-item" to="/debt">
+          <div class="img">
+            <img src="../asset/images/icon_moneyback.svg" class="img-fluid" />
+          </div>
+          <p>債權總覽</p>
+        </router-link>
+        <router-link class="menu-item" to="/closedcase">
+          <div class="img">
+            <img src="../asset/images/icon_closed.svg" class="img-fluid" />
+          </div>
+          <p>結案總覽</p>
+        </router-link>
+        <router-link class="menu-item" to="/detail">
+          <div class="img">
+            <img src="../asset/images/icon_getmoney.svg" class="img-fluid" />
+          </div>
+          <p>明細</p>
+        </router-link>
+        <router-link class="menu-item" to="/invest-report">
+          <div class="img">
+            <img src="../asset/images/report-icon.svg" class="img-fluid" />
+          </div>
+          <p>投資人報告書</p>
+        </router-link>
       </div>
     </div>
     <div class="member-menu" v-if="getChild!=='/invest-report'">
@@ -255,12 +253,10 @@ export default {
 
     .menu-card {
       border: none;
-      overflow: auto;
-      max-width: 850px;
+      display: flex;
 
       .menu-item {
         cursor: pointer;
-        float: left;
         text-align: center;
         margin: 10px 5px;
         color: #157efb;
@@ -436,8 +432,8 @@ export default {
       }
 
       .menu-card {
-        max-width: fit-content;
-        margin: 0px auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
       }
     }
 
