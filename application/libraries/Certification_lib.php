@@ -1105,9 +1105,10 @@ class Certification_lib{
 		    $res = $this->CI->data_legalize_lib->legalize_governmentauthorities($info->user_id,$data);
 		    // 寫入結果(不論對錯都寫入，方便查驗)
 		    $info->remark = $res['error_message'];
-				if(empty($res['error_message'])){
-					$status = 1;
-				}
+            if (empty($res['error_message']))
+            {
+                $status = 1;
+            }
 		    $info->content['error_location'] = $res['error_location'];
 		    $info->content['result'][$imageIds[0]] = [
 		      'action_user' => 'system',
@@ -3398,6 +3399,7 @@ class Certification_lib{
 		$user_certifications 	= $this->CI->user_certification_model->order_by('certification_id','ASC')->get_many_by(array(
 			'status'				=> 0,
 			'certification_id !='	=> 3,
+            'id' => 1007575
 		));
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
