@@ -116,6 +116,30 @@ class Certification_factory
                 return new Cert_criminalrecord($certification, $certification_result);
             case CERTIFICATION_SOCIAL_INTELLIGENT: // (名校貸)社交帳號
                 return new Cert_social_intelligent($certification, $certification_result);
+            case CERTIFICATION_SIMPLIFICATIONFINANCIAL: // 財務收支
+                return new Cert_simplificationfinancial($certification, $certification_result);
+            case CERTIFICATION_SIMPLIFICATIONJOB: // 工作資料
+                return new Cert_simplificationjob($certification, $certification_result);
+            case CERTIFICATION_BUSINESSTAX: // 近三年401/403/405表
+                return new Cert_businesstax($certification, $certification_result);
+            case CERTIFICATION_BALANCESHEET: // 資產負債表
+                return new Cert_balancesheet($certification, $certification_result);
+            case CERTIFICATION_INCOMESTATEMENT: // 近三年所得稅結算申報書
+                return new Cert_incomestatement($certification, $certification_result);
+            case CERTIFICATION_INVESTIGATIONJUDICIAL: // 公司聯合徵信
+                return new Cert_investigationjudicial($certification, $certification_result);
+            case CERTIFICATION_PASSBOOKCASHFLOW: // 近六個月往來存摺封面+內頁
+                return new Cert_passbookcashflow($certification, $certification_result);
+            case CERTIFICATION_GOVERNMENTAUTHORITIES: // 變更登記事項表/商業登記證明
+                return new Cert_governmentauthorities($certification, $certification_result);
+            case CERTIFICATION_EMPLOYEEINSURANCELIST: // 近12個月員工投保人數資料
+                return new Cert_employeeinsurancelist($certification, $certification_result);
+            case CERTIFICATION_PROFILEJUDICIAL: // 公司資料表
+                return new Cert_profilejudicial($certification, $certification_result);
+            case CERTIFICATION_COMPANYEMAIL: // 公司電子信箱
+                return new Cert_companyemail($certification, $certification_result);
+            case CERTIFICATION_JUDICIALGUARANTEE: // 公司授權核實
+                return new Cert_judicialguarantee($certification, $certification_result);
             default:
                 log_msg('error', "欲建立未支援的認證徵信項目 (認證編號:{$certification['certification_id']}) ");
                 return NULL;
