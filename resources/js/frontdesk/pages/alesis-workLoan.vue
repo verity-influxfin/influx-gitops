@@ -189,7 +189,7 @@
                                 <div class="文章段落">
                                     <div class="標籤">方法 1</div>
                                     <div class="容器">
-                                        <alesis-button size="1.2rem" xPadding="2rem" yPadding=".8rem">自然人憑證</alesis-button>
+                                        <alesis-button size="1.2rem" xPadding="2rem" yPadding=".8rem">至各縣市勞動部申請</alesis-button>
                                     </div>
                                 </div>
                                 <div class="內容">至各縣市勞動部申請 : 申請後請拍照上傳至APP內</div>
@@ -197,7 +197,7 @@
                                 <div class="文章段落">
                                     <div class="標籤">方法 2</div>
                                     <div class="容器">
-                                        <alesis-button size="1.2rem" xPadding="1rem" yPadding=".8rem">至各縣市勞動部申請</alesis-button>
+                                        <alesis-button size="1.2rem" xPadding="1rem" yPadding=".8rem">自然人憑證</alesis-button>
                                     </div>
                                 </div>
                                 <div class="內容">
