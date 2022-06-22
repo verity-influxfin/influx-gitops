@@ -233,8 +233,14 @@ class Certification extends REST_Controller {
             //     $user_id = $judicial_person->user_id;
             // }
 
-            $rs = $this->certification_lib->get_certification_info($user_id, $certification['id'], $investor);
-            if($rs){
+            $rs = $this->certification_lib->get_certification_info($user_id, $certification['id'], $investor, TRUE, TRUE);
+
+            $this->load->helper('target');
+            $this->load->helper('user_certification');
+            $exist_target_submitted = exist_approving_target_submitted($user_id);
+            $truly_failed = certification_truly_failed($exist_target_submitted, $rs->certification_id ?? 0, $investor);
+
+            if($rs && $truly_failed === FALSE){
 				$data = array(
 					'alias'				=> $alias,
 					'certification_id'	=> $rs->certification_id,
