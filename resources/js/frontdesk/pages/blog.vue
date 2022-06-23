@@ -60,13 +60,6 @@
                 <div class="col-lg-3 ">
                     <div class="panel panel-default" v-if="latest_articles">
                         <div class="panel-body">
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <a href="/5th-anniversary" class="ad_aside" target="_blank">
-                                        <img src="~images/5th-anniversary-ad.jpg" class="img-fluid" />
-                                    </a>
-                                </div>
-                            </div>
                             <div class="row mb-4">
                                 <div class="col">
                                     <form onsubmit="return false;" class="search-form" autocomplete="off">
