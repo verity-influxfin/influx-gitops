@@ -3211,6 +3211,8 @@ class Certification extends REST_Controller {
                 'certification_id'	=> $certification_id,
                 'investor'			=> $investor,
                 'content'			=> json_encode($content),
+                // Frank 表示先直接過，二審會審
+                'status' => CERTIFICATION_STATUS_SUCCEED
             ];
             $insert = $this->user_certification_model->insert($param);
             if($insert){

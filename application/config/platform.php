@@ -927,7 +927,7 @@ $config['product_list'] = [
         'type' => 1,
         'identity' => 3,
         'alias' => 'SSM',
-        'name' => '普匯微企e秒貸',
+        'name' => '普匯信保專案融資',
         'loan_range_s' => 500000,
         'loan_range_e' => 6000000,
         'interest_rate_s' => 5,
@@ -1105,10 +1105,9 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'J2' => [
-        'name' => '普匯微企e秒貸',
-        'description' => '<span style=\'font-size:14px;color:white\'>1.額度最高 100 萬、3 年期、利率 3.8%。<br>
-2.由銀行簽約對保放款。<br>
-3.信保基金保證 95 成，加強中小微企業加強擔保力。</span>',
+        'name' => '信保專案融資',
+        'description' => '<span style=\'font-size:14px;color:white\'>1.額度最高600萬、1~5年期。<br>
+2.由銀行簽約對保放款。</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
@@ -1772,7 +1771,7 @@ $config['sub_product_list'] = [
         'identity' => [
             3 => [
                 'visul_id' => 'LJ2P1',
-                'name' => '普匯微企e秒貸',
+                'name' => '信保專案融資',
                 'product_id' => '1002:0',
                 'loan_range_s' => 500000,
                 'loan_range_e' => 6000000,
@@ -2081,7 +2080,7 @@ $config['certifications'] = [
     1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '近六個月往來存摺封面及內頁', 'status' => 1, 'description' => '提供近六個月往來存摺封面及內頁', 'optional' => []],
     1005 => ['id' => CERTIFICATION_INTERVIEW, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '提供親訪報告', 'optional' => []],
     1006 => ['id' => CERTIFICATION_CERCREDITJUDICIAL, 'alias' => 'cercreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '提供信用評估表', 'optional' => []],
-    1007 => ['id' => CERTIFICATION_GOVERNMENTAUTHORITIES, 'alias' => 'governmentauthorities', 'name' => '設立(變更)登記事項表', 'status' => 1, 'description' => '提供設立(變更)登記事項表', 'optional' => []],
+    1007 => ['id' => CERTIFICATION_GOVERNMENTAUTHORITIES, 'alias' => 'governmentauthorities', 'name' => '設立(變更)事項登記表', 'status' => 1, 'description' => '提供設立(變更)事項登記表', 'optional' => []],
     1008 => ['id' => CERTIFICATION_CHARTER, 'alias' => 'charter', 'name' => '公司章程', 'status' => 1, 'description' => '提供公司章程', 'optional' => []],
     1009 => ['id' => CERTIFICATION_REGISTEROFMEMBERS, 'alias' => 'registerofmembers', 'name' => '股東名簿', 'status' => 1, 'description' => '提供股東名簿', 'optional' => []],
     1010 => ['id' => CERTIFICATION_MAINPRODUCTSTATUS, 'alias' => 'mainproductstatus', 'name' => '主要商品銷售情況表', 'status' => 1, 'description' => '提供主要商品銷售情況表', 'optional' => []],
