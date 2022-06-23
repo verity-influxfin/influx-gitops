@@ -238,8 +238,7 @@ class Certification extends REST_Controller {
             $this->load->helper('target');
             $this->load->helper('user_certification');
             $exist_target_submitted = exist_approving_target_submitted($user_id);
-            $truly_failed = certification_truly_failed($exist_target_submitted, $rs->certification_id ?? 0, $investor);
-
+            $truly_failed = certification_truly_failed($exist_target_submitted, $rs->id ?? 0, $investor);
             if($rs && $truly_failed === FALSE){
 				$data = array(
 					'alias'				=> $alias,
