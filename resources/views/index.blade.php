@@ -270,9 +270,6 @@
                                                     <a href="/news" class="link-text">最新消息</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/blog" class="link-text">普匯小學堂</a>
-                                                </div>
-                                                <div class="link-item">
                                                     <a href="/faq" class="link-text">瞭解更多</a>
                                                 </div>
                                             </div>
@@ -286,6 +283,15 @@
                                                 </div>
                                                 <div class="link-item">
                                                     <a href="/companycooperation" class="link-text">業務合作</a>
+                                                </div>
+                                            </div>
+                                            <div class="function-list-items">
+                                                <div class="link-title">普匯小學堂</div>
+                                                <div class="link-item">
+                                                    <a href="/blog" class="link-text">普匯小學堂</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/vlog" class="link-text">小學堂影音</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -514,6 +520,7 @@
                                 <a href="/company" class="text-white">關於我們</a>
                                 <a href="/news" class="text-white">最新消息</a>
                                 <a href="/blog" class="text-white">普匯小學堂</a>
+                                <a href="/vlog" class="text-white">小學堂影音</a>
                             </div>
                         </div>
                         <div class="item">
