@@ -2227,7 +2227,8 @@ class Target_lib
             'checkOwner' => $product['checkOwner'] ?? FALSE,
             'status' => $sub_product['status'],
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,
-            'available_company_categories' => $sub_product['available_company_categories'] ?? null
+            'available_company_categories' => $sub_product['available_company_categories'] ?? null,
+            'default_reason' => $sub_product['default_reason'] ?? ''
         );
     }
 

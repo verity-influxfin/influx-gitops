@@ -1746,6 +1746,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_REPAYMENT_CAPACITY
                     ]
                 ],
+                'default_reason' => '購車',
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
@@ -1834,6 +1835,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_REPAYMENT_CAPACITY
                     ]
                 ],
+                'default_reason' => '購房',
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
@@ -1922,6 +1924,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_REPAYMENT_CAPACITY
                     ]
                 ],
+                'default_reason' => '房屋裝修',
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],

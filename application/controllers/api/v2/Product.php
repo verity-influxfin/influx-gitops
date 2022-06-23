@@ -2741,7 +2741,8 @@ class Product extends REST_Controller {
             'apply_range_s' => $sub_product['apply_range_s'] ?? null,
             'apply_range_e' => $sub_product['apply_range_e'] ?? null,
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,
-            'available_company_categories' => $sub_product['available_company_categories'] ?? null
+            'available_company_categories' => $sub_product['available_company_categories'] ?? null,
+            'default_reason' => $sub_product['default_reason'] ?? ''
         );
     }
 
@@ -2795,7 +2796,7 @@ class Product extends REST_Controller {
             }
         }
 
-        isset($input['reason'])?$param['reason'] = $input['reason']:'';
+        $param['reason'] = $input['reason'] ?? ($product['default_reason'] ?? '');
         if(isset($input['reason_description'])&&!empty($input['reason_description'])){
             $build = [
                 'reason' => $param['reason'],
