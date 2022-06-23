@@ -870,12 +870,14 @@ class Target extends MY_Admin_Controller {
             $allowed_display_meta = [
                 TARGET_META_COMPANY_CATEGORY_NUMBER
             ];
+
+            $target_meta_list = [];
             $target_meta = $this->target_lib->get_meta_list($target->id);
-            foreach ($target_meta as $i => &$meta)
+            foreach ($target_meta as $meta)
             {
-                if ( ! in_array($meta['meta_key'], $allowed_display_meta))
+                if ( in_array($meta['meta_key'], $allowed_display_meta))
                 {
-                    unset($target_meta[$i]);
+                    $target_meta_list[] = $meta;
                 }
             }
 
@@ -892,7 +894,7 @@ class Target extends MY_Admin_Controller {
 				"bank_accounts" => $this->bank_account_output->toMany(),
 				"virtual_accounts" => $this->virtual_account_output->toMany(),
 				"targets" => $this->target_output->toMany(),
-                'target_meta' => $target_meta,
+                'target_meta' => $target_meta_list,
                 'contract_list' => $contract_list
 			];
 
