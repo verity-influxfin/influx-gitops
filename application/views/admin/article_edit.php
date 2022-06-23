@@ -21,7 +21,7 @@
 					</div>
 					<div class="panel-body">
 						<div class="row">
-							<form action="<?=isset($data)?"edit":"add" ?>" method="post" enctype="multipart/form-data">
+							<form action="<?= $type_name . '_' . (isset($data)?"edit":"add") ?>" method="post" enctype="multipart/form-data">
 								<div class="col-lg-6">
 									<div class="form-group">
 										<label>標題</label>

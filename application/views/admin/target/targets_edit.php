@@ -164,7 +164,7 @@ N                                                <?
                                     </tr>
                                     <tr>
                                         <td><p class="form-control-static">授信審核表</p></td>
-                                        <td><a target="_blank" href="<?=admin_url('creditmanagement/report')."?type=person&target_id=" . $data->id ?? "";  ?>" class="btn btn-default">查看</a></td>
+                                        <td><a target="_blank" href="<?=admin_url('creditmanagement/report_targets_edit')."?type=person&target_id=" . $data->id ?? "";  ?>" class="btn btn-default">查看</a></td>
                                     </tr>
                                     <? if ($data->order_id == 0) { ?>
                                         <tr>

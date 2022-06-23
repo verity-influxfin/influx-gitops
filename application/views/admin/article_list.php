@@ -1,8 +1,8 @@
         <script>
-			function success(id){
+			function success(id, type_name){
 				if(id){
 					$.ajax({
-						url: './success?id='+id,
+						url: `./${type_name}_success?id=${id}`,
 						type: 'GET',
 						success: function(response) {
 							alert(response);
@@ -12,10 +12,10 @@
 				}
 			}
 			
-			function failed(id){
+			function failed(id, type_name){
 				if(id){
 					$.ajax({
-						url: './failed?id='+id,
+						url: `./${type_name}_failed?id=${id}`,
 						type: 'GET',
 						success: function(response) {
 							alert(response);
@@ -25,10 +25,10 @@
 				}
 			}
 			
-			function del(id){
+			function del(id, type_name){
 				if(id){
 					$.ajax({
-						url: './del?id='+id,
+						url: `./${type_name}del?id=${id}`,
 						type: 'GET',
 						success: function(response) {
 							alert(response);
@@ -52,7 +52,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
 							<span><?=$type_list[$type] ?></span>
-							<a href="<?=admin_url('Article/add?type='.$type) ?>">
+                            <a href="<?= admin_url("article/{$type_name}_add?type={$type}") ?>">
 								<button class="btn btn-primary">新增</button>
 							</a>
                         </div>
@@ -89,14 +89,14 @@
                                             <td>
 											<?=isset($value->status)?$status_list[$value->status]:"" ?>
 												<? if($value->status){?>
-													<button onclick="failed(<?=isset($value->id)?$value->id:"" ?>);" type="button" class="btn btn-danger btn-circle"><i class="fa fa-pause"></i></button>
+													<button onclick="failed(<?=isset($value->id)?$value->id:"" ?>,'<?= $type_name ?>');" type="button" class="btn btn-danger btn-circle"><i class="fa fa-pause"></i></button>
 												<? }else{ ?>
-													<button onclick="success(<?=isset($value->id)?$value->id:"" ?>);" type="button" class="btn btn-success btn-circle"><i class="fa fa-play"></i> </button>
+													<button onclick="success(<?=isset($value->id)?$value->id:"" ?>,'<?= $type_name ?>');" type="button" class="btn btn-success btn-circle"><i class="fa fa-play"></i> </button>
 												<? } ?>
 											</td>
 											<td><?=isset($value->rank)?$value->rank:"" ?></td>
-											<td><a href="<?=admin_url('Article/edit?id=').$value->id ?>" class="btn btn-default">Edit</a></td> 
-											<td><button onclick="del(<?=isset($value->id)?$value->id:"" ?>);" type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button></td> 
+											<td><a href="<?= admin_url("article/{$type_name}_edit?id={$value->id}&type={$type}") ?>" class="btn btn-default">Edit</a></td>
+											<td><button onclick="del(<?=isset($value->id)?$value->id:"" ?>,'<?= $type_name ?>');" type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button></td>
 										</tr>
 									<?php 
 										}}

@@ -170,7 +170,7 @@
                                             <td><?=isset($value->credit->created_at)?date("Y-m-d H:i:s",$value->credit->created_at):'' ?></td>
                                             <td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
                                             <td><?=isset($value->remark)?nl2br($value->remark):'' ?></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
+											<td><a href="<?=admin_url('target/detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>
 									<?php
 									}}

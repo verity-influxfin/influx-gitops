@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo base_url();?>assets/admin/js/common/datetime.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/admin/js/common/datetime.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/user.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/verification.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/bankaccount.js"></script>
@@ -158,7 +158,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<iframe id="creditManagementTable"
-								src="../creditmanagement/report?target_id=<?=$_GET['id']?>&type=person"
+								src="../creditmanagement/report_final_validations?target_id=<?=$_GET['id']?>&type=person"
 								scrolling='no'></iframe>
 							<div class="table-responsive">
 								<table class="table table-bordered">
@@ -1053,22 +1053,22 @@
 		}
 	}
 
-	// 取得授審表設定檔資料
-	function get_default_item(target_id, type) {
-		let report_item = {};
-		$.ajax({
-			type: "GET",
-			url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=person`,
-			async: false,
-			success: function (response) {
-				report_item = response.response;
-			},
-			error: function (error) {
-				alert(error);
-			}
-		});
-		return report_item;
-	}
+    // 取得授審表設定檔資料
+    function get_default_item(target_id,type){
+        let report_item = {};
+        $.ajax({
+            type: "GET",
+            url: `/admin/creditmanagement/final_validations_get_structural_data?target_id=${target_id}&type=person`,
+            async: false,
+            success: function (response) {
+                report_item = response.response;
+            },
+            error: function(error) {
+                alert(error);
+            }
+        });
+        return report_item;
+    }
 
 	// 取得授審表案件核貸資料
 	function get_report_data(target_id) {
@@ -1176,7 +1176,7 @@
 				const buttonToID = (id) => {
 					return `<div class="d-flex">
 						<button class="btn btn-default mr-2">
-							<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
+							<a href="/admin/user/detail?id=${id}" target="_blank">查看</a>
 						</button>
 					</div>`
 				}
@@ -1446,7 +1446,7 @@
 		function fetchBrookesiaUserRuleHit(userId) {
 			$.ajax({
 				type: "GET",
-				url: "/admin/brookesia/user_rule_hit" + "?userId=" + userId,
+                url: "/admin/brookesia/final_valid_user_rule_hit" + "?userId=" + userId,
 				beforeSend: function () {
 					brookesiaDatalock = true;
 				},
@@ -1503,7 +1503,7 @@
 		function fetchRelatedUsers(userId) {
 			$.ajax({
 				type: "GET",
-				url: "/admin/brookesia/user_related_user" + "?userId=" + userId,
+				url: "/admin/brookesia/final_valid_user_related_user" + "?userId=" + userId,
 				beforeSend: function () {
 					relatedUserAjaxLock = true;
 				},

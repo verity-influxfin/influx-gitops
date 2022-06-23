@@ -154,7 +154,6 @@ tbody td{text-align:center;word-break:break-all;}
                                     <thead>
                                         <tr>
                                             <th>處理人</th>
-                                            <th>角色</th>
                                             <th>收到請求時間</th>
                                             <th>處理完畢時間</th>
                                             <th>資產等級人工調整</th>
@@ -171,7 +170,6 @@ tbody td{text-align:center;word-break:break-all;}
 									?>
                                         <tr>
                                             <td><?=isset($value->admin_name)?$value->admin_name:"" ?></td>
-                                            <td><?=isset($role_name[$value->role_id])?$role_name[$value->role_id]:"" ?></td>
                                            	<td class="stt"><?=isset($value->start_time)?$value->start_time-28800:"" ?></td>
                                            	<td class="ent"><?=isset($value->end_time)?$value->end_time-28800:"" ?></td>
                                            	<td><?=isset($value->product_level)?$product_level[$value->product_level]:"" ?></td>
