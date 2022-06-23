@@ -4,7 +4,12 @@
       <img
         src="@/asset/images/collegeLoan/college-cover.png"
         alt="普匯學生貸banner"
-        class="img-fluid"
+        class="img-fluid d-sm-block d-none"
+      />
+      <img
+        src="@/asset/images/collegeLoan/college-cover-phone.png"
+        alt="普匯學生貸手機banner"
+        class="img-fluid d-block d-sm-none mx-auto w-100"
       />
     </div>
     <div class="intro">
@@ -65,7 +70,7 @@
       <div class="block-content">
         <h1 class="h1">如何申請</h1>
         <h2 class="h2">準備您的學生證、雙證件、金融卡帳號，手機APP拍照上傳</h2>
-        <div class="row no-gutters apply-icons">
+        <div class="apply-icons">
           <div class="apply-icon-item">
             <img
               src="@/asset/images/collegeLoan/student-card-icon.png"
@@ -74,7 +79,7 @@
             />
             <div class="apply-icon-text">學生證</div>
           </div>
-          <div>
+          <div class="apply-icon-item">
             <img
               src="@/asset/images/collegeLoan/idcard-icon.png"
               alt="雙證件"
@@ -82,7 +87,7 @@
             />
             <div class="apply-icon-text">雙證件</div>
           </div>
-          <div>
+          <div class="apply-icon-item">
             <img
               src="@/asset/images/collegeLoan/creadit-icon.png"
               alt="金融帳號"
@@ -90,9 +95,9 @@
             />
             <div class="apply-icon-text">金融帳號</div>
           </div>
-          <div>
+          <div class="apply-icon-item">
             <img
-              src="@/asset/images/collegeLoan/upload-icon.png"
+              src="@/asset/images/collegeLoan/upload-college-icon.png"
               alt="拍照上傳"
               class="apply-icon-img"
             />
@@ -103,14 +108,19 @@
           <img
             src="@/asset/images/collegeLoan/apply-img.png"
             alt=""
-            class="apply-slogan-img col-auto"
+            class="apply-slogan-img col-12 col-md-auto"
           />
-          <div class="apply-slogan-text col">
+          <div class="col d-md-block d-none apply-slogan-text">
             <div class="line-1">
               最高額度<span class="em">15</span>
               萬&emsp; 最低利率
               <span class="em">4</span>%
             </div>
+            <div>期數可分<span class="em">3-24</span>期</div>
+          </div>
+          <div class="col-12 d-md-none d-block apply-slogan-text">
+            <div>最高額度<span class="em">15</span>萬</div>
+            <div>最低利率<span class="em">4</span>%</div>
             <div>期數可分<span class="em">3-24</span>期</div>
           </div>
         </div>
@@ -183,10 +193,16 @@
     </div>
     <div class="reason">
       <h1 class="h1">為什麼選擇普匯</h1>
-      <h2 class="h2">全線上手機APP24小時不停機，AI風控自動審核</h2>
+      <h2 class="h2 d-md-block d-none">
+        全線上手機APP24小時不停機，AI風控自動審核
+      </h2>
+      <h2 class="h2 d-md-none d-block">
+        <div>全線上手機APP24小時不停機，</div>
+        <div>AI風控自動審核</div>
+      </h2>
       <div class="block-content">
         <div class="row no-gutters reason-row">
-          <div class="reason-intro col-auto">
+          <div class="reason-intro col-md-auto col-12">
             <div class="reason-intro-title">全台學生貸市佔率最高</div>
             <div class="reason-intro-sub">幫助數萬名學生度過資金難關</div>
             <div class="reason-intro-list">
@@ -197,7 +213,7 @@
               <div class="reason-intro-item">申貸利率完全公開透明不隱藏</div>
             </div>
           </div>
-          <div class="col reason-image-group">
+          <div class="col-md col-auto reason-image-group">
             <div class="reason-item reason-item-1">安全</div>
             <div class="reason-item reason-item-2">快速</div>
             <div class="reason-item reason-item-3">隱私</div>
@@ -227,14 +243,14 @@
       <div class="block-content">
         <div class="row no-gutters projects-row">
           <div class="project-title w-100">即時成功案件</div>
-          <div class="col case-col">
+          <div class="col-md col-12 mx-auto case-col">
             <alesis-project
               v-for="item in collegePreviews"
               v-bind="item"
               :key="item.target_no"
             />
           </div>
-          <div class="col-4">
+          <div class="col-md-4 col-auto mx-auto">
             <alesis-taiwan-map />
           </div>
         </div>
@@ -243,9 +259,13 @@
     <div class="caculate">
       <h1 class="h1">試算你的普匯信用額度</h1>
       <div class="block-content">
-        <form @submit.prevent="calculateForm" class="caculate-form" ref="borrowReport">
+        <form
+          @submit.prevent="calculateForm"
+          class="caculate-form"
+          ref="borrowReport"
+        >
           <div class="row no-gutters">
-            <div class="col-6">
+            <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*就讀學校：</span>
                 <select
@@ -265,7 +285,7 @@
                 </select>
               </div>
             </div>
-            <div class="col">
+            <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*是否有學貸：</span>
                 <div class="radio-custom">
@@ -296,7 +316,7 @@
             </div>
           </div>
           <div class="row no-gutters">
-            <div class="col-6">
+            <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*就讀科系：</span>
                 <select
@@ -316,7 +336,7 @@
                 </select>
               </div>
             </div>
-            <div class="col">
+            <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*打工或兼職：</span>
                 <div class="radio-custom">
@@ -347,38 +367,43 @@
             </div>
           </div>
           <div class="row no-gutters">
-            <div class="col-6">
+            <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*每月收入：</span>
-                <input class="item-input col" name="monthly_economy" required/>
+                <input class="item-input col" name="monthly_economy" required />
               </div>
             </div>
-            <div class="col">
+            <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*電子信箱：</span>
-                <input class="item-input col" name="email" required/>
+                <input class="item-input col" name="email" required />
               </div>
             </div>
           </div>
           <div class="row no-gutters">
-            <div class="col-6">
+            <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*手機號碼：</span>
-                <input class="item-input col" name="phone" maxlength="10" required/>
+                <input
+                  class="item-input col"
+                  name="phone"
+                  maxlength="10"
+                  required
+                />
               </div>
             </div>
-            <div class="col">
+            <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">LINE帳號：</span>
-                <input class="item-input col" name="line"/>
+                <input class="item-input col" name="line" />
               </div>
             </div>
           </div>
           <div class="row no-gutters">
-            <div class="col-6">
+            <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*用戶暱稱：</span>
-                <input class="item-input col" name="name" required/>
+                <input class="item-input col" name="name" required />
               </div>
             </div>
           </div>
@@ -425,19 +450,19 @@
             </div>
           </div>
           <div class="row no-gutters justify-content-center">
-            <div class="d-flex align-items-center col-8">
+            <div class="d-flex align-items-center col-md-8 col-12">
               <span class="item">方便聯繫時間：</span>
               <input type="text" class="item-input col" name="contact_time" />
             </div>
             <input type="hidden" name="identity" value="1" />
-            <button class="btn btn-form-submit col-auto">取得報告</button>
+            <button class="btn btn-form-submit col-md-auto col-12">取得報告</button>
           </div>
         </form>
         <div class="caculate-report row no-gutters" v-if="formCalculated">
-          <div class="col-6 position-relative">
+          <div class="col-md-6 col-12 position-relative">
             <img
               src="@/asset/images/collegeLoan/caculate-img.png"
-              class="caculate-img"
+              class="caculate-img img-fluid"
             />
           </div>
           <div class="col">
@@ -487,7 +512,7 @@
     </div>
     <div class="member-info">
       <div class="block-content row no-gutters">
-        <div class="col-6 text-col">
+        <div class="col-md-6 col-12 text-col">
           <h1 class="h1">會員獨享資訊</h1>
           <h2 class="h2">
             <div>•全台信用良好大學</div>
@@ -497,30 +522,30 @@
           <div class="divider"></div>
           <div class="join-text">立即加入</div>
           <div class="join-btn">
-            <div class="download-ios">
+            <div>
               <a
                 href="https://www.influxfin.com/borrowLink"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src="/images/alesis-app-store.svg" />
+                <img src="/images/alesis-app-store.svg" class="download-ios" />
               </a>
             </div>
-            <div class="download-android">
+            <div>
               <a
                 href="https://www.influxfin.com/borrowLink"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src="/images/alesis-google-play.svg" />
+                <img src="/images/alesis-google-play.svg" class="download-android" />
               </a>
             </div>
           </div>
         </div>
-        <div class="col">
+        <div class="col-md col-12">
           <img
             src="@/asset/images/collegeLoan/join-cover.png"
-            class="join-cover"
+            class="join-cover img-fluid"
             alt="下載app"
           />
         </div>
@@ -699,8 +724,16 @@ export default {
     height: 10px;
   }
 }
+@media screen and (max-width: 767px) {
+  .radio-custom label {
+    margin-right: 10px;
+  }
+}
 </style>
 <style lang="scss" scoped>
+$color--primary: #036eb7;
+$color__text--primary: #023d64;
+$color__background--primary: #f3f9fc;
 $color--primary: #036eb7;
 $color__text--primary: #023d64;
 $color__background--primary: #f3f9fc;
@@ -772,6 +805,7 @@ $color__background--primary: #f3f9fc;
       margin-top: 24px;
     }
     .apply-icons {
+      display: flex;
       justify-content: space-between;
       max-width: 1037px;
       width: 100%;
@@ -800,8 +834,8 @@ $color__background--primary: #f3f9fc;
     &-img {
       position: absolute;
       left: -100px;
-      height: 752px;
-      top: -122px;
+      width: 452px;
+      top: -30px;
     }
     &-text {
       padding-top: 70px;
@@ -1036,7 +1070,7 @@ $color__background--primary: #f3f9fc;
       }
       .img-logo {
         position: absolute;
-        left: -7.4;
+        left: -7.4px;
         top: 28.5px;
       }
       .img-outline {
@@ -1103,11 +1137,6 @@ $color__background--primary: #f3f9fc;
         border-radius: 12px;
         margin-right: 25px;
       }
-      .item-radio {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-      }
       .item-label {
         position: relative;
         font-style: normal;
@@ -1116,15 +1145,6 @@ $color__background--primary: #f3f9fc;
         line-height: 1.4;
         color: $color__text--primary;
         padding-left: 30px;
-      }
-      .radio-mark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 25px;
-        width: 25px;
-        background-color: #eee;
-        border-radius: 50%;
       }
       .btn-form-submit {
         padding: 0px 140px;
@@ -1249,6 +1269,407 @@ $color__background--primary: #f3f9fc;
         .download-android,
         .download-ios {
           height: 54px;
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .h1 {
+    font-size: 28px;
+  }
+  .h2 {
+    font-size: 18px;
+  }
+  .block-content {
+    padding: 0 25px;
+  }
+  .college-loan {
+    .intro {
+      padding: 36px 0;
+      .h2 {
+        margin-top: 8px;
+      }
+    }
+    .feature-cards {
+      margin-top: 36px;
+      gap: 15px;
+      .feature-card {
+        &-sub {
+          font-size: 16px;
+          margin-bottom: 12px;
+        }
+        &-list {
+          padding-inline-start: 14px;
+          font-size: 12px;
+          line-height: 1.4;
+        }
+      }
+    }
+    .apply-intro {
+      padding: 50px 0 100px;
+      background-color: $color__background--primary;
+      .h1 {
+        color: $color--primary;
+      }
+      .h2 {
+        color: $color--primary;
+        opacity: 0.64;
+        margin-top: 24px;
+      }
+      .apply-icons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 35px auto;
+        .apply-icon {
+          &-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          &-img {
+            width: 95px;
+            height: 95px;
+          }
+          &-text {
+            margin-top: 12px;
+            font-size: 20px;
+            text-align: left;
+          }
+        }
+      }
+    }
+    .apply-slogan {
+      margin: 60px auto;
+      flex-direction: column-reverse;
+      max-width: 1220px;
+      position: relative;
+      &-img {
+        margin: 25px auto;
+        position: relative;
+        left: 0;
+        width: 287px;
+        top: 0;
+      }
+      &-text {
+        padding-top: 64px;
+        font-size: 32px;
+        text-align: center;
+        .em {
+          font-size: 64px;
+          margin: 0 10px;
+        }
+      }
+    }
+    .step {
+      padding: 36px 0 80px;
+      .h2 {
+        margin-top: 8px;
+      }
+      .step-main {
+        margin: 48px auto;
+        position: relative;
+        display: flex;
+        width: 100%;
+        max-width: 700px;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      .step-content {
+        width: 200px;
+        padding: 0 15px 10px 20px;
+        border-left: 5px solid $color--primary;
+        &:hover,
+        &:focus-within {
+          .step-content-title {
+            color: $color__text--primary;
+          }
+          .step-content-info {
+            opacity: 1;
+          }
+        }
+        &-title {
+          font-size: 18px;
+          &::before {
+            color: #fff;
+            font-size: 18px;
+            right: 184.5px;
+            width: 27px;
+          }
+        }
+        &-info {
+          font-size: 12px;
+          line-height: 1.4;
+        }
+        &-img {
+          top: -85px;
+          left: -50px;
+          transform: scale(0.6);
+        }
+        &-1 {
+          .step-content-title::before {
+            content: '1';
+          }
+          .step-content-img {
+            opacity: 1;
+            z-index: 3;
+          }
+        }
+        &-2 {
+          .step-content-title::before {
+            content: '2';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        &-3 {
+          .step-content-title::before {
+            content: '3';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+        &-4 {
+          .step-content-title::before {
+            content: '4';
+          }
+          &:hover,
+          &:focus-within {
+            .step-content-img {
+              z-index: 10;
+              opacity: 1;
+              transition-property: opacity;
+              transition-duration: 1s;
+            }
+          }
+        }
+      }
+    }
+    .reason {
+      padding: 36px 0;
+      .h2 {
+        margin-top: 8px;
+      }
+      .bottom-title {
+        margin-top: 24px;
+        font-size: 28px;
+      }
+      .reason-row {
+        margin-top: 24px;
+      }
+      .reason-intro {
+        flex-direction: column;
+        padding-right: 0;
+        &-title {
+          font-size: 20px;
+          text-align: center;
+        }
+        &-sub {
+          font-size: 14px;
+          text-align: center;
+          margin-bottom: 12px;
+        }
+        &-item {
+          display: flex;
+          font-size: 18px;
+          line-height: 1.4;
+          color: $color__text--primary;
+          margin-bottom: 13px;
+          &::before {
+            content: '';
+            flex: 0 0 32px;
+            background-size: contain;
+            background-position: center;
+            height: 32px;
+            margin-right: 15px;
+          }
+        }
+      }
+      .reason-image-group {
+        margin: 20px auto;
+        .reason-item {
+          &-1 {
+            left: -28px;
+            top: 0;
+          }
+          &-2 {
+            top: 40px;
+            right: -50px;
+          }
+          &-3 {
+            bottom: -20px;
+            right: 0px;
+          }
+          &-4 {
+            left: -50px;
+            bottom: 40px;
+          }
+          width: 51px;
+          height: 51px;
+          font-size: 18px;
+          line-height: 51px;
+        }
+        .img-logo {
+          position: absolute;
+          left: 17.5px;
+          width: 200px;
+          top: 36.5px;
+        }
+        .img-outline {
+          width: 240px;
+          animation-duration: 60s;
+          animation-iteration-count: infinite;
+          animation-name: outline-img;
+        }
+      }
+    }
+    .case {
+      padding: 36px 0;
+      .h1 {
+        color: $color--primary;
+      }
+      .h2 {
+        margin-top: 8px;
+      }
+      .projects-row {
+        margin-top: 24px;
+        .project-title {
+          font-size: 20px;
+          text-align: center;
+          margin-bottom: 24px;
+        }
+        .case-col {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          transform: scale(.80);
+          margin-top: -102px;
+          gap: 16px;
+        }
+      }
+    }
+    .caculate {
+      padding: 36px 0;
+      .h1 {
+        color: $color--primary;
+      }
+      .caculate-form {
+        margin-top: 56px;
+        .item {
+          font-size: 16px;
+        }
+        .item-input {
+          font-size: 16px;
+          line-height: 1.4;
+          border: 2px solid $color--primary;
+          border-radius: 12px;
+          margin-right: 25px;
+        }
+        .item-label {
+          font-size: 16px;
+          padding-left: 20px;
+        }
+        .btn-form-submit {
+          padding: 8px 100px;
+          font-size: 16px;
+          margin-top: 28px;
+        }
+      }
+    }
+    .caculate-report {
+      margin-top: 56px;
+      flex-direction: column-reverse;
+      .caculate-img {
+        position: relative;
+        top: 0;
+        left: -25px;
+        transform: scale(1.2);
+      }
+      .report-title {
+        font-size: 28px;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .report-sub {
+        font-size: 18px;
+        margin-bottom: 16px;
+      }
+      .creadit {
+        margin-bottom: 16px;
+        text-align: center;
+        &-title {
+          font-size: 24px;
+        }
+        &-level {
+          font-size: 24px;
+        }
+      }
+      .report-info {
+        margin-bottom: 15px;
+      }
+      .report-info-title {
+        font-size: 18px;
+      }
+      .report-info-value {
+        font-size: 18px;
+      }
+      .report-info-hint {
+        text-align: center;
+        font-size: 14px;
+      }
+    }
+    .review {
+      padding: 64px 0;
+      .h1 {
+        color: $color--primary;
+        margin-bottom: 90px;
+      }
+    }
+    .member-info {
+      background-color: $color__background--primary;
+      .text-col {
+        padding: 36px 0;
+        .h1 {
+          text-align: center;
+        }
+        .h2 {
+          font-size: 18px;
+          text-align: center;
+        }
+        .divider {
+          width: 86px;
+          margin: 12px auto;
+          border-bottom: 4px solid #fff;
+        }
+        .join-text {
+          font-size: 24px;
+          margin-bottom: 16px;
+          padding-left: 0;
+          text-align: center;
+        }
+        .join-btn {
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          .download-android,
+          .download-ios {
+            height: 36px;
+          }
         }
       }
     }
