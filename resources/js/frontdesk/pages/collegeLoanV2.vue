@@ -297,7 +297,7 @@
                       name="is_student_loan"
                       value="True"
                       required
-                    /><span class="outside"><span class="inside"></span></span>
+                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
                   </label>
                 </div>
                 <div class="radio-custom">
@@ -309,7 +309,7 @@
                       name="is_student_loan"
                       value="False"
                       required
-                    /><span class="outside"><span class="inside"></span></span>
+                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
                   </label>
                 </div>
               </div>
@@ -348,7 +348,7 @@
                       name="is_part_time_job"
                       value="True"
                       required
-                    /><span class="outside"><span class="inside"></span></span>
+                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
                   </label>
                 </div>
                 <div class="radio-custom">
@@ -360,7 +360,7 @@
                       name="is_part_time_job"
                       value="False"
                       required
-                    /><span class="outside"><span class="inside"></span></span>
+                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
                   </label>
                 </div>
               </div>
@@ -438,7 +438,7 @@
                       name="is_contact"
                       value="True"
                       required
-                    /><span class="outside"><span class="inside"></span></span>
+                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
                   </label>
                 </div>
                 <div class="radio-custom">
@@ -450,7 +450,7 @@
                       name="is_contact"
                       value="Fales"
                       required
-                    /><span class="outside"><span class="inside"></span></span>
+                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
                   </label>
                 </div>
               </div>
@@ -692,7 +692,7 @@ export default {
     opacity: 0;
   }
 
-  .outside {
+  .college-input-outside {
     display: inline-block;
     position: absolute;
     left: 0%;
@@ -707,7 +707,7 @@ export default {
     background: #fff;
   }
 
-  .inside {
+  .college-input-inside {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -723,20 +723,20 @@ export default {
     -webkit-transform: scale(0, 0);
     transform: scale(0, 0);
   }
-  .no-transforms .inside {
+  .no-transforms .college-input-inside {
     left: auto;
     top: auto;
     width: 0;
     height: 0;
   }
 
-  input:checked + .outside .inside {
+  input:checked + .college-input-outside .college-input-inside {
     -webkit-animation: radio-select 0.1s linear;
     animation: radio-select 0.1s linear;
     -webkit-transform: scale(1, 1);
     transform: scale(1, 1);
   }
-  .no-transforms input:checked + .outside .inside {
+  .no-transforms input:checked + .college-input-outside .college-input-inside {
     width: 10px;
     height: 10px;
   }
