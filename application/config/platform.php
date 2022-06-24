@@ -1162,7 +1162,7 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'LF1' => [
-        'name' => '火速貸',
+        'name' => '上班族貸',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'><span style=\'font-size:14px;color:#4a4a4a\'>*毋須提供相關佐證</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
