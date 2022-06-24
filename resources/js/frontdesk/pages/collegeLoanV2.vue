@@ -137,7 +137,7 @@
           <div class="step-content-title">步驟一</div>
           <div class="step-content-info">
             <div>選擇額度 -</div>
-            <div>提供完整資訊，有助提高額度</div>
+            <div>額度最高15萬，3-24期任你選</div>
           </div>
           <div class="step-content-img">
             <img
@@ -150,20 +150,6 @@
         <div class="step-content step-content-2">
           <div class="step-content-title">步驟二</div>
           <div class="step-content-info">
-            <div>選擇身分 -</div>
-            <div>根據您的身分選擇適合的專案</div>
-          </div>
-          <div class="step-content-img">
-            <img
-              class="img-fluid"
-              src="@/asset/images/index/loan-step-2.png"
-              alt=""
-            />
-          </div>
-        </div>
-        <div class="step-content step-content-3">
-          <div class="step-content-title">步驟三</div>
-          <div class="step-content-info">
             <div>上傳資料 -</div>
             <div>AI數據分析審核，全程無人打擾</div>
           </div>
@@ -175,8 +161,8 @@
             />
           </div>
         </div>
-        <div class="step-content step-content-4">
-          <div class="step-content-title">步驟四</div>
+        <div class="step-content step-content-3">
+          <div class="step-content-title">步驟三</div>
           <div class="step-content-info">
             <div>持證自拍 -</div>
             <div>審核成功後，立即上架幫您媒合投資人</div>
@@ -185,6 +171,20 @@
             <img
               class="img-fluid"
               src="@/asset/images/index/loan-step-4.png"
+              alt=""
+            />
+          </div>
+        </div>
+        <div class="step-content step-content-4">
+          <div class="step-content-title">步驟四</div>
+          <div class="step-content-info">
+            <div>上架媒合 -</div>
+            <div>24小時收到款項</div>
+          </div>
+          <div class="step-content-img">
+            <img
+              class="img-fluid"
+              src="@/asset/images/index/loan-step-5.png"
               alt=""
             />
           </div>
@@ -370,7 +370,14 @@
             <div class="col-md-6 col-12">
               <div class="d-flex align-items-center mb-4">
                 <span class="item">*每月收入：</span>
-                <input class="item-input col" name="monthly_economy" required />
+                <select class="item-input col" name="monthly_economy" required>
+                  <option selected disabled value="">-請選擇-</option>
+                  <option value="3000">低於 5,000 元</option>
+                  <option value="6000">5,000 元 - 10,000 元</option>
+                  <option value="12500">10,000 元 - 15,000 元</option>
+                  <option value="17000">15,000 元 - 20,000 元</option>
+                  <option value="20200">20,000 以上</option>
+                </select>
               </div>
             </div>
             <div class="col-md-6 col-12">
@@ -424,7 +431,7 @@
                 <span class="item">* 一對一專人聯繫服務：</span>
                 <div class="radio-custom">
                   <label class="item-label">
-                    是
+                    有意願
                     <input
                       type="radio"
                       class="radio-inline"
@@ -436,7 +443,7 @@
                 </div>
                 <div class="radio-custom">
                   <label class="item-label">
-                    否
+                    無意願
                     <input
                       type="radio"
                       class="radio-inline"
@@ -452,10 +459,17 @@
           <div class="row no-gutters justify-content-center">
             <div class="d-flex align-items-center col-md-8 col-12">
               <span class="item">方便聯繫時間：</span>
-              <input type="text" class="item-input col" name="contact_time" />
+              <select type="text" class="item-input col" name="contact_time">
+                <option selected disabled value="">-請選擇-</option>
+                <option value="隨時">隨時</option>
+                <option value="上午(09:00 ~ 12:00)">上午(09:00 ~ 12:00)</option>
+                <option value="下午(13:30 ~ 18:00)">下午(13:30 ~ 18:00)</option>
+              </select>
             </div>
             <input type="hidden" name="identity" value="1" />
-            <button class="btn btn-form-submit col-md-auto col-12">取得報告</button>
+            <button class="btn btn-form-submit col-md-auto col-12">
+              取得報告
+            </button>
           </div>
         </form>
         <div class="caculate-report row no-gutters" v-if="formCalculated">
@@ -537,7 +551,10 @@
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src="/images/alesis-google-play.svg" class="download-android" />
+                <img
+                  src="/images/alesis-google-play.svg"
+                  class="download-android"
+                />
               </a>
             </div>
           </div>
@@ -679,15 +696,15 @@ export default {
     display: inline-block;
     position: absolute;
     left: 0%;
-    top: 50%;
+    top: 30%;
     margin-top: -10px;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #003cab;
-    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #036eb7;
+    border-radius: 12px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    background: none;
+    background: #fff;
   }
 
   .inside {
@@ -697,10 +714,10 @@ export default {
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     display: inline-block;
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    background: #003cab;
+    border-radius: 12px;
+    width: 30px;
+    height: 30px;
+    background: #036eb7;
     left: 3px;
     top: 3px;
     -webkit-transform: scale(0, 0);
@@ -833,9 +850,7 @@ $color__background--primary: #f3f9fc;
     position: relative;
     &-img {
       position: absolute;
-      left: -100px;
       width: 452px;
-      top: -30px;
     }
     &-text {
       padding-top: 70px;
@@ -880,7 +895,7 @@ $color__background--primary: #f3f9fc;
     }
     .step-content {
       width: 275px;
-      padding: 0 15px 10px 30px;
+      padding: 0 15px 10px 60px;
       border-left: 5px solid $color--primary;
       &:hover,
       &:focus-within {
@@ -894,24 +909,25 @@ $color__background--primary: #f3f9fc;
       &-title {
         font-style: normal;
         font-weight: 700;
-        font-size: 24px;
+        font-size: 36px;
         color: $color--primary;
         &::before {
           background: $color--primary;
           border-radius: 50%;
           color: #fff;
-          font-size: 24px;
+          font-size: 36px;
           font-style: normal;
           font-weight: 500;
           position: absolute;
-          right: 255px;
+          right: 243px;
           text-align: center;
-          width: 36px;
+          width: 60px;
         }
       }
       &-info {
+        margin-top: 8px;
         font-weight: 400;
-        font-size: 16px;
+        font-size: 20px;
         line-height: 23px;
         color: $color__text--primary;
         opacity: 0.56;
@@ -962,6 +978,7 @@ $color__background--primary: #f3f9fc;
         }
       }
       &-4 {
+        border-left: none;
         .step-content-title::before {
           content: '4';
         }
@@ -1001,7 +1018,7 @@ $color__background--primary: #f3f9fc;
       margin-top: 84px;
     }
     .reason-intro {
-      padding-right: 220px;
+      padding-right: 120px;
       &-title {
         font-style: normal;
         font-weight: 700;
@@ -1022,11 +1039,11 @@ $color__background--primary: #f3f9fc;
         display: flex;
         font-style: normal;
         font-weight: 500;
-        font-size: 36px;
+        font-size: 32px;
         line-height: 1.4;
         color: $color__text--primary;
         margin-bottom: 24px;
-        max-width: 485px;
+        min-width: 580px;
         &::before {
           content: '';
           background-position: 0 5px;
@@ -1118,6 +1135,9 @@ $color__background--primary: #f3f9fc;
   .caculate {
     padding: 50px 0;
     background-color: $color__background--primary;
+    .block-content {
+      max-width: 1200px;
+    }
     .h1 {
       color: $color--primary;
     }
@@ -1128,6 +1148,7 @@ $color__background--primary: #f3f9fc;
         font-weight: 500;
         font-size: 30px;
         line-height: 1.4;
+        min-width: 195px;
         color: $color__text--primary;
       }
       .item-input {
@@ -1144,10 +1165,10 @@ $color__background--primary: #f3f9fc;
         font-size: 30px;
         line-height: 1.4;
         color: $color__text--primary;
-        padding-left: 30px;
+        padding-left: 45px;
       }
       .btn-form-submit {
-        padding: 0px 140px;
+        padding: 0px 120px;
         font-style: normal;
         font-weight: 500;
         font-size: 30px;
@@ -1162,8 +1183,8 @@ $color__background--primary: #f3f9fc;
     margin-top: 160px;
     .caculate-img {
       position: absolute;
-      top: -115px;
-      left: -56px;
+      top: 15px;
+      left: 0;
     }
     .report-title {
       font-style: normal;
@@ -1307,7 +1328,7 @@ $color__background--primary: #f3f9fc;
       }
     }
     .apply-intro {
-      padding: 50px 0 100px;
+      padding: 50px 0;
       background-color: $color__background--primary;
       .h1 {
         color: $color--primary;
@@ -1557,7 +1578,7 @@ $color__background--primary: #f3f9fc;
           display: flex;
           flex-direction: column;
           align-items: center;
-          transform: scale(.80);
+          transform: scale(0.8);
           margin-top: -102px;
           gap: 16px;
         }
