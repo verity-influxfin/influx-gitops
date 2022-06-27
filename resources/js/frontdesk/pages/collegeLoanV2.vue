@@ -156,7 +156,7 @@
           <div class="step-content-img">
             <img
               class="img-fluid"
-              src="@/asset/images/index/loan-step-3.png"
+              src="@/asset/images/index/loan-step-4.png"
               alt=""
             />
           </div>
@@ -170,7 +170,7 @@
           <div class="step-content-img">
             <img
               class="img-fluid"
-              src="@/asset/images/index/loan-step-4.png"
+              src="@/asset/images/index/loan-step-3.png"
               alt=""
             />
           </div>
