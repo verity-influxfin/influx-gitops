@@ -303,6 +303,14 @@ class Certification_lib{
         {
 			$certification 	= $this->certification[$info->certification_id];
 			$method			= $certification['alias'].'_verify';
+
+            // 新的徵信審核方式
+            $cert = Certification_factory::get_instance_by_model_resource($info);
+            if ( ! empty($cert))
+            {
+                return $cert->verify();
+            }
+            // 舊的徵信審核方式
 			if(method_exists($this, $method)){
 				$rs = $this->$method($info);
 			}else{
@@ -1274,6 +1282,16 @@ class Certification_lib{
 		return false;
 	}
 
+    /**
+     * 建立 OCR 任務
+     * @param string $task_path
+     * @param array $image_list
+     */
+    public function create_ocr_task(string $task_path, array $image_list)
+    {
+
+    }
+
 	public function incomestatement_verify($info = array(), $url=null){
 		// $user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
 		// if($user_certification==false || $user_certification->status!=1){
@@ -1377,126 +1395,12 @@ class Certification_lib{
 	}
 
 	public function businesstax_verify($info = array(), $url=null){
-		// $user_certification	= $this->get_certification_info($user_id,1015,$info->investor);
-		// if($user_certification==false || $user_certification->status!=1){
-		// 	return false;
-		// }
+
 		$info->content = isset($info->content) ? json_decode($info->content,true) : '';
 		if($info && $info->certification_id == CERTIFICATION_BUSINESSTAX && $info->status == 0 && !empty($info->content['business_tax_image'])){
 			// 401暫時性
 			$status = 3;
-			// $this->CI->load->model('log/log_image_model');
-			// $image_id = $this->CI->log_image_model->getIDByUrl([$info->content['business_tax_image']]);
-			// foreach($image_id as $v){
-			// 	$imageIds[] = $v->id;
-			// }
-			// $this->CI->load->library('ocr/report_scan_lib');
-			// $batchType = 'business_tax_return_reports';
-			// $response = $this->CI->report_scan_lib->requestForResult($batchType, $imageIds);
-			// if ($response && $response->status == 200) {
-			// 	$response = isset($response->response->business_tax_return_logs->items) ? $response->response->business_tax_return_logs->items : '';
-			// 	if($response){
-			// 		$this->CI->load->model('user/judicial_person_model');
-			// 		$company_info = $this->CI->judicial_person_model->get_many_by([
-			// 		    'company_user_id' => $info->user_id,
-			// 		]);
-			// 		$this->CI->load->library('gcis_lib');
-		  //     $gcis_info = $this->CI->gcis_lib->account_info($tax_id);
-			// 		$company_address = isset($gcis_info['Company_Location']) ? $gcis_info['Company_Location'] : '';
-			// 		$company_responser = isset($gcis_info['Responsible_Name']) ? $gcis_info['Responsible_Name'] : '';
-			//
-			// 		$check_list =[];
-			// 		$info->content['error_message']=[];
-			// 		foreach($response as $k=>$v){
-			// 			$check_list[$k]['taxId'] = isset($v->business_tax_return->company_info->taxId) ? $v->business_tax_return->company_info->taxId : '';
-			// 			$check_list[$k]['name'] = isset($v->business_tax_return->company_info->name) ? $v->business_tax_return->company_info->name : '';
-			// 			$check_list[$k]['address'] = isset($v->business_tax_return->company_info->address) ? $v->business_tax_return->company_info->address : '';
-			// 			$check_list[$k]['responser'] = isset($v->business_tax_return->company_info->responser) ? $v->business_tax_return->company_info->responser : '';
-			// 			$check_list[$k]['time'] = isset($v->business_tax_return->report_time_range) ? $v->business_tax_return->report_time_range : '';
-			// 		}
-			// 		$now = date('md');
-			// 		if($now < 115){
-			// 			$start_range = date('Y')-2-1911;
-			// 			$start_range .= '11';
-			// 			$end_range = date('Y')-1-1911;
-			// 			$end_range .= '10';
-			// 		}
-			// 		if((115 >= $now) && ($now > 315)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '1';
-			// 			$end_range = date('Y')-1-1911;
-			// 			$end_range .= '12';
-			// 		}
-			// 		if((315 >= $now) && ($now > 515)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '03';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '02';
-			// 		}
-			// 		if((515 >= $now) && ($now > 715)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '05';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '02';
-			// 		}
-			// 		if((715 >= $now) && ($now > 915)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '07';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '06';
-			// 		}
-			// 		if((915 >= $now) && ($now > 1115)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '9';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '08';
-			// 		}
-			// 		if(1115>= $now){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '11';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '10';
-			// 		}
-			// 		foreach($check_list as $v){
-			// 			if(! in_array('公司統一編號不一致',$info->content['error_message'])){
-			// 				if($v->taxId != $company_info[0]->tax_id){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '公司統一編號不一致';
-			// 				}
-			// 			}
-			// 			if(! in_array('公司名稱不一致',$info->content['error_message'])){
-			// 				if($v->name != $company_info[0]->company){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '公司名稱不一致';
-			// 				}
-			// 			}
-			// 			if(! in_array('公司地址不一致',$info->content['error_message'])){
-			// 				if($v->address != $company_address){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '公司地址不一致';
-			// 				}
-			// 			}
-			// 			if(! in_array('公司負責人不一致',$info->content['error_message'])){
-			// 				if($v->responser != $company_responser){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '公司負責人不一致';
-			// 				}
-			// 			}
-			// 			if(! in_array('資料不符合近一年區間',$info->content['error_message'])){
-			// 				$time = explode("年",$v->time);
-			// 				$time[1] = explode("-",$time);
-			// 				if( ($start_range < $time[0].$time[1][0]) || ($end_range > $time[0].$time[1][0]) ){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '資料不符合近一年區間';
-			// 				}
-			// 			}
-			// 		}
-			// 		if($status == 1){
-			// 			$this->set_success($info->id ,true);
-			// 		}
-			//
-			// 	}
-			// }
+
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status,
 				'sys_check' => 1,

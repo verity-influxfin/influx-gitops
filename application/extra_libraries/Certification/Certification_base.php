@@ -14,6 +14,11 @@ abstract class Certification_base implements Certification_definition
     public $remark;
 
     /**
+     * @var array 審核過程中產生需回寫回 content 的內容
+     */
+    protected $additional_data = [];
+
+    /**
      * @var array 所需依賴徵信項之編號
      */
     protected $dependency_cert_id = [];
@@ -589,6 +594,22 @@ abstract class Certification_base implements Certification_definition
 
     public function post_verify(): bool
     {
-        return TRUE;
+        if (empty($this->additional_data))
+        {
+            return TRUE;
+        }
+
+        $certification_info = $this->CI->user_certification_model->get($this->certification['id']);
+        $content = json_decode($certification_info->content ?? '', TRUE);
+        $result = $this->CI->user_certification_model->update($this->certification['id'], [
+            'content' => json_encode(array_replace_recursive($content ?? [], $this->additional_data), JSON_INVALID_UTF8_IGNORE)
+        ]);
+
+        if ($result)
+        {
+            return TRUE;
+        }
+
+        return FALSE;
     }
 }

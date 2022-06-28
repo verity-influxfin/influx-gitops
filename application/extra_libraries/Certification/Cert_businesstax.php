@@ -1,6 +1,9 @@
 <?php
 
 namespace Certification;
+
+use Certification_ocr\Certification_ocr_factory;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
@@ -46,6 +49,13 @@ class Cert_businesstax extends Certification_base
      */
     public function parse()
     {
+        $cert_ocr = Certification_ocr_factory::get_instance($this->certification);
+        $ocr_result = $cert_ocr->get_result();
+        if ($ocr_result['success'] === TRUE)
+        { // 把 OCR 解析到的內容補到 content 的空格裡
+            $this->content = array_replace_recursive($ocr_result['data'], $this->content);
+            $this->content['ocr_result'] = TRUE;
+        }
         return $this->content;
     }
 
@@ -75,6 +85,14 @@ class Cert_businesstax extends Certification_base
      */
     public function verify_data($content): bool
     {
+        if ($this->content['ocr_result'] === TRUE)
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        }
+        else
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
+        }
         return TRUE;
     }
 
