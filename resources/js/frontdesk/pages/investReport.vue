@@ -218,11 +218,22 @@
 <script>
 import Axios from 'axios'
 export default {
-  beforeRouteEnter(to, from, next) {
+  async beforeRouteEnter(to, from, next) {
     if (sessionStorage.length === 0 || sessionStorage.flag === 'logout') {
       next('/index')
       // next();
     } else {
+      const getData = () => {
+        return Axios.post('/getInvestReport')
+          .then(({ data }) => {
+            return data.data
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      }
+      const data = await getData()
+      window.localStorage.setItem('invest_report',JSON.stringify(data))
       next()
     }
   },
@@ -418,9 +429,7 @@ export default {
     this.$parent.pageTitle = ''
     this.$parent.pagedesc = ''
     console.log(this.$parent.tweenedReceivable)
-    this.getData().finally(() => {
-      this.loading = false
-    })
+    this.invest_report = JSON.parse(window.localStorage.getItem('invest_report'))
   },
   computed: {
     today() {
@@ -484,16 +493,6 @@ export default {
         return x
       }
       return parseInt(x, 10).toLocaleString()
-    },
-    getData() {
-      return Axios.post('/getInvestReport')
-        .then(({ data }) => {
-          this.invest_report = data.data
-          console.log(data)
-        })
-        .catch(err => {
-          console.error(err)
-        })
     },
     downloadExcel() {
       return Axios.get('/downloadInvestReport', {

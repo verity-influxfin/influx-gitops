@@ -17,7 +17,7 @@ let notificationRow = Vue.extend({
   props: ["item", "index", "vm"],
   template: `
     <li class="notification-row">
-      <div class="notification title collapsed" @click="read(item.id,item.status,index)" data-toggle="collapse" :data-target="'#collapse'+item.id" aria-expanded="true">   
+      <div class="notification title collapsed" @click="read(item.id,item.status,index)" data-toggle="collapse" :data-target="'#collapse'+item.id" aria-expanded="true">
         <p>{{item.title}}</p>
         <span>{{dateToString(parseInt(item.created_at + "000"))}}</span>
         <i v-if="item.status == 1" class="fas fa-circle"></i>
@@ -76,15 +76,6 @@ export default {
     notifications() {
       this.pagination();
     },
-  },
-  mounted() {
-    let header =
-      $(".invest-header").length !== 0
-        ? $(".invest-header").height()
-        : $(".loan-header").height();
-    $("html")
-      .stop()
-      .animate({ scrollTop: $(".member-menu").height() + header }, 1000);
   },
   methods: {
     getNotification() {

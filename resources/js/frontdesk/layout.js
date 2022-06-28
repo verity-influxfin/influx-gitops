@@ -79,7 +79,7 @@ $(() => {
             code: '',
             message: '',
             pwdMessage: '',
-            investor: $cookies.get('investor') === '1' ? '1' : '0',
+            investor: $cookies.get('investor') === '0' ? '0' : '1',
             timer: null,
             counter: 180,
             loginTime: 0,
