@@ -41,8 +41,10 @@ export default {
     },
     certification:{
         type:Object,
-        default: {
-            user_status:null
+        default() {
+            return{
+                user_status:null
+            }
         },
     }
   },
@@ -65,6 +67,7 @@ export default {
     width: 160px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     flex-direction: column;
   }

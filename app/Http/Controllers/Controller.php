@@ -434,22 +434,18 @@ class Controller extends BaseController
                         }
                         // 每月經濟收入
                         if(isset($input['monthly_economy'])){
-                            switch ($input['monthly_economy']) {
-                                case '>20000':
-                                    $total_point += 200;
-                                    break;
-                                case '15000-20000':
-                                    $total_point += 150;
-                                    break;
-                                case '10000-15000':
-                                    $total_point += 100;
-                                    break;
-                                case '5000-10000':
-                                    $total_point += 50;
-                                    break;
-                                default:
-                                    $total_point += 0;
-                                    break;
+                            $monthly_economy = $input['monthly_economy'];
+                            if($monthly_economy > 20000){
+                                $total_point += 200;
+                            }
+                            if($monthly_economy >= 15000 && $monthly_economy < 20000){
+                                $total_point += 150;
+                            }
+                            if($monthly_economy >= 10000 && $monthly_economy < 15000){
+                                $total_point += 100;
+                            }
+                            if($monthly_economy >= 5000 && $monthly_economy < 10000){
+                                $total_point += 100;
                             }
                         }
                     }

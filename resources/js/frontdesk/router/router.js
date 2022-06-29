@@ -40,7 +40,7 @@ import faq from '../pages/alesis-faq';
 import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
 import workLoan from '../pages/alesis-workLoan';
-import collegeLoan from "../pages/alesis-collegeLoan";
+import collegeLoan from "../pages/collegeLoanV2";
 import investReport from "../pages/investReport"
 import search from "../pages/search.vue";
 import promoteCodeIntro from '../pages/promoteCodeIntro.vue'
