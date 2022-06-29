@@ -54,7 +54,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <!-- local -->
-    <link rel="stylesheet" href="{{ asset('css/web.css?'.csrf_token()) }}">
+    <link rel="stylesheet" href="{{ mix('css/web.css') }}">
 
     <!--Facebook Comments-->
     <script>
@@ -701,6 +701,6 @@
 <script type="text/javascript" src="{{ asset('js/package/particles.min.js') }}"></script>
 
 <!-- local -->
-<script type="text/javascript" src="{{ asset('js/web.js?'.csrf_token()) }}"></script>
+<script type="text/javascript" src="{{ mix('js/web.js') }}"></script>
 
 </html>
