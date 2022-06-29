@@ -480,7 +480,7 @@
             />
           </div>
           <div class="col">
-            <div class="report-title">親愛的王小明您好：</div>
+            <div class="report-title">親愛的{{borrowReportResult.name}}您好：</div>
             <div class="report-sub">
               <div>感謝您使用普匯的學生貸款額度利率評估服務，</div>
               <div>經系統自動評估後，符合您的額度及利率區間如下：</div>
@@ -590,6 +590,7 @@ export default {
       collegePreviews: [],
       schools: [],
       borrowReportResult: {
+        name:'',
         amount: 0,
         rate: '',
         platform_fee: 0,
@@ -653,6 +654,7 @@ export default {
           'Accept': 'application/json',
         }
       }).then((res) => {
+        this.borrowReportResult.name = data.get('name')
         this.borrowReportResult.amount = res.data.amount
         this.borrowReportResult.rate = res.data.rate
         this.borrowReportResult.platform_fee = res.data.platform_fee
