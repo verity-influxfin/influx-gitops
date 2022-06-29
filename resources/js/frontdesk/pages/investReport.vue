@@ -265,23 +265,27 @@ export default {
     if (sessionStorage.length === 0 || sessionStorage.flag === 'logout') {
       next(vm => {
         vm.$store.commit('mutationLogin')
-        vm.isLogin = false
       })
     } else {
-      const getData = () => {
-        return Axios.post('/getInvestReport')
-          .then(({ data }) => {
-            return data.data
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      }
-      const ReportData = await getData()
-      next(vm => {
-        vm.$store.dispatch("getMyInvestment");
-        vm.invest_report = ReportData
-      })
+      // get InvestReport
+      Axios.post('/getInvestReport')
+        .then(({ data }) => {
+          if (data.error && data.error == 2002) {
+            // 實名認證未通過
+            alert('需通過實名認證才可查看本頁面')
+            next(vm => {
+              vm.$router.back()
+            })
+          } else {
+            next(vm => {
+              vm.$store.dispatch("getMyInvestment");
+              vm.invest_report = data.data
+            })
+          }
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
   },
   components: {
@@ -466,7 +470,6 @@ export default {
         */
       },
       userData: {},
-      isLogin: null,
       loading: true,
       accountReceivable: 0,
       principal: 0,
