@@ -224,7 +224,7 @@ $(() => {
                                     this.$store.commit('mutationUserData', res.data);
                                     $(this.$refs.loginForm).modal("hide");
                                     // 5th
-                                    if (this.$route.path === '/5th-anniversary') {
+                                    if (this.$route.path === '/5th-anniversary'|| this.$route.path === '/invest-report' || this.$route.path === '/risk' ) {
                                         location.reload()
                                         return
                                     }

@@ -1,6 +1,47 @@
 <template>
-  <div class="main">
-    <div class="my-invest">
+  <div class="invest-container">
+    <div class="invest-header">
+      <userInfo :userData="userData"></userInfo>
+      <div class="menu-card">
+        <div style="width: max-content; overflow: hidden">
+          <router-link class="menu-item" to="/investnotification">
+            <div class="img">
+              <img
+                src="../asset/images/icon_notification.svg"
+                class="img-fluid"
+              />
+              <span v-if="unreadCount !== 0">{{ unreadCount }}</span>
+            </div>
+            <p>通知</p>
+          </router-link>
+          <router-link class="menu-item" to="/debt">
+            <div class="img">
+              <img src="../asset/images/icon_moneyback.svg" class="img-fluid" />
+            </div>
+            <p>債權總覽</p>
+          </router-link>
+          <router-link class="menu-item" to="/closedcase">
+            <div class="img">
+              <img src="../asset/images/icon_closed.svg" class="img-fluid" />
+            </div>
+            <p>結案總覽</p>
+          </router-link>
+          <router-link class="menu-item" to="/detail">
+            <div class="img">
+              <img src="../asset/images/icon_getmoney.svg" class="img-fluid" />
+            </div>
+            <p>明細</p>
+          </router-link>
+          <router-link class="menu-item" to="/invest-report">
+            <div class="img">
+              <img src="../asset/images/report-icon.svg" class="img-fluid" />
+            </div>
+            <p>投資人報告書</p>
+          </router-link>
+        </div>
+      </div>
+    </div>
+    <div class="my-invest main">
       <div class="my-invest-header">
         <div class="invest-title col">投資總覽</div>
         <div class="invest-date col-auto">日期：{{ today }}</div>
@@ -8,11 +49,11 @@
       <div class="invest-content">
         <div class="invest-item">
           <div class="item-title">應收款項</div>
-          <div class="item-info">${{ formate(tweenedPrincipal) }}</div>
+          <div class="item-info">${{ formate(tweenedAccountReceivable) }}</div>
         </div>
         <div class="invest-item">
           <div class="item-title">持有債權本金餘額</div>
-          <div class="item-info">${{ formate(tweenedReceivable) }}</div>
+          <div class="item-info">${{ formate(tweenedPrincipal) }}</div>
         </div>
         <div class="invest-item">
           <div class="item-title">得標/處理中</div>
@@ -216,12 +257,16 @@
 </template>
 
 <script>
+import userInfo from "../component/userInfoComponent";
 import Axios from 'axios'
+import { gsap } from 'gsap/dist/gsap'
 export default {
   async beforeRouteEnter(to, from, next) {
     if (sessionStorage.length === 0 || sessionStorage.flag === 'logout') {
-      next('/index')
-      // next();
+      next(vm => {
+        vm.$store.commit('mutationLogin')
+        vm.isLogin = false
+      })
     } else {
       const getData = () => {
         return Axios.post('/getInvestReport')
@@ -233,10 +278,14 @@ export default {
           })
       }
       const ReportData = await getData()
-      next(vm=>{
+      next(vm => {
+        vm.$store.dispatch("getMyInvestment");
         vm.invest_report = ReportData
       })
     }
+  },
+  components: {
+    userInfo,
   },
   data() {
     return {
@@ -416,9 +465,15 @@ export default {
         estimate_IRR: 0.161
         */
       },
+      userData: {},
+      isLogin: null,
       loading: true,
+      accountReceivable: 0,
+      principal: 0,
+      frozen: 0,
+      insufficient: 0,
+      tweenedAccountReceivable: 0,
       tweenedPrincipal: 0,
-      tweenedReceivable: 0,
       tweenedFrozen: 0,
       tweenedInsufficient: 0,
     }
@@ -426,10 +481,7 @@ export default {
   created() {
     this.loading = false
     // $parent myInvestment.vue
-    this.$parent.pageIcon = ''
-    this.$parent.pageTitle = ''
-    this.$parent.pagedesc = ''
-    console.log(this.$parent.tweenedReceivable)
+    this.userData = JSON.parse(sessionStorage.getItem('userData'))
   },
   computed: {
     today() {
@@ -486,6 +538,9 @@ export default {
         }
       })
     },
+    myInvsetment() {
+      return this.$store.getters.InvestAccountData;
+    },
   },
   methods: {
     formate(x) {
@@ -507,37 +562,268 @@ export default {
       }).catch(err => {
         alert('發生錯誤，請稍後再試')
       })
+    },
+    getInvestmentData() {
+      let totalFrozen = 0;
+      for (let key in this.myInvsetment.funds.frozenes) {
+        totalFrozen += this.myInvsetment.funds.frozenes[key];
+      }
+
+      let money = 0;
+      if (this.myInvsetment.funds.total - totalFrozen < this.myInvsetment.payable) {
+        money = this.myInvsetment.payable - (this.myInvsetment.funds.total - totalFrozen);
+      }
+
+      this.accountReceivable =
+        this.myInvsetment.accounts_receivable.principal +
+        this.myInvsetment.accounts_receivable.interest +
+        this.myInvsetment.accounts_receivable.delay_interest;
+      this.principal = this.myInvsetment.accounts_receivable.principal;
+      this.available = this.myInvsetment.funds.total - totalFrozen;
+      this.frozen = totalFrozen;
+      this.insufficient = money;
     }
   },
   watch: {
-    '$parent.tweenedPrincipal': {
-      immediate: true,
-      handler(newValue) {
-        this.tweenedPrincipal = newValue
-      }
+    myInvsetment() {
+      this.getInvestmentData();
     },
-    '$parent.tweenedReceivable': {
-      immediate: true,
-      handler(newValue) {
-        this.tweenedReceivable = newValue
-      }
+    accountReceivable(newValue) {
+      gsap.to(this.$data, { duration: 1, tweenedAccountReceivable: newValue });
     },
-    '$parent.tweenedFrozen': {
-      immediate: true,
-      handler(newValue) {
-        this.tweenedFrozen = newValue
-      }
+    principal(newValue) {
+      gsap.to(this.$data, { duration: 1, tweenedPrincipal: newValue });
     },
-    '$parent.tweenedInsufficient': {
-      immediate: true,
-      handler(newValue) {
-        this.tweenedInsufficient = newValue
-      }
+    available(newValue) {
+      gsap.to(this.$data, { duration: 1, tweenedAvailable: newValue });
+    },
+    frozen(newValue) {
+      gsap.to(this.$data, { duration: 1, tweenedFrozen: newValue });
+    },
+    insufficient(newValue) {
+      gsap.to(this.$data, { duration: 1, tweenedInsufficient: newValue });
     },
   },
 }
 </script>
+<style lang="scss">
+.invest-header {
+  background-image: url('../asset/images/header_bg.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding: 25px 5%;
+  display: flex;
+  justify-content: space-between;
+  .info-card {
+    display: flex;
+    .picture {
+      border-radius: 50%;
+      overflow: hidden;
+      height: 100px;
+      width: 100px;
+    }
+    .userInfo {
+      display: grid;
+      padding-left: 20px;
+      color: #ffffff;
+      p {
+        line-height: 50px;
+        margin: 0px;
+        font-weight: bolder;
+        font-size: 20px;
+      }
+      span {
+        line-height: 50px;
+        margin: 0px;
+        font-weight: bolder;
+      }
+    }
+  }
+  .menu-card {
+    border: none;
+    overflow: auto;
+    max-width: 850px;
+    .menu-item {
+      cursor: pointer;
+      float: left;
+      text-align: center;
+      margin: 10px 5px;
+      color: #157efb;
+      min-width: 80px;
+      &:hover {
+        text-decoration: none;
+      }
+      .img {
+        width: 45px;
+        height: 45px;
+        position: relative;
+        margin: 5px auto;
+        img {
+          width: 100%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+        span {
+          position: absolute;
+          top: -13px;
+          right: 15px;
+          background: #083a6e;
+          border-radius: 50%;
+          width: 17px;
+          font-size: 10px;
+          font-weight: initial;
+        }
+      }
+
+      p {
+        margin-bottom: 0px;
+      }
+    }
+  }
+}
+.member-menu {
+  width: 85%;
+  margin: 0px auto;
+  display: flex;
+  padding: 25px;
+  .invest-card {
+    width: calc(50% - 20px);
+    margin: 20px 10px;
+    border-radius: 25px;
+    box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+    background-image: linear-gradient(to right, #e4eeff 0%, #ffffff 100%);
+    position: relative;
+    .invest-box {
+      overflow: hidden;
+      padding: 3rem 2rem;
+      .header {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .detial-row {
+        width: 50%;
+        height: 82px;
+        float: left;
+        text-align: center;
+        padding: 10px;
+        font-weight: bold;
+        position: relative;
+        &:first-of-type {
+          border-right: 0.5px solid #81c3f3;
+          border-bottom: 0.5px solid #81c3f3;
+          border-width: medium;
+        }
+        &:nth-of-type(2) {
+          border-bottom: 0.5px solid #81c3f3;
+          border-width: medium;
+        }
+
+        &:nth-of-type(3) {
+          border-right: 0.5px solid #81c3f3;
+          border-width: medium;
+        }
+        div {
+          display: flex;
+          flex-direction: column;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+    .balance-row {
+      border: 2px solid #157efb;
+      border-radius: 25px;
+      background-image: linear-gradient(to top, #ebf5ff, #ffffff),
+        linear-gradient(to bottom, #81c3f3, #157efb);
+      color: #157efb;
+      font-weight: bold;
+      position: absolute;
+      left: 50%;
+      bottom: 0%;
+      transform: translate(-50%, 50%);
+      width: 60%;
+      text-align: center;
+      padding: 5px;
+
+      label {
+        margin-bottom: 0px;
+        margin-right: 10px;
+      }
+    }
+  }
+  .info-card {
+    width: calc(50% - 20px);
+    margin: 20px 10px;
+    position: relative;
+    padding: 3rem;
+
+    .title {
+      display: flex;
+      margin-bottom: 20px;
+      color: #083a6e;
+
+      .icon {
+        margin-right: 5px;
+
+        img {
+          width: 45px;
+          height: 29px;
+        }
+      }
+      h3 {
+        font-weight: bold;
+      }
+    }
+    p {
+      font-weight: bold;
+    }
+  }
+}
+@media screen and (max-width: 940px) {
+  .invest-header {
+    background-size: cover;
+    flex-direction: column;
+    padding: 10px;
+    .info-card {
+      width: fit-content;
+      margin: 0px auto;
+      .picture {
+        width: 90px;
+        height: 90px;
+      }
+    }
+    .menu-card {
+      max-width: fit-content;
+      margin: 0px auto;
+    }
+  }
+  .member-menu {
+    width: 100%;
+    flex-direction: column;
+    padding: 10px;
+
+    .invest-card {
+      width: calc(100% - 20px);
+      margin: 10px;
+    }
+
+    .info-card {
+      width: calc(100% - 20px);
+      padding: 25px 0px 0px 0px;
+      margin: 10px;
+    }
+  }
+}
+</style>
 <style lang="scss" scoped>
+.invest-container {
+  min-height: 100vh;
+}
 .b-right {
   border-right: 1px solid #fff;
 }
@@ -546,7 +832,7 @@ export default {
   background-color: #fff;
   border-radius: 28px;
   box-shadow: 4px 4px 10px 3px rgba(0, 0, 0, 0.1);
-  margin: 20px 0;
+  margin: 20px auto;
   padding: 20px 40px;
   .my-invest-header {
     display: flex;
