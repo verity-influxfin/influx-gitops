@@ -232,9 +232,10 @@ export default {
             console.error(err)
           })
       }
-      const data = await getData()
-      window.localStorage.setItem('invest_report',JSON.stringify(data))
-      next()
+      const ReportData = await getData()
+      next(vm=>{
+        vm.invest_report = ReportData
+      })
     }
   },
   data() {
@@ -429,7 +430,6 @@ export default {
     this.$parent.pageTitle = ''
     this.$parent.pagedesc = ''
     console.log(this.$parent.tweenedReceivable)
-    this.invest_report = JSON.parse(window.localStorage.getItem('invest_report'))
   },
   computed: {
     today() {
