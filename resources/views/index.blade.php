@@ -651,8 +651,8 @@
                         <div class="input-group" v-if="!loginHideOption">
                             <span class="input-group-addon label-text"></span>
                             <div class="radio-custom">
-                                <label><input type="radio" name="investor" class="radio-inline" value="0" v-model="investor" checked><span class="outside"><span class="inside"></span></span>借款人</label>
-                                <label><input type="radio" name="investor" class="radio-inline" value="1" v-model="investor"><span class="outside"><span class="inside"></span></span>投資人</label>
+                                <label><input type="radio" name="investor" class="radio-inline" value="0" v-model="investor"><span class="outside"><span class="inside"></span></span>借款人</label>
+                                <label><input type="radio" name="investor" class="radio-inline" value="1" v-model="investor" checked><span class="outside"><span class="inside"></span></span>投資人</label>
                             </div>
                         </div>
                         <div class="input-group">

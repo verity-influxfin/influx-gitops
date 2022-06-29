@@ -576,7 +576,7 @@ export default {
         }
         $('#uploadModal').modal('show')
       } else {
-        this.$store.commit('mutation5thLogin')
+        this.$store.commit('mutationLogin')
       }
     },
     doVote(id) {
@@ -586,7 +586,7 @@ export default {
         return
       }
       if (this.flag !== 'login') {
-        this.$store.commit('mutation5thLogin')
+        this.$store.commit('mutationLogin')
         return
       }
       if (confirm('是否要投票給此作品')) {

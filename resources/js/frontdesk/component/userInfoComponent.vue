@@ -6,7 +6,7 @@
         class="img-fluid"
       />
     </div>
-    <div class="userInfo">
+    <div class="userInfo" v-show="userData.id">
       <p>{{regards}}</p>
       <span>我的使用者編號：{{$props.userData.id}}</span>
     </div>
