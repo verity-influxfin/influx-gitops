@@ -1197,209 +1197,13 @@ class Certification_lib{
 	}
 
 	public function balancesheet_verify($info = array(), $url=null){
-		// $user_certification	= $this->get_certification_info($user_id,1007,$info->investor);
-		// if($user_certification==false || $user_certification->status!=1){
-		// 	return false;
-		// }
+
 		$info->content = isset($info->content) ? json_decode($info->content,true) : '';
 		if($info && $info->certification_id == 1001 && $info->status == 0 && !empty($info->content['balance_sheet_image'])){
 
 			// 資產負債暫時性
 			$status = 3;
 
-			// $this->CI->load->model('log/log_image_model');
-			// $image_id = $this->CI->log_image_model->getIDByUrl([$info->content['balance_sheet_image']]);
-			// foreach($image_id as $v){
-			// 	$imageIds[] = $v->id;
-			// }
-			// $this->CI->load->library('ocr/report_scan_lib');
-			// $batchType = 'balance_sheets';
-			// $response = $this->CI->report_scan_lib->requestForResult($batchType, $imageIds);
-			// if ($response && $response->status == 200) {
-			// 	$response = isset($response->response->balance_sheet_logs->items[0]) ? $response->response->balance_sheet_logs->items[0] : '';
-			// 	if($response && $response->status=='finished'){
-			// 		$this->CI->load->model('user/judicial_person_model');
-			// 		$company_info = $this->CI->judicial_person_model->get_many_by([
-			// 		    'company_user_id' => $info->user_id,
-			// 		]);
-			// 		$tax_id = isset($response->balance_sheet->companyInfo->taxId) ? $response->balance_sheet->companyInfo->taxId : '';
-			// 		$company_name = isset($response->balance_sheet->companyInfo->name) ? $response->balance_sheet->companyInfo->name : '';
-			// 		$report_time = isset($response->balance_sheet->reportTime) ? $response->balance_sheet->reportTime : '';
-			// 		if($tax_id != $company_info[0]->tax_id){
-			// 			$status = 3;
-			// 			$info->content['error_message'][] = '公司統一編號不一致';
-			// 		}
-			// 		if($company_name != $company_info[0]->company){
-			// 			$status = 3;
-			// 			$info->content['error_message'][] = '公司名稱不一致';
-			// 		}
-			//
-			// 		$image_info = $this->CI->log_image_model->get_many_by([
-			// 		    'url' => $info->content['balance_sheet_image'],
-			// 		]);
-			// 		$update_time = $image_info->created_at;
-			// 		if(preg_match("/^[0-9]{3}年(0?[1-9]|1[012])月(0?[1-9]|[12][0-9]|3[01])日$/", $report_time)){
-			// 			$report_time = date_parse_from_format('Y-m-d',$report_time);
-			// 			$update_time = explode('-',date('Y-m-d',$update_time));
-			// 			$report_time = explode('-',$report_time['year'].'-'.$report_time['month'].'-'.$report_time['day']);
-			// 			if(count($report_time)>=3){
-			// 				if($update_time[1]>=6){
-			// 					$update_time[0] -= 1;
-			// 				}
-			// 				if($update_time[1]<6){
-			// 					$update_time[0] -= 2;
-			// 				}
-			// 				if($update_time[0] != $report_time[0]){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '日期不為近一年';
-			// 				}
-			// 			}else{
-			// 				$status = 3;
-			// 				$info->content['error_message'][] = '日期無法辨識';
-			// 			}
-			// 		}else{
-			// 			$status = 3;
-			// 			$info->content['error_message'][] = '日期格式不正確';
-			// 		}
-			//
-			// 		if($status == 1){
-			// 			$this->set_success($info->id ,true);
-			// 		}
-			//
-			// 	}else{
-			// 		$status = 3;
-			// 	}
-			// }else{
-			// 	$status = 3;
-			// }
-			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status,
-				'sys_check' => 1,
-				'content' => json_encode($info->content)
-			));
-			return true;
-		}
-		return false;
-	}
-
-    /**
-     * 建立 OCR 任務
-     * @param string $task_path
-     * @param array $image_list
-     */
-    public function create_ocr_task(string $task_path, array $image_list)
-    {
-
-    }
-
-	public function incomestatement_verify($info = array(), $url=null){
-		// $user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
-		// if($user_certification==false || $user_certification->status!=1){
-		// 	return false;
-		// }
-		$info->content = isset($info->content) ? json_decode($info->content,true) : [];
-		if($info && $info->certification_id == 1002 && $info->status == 0){
-			$status = 3;
-	        $data = [];
-            if(isset($info->content['result']) && !empty($info->content['result'])){
-                foreach($info->content['result'] as $k=>$v){
-    				// 使用者校驗資料
-    				if(isset($v['origin_type']) && $v['origin_type'] == 'user_confirm'){
-    					$data[$k]['report_time'] = isset($v['report_time']) ? $v['report_time']: '';
-    					$data[$k]['company_name'] = isset($v['company_name']) ? $v['company_name']: '';
-    					$data[$k]['company_tax_id'] = isset($v['company_tax_id']) ? $v['company_tax_id']: '';
-    					$data[$k]['input_89'] = isset($v['input_89']) ? $v['input_89']: '';
-    					$data[$k]['input_90'] = isset($v['input_90']) ? $v['input_90']: '';
-    					$data[$k]['id'] = $k;
-    				}
-    				if(! isset($v['origin_type'])){
-    					// 找所有圖片ID
-    			    // $this->CI->load->model('log/log_image_model');
-    			    // if(is_array($info->content['income_statement_image'])){
-    			    //   $imgurl = $info->content['income_statement_image'];
-    			    // }else{
-    			    //   $imgurl = [$info->content['income_statement_image']];
-    			    // }
-    			    // $image_info = $this->CI->log_image_model->get_many_by([
-    			    //     'url' => $imgurl,
-    			    // ]);
-    			    // if($image_info){
-    			    //   $update_time = $image_info[0]->created_at;
-    			    //   foreach($image_info as $v){
-    			    //     $imageIds[] = $v->id;
-    			    //   }
-    			    // }
-
-    					// 找所有ocr資料
-    			    $this->CI->load->library('ocr/report_scan_lib');
-    			    $response = $this->CI->report_scan_lib->requestForResult('income_statements', $k);
-    					if ($response && $response->status == 200) {
-    						foreach($response as $k1=>$v1){
-    		          $data[$k]['report_time'] = isset($v1->income_statement->report_time_range->end_at) ? $v1->income_statement->report_time_range->end_at : '';
-    		          $data[$k]['company_name'] = isset($v1->income_statement->company->companyName) ? $v1->income_statement->company->companyName : '';
-    		          $data[$k]['company_tax_id'] = isset($v1->income_statement->company->taxId) ? $v1->income_statement->company->taxId : '';
-    		          $data[$k]['input_89'] = isset($v1->income_statement->operationIncome->{'89'}) ? $v1->income_statement->operationIncome->{'89'} : '';
-    		          $data[$k]['input_90'] = isset($v1->income_statement->operationIncome->{'90'}) ? $v1->income_statement->operationIncome->{'90'} : '';
-    		          $data[$k]['id'] = isset($v1->id) ? $v1->id : '';
-    		          foreach($v1->income_statement->netIncomeTable as $v2){
-    		            if($v2->key =='04'){
-    		              $data[$k]['input_4_1'] = $v2->value->left;
-    		              $data[$k]['input_4_2'] = $v2->value->right;
-    		              break;
-    		            }
-    		          }
-    		        }
-    					}
-    				}
-    			}
-            }
-
-			if($data){
-				$this->CI->load->library('verify/data_legalize_lib');
-				$res = $this->CI->data_legalize_lib->legalize_incomestatement($info->user_id,$data);
-
-				$info->remark = $res['error_message'];
-				if(empty($res['error_message'])){
-					$status = 1;
-				}
-				$info->content['error_location'] = $res['error_location'];
-				// 寫入資料
-				foreach($res['result'] as $k => $v){
-					$info->content['result'][$data[$k]['id']] = [
-						'action_user' => '系統',
-						'send_time' => time(),
-						'status' => 1,
-						'company_name' => isset($res[$k]['company_name']) ? $res[$k]['company_name']: '',
-						'report_time' => isset($res[$k]['report_time']) ? $res[$k]['report_time'] :'',
-						'company_tax_id' => isset($res[$k]['company_tax_id']) ? $res[$k]['company_tax_id'] :'',
-						'input_89' => isset($res[$k]['input_89']) ? $res[$k]['input_89']:'',
-						'input_90' => isset($res[$k]['input_90']) ? $res[$k]['input_90'] : '',
-						'input_4_1' => isset($data[$k]['input_4_1']) ? $data[$k]['input_4_1'] : '',
-						'input_4_2' => isset($data[$k]['input_4_2']) ? $data[$k]['input_4_2'] : '',
-					];
-				}
-
-			}
-            $this->CI->user_certification_model->update($info->id, array(
-                'status' => 3,
-                'sys_check' => 1,
-                'content' => json_encode($info->content),
-                'remark' => json_encode($info->remark)
-            ));
-			if($status == 1){
-				$this->set_success($info->id ,true);
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public function businesstax_verify($info = array(), $url=null){
-
-		$info->content = isset($info->content) ? json_decode($info->content,true) : '';
-		if($info && $info->certification_id == CERTIFICATION_BUSINESSTAX && $info->status == 0 && !empty($info->content['business_tax_image'])){
-			// 401暫時性
-			$status = 3;
 
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status,
@@ -1410,6 +1214,7 @@ class Certification_lib{
 		}
 		return false;
 	}
+
 
 	public function employeeinsurancelist_verify($info = array(), $url=null){
 		// $user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
@@ -1518,26 +1323,6 @@ class Certification_lib{
 		}
 		return false;
 	}
-
-    public function judicialguarantee_verify($info = array(), $url=null){
-        if($info && $info->certification_id == CERTIFICATION_JUDICIALGUARANTEE && $info->status == 0){
-            $info->content = isset($info->content) ? json_decode($info->content,true) : [];
-            $this->CI->load->library('Judicialperson_lib');
-            $res = $this->CI->judicialperson_lib->script_check_judicial_person_face($info);
-            if($res){
-                $info->content['judicialPersonId'] = $res['judicialPersonId'];
-                $info->content['compareResult'] = $res['compareResult'];
-                $this->CI->user_certification_model->update($info->id, array(
-                    'status' => $res['status'],
-                    'sys_check' => 1,
-                    'content' => json_encode($info->content),
-                ));
-            }
-
-            return true;
-        }
-        return false;
-    }
 
     public function profilejudicial_verify($info = array(), $url=null){
         if($info && $info->certification_id == CERTIFICATION_PROFILEJUDICIAL && $info->status == 0){

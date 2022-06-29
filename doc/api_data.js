@@ -4408,7 +4408,7 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "AnnualIncome1",
-                            "description": "<p>近一年損益表營收</p>"
+                            "description": "<p>近一年損益表營業收入淨額</p>"
                         },
                         {
                             "group": "Parameter",
@@ -4450,7 +4450,7 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "AnnualIncome2",
-                            "description": "<p>近二年損益表營收</p>"
+                            "description": "<p>近二年損益表營業收入淨額</p>"
                         },
                         {
                             "group": "Parameter",
@@ -4492,7 +4492,7 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "AnnualIncome3",
-                            "description": "<p>近三年損益表營收</p>"
+                            "description": "<p>近三年損益表營業收入淨額</p>"
                         },
                     ]
                 }

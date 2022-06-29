@@ -12,7 +12,7 @@ CREATE TABLE p2p_user.user_certification_ocr_task
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8
     COLLATE = utf8_general_ci;
-CREATE INDEX user_certification_ocr_task_task_id_IDX USING BTREE ON p2p_user.user_certification_ocr_task (certification_id);
+CREATE INDEX user_certification_ocr_task_task_id_IDX USING BTREE ON p2p_user.user_certification_ocr_task (user_certification_id);
 
 CREATE TABLE p2p_log.certification_ocr_log
 (
@@ -28,4 +28,4 @@ CREATE TABLE p2p_log.certification_ocr_log
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8
     COLLATE = utf8_general_ci;
-CREATE INDEX certification_ocr_log_cert_id_IDX USING BTREE ON p2p_log.certification_ocr_log (certification_id);
+CREATE INDEX certification_ocr_log_cert_id_IDX USING BTREE ON p2p_log.certification_ocr_log (user_certification_id);

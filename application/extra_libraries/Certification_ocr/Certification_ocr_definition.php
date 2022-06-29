@@ -38,12 +38,6 @@ interface Certification_ocr_definition
     public function get_image_list(): array;
 
     /**
-     * 取得 content 中儲存圖片的 key
-     * @return string[]
-     */
-    public function get_image_fields(): array;
-
-    /**
      * 把任務的回傳值填到對應的 content key
      * @param array $task_res_data : 任務解析完的 response_body
      * @return array

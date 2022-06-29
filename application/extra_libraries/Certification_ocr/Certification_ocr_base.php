@@ -141,28 +141,6 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     }
 
     /**
-     * 回傳欲解析的圖片 url
-     * @return array
-     */
-    public function get_image_list(): array
-    {
-        $image_list = [];
-        $content = json_decode($this->certification['content'], TRUE);
-        $image_fields = $this->get_image_fields();
-        array_walk($content, function ($element, $key) use (&$image_list, &$image_fields) {
-            if (in_array($key, $image_fields))
-            {
-                unset($image_fields[$key]);
-                if ( ! empty($element))
-                {
-                    $image_list[] = $element;
-                }
-            }
-        });
-        return $image_list;
-    }
-
-    /**
      * @param string $msg : 回傳的訊息
      * @param string $code
      * @return array
@@ -239,7 +217,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         }
         if (empty($res['response_body']))
         {
-            return $this->_return_success([], 'Task processing has not done yet.', 202);
+            return $this->_return_failure('Task processing has not done yet.');
         }
         return $this->_return_success($res['response_body']);
     }

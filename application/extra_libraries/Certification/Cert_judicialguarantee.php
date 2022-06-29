@@ -75,6 +75,14 @@ class Cert_judicialguarantee extends Certification_base
      */
     public function verify_data($content): bool
     {
+        $this->CI->load->library('judicialperson_lib');
+        $res = $this->CI->judicialperson_lib->script_check_judicial_person_face($this->certification);
+        if ($res)
+        {
+            $this->additional_data['judicialPersonId'] = $res['judicialPersonId'];
+            $this->additional_data['compareResult'] = $res['compareResult'];
+            $this->result->setStatus($res['status']);
+        }
         return TRUE;
     }
 

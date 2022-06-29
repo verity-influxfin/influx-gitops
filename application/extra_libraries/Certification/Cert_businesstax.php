@@ -85,7 +85,7 @@ class Cert_businesstax extends Certification_base
      */
     public function verify_data($content): bool
     {
-        if ($this->content['ocr_result'] === TRUE)
+        if (isset($this->content['ocr_result']) && $this->content['ocr_result'] === TRUE)
         {
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
         }

@@ -10,10 +10,32 @@ class Cert_businesstax extends Certification_ocr_base
     protected $task_path = '/ocr/table_401';
 
     /**
+     * 回傳欲解析的圖片 url
+     * @return array
+     */
+    public function get_image_list(): array
+    {
+        $image_list = [];
+        $content = json_decode($this->certification['content'], TRUE);
+        $image_fields = $this->get_image_fields();
+        array_walk($content, function ($element, $key) use (&$image_list, &$image_fields) {
+            if (in_array($key, $image_fields))
+            {
+                unset($image_fields[$key]);
+                if ( ! empty($element))
+                {
+                    $image_list[] = $element;
+                }
+            }
+        });
+        return $image_list;
+    }
+
+    /**
      * 取得 content 中儲存圖片的 key
      * @return string[]
      */
-    public function get_image_fields(): array
+    private function get_image_fields(): array
     {
         return [
             'lastOneYearInvoiceImageM1M2',
@@ -52,9 +74,10 @@ class Cert_businesstax extends Certification_ocr_base
     {
         // todo: OCR只辨識第一張，問欄位值怎麼處理
         // https://dev-c.influxfin.com/doc/#api-Certification-PostCertificationBusinessTax
+        // 預設填入近一年申報的相關資料
+        // todo: 開立發票金額是對應文件上的哪個欄位
         return [
             'businessTaxLastOneYear' => $task_res_data['yyy'],
-            'businessTaxLastTwoYear' => $task_res_data['yyy']
         ];
     }
 }

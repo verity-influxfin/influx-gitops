@@ -1,6 +1,10 @@
 <?php
 
 namespace Certification;
+
+use Certification_ocr\Certification_ocr_factory;
+use CertificationResult\MessageDisplay;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
@@ -46,6 +50,13 @@ class Cert_governmentauthorities extends Certification_base
      */
     public function parse()
     {
+        $cert_ocr = Certification_ocr_factory::get_instance($this->certification);
+        $ocr_result = $cert_ocr->get_result();
+        if ($ocr_result['success'] === TRUE)
+        { // 把 OCR 解析到的內容補到 content 的空格裡
+            $this->content = array_replace_recursive($ocr_result['data'], $this->content);
+            $this->content['ocr_result'] = TRUE;
+        }
         return $this->content;
     }
 
@@ -75,6 +86,165 @@ class Cert_governmentauthorities extends Certification_base
      */
     public function verify_data($content): bool
     {
+        if ( ! isset($content['ocr_result']) || $content['ocr_result'] === FALSE)
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
+            return TRUE;
+        }
+
+        $data = [];
+        $group_id = $content['group_id'] ?? '';
+        $imageIds[] = $group_id;
+        $count_array = [
+            '1' => 'A',
+            '2' => 'B',
+            '3' => 'C',
+            '4' => 'D',
+            '5' => 'E',
+            '6' => 'F',
+            '7' => 'G',
+        ];
+
+        // 找不到資料來源，找 ocr 結果
+        if (isset($group_id) && ! isset($content['result'][$group_id]['origin_type']))
+        {
+            $this->CI->load->library('ocr/report_scan_lib');
+            $batchType = 'amendment_of_registers';
+            $response = $this->CI->report_scan_lib->requestForResult($batchType, $imageIds);
+
+            if ($response && $response->status == 200)
+            {
+                $response = $response->response->amendment_of_register_logs->items[0] ?? '';
+                if ($response && $response->status == 'finished')
+                {
+                    // 變卡ocr資料
+                    $data[$group_id]['company_owner'] = $response->amendment_of_register->companyInfo->owner ?? '';
+                    $data[$group_id]['tax_id'] = $response->amendment_of_register->companyInfo->taxId ?? '';
+                    $data[$group_id]['company_address'] = $response->amendment_of_register->companyInfo->address ?? '';
+                    $data[$group_id]['company_name'] = $response->amendment_of_register->companyInfo->name ?? '';
+                    $data[$group_id]['capital_amount'] = $response->amendment_of_register->companyInfo->amountOfCapital ?? '';
+                    $data[$group_id]['paid_in_capital_amount'] = $response->amendment_of_register->companyInfo->paidInCapital ?? '';
+                    // to do : 董監事資料待補上?
+                }
+                else
+                {
+                    $this->result->addMessage(
+                        '找不到變卡ocr資料',
+                        CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                        MessageDisplay::Backend
+                    );
+                }
+            }
+        }
+        // 使用者校正資料
+        if (isset($content['result'][$group_id]['origin_type']) && $content['result'][$group_id]['origin_type'] == 'user_confirm')
+        {
+            $data[$group_id]['company_owner'] = $content['result'][$group_id]['owner'] ?? '';
+            $data[$group_id]['owner_id'] = $content['result'][$group_id]['owner_id'] ?? '';
+            $data[$group_id]['tax_id'] = $content['result'][$group_id]['tax_id'] ?? '';
+            $data[$group_id]['company_address'] = $content['result'][$group_id]['address'] ?? '';
+            $data[$group_id]['company_name'] = $content['result'][$group_id]['name'] ?? '';
+            $data[$group_id]['capital_amount'] = $content['result'][$group_id]['capital'] ?? '';
+            $data[$group_id]['paid_in_capital_amount'] = $content['result'][$group_id]['capital'] ?? '';
+            // 董監事
+            for ($i = 1; $i <= 7; $i++)
+            {
+                $data[$group_id]["Director{$count_array[$i]}Id"] = $info->content['result'][$group_id]["Director{$count_array[$i]}Id"] ?? '';
+                $data[$group_id]["Director{$count_array[$i]}Name"] = $info->content['result'][$group_id]["Director{$count_array[$i]}Name"] ?? '';
+            }
+        }
+        if ($data)
+        {
+            // 變卡正確性驗證
+            $this->CI->load->library('verify/data_legalize_lib');
+            $res = $this->CI->data_legalize_lib->legalize_governmentauthorities($this->certification['user_id'], $data);
+            // 寫入結果(不論對錯都寫入，方便查驗)
+
+            if (empty($res['error_message']))
+            {
+                $this->result->addMessage($res['error_message'], CERTIFICATION_STATUS_SUCCEED);
+            }
+            else
+            {
+                $this->result->addMessage($res['error_message'], CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+            }
+            $this->additional_data['error_location'] = $res['error_location'];
+            $this->additional_data['result'][$imageIds[0]] = [
+                'action_user' => 'system',
+                'send_time' => time(),
+                'status' => 1,
+                'tax_id' => $data[$group_id]['tax_id'] ?? '',
+                'name' => $data[$group_id]['company_name'] ?? '',
+                'capital' => $data[$group_id]['capital_amount'] ?? '',
+                'address' => $data[$group_id]['company_address'] ?? '',
+                'owner' => $data[$group_id]['company_owner'] ?? '',
+                'owner_id' => $data[$group_id]['owner_id'] ?? '',
+                'company_type' => $res['result']['company_type'] ?? '',
+            ];
+            for ($i = 1; $i <= 7; $i++)
+            {
+                $this->additional_data['result'][$imageIds[0]]["Director{$count_array[$i]}Id"] = $data["Director{$count_array[$i]}Id"] ?? '';
+                $this->additional_data['result'][$imageIds[0]]["Director{$count_array[$i]}Name"] = $data["Director{$count_array[$i]}Name"] ?? '';
+            }
+        }
+        // 爬蟲資料結果
+        $user_info = $this->CI->user_model->get_by(array('id' => $this->certification['user_id']));
+        if ($user_info && ! empty($user_info->id_number))
+        {
+            $this->CI->load->library('scraper/Findbiz_lib');
+            // 確認爬蟲狀態
+            $scraper_status = $this->CI->findbiz_lib->getFindBizStatus($user_info->id_number);
+            if ( ! $scraper_status || ! isset($scraper_status->response->result->status) || ($scraper_status->response->result->status != 'failure' && $scraper_status->response->result->status != 'finished'))
+            {
+                // 爬蟲沒打過重打一次
+                if ($scraper_status && isset($scraper_status->status) && $scraper_status->status == 204)
+                {
+                    $this->CI->findbiz_lib->requestFindBizData($user_info->id_number);
+                }
+                $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
+                return FALSE;
+            }
+            // 商業司截圖(for新光普匯微企e秒貸)
+            $company_image_url = $this->CI->findbiz_lib->getFindBizImage($user_info->id_number, $user_info->id);
+            if ($company_image_url)
+            {
+                $this->additional_data['governmentauthorities_image'][] = $company_image_url;
+            }
+            // 商業司歷任負責人
+            $company_scraper_info = $this->CI->findbiz_lib->getResultByBusinessId($user_info->id_number);
+            if ($company_scraper_info)
+            {
+                $company_user_info = $this->CI->findbiz_lib->searchEachTermOwner($company_scraper_info);
+                if ($company_user_info)
+                {
+                    krsort($company_user_info);
+                    $num = 0;
+                    foreach ($company_user_info as $k => $v)
+                    {
+                        if ($num == 0)
+                        {
+                            $this->additional_data['PrOnboardDay'] = $k;
+                            $this->additional_data['PrOnboardName'] = $v;
+                        }
+                        if ($num == 1)
+                        {
+                            $this->additional_data['ExPrOnboardDay'] = $k;
+                            $this->additional_data['ExPrOnboardName'] = $v;
+                        }
+                        if ($num == 2)
+                        {
+                            $this->additional_data['ExPrOnboardDay2'] = $k;
+                            $this->additional_data['ExPrOnboardName2'] = $v;
+                        }
+                        if ($num == 3)
+                        {
+                            break;
+                        }
+                        $num++;
+                    }
+                }
+            }
+        }
         return TRUE;
     }
 

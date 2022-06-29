@@ -14,6 +14,17 @@
         $('input#fail').attr('disabled', sel.attr('value') == 'other' ? false : true);
     });
 </script>
+<style>
+    table {
+        border-collapse: collapse;
+    }
+
+    td{
+        border: 1px solid;
+        padding: 2px 2px 2px 2px;
+        text-align: right;
+    }
+</style>
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
@@ -36,6 +47,26 @@
                                 <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->user_id) ?>">
                                     <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                                 </a>
+                            </div>
+                            <div class="form-group">
+                                <?php $content = [];
+                                if ( ! empty($data->content)) {
+                                    $content = json_decode($data->content, TRUE);
+                                } ?>
+                                <table>
+                                    <tr>
+                                        <td>資產總額</td>
+                                        <td><?= isset($content['assetsAmount']) && is_numeric($content['assetsAmount']) ? number_format($content['assetsAmount']) : '-' ?></td></tr>
+                                    <tr>
+                                        <td>負債總額</td>
+                                        <td><?= isset($content['assetsAmount']) && is_numeric($content['liabilitiesAmount']) ? number_format($content['liabilitiesAmount']) : '-' ?></td></tr>
+                                    <tr>
+                                        <td>權益總額</td>
+                                        <td><?= isset($content['equityAmount']) && is_numeric($content['equityAmount']) ? number_format($content['equityAmount']) : '-' ?></td></tr>
+                                    <tr>
+                                        <td>負債及權益總額</td>
+                                        <td><?= isset($content['liabEquityAmount']) && is_numeric($content['liabEquityAmount']) ? number_format($content['liabEquityAmount']) : '-' ?></td></tr>
+                                </table>
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
