@@ -297,7 +297,9 @@
                       name="is_student_loan"
                       value="True"
                       required
-                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
+                    /><span class="college-input-outside"
+                      ><span class="college-input-inside"></span
+                    ></span>
                   </label>
                 </div>
                 <div class="radio-custom-college">
@@ -309,7 +311,9 @@
                       name="is_student_loan"
                       value="False"
                       required
-                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
+                    /><span class="college-input-outside"
+                      ><span class="college-input-inside"></span
+                    ></span>
                   </label>
                 </div>
               </div>
@@ -348,7 +352,9 @@
                       name="is_part_time_job"
                       value="True"
                       required
-                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
+                    /><span class="college-input-outside"
+                      ><span class="college-input-inside"></span
+                    ></span>
                   </label>
                 </div>
                 <div class="radio-custom-college">
@@ -360,7 +366,9 @@
                       name="is_part_time_job"
                       value="False"
                       required
-                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
+                    /><span class="college-input-outside"
+                      ><span class="college-input-inside"></span
+                    ></span>
                   </label>
                 </div>
               </div>
@@ -438,7 +446,9 @@
                       name="is_contact"
                       value="True"
                       required
-                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
+                    /><span class="college-input-outside"
+                      ><span class="college-input-inside"></span
+                    ></span>
                   </label>
                 </div>
                 <div class="radio-custom-college">
@@ -450,7 +460,9 @@
                       name="is_contact"
                       value="Fales"
                       required
-                    /><span class="college-input-outside"><span class="college-input-inside"></span></span>
+                    /><span class="college-input-outside"
+                      ><span class="college-input-inside"></span
+                    ></span>
                   </label>
                 </div>
               </div>
@@ -480,7 +492,9 @@
             />
           </div>
           <div class="col">
-            <div class="report-title">親愛的{{borrowReportResult.name}}您好：</div>
+            <div class="report-title">
+              親愛的{{ borrowReportResult.name }}您好：
+            </div>
             <div class="report-sub">
               <div>感謝您使用普匯的學生貸款額度利率評估服務，</div>
               <div>經系統自動評估後，符合您的額度及利率區間如下：</div>
@@ -590,7 +604,7 @@ export default {
       collegePreviews: [],
       schools: [],
       borrowReportResult: {
-        name:'',
+        name: '',
         amount: 0,
         rate: '',
         platform_fee: 0,
@@ -747,15 +761,16 @@ export default {
   .radio-custom-college label {
     margin-right: 10px;
   }
-  .radio-custom-college .college-input-outside{
-      margin-top: -6px;
-      width: 22px;
-      height: 22px;
+  .radio-custom-college .college-input-outside {
+    margin-top: -6px;
+    width: 22px;
+    height: 22px;
   }
-  .radio-custom-college .college-input-inside{
-      width: 17px;
-      height: 17px;
-
+  .radio-custom-college .college-input-inside {
+    width: 16px;
+    height: 16px;
+    top: 1px;
+    left: 1px;
   }
 }
 </style>
