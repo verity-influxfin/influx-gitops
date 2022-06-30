@@ -713,9 +713,9 @@ export default {
     position: absolute;
     left: 0%;
     top: 30%;
-    margin-top: -10px;
-    width: 40px;
-    height: 40px;
+    margin-top: 0;
+    width: 22px;
+    height: 22px;
     border: 2px solid #036eb7;
     border-radius: 12px;
     -webkit-box-sizing: border-box;
@@ -731,8 +731,8 @@ export default {
     transform: translate(-50%, -50%);
     display: inline-block;
     border-radius: 12px;
-    width: 30px;
-    height: 30px;
+    width: 12px;
+    height: 12px;
     background: #036eb7;
     left: 3px;
     top: 3px;
@@ -1192,7 +1192,7 @@ $color__background--primary: #f3f9fc;
         font-size: 30px;
         line-height: 1.4;
         color: $color__text--primary;
-        padding-left: 45px;
+        padding-left: 30px;
       }
       .btn-form-submit {
         padding: 0px 120px;
