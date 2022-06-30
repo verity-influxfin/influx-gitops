@@ -2532,8 +2532,8 @@ class Target_lib
             $target['apply_date'] = date('Y-m-d',$target['created_at']);
             $target['apply_time'] = date('H:i:s',$target['created_at']);
             // TODO: 封存當下的可動用額度，還是匯出當下的？
-            // $target['unused_credit_line'] = floor($target['unused_credit_line'] / 1000) * 1000;
-            $target['unused_credit_line'] = $temp_remain_amount_list[$user_id]['user_available_amount'];
+            $target['unused_credit_line'] = floor($target['unused_credit_line'] / 1000) * 1000;
+            // $target['unused_credit_line'] = $temp_remain_amount_list[$user_id]['user_available_amount'];
             $target['principle_balance'] = $remain_principle_List[$target['id']] ?? 0;
         }
 

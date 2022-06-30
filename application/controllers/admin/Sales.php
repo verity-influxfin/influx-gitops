@@ -2564,11 +2564,21 @@ class Sales extends MY_Admin_Controller {
             $data[] = $report_data;
         }
 
+        // 撈取所有推薦申貸案件
+        $apply_list = $this->qrcode_lib->get_promoted_apply_info($where, $start_date, $end_date);
+
         $target_ids = [];
         foreach ($this->user_lib->rewardCategories as $category => $productIdList)
         {
             $target_ids = array_merge($target_ids, array_column($list[$category], 'id'));
+            $temp_target_list = array_column($apply_list ?? [], $category);
+            if ( ! empty($temp_target_list))
+            {
+                $temp_target_list = call_user_func_array('array_merge', $temp_target_list);
+            }
+            $target_ids = array_merge($target_ids, array_column($temp_target_list ?? [], 'id'));
         }
+        $target_ids = array_unique($target_ids);
 
         if ( ! empty($target_ids))
         {
@@ -2584,7 +2594,7 @@ class Sales extends MY_Admin_Controller {
                 $report_data['user_identity'] = $target['user_identity'];
                 $report_data['apply_date'] = $target['apply_date'];
                 $report_data['approve_date'] = isset($target['credit_created_at']) ? date("Y-m-d", $target['credit_created_at']) : '-';
-                $report_data['loan_date'] = empty($target['loan_date']) ? '' : $target['loan_date'];
+                $report_data['loan_date'] = empty($target['loan_date']) ? '-' : $target['loan_date'];
                 $report_data['apply_amount'] = $target['amount'];
                 $report_data['credit_amount'] = empty($target['credit_amount']) ? '-' : $target['credit_amount'];
                 $report_data['loan_amount'] = empty($target['loan_amount']) ? '-' : $target['loan_amount'];
@@ -2593,10 +2603,10 @@ class Sales extends MY_Admin_Controller {
                 $report_data['interest_rate'] = $target['interest_rate'];
                 $report_data['instalment'] = $instalment_list[$target['instalment']];
                 $report_data['repayment_type'] = $repayment_type[$target['repayment']];
-                $report_data['delay_status'] = $target['delay'] == '0' ? '逾期中' : '未逾期';
+                $report_data['delay_status'] = $target['delay'] != '0' ? '逾期中' : '未逾期';
                 $report_data['delay_days'] = $target['delay_days'];
                 $report_data['target_status'] = $status_list[$target['status']];
-                $report_data['reason'] = $reason_list['reason'] ?? '';
+                $report_data['reason'] = $reason_list['reason'] ?? $target['reason'];
                 $report_data['remark'] = $target['remark'];
                 $data[] = $report_data;
             }
