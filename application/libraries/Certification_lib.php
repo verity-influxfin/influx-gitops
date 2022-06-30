@@ -3087,8 +3087,7 @@ class Certification_lib{
 		$ids			= array();
 		$user_certifications 	= $this->CI->user_certification_model->order_by('certification_id','ASC')->get_many_by(array(
 			'status'				=> 0,
-			'certification_id !='	=> 3,
-            'id' => 1007575
+			'certification_id !='	=> 3
 		));
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
