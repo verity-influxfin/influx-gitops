@@ -266,7 +266,7 @@
         >
           <div class="row no-gutters">
             <div class="col-md-6 col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
                 <span class="item">*就讀學校：</span>
                 <select
                   class="item-input item-select col"
@@ -286,9 +286,9 @@
               </div>
             </div>
             <div class="col-md-6 col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
                 <span class="item">*是否有學貸：</span>
-                <div class="radio-custom">
+                <div class="radio-custom-college">
                   <label class="item-label">
                     是
                     <input
@@ -300,7 +300,7 @@
                     /><span class="college-input-outside"><span class="college-input-inside"></span></span>
                   </label>
                 </div>
-                <div class="radio-custom">
+                <div class="radio-custom-college">
                   <label class="item-label">
                     否
                     <input
@@ -317,7 +317,7 @@
           </div>
           <div class="row no-gutters">
             <div class="col-md-6 col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
                 <span class="item">*就讀科系：</span>
                 <select
                   class="item-input item-select col"
@@ -337,9 +337,9 @@
               </div>
             </div>
             <div class="col-md-6 col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
                 <span class="item">*打工或兼職：</span>
-                <div class="radio-custom">
+                <div class="radio-custom-college">
                   <label class="item-label">
                     是
                     <input
@@ -351,7 +351,7 @@
                     /><span class="college-input-outside"><span class="college-input-inside"></span></span>
                   </label>
                 </div>
-                <div class="radio-custom">
+                <div class="radio-custom-college">
                   <label class="item-label">
                     否
                     <input
@@ -368,7 +368,7 @@
           </div>
           <div class="row no-gutters">
             <div class="col-md-6 col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
                 <span class="item">*每月收入：</span>
                 <select class="item-input col" name="monthly_economy" required>
                   <option selected disabled value="">-請選擇-</option>
@@ -381,7 +381,7 @@
               </div>
             </div>
             <div class="col-md-6 col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
                 <span class="item">*電子信箱：</span>
                 <input class="item-input col" name="email" required />
               </div>
@@ -389,7 +389,7 @@
           </div>
           <div class="row no-gutters">
             <div class="col-md-6 col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
                 <span class="item">*手機號碼：</span>
                 <input
                   class="item-input col"
@@ -400,7 +400,7 @@
               </div>
             </div>
             <div class="col-md-6 col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
                 <span class="item">LINE帳號：</span>
                 <input class="item-input col" name="line" />
               </div>
@@ -408,7 +408,7 @@
           </div>
           <div class="row no-gutters">
             <div class="col-md-6 col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
                 <span class="item">*用戶暱稱：</span>
                 <input class="item-input col" name="name" required />
               </div>
@@ -416,7 +416,7 @@
           </div>
           <div class="row no-gutters">
             <div class="col-12">
-              <div class="d-flex mb-4">
+              <div class="d-flex flex-wrap mb-md-4 mb-1">
                 <span class="item">借款原因：</span>
                 <textarea
                   class="item-input item-textarea col"
@@ -427,9 +427,9 @@
           </div>
           <div class="row no-gutters">
             <div class="col-12">
-              <div class="d-flex align-items-center mb-4">
+              <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
                 <span class="item">* 一對一專人聯繫服務：</span>
-                <div class="radio-custom">
+                <div class="radio-custom-college">
                   <label class="item-label">
                     有意願
                     <input
@@ -441,7 +441,7 @@
                     /><span class="college-input-outside"><span class="college-input-inside"></span></span>
                   </label>
                 </div>
-                <div class="radio-custom">
+                <div class="radio-custom-college">
                   <label class="item-label">
                     無意願
                     <input
@@ -457,7 +457,7 @@
             </div>
           </div>
           <div class="row no-gutters justify-content-center">
-            <div class="d-flex align-items-center col-md-8 col-12">
+            <div class="d-flex align-items-center flex-wrap col-md-8 col-12">
               <span class="item">方便聯繫時間：</span>
               <select type="text" class="item-input col" name="contact_time">
                 <option selected disabled value="">-請選擇-</option>
@@ -676,7 +676,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.radio-custom {
+.radio-custom-college {
   display: contents;
   label {
     display: inline-block;
@@ -744,8 +744,18 @@ export default {
   }
 }
 @media screen and (max-width: 767px) {
-  .radio-custom label {
+  .radio-custom-college label {
     margin-right: 10px;
+  }
+  .radio-custom-college .college-input-outside{
+      margin-top: -6px;
+      width: 22px;
+      height: 22px;
+  }
+  .radio-custom-college .college-input-inside{
+      width: 17px;
+      height: 17px;
+
   }
 }
 </style>
@@ -1595,6 +1605,8 @@ $color__background--primary: #f3f9fc;
         margin-top: 56px;
         .item {
           font-size: 16px;
+          margin-bottom: 8px;
+          flex: 0 1 100%;
         }
         .item-input {
           font-size: 16px;
@@ -1605,7 +1617,7 @@ $color__background--primary: #f3f9fc;
         }
         .item-label {
           font-size: 16px;
-          padding-left: 20px;
+          padding-left: 30px;
         }
         .btn-form-submit {
           padding: 8px 100px;
@@ -1657,10 +1669,10 @@ $color__background--primary: #f3f9fc;
       }
     }
     .review {
-      padding: 64px 0;
+      padding: 36px 0;
       .h1 {
         color: $color--primary;
-        margin-bottom: 90px;
+        margin-bottom: 30px;
       }
     }
     .member-info {
