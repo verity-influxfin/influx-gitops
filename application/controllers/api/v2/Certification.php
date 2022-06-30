@@ -146,12 +146,7 @@ class Certification extends REST_Controller {
                     )
                 ){
                     count($certification_list[$value]['optional']) == 0 ? $certification_list[$value]['optional'] = false : '';
-                    $truly_failed = certification_truly_failed(
-                        $exist_target_submitted,
-                        $certification_list[$value]['certificate_status'] ?? 0,
-                        $certification_list[$value]['user_status'],
-                        $certification_list[$value]['expire_time']
-                    );
+                    $truly_failed = certification_truly_failed($exist_target_submitted, $certification_list[$value]['certification_id'] ?? 0, $this->user_info->investor);
                     if ($truly_failed)
                     {
                         $certification_list[$value]['user_status'] = NULL;
@@ -238,8 +233,13 @@ class Certification extends REST_Controller {
             //     $user_id = $judicial_person->user_id;
             // }
 
-            $rs = $this->certification_lib->get_certification_info($user_id, $certification['id'], $investor);
-            if($rs){
+            $rs = $this->certification_lib->get_certification_info($user_id, $certification['id'], $investor, TRUE, TRUE);
+
+            $this->load->helper('target');
+            $this->load->helper('user_certification');
+            $exist_target_submitted = exist_approving_target_submitted($user_id);
+            $truly_failed = certification_truly_failed($exist_target_submitted, $rs->id ?? 0, $investor);
+            if($rs && $truly_failed === FALSE){
 				$data = array(
 					'alias'				=> $alias,
 					'certification_id'	=> $rs->certification_id,
@@ -1748,7 +1748,7 @@ class Certification extends REST_Controller {
 			$file_field 	= ['creditcard_image'];
 			foreach ($file_field as $field) {
                 if(isset($input[$field])) {
-                    $should_check = true;
+
                     $image_id = !empty($input[$field]) != null ? intval($input[$field]) : null;
                     if (!$image_id) {
                         //$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1759,6 +1759,7 @@ class Certification extends REST_Controller {
                         ]);
 
                         if ($rs) {
+                            $should_check = true;
                             $content[$field] = $rs->url;
                         } else {
                             $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
@@ -1772,7 +1773,7 @@ class Certification extends REST_Controller {
             $file_fields 	= ['passbook_image','bill_phone_image'];
 			foreach ($file_fields as $fieldS) {
 			    if(isset($input[$fieldS])){
-                    $should_check = true;
+
                     $image_ids = explode(',', $input[$fieldS]);
                     if (count($image_ids) > 3) {
                         $image_ids = array_slice($image_ids, 0, 3);
@@ -1783,6 +1784,7 @@ class Certification extends REST_Controller {
                     ]);
 
                     if ($list && count($list) == count($image_ids)) {
+                        $should_check = true;
                         $content[$fieldS] = [];
                         foreach ($list as $k => $v) {
                             $content[$fieldS][] = $v->url;
@@ -4474,7 +4476,7 @@ class Certification extends REST_Controller {
         $this->load->helper('target');
         $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
         $this->load->helper('user_certification');
-        $truly_failed = certification_truly_failed($exist_target_submitted, $user_certification->certificate_status ?? 0, $user_certification->status, $user_certification->expire_time ?? '');
+        $truly_failed = certification_truly_failed($exist_target_submitted, $user_certification->id ?? 0, $this->user_info->investor);
 
         if($user_certification && ! $truly_failed){
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
