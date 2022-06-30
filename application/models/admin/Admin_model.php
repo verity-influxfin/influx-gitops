@@ -98,7 +98,7 @@ class Admin_model extends MY_Model
             ->get()
             ->first_row('array');
 
-        return array_merge($admin_data, ['permission' => $admin_permission_data]);
+        return array_merge($admin_data ?? [], ['permission' => $admin_permission_data]);
     }
 
     // 撈取尚無「部門(Table: admins)」的管理員
