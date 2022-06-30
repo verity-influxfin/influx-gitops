@@ -56,6 +56,7 @@ class Cert_governmentauthorities extends Certification_base
         { // 把 OCR 解析到的內容補到 content 的空格裡
             $this->content = array_replace_recursive($ocr_result['data'], $this->content);
             $this->content['ocr_result'] = TRUE;
+            $this->content['ocr_result_content'] = $ocr_result['data'];
         }
         return $this->content;
     }
