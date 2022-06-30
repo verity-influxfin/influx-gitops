@@ -297,6 +297,7 @@
                                                     echo '<th></th>';
                                                 }else{
                                                     echo '<th>收件檢核表</th>';
+                                                    echo '<th>徵信報告</th>';
                                                     echo '<th>圖片上傳資料</th>';
                                                 }
                                             }else{
@@ -445,6 +446,7 @@
                                                         if (!isset($input['target_id'])) {
                                                             echo '<td><button class="btn btn-primary btn-warning manual_handling" onclick=""' .(in_array($value->status, [TARGET_BANK_LOAN, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED]) ?'disabled':' '). ' data-target_id='.$value->id.'>轉人工</button></td>';
                                                         }else{
+                                                            echo '<td><a class="btn btn-primary" href="/admin/CertificationReport/report?target_id='.($value->id??"").'" target="_blank" >查看<br />徵信報告</a></td>';
                                                             echo '<td><button class="btn btn-primary btn-info" onclick="" >圖片資料</button></td>';
                                                         }
                                                     }else{

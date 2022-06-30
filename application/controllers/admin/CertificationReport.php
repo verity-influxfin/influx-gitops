@@ -108,11 +108,11 @@ class CertificationReport extends MY_Admin_Controller
                 $this->input_data['target_id'],$this->input_data['report_data'],$admin_id,$admin_name);
         if ($rs === TRUE)
         {
-            $this->json_output->setStatusCode(200)->setResponse(['report data save success'])->send();
+            $this->json_output->setStatusCode(200)->setResponse(['儲存成功！'])->send();
         }
         else
         {
-            $this->json_output->setStatusCode(400)->setResponse(['report data save fail'])->send();
+            $this->json_output->setStatusCode(400)->setResponse(['儲存失敗。'])->send();
         }
     }
 }
