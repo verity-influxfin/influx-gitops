@@ -231,7 +231,21 @@ $config['role_permission'] = [
                 ]
             ]
         ]
-    ]
+    ],
+    'CertificationReport' => [
+        'name' => '角色-徵信報告',
+        'permission' =>[
+            'CertificationReport' => [
+                'report' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['id' => '*'],
+                    ],
+                    'menu_display' => false,
+                ]
+            ]
+        ]
+    ],
 ];
 
 //內部通知Email
