@@ -271,7 +271,7 @@ class Sendemail
 		$title = "【好康標的】";
 		$content = "親愛的投資人請注意：
 			您的投資標的有一項重大變更！
-			您於" .  date("m月d日",strtotime($investment->tx_datetime)) . "投資債權，剛剛自主提升利率由
+			您於" .  date("m月d日", $investment->created_at) . "投資債權，剛剛自主提升利率由
 			".$old_rate."%-->".$new_rate."%
 			同樣的項目，更高的潛在收益！
 			請登錄普匯APP 下標搶佔先手";
