@@ -7170,7 +7170,16 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompARelationship",
-                            "description": "關係企業(A)與借戶之關係"
+                            "description": "關係企業(A)與借戶之關係<br/>" +
+                                "A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)<br/>" +
+                                "B:相同股東出資額均>=40%<br/>" +
+                                "C:轉投資之投資額>=40%<br/>" +
+                                "D:營業場所相同<br/>" +
+                                "E:營業場所有租賃關係<br/>" +
+                                "F:相同總經理<br/>" +
+                                "G:相同財務主管<br/>" +
+                                "H:其他",
+                            "allowedValues": ['A', 'B', 'C', 'D']
                         }, {
                             "group": "Parameter",
                             "type": "String",
