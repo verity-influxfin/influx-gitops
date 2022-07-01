@@ -5,6 +5,31 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <a
+                class="swiper-slide"
+                href="https://www.influxfin.com/articlepage?q=news-8200"
+                target="_blank"
+              >
+                <div class="row no-gutters speech">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/speech-text.png"
+                        alt="普匯"
+                        style="width: 305px"
+                      />
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img
+                      src="@/asset/images/index/header/speech-cover.png"
+                      style="width: 340px"
+                      class="speech-cover"
+                    />
+                  </div>
+                </div>
+              </a>
               <div class="swiper-slide">
                 <div class="row no-gutters general">
                   <div class="col-auto">
@@ -35,6 +60,30 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <a
+                class="swiper-slide"
+                href="https://www.influxfin.com/articlepage?q=news-8200"
+                target="_blank"
+              >
+                <div class="row no-gutters speech">
+                  <div class="col-auto">
+                    <div class="text-bg">
+                      <img
+                        src="@/asset/images/index/header/speech-text.png"
+                        alt="普匯"
+                        style="width: 574px"
+                      />
+                    </div>
+                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
+                  </div>
+                  <div class="col position-releative">
+                    <img
+                      src="@/asset/images/index/header/speech-cover.png"
+                      class="speech-cover"
+                    />
+                  </div>
+                </div>
+              </a>
               <div class="swiper-slide">
                 <div class="row no-gutters general">
                   <div class="col-auto">
@@ -1317,6 +1366,27 @@ export default {
           font-size: 28px;
         }
       }
+      .speech {
+        flex-wrap: nowrap;
+        .text-bg {
+          height: 192px;
+          width: 472px;
+        }
+        .solgan {
+          margin-top: 100px;
+          font-style: normal;
+          font-weight: 700;
+          font-size: 24px;
+          letter-spacing: 0.04em;
+          color: #ffffff;
+        }
+        .speech-cover {
+          left: 60px;
+          position: relative;
+          height: 458px;
+          top: -60px;
+        }
+      }
       .general {
         flex-wrap: nowrap;
         .text-bg {
@@ -2320,6 +2390,24 @@ export default {
             transform: rotate(-10deg);
             top: -195px;
             left: 144px;
+          }
+        }
+        .speech {
+          padding-top: 20px;
+          flex-wrap: wrap;
+          .text-bg {
+            height: 192px;
+            width: 178px;
+          }
+          .solgan {
+            margin-top: 100px;
+            font-size: 14px;
+          }
+          .speech-cover {
+            left: -35px;
+            top: -250px;
+            position: relative;
+            height: 258px;
           }
         }
         .general {
