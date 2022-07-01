@@ -2421,6 +2421,11 @@ class Certification_lib{
         return false;
     }
 
+    private function passbookcashflow2_success($info)
+    {
+        return $this->passbookcashflow_success($info);
+    }
+
 		private function governmentauthorities_success($info){
 		    if($info){
                 $content = $info->content;
