@@ -3372,6 +3372,7 @@ class Certification_lib{
             return FALSE;
         }
 
+        // 必填徵信項
         $targetData = json_decode($target->target_data, TRUE);
         $verify_cert_ids = array_column($pendingCertifications, 'id');
         $targetData['verify_cetification_list'] = json_encode($verify_cert_ids);
@@ -3380,7 +3381,19 @@ class Certification_lib{
             'id' => $target->id
         ], ['target_data' => json_encode($targetData, JSON_INVALID_UTF8_IGNORE)]);
 
-        $this->CI->user_certification_model->update_by(['id' => $verify_cert_ids], [
+        // 選填徵信項
+        if ( ! empty($productList[$target->product_id]['certifications']))
+        {
+            $option_cert_list = array_diff($productList[$target->product_id]['certifications'], $validateCertificationList);
+            $optional_cert_ids = array_filter(
+                array_column(array_reverse($userCertifications), 'id', 'certification_id'),
+                function ($key) use ($option_cert_list) {
+                    return in_array($key, $option_cert_list);
+                }, ARRAY_FILTER_USE_KEY
+            );
+        }
+
+        $this->CI->user_certification_model->update_by(['id' => array_merge($verify_cert_ids, $optional_cert_ids)], [
             'certificate_status' => 1
         ]);
         return TRUE;

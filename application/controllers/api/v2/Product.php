@@ -3550,7 +3550,8 @@ class Product extends REST_Controller {
                 ];
                 continue;
             }
-            $need_chk_cert = array_diff($product['certifications'], $product['option_certifications']);
+            $stage_cert_list = call_user_func_array('array_merge', $product['certifications_stage']);
+            $need_chk_cert = array_diff($stage_cert_list, $product['option_certifications']);
             $this->load->model('user_certification_model');
             $cert_list = $this->config->item('certifications');
             $failed_cert_reason = [];
