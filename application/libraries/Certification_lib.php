@@ -319,8 +319,9 @@ class Certification_lib{
             if ($info && $info->status != CERTIFICATION_STATUS_FAILED)
             {
                 $info->content = isJson($info->content) ? json_decode($info->content, TRUE) : [];
-                $info->remark = isJson($info->remark) ? json_decode($info->remark, TRUE) : [];
-				$info->remark['fail'] 	= $fail;
+                $info->remark = json_decode($info->remark, TRUE);
+                $info->remark = is_array($info->remark) ? $info->remark : [];
+                $info->remark['fail'] = $fail;
 				$certification 	= $this->certification[$info->certification_id];
 				$param = [
                     'status'    => 2,
