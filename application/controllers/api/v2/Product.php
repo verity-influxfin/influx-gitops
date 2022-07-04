@@ -1460,7 +1460,8 @@ class Product extends REST_Controller {
 					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
-                        if (certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0))
+                        if (certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0) &&
+                            $target->certificate_status != TARGET_CERTIFICATE_SUBMITTED)
                         {
                             $value['user_status'] = NULL;
                             $value['certification_id'] = NULL;
