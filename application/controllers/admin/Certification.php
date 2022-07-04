@@ -3,6 +3,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
+use Certification\Certification_factory;
 
 class Certification extends MY_Admin_Controller {
 
@@ -684,7 +685,8 @@ class Certification extends MY_Admin_Controller {
                             'status'				=> 2,
                             'change_admin'			=> $this->login_info->id,
                         ));
-                        $this->user_certification_model->update($info->user_certification_id,array('status'=>2));
+                        $cert = Certification_factory::get_instance_by_id($info->user_certification_id);
+                        $cert->set_failure(FALSE, '您的金融認證驗證失敗，請重新提供');
                         $this->user_bankaccount_model->update($post['id'],array('verify'=>4,'status'=>0));
                         $rs = true;
                     }

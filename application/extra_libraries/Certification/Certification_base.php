@@ -56,7 +56,7 @@ abstract class Certification_base implements Certification_definition
     /**
      * @var array 與此徵信項有關聯的產品(包含子產品)
      */
-    private $related_product;
+    protected $related_product;
 
     /**
      * CertificationBase constructor.
