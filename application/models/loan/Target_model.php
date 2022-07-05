@@ -700,7 +700,7 @@ class Target_model extends MY_Model
     public function get_by_multi_product(int $user_id, array $target_status, array $prod_subprod_id)
     {
         $this->db
-            ->select('id')
+            ->select('id, status, sub_status')
             ->from('p2p_loan.targets')
             ->where('user_id', $user_id)
             ->where_in('status', $target_status);

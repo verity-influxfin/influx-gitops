@@ -1435,7 +1435,7 @@ class Product extends REST_Controller {
                 $this->load->helper('target');
                 $this->load->helper('user_certification');
                 $this->load->helper('product');
-                $exist_target_submitted = chk_target_submitted($target->certificate_status ?? 0);
+                $exist_target_submitted = chk_target_submitted($target->status, $target->certificate_status ?? 0);
 
                 foreach($certification_list as $key => $value){
 

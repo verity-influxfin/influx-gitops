@@ -781,7 +781,6 @@ class Certification_lib{
             $content = json_decode($info->content, TRUE);
             $verifiedResult = new StudentCertificationResult(CERTIFICATION_STATUS_SUCCEED);
             $sys_check = SYSTEM_CHECK;
-            $reference = $content['front_image_id'] . '-' . $content['back_image_id'];
             $content['meta'] ?? [];
 
             $this->CI->load->library('scraper/sip_lib');
@@ -818,7 +817,7 @@ class Certification_lib{
                                                 // 判斷是否有資料
                                                 if ($sip_data && isset($sip_data['response']['result']))
                                                 {   
-                                                    $name = $name ?? '';
+                                                    $name = $user_info['name']  ?? '';
                                                     $id_number = $user_info['id_number'] ?? '';
                                                     $sip_name = $sip_data['response']['result']['name'] ?? '';
                                                     $sip_id_number = $sip_data['response']['result']['idNumber'] ?? '';

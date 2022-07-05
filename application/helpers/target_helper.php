@@ -63,12 +63,16 @@ function exist_approving_target_submitted($user_id)
 }
 
 /**
- * 確認案件的提交狀態是否已提交過一次
+ * 確認待核可案件的提交狀態是否已提交過一次
+ * @param int $target_status
  * @param int $target_cert_status : 提交狀態 (target.certificate_status)
  * @return bool
  */
-function chk_target_submitted(int $target_cert_status): bool
+function chk_target_submitted(int $target_status, int $target_cert_status): bool
 {
+    if ($target_status != TARGET_WAITING_APPROVE)
+        return FALSE;
+
     switch ($target_cert_status)
     {
         case TARGET_CERTIFICATE_SUBMITTED: // 已提交

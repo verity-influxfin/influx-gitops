@@ -3,6 +3,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
+use Certification\Certification_factory;
 
 class Certification extends MY_Admin_Controller {
 
@@ -756,7 +757,8 @@ class Certification extends MY_Admin_Controller {
                             'status'				=> 2,
                             'change_admin'			=> $this->login_info->id,
                         ));
-                        $this->user_certification_model->update($info->user_certification_id,array('status'=>2));
+                        $cert = Certification_factory::get_instance_by_id($info->user_certification_id);
+                        $cert->set_failure(FALSE, '您的金融認證驗證失敗，請重新提供');
                         $this->user_bankaccount_model->update($post['id'],array('verify'=>4,'status'=>0));
                         $rs = true;
                     }
@@ -1603,8 +1605,10 @@ class Certification extends MY_Admin_Controller {
             alert('資料更改失敗，找不到資料', admin_url('certification/user_certification_edit?id='.$post['id']));
         }
 
-        if(isset($certification_info->status) && $certification_info->status != 3){
-            alert('資料更改失敗，狀態未在待人工審核中', admin_url('certification/user_certification_edit?id='.$post['id']));
+        if ( ! in_array($certification_info->status,
+            [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_PENDING_TO_REVIEW]))
+        {
+            alert('資料更改失敗，狀態未在待驗證/待人工審核的狀態', admin_url('certification/user_certification_edit?id=' . $post['id']));
         }
 
         $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
