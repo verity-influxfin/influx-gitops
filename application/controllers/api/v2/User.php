@@ -1763,6 +1763,61 @@ END:
 		$this->response(['result' => 'SUCCESS','data' => $data]);
     }
 
+    /**
+     * 會員 上傳圖片（數量：n）
+     * @api {post} /v2/user/upload_multi
+     * @return void
+     */
+    public function upload_multi_post()
+    {
+        $user_id = $this->user_info->id;
+        $data = [];
+        // 上傳檔案欄位
+        if ( ! empty($_FILES['image']))
+        {
+            $files = $_FILES['image'];
+            $count = count($files['name']);
+            // 確認不是空檔案
+            for ($i = 0; $i < $count; $i++)
+            {
+                if ($files['size'][$i] == 0)
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => FILE_IS_EMPTY, 'msg' => '檔案大小為0'));
+                }
+            }
+            // 上傳 S3
+            $this->load->library('S3_upload');
+            for ($i = 0; $i < $count; $i++)
+            {
+                $image = $this->s3_upload->image_id(['image' => [
+                    'name' => $files['name'][$i],
+                    'tmp_name' => $files['tmp_name'][$i],
+                    'type' => $files['type'][$i],
+                    'size' => $files['size'][$i],
+                ]], 'image', $user_id, 'user_upload/' . $user_id);
+                if ($image)
+                {
+                    $data['image_id'][] = $image;
+                }
+                else
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '上傳S3失敗'));
+                }
+            }
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '無上傳檔案'));
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => $data]);
+    }
+
+    /**
+     * 會員 上傳 PDF 檔案（數量：1）
+     * @api {post} /v2/user/upload_pdf
+     * @return void
+     */
     public function upload_pdf_post()
     {
         $user_id = $this->user_info->id;
@@ -1805,6 +1860,67 @@ END:
         else
         {
             $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => $data]);
+    }
+
+    /**
+     * 會員 上傳 PDF 檔案（數量：n）
+     * @api {post} /v2/user/upload_pdf_multi
+     * @return void
+     */
+    public function upload_pdf_multi_post()
+    {
+        $user_id = $this->user_info->id;
+        $data = [];
+        // 上傳檔案欄位
+        if ( ! empty($_FILES['pdf']))
+        {
+            $files = $_FILES['pdf'];
+            $count = count($files['name']);
+
+            for ($i = 0; $i < $count; $i++)
+            {
+                // 確認不是空檔案
+                if ($files['size'][$i] == 0)
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => FILE_IS_EMPTY, 'msg' => '檔案大小為0'));
+                }
+                // 確認檔案格式
+                if ( ! is_pdf($files['type'][$i]))
+                {
+                    $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '格式錯誤']);
+                }
+                // 確認檔案為 HTTP POST
+                if ( ! is_uploaded_file($files['tmp_name'][$i]))
+                {
+                    $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '非用戶上傳檔案']);
+                }
+            }
+            // 上傳 S3
+            $this->load->library('S3_upload');
+            for ($i = 0; $i < $count; $i++)
+            {
+                $pdf = $this->s3_upload->pdf_id(
+                    file_get_contents($files['tmp_name'][$i]),
+                    round(microtime(TRUE) * 1000) . rand(1, 99) . '.pdf',
+                    $user_id,
+                    'user_upload/' . $user_id
+                );
+                if ($pdf)
+                {
+                    $data['pdf_id'][] = $pdf;
+                }
+                else
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '上傳S3失敗'));
+                }
+            }
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '無上傳檔案'));
         }
 
         $this->response(['result' => 'SUCCESS', 'data' => $data]);

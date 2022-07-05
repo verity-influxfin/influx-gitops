@@ -48997,8 +48997,122 @@ define({
             }
         }, {
             "type": "post",
+            "url": "/v2/user/upload_multi",
+            "title": "會員 上傳圖片（數量：n）",
+            "version": "0.2.0",
+            "name": "PostUserUploadMulti",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "file",
+                            "allowedValues": [
+                                "\"*.jpg\"",
+                                "\"*.png\"",
+                                "\"*.gif\""
+                            ],
+                            "optional": false,
+                            "field": "image[]",
+                            "description": "<p>圖片檔</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "image_id",
+                            "description": "<p>圖片ID</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"image_id\": [191,192,193]\n  }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/upload_multi"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "199",
+                            "description": "<p>檔案大小為0</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\",\n  \"msg\": \"xxx\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\",\n  \"msg\": \"檔案大小為0\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        }, {
+            "type": "post",
             "url": "/v2/user/upload_pdf",
-            "title": "會員 上傳PDF檔案",
+            "title": "會員 上傳PDF檔案（數量：1）",
             "version": "0.2.0",
             "name": "PostUserUploadPdf",
             "group": "User",
@@ -49102,6 +49216,125 @@ define({
                     }, {
                         "title": "199",
                         "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"199\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "101",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "100",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"100\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        }, {
+            "type": "post",
+            "url": "/v2/user/upload_pdf_multi",
+            "title": "會員 上傳PDF檔案（數量：n）",
+            "version": "0.2.0",
+            "name": "PostUserUploadPdfMulti",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "file",
+                            "allowedValues": ["\"*.pdf\""],
+                            "optional": false,
+                            "field": "pdf[]",
+                            "description": "<p>PDF檔</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "pdf_id",
+                            "description": "<p>PDF檔ID</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"pdf_id\": [191,192,193]\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/upload_pdf_multi"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "199",
+                            "description": "<p>檔案大小為0</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }, {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"200\",\n    \"msg\": \"xxx\"\n}",
+                        "type": "Object"
+                    }, {
+                        "title": "199",
+                        "content": "{\n    \"result\": \"ERROR\",\n    \"error\": \"199\",\n    \"msg\": \"檔案大小為0\"\n}",
                         "type": "Object"
                     }, {
                         "title": "101",
