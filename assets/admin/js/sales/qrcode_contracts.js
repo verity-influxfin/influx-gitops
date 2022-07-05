@@ -91,10 +91,18 @@ var app = new Vue({
         current_page: 1
     },
     contract: {
-        individual_reward: 0,
-        individual_platform_fee: 0,
-        enterprise_reward: 0,
-        enterprise_platform_fee: 0
+        student_reward_amount: 0,
+        salary_man_reward_amount: 0,
+        small_enterprise_reward_amount: 0,
+        small_enterprise2_reward_amount: 0,
+        small_enterprise3_reward_amount: 0,
+        student_platform_fee: 0,
+        salary_man_platform_fee: 0,
+        small_enterprise_platform_fee: 0,
+        small_enterprise2_platform_fee: 0,
+        small_enterprise3_platform_fee: 0,
+        full_member: 0,
+        download: 0,
     },
     context: '',
     contract_printing: '',
@@ -158,10 +166,18 @@ var app = new Vue({
             if (contract) {
                 self.contract_printing = contract.replace(/\%(\S+)\%/g, function (match, col) {
                     switch (col) {
-                        case 'individual_reward':
-                        case 'individual_platform_fee':
-                        case 'enterprise_reward':
-                        case 'enterprise_platform_fee':
+                        case 'student_reward_amount':
+                        case 'salary_man_reward_amount':
+                        case 'small_enterprise_reward_amount':
+                        case 'small_enterprise2_reward_amount':
+                        case 'small_enterprise3_reward_amount':
+                        case 'student_platform_fee':
+                        case 'salary_man_platform_fee':
+                        case 'small_enterprise_platform_fee':
+                        case 'small_enterprise2_platform_fee':
+                        case 'small_enterprise3_platform_fee':
+                        case 'full_member':
+                        case 'download':
                             return self.contract[col];
                     }
                 });
@@ -178,10 +194,18 @@ var app = new Vue({
             self.mode = 'review';
             self.context = contract.replace(/\%(\S+)\%/g, function (match, col) {
                     switch (col) {
-                        case 'individual_reward':
-                        case 'individual_platform_fee':
-                        case 'enterprise_reward':
-                        case 'enterprise_platform_fee':
+                        case 'student_reward_amount':
+                        case 'salary_man_reward_amount':
+                        case 'small_enterprise_reward_amount':
+                        case 'small_enterprise2_reward_amount':
+                        case 'small_enterprise3_reward_amount':
+                        case 'student_platform_fee':
+                        case 'salary_man_platform_fee':
+                        case 'small_enterprise_platform_fee':
+                        case 'small_enterprise2_platform_fee':
+                        case 'small_enterprise3_platform_fee':
+                        case 'full_member':
+                        case 'download':
                             return self.contract[col];
                     }
                 });
@@ -190,10 +214,18 @@ var app = new Vue({
     cancel: function () {
         this.context = '';
         this.contract = {
-            individual_reward: 0,
-            individual_platform_fee: 0,
-            enterprise_reward: 0,
-            enterprise_platform_fee: 0
+            student_reward_amount: 0,
+            salary_man_reward_amount: 0,
+            small_enterprise_reward_amount: 0,
+            small_enterprise2_reward_amount: 0,
+            small_enterprise3_reward_amount: 0,
+            student_platform_fee: 0,
+            salary_man_platform_fee: 0,
+            small_enterprise_platform_fee: 0,
+            small_enterprise2_platform_fee: 0,
+            small_enterprise3_platform_fee: 0,
+            full_member: 0,
+            download: 0,
         };
         this.mode = 'list';
     },
@@ -239,13 +271,7 @@ var app = new Vue({
             {
                 let data = resp.data.response.data;
 
-                self.contract = {
-                    individual_reward: data.content[0],
-                    individual_platform_fee: data.content[1],
-                    enterprise_reward: data.content[2],
-                    enterprise_platform_fee: data.content[3]
-                };
-
+                self.contract = data.content;
                 if (data.contract) {
                     contract = data.contract;
                 }

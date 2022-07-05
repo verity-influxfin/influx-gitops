@@ -17,27 +17,75 @@
                 <div class="panel panel-default">
                     <div class="panel-body form-horizontal">
                         <div class="form-group">
-                            <label for="individual_reward" class="col-sm-6 control-label">個金核可獎金 (元)</label>
+                            <label for="student_reward_amount" class="col-sm-6 control-label">學生貸核可獎金 (元)</label>
                             <div class="col-sm-6">
-                                <input type="" class="form-control" v-model="contract.individual_reward" id="individual_reward" placeholder="個金核可獎金 (元)">
+                                <input type="" class="form-control" v-model="contract.student_reward_amount" id="student_reward_amount" placeholder="學生貸核可獎金 (元)">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="individual_platform_fee" class="col-sm-6 control-label">個金服務費 (%)</label>
+                            <label for="student_platform_fee" class="col-sm-6 control-label">學生貸服務費 (%)</label>
                             <div class="col-sm-6">
-                                <input type="" class="form-control" v-model="contract.individual_platform_fee" id="individual_platform_fee" placeholder="個金服務費 (%)">
+                                <input type="" class="form-control" v-model="contract.student_platform_fee" id="student_platform_fee" placeholder="學生貸服務費 (%)">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="enterprise_reward" class="col-sm-6 control-label">企金核可獎金 (元)</label>
+                            <label for="salary_man_reward_amount" class="col-sm-6 control-label">上班族貸核可獎金 (元)</label>
                             <div class="col-sm-6">
-                                <input type="" class="form-control" v-model="contract.enterprise_reward" id="enterprise_reward" placeholder="企金核可獎金 (元)">
+                                <input type="" class="form-control" v-model="contract.salary_man_reward_amount" id="salary_man_reward_amount" placeholder="上班族貸核可獎金 (元)">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="enterprise_platform_fee" class="col-sm-6 control-label">企金服務費 (%)</label>
+                            <label for="salary_man_platform_fee" class="col-sm-6 control-label">上班族貸服務費 (%)</label>
                             <div class="col-sm-6">
-                                <input type="" class="form-control" v-model="contract.enterprise_platform_fee" id="enterprise_platform_fee" placeholder="企金服務費 (%)">
+                                <input type="" class="form-control" v-model="contract.salary_man_platform_fee" id="salary_man_platform_fee" placeholder="上班族貸服務費 (%)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="enterprise_reward" class="col-sm-6 control-label">信保專案核可獎金 (元)</label>
+                            <div class="col-sm-6">
+                                <input type="" class="form-control" v-model="contract.enterprise_reward" id="enterprise_reward" placeholder="信保專案核可獎金 (元)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="enterprise_platform_fee" class="col-sm-6 control-label">信保專案服務費 (%)</label>
+                            <div class="col-sm-6">
+                                <input type="" class="form-control" v-model="contract.enterprise_platform_fee" id="enterprise_platform_fee" placeholder="信保專案服務費 (%)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="enterprise2_reward" class="col-sm-6 control-label">中小企業信貸核可獎金 (元)</label>
+                            <div class="col-sm-6">
+                                <input type="" class="form-control" v-model="contract.enterprise2_reward" id="enterprise2_reward" placeholder="中小企業信貸核可獎金 (元)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="enterprise2_platform_fee" class="col-sm-6 control-label">中小企業信貸服務費 (%)</label>
+                            <div class="col-sm-6">
+                                <input type="" class="form-control" v-model="contract.enterprise2_platform_fee" id="enterprise2_platform_fee" placeholder="中小企業信貸服務費 (%)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="enterprise3_reward" class="col-sm-6 control-label">企業主速貸核可獎金 (元)</label>
+                            <div class="col-sm-6">
+                                <input type="" class="form-control" v-model="contract.enterprise3_reward" id="enterprise3_reward" placeholder="企業主速貸核可獎金 (元)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="enterprise3_platform_fee" class="col-sm-6 control-label">企業主速貸服務費 (%)</label>
+                            <div class="col-sm-6">
+                                <input type="" class="form-control" v-model="contract.enterprise3_platform_fee" id="enterprise3_platform_fee" placeholder="企業主速貸服務費 (%)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="full_member" class="col-sm-6 control-label">新戶(註冊+下載)獎金</label>
+                            <div class="col-sm-6">
+                                <input type="" class="form-control" v-model="contract.full_member" id="full_member" placeholder="新戶(註冊+下載)獎金">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="download" class="col-sm-6 control-label">新戶(下載)獎金</label>
+                            <div class="col-sm-6">
+                                <input type="" class="form-control" v-model="contract.download" id="download" placeholder="新戶(下載)獎金">
                             </div>
                         </div>
                     </div>
@@ -70,7 +118,19 @@
             <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <pre class="preview_zone" v-if="Array.isArray(context)">{{context[0]}}<input v-model="contract.individual_reward" />{{context[1]}}<input v-model="contract.individual_platform_fee" />{{context[2]}}<input v-model="contract.enterprise_reward" />{{context[3]}}<input v-model="contract.enterprise_platform_fee" />{{context[4]}}</pre>
+                        <pre class="preview_zone" v-if="Array.isArray(context)">{{context[0]}}
+                            <input v-model="contract.student_reward_amount" />{{context[1]}}
+                            <input v-model="contract.student_platform_fee" />{{context[2]}}
+                            <input v-model="contract.salary_man_reward_amount" />{{context[3]}}
+                            <input v-model="contract.salary_man_platform_fee" />{{context[4]}}
+                            <input v-model="contract.enterprise_reward" />{{context[5]}}
+                            <input v-model="contract.enterprise_platform_fee" />{{context[6]}}
+                            <input v-model="contract.enterprise2_reward" />{{context[7]}}
+                            <input v-model="contract.enterprise2_platform_fee" />{{context[8]}}
+                            <input v-model="contract.enterprise3_reward" />{{context[9]}}
+                            <input v-model="contract.enterprise3_platform_fee" />{{context[10]}}
+                            <input v-model="contract.full_member" />{{context[11]}}
+                            <input v-model="contract.download" />{{context[12]}}</pre>
                         <pre class="preview_zone" v-else>{{context}}</pre>
                     </div>
                 </div>

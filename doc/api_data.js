@@ -46005,6 +46005,19 @@ define({
                     ]
                 }
             },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "alias",
+                            "description": "<p>想申請的qrcode專案別名</p>"
+                        }
+                    ]
+                }
+            },
             "success": {
                 "fields": {
                     "Success 200": [

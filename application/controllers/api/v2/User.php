@@ -2692,17 +2692,17 @@ END:
         $this->load->model('user/user_qrcode_model');
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('user/user_certification_model');
+        $input = $this->input->post(NULL, TRUE);
         $user_id = $this->user_info->id;
         $investor = $this->user_info->investor;
         $company = $this->user_info->company;
         $promote_code = $this->user_info->my_promote_code;
 
-        $alias_name = '';
         if ($company == USER_NOT_COMPANY)
         {
             // 一般方案 qrcode_setting 的 alias
             $promote_cert_list = $this->config->item('promote_code_certs');
-            $alias_name = $this->qrcode_setting_model->generalCaseAliasName;
+            $alias_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
         }
         else
         {
@@ -2718,7 +2718,18 @@ END:
 
             // 特約方案 qrcode_setting 的 alias
             $promote_cert_list = $this->config->item('promote_code_certs_company');
-            $alias_name = $this->qrcode_setting_model->appointedCaseAliasName;
+            $alias_name = PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME;
+        }
+
+        if ( ! empty($input['alias']))
+        {
+            $alias_name = $input['alias'];
+        }
+
+        $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias_name]);
+        if ( ! isset($qrcode_settings))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => EXIT_DATABASE));
         }
 
         $certifications = [];
@@ -2755,12 +2766,6 @@ END:
             $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST));
         }
 
-        $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias_name]);
-        if ( ! isset($qrcode_settings))
-        {
-            $this->response(array('result' => 'ERROR', 'error' => EXIT_DATABASE));
-        }
-
         if ($promote_code == '')
         {
             $this->load->library('user_lib');
@@ -2777,20 +2782,27 @@ END:
         $start_time = date('Y-m-d H:i:s');
         $end_time = date("Y-m-d H:i:s", strtotime("+ 1 year"));
 
+        $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($qrcode_settings->alias);
+        $apply_qualification = $this->qrcode_lib->has_apply_permission($contract_type_name, $company);
+        if ( ! $apply_qualification)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => APPLY_NO_PERMISSION));
+        }
+
         if ($company == USER_NOT_COMPANY)
         {
-            $contract_type_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
             $user_info = $this->user_model->get($user_id);
             $name = $user_info->name ?? '';
             $address = $user_info->address ?? '';
+            $id_number = $user_info->id_number ?? '';
         }
         else
         {
-            $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
             $this->load->model('user/judicial_person_model');
             $judicial_person_info = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
             $name = $judicial_person_info->company ?? '';
             $address = $judicial_person_info->cooperation_address ?? '';
+            $id_number = $judicial_person_info->tax_id ?? '';
         }
 
         $rs = FALSE;
@@ -2799,7 +2811,7 @@ END:
             if ($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT)
             {
                 // 不是特約方案才會直接到待審核
-                if ($alias_name != $this->qrcode_setting_model->appointedCaseAliasName)
+                if ( ! $this->qrcode_lib->is_appointed_type($alias_name))
                 {
                     $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
                         ['status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
@@ -2817,12 +2829,12 @@ END:
         }
         else
         {
-            $contract = $this->qrcode_lib->get_contract_format_content($contract_type_name, $name, $address, $settings);
+            $contract = $this->qrcode_lib->get_contract_format_content($contract_type_name, $name, $id_number, $address, $settings);
             $contract_id = $this->contract_lib->sign_contract($contract_type_name, $contract);
 
-            switch ($alias_name)
+            switch ($this->qrcode_lib->is_appointed_type($alias_name))
             {
-                case $this->qrcode_setting_model->appointedCaseAliasName:
+                case TRUE:
                     $status = PROMOTE_STATUS_PENDING_TO_SENT;
                     break;
                 default:
@@ -2843,38 +2855,28 @@ END:
             ]);
         }
 
-        // 把待送出審核的狀態改為待驗證
-        if ( ! empty($settings['certification_id']))
-        {
-            $this->user_certification_model->update_by([
-                'id' => $settings['certification_id'],
-                'user_id' => $user_id,
-                'investor' => $investor,
-                'status' => CERTIFICATION_STATUS_AUTHENTICATED
-            ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
-        }
-
         // 特約方案需增加過審合約
         $user_qrcode = $this->user_qrcode_model->get_by([
             'user_id' => $user_id,
             'alias' => $alias_name,
             'status != ' => PROMOTE_STATUS_DISABLED
         ]);
-        if (isset($user_qrcode) && $user_qrcode->alias == $this->qrcode_setting_model->appointedCaseAliasName)
+        if (isset($user_qrcode) && $this->qrcode_lib->is_appointed_type($user_qrcode->alias))
         {
             $this->load->model('user/user_qrcode_apply_model');
             $this->load->model('admin/contract_format_model');
             $this->load->library('qrcode_lib');
-            $contract_format = $this->contract_format_model->get_by(['type' => PROMOTE_APPOINTED_CONTRACT_TYPE_NAME]);
+            $contract_format = $this->contract_format_model->get_by(['type' => $user_qrcode->alias]);
 
             $qrcode_apply = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $user_qrcode->id, 'status !=' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
             if ( ! isset($qrcode_apply))
             {
+                $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($user_qrcode->alias);
                 $rs = $this->user_qrcode_apply_model->insert([
                     'user_qrcode_id' => $user_qrcode->id,
                     'status' => PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP,
                     'contract_format_id' => $contract_format->id ?? 0,
-                    'contract_content' => json_encode($this->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME, $name, $address)),
+                    'contract_content' => json_encode($this->qrcode_lib->get_contract_format_content($contract_type_name, $name, $id_number, $address)),
                 ]);
             }
             else if ($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT && $qrcode_apply->status == PROMOTE_REVIEW_STATUS_SUCCESS)
@@ -2950,16 +2952,27 @@ END:
         $categoryInitList = array_combine(array_keys($this->user_lib->rewardCategories), array_fill(0, count($this->user_lib->rewardCategories), ['detail' => [], 'count' => 0, 'rewardAmount' => 0]));
         $initList = array_merge_recursive(['registered' => [], 'registeredCount' => 0, 'fullMember' => [], 'fullMemberCount' => 0, 'fullMemberRewardAmount' => 0], $categoryInitList);
         $initList = array_merge_recursive($initList, ['collaboration' => $collaboratorInitList]);
+        $where = ['user_id' => $user_id, 'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY],
+            'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
 
-        if ( ! $company)
+        $user_qrcode = $this->user_qrcode_model->get_by($where);
+        if (isset($user_qrcode))
         {
-            $contract_type_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
-            $alias = $this->qrcode_setting_model->generalCaseAliasName;
+            $alias = $user_qrcode->alias;
+            $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($alias);
         }
         else
         {
-            $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
-            $alias = $this->qrcode_setting_model->appointedCaseAliasName;
+            if ( ! $company)
+            {
+                $contract_type_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
+                $alias = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
+            }
+            else
+            {
+                $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
+                $alias = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
+            }
         }
 
         $contract_format = $this->contract_format_model->order_by('created_at', 'desc')->get_by(['type' => $contract_type_name]);
@@ -2971,12 +2984,9 @@ END:
                 $user_info = $this->user_model->get($user_id);
                 $settings = json_decode($qrcode_settings->settings, TRUE);
                 $data['contract'] = vsprintf($contract_format->content,
-                    $this->qrcode_lib->get_contract_format_content($contract_type_name, $user_info->name ?? '', $user_info->address ?? '', $settings));
+                    $this->qrcode_lib->get_contract_format_content($contract_type_name, $user_info->name ?? '', $user_info->id_number ?? '', $user_info->address ?? '', $settings));
             }
         }
-
-        $where = ['user_id' => $user_id, 'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY],
-            'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
 
         $userQrcode = $this->qrcode_lib->get_promoted_reward_info($where);
         if (isset($userQrcode) && ! empty($userQrcode))
@@ -3113,37 +3123,36 @@ END:
             $data['promote_name'] = $settings['description'] ?? '';
             $data['promote_alias'] = $userQrcodeInfo['alias'];
             $data['status'] = intval($userQrcodeInfo['status']);
-            if ($company)
+
+            // 法人的 qrcode 狀態：
+            // 預設狀態或無任何已通過審查合約紀錄   : 0 (app顯示待申請)
+            // 點選我要申請後                   : 0->2 (app顯示合約審核中)
+            // 經辦人員新增合約，且老闆審核過後    : 2->4 (app顯示合約，待進行簽約)
+            // 法人按下同意合約進行申請後         : 4->3 (app顯示審核中)
+            // 當該過的認證項都通過              : 3->1 (app顯示QR code和已收到的獎金)
+            $this->load->model('user/user_qrcode_apply_model');
+            $apply_info = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $userQrcodeInfo['id']]);
+            if (isset($apply_info))
             {
-                // 法人的 qrcode 狀態：
-                // 預設狀態或無任何已通過審查合約紀錄   : 0 (app顯示待申請)
-                // 點選我要申請後                   : 0->2 (app顯示合約審核中)
-                // 經辦人員新增合約，且老闆審核過後    : 2->4 (app顯示合約，待進行簽約)
-                // 法人按下同意合約進行申請後         : 4->3 (app顯示審核中)
-                // 當該過的認證項都通過              : 3->1 (app顯示QR code和已收到的獎金)
-                $this->load->model('user/user_qrcode_apply_model');
-                $apply_info = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $userQrcodeInfo['id']]);
-                if (isset($apply_info))
+                if ($userQrcodeInfo['status'] == PROMOTE_STATUS_PENDING_TO_SENT)
                 {
-                    if ($userQrcodeInfo['status'] == PROMOTE_STATUS_PENDING_TO_SENT)
+                    switch ($apply_info->status)
                     {
-                        switch ($apply_info->status)
-                        {
-                            case PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP:
-                            case PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW:
-                                $data['status'] = PROMOTE_STATUS_PENDING_TO_SENT;
-                                break;
-                            case PROMOTE_REVIEW_STATUS_WITHDRAW:
-                                $data['status'] = PROMOTE_STATUS_DISABLED;
-                                break;
-                            case PROMOTE_REVIEW_STATUS_SUCCESS:
-                                $data['status'] = PROMOTE_STATUS_CAN_SIGN_CONTRACT;
-                                $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id'], [], FALSE);
-                                break;
-                        }
+                        case PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP:
+                        case PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW:
+                            $data['status'] = PROMOTE_STATUS_PENDING_TO_SENT;
+                            break;
+                        case PROMOTE_REVIEW_STATUS_WITHDRAW:
+                            $data['status'] = PROMOTE_STATUS_DISABLED;
+                            break;
+                        case PROMOTE_REVIEW_STATUS_SUCCESS:
+                            $data['status'] = PROMOTE_STATUS_CAN_SIGN_CONTRACT;
+                            $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id'], [], FALSE);
+                            break;
                     }
                 }
             }
+
             $data['contract'] = ! empty($contract) ? $contract['content'] : $data['contract'];
         }
 

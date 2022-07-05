@@ -254,9 +254,9 @@ class Certification_lib{
                     if ( ! $company)
                     {
                         $content = json_decode($certifications[CERTIFICATION_IDENTITY]->content, TRUE);
-
-                        $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME,
-                            $content['name'] ?? '', $content['address'] ?? '', $settings, $origin_contract_date);
+                        $name = $content['name'] ?? '';
+                        $id_number = $content['id_number'] ?? '';
+                        $address = $content['address'] ?? '';
                     }
                     else
                     {
@@ -265,10 +265,12 @@ class Certification_lib{
                         $judicial_person_info = $this->CI->judicial_person_model->get_by(['company_user_id' => $info->user_id]);
                         $name = $judicial_person_info->company ?? '';
                         $address = $judicial_person_info->cooperation_address ?? '';
-
-                        $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME,
-                            $name, $address, $settings, $origin_contract_date);
+                        $id_number = $judicial_person_info->tax_id ?? '';
                     }
+                    $contract_type = $this->CI->qrcode_lib->get_contract_type_by_alias($promoteCode->alias);
+                    $contract = $this->CI->qrcode_lib->get_contract_format_content($contract_type,
+                        $name, $id_number, $address, $settings, $origin_contract_date);
+
                     if ( ! empty($contract))
                     {
                         $this->CI->contract_lib->update_contract($promoteCode->contract_id, $contract);

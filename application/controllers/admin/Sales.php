@@ -1765,12 +1765,17 @@ class Sales extends MY_Admin_Controller {
             $contract_format = $this->contract_format_model->order_by('created_at', 'desc')->get_by(['id' => $review_list['contract_format_id']]);
             $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($review_list['alias']);
             $contract_content = json_decode($review_list['contract_content'], TRUE);
-            $content = $this->qrcode_lib->get_contract_format_content($contract_type_name, $contract_content[0] ?? '', $contract_content[10] ?? '', []);
-            $list['content'] = array_slice(json_decode($review_list['contract_content'], TRUE) ?? [], 4, 4);
-            $content[4] = '%individual_reward%';
-            $content[5] = '%individual_platform_fee%';
-            $content[6] = '%enterprise_reward%';
-            $content[7] = '%enterprise_platform_fee%';
+
+            $format_setting = $this->qrcode_lib->get_contract_format($contract_type_name, $contract_content, '%');
+            $format_setting_without_format = $this->qrcode_lib->get_contract_format($contract_type_name, $contract_content);
+            $content = $format_setting['content'];
+
+            $list['content'] = array_combine(
+                array_slice($format_setting_without_format['content'],
+                $format_setting['input_start'], $format_setting['input_end']-$format_setting['input_start']+1),
+                array_slice(json_decode($review_list['contract_content'], TRUE) ?? [],
+                    $format_setting['input_start'], $format_setting['input_end']-$format_setting['input_start']+1)
+            );
             $list['contract'] = '';
             if (isset($contract_format->content))
             {
@@ -1940,11 +1945,12 @@ class Sales extends MY_Admin_Controller {
     public function promote_modify_contract()
     {
         $this->load->library('output/json_output');
+        $this->load->library('qrcode_lib');
         $this->load->model('user/user_qrcode_apply_model');
 
         $input = $this->input->post(NULL, TRUE);
         $data = [];
-        $fields = ['qrcode_apply_id', 'individual_reward', 'individual_platform_fee', 'enterprise_reward', 'enterprise_platform_fee'];
+        $fields = ['qrcode_apply_id'];
 
         foreach ($fields as $field)
         {
@@ -1964,20 +1970,23 @@ class Sales extends MY_Admin_Controller {
         {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
         }
-
-        if (( ! empty($data['individual_reward']) && ! empty($data['individual_platform_fee'])) ||
-            ( ! empty($data['enterprise_reward']) && ! empty($data['enterprise_platform_fee'])))
+        $this->load->model('user/user_qrcode_model');
+        $user_qrcode = $this->user_qrcode_model->get_by(['id' => $apply_info->user_qrcode_id]);
+        if ( ! isset($user_qrcode))
         {
-            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '不能同時設定獎金及服務費，只能擇其一'))->send();
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '找不到對應的qrcode資料'))->send();
         }
 
+        $contract_type = $this->qrcode_lib->get_contract_type_by_alias($user_qrcode->alias);
+        $format_setting = $this->qrcode_lib->get_contract_format($contract_type);
+        $fields = array_flip($format_setting['content']);
         $contract_content = json_decode($apply_info->contract_content, TRUE);
-        $fields = ['individual_reward' => 4, 'individual_platform_fee' => 5, 'enterprise_reward' => 6, 'enterprise_platform_fee' => 7];
+
         foreach ($fields as $field => $idx)
         {
-            if (isset($data[$field]))
+            if (isset($input[$field]))
             {
-                $contract_content[$idx] = $data[$field];
+                $contract_content[$idx] = $input[$field];
             }
         }
         $rs = $this->user_qrcode_apply_model->update_by(['id' => $data['qrcode_apply_id']],
@@ -2052,6 +2061,7 @@ class Sales extends MY_Admin_Controller {
         $this->load->library('notification_lib');
         $this->load->library('user_lib');
         $this->load->library('contract_lib');
+        $this->load->library('qrcode_lib');
         $input = $this->input->post(NULL, TRUE);
         $apply_info = $this->user_qrcode_apply_model->get_by(['id' => $input['qrcode_apply_id'], 'status' => PROMOTE_REVIEW_STATUS_SUCCESS]);
         if (isset($apply_info))
@@ -2065,18 +2075,50 @@ class Sales extends MY_Admin_Controller {
 
             $contract_content = json_decode($apply_info->contract_content, TRUE);
             $this->contract_lib->update_contract($qrcode_code->contract_id, $contract_content);
-            $content = array_slice($contract_content, 4, 4);
 
-            foreach ($this->user_lib->appointed_individual_categories as $category)
+            $contract_type = $this->qrcode_lib->get_contract_type_by_alias($qrcode_code->alias);
+            $format_setting = $this->qrcode_lib->get_contract_format($contract_type);
+            $fields = array_flip($format_setting['content']);
+            foreach ($fields as $field => $idx)
             {
-                $settings['reward']['product'][$category]['amount'] = (int) $content[0] ?? 0;
-                $settings['reward']['product'][$category]['borrower_percent'] = (float) $content[1] ?? 0;
-            }
-
-            foreach ($this->user_lib->appointed_enterprise_categories as $category)
-            {
-                $settings['reward']['product'][$category]['amount'] = (int) $content[2] ?? 0;
-                $settings['reward']['product'][$category]['borrower_percent'] = (float) $content[3] ?? 0;
+                switch ($field) {
+                    case 'student_reward_amount':
+                        $settings['reward']['product']['student']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'salary_man_reward_amount':
+                        $settings['reward']['product']['salary_man']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise_reward_amount':
+                        $settings['reward']['product']['small_enterprise']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise2_reward_amount':
+                        $settings['reward']['product']['small_enterprise2']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise3_reward_amount':
+                        $settings['reward']['product']['small_enterprise3']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'student_platform_fee':
+                        $settings['reward']['product']['student']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'salary_man_platform_fee':
+                        $settings['reward']['product']['salary_man']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise_platform_fee':
+                        $settings['reward']['product']['small_enterprise']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise2_platform_fee':
+                        $settings['reward']['product']['small_enterprise2']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise3_platform_fee':
+                        $settings['reward']['product']['small_enterprise3']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'full_member':
+                        $settings['reward']['full_member']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'download':
+                        $settings['reward']['download']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                }
             }
 
             $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], ['settings' => json_encode($settings)]);

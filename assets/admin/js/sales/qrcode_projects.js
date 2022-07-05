@@ -91,10 +91,18 @@ var app = new Vue({
         current_page: 1
     },
     contract: {
-        individual_reward: 0,
-        individual_platform_fee: 0,
-        enterprise_reward: 0,
-        enterprise_platform_fee: 0
+        student_reward_amount: 0,
+        salary_man_reward_amount: 0,
+        small_enterprise_reward_amount: 0,
+        small_enterprise2_reward_amount: 0,
+        small_enterprise3_reward_amount: 0,
+        student_platform_fee: 0,
+        salary_man_platform_fee: 0,
+        small_enterprise_platform_fee: 0,
+        small_enterprise2_platform_fee: 0,
+        small_enterprise3_platform_fee: 0,
+        full_member: 0,
+        download: 0,
     },
     context: '',
     contract_printing: '',
@@ -155,12 +163,22 @@ var app = new Vue({
         self.contract_printing = '';
         this.get_context(apply_id, function (contract) {
             if (contract) {
+                console.log('test.contract',contract);
                 self.contract_printing = contract.replace(/\%(\S+)\%/g, function (match, col) {
+                    console.log(col);
                     switch (col) {
-                        case 'individual_reward':
-                        case 'individual_platform_fee':
-                        case 'enterprise_reward':
-                        case 'enterprise_platform_fee':
+                        case 'student_reward_amount':
+                        case 'salary_man_reward_amount':
+                        case 'small_enterprise_reward_amount':
+                        case 'small_enterprise2_reward_amount':
+                        case 'small_enterprise3_reward_amount':
+                        case 'student_platform_fee':
+                        case 'salary_man_platform_fee':
+                        case 'small_enterprise_platform_fee':
+                        case 'small_enterprise2_platform_fee':
+                        case 'small_enterprise3_platform_fee':
+                        case 'full_member':
+                        case 'download':
                             return self.contract[col];
                     }
                 });
@@ -176,15 +194,24 @@ var app = new Vue({
         this.get_context(apply_id, function (contract) {
             self.mode = 'edit';
             self.context = contract.split(/\%(\S+)\%/g).filter((x, i) => i % 2 == 0);
+            console.log(self.context);
         });
     },
     cancel: function () {
         this.context = '';
         this.contract = {
-            individual_reward: 0,
-            individual_platform_fee: 0,
-            enterprise_reward: 0,
-            enterprise_platform_fee: 0
+            student_reward_amount: 0,
+            salary_man_reward_amount: 0,
+            small_enterprise_reward_amount: 0,
+            small_enterprise2_reward_amount: 0,
+            small_enterprise3_reward_amount: 0,
+            student_platform_fee: 0,
+            salary_man_platform_fee: 0,
+            small_enterprise_platform_fee: 0,
+            small_enterprise2_platform_fee: 0,
+            small_enterprise3_platform_fee: 0,
+            full_member: 0,
+            download: 0,
         };
         this.mode = 'list';
     },
@@ -194,19 +221,37 @@ var app = new Vue({
     },
 	update_contract: async function () {
 		this.is_waiting_response = true
-		const individual_reward = Number(this.contract.individual_reward)
-		const individual_platform_fee = Number(this.contract.individual_platform_fee)
-		const enterprise_reward = Number(this.contract.enterprise_reward)
-		const enterprise_platform_fee = Number(this.contract.enterprise_platform_fee)
-		const  qrcode_apply_id  = this.qrcode_apply_id
-		if (individual_reward === NaN) {
+		const student_reward_amount = Number(this.contract.student_reward_amount)
+		const salary_man_reward_amount = Number(this.contract.salary_man_reward_amount)
+		const small_enterprise_reward_amount = Number(this.contract.small_enterprise_reward_amount)
+		const small_enterprise2_reward_amount = Number(this.contract.small_enterprise2_reward_amount)
+		const small_enterprise3_reward_amount = Number(this.contract.small_enterprise3_reward_amount)
+        const student_platform_fee = Number(this.contract.student_platform_fee)
+		const salary_man_platform_fee = Number(this.contract.salary_man_platform_fee)
+		const small_enterprise_platform_fee = Number(this.contract.small_enterprise_platform_fee)
+		const small_enterprise2_platform_fee = Number(this.contract.small_enterprise2_platform_fee)
+		const small_enterprise3_platform_fee = Number(this.contract.small_enterprise3_platform_fee)
+		const full_member = Number(this.contract.full_member)
+		const download = Number(this.contract.download)
+		const qrcode_apply_id  = this.qrcode_apply_id
+        if (student_reward_amount === NaN || salary_man_reward_amount === NaN  || small_enterprise_reward_amount === NaN
+            || small_enterprise2_reward_amount === NaN  || small_enterprise3_reward_amount === NaN) {
+            alert('核貸獎金 必須是數字')
+            return
+        }
+		if (student_platform_fee === NaN || salary_man_platform_fee === NaN || small_enterprise_platform_fee === NaN ||
+            small_enterprise2_platform_fee === NaN || small_enterprise3_platform_fee === NaN) {
 			alert('服務⼿續費 必須是數字')
 			return
 		}
-		if (individual_platform_fee === NaN) {
-			alert('利息⼿續費 必須是數字')
-			return
-		}
+        if (full_member === NaN) {
+            alert('註冊+下載獎金 必須是數字')
+            return
+        }
+        if (download === NaN) {
+            alert('下載獎金 必須是數字')
+            return
+        }
 		if (enterprise_reward === NaN) {
 			alert('第三⽅合作個⼈產品 必須是數字')
 			return
@@ -217,10 +262,18 @@ var app = new Vue({
 		}
 		const data = new FormData()
 		data.append('qrcode_apply_id',qrcode_apply_id)
-		data.append('individual_reward',individual_reward)
-		data.append('individual_platform_fee',individual_platform_fee)
-		data.append('enterprise_reward',enterprise_reward)
-		data.append('enterprise_platform_fee',enterprise_platform_fee)
+		data.append('student_reward_amount',student_reward_amount)
+		data.append('salary_man_reward_amount',salary_man_reward_amount)
+		data.append('small_enterprise_reward_amount',small_enterprise_reward_amount)
+		data.append('small_enterprise2_reward_amount',small_enterprise2_reward_amount)
+		data.append('small_enterprise3_reward_amount',small_enterprise3_reward_amount)
+		data.append('student_platform_fee',student_platform_fee)
+		data.append('salary_man_platform_fee',salary_man_platform_fee)
+		data.append('small_enterprise_platform_fee',small_enterprise_platform_fee)
+		data.append('small_enterprise2_platform_fee',small_enterprise2_platform_fee)
+		data.append('small_enterprise3_platform_fee',small_enterprise3_platform_fee)
+		data.append('full_member',full_member)
+		data.append('download',download)
 		const res = await axios({
 			method:'post',
 			url: '/admin/Sales/promote_modify_contract',
@@ -295,12 +348,9 @@ var app = new Vue({
             {
                 let data = resp.data.response.data;
 
-                self.contract = {
-                    individual_reward: data.content[0],
-                    individual_platform_fee: data.content[1],
-                    enterprise_reward: data.content[2],
-                    enterprise_platform_fee: data.content[3]
-                };
+                self.contract = data.content;
+                console.log(data);
+                console.log(self.contract);
 
                 if (data.contract) {
                     contract = data.contract;

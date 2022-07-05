@@ -18,13 +18,20 @@ class Qrcode_lib
      * 取得 promote_code 的合約格式對應內容
      * @param string $type_name
      * @param string $name
+     * @param string $id_number
      * @param string $address
      * @param array $settings
      * @param string $contract_date
      * @return array
      */
-    public function get_contract_format_content(string $type_name, string $name = '', string $address = '', array $settings = [], string $contract_date = ''): array
+    public function get_contract_format_content(string $type_name, string $name = '', string $id_number = '', string $address = '', array $settings = [], string $contract_date = ''): array
     {
+        $regexResult = [];
+        $time = time();
+        $contract_year = (string)(date('Y', $time) - 1911);
+        $contract_month = (string)date('m', $time);
+        $contract_day = (string)date('d', $time);
+
         if ( ! empty($contract_date))
         {
             preg_match('/(\d+)\-(\d+)\-(\d+)/', $contract_date, $regexResult);
@@ -36,16 +43,12 @@ class Qrcode_lib
             }
         }
 
-        if (empty($contract_date))
-        {
-            $time = time();
-            $contract_year = date('Y', $time) - 1911;
-            $contract_month = date('m', $time);
-            $contract_day = date('d', $time);
-        }
+        $next_year = (string)((int)$contract_year+1);
+
 
         switch ($type_name)
         {
+            case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
             case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
                 return [$name, $contract_year, $contract_month, $contract_day,
                     $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
@@ -60,21 +63,198 @@ class Qrcode_lib
                     $name, $name, $address,
                     $contract_year, $contract_month, $contract_day];
                 break;
+            case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+                break;
+            case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise2']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['amount'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+                break;
+            case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0, $settings['reward']['product']['small_enterprise2']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['borrower_percent'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+                break;
+            case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise2']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['amount'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0, $settings['reward']['product']['small_enterprise2']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['borrower_percent'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise2']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['amount'] ?? 0,
+                    $name, $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0, $settings['reward']['product']['small_enterprise2']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['borrower_percent'] ?? 0,
+                    $name, $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise2']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['amount'] ?? 0,
+                    $name, $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0, $settings['reward']['product']['small_enterprise2']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['borrower_percent'] ?? 0,
+                    $name, $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
         }
         return [];
+    }
+
+    /**
+     * 取得 promote_code 的合約格式
+     * @param string $type_name
+     * @param array $content
+     * @param string $format_symbol
+     * @return array
+     */
+    public function get_contract_format(string $type_name, array $content=[], string $format_symbol=''): array
+    {
+
+        $time = time();
+        $contract_year = (string)(date('Y', $time) - 1911);
+        $contract_month = (string)date('m', $time);
+        $contract_day = (string)date('d', $time);
+        $next_year = (string)((int)$contract_year+1);
+        $content_list = $content;
+
+        switch ($type_name)
+        {
+            case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+                $input_start = 4;
+                $input_end = 6;
+                $content_list[4] = 'student_reward_amount';
+                $content_list[5] = 'salary_man_reward_amount';
+                $content_list[6] = 'small_enterprise_reward_amount';
+                break;
+            case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
+                $input_start = 4;
+                $input_end = 7;
+                $content_list[4] = 'student_reward_amount';
+                $content_list[5] = 'student_platform_fee';
+                $content_list[6] = 'small_enterprise_reward_amount';
+                $content_list[7] = 'small_enterprise_platform_fee';
+                break;
+            case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 11;
+                $content_list[7] = 'full_member';
+                $content_list[8] = 'download';
+                $content_list[9] = 'student_reward_amount';
+                $content_list[10] = 'salary_man_reward_amount';
+                $content_list[11] = 'small_enterprise_reward_amount';
+                break;
+            case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 11;
+                $content_list[7] = 'student_reward_amount';
+                $content_list[8] = 'salary_man_reward_amount';
+                $content_list[9] = 'small_enterprise_reward_amount';
+                $content_list[10] = 'small_enterprise2_reward_amount';
+                $content_list[11] = 'small_enterprise3_reward_amount';
+                break;
+            case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 11;
+                $content_list[7] = 'student_platform_fee';
+                $content_list[8] = 'salary_man_platform_fee';
+                $content_list[9] = 'small_enterprise_platform_fee';
+                $content_list[10] = 'small_enterprise2_platform_fee';
+                $content_list[11] = 'small_enterprise3_platform_fee';
+                break;
+            case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 13;
+                $content_list[7] = 'full_member';
+                $content_list[8] = 'download';
+                $content_list[9] = 'student_reward_amount';
+                $content_list[10] = 'salary_man_reward_amount';
+                $content_list[11] = 'small_enterprise_reward_amount';
+                $content_list[12] = 'small_enterprise2_reward_amount';
+                $content_list[13] = 'small_enterprise3_reward_amount';
+                break;
+            case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 13;
+                $content_list[7] = 'full_member';
+                $content_list[8] = 'download';
+                $content_list[9] = 'student_platform_fee';
+                $content_list[10] = 'salary_man_platform_fee';
+                $content_list[11] = 'small_enterprise_platform_fee';
+                $content_list[12] = 'small_enterprise2_platform_fee';
+                $content_list[13] = 'small_enterprise3_platform_fee';
+                break;
+            default:
+                $input_start = 0;
+                $input_end = 0;
+                break;
+        }
+
+        if ( ! empty($format_symbol))
+        {
+            for ($i = $input_start; $i <= $input_end; $i++)
+            {
+                $content_list[$i] = $format_symbol . $content_list[$i] . $format_symbol;
+            }
+        }
+        return ['content' => $content_list, 'input_start' => $input_start, 'input_end' => $input_end];
     }
 
     public function get_contract_type_by_alias($alias): string
     {
         $this->CI->load->model('user/qrcode_setting_model');
-        $contract_type_name = '';
-        if ($alias == $this->CI->qrcode_setting_model->generalCaseAliasName)
+        switch ($alias)
         {
-            $contract_type_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
-        }
-        else if ($alias == $this->CI->qrcode_setting_model->appointedCaseAliasName)
-        {
-            $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
+            case $this->CI->qrcode_setting_model->generalCaseAliasName:
+                $contract_type_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
+                break;
+            case $this->CI->qrcode_setting_model->appointedCaseAliasName:
+                $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
+                break;
+            default:
+                $contract_type_name = $alias;
+                break;
         }
         return $contract_type_name;
     }
@@ -915,5 +1095,66 @@ class Qrcode_lib
         }
 
         return array_replace($main_qrcode_reward_list, $subcode_reward_list);
+    }
+
+    /**
+     * 是否是特約商類型（需審核）
+     * @param $alias
+     * @return bool
+     */
+    public function is_appointed_type($alias): bool
+    {
+        switch ($alias)
+        {
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+                return FALSE;
+            case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+                return TRUE;
+        }
+    }
+
+    /**
+     * 確認使用者身份是否可申請推薦碼
+     * @param $contract_type
+     * @param bool $company
+     * @return bool
+     */
+    public function has_apply_permission($contract_type, bool $company = FALSE): bool
+    {
+        if ($company)
+        {
+            switch ($contract_type)
+            {
+                case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
+                case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+                case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+                case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+                case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+                    return TRUE;
+            }
+        }
+        else
+        {
+            switch ($contract_type)
+            {
+                case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+                    return TRUE;
+            }
+        }
+        return FALSE;
     }
 }
