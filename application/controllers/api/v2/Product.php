@@ -1468,11 +1468,17 @@ class Product extends REST_Controller {
 					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
+                        $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target);
                         $truly_failed = certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
                             USER_BORROWER,
                             is_judicial_product($target->product_id)
                         );
-                        if ($truly_failed)
+
+                        if (in_array($key, $skip_certification_ids))
+                        {
+                            $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                        }
+                        else if ($truly_failed)
                         {
                             $value['user_status'] = NULL;
                             $value['certification_id'] = NULL;

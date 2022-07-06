@@ -816,7 +816,7 @@ class Certification_lib{
                                                 $user_info = ! empty($user_certification->content) ? $user_certification->content : [];
                                                 // 判斷是否有資料
                                                 if ($sip_data && isset($sip_data['response']['result']))
-                                                {   
+                                                {
                                                     $name = $user_info['name']  ?? '';
                                                     $id_number = $user_info['id_number'] ?? '';
                                                     $sip_name = $sip_data['response']['result']['name'] ?? '';
@@ -2867,17 +2867,7 @@ class Certification_lib{
                 }
             }
 
-            $skip_certification_ids = [];
-            if ( ! empty($target))
-            {
-                $this->CI->load->model('loan/target_meta_model');
-                $target_meta = $this->CI->target_meta_model->as_array()->get_by([
-                    'target_id' => $target->id,
-                    'meta_key' => 'skip_certification_ids'
-                ]);
-                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
-                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
-            }
+            $skip_certification_ids = $this->get_skip_certification_ids($target);
 
 			foreach($certification as $key => $value){
 				$userId = $user_id;
@@ -3651,4 +3641,22 @@ class Certification_lib{
         }
         return $certs_content;
     }
+
+    public function get_skip_certification_ids($target)
+    {
+        $skip_certification_ids = [];
+        if ( ! empty($target))
+        {
+            $this->CI->load->model('loan/target_meta_model');
+            $target_meta = $this->CI->target_meta_model->as_array()->get_by([
+                'target_id' => $target->id,
+                'meta_key' => 'skip_certification_ids'
+            ]);
+            $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
+            $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
+        }
+        return $skip_certification_ids;
+    }
+
 }
+
