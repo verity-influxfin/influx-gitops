@@ -128,7 +128,15 @@ class Certification extends REST_Controller {
 		$investor 			= $this->user_info->investor;
 		$company 			= $this->user_info->company;
         $incharge           = $this->user_info->incharge;
-        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, TRUE, FALSE, FALSE, TRUE);
+        $input = $this->input->get(NULL, TRUE);
+        $target = FALSE;
+        if (isset($input['target_id']))
+        {
+            $this->load->model('loan/target_model');
+            $target = $this->target_model->get_by(['id' => $input['target_id']]);
+        }
+
+        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, FALSE, $target);
 		$list				= array();
 		if(!empty($certification_list)){
 		    $sort = $this->config->item('certifications_sort');

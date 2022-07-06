@@ -2866,6 +2866,14 @@ class Certification_lib{
                 }
             }
 
+            $skip_certification_ids = [];
+            if (isset($target))
+            {
+                $target_data = json_decode($target->target_data ?? '[]', TRUE);
+                $skip_certification_ids = json_decode($target_data['skip_certification_ids'] ?? '[]', TRUE);
+                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
+            }
+
 			foreach($certification as $key => $value){
 				$userId = $user_id;
 				if($company){
@@ -2883,14 +2891,21 @@ class Certification_lib{
                     $value['expire_time'] = $user_certification->expire_time;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
-				}else{
-					$value['user_status'] 		 = null;
-					$value['certification_id'] 	 = null;
-					$value['updated_at'] 		 = null;
+                }
+                else
+                {
+                    $value['user_status'] = NULL;
+                    $value['certification_id'] = NULL;
+                    $value['updated_at'] = NULL;
                     $value['expire_time'] = NULL;
-				}
+                }
 
-                    $certification_list[$key] = $value;
+                if (in_array($key, $skip_certification_ids))
+                {
+                    $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                }
+
+                $certification_list[$key] = $value;
             }
 			return $certification_list;
 		}

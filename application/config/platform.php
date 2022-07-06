@@ -971,9 +971,11 @@ $config['product_list'] = [
         'option_certifications' => [
             CERTIFICATION_JUDICIALGUARANTEE,
             CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_PASSBOOKCASHFLOW_2
         ],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
+            CERTIFICATION_PASSBOOKCASHFLOW_2
         ],
         'certifications_stage' => [
             [
