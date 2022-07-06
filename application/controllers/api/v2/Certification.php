@@ -3559,6 +3559,10 @@ class Certification extends REST_Controller {
     public function passbookcashflow2_post()
     {
         // 自然人存摺
+        if (isset($this->user_info->naturalPerson))
+        {
+            $this->user_info->id = $this->user_info->naturalPerson->id;
+        }
         $this->passbookcashflow(CERTIFICATION_PASSBOOKCASHFLOW_2);
     }
 

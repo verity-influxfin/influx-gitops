@@ -2770,7 +2770,8 @@ class Certification_lib{
                             CERTIFICATION_FINANCIALWORKER,
                             CERTIFICATION_INVESTIGATION,
                             CERTIFICATION_JOB,
-                            CERTIFICATION_PROFILE
+                            CERTIFICATION_PROFILE,
+                            CERTIFICATION_PASSBOOKCASHFLOW_2
                         ]))
                         {
                             $user_certification = $this->get_certification_info($naturalPerson->id, $value, 0, $get_fail, $get_expired);
