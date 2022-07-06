@@ -9,7 +9,9 @@
     </div>
     <div class="features">
       <div class="block-content">
-        <h1 class="h1">隨意貸 輕鬆還</h1>
+        <h1 class="h1" data-aos="fade-right" data-aos-duration="800">
+          隨意貸 輕鬆還
+        </h1>
         <div class="row justify-content-center no-gutters">
           <div class="feature-grid">
             <div class="card" data-aos="fade-up">
@@ -63,7 +65,11 @@
           </div>
         </div>
         <div class="row no-gutters justify-content-center">
-          <div class="feature-suit">
+          <div
+            class="feature-suit"
+            data-aos="zoom-in-up"
+            data-aos-duration="800"
+          >
             <div class="d-flex align-items-center suit-title-container">
               <div class="suit-title">適用對象</div>
             </div>
@@ -73,8 +79,12 @@
             <div class="suit-item">•信用良好（無催收/呆帳紀錄）</div>
           </div>
         </div>
-        <h1 class="h1">超過10萬用戶使用</h1>
-        <h2 class="h2">體驗超簡便快速、安全又隱私的金融科技貸款服務</h2>
+        <h1 class="h1" data-aos="fade-left" data-aos-duration="800">
+          超過10萬用戶使用
+        </h1>
+        <h2 class="h2" data-aos="fade-right" data-aos-duration="800">
+          體驗超簡便快速、安全又隱私的金融科技貸款服務
+        </h2>
         <div class="feature-user">
           <div class="card" data-aos="fade-up" data-aos-duration="800">
             <div class="bg-text">
@@ -160,14 +170,275 @@
         </div>
       </div>
     </div>
+    <div class="purpose">
+      <div class="block-content">
+        <h1 class="h1">生活就是需要錢</h1>
+        <h2 class="h2">普匯最了解您的資金需求</h2>
+        <div class="d-flex justify-content-center">
+          <div class="purpose-grid">
+            <div
+              class="purpose-col"
+              data-aos="flip-up"
+              data-aos-delay="1500"
+              data-aos-duration="800"
+            >
+              <div class="purpose-img-1">
+                <img
+                  src="@/asset/images/workloan/purpose-img-1.png"
+                  alt=""
+                  class="img-fluid"
+                />
+              </div>
+              <div class="purpose-col-title">購車頭期款</div>
+              <div class="purpose-col-text">普匯全額貸給你</div>
+            </div>
+            <div
+              class="purpose-col"
+              data-aos="flip-left"
+              data-aos-delay="1000"
+              data-aos-duration="800"
+            >
+              <div class="purpose-img-2">
+                <img
+                  src="@/asset/images/workloan/purpose-img-2.png"
+                  alt=""
+                  class="img-fluid"
+                />
+              </div>
+              <div class="purpose-col-title">投資理財</div>
+              <div class="purpose-col-text">股票交割款、投資本金</div>
+            </div>
+            <div
+              class="purpose-col"
+              data-aos="flip-right"
+              data-aos-delay="500"
+              data-aos-duration="800"
+            >
+              <div class="purpose-img-3">
+                <img
+                  src="@/asset/images/workloan/purpose-img-3.png"
+                  alt=""
+                  class="img-fluid"
+                />
+              </div>
+              <div class="purpose-col-title">購房頭期款</div>
+              <div class="purpose-col-text">普匯貸你自備款</div>
+            </div>
+            <div
+              class="purpose-col"
+              data-aos="flip-down"
+              data-aos-duration="800"
+            >
+              <div class="purpose-img-4">
+                <img
+                  src="@/asset/images/workloan/purpose-img-4.png"
+                  alt=""
+                  class="img-fluid"
+                />
+              </div>
+              <div class="purpose-col-title">日常消費</div>
+              <div class="purpose-col-text">生活急需、資金周轉</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-title">專人溫馨服務</div>
+        <form action="" class="row no-gutters justify-content-center">
+          <div class="col">
+            <div class="row no-gutters mb-3">
+              <div class="item">*您的尊稱：</div>
+              <input
+                type="text"
+                name=""
+                id=""
+                class="item-input col"
+                required
+              />
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="item">*手機號碼：</div>
+              <input type="text" name="" id="" class="item-input col" />
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="item">*身分證性別：</div>
+              <div class="radio-custom">
+                <label class="item-label">
+                  <input
+                    type="radio"
+                    name="gender"
+                    class="radio-inline"
+                    value="0"
+                  />
+                  <span class="outside"><span class="inside"></span></span>男
+                </label>
+                <label class="item-label">
+                  <input
+                    type="radio"
+                    name="gender"
+                    class="radio-inline"
+                    value="1"
+                    checked
+                  />
+                  <span class="outside"><span class="inside"></span></span>女
+                </label>
+              </div>
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="item">LINE帳號：</div>
+              <input type="text" name="" id="" class="item-input col" />
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="item">*電子信箱：</div>
+              <input type="text" name="" id="" class="item-input col" />
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="item">*資金需求原因：</div>
+              <input type="text" name="" id="" class="item-input col" />
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="item">*聯絡時間：</div>
+              <input type="text" name="" id="" class="item-input col" />
+            </div>
+            <div class="row no-gutters">
+              <div class="item"></div>
+              <button class="btn btn-block btn-form-submit col">送出</button>
+            </div>
+          </div>
+          <div class="col-6">
+            <img
+              src="@/asset/images/workloan/form-cover-1.png"
+              alt=""
+              class="img-fluid form-cover"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="diagram">
+      <div class="block-content">
+        <h1 class="h1">申貸流程</h1>
+        <h2 class="h2">5分鐘申貸、10分鐘審核、1小時放款</h2>
+        <div class="swiper">
+          <!-- Additional required wrapper -->
+          <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">Slide 1</div>
+            <div class="swiper-slide">Slide 2</div>
+            <div class="swiper-slide">Slide 3</div>
+            <div class="swiper-slide">Slide 3</div>
+          </div>
+          <!-- If we need pagination -->
+          <div class="swiper-pagination"></div>
+          <!-- If we need navigation buttons -->
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </div>
+    </div>
+    <div class="product-feature">
+      <div class="block-content">
+        <h1 class="h1">上班族產品特色</h1>
+        <h2 class="h2">方便、安全、隱私，您申辦貸款的首選</h2>
+        <div class="product-feature-grid">
+          <div
+            class="product-feature-item"
+            data-aos="fade-right"
+            data-aos-duration="500"
+          >
+            <div class="product-feature-title">即時審核，快速媒合放款</div>
+            <div class="product-feature-text">
+              <div>系統自動化審核加快申貸的速度，5分鐘申貸</div>
+              <div>10分鐘核准 最快1小時放款！</div>
+            </div>
+          </div>
+          <div
+            class="product-feature-item"
+            data-aos="fade-right"
+            data-aos-duration="500"
+            data-aos-offset="300"
+          >
+            <div class="product-feature-title">全線上無人化</div>
+            <div class="product-feature-text">
+              運用AI整合會員資料進行大數據分析，自動線上完成徵信、授信、甚至續約程序，操作方便簡單。
+            </div>
+          </div>
+          <div
+            class="product-feature-item"
+            data-aos="fade-right"
+            data-aos-duration="500"
+            data-aos-offset="200"
+          >
+            <div class="product-feature-title">隱私無照會</div>
+            <div class="product-feature-text">
+              申貸全程無人干擾，更不會接到任何業務員的照會電話，也不會主動聯絡借款人及其緊急聯絡人。
+            </div>
+          </div>
+          <div
+            class="product-feature-item product-feature-img"
+            data-aos="flip-down"
+            data-aos-duration="500"
+          >
+            <img
+              src="@/asset/images/workloan/product-feature-1.png"
+              class="img-fluid"
+            />
+          </div>
+          <div
+            class="product-feature-item"
+            data-aos="fade-left"
+            data-aos-duration="500"
+          >
+            <div class="product-feature-title">聯徵不留紀錄</div>
+            <div class="product-feature-text">
+              不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。
+            </div>
+          </div>
+          <div
+            class="product-feature-item"
+            data-aos="fade-left"
+            data-aos-duration="500"
+            data-aos-delay="200"
+            data-aos-offset="200"
+          >
+            <div class="product-feature-title">費率單純透明</div>
+            <div class="product-feature-text">
+              只收取一次性成交手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。
+            </div>
+          </div>
+          <div
+            class="product-feature-item"
+            data-aos="fade-left"
+            data-aos-duration="500"
+            data-aos-delay="200"
+            data-aos-offset="200"
+          >
+            <div class="product-feature-title">金融機構合作</div>
+            <div class="product-feature-text">
+              在會員用戶逐漸成長的情況下，普匯專業優質的名聲，吸引許多金融機構相邀合作，包含「新光銀行」、「上海商銀」等，共同為台灣金融科技發展貢獻一份力。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import featureCard from '../component/index/featureCard'
+import 'swiper/swiper.scss'
+import 'swiper/components/navigation/navigation.min.css'
+import SwiperCore, { Navigation } from 'swiper/core'
 export default {
   components: {
     featureCard,
+  },
+  mounted() {
+    SwiperCore.use([Navigation])
+    const swiper = new Swiper('.swiper', {
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    })
   },
 }
 </script>
@@ -414,6 +685,169 @@ $color__background--primary: #f3f9fc;
           line-height: 2;
           color: #ffffff;
         }
+      }
+    }
+  }
+}
+.purpose {
+  padding: 120px 0;
+  background: $color__background--primary;
+  .h1 {
+    color: $color--primary;
+  }
+  .h2 {
+    color: $color--primary;
+    opacity: 0.64;
+    margin-top: 24px;
+  }
+  .purpose-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(320px, 1fr));
+    gap: 16px;
+    height: 450px;
+    .purpose-col {
+      padding: 15px 15px 0 15px;
+    }
+    .purpose-img {
+      &-1 {
+        margin-top: 118px;
+      }
+      &-2 {
+        margin-top: 156px;
+      }
+      &-3 {
+        margin-top: 82px;
+      }
+    }
+    .purpose-col-title {
+      margin-top: -15px;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 1.4;
+      text-align: center;
+      color: $color--primary;
+    }
+    .purpose-col-text {
+      margin-top: 6px;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.4;
+      letter-spacing: 0.05em;
+      text-align: center;
+      color: $color__text--primary;
+    }
+  }
+  .form-title {
+    margin: 84px 0 120px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 1.4;
+    text-align: center;
+    color: $color__text--primary;
+  }
+  .item {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1.4;
+    min-width: 225px;
+    color: $color__text--primary;
+  }
+  .item-input {
+    font-size: 24px;
+    line-height: 1.4;
+    border: 2px solid $color--primary;
+    border-radius: 12px;
+  }
+  .item-label {
+    font-size: 24px;
+    line-height: 43px;
+    color: $color__text--primary;
+    opacity: 0.7;
+    width: fit-content;
+    margin-right: 15px;
+  }
+  .form-cover {
+    position: relative;
+    top: -120px;
+  }
+  .btn-form-submit {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1.4;
+    color: #ffffff;
+    background-color: $color--primary;
+    border-radius: 12px;
+  }
+}
+.diagram {
+  padding: 64px 0;
+  .h1 {
+    color: $color--primary;
+  }
+  .h2 {
+    color: $color--primary;
+    opacity: 0.64;
+    margin-top: 24px;
+  }
+  .swiper {
+    margin-top: 32px;
+  }
+}
+.product-feature {
+  padding: 64px 0;
+  background: $color__background--primary;
+  .h1 {
+    color: $color--primary;
+  }
+  .h2 {
+    color: $color--primary;
+    opacity: 0.64;
+    margin-top: 24px;
+  }
+  .product-feature-grid {
+    display: grid;
+    margin-top: 85px;
+    grid-template-columns: 1fr 380px 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 12px;
+    .product-feature {
+      &-img {
+        grid-area: 1 / 2 / 4 / 3;
+        position: relative;
+        top: -35px;
+      }
+      &-title {
+        display: flex;
+        align-items: center;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 1.4;
+        color: $color__text--primary;
+        &::before {
+          content: '';
+          display: block;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          margin-right: 16px;
+          background: $color--primary;
+        }
+      }
+      &-text {
+        margin: 12px 0 0 36px;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 1.5;
+        max-width: 360px;
+        color: $color__text--primary;
+        opacity: 0.56;
       }
     }
   }
