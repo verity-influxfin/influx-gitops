@@ -2870,8 +2870,12 @@ class Certification_lib{
             $skip_certification_ids = [];
             if (isset($target))
             {
-                $target_data = json_decode($target->target_data ?? '[]', TRUE);
-                $skip_certification_ids = json_decode($target_data['skip_certification_ids'] ?? '[]', TRUE);
+                $this->CI->load->model('loan/target_meta_model');
+                $target_meta = $this->CI->target_meta_model->as_array()->get_by([
+                    'target_id' => $target->id,
+                    'meta_key' => 'skip_certification_ids'
+                ]);
+                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
                 $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
             }
 

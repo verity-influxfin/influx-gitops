@@ -3879,6 +3879,13 @@ class Product extends REST_Controller {
      *     'result':'SUCCESS',
      * }
      *
+     * @apiError 8 資料庫發生錯誤
+     * @apiErrorExample {Object} 8
+     *     {
+     *       "result": "ERROR",
+     *       "error": "8"
+     *     }
+     *
      * @apiError 200 參數錯誤
      * @apiErrorExample {Object} 200
      *     {
@@ -3924,18 +3931,39 @@ class Product extends REST_Controller {
         $product = $this->target_lib->get_product_info($target->product_id, $target->sub_product_id);
         $option_cert_ids = $product['backend_option_certifications'] ?? [];
         $skip_cert_ids = explode(',', $input['certification_ids']);
-        if(empty($skip_cert_ids) || count(array_intersect($option_cert_ids, $skip_cert_ids)) != count($skip_cert_ids)) {
+        if (empty($skip_cert_ids) || count(array_intersect($option_cert_ids, $skip_cert_ids)) != count($skip_cert_ids))
+        {
             $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '欲略過的徵信資料編號有誤']);
         }
 
-        $target_data = json_decode($target->target_data ?? [], TRUE);
-        $target_data['skip_certification_ids'] = json_encode($skip_cert_ids);
+        $this->load->model('loan/target_meta_model');
+        $rs = $this->target_meta_model->get_by([
+            'target_id' => $target->id,
+            'meta_key' => 'skip_certification_ids'
+        ]);
 
-        $this->target_model->update(
-            $input['target_id'], [
-                'target_data' => json_encode($target_data)
-            ]
-        );
-        $this->response(['result' => 'SUCCESS']);
+        if (isset($rs))
+        {
+            $is_succeed = $this->target_meta_model->update($rs->id, [
+                'meta_value' => json_encode($skip_cert_ids),
+            ]);
+        }
+        else
+        {
+            $is_succeed = $this->target_meta_model->insert([
+                'target_id' => $target->id,
+                'meta_key' => 'skip_certification_ids',
+                'meta_value' => json_encode($skip_cert_ids),
+            ]);
+        }
+
+        if ($is_succeed)
+        {
+            $this->response(['result' => 'SUCCESS']);
+        }
+        else
+        {
+            $this->response(['result' => 'ERROR', 'error' => EXIT_DATABASE]);
+        }
     }
 }
