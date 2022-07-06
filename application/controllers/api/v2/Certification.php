@@ -58,7 +58,7 @@ class Certification extends REST_Controller {
                 if($this->user_info->naturalPerson && $this->request->method == 'post'){
                     $this->load->library('certification_lib');
                     //檢核變卡認證，並排除以下認證
-                    if(!in_array($method, ['governmentauthorities','identity','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody'])){
+                    if(!in_array($method, ['governmentauthorities','identity','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody', 'passbookcashflow2'])){
                         $cerGovernmentauthorities = $this->certification_lib->get_certification_info($tokenData->id, CERTIFICATION_GOVERNMENTAUTHORITIES, $this->user_info->investor);
                         if(!$cerGovernmentauthorities && $method != 'governmentauthorities'){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
