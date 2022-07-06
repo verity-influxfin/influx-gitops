@@ -3608,9 +3608,13 @@ class Certification extends REST_Controller {
                 {
                     $image_ids = array_slice($image_ids, 0, 15);
                 }
+
+                // 法人與自然人都在存取範圍內
+                $user_ids = array_unique([$this->user_info->originalID, $user_id]);
+
                 $list = $this->log_image_model->get_many_by([
                     'id' => $image_ids,
-                    'user_id' => $user_id,
+                    'user_id' => $user_ids,
                 ]);
 
                 if ($list && count($list) == count($image_ids))
