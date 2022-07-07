@@ -2,7 +2,7 @@
   <div class="work-loan">
     <div class="banner">
       <img
-        src="@/asset/images/collegeLoan/college-cover.png"
+        src="@/asset/images/workloan/workloan-cover.png"
         alt="普匯上班族貸banner"
         class="img-fluid d-sm-block d-none"
       />
@@ -321,10 +321,92 @@
           <!-- Additional required wrapper -->
           <div class="swiper-wrapper">
             <!-- Slides -->
-            <div class="swiper-slide">Slide 1</div>
-            <div class="swiper-slide">Slide 2</div>
-            <div class="swiper-slide">Slide 3</div>
-            <div class="swiper-slide">Slide 3</div>
+            <div class="swiper-slide">
+              <div class="swiper-left swiper-text-1">
+                <div>量身製定資金需求</div>
+                <div>提供您更滿意的貸款</div>
+              </div>
+              <img src="@/asset/images/workloan/step-1-1.png" alt="" />
+              <img src="@/asset/images/workloan/step-1-2.png" alt="" />
+              <div class="swiper-step">
+                <div class="swiper-step-title">Step 1：</div>
+                <div class="swiper-step-info">• 選擇「申貸專案」</div>
+                <div class="swiper-step-next"></div>
+                <div class="swiper-step-info">• 上傳「資金需求佐證文件」</div>
+                <div class="swiper-step-next"></div>
+                <div class="swiper-step-info">• 選擇「借款金額與期數」</div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="swiper-left">
+                <div class="swiper-text-1">需要準備什麼資料？</div>
+                <div class="swiper-text-2">Check list：</div>
+                <div class="swiper-text-3">•雙證件</div>
+                <div class="swiper-text-3">•銀行存款金融卡</div>
+                <div class="swiper-text-3">•工作收入證明</div>
+                <div class="swiper-text-info">
+                  <div>(1)勞保異動明細</div>
+                  <div>(2)近三個月薪資憑證</div>
+                  <div>(3)近三個月存摺封面與內頁</div>
+                  <div>(4)近年度扣繳憑單</div>
+                </div>
+                <div class="swiper-text-3">•個人聯徵信用報告</div>
+                <a href="http://" target="_blank" rel="noopener noreferrer" class="swiper-text-link">如何申請聯徵？</a>
+              </div>
+              <img src="@/asset/images/workloan/step-2-1.png" alt="" />
+              <img src="@/asset/images/workloan/step-2-2.png" alt="" />
+              <div class="swiper-step">
+                <div class="swiper-step-title">Step 2：</div>
+                <div class="swiper-step-info">• 完成「身分驗證」</div>
+                <div class="swiper-step-next"></div>
+                <div class="swiper-step-info">• 完成其他資料提供</div>
+                <div class="swiper-step-next"></div>
+                <div class="swiper-step-info">• 確認送出審核</div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="swiper-left swiper-text-1">
+                <div class="swiper-text-1">
+                  <div>全台第一</div>
+                  <div>AI自動審核風控系統</div>
+                  <div class="swiper-text-3">
+                    <div>•運用金融科技</div>
+                    <div>•快速辨識驗證資訊</div>
+                    <div>•提供最安全無人化</div>
+                    <div>•FinTech借貸服務</div>
+                  </div>
+                </div>
+              </div>
+              <img src="@/asset/images/workloan/step-3-1.png" alt="" />
+              <img src="@/asset/images/workloan/step-3-2.png" alt="" />
+              <div class="swiper-step">
+                <div class="swiper-step-title">Step 3：</div>
+                <div class="swiper-step-info">• 取得核准額度</div>
+                <div class="swiper-step-next"></div>
+                <div class="swiper-step-info">• 選擇借款金額</div>
+                <div class="swiper-step-next"></div>
+                <div class="swiper-step-info">• 線上簽約</div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="swiper-left">
+                <div class="swiper-text-1">超速資金媒合效率</div>
+                <div class="swiper-slogan">
+                  <div>最快<span class="em">1</span>小時</div>
+                  <div>立馬到帳！</div>
+                </div>
+              </div>
+              <img src="@/asset/images/workloan/step-4-1.png" alt="" />
+              <img src="@/asset/images/workloan/step-4-2.png" alt="" />
+              <div class="swiper-step">
+                <div class="swiper-step-title">Step 4：</div>
+                <div class="swiper-step-info">• 案件上架</div>
+                <div class="swiper-step-next"></div>
+                <div class="swiper-step-info">• 快速媒合</div>
+                <div class="swiper-step-next"></div>
+                <div class="swiper-step-info">• 立即到帳</div>
+              </div>
+            </div>
           </div>
           <!-- If we need pagination -->
           <div class="swiper-pagination"></div>
@@ -497,7 +579,7 @@
             <div class="form-hint">
               *平台不會公開借款人個人基本資料，請借款人安心上傳
             </div>
-            <form action="">
+            <form>
               <div class="row no-gutters mb-3">
                 <div class="form-item-text">使用者編號：</div>
                 <input
@@ -991,6 +1073,90 @@ $color__background--primary: #f3f9fc;
   .swiper {
     margin-top: 32px;
   }
+  .swiper-slide {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr auto auto 1fr;
+    align-items: center;
+    padding-bottom: 40px;
+  }
+  .swiper-left {
+    justify-self: end;
+    .swiper-text-info {
+      margin: 8px 0 8px 18px;
+    }
+  }
+  .swiper-text {
+    &-1 {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 1.4;
+      color: $color__text--primary;
+      margin-bottom: 4px;
+    }
+    &-2 {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 1.4;
+      color: $color--primary;
+    }
+    &-3 {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 1.4;
+      color: $color--primary;
+    }
+    &-link {
+      margin-left: 18px;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 1.4;
+      color: $color--primary;
+      text-decoration-line: underline;
+    }
+  }
+  .swiper {
+    &-step-title {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 1.4;
+      color: $color--primary;
+      margin-bottom: 16px;
+    }
+    &-step-next {
+      background-image: url('~images/workloan/step-next.png');
+      width: 16px;
+      height: 22px;
+      margin: 4px 0;
+    }
+    &-step-info {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.4;
+      color: #393939;
+    }
+    &-slogan {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 1.4;
+      color: #036eb7;
+      .em {
+        font-family: 'Arial';
+        font-style: italic;
+        font-weight: 700;
+        font-size: 64px;
+        line-height: 1.4;
+        color: #f29500;
+      }
+    }
+  }
 }
 .product-feature {
   padding: 64px 0;
@@ -1127,7 +1293,7 @@ $color__background--primary: #f3f9fc;
   .form-item-text {
     min-width: 180px;
   }
-  .form-textarea{
+  .form-textarea {
     height: 200px;
   }
   .btn-form-submit {
