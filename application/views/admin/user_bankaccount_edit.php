@@ -53,10 +53,16 @@
                                     <h4>審核</h4>
                                     <form role="form" method="post">
                                         <fieldset>
-                                            <div class="form-group hide">
-                                                <select id="status" name="status" class="form-control" onchange="check_fail();" >
-                                                    <option value="2"></option>
+                                            <div class="form-group" id="fail_div">
+                                                <label>失敗原因</label>
+                                                <select id="fail" name="fail" class="form-control">
+                                                    <option value="" disabled selected>選擇回覆內容</option>
+                                                    <?php foreach ($certifications_msg[CERTIFICATION_DEBITCARD] as $key => $value) { ?>
+                                                        <option><?= $value ?></option>
+                                                    <?php } ?>
+                                                    <option value="other">其它</option>
                                                 </select>
+                                                <input type="text" class="form-control" name="fail2" value="" >
                                                 <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
                                                 <input type="hidden" name="from" value="<?=isset($from)?$from:"";?>" >
                                             </div>
