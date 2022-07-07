@@ -823,7 +823,11 @@ class Target_model extends MY_Model
             $this->db->select('new_target_id')
                 ->from('p2p_loan.subloan')
                 ->where_in('target_id', array_column($targets, 'id'));
-            $subloan_target_ids = $this->db->get()->result_array();
+            $rs = $this->db->get()->result_array();
+            if ( ! empty($rs))
+            {
+                $subloan_target_ids = array_column($rs, 'new_target_id');
+            }
         }
 
         $result = [
