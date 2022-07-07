@@ -245,23 +245,23 @@
         <form action="" class="row no-gutters justify-content-center">
           <div class="col">
             <div class="row no-gutters mb-3">
-              <div class="item">*您的尊稱：</div>
+              <div class="form-item-text">*您的尊稱：</div>
               <input
                 type="text"
                 name=""
                 id=""
-                class="item-input col"
+                class="form-item-input col"
                 required
               />
             </div>
             <div class="row no-gutters mb-3">
-              <div class="item">*手機號碼：</div>
-              <input type="text" name="" id="" class="item-input col" />
+              <div class="form-item-text">*手機號碼：</div>
+              <input type="text" name="" id="" class="form-item-input col" />
             </div>
             <div class="row no-gutters mb-3">
-              <div class="item">*身分證性別：</div>
+              <div class="form-item-text">*身分證性別：</div>
               <div class="radio-custom">
-                <label class="item-label">
+                <label class="form-item-label">
                   <input
                     type="radio"
                     name="gender"
@@ -270,7 +270,7 @@
                   />
                   <span class="outside"><span class="inside"></span></span>男
                 </label>
-                <label class="item-label">
+                <label class="form-item-label">
                   <input
                     type="radio"
                     name="gender"
@@ -283,23 +283,23 @@
               </div>
             </div>
             <div class="row no-gutters mb-3">
-              <div class="item">LINE帳號：</div>
-              <input type="text" name="" id="" class="item-input col" />
+              <div class="form-item-text">LINE帳號：</div>
+              <input type="text" name="" id="" class="form-item-input col" />
             </div>
             <div class="row no-gutters mb-3">
-              <div class="item">*電子信箱：</div>
-              <input type="text" name="" id="" class="item-input col" />
+              <div class="form-item-text">*電子信箱：</div>
+              <input type="text" name="" id="" class="form-item-input col" />
             </div>
             <div class="row no-gutters mb-3">
-              <div class="item">*資金需求原因：</div>
-              <input type="text" name="" id="" class="item-input col" />
+              <div class="form-item-text">*資金需求原因：</div>
+              <input type="text" name="" id="" class="form-item-input col" />
             </div>
             <div class="row no-gutters mb-3">
-              <div class="item">*聯絡時間：</div>
-              <input type="text" name="" id="" class="item-input col" />
+              <div class="form-item-text">*聯絡時間：</div>
+              <input type="text" name="" id="" class="form-item-input col" />
             </div>
             <div class="row no-gutters">
-              <div class="item"></div>
+              <div class="form-item-text"></div>
               <button class="btn btn-block btn-form-submit col">送出</button>
             </div>
           </div>
@@ -397,7 +397,7 @@
             data-aos="fade-left"
             data-aos-duration="500"
             data-aos-delay="200"
-            data-aos-offset="200"
+            data-aos-offset="100"
           >
             <div class="product-feature-title">費率單純透明</div>
             <div class="product-feature-text">
@@ -409,12 +409,188 @@
             data-aos="fade-left"
             data-aos-duration="500"
             data-aos-delay="200"
-            data-aos-offset="200"
+            data-aos-offset="100"
           >
             <div class="product-feature-title">金融機構合作</div>
             <div class="product-feature-text">
               在會員用戶逐漸成長的情況下，普匯專業優質的名聲，吸引許多金融機構相邀合作，包含「新光銀行」、「上海商銀」等，共同為台灣金融科技發展貢獻一份力。
             </div>
+          </div>
+        </div>
+        <div class="row no-gutters justify-content-center">
+          <div class="slogan">假日放款全年無休</div>
+        </div>
+        <div class="row no-gutters justify-content-center mt-5">
+          <a href="/borrowLink" target="_blank" rel="noopener noreferrer">
+            <button class="btn btn-download">取得資金</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="case-share">
+      <div class="block-content">
+        <h1 class="h1">優質案例分享</h1>
+        <h2 class="h2">已有數萬位使用者取得資金，您還在等什麼？</h2>
+        <div class="row no-gutters swiper-row">
+          <div class="swiper">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+              <!-- Slides -->
+              <div class="swiper-slide">
+                <div class="case-container">
+                  <alesis-project v-bind="cases[0]"></alesis-project>
+                </div>
+                <div class="case-container">
+                  <alesis-project v-bind="cases[1]"></alesis-project>
+                </div>
+                <div class="case-container">
+                  <alesis-project v-bind="cases[2]"></alesis-project>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="case-container">
+                  <alesis-project v-bind="cases[3]"></alesis-project>
+                </div>
+                <div class="case-container">
+                  <alesis-project v-bind="cases[4]"></alesis-project>
+                </div>
+                <div class="case-container">
+                  <alesis-project v-bind="cases[5]"></alesis-project>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="case-container">
+                  <alesis-project v-bind="cases[6]"></alesis-project>
+                </div>
+                <div class="case-container">
+                  <alesis-project v-bind="cases[7]"></alesis-project>
+                </div>
+                <div class="case-container">
+                  <alesis-project v-bind="cases[8]"></alesis-project>
+                </div>
+              </div>
+            </div>
+            <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="experience-share">
+      <div class="block-content">
+        <h1 class="h1">上傳分享</h1>
+        <div class="row no-gutters form-row">
+          <div class="col-5">
+            <img
+              src="@/asset/images/workloan/exp-share.png"
+              class="img-fluid"
+            />
+          </div>
+          <div class="col">
+            <div class="form-title">立即上傳分享您在普匯的借款體驗！</div>
+            <div class="form-text">
+              下次申貸時系統將為您的信用分數加分，有助於提高您的核准額度
+            </div>
+            <div class="form-hint">
+              *平台不會公開借款人個人基本資料，請借款人安心上傳
+            </div>
+            <form action="">
+              <div class="row no-gutters mb-3">
+                <div class="form-item-text">使用者編號：</div>
+                <input
+                  type="text"
+                  name="userId"
+                  id=""
+                  class="form-item-input col"
+                />
+              </div>
+              <div class="row no-gutters mb-3">
+                <div class="form-item-text">借款體驗：</div>
+                <textarea
+                  name="exp"
+                  class="form-item-input col form-textarea"
+                ></textarea>
+              </div>
+              <div class="text-center">
+                <button class="btn btn-form-submit col">送出</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="experience">
+      <div class="block-content">
+        <h1 class="h1">用戶體驗</h1>
+        <h2 class="h2">我們提供最溫暖的金融科技服務</h2>
+        <div class="row no-gutters">
+          <div class="swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="row no-gutters user-comment">
+                  <div class="col-auto">
+                    <div class="card comment-card">
+                      <div class="card-body">
+                        <div class="card-title star">
+                          <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                        </div>
+                        <div class="card-text">
+                          很棒的平台，是一個不錯的投資管道，創造穩定的現金流，不用怕被股市震盪影響心情。
+                        </div>
+                        <div class="mt-2 d-flex align-items-center">
+                          <div class="portrait mr-2">
+                            <img src="@/asset/images/ue-1.png" alt="" />
+                          </div>
+                          <span> 王先生 </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-auto mx-5 d-sm-block d-none">
+                    <div class="card comment-card">
+                      <div class="card-body">
+                        <div class="card-title star">
+                          <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                        </div>
+                        <div class="card-text">
+                          很棒的新創公司，雖然成立時間不長，但是在選校園大使期間，也感受到這間公司的氛圍是很棒的，是歡樂的。
+                        </div>
+                        <div class="mt-2 d-flex align-items-center">
+                          <div class="portrait mr-2">
+                            <img src="@/asset/images/ue-2.png" alt="" />
+                          </div>
+                          <span> 陳小姐 </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-auto d-sm-block d-none">
+                    <div class="card comment-card">
+                      <div class="card-body">
+                        <div class="card-title star">
+                          <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                        </div>
+                        <div class="card-text">
+                          對於實習生培訓企劃用心且真誠，老闆會針對提案親自給予回饋，在乎並深耕於教育與人才養成
+                        </div>
+                        <div class="mt-2 d-flex align-items-center">
+                          <div class="portrait mr-2">
+                            <img src="@/asset/images/ue-3.png" alt="" />
+                          </div>
+                          <span> 林先生 </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 導覽按鈕 -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
           </div>
         </div>
       </div>
@@ -424,21 +600,38 @@
 
 <script>
 import featureCard from '../component/index/featureCard'
+import AlesisProject from "../component/alesis/AlesisProject";
+import axios from 'axios'
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
-import SwiperCore, { Navigation } from 'swiper/core'
+import 'swiper/components/pagination/pagination.min.css'
+import SwiperCore, { Navigation, Pagination } from 'swiper/core'
 export default {
   components: {
     featureCard,
+    AlesisProject
+  },
+  data() {
+    return {
+      cases: []
+    }
   },
   mounted() {
-    SwiperCore.use([Navigation])
+    SwiperCore.use([Navigation, Pagination])
     const swiper = new Swiper('.swiper', {
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
+      pagination: {
+        el: '.swiper-pagination',
+      },
     })
+    axios.post(`/getCase`, { status: 10, product_id: 3 }).then((res) => {
+      this.cases = res.data.slice(0, 8)
+    }).catch((error) => {
+      console.error('getCase 發生錯誤，請稍後再試');
+    });
   },
 }
 </script>
@@ -552,6 +745,29 @@ $color__background--primary: #f3f9fc;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+}
+.form-item-text {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.2;
+  min-width: 225px;
+  color: $color__text--primary;
+}
+.form-item-input {
+  padding: 4px 12px;
+  font-size: 24px;
+  line-height: 1.2;
+  border: 2px solid $color--primary;
+  border-radius: 12px;
+}
+.form-item-label {
+  font-size: 24px;
+  line-height: 1.2;
+  color: $color__text--primary;
+  opacity: 0.7;
+  width: fit-content;
+  margin-right: 15px;
 }
 .features {
   padding: 100px;
@@ -748,28 +964,6 @@ $color__background--primary: #f3f9fc;
     text-align: center;
     color: $color__text--primary;
   }
-  .item {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 30px;
-    line-height: 1.4;
-    min-width: 225px;
-    color: $color__text--primary;
-  }
-  .item-input {
-    font-size: 24px;
-    line-height: 1.4;
-    border: 2px solid $color--primary;
-    border-radius: 12px;
-  }
-  .item-label {
-    font-size: 24px;
-    line-height: 43px;
-    color: $color__text--primary;
-    opacity: 0.7;
-    width: fit-content;
-    margin-right: 15px;
-  }
   .form-cover {
     position: relative;
     top: -120px;
@@ -811,7 +1005,7 @@ $color__background--primary: #f3f9fc;
   }
   .product-feature-grid {
     display: grid;
-    margin-top: 85px;
+    margin: 85px 0 90px;
     grid-template-columns: 1fr 380px 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     gap: 12px;
@@ -848,6 +1042,131 @@ $color__background--primary: #f3f9fc;
         max-width: 360px;
         color: $color__text--primary;
         opacity: 0.56;
+      }
+    }
+  }
+  .slogan {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 1.4;
+    color: #f29500;
+  }
+  .btn-download {
+    border: 2px solid $color--primary;
+    border-radius: 10px;
+    color: $color--primary;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.4;
+    padding: 9px 60px;
+  }
+}
+.case-share {
+  padding: 64px 0;
+  .h1 {
+    color: $color--primary;
+  }
+  .h2 {
+    color: $color--primary;
+    opacity: 0.64;
+    margin-top: 24px;
+  }
+  .swiper {
+    margin-top: 85px;
+  }
+  .swiper-slide {
+    display: grid;
+    padding-bottom: 40px;
+    gap: 15px;
+    grid-template-columns: auto auto auto;
+    justify-content: center;
+  }
+  .case-container {
+    transform: scale(0.95);
+  }
+}
+.experience-share {
+  padding: 64px 0;
+  background: $color__background--primary;
+  .h1 {
+    color: $color--primary;
+  }
+  .h2 {
+    color: $color--primary;
+    opacity: 0.64;
+    margin-top: 24px;
+  }
+  .form-row {
+    margin-top: 100px;
+  }
+  .form-title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.4;
+    color: $color__text--primary;
+  }
+  .form-text {
+    margin-top: 12px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.4;
+    color: $color--primary;
+  }
+  .form-hint {
+    margin: 8px 0 24px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #f29500;
+  }
+  .form-item-text {
+    min-width: 180px;
+  }
+  .form-textarea{
+    height: 200px;
+  }
+  .btn-form-submit {
+    background: $color--primary;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    color: #fff;
+    padding: 4px 160px;
+    border-radius: 12px;
+    width: fit-content;
+  }
+}
+.experience {
+  padding: 64px 0;
+  background: linear-gradient(90deg, #a8b3c8 0%, #d2d8e6 50%);
+  .h1 {
+    color: #fff;
+  }
+  .h2 {
+    font-size: 24px;
+    color: #393939;
+    margin-top: 12px;
+  }
+  .swiper-row {
+    margin-top: 100px;
+  }
+  .user-comment {
+    margin-top: 100px;
+    justify-content: center;
+    .comment-card {
+      width: 360px;
+      padding: 10px;
+      .star {
+        color: #f3cd03;
+      }
+      .portrait {
+        width: 56px;
+        border-radius: 50%;
       }
     }
   }
