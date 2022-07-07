@@ -125,7 +125,28 @@ class Cert_debitcard extends Certification_base
      */
     public function post_failure($sys_check): bool
     {
+        // 若同user有其他待驗證的申貸案，金融驗證被退的話，則將該申貸案退回待核可
+        $this->CI->load->library('target_lib');
+        $target_list = $this->CI->target_model->get_by_multi_product(
+            $this->certification['user_id'],
+            [TARGET_WAITING_VERIFY],
+            $this->related_product
+        );
+        if ( ! empty($target_list))
+        {
+            foreach ($target_list as $value)
+            {
 
+                $this->CI->target_model->update_by(
+                    ['id' => $value['id']],
+                    [
+                        'status' => TARGET_WAITING_APPROVE,
+                        'sub_status' => $value['sub_status'] == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET ? TARGET_SUBSTATUS_NORNAL : $value['sub_status'],
+                        'certificate_status' => TARGET_CERTIFICATE_SUBMITTED
+                    ]
+                );
+            }
+        }
         return TRUE;
     }
 
