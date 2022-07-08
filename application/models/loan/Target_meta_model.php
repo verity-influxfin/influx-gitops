@@ -31,7 +31,7 @@ class Target_meta_model extends MY_Model
     public const ASSET_BT_0_5_MILLION = 4;
     public const ASSET_INVALID = 5;
     public const GUARANTOR_JOB_LECTURER = 1;
-    public const GUARANTOR_JOB_professional = 2;
+    public const GUARANTOR_JOB_PROFESSIONAL = 2;
     public const GUARANTOR_JOB_HUGE_COMPANY_EMPLOYEE = 3;
     public const GUARANTOR_JOB_GENERAL = 4;
     public const GUARANTOR_JOB_INVALID = 5;
