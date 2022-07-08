@@ -765,7 +765,6 @@ class Credit_lib{
             $total += $approvalExtra->getExtraPoints();
         }
         $param['points'] = intval($total);
-        $param['score_list'] = json_encode($score_list);
 
         if ($mix_credit)
         {

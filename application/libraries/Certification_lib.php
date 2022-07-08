@@ -2759,7 +2759,16 @@ class Certification_lib{
             }
 
             if($product){
-                foreach($product['certifications'] as $key => $value) {
+                $product_certs = $product['certifications'];
+
+                if(($product['check_associates_certs'] ?? FALSE))
+                {
+                    $associates_certifications_config = $this->CI->config->item('associates_certifications');
+                    $associates_certifications = $associates_certifications_config[$product['id']];
+                    $product_certs = array_unique(array_merge($product_certs, $associates_certifications[ASSOCIATES_CHARACTER_REGISTER_OWNER]));
+                }
+
+                foreach($product_certs as $key => $value) {
                     $data = $this->certification[$value];
                     if($company){
                         if(in_array($value, [
@@ -3658,5 +3667,60 @@ class Certification_lib{
         return $skip_certification_ids;
     }
 
+    /**
+     * 確認案件關係人是否都通過徵信項
+     * @param $target
+     * @throws Exception
+     * @return Boolean
+     */
+    public function associate_certs_are_succeed($target): bool
+    {
+        $this->CI->load->model('loan/target_associate_model');
+        // 歸案之自然人資料
+        $associates_list = $this->CI->target_associate_model->get_many_by([
+            'status' => ASSOCIATES_STATUS_APPROVED,
+            'target_id' => $target->id
+        ]);
+        if ( ! empty($associates_list))
+        {
+            $user_id_list = array_column($associates_list, 'user_id', 'character');
+
+            // 有未註冊之自然人 (id 為 NULL)
+            if (count(array_filter($user_id_list)) != count($user_id_list))
+            {
+                return FALSE;
+            }
+
+            $associates_certifications_config = $this->CI->config->item('associates_certifications');
+            if ( ! isset($associates_certifications_config[$target->product_id]))
+            {
+                throw new Exception("Not supported for this product (product_id:{$target->product_id})");
+            }
+
+            $this->CI->load->model('user/user_certification_model');
+            $associates_certifications = $associates_certifications_config[$target->product_id];
+            foreach ($associates_list as $associates_info)
+            {
+                if (isset($associates_certifications[$associates_info->character]))
+                {
+                    $associates_certifications_list = $this->CI->user_certification_model->get_many_by([
+                        'investor' => BORROWER,
+                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                        'user_id' => $associates_info->user_id,
+                        'certification_id' => $associates_certifications[$associates_info->character]
+                    ]);
+                    // 確認認證徵信是否完成
+                    if (count($associates_certifications[$associates_info->character])
+                        == count(json_decode(json_encode($associates_certifications_list), TRUE)))
+                    {
+                        return TRUE;
+                    }
+                }
+            }
+
+        }
+
+        return FALSE;
+    }
 }
 

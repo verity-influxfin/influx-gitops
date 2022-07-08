@@ -1,6 +1,6 @@
 <?php
 namespace CreditSheet;
-use CreditSheet\BasicInfo\CompanyBasicInfo;
+use CreditSheet\BasicInfo\BasicInfoBase;
 use CreditSheet\CashLoan\CashLoanInfo;
 use CreditSheet\CreditLine\CreditLineInfo;
 use Utility\ViewCoverter;
@@ -22,7 +22,7 @@ class CompanyCreditSheet extends CreditSheetBase {
     public const ALLOW_PRODUCT_LIST = [PRODUCT_SK_MILLION_SMEG];
 
     // 最終核准層次
-    protected $finalReviewerLevel = self::REVIEWER_CHIEF_EXECUTIVE_OFFICER;
+    protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
 
     // 可評分範圍
     protected $scoringMin = -20;
@@ -35,11 +35,11 @@ class CompanyCreditSheet extends CreditSheetBase {
      * CompanyCreditSheet constructor.
      * @param $target
      * @param $user
-     * @param CompanyBasicInfo $companyBasicInfo
+     * @param BasicInfoBase $companyBasicInfo
      * @param CreditLineInfo $creditLineInfo
      * @param CashLoanInfo $cashLoanInfo
      */
-    function __construct($target, $user, CompanyBasicInfo $companyBasicInfo, CreditLineInfo $creditLineInfo, CashLoanInfo $cashLoanInfo)
+    function __construct($target, $user, BasicInfoBase $companyBasicInfo, CreditLineInfo $creditLineInfo, CashLoanInfo $cashLoanInfo)
     {
         $this->CI = &get_instance();
         $this->CI->load->model('loan/credit_sheet_model');
@@ -210,27 +210,16 @@ class CompanyCreditSheet extends CreditSheetBase {
         $reviewedInfoList = $this->CI->credit_sheet_review_model->get_many_by(
             ['credit_sheet_id' => $this->creditSheetRecord->id]);
 
-        // 上班族階段上架 或 非階段上架之其他產品
-        if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
-            // 設定信評加分
-            $bonusScore = array_sum(array_column($reviewedInfoList, 'score'));
-            $this->CI->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
-            $this->CI->approvalextra->setSkipInsertion(true);
-            $this->CI->approvalextra->setExtraPoints($bonusScore);
+        // 設定信評加分
+        $bonusScore = array_sum(array_column($reviewedInfoList, 'score'));
+        $this->CI->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
+        $this->CI->approvalextra->setSkipInsertion(true);
+        $this->CI->approvalextra->setExtraPoints($bonusScore);
 
-            // 上班族階段上架
-            $level = false;
-            if($this->target->product_id == PRODUCT_ID_SALARY_MAN && $this->target->sub_product_id == STAGE_CER_TARGET){
-                $this->CI->load->library('Certification_lib');
-                $certification = $this->CI->certification_lib->get_certification_info($this->user->id, 8, 0);
-                $certificationStatus = isset($certification) && $certification && $certification->status == 1;
-                $level = $certificationStatus ? 3 : 4 ;
-            }
+        $estimatedCredit = $this->CI->credit_lib->approve_credit($this->user->id,
+            $this->target->product_id, $this->target->sub_product_id,
+            $this->CI->approvalextra, FALSE, FALSE, FALSE, $this->target->instalment, $this->target);
 
-            $estimatedCredit = $this->CI->credit_lib->approve_credit($this->user->id,
-                $this->target->product_id, $this->target->sub_product_id,
-                $this->CI->approvalextra, $level, false, false, $this->target->instalment, $this->target);
-        }
 
         $separator = ', ';
         $opinions = implode($separator, array_column($reviewedInfoList, 'opinion'));
@@ -242,7 +231,7 @@ class CompanyCreditSheet extends CreditSheetBase {
                 || $estimatedCredit["level"] != $credit['level'])
         ) {
             $this->CI->credit_model->update_by(
-                ['user_id' => $this->user->id, 'status' => 1, 'product_id' => self::ALLOW_PRODUCT_LIST],
+                ['user_id' => $this->user->id, 'status' => 1, 'product_id' => $this->target->product_id],
                 ['status'=> 0]
             );
             $newCredit = $this->CI->credit_model->insert($estimatedCredit);
@@ -250,16 +239,10 @@ class CompanyCreditSheet extends CreditSheetBase {
 
         $this->CI->credit_model->trans_complete();
 
-        // 學生階段上架
-        if($this->target->product_id == PRODUCT_ID_STUDENT && $this->target->sub_product_id == STAGE_CER_TARGET) {
-            $param['status'] = 1;
-            $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
-            $param['remark'] = $remark;
-            $this->CI->target_model->update($this->target->id,$param);
-        }
-        else{
-            $this->CI->target_lib->approve_target($this->target,$remark,true);
-        }
+        // Note: 目前核可無作用，純粹給分
+        // $this->CI->target_lib->approve_target($this->target,$remark,true);
+        $credit = $this->CI->credit_lib->get_credit($this->user->id, $this->target->product_id, $this->target->sub_product_id, $this->target);
+        $this->archive($credit);
     }
 
     /**

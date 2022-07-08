@@ -161,6 +161,11 @@ class Creditmanagement extends MY_Admin_Controller
         {
             $certification_need_chk = $product_detail['certifications'];
         }
+        $this->load->library('certification_lib');
+        if($this->certification_lib->associate_certs_are_succeed($response) == FALSE)
+        {
+            return ['result' => FALSE, 'msg' => '尚有自然關係人未完成'];
+        }
 
         foreach ($certification_need_chk as $certification_id)
         {

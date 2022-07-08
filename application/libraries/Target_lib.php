@@ -1673,7 +1673,7 @@ class Target_lib
                         $product_certification = $product['certifications'];
                         $finish = true;
 
-                        if ($value->product_id == 1002)
+                        if (($product['check_associates_certs'] ?? FALSE))
                         {
                             // 普匯微企e秒貸歸戶
 							// to do : 任務控制程式過件須確認不會有其他非法人產品進來
@@ -1745,55 +1745,10 @@ class Target_lib
                                 $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
                             }
                         }
-                        // 法人產品自然人認證徵信完成判斷
-                        // TODO: 認證徵信個金企金待系統整合
-                        if ($finish && in_array($value->product_id, [PRODUCT_SK_MILLION_SMEG]))
+                        // 法人產品需確認自然關係人認證徵信是否完成
+                        if ($finish && ($product['check_associates_certs'] ?? FALSE))
                         {
-                            // 歸案之自然人資料
-                            $associates_list = $this->CI->target_associate_model->get_many_by([
-                                'status' => ASSOCIATES_STATUS_APPROVED,
-                                'target_id' => $value->id
-                            ]);
-                            if ( ! empty($associates_list))
-                            {
-                                $user_id_list = array_column($associates_list, 'user_id', 'character');
-                                // 有尚未註冊之自然人
-                                if(count(array_filter($user_id_list)) != count($user_id_list)){
-                                    $finish = FALSE;
-                                }
-                                else
-                                {
-                                    $associates_certifications_config = $this->CI->config->item('associates_certifications');
-                                    if (isset($associates_certifications_config[$value->product_id]))
-                                    {
-                                        $this->CI->load->model('user/user_certification_model');
-                                        $associates_certifications = $associates_certifications_config[$value->product_id];
-                                        foreach ($associates_list as $associates_info)
-                                        {
-                                            if (isset($associates_certifications[$associates_info->character]))
-                                            {
-                                                $associates_certifications_list = $this->CI->user_certification_model->get_many_by([
-                                                    'investor' => BORROWER,
-                                                    'status' => CERTIFICATION_STATUS_SUCCEED,
-                                                    'user_id' => $associates_info->user_id,
-                                                    'certification_id' => $associates_certifications[$associates_info->character]
-                                                ]);
-                                                // 確認認證徵信是否完成
-                                                if (count($associates_certifications[$associates_info->character])
-                                                    != count(json_decode(json_encode($associates_certifications_list), TRUE)))
-                                                {
-                                                    $finish = FALSE;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                $finish = FALSE;
-                            }
+                            $finish = $this->CI->certification_lib->associate_certs_are_succeed($value);
                         }
 
                         if ($finish && $wait_associates) {

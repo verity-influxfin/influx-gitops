@@ -1341,8 +1341,10 @@ class Product extends REST_Controller {
         $company_status	= $this->user_info->company;
         $target 			= $this->target_model->get($target_id);
         if(!empty($target)){
+            $associates_certifications_config = $this->config->item('associates_certifications');
             $product_list = $this->config->item('product_list');
             $product = isset($product_list[$target->product_id]) ? $product_list[$target->product_id] : $product_list[1];
+            $associates_certifications = $associates_certifications_config[$target->product_id];
             $product_name = $product['name'];
             $sub_product_id = $target->sub_product_id;
             if($this->is_sub_product($product,$sub_product_id)){
@@ -1410,7 +1412,6 @@ class Product extends REST_Controller {
             }
 
             $certification		= [];
-
             $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, TRUE, $target, $product, TRUE);
             $completeness_level = 100 / count($certification_list);
             if(count($cer_group) > 0){
@@ -1467,7 +1468,9 @@ class Product extends REST_Controller {
 						$content_array_data = new StdClass();
 					}
                     $diploma = $key==8?$value:null;
-                    if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
+                    if ((in_array($key, $product['certifications']) || in_array($key, $associates_certifications[ASSOCIATES_CHARACTER_REGISTER_OWNER]))
+                        && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL)
+                    {
                         $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target);
                         $truly_failed = certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
                             USER_BORROWER,
