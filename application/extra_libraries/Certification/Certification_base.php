@@ -514,17 +514,32 @@ abstract class Certification_base implements Certification_definition
         $this->CI->load->library('target_lib');
         $target_list = $this->CI->target_model->get_by_multi_product(
             $this->certification['user_id'],
-            [TARGET_WAITING_SIGNING, TARGET_ORDER_WAITING_SHIP],
+            [TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_ORDER_WAITING_SHIP],
             $this->related_product
         );
         if ( ! empty($target_list))
         {
             foreach ($target_list as $value)
             {
-                $this->CI->target_model->update_by(
-                    ['id' => $value['id']],
-                    ['status' => $value['status'] == TARGET_WAITING_SIGNING ? TARGET_WAITING_APPROVE : TARGET_ORDER_WAITING_VERIFY]
-                );
+                switch ($value['status'])
+                {
+                    // 個金案件：待簽約&待驗證皆要退回待核可
+                    // 企金案件：待驗證要退回待核可（目前無待簽約階段）
+                    case TARGET_WAITING_SIGNING:
+                    case TARGET_WAITING_VERIFY:
+                        $status = TARGET_WAITING_APPROVE;
+                        break;
+                    case TARGET_ORDER_WAITING_SHIP:
+                        $status = TARGET_ORDER_WAITING_VERIFY;
+                        break;
+                }
+                if (isset($status))
+                {
+                    $this->CI->target_model->update_by(
+                        ['id' => $value['id']],
+                        ['status' => $status]
+                    );
+                }
             }
         }
 
