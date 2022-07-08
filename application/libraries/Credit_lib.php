@@ -805,6 +805,7 @@ class Credit_lib{
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10)
         {
+            $param['score_list'] = json_encode($score_list);
             return $param;
         }
         $this->CI->credit_model->update_by(
