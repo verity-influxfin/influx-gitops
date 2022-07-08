@@ -822,8 +822,8 @@ class Sales extends MY_Admin_Controller {
         $page_data['collaborator_list'] = json_decode(json_encode($this->qrcode_collaborator_model->get_all(['status' => 1])), TRUE) ?? [];
         $page_data['data'] = reset($list);
 
-        $contract = $this->contract_lib->get_contract(isset($page_data['data']['info']) ? $page_data['data']['info']['contract_id'] : 0);
-        $page_data['contract'] = $contract ? $contract['content'] : "";
+        $contract = $this->contract_lib->get_contract(isset($page_data['data']['info']) ? $page_data['data']['info']['contract_id'] : 0, [], FALSE);
+        $page_data['contract'] = $contract ? htmlentities($contract['content']) : "";
 
         $this->load->view('admin/_header');
         $this->load->view('admin/_title', $this->menu);
