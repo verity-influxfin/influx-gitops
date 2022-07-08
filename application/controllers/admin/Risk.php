@@ -747,13 +747,21 @@ class Risk extends MY_Admin_Controller {
 
 			$product_list = $this->config->item('product_list');
 			$certification_list = $this->config->item('certifications');
+
 			$product = $product_list[$target->product_id];
 			$sub_product_id = $target->sub_product_id;
 			if ($this->is_sub_product($product, $sub_product_id)) {
 				$product = $this->trans_sub_product($product, $sub_product_id);
 			}
 
-			foreach ($product['certifications'] as $ckey => $cvalue) {
+            $product_certs = $product['certifications'];
+            if(($product['check_associates_certs'] ?? FALSE))
+            {
+                $associates_certifications_config = $this->config->item('associates_certifications');
+                $associates_certifications = $associates_certifications_config[$target->product_id];
+                $product_certs = array_unique(array_merge($product_certs, $associates_certifications[ASSOCIATES_CHARACTER_REGISTER_OWNER]));
+            }
+			foreach ($product_certs as $ckey => $cvalue) {
 				if (!isset($useCer[$cvalue]) && $cvalue < CERTIFICATION_FOR_JUDICIAL) {
 					$useCer[$cvalue] = $certification_list[$cvalue];
 				}
@@ -766,7 +774,7 @@ class Risk extends MY_Admin_Controller {
 				$lastUpdate = 0;
 				if ($associate->user_id != null) {
 					if ($cer_status = $this->certification_lib->get_last_status($associate->user_id, BORROWER)) {
-						foreach($product['certifications'] as $cer_statusKey => $cer_statusValue) {
+						foreach($product_certs as $cer_statusKey => $cer_statusValue) {
 							if($cer_statusValue < CERTIFICATION_FOR_JUDICIAL){
 								if(isset($cer_status[$cer_statusValue])){
 									$cer_status[$cer_statusValue]['user_status'] != 1 ? $status = 0 : '';
