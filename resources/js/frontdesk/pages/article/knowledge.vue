@@ -135,7 +135,6 @@
                     };
 
                     $('title').text(`${data.post_title} - inFlux普匯金融科技`);
-                    this.changeMetaData();
                 }
             },
 
@@ -170,19 +169,6 @@
                     }, 1000);
                 });
             },
-            changeMetaData() {
-                // 根據小學堂文章內容修改 meta data
-                let description = this.article.content
-                    .replace(/(<([^>]+)>)/gi, '')
-                    .trim()
-                    .replace(/\&.+\;/gm, '')
-                    .substr(0, 140) + '...';
-                const url = new URL(location.href);
-
-                $("meta[name='title']").attr('content', this.article.title);
-                $("meta[name='description']").attr('content', description);
-                $("meta[name='og:image']").attr('content', `${url.origin}/${this.article.cover_img}`);
-            }
         },
     };
 </script>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\KnowledgeArticle;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
@@ -309,7 +310,57 @@ Route::post('setGamePrize','Cardgamecontroller@setGamePrize');
 
 Route::view('/cardgame/{path?}', 'cardgame');
 
-Route::view('/{path?}', 'index');
+Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
+
+    $name = str_replace('-', '_', strtolower($name));
+
+    switch (true)
+    {
+
+        // 報名截止跳轉活動介紹頁
+        case $name == '2021_campus_ambassador' && $path != 'index':
+            return redirect('/campaign/2021-campus-ambassador');
+
+        case view()->exists($path = sprintf('campaigns/%s/%s', $name, $path)):
+            return view($path);
+    }
+    throw new NotFoundHttpException();
+});
+
+Route::get('/{path?}', function (Request $request, $path) {
+    $default_desc = '首創台灣「AI風控審核無人化融資系統」，利用高端科技，全程無人為干擾，一支手機完成借貸！';
+    $default_title = 'inFlux普匯金融科技';
+    $default_og_img = asset('images/site_icon.png');
+
+    if ($path == 'articlepage' && preg_match("/^knowledge-([\d]+)$/i", $request->get('q'), $matches) !== FALSE) {
+        // 小學堂文章 meta data
+        $knowledge_info = KnowledgeArticle::select(['media_link', 'post_title', 'post_content'])
+            ->where('id', $matches[1])
+            ->get()
+            ->first();
+
+        if (!empty($knowledge_info['post_content'])) {
+            $meta_description = substr(
+                    preg_replace("/&.+;/m", '', trim(
+                        preg_replace("/(<([^>]+)>)/i", '', $knowledge_info['post_content']))
+                    ),
+                    0, 140
+                ) . '...';
+        }
+
+        return view('index', [
+            'meta_description' => $meta_description ?? $default_desc,
+            'meta_title' => (!empty($knowledge_info['post_title']) ? $knowledge_info['post_title'] . ' - ' : '') . 'inFlux普匯金融科技',
+            'meta_og_image' => asset($knowledge_info['media_link'])
+        ]);
+    } else {
+        return view('index', [
+            'meta_description' => $default_desc,
+            'meta_title' => $default_title,
+            'meta_og_image' => $default_og_img
+        ]);
+    }
+});
 
 
 // API v1
