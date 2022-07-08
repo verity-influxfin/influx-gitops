@@ -2494,6 +2494,58 @@ class Target_lib
     }
 
     /**
+     * 取得案件相關的詳細資訊
+     * @param array $target_ids
+     * @return mixed
+     */
+    public function get_targets_detail(array $target_ids)
+    {
+        $this->CI->load->model('loan/target_model');
+        $this->CI->load->model('transaction/transaction_model');
+        $this->CI->load->model('user/user_certification_model');
+        $this->CI->load->library('credit_lib');
+
+        $product_list = $this->CI->config->item('product_list');
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        $subloan_list = $this->CI->config->item('subloan_list');
+        $temp_remain_amount_list = [];
+
+        $targets = $this->CI->target_model->get_targets_detail(['id' => $target_ids]);
+        $user_loaned_count_list = $this->CI->target_model->getUserStatusByTargetId($target_ids);
+        $user_loaned_count_list = array_column($user_loaned_count_list, 'total_count', 'user_id');
+
+        $where = ['investor' => USER_BORROWER, 'status' => 1];
+        $user_cert_list = $this->CI->user_certification_model->getCertificationsByTargetId($target_ids, $where);
+
+        $remain_principle_List = $this->CI->transaction_model->get_targets_account_payable_amount($target_ids, SOURCE_AR_PRINCIPAL, $group_by_target=TRUE);
+        $remain_principle_List = array_column($remain_principle_List, 'total_count', 'target_id');
+
+        foreach ($targets as &$target)
+        {
+            $user_id = $target['user_id'];
+            $product_id = $target['product_id'];
+            $sub_product_id = $target['sub_product_id'];
+            if ( ! array_key_exists($user_id, $temp_remain_amount_list))
+            {
+                $remain_amount = $this->CI->credit_lib->get_remain_amount($user_id, $product_id, $sub_product_id);
+                $temp_remain_amount_list[$user_id] = $remain_amount;
+            }
+
+            $target['product_name'] = $product_list[$product_id]['name'] . ($sub_product_id != 0 ? '/' . $sub_product_list[$sub_product_id]['identity'][$product_list[$product_id]['identity']]['name'] : '') . (preg_match('/' . $subloan_list . '/', $target['target_no']) ? '(產品轉換)' : '');
+            $target['user_loyalty_status'] = ($user_loaned_count_list[$user_id] ?? 0) > 0 ? '舊戶':'新戶';
+            $target['user_identity'] = (isset($user_cert_list[$user_id]) && isset($user_cert_list[$user_id][CERTIFICATION_IDENTITY]) ? "是" : "否");
+            $target['apply_date'] = date('Y-m-d',$target['created_at']);
+            $target['apply_time'] = date('H:i:s',$target['created_at']);
+            // TODO: 封存當下的可動用額度，還是匯出當下的？
+            $target['unused_credit_line'] = floor($target['unused_credit_line'] / 1000) * 1000;
+            // $target['unused_credit_line'] = $temp_remain_amount_list[$user_id]['user_available_amount'];
+            $target['principle_balance'] = $remain_principle_List[$target['id']] ?? 0;
+        }
+
+        return $targets;
+    }
+    
+    /**
      * 取得產品設定結構
      * @param $product_id
      * @param $sub_product_id

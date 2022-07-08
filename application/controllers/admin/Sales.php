@@ -2493,4 +2493,126 @@ class Sales extends MY_Admin_Controller {
 
         return $day->format('Ym');
     }
+
+    /**
+     * 匯出推薦碼統計報表
+     */
+    public function promote_report_export()
+    {
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->model('user/qrcode_collaborator_model');
+        $this->load->model('user/user_subcode_model');
+        $this->load->model('behavion/user_behavior_model');
+        $this->load->library('contract_lib');
+        $this->load->library('qrcode_lib');
+        $this->load->library('user_lib');
+        $this->load->library('spreadsheet_lib');
+        $this->load->library('target_lib');
+        $instalment_list = $this->config->item('instalment');
+        $repayment_type = $this->config->item('repayment_type');
+        $status_list = $this->target_model->status_list;
+
+        $input = $this->input->get(NULL, TRUE);
+        $where = [];
+        $data = [];
+
+        $main_qrcode_id = $input['id'] ?? 0;
+        $start_date = $input['sdate'] ?? '';
+        $end_date = $input['edate'] ?? '';
+
+        $where['id'] = $main_qrcode_id;
+        $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
+        $list = $this->qrcode_lib->get_promoted_reward_info($where, $start_date, $end_date);
+        $list = reset($list);
+        if (empty($list))
+        {
+            alert('查無此推薦碼，請重新確認。', admin_url("sales/promote_edit?id={$main_qrcode_id}"));
+            return FALSE;
+        }
+
+        $title_rows = [
+            'register_date' => ['name' => '註冊日期', 'width' => 12, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'user_id' => ['name' => '使用者編號', 'width' => 10, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'target_no' => ['name' => '案號', 'width' => 17.5, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'product_name' => ['name' => '產品', 'width' => 15, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'user_identity' => ['name' => '是否完成實名認證', 'width' => 15, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'apply_date' => ['name' => '申請日期', 'width' => 10.5, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'approve_date' => ['name' => '核准日期', 'width' => 10.5, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'loan_date' => ['name' => '放款日期', 'width' => 10.5, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'apply_amount' => ['name' => '申請金額', 'width' => 8, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'credit_amount' => ['name' => '核准金額', 'width' => 8, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'loan_amount' => ['name' => '動用金額', 'width' => 8, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'unused_credit_line' => ['name' => '可動用金額', 'width' => 9.5, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'principle_balance' => ['name' => '本金餘額', 'width' => 8, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'interest_rate' => ['name' => '年化利率', 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'instalment' => ['name' => '期數', 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'repayment_type' => ['name' => '還款方式', 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'delay_status' => ['name' => '逾期狀況', 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'delay_days' => ['name' => '逾期天數', 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'target_status' => ['name' => '狀態', 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'reason' => ['name' => '借款原因', 'width' => 12, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'remark' => ['name' => '備註', 'width' => 18, 'alignment' => ['h' => 'center', 'v' => 'center']]
+        ];
+        $init_report_data = array_combine(array_keys($title_rows), array_fill(0, count($title_rows), 'n/a'));
+
+        foreach ($list['fullMember'] as $rs)
+        {
+            $report_data = $init_report_data;
+            $report_data['user_id'] = $rs['user_id'];
+            $report_data['register_date'] = date('Y-m-d', strtotime($rs['created_at']));
+            $user_register_date[$rs['user_id']] = $report_data['register_date'];
+            $data[] = $report_data;
+        }
+
+        // 撈取所有推薦申貸案件
+        $apply_list = $this->qrcode_lib->get_promoted_apply_info($where, $start_date, $end_date);
+
+        $target_ids = [];
+        foreach ($this->user_lib->rewardCategories as $category => $productIdList)
+        {
+            $target_ids = array_merge($target_ids, array_column($list[$category], 'id'));
+            $temp_target_list = array_column($apply_list ?? [], $category);
+            if ( ! empty($temp_target_list))
+            {
+                $temp_target_list = call_user_func_array('array_merge', $temp_target_list);
+            }
+            $target_ids = array_merge($target_ids, array_column($temp_target_list ?? [], 'id'));
+        }
+        $target_ids = array_unique($target_ids);
+
+        if ( ! empty($target_ids))
+        {
+            $targets = $this->target_lib->get_targets_detail($target_ids);
+            foreach ($targets as $target)
+            {
+                $reason_list = json_decode($target['reason'], TRUE);
+                $report_data = $init_report_data;
+                $report_data['register_date'] = $user_register_date[$target['user_id']] ?? '-';
+                $report_data['user_id'] = $target['user_id'];
+                $report_data['target_no'] = $target['target_no'];
+                $report_data['product_name'] = $target['product_name'];
+                $report_data['user_identity'] = $target['user_identity'];
+                $report_data['apply_date'] = $target['apply_date'];
+                $report_data['approve_date'] = isset($target['credit_created_at']) ? date("Y-m-d", $target['credit_created_at']) : '-';
+                $report_data['loan_date'] = empty($target['loan_date']) ? '-' : $target['loan_date'];
+                $report_data['apply_amount'] = $target['amount'];
+                $report_data['credit_amount'] = empty($target['credit_amount']) ? '-' : $target['credit_amount'];
+                $report_data['loan_amount'] = empty($target['loan_amount']) ? '-' : $target['loan_amount'];
+                $report_data['unused_credit_line'] = $target['unused_credit_line'] ?? '-';
+                $report_data['principle_balance'] = $target['principle_balance'];
+                $report_data['interest_rate'] = $target['interest_rate'];
+                $report_data['instalment'] = $instalment_list[$target['instalment']];
+                $report_data['repayment_type'] = $repayment_type[$target['repayment']];
+                $report_data['delay_status'] = $target['delay'] != '0' ? '逾期中' : '未逾期';
+                $report_data['delay_days'] = $target['delay_days'];
+                $report_data['target_status'] = $status_list[$target['status']];
+                $report_data['reason'] = $reason_list['reason'] ?? $target['reason'];
+                $report_data['remark'] = $target['remark'];
+                $data[] = $report_data;
+            }
+        }
+        $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data);
+        $this->spreadsheet_lib->download("推薦碼統計表({$list['info']['promote_code']}).xlsx", $spreadsheet);
+        exit(0);
+    }
 }
