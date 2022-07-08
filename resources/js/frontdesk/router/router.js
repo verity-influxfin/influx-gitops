@@ -50,6 +50,7 @@ import businessEnd from '../pages/BusinessLoan/end'
 import smeIndex from '../pages/BusinessLoan/smeLoan'
 import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
+import campus2022 from '../pages/2022_campus_ambassador/index'
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -147,6 +148,7 @@ let routers = [
     {path:'/charitable',component:ntu},
     { path: '/charitable-status', component: charitableStatus},
     { path: '/search',name:'search', component: search },
+    { path: '/2022-campus-ambassador',name:'campus2022', component: campus2022 },
 ];
 
 export default routers;
