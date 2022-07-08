@@ -336,7 +336,6 @@ class user_qrcode_model extends MY_Model
      */
     public function get_target_apply_list(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime = '', string $endTime = '', bool $returnSQL = FALSE)
     {
-        $this->load->model('user/qrcode_setting_model');
         $subQuery = $this->getRegisteredUserByPromoteCode($qrcodeWhere, '', '', TRUE);
 
         $this->_database
