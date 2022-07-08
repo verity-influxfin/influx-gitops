@@ -56,7 +56,7 @@ abstract class Certification_base implements Certification_definition
     /**
      * @var array 與此徵信項有關聯的產品(包含子產品)
      */
-    private $related_product;
+    protected $related_product;
 
     /**
      * CertificationBase constructor.
@@ -489,6 +489,15 @@ abstract class Certification_base implements Certification_definition
     public function is_pending_to_verify(): bool
     {
         return $this->certification['status'] == CERTIFICATION_STATUS_PENDING_TO_VALIDATE;
+    }
+
+    /**
+     * 該徵信項是否曾送出審核過
+     * @return bool
+     */
+    public function is_submit_to_review(): bool
+    {
+        return $this->certification['certificate_status'] == 1;
     }
 
     /**

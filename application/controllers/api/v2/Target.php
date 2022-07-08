@@ -713,7 +713,8 @@ class Target extends REST_Controller {
                                 "<br>現職年資：" . (isset($contents->job_seniority) ? $seniority_range[$contents->job_seniority] : '') .
                                 "<br>總年資：" . (isset($contents->seniority) ? $seniority_range[$contents->seniority] : '');
                         }
-                        $cer['user_status'] = $cur_cer[$value]->status == 2 ? 1 : intval($cur_cer[$value]->status);
+                        // Note: 已經審核過封存的徵信項目，對於媒合上架後都應該是成功的狀態
+                        $cer['user_status'] = CERTIFICATION_STATUS_SUCCEED;
                         $cer['certification_id'] = intval($cur_cer[$value]->id);
                         $cer['updated_at'] = intval($cur_cer[$value]->updated_at);
                         $description ? $cer['description'] = $description : '';

@@ -564,7 +564,7 @@ class Certification_data
 							$res['balanceMid'] += $value['noDelayAmount'] + $value['delayAmount'];
 						}
 						if($value['accountDescription']=='長期放款'){
-							$res['totalAmountLong'] += $value['totalAmountLong'];
+							$res['totalAmountLong'] += $value['totalAmount'];
 							$res['totalAmountLongCount'] += 1;
 							$res['balanceLong'] += $value['noDelayAmount'] + $value['delayAmount'];
 						}

@@ -770,7 +770,6 @@ class Certification_lib{
             $content = json_decode($info->content, TRUE);
             $verifiedResult = new StudentCertificationResult(CERTIFICATION_STATUS_SUCCEED);
             $sys_check = SYSTEM_CHECK;
-            $reference = $content['front_image_id'] . '-' . $content['back_image_id'];
             $content['meta'] ?? [];
 
             $this->CI->load->library('scraper/sip_lib');
@@ -807,7 +806,7 @@ class Certification_lib{
                                                 // 判斷是否有資料
                                                 if ($sip_data && isset($sip_data['response']['result']))
                                                 {   
-                                                    $name = $name ?? '';
+                                                    $name = $user_info['name']  ?? '';
                                                     $id_number = $user_info['id_number'] ?? '';
                                                     $sip_name = $sip_data['response']['result']['name'] ?? '';
                                                     $sip_id_number = $sip_data['response']['result']['idNumber'] ?? '';
@@ -3196,6 +3195,7 @@ class Certification_lib{
 					$value['content'] 		       = $user_certification->content;
                     $value['remark']		       = $user_certification->remark;
                     $value['certificate_status'] = $user_certification->certificate_status;
+                    $value['expire_time'] = $user_certification->expire_time;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
 				}
@@ -3204,6 +3204,7 @@ class Certification_lib{
                     $value['user_status'] = NULL;
                     $value['certification_id'] = NULL;
                     $value['updated_at'] = NULL;
+                    $value['expire_time'] = NULL;
                 }
 
                 if (in_array($key, $skip_certification_ids))

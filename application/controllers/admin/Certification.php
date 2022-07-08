@@ -3,6 +3,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
+use Certification\Certification_factory;
 
 class Certification extends MY_Admin_Controller {
 
@@ -436,7 +437,8 @@ class Certification extends MY_Admin_Controller {
 				return false;
 			}elseif(!empty($post['id'])){
 				$from 	= isset($post['from'])?$post['from']:'';
-				$fail 	= isset($post['fail'])?$post['fail']:'';
+                $fail   = $post['fail'] ?? '';
+                $fail   = $post['fail2'] ?? $fail;
 				if(!empty($from)){
 					//$back_url = admin_url($from);
 					$back_url = admin_url('close');
@@ -644,6 +646,7 @@ class Certification extends MY_Admin_Controller {
 					$page_data['verify_list'] 			= $this->user_bankaccount_model->verify_list;
 					$page_data['investor_list'] 		= $this->user_bankaccount_model->investor_list;
                     $page_data['status_list'] 			= $this->user_certification_model->status_list;
+                    $page_data['certifications_msg'] = $this->config->item('certifications_msg');
 
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
@@ -673,32 +676,40 @@ class Certification extends MY_Admin_Controller {
 				alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
 			}
 		}else{
-			if(!empty($post['id'])){
-				$info = $this->user_bankaccount_model->get($post['id']);
-				if($info){
-					if($post['status']=='2'){
-						$this->load->model('log/log_usercertification_model');
+            if ( ! empty($post['id']))
+            {
+                $info = $this->user_bankaccount_model->get($post['id']);
+                $fail = $post['fail'] ?? '';
+                $fail = empty($post['fail2']) ? $fail : $post['fail2'];
+                if ($info)
+                {
+                    $cert = Certification_factory::get_instance_by_id($info->user_certification_id);
+                    if ( ! $cert->is_failed())
+                    {
+                        $this->load->model('log/log_usercertification_model');
                         $this->log_usercertification_model->insert(array(
-                            'user_certification_id'	=> $info->user_certification_id,
-                            'status'				=> 2,
-                            'change_admin'			=> $this->login_info->id,
+                            'user_certification_id' => $info->user_certification_id,
+                            'status' => 2,
+                            'change_admin' => $this->login_info->id,
                         ));
-                        $this->user_certification_model->update($info->user_certification_id,array('status'=>2));
-                        $this->user_bankaccount_model->update($post['id'],array('verify'=>4,'status'=>0));
-                        $rs = true;
+                        $cert->set_failure(FALSE, $fail);
+                        $this->user_bankaccount_model->update($post['id'], array('verify' => 4, 'status' => 0));
+                        alert('更新成功', admin_url('certification/user_bankaccount_list'));
                     }
-
-                    if($rs===true){
-                        alert('更新成功',admin_url('certification/user_bankaccount_list'));
-                    }else{
-                        alert('更新失敗，請洽工程師',admin_url('certification/user_bankaccount_list'));
+                    else
+                    {
+                        alert('金融驗證已經是失敗狀態，無法更新', admin_url('certification/user_bankaccount_list'));
                     }
-				}else{
-					alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
-				}
-			}else{
-				alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
-			}
+                }
+                else
+                {
+                    alert('ERROR , id is not exist', admin_url('certification/difficult_word_list'));
+                }
+            }
+            else
+            {
+                alert('ERROR , id is not exist', admin_url('certification/difficult_word_list'));
+            }
 		}
 	}
 
@@ -1521,8 +1532,10 @@ class Certification extends MY_Admin_Controller {
             alert('資料更改失敗，找不到資料', admin_url('certification/user_certification_edit?id='.$post['id']));
         }
 
-        if(isset($certification_info->status) && $certification_info->status != 3){
-            alert('資料更改失敗，狀態未在待人工審核中', admin_url('certification/user_certification_edit?id='.$post['id']));
+        if ( ! in_array($certification_info->status,
+            [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_PENDING_TO_REVIEW]))
+        {
+            alert('資料更改失敗，狀態未在待驗證/待人工審核的狀態', admin_url('certification/user_certification_edit?id=' . $post['id']));
         }
 
         $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];

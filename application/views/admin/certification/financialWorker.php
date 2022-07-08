@@ -135,7 +135,14 @@
 											</div>
 											<div class="form-group" id="fail_div" style="display:none">
 												<label>失敗原因</label>
-												<input type="text" class="form-control" id="fail" name="fail" value="<?=$remark && isset($remark["fail"])?$remark["fail"]:"";?>" >
+                                                <select id="fail" name="fail" class="form-control">
+                                                    <option value="" disabled selected>選擇回覆內容</option>
+                                                    <?php foreach ($certifications_msg[$data->certification_id] as $key => $value) { ?>
+                                                        <option <?= $data->status == $value ? 'selected' : '' ?>><?= $value ?></option>
+                                                    <?php } ?>
+                                                    <option value="other">其它</option>
+                                                </select>
+												<input type="text" class="form-control" name="fail2" value="<?=$remark && isset($remark["fail"])?$remark["fail"]:"";?>" >
 											</div>
 											<button type="submit" class="btn btn-primary">送出</button>
                                         </fieldset>

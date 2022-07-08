@@ -491,7 +491,7 @@ class Target extends MY_Admin_Controller {
 	function verify_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
-		$remark = isset($get['remark'])?$get['remark']:'';
+		$remark = $get['remark'] ?? '';
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && in_array($info->status,array(

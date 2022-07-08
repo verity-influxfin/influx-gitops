@@ -138,11 +138,16 @@ class Certification extends REST_Controller {
             $target = $this->target_model->get_by(['id' => $input['target_id']]);
         }
 
-        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, FALSE, $target);
+        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, TRUE, $target, FALSE, TRUE);
 		$list				= array();
 		if(!empty($certification_list)){
 		    $sort = $this->config->item('certifications_sort');
 		    $new_list = [];
+
+            $this->load->helper('target');
+            $this->load->helper('user_certification');
+            $exist_target_submitted = exist_approving_target_submitted($user_id);
+
 		    foreach ($sort as $key => $value){
                 if(isset($certification_list[$value])
                     && (
@@ -151,6 +156,14 @@ class Certification extends REST_Controller {
                     )
                 ){
                     count($certification_list[$value]['optional']) == 0 ? $certification_list[$value]['optional'] = false : '';
+                    $truly_failed = certification_truly_failed($exist_target_submitted, $certification_list[$value]['certification_id'] ?? 0, $this->user_info->investor);
+                    if ($truly_failed)
+                    {
+                        $certification_list[$value]['user_status'] = NULL;
+                        $certification_list[$value]['certification_id'] = NULL;
+                        $certification_list[$value]['remark'] = NULL;
+                        $certification_list[$value]['content'] = NULL;
+                    }
                     $new_list[$value] = $certification_list[$value];
                 }
             }
@@ -230,8 +243,13 @@ class Certification extends REST_Controller {
             //     $user_id = $judicial_person->user_id;
             // }
 
-            $rs = $this->certification_lib->get_certification_info($user_id, $certification['id'], $investor);
-            if($rs){
+            $rs = $this->certification_lib->get_certification_info($user_id, $certification['id'], $investor, TRUE, TRUE);
+
+            $this->load->helper('target');
+            $this->load->helper('user_certification');
+            $exist_target_submitted = exist_approving_target_submitted($user_id);
+            $truly_failed = certification_truly_failed($exist_target_submitted, $rs->id ?? 0, $investor);
+            if($rs && $truly_failed === FALSE){
 				$data = array(
 					'alias'				=> $alias,
 					'certification_id'	=> $rs->certification_id,
@@ -1740,7 +1758,7 @@ class Certification extends REST_Controller {
 			$file_field 	= ['creditcard_image'];
 			foreach ($file_field as $field) {
                 if(isset($input[$field])) {
-                    $should_check = true;
+
                     $image_id = !empty($input[$field]) != null ? intval($input[$field]) : null;
                     if (!$image_id) {
                         //$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1751,6 +1769,7 @@ class Certification extends REST_Controller {
                         ]);
 
                         if ($rs) {
+                            $should_check = true;
                             $content[$field] = $rs->url;
                         } else {
                             $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
@@ -1764,7 +1783,7 @@ class Certification extends REST_Controller {
             $file_fields 	= ['passbook_image','bill_phone_image'];
 			foreach ($file_fields as $fieldS) {
 			    if(isset($input[$fieldS])){
-                    $should_check = true;
+
                     $image_ids = explode(',', $input[$fieldS]);
                     if (count($image_ids) > 3) {
                         $image_ids = array_slice($image_ids, 0, 3);
@@ -1775,6 +1794,7 @@ class Certification extends REST_Controller {
                     ]);
 
                     if ($list && count($list) == count($image_ids)) {
+                        $should_check = true;
                         $content[$fieldS] = [];
                         foreach ($list as $k => $v) {
                             $content[$fieldS][] = $v->url;
@@ -4461,8 +4481,14 @@ class Certification extends REST_Controller {
         if(isset($this->user_info->naturalPerson) && $certification_id < 1000) {
             $this->user_info->id = $this->user_info->naturalPerson->id;
         }
-        $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor);
-        if($user_certification){
+        $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor, TRUE, TRUE);
+
+        $this->load->helper('target');
+        $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
+        $this->load->helper('user_certification');
+        $truly_failed = certification_truly_failed($exist_target_submitted, $user_certification->id ?? 0, $this->user_info->investor);
+
+        if($user_certification && ! $truly_failed){
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
         }
     }
