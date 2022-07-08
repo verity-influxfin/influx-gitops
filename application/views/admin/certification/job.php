@@ -266,7 +266,31 @@
                                 </div>
 								<div class="col-lg-6">
                                     <h1>圖片</h1>
-									<fieldset disabled>
+                                    <fieldset disabled>
+                                        <div class="form-group">
+                                            <?php if ( ! empty($content['ocr_marker']['res']) && $content['ocr_marker']['res'] === TRUE)
+                                            { ?>
+                                                <label for="disabledSelect">OCR 關鍵字標記</label><br>
+                                                <?php
+                                                foreach ($content['ocr_marker']['content'] as $value)
+                                                { ?>
+                                                    <table class="ocr_marker">
+                                                        <tr>
+                                                            <td>
+                                                                <a href="<?= $value['url']; ?>" data-fancybox="images">
+                                                                    <img alt="" src="<?= $value['url']; ?>"
+                                                                         style="width:30%;max-width:400px">
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <strong>關鍵字</strong><br/>
+                                                                <?= implode("<br/>", array_merge($value['input_kw_list'], $value['salary_kw_list'])) ?>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                <?php }
+                                            } ?>
+                                        </div>
                                         <? if ($data->status!=4) { ?>
                                             <? if (!isset($content['financial_image'])) { ?>
                                             <? if (isset($content['labor_image'])) { ?>
