@@ -528,7 +528,7 @@ class Target extends REST_Controller {
         $user_meta = '';
 
         if(!empty($target) && in_array($target->status,[3,4,504])){
-
+            $this->load->library('loanmanager/product_lib');
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
             $sub_product_id = $target->sub_product_id;
@@ -636,7 +636,8 @@ class Target extends REST_Controller {
                 foreach ($certifications as $key => $value) {
                     $cur_cer[$value->certification_id] = $value;
                 }
-                foreach ($product['certifications'] as $key => $value) {
+                $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, []);
+                foreach ($product_certs as $key => $value) {
                     $cer = $certification[$value];
                     // 不顯示於 APP 的徵信項目
                     if (($cer['show'] ?? TRUE) == FALSE)
@@ -783,6 +784,7 @@ class Target extends REST_Controller {
         $user_meta = '';
 
         if(!empty($target) && in_array($target->status,[504])){
+            $this->load->library('loanmanager/product_lib');
 
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
@@ -815,7 +817,9 @@ class Target extends REST_Controller {
                 foreach ($certifications as $key => $value) {
                     $cur_cer[$value->certification_id] = $value;
                 }
-                foreach ($product['certifications'] as $key => $value) {
+
+                $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, []);
+                foreach ($product_certs as $key => $value) {
                     $cer = $certification[$value];
                     if (!isset($cur_cer[$value])) {
                         $cer['description'] = '未' . $cer['description'];

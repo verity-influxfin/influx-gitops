@@ -245,6 +245,7 @@ class Product extends REST_Controller {
 
                 $certification = [];
                 if (!empty($certification_list)) {
+                    $this->load->library('loanmanager/product_lib');
                     foreach ($certification_list as $k => $v) {
                         $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
                             USER_BORROWER,
@@ -258,7 +259,8 @@ class Product extends REST_Controller {
                             $v['remark'] = NULL;
                         }
 
-                        if (in_array($k, $value['certifications'])) {
+                        $product_certs = $this->product_lib->get_product_certs_by_product($value, []);
+                        if (in_array($k, $product_certs)) {
                             !is_bool($v['optional']) ? $v['optional'] = false : '';
                             $certification[] = $v;
                         }
@@ -1341,10 +1343,8 @@ class Product extends REST_Controller {
         $company_status	= $this->user_info->company;
         $target 			= $this->target_model->get($target_id);
         if(!empty($target)){
-            $associates_certifications_config = $this->config->item('associates_certifications');
             $product_list = $this->config->item('product_list');
             $product = isset($product_list[$target->product_id]) ? $product_list[$target->product_id] : $product_list[1];
-            $associates_certifications = $associates_certifications_config[$target->product_id];
             $product_name = $product['name'];
             $sub_product_id = $target->sub_product_id;
             if($this->is_sub_product($product,$sub_product_id)){
@@ -1468,8 +1468,9 @@ class Product extends REST_Controller {
 						$content_array_data = new StdClass();
 					}
                     $diploma = $key==8?$value:null;
-                    if ((in_array($key, $product['certifications']) || in_array($key, $associates_certifications[ASSOCIATES_CHARACTER_REGISTER_OWNER]))
-                        && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL)
+                    $this->load->library('loanmanager/product_lib');
+                    $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
+                    if (in_array($key, $product_certs) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL)
                     {
                         $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target);
                         $truly_failed = certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
@@ -3688,7 +3689,8 @@ class Product extends REST_Controller {
                 ];
                 continue;
             }
-            $need_chk_cert = array_diff($product['certifications'], $product['option_certifications']);
+            $product_certs = $this->product_lib->get_product_certs_by_product_id($value['product_id'], $value['sub_product_id'], []);
+            $need_chk_cert = array_diff($product_certs, $product['option_certifications']);
             $this->load->model('user_certification_model');
             $cert_list = $this->config->item('certifications');
             $failed_cert_reason = [];

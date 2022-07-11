@@ -2759,15 +2759,8 @@ class Certification_lib{
             }
 
             if($product){
-                $product_certs = $product['certifications'];
-
-                if(($product['check_associates_certs'] ?? FALSE))
-                {
-                    $associates_certifications_config = $this->CI->config->item('associates_certifications');
-                    $associates_certifications = $associates_certifications_config[$product['id']];
-                    $product_certs = array_unique(array_merge($product_certs, $associates_certifications[ASSOCIATES_CHARACTER_REGISTER_OWNER]));
-                }
-
+                $this->CI->load->library('loanmanager/product_lib');
+                $product_certs = $this->CI->product_lib->get_product_certs_by_product($product, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
                 foreach($product_certs as $key => $value) {
                     $data = $this->certification[$value];
                     if($company){
@@ -2798,7 +2791,7 @@ class Certification_lib{
                             $certification[$value] = $data;
                         }
                     }else{
-                        if($value <= CERTIFICATION_FOR_JUDICIAL){
+                        if($value < CERTIFICATION_FOR_JUDICIAL){
                             $certification[$value] = $data;
                         }
                     }
@@ -2928,16 +2921,18 @@ class Certification_lib{
     public function get_last_status($user_id, $investor = 0, $company = 0, $target = false, $product_info = false, $target_get_failed = FALSE, $target_get_expired = FALSE)
     {
 		if($user_id){
+            $this->CI->load->library('loanmanager/product_lib');
 			$certification = [];
             $company_source_user_id = false;
             if($target){
+                $product_certs = $this->CI->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, []);
                 if($target->product_id >= PRODUCT_FOR_JUDICIAL){
 //                    $company = $this->get_company_type($user_id);
 //                    $company_source_user_id = $company->user_id;
                 }
                 foreach($this->certification as $key => $value) {
-                    if ($target->product_id >= PRODUCT_FOR_JUDICIAL && $key >= CERTIFICATION_FOR_JUDICIAL || $target->product_id < PRODUCT_FOR_JUDICIAL && $key < CERTIFICATION_FOR_JUDICIAL) {
-                        $product_info && !in_array($key, $product_info['certifications']) ? '' : $certification[$key] = $value;
+                    if (in_array($key, $product_certs)) {
+                        $certification[$key] = $value;
                     }
                     else{
                         unset($certification[$key]);

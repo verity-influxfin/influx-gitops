@@ -370,6 +370,7 @@ class Risk extends MY_Admin_Controller {
 		$certification_investor_list = array();
 		$cer = $this->config->item('certifications');
 		$product_list = $this->config->item('product_list');
+        $this->load->library('loanmanager/product_lib');
 
 		$target_status = [
 			TARGET_WAITING_APPROVE,
@@ -442,8 +443,9 @@ class Risk extends MY_Admin_Controller {
 					if($this->is_sub_product($product,$sub_product_id)){
 						$product = $this->trans_sub_product($product,$sub_product_id);
 					}
+                    $product_certs = $this->product_lib->get_product_certs_by_product_id($value->product_id, $value->sub_product_id, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
 
-					foreach($product['certifications'] as $ckey => $cvalue){
+                    foreach($product_certs as $ckey => $cvalue){
 						if(!isset($useCer[$value->product_id][$cvalue])){
 							$useCer[$value->product_id][$cvalue] = $cer[$cvalue];
 						}
@@ -457,7 +459,7 @@ class Risk extends MY_Admin_Controller {
 							$status = 1;
 							if($associate->user_id != null){
 								if($cer_status = $this->certification_lib->get_last_status($associate->user_id, BORROWER)){
-									foreach($product['certifications'] as $cer_statusKey => $cer_statusValue) {
+									foreach($product_certs as $cer_statusKey => $cer_statusValue) {
 										if($cer_statusValue < PRODUCT_FOR_JUDICIAL && isset($cer_status[$cer_statusValue])){
 											$cer_status[$cer_statusValue]['user_status'] != 1 ? $status = 0 : '';
 										}
@@ -754,13 +756,8 @@ class Risk extends MY_Admin_Controller {
 				$product = $this->trans_sub_product($product, $sub_product_id);
 			}
 
-            $product_certs = $product['certifications'];
-            if(($product['check_associates_certs'] ?? FALSE))
-            {
-                $associates_certifications_config = $this->config->item('associates_certifications');
-                $associates_certifications = $associates_certifications_config[$target->product_id];
-                $product_certs = array_unique(array_merge($product_certs, $associates_certifications[ASSOCIATES_CHARACTER_REGISTER_OWNER]));
-            }
+            $this->load->library('loanmanager/product_lib');
+            $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
 			foreach ($product_certs as $ckey => $cvalue) {
 				if (!isset($useCer[$cvalue]) && $cvalue < CERTIFICATION_FOR_JUDICIAL) {
 					$useCer[$cvalue] = $certification_list[$cvalue];

@@ -542,10 +542,13 @@ class Subloan extends REST_Controller {
             $product 			= $product_list[$target->product_id];
             $certification		= [];
             $this->load->library('Certification_lib');
+            $this->load->library('loanmanager/product_lib');
             $certification_list	= $this->certification_lib->get_status($user_id,0);
+            $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
-                    if(in_array($key,$product['certifications'])){
+                    if (in_array($key, $product_certs))
+                    {
                         $certification[] = $value;
                     }
                 }

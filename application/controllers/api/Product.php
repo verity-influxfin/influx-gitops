@@ -577,7 +577,7 @@ class Product extends REST_Controller {
 				//檢查認證 NOT_VERIFIED
 				$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 				foreach($certification_list as $key => $value){
-					if(in_array($key,$product['certifications']) && $value['user_status']!=1){
+					if(in_array($key, $product_certs) && $value['user_status']!=1){
 						$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 					}
 				}

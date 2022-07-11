@@ -1636,7 +1636,7 @@ class Target_lib
     //審核額度
     public function script_approve_target()
     {
-
+        $this->CI->load->library('loanmanager/product_lib');
         $this->CI->load->library('Certification_lib');
         $targets = $this->CI->target_model->get_many_by([
             'status' => [TARGET_WAITING_APPROVE, TARGET_ORDER_WAITING_VERIFY],
@@ -1670,7 +1670,7 @@ class Target_lib
                         if ($this->is_sub_product($product, $sub_product_id)) {
                             $product = $this->trans_sub_product($product, $sub_product_id);
                         }
-                        $product_certification = $product['certifications'];
+                        $product_certification = $this->CI->product_lib->get_product_certs_by_product_id($value->product_id, $value->sub_product_id, []);
                         $finish = true;
 
                         if (($product['check_associates_certs'] ?? FALSE))
@@ -2284,6 +2284,8 @@ class Target_lib
     public function get_associates_list($target_id, $status = [0, 1], $product, $self_user_id, $self_certification)
     {
         $this->CI->load->model('loan/target_associate_model');
+        $this->CI->load->library('loanmanager/product_lib');
+        $product_certs = $this->CI->product_lib->get_product_certs_by_product($product, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
         $get_associates_list = $this->CI->target_associate_model->get_many_by([
             'target_id' => $target_id,
             'status <=' => 1,
@@ -2323,7 +2325,7 @@ class Target_lib
                         $phone = $user_info->phone;
                         $certification_list = $this->CI->certification_lib->get_status($value->user_id, $this->CI->user_info->investor, $this->CI->user_info->company);
                         foreach ($certification_list as $ckey => $cvalue) {
-                            if (in_array($ckey, $product['certifications']) && $ckey <= 1000) {
+                            if (in_array($ckey, $product_certs) && $ckey <= 1000) {
                                 $cvalue['optional'] = false;
                                 $certification[] = $cvalue;
                             }

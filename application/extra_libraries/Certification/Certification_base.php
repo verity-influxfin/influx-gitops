@@ -583,7 +583,8 @@ abstract class Certification_base implements Certification_definition
                 continue;
             }
 
-            if ( ! isset($product['certifications']) || ! in_array($this->certification_id, $product['certifications']))
+            $product_certs = $this->CI->product_lib->get_product_certs_by_product($product, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
+            if ( ! in_array($this->certification_id, $product_certs))
             {
                 continue;
             }
@@ -596,7 +597,8 @@ abstract class Certification_base implements Certification_definition
             for ($i = 0; $i < count($product['sub_product']); $i++)
             {
                 $product_info = $this->CI->product_lib->getProductInfo($product['id'], $product['sub_product'][$i]);
-                if ( ! isset($product_info['certifications']) || ! in_array($this->certification_id, $product_info['certifications']))
+                $product_certs = $this->CI->product_lib->get_product_certs_by_product($product_info, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
+                if ( ! in_array($this->certification_id, $product_certs))
                 {
                     continue;
                 }
