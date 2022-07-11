@@ -273,21 +273,30 @@
                                                 <label for="disabledSelect">OCR 關鍵字標記</label><br>
                                                 <?php
                                                 foreach ($content['ocr_marker']['content'] as $value)
-                                                { ?>
-                                                    <table class="ocr_marker">
-                                                        <tr>
-                                                            <td>
-                                                                <a href="<?= $value['url']; ?>" data-fancybox="images">
-                                                                    <img alt="" src="<?= $value['url']; ?>"
-                                                                         style="width:30%;max-width:400px">
-                                                                </a>
-                                                            </td>
-                                                            <td>
-                                                                <strong>關鍵字</strong><br/>
-                                                                <?= implode("<br/>", array_merge($value['input_kw_list'], $value['salary_kw_list'])) ?>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
+                                                {
+                                                    if (empty($value['input_kw_list']) && empty($value['salary_kw_list']))
+                                                    {
+                                                        continue;
+                                                    } ?>
+                                                    <div class="row" style="width: 100%">
+                                                        <div class="col-lg-3">
+                                                            <a href="<?= $value['url']; ?>" data-fancybox="images">
+                                                                <img alt="" src="<?= $value['url']; ?>"
+                                                                     style="width:100%;max-width:300px">
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <label>身份關鍵字：</label>
+                                                            <br/>
+                                                            <?= implode("<br/>", $value['input_kw_list']) ?>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <label>收入關鍵字：</label>
+                                                            <br/>
+                                                            <?= implode("<br/>", $value['salary_kw_list']) ?>
+                                                        </div>
+                                                    </div>
+                                                    <hr/>
                                                 <?php }
                                             } ?>
                                         </div>
