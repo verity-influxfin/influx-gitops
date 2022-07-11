@@ -11,6 +11,7 @@ class Cert_job extends Ocr_marker_base
 {
     protected $task_path = '/keywords_marker/work_income_proof';
     protected $content;
+    protected $task_type = self::TYPE_MARKER;
 
     public function __construct($certification)
     {
@@ -120,14 +121,5 @@ class Cert_job extends Ocr_marker_base
     private function _get_user_id()
     {
         return $this->certification['user_id'] ?? '';
-    }
-
-    /**
-     * 取得 OCR 任務類型
-     * @return int
-     */
-    public function get_task_type(): int
-    {
-        return self::TYPE_MARKER;
     }
 }

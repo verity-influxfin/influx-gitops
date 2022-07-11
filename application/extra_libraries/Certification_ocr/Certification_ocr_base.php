@@ -19,7 +19,8 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     protected $certification;
     protected $task_path;
     // OCR 任務類型
-    protected $task_type = [
+    protected $task_type;
+    protected $task_type_list = [
         self::TYPE_PARSER, // 一般的資料解析
         self::TYPE_MARKER, // 標記圖片上的關鍵訊息
     ];
@@ -127,14 +128,13 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     public function get_result(): array
     {
         // OCR 任務類型
-        $task_type = $this->get_task_type();
-        if ($this->_chk_task_type($task_type) === FALSE)
+        if ($this->get_task_type() === FALSE)
         {
             return $this->return_failure('Cannot figure out the task type!');
         }
 
         // OCR 任務 id
-        $task_id = $this->get_ocr_task_id($task_type);
+        $task_id = $this->get_ocr_task_id($this->task_type);
         if (empty($task_id))
         {
             $body = $this->get_request_body();
@@ -201,7 +201,8 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     {
         $this->CI->user_certification_ocr_task_model->insert([
             'user_certification_id' => $this->certification['id'],
-            'task_id' => $task_id
+            'task_id' => $task_id,
+            'type' => $this->task_type,
         ]);
     }
 
@@ -238,32 +239,17 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     }
 
     /**
-     * 檢查 OCR 任務類型
-     * @param $type
+     * 取得 OCR 任務類型
      * @return bool
      */
-    private function _chk_task_type($type): bool
+    public function get_task_type(): bool
     {
-        if (empty($type))
-        {
-            return FALSE;
-        }
-
-        if ( ! in_array($type, $this->task_type))
+        if ( ! in_array($this->task_type, $this->task_type_list))
         {
             return FALSE;
         }
 
         return TRUE;
-    }
-
-    /**
-     * 取得 OCR 任務類型
-     * @return int
-     */
-    public function get_task_type(): int
-    {
-        return self::TYPE_PARSER;
     }
 
 
