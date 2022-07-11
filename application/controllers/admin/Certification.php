@@ -694,21 +694,21 @@ class Certification extends MY_Admin_Controller {
                         ));
                         $cert->set_failure(FALSE, $fail);
                         $this->user_bankaccount_model->update($post['id'], array('verify' => 4, 'status' => 0));
-                        alert('更新成功', admin_url('certification/user_bankaccount_list'));
+                        alert('更新成功', admin_url('close'));
                     }
                     else
                     {
-                        alert('金融驗證已經是失敗狀態，無法更新', admin_url('certification/user_bankaccount_list'));
+                        alert('金融驗證已經是失敗狀態，無法更新', admin_url('close'));
                     }
                 }
                 else
                 {
-                    alert('ERROR , id is not exist', admin_url('certification/difficult_word_list'));
+                    alert('ERROR , id is not exist', admin_url('close'));
                 }
             }
             else
             {
-                alert('ERROR , id is not exist', admin_url('certification/difficult_word_list'));
+                alert('ERROR , id is not exist', admin_url('close'));
             }
 		}
 	}

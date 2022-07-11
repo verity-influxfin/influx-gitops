@@ -360,7 +360,7 @@
 																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
 																		case '2':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" disabled class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
