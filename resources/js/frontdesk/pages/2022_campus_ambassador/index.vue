@@ -124,7 +124,7 @@
               <div class="card-row-text">
                 <div>•普匯校園大使結業證書</div>
                 <div>•履歷健檢了解優劣勢</div>
-                <div>•績優組別可獲執行長推薦涵</div>
+                <div>•績優組別可獲執行長推薦函</div>
               </div>
             </div>
           </div>
