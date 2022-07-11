@@ -121,4 +121,13 @@ class Cert_job extends Ocr_marker_base
     {
         return $this->certification['user_id'] ?? '';
     }
+
+    /**
+     * 取得 OCR 任務類型
+     * @return int
+     */
+    public function get_task_type(): int
+    {
+        return self::TYPE_MARKER;
+    }
 }
