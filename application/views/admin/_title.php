@@ -40,7 +40,7 @@
                     <?php if (! empty($menu)):?>
                         <?php foreach ($menu as $key => $value):
                             if (empty($value['parent_url']) || empty($value['parent_name'])) continue; ?>
-                            <li data-id="<?= $key ?>" class="<?= ($active == $key) ? 'active' : '' ?>">
+                            <li data-id="<?= $key ?>" class="<?= (strtolower($active) == strtolower($key)) ? 'active' : '' ?>">
                                 <a href="<?= $value['parent_url'] ?>"><?= $value['parent_name'] ?>
                                     <?= ! empty($value['sub']) ? '<span class="fa arrow"></span>' : '' ?>
                                 </a>
