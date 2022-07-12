@@ -111,6 +111,7 @@ $route['admin/(Target|target)/target_waiting_verify_detail'] = 'admin/target/edi
 $route['admin/(Target|target)/target_finished_detail'] = 'admin/target/edit';
 $route['admin/(Target|target)/target_repayment_detail'] = 'admin/target/edit';
 $route['admin/(Target|target)/target_prepayment_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/target_loan_detail'] = 'admin/target/edit';
 $route['admin/(Target|target)/legal_doc_detail'] = 'admin/target/edit';
 $route['admin/(Target|target)/transfer_detail'] = 'admin/target/edit';
 $route['admin/(Target|target)/obligations_detail'] = 'admin/target/edit';
