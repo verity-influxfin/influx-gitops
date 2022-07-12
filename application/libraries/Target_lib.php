@@ -2494,6 +2494,66 @@ class Target_lib
     }
 
     /**
+     * 退案件回待核可
+     * @param $target
+     * @return bool
+     */
+    public function withdraw_target_to_unapproved($target): bool
+    {
+        if (is_object($target))
+        {
+            $target = json_decode(json_encode($target), TRUE);
+        }
+
+        if ( ! in_array($target['status'], [TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_ORDER_WAITING_SHIP]))
+        {
+            log_message('error', '[withdraw_target_to_unapproved]案件非處於允許的狀態。');
+            return FALSE;
+        }
+
+        $creditSheet = CreditSheetFactory::getInstance($target['id']);
+        if($creditSheet)
+        {
+            $canceled = $creditSheet->cancel();
+            if ( ! $canceled)
+            {
+                log_message('error', '[withdraw_target_to_unapproved]發生不明原因導致授審表取消失敗。');
+                return FALSE;
+            }
+        }
+
+        $status = $target['status'];
+        switch ($target['status'])
+        {
+            // 個金案件：待簽約&待驗證皆要退回待核可
+            // 企金案件：待驗證要退回待核可（目前無待簽約階段）
+            case TARGET_WAITING_SIGNING:
+            case TARGET_WAITING_VERIFY:
+                $status = TARGET_WAITING_APPROVE;
+                break;
+            case TARGET_ORDER_WAITING_SHIP:
+                $status = TARGET_ORDER_WAITING_VERIFY;
+                break;
+        }
+
+        $sub_status = $target['sub_status'];
+        switch ($target['sub_status'])
+        {
+            case TARGET_SUBSTATUS_SECOND_INSTANCE:
+            case TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET:
+                $sub_status = TARGET_SUBSTATUS_NORNAL;
+                break;
+        }
+
+        $this->CI->target_model->update_by(
+            ['id' => $target['id']],
+            ['status' => $status, 'sub_status' => $sub_status, 'certificate_status' => TARGET_CERTIFICATE_SUBMITTED]
+        );
+
+        return TRUE;
+    }
+    
+    /**
      * 取得案件相關的詳細資訊
      * @param array $target_ids
      * @return mixed
