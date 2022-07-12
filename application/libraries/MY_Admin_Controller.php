@@ -76,14 +76,14 @@ class MY_Admin_Controller extends CI_Controller{
                     $admin_menu[$controller]['sub'][$item_key] = ['name' => $item_value['name']];
                     if ( ! empty($item_value['param']) && is_array($item_value['param']))
                     {
-                        $query_str = http_build_query($item_value['param']);
+                        $query_str = '?' . http_build_query($item_value['param']);
                     }
                     else
                     {
                         $query_str = '';
                     }
                     $admin_menu[$controller]['sub'][$item_key]['url'] = admin_url(
-                        $this->permission_granted[$controller][$item_key]['url'] . '?' . $query_str
+                        $this->permission_granted[$controller][$item_key]['url'] . $query_str
                     );
                 }
                 if (empty($admin_menu[$controller]['sub'])) continue;
