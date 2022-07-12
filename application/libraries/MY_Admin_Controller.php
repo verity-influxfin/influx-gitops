@@ -73,8 +73,18 @@ class MY_Admin_Controller extends CI_Controller{
                 foreach ($controller_value['menu'] as $item_key => $item_value)
                 {
                     if ( ! ($this->permission_granted[$controller][$item_key]['action']['granted'] & $this->action_type_list['read']['key'])) continue;
-                    $admin_menu[$controller]['sub'][$item_key] = ['name' => $item_value];
-                    $admin_menu[$controller]['sub'][$item_key]['url'] = admin_url($this->permission_granted[$controller][$item_key]['url']);
+                    $admin_menu[$controller]['sub'][$item_key] = ['name' => $item_value['name']];
+                    if ( ! empty($item_value['param']) && is_array($item_value['param']))
+                    {
+                        $query_str = http_build_query($item_value['param']);
+                    }
+                    else
+                    {
+                        $query_str = '';
+                    }
+                    $admin_menu[$controller]['sub'][$item_key]['url'] = admin_url(
+                        $this->permission_granted[$controller][$item_key]['url'] . '?' . $query_str
+                    );
                 }
                 if (empty($admin_menu[$controller]['sub'])) continue;
                 $admin_menu[$controller]['parent_url'] = '#';

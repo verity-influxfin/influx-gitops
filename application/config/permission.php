@@ -3,7 +3,7 @@ $config['permission'] = [
     'Charity' => [
         'name' => '慈善專區',
         'menu' => [
-            'index' => '慈善專區',
+            'index' => ['name' => '慈善專區'],
         ],
         'permission' => [
             'index' => ['model' => 'Charity', 'submodel' => 'index', 'action' => 'read'],
@@ -13,7 +13,7 @@ $config['permission'] = [
     'Product' => [
         'name' => '產品管理',
         'menu' => [
-            'index' => '產品管理',
+            'index' => ['name' => '產品管理'],
         ],
         'permission' => [
             'index' => ['model' => 'Product', 'submodel' => 'index', 'action' => 'read'],
@@ -22,8 +22,8 @@ $config['permission'] = [
     'AntiFraud' => [
         'name' => '反詐欺系統',
         'menu' => [
-            'index' => '反詐欺管理指標',
-            'list' => '反詐欺規則總覽',
+            'index' => ['name' => '反詐欺管理指標'],
+            'list' => ['name' => '反詐欺規則總覽'],
         ],
         'permission' => [
             'index' => ['model' => 'AntiFraud', 'submodel' => 'index', 'action' => 'read'],
@@ -33,18 +33,18 @@ $config['permission'] = [
     'Target' => [
         'name' => '借款管理',
         'menu' => [
-            'index' => '全部列表',
-            'waiting_evaluation' => '二審',
-            'waiting_signing' => '待簽約',
-            'waiting_verify' => '待上架',
-            'waiting_bidding' => '已上架',
-            'waiting_loan' => '待放款',
-            'repayment' => '還款中',
-            'finished' => '已結案',
-            'repayment_delayed' => '逾期中',
-            'prepayment' => '提前還款',
-            'order_target' => '消費貸 - 案件列表',
-            'waiting_approve_order_transfer' => '消費貸 - 債轉待批覆',
+            'index' => ['name' => '全部列表'],
+            'waiting_evaluation' => ['name' => '二審'],
+            'waiting_signing' => ['name' => '待簽約'],
+            'waiting_verify' => ['name' => '待上架'],
+            'waiting_bidding' => ['name' => '已上架'],
+            'waiting_loan' => ['name' => '待放款'],
+            'repayment' => ['name' => '還款中'],
+            'finished' => ['name' => '已結案'],
+            'repayment_delayed' => ['name' => '逾期中', 'param' => ['delay' => 1, 'status' => 5]],
+            'prepayment' => ['name' => '提前還款'],
+            'order_target' => ['name' => '消費貸 - 案件列表'],
+            'waiting_approve_order_transfer' => ['name' => '消費貸 - 債轉待批覆'],
         ],
         'detail' => [
             'edit' => '借款詳細內容'
@@ -105,11 +105,11 @@ $config['permission'] = [
     'Transfer' => [
         'name' => '債權管理',
         'menu' => [
-            'index' => '全部列表',
-            'obligations' => '全部列表(New)',
-            'waiting_transfer' => '債轉待收購',
-            'waiting_transfer_success' => '債轉待放款',
-            'bidding' => '已投標',
+            'index' => ['name' => '全部列表'],
+            'obligations' => ['name' => '全部列表(New)'],
+            'waiting_transfer' => ['name' => '債轉待收購'],
+            'waiting_transfer_success' => ['name' => '債轉待放款'],
+            'bidding' => ['name' => '已投標'],
         ],
         'detail' => [
             'edit' => '債權詳細內容'
@@ -135,12 +135,12 @@ $config['permission'] = [
     'Risk' => [
         'name' => '風控專區',
         'menu' => [
-            'natural_person' => '自然人借款端審核',
-            'juridical_person' => '法人借款端審核',
-            'investor' => '投資端審核',
-            'credit' => '信評管理',
-            'credit_management' => '授信審核表',
-            'black_list' => '黑名單列表',
+            'natural_person' => ['name' => '自然人借款端審核'],
+            'juridical_person' => ['name' => '法人借款端審核', 'param' => ['investor' => 0, 'company' => 1]],
+            'investor' => ['name' => '投資端審核', 'param' => ['investor' => 1]],
+            'credit' => ['name' => '信評管理'],
+            'credit_management' => ['name' => '授信審核表'],
+            'black_list' => ['name' => '黑名單列表'],
         ],
         'permission' => [
             'natural_person' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
@@ -162,11 +162,11 @@ $config['permission'] = [
     'Passbook' => [
         'name' => '虛擬帳號管理',
         'menu' => [
-            'user_bankaccount_list' => '金融帳號認證',
-            'index' => '虛擬帳號列表',
-            'withdraw_list' => '提領紀錄',
-            'withdraw_waiting' => '提領待放款',
-            'unknown_funds' => '不明來源退款',
+            'user_bankaccount_list' => ['name' => '金融帳號認證', 'param' => ['verify' => 2]],
+            'index' => ['name' => '虛擬帳號列表'],
+            'withdraw_list' => ['name' => '提領紀錄'],
+            'withdraw_waiting' => ['name' => '提領待放款'],
+            'unknown_funds' => ['name' => '不明來源退款'],
         ],
         'permission' => [
             'user_bankaccount_list' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
@@ -192,10 +192,10 @@ $config['permission'] = [
     'Judicialperson' => [
         'name' => '法人管理',
         'menu' => [
-            'juridical_apply' => '法人申請列表',
-            'juridical_management' => '法人管理列表',
-            'cooperation_apply' => '經銷商申請列表',
-            'cooperation_management' => '經銷商管理列表',
+            'juridical_apply' => ['name' => '法人申請列表', 'param' => ['status' => 0]],
+            'juridical_management' => ['name' => '法人管理列表', 'param' => ['status' => 1]],
+            'cooperation_apply' => ['name' => '經銷商申請列表', 'param' => ['cooperation' => 2]],
+            'cooperation_management' => ['name' => '經銷商管理列表', 'param' => ['cooperation' => 1]],
         ],
         'permission' => [
             'juridical_apply' => ['model' => 'Judicialperson', 'submodel' => 'juridical_apply', 'action' => 'read'],
@@ -215,7 +215,7 @@ $config['permission'] = [
     'Creditmanagement' => [
         'name' => '授審表',
         'menu' => [
-            'index' => '列表(還沒做)',
+            'index' => ['name' => '列表(還沒做)'],
         ],
         'permission' => [
             'index' => ['model' => 'Creditmanagement', 'submodel' => 'index', 'action' => 'read'],
@@ -233,9 +233,9 @@ $config['permission'] = [
     'Certification' => [
         'name' => '認證管理',
         'menu' => [
-            'index' => '認證方式列表',
-            'user_certification_list' => '會員認證審核',
-            'difficult_word_list' => '銀行困難字管理',
+            'index' => ['name' => '認證方式列表'],
+            'user_certification_list' => ['name' => '會員認證審核'],
+            'difficult_word_list' => ['name' => '銀行困難字管理'],
         ],
         'permission' => [
             'index' => ['model' => 'Certification', 'submodel' => 'index', 'action' => 'read'],
@@ -268,7 +268,7 @@ $config['permission'] = [
     'Scraper' => [
         'name' => '爬蟲系統',
         'menu' => [
-            'index' => '會員爬蟲列表',
+            'index' => ['name' => '會員爬蟲列表'],
         ],
         'permission' => [
             'index' => ['model' => 'Scraper', 'submodel' => 'index', 'action' => 'read'],
@@ -292,8 +292,8 @@ $config['permission'] = [
     'Partner' => [
         'name' => '合作夥伴管理',
         'menu' => [
-            'partner_type' => '合作商類別',
-            'index' => '合作商列表',
+            'partner_type' => ['name' => '合作商類別'],
+            'index' => ['name' => '合作商列表'],
         ],
         'permission' => [
             'partner_type' => ['model' => 'Partner', 'submodel' => 'partner_type', 'action' => 'read'],
@@ -306,9 +306,9 @@ $config['permission'] = [
     'Contact' => [
         'name' => '客服管理',
         'menu' => [
-            'index' => '投訴與建議',
-            'send_email' => '通知工具',
-            'certifications' => '會員認證審核列表',
+            'index' => ['name' => '投訴與建議'],
+            'send_email' => ['name' => '通知工具'],
+            'certifications' => ['name' => '會員認證審核列表'],
         ],
         'permission' => [
             'index' => ['model' => 'Contact', 'submodel' => 'index', 'action' => 'read'],
@@ -321,8 +321,8 @@ $config['permission'] = [
     'User' => [
         'name' => '會員管理',
         'menu' => [
-            'index' => '會員列表',
-            'blocked_users' => '鎖定帳號管理',
+            'index' => ['name' => '會員列表'],
+            'blocked_users' => ['name' => '鎖定帳號管理'],
         ],
         'detail' => [
             'edit' => '會員詳細內容'
@@ -341,11 +341,11 @@ $config['permission'] = [
     'Admin' => [
         'name' => '後台人員管理',
         'menu' => [
-            'index' => '人員列表',
-            'group_permission_list' => '部門權限設定',
-            'admin_permission_list' => '人員權限設定',
-            'permission_grant_list' => '權限審核',
-            'permission_search' => '權限查詢',
+            'index' => ['name' => '人員列表'],
+            'group_permission_list' => ['name' => '部門權限設定'],
+            'admin_permission_list' => ['name' => '人員權限設定'],
+            'permission_grant_list' => ['name' => '權限審核'],
+            'permission_search' => ['name' => '權限查詢'],
         ],
         'permission' => [
             'index' => ['model' => 'Admin', 'submodel' => 'index', 'action' => 'read'],
@@ -374,16 +374,16 @@ $config['permission'] = [
     'Sales' => [
         'name' => '業務報表',
         'menu' => [
-            'index' => '借款報表',
-            'register_report' => '註冊報表',
-            'bonus_report' => '獎金報表',
-            'loan_overview' => '申貸總覽',
-            'valuable_report' => '高價值用戶報表',
-            'promote_list' => '推薦有賞',
-            'promote_reward_list' => '推薦有賞放款',
-            'qrcode_projects' => 'QRcode方案設定',
-            'qrcode_contracts' => 'QRcode合約審核',
-            'sales_report' => '績效統計表',
+            'index' => ['name' => '借款報表'],
+            'register_report' => ['name' => '註冊報表'],
+            'bonus_report' => ['name' => '獎金報表'],
+            'loan_overview' => ['name' => '申貸總覽'],
+            'valuable_report' => ['name' => '高價值用戶報表'],
+            'promote_list' => ['name' => '推薦有賞'],
+            'promote_reward_list' => ['name' => '推薦有賞放款'],
+            'qrcode_projects' => ['name' => 'QRcode方案設定'],
+            'qrcode_contracts' => ['name' => 'QRcode合約審核'],
+            'sales_report' => ['name' => '績效統計表'],
         ],
         'detail' => [
             'promote_edit' => '推薦有賞詳細內容'
@@ -420,10 +420,10 @@ $config['permission'] = [
     'Account' => [
         'name' => '財務作業',
         'menu' => [
-            'daily_report' => '虛擬帳戶交易明細表',
-            'passbook_report' => '虛擬帳號餘額明細表',
-            'estatement' => '個人對帳單',
-            'index' => '收支統計表',
+            'daily_report' => ['name' => '虛擬帳戶交易明細表'],
+            'passbook_report' => ['name' => '虛擬帳號餘額明細表'],
+            'estatement' => ['name' => '個人對帳單'],
+            'index' => ['name' => '收支統計表'],
         ],
         'permission' => [
             'daily_report' => ['model' => 'Account', 'submodel' => 'daily_report', 'action' => 'read'],
@@ -437,7 +437,7 @@ $config['permission'] = [
     'Ocr' => [
         'name' => 'OCR 結果',
         'menu' => [
-            'index' => '報表',
+            'index' => ['name' => '報表'],
         ],
         'permission' => [
             'index' => ['model' => 'Ocr', 'submodel' => 'index', 'action' => 'read'],
@@ -450,8 +450,8 @@ $config['permission'] = [
     'PostLoan' => [
         'name' => '貸後管理',
         'menu' => [
-            'legal_doc' => '法訴文件管理',
-            'deduct' => '法催扣款',
+            'legal_doc' => ['name' => '法訴文件管理'],
+            'deduct' => ['name' => '法催扣款'],
         ],
         'permission' => [
             'legal_doc' => ['model' => 'PostLoan', 'submodel' => 'legal_doc', 'action' => 'read'],
@@ -466,8 +466,8 @@ $config['permission'] = [
     'Article' => [
         'name' => '活動及最新消息',
         'menu' => [
-            'index' => '最新活動',
-            'news' => '最新消息',
+            'index' => ['name' => '最新活動'],
+            'news' => ['name' => '最新消息', 'param' => ['type' => 2]],
         ],
         'permission' => [
             'index' => ['model' => 'Article', 'submodel' => 'index', 'action' => 'read'],
@@ -487,7 +487,7 @@ $config['permission'] = [
     'Agreement' => [
         'name' => '協議書',
         'menu' => [
-            'index' => '協議書',
+            'index' => ['name' => '協議書'],
         ],
         'permission' => [
             'index' => ['model' => 'Agreement', 'submodel' => 'index', 'action' => 'read'],
@@ -501,7 +501,7 @@ $config['permission'] = [
     'Contract' => [
         'name' => '合約書',
         'menu' => [
-            'index' => '合約書',
+            'index' => ['name' => '合約書'],
         ],
         'permission' => [
             'index' => ['model' => 'Contract', 'submodel' => 'index', 'action' => 'read'],
