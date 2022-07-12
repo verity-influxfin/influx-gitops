@@ -218,7 +218,7 @@ N                                                <?
                                             <td width="150px"><?= $order->merchant_order_no; ?></td>
                                             <td width="110px">法人商號(賣家)</td>
                                             <td colspan="3"><a class="fancyframe"
-                                                               href="<?= admin_url('judicialperson/cooperation_edit?id=' . $judicial_person->id) ?>"><?= isset($judicial_person->user_id) ? $judicial_person->company : ""; ?></a>
+                                                               href="<?= admin_url('judicialperson/cooperation_management_edit?id=' . $judicial_person->id) ?>"><?= isset($judicial_person->user_id) ? $judicial_person->company : ""; ?></a>
                                             </td>
                                         </tr>
                                         <tr>
