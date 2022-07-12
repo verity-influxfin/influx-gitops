@@ -846,18 +846,17 @@ class Product extends REST_Controller {
             // 申貸產品需選擇職業(公司類型)
             if ( ! empty($product['available_company_categories']))
             {
-                if ( ! isset($input['company_category']))
+                if (isset($input['company_category']))
                 {
-                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => 'The parameters are lack of company_category.'));
+                    if ( ! array_key_exists($input['company_category'], $product['available_company_categories']))
+                    {
+                        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => 'The parameter company_category is not correct.'));
+                    }
+                    $input['target_meta'][] = [
+                        'meta_key' => TARGET_META_COMPANY_CATEGORY_NUMBER,
+                        'meta_value' => (int)$input['company_category']
+                    ];
                 }
-                else if ( ! array_key_exists($input['company_category'], $product['available_company_categories']))
-                {
-                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => 'The parameter company_category is not correct.'));
-                }
-                $input['target_meta'][] = [
-                    'meta_key' => TARGET_META_COMPANY_CATEGORY_NUMBER,
-                    'meta_value' => (int)$input['company_category']
-                ];
             }
 
             // 外匯車判斷
