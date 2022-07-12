@@ -363,6 +363,20 @@ Route::prefix('api/v1')->group(function() {
     Route::post('/campaign2022/upload', 'Campaign2022Controller@save_file');
     Route::post('/campaign2022/vote', 'Campaign2022Controller@save_vote');
     Route::get('/campaign2022/montage', 'Campaign2022Controller@get_montage');
+
+    // 校園大使 (換年度，換Controller)
+    Route::prefix('/campus-ambassador')->group(function () {
+        // 報名
+        Route::group([
+            'prefix' => '/sign-up',
+            'middleware' => 'member.login.chk'
+        ], function () {
+            // 個人組
+            Route::post('/individual', 'CampusAmbassador2022Controller@sign_up_individual');
+            // 團體組
+            Route::post('/group', 'CampusAmbassador2022Controller@sign_up_group');
+        });
+    });
 });
 
 // 捐款動畫 SSE API
