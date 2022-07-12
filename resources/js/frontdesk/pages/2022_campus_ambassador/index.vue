@@ -93,7 +93,7 @@
           <div>喜歡交朋友、熱愛分享、喜歡活動、有高度執行力</div>
           <div>對經營社群有興趣、有業務洽談或推廣能力的你</div>
           <div class="mt-3">快加入普匯校園大使</div>
-          <div>成為赤手可熱的<span class="em">Fintech人才</span></div>
+          <div>成為炙手可熱的<span class="em">Fintech人才</span></div>
         </div>
         <div class="intro-text d-block d-md-none">
           <div>喜歡交朋友、熱愛分享、</div>
@@ -101,7 +101,7 @@
           <div>對經營社群有興趣、</div>
           <div>有業務洽談或推廣能力的你</div>
           <div class="mt-3">快加入普匯校園大使</div>
-          <div>成為赤手可熱的<span class="em">Fintech人才</span></div>
+          <div>成為炙手可熱的<span class="em">Fintech人才</span></div>
         </div>
       </div>
     </div>
@@ -137,9 +137,10 @@
             <div class="col-md col-12">
               <div class="card-row-title">大使培訓計畫</div>
               <div class="card-row-text">
-                <div>•普匯校園大使結業證書</div>
-                <div>•履歷健檢了解優劣勢</div>
-                <div>•績優組別可獲執行長推薦函</div>
+                <div>•活動提案與簡報技巧提升</div>
+                <div>•提案企劃＆業務能力up up</div>
+                <div>•專業培訓課程</div>
+                <div>•近距離接觸FinTech產業新知</div>
               </div>
             </div>
           </div>
@@ -356,8 +357,8 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="swiper-slide">
-              <div class="slide-content">
+            <div class="swiper-slide">
+              <div class="slide-content slide-content-2">
                 <div class="card">
                   <div class="card-body">
                     <div class="card-title">鄭裕庭/海洋大學</div>
@@ -374,7 +375,7 @@
                   />
                 </div>
               </div>
-            </div> -->
+            </div>
           </div>
           <div class="swiper-pagination"></div>
           <div class="swiper-button-prev"></div>
