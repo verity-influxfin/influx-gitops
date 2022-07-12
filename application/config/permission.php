@@ -328,11 +328,12 @@ $config['permission'] = [
         ],
         'permission' => [
             'index' => ['model' => 'User', 'submodel' => 'index', 'action' => 'read'],
+            'detail' => ['model' => 'User', 'submodel' => 'index', 'action' => 'read'],
             'blocked_users' => ['model' => 'User', 'submodel' => 'blocked_users', 'action' => 'read'],
             'edit' => ['model' => 'User', 'submodel' => 'index', 'action' => 'update'],
             'display' => ['model' => 'User', 'submodel' => 'index', 'action' => 'read'],
             'block_users' => ['model' => 'User', 'submodel' => 'blocked_users', 'action' => 'update'],
-            'get_user_notification' => ['model' => 'User', 'submodel' => 'index', 'action' => 'update'],
+            'get_user_notification' => ['model' => 'User', 'submodel' => 'index', 'action' => 'read'],
             'judicialyuan' => ['model' => 'User', 'submodel' => 'index', 'action' => 'update'],
         ],
     ],
