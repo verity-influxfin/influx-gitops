@@ -8,9 +8,9 @@
         class="d-sm-block d-none img-fluid"
       />
       <img
-        src="@/asset/images/2022_campus_ambassador/2022-campus-cover.png"
+        src="@/asset/images/2022_campus_ambassador/2022-campus-cover-phone.png"
         alt="2022普匯校園大使"
-        class="d-sm-none d-block img-fluid"
+        class="d-sm-none d-block w-100"
       />
       <div class="cover-join">
         <button class="btn btn-campus-primary" @click="scrollToJoin">
@@ -324,17 +324,16 @@
               <div class="slide-content">
                 <div>
                   <img
-                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-1.png"
+                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-9.png"
                     alt=""
-                    class="img-fluid history-img"
+                    class="img-fluid"
                   />
                 </div>
                 <div class="card">
                   <div class="card-body">
-                    <div class="card-title">黃稔桐/銘傳大學</div>
+                    <div class="card-title">陳柔瑄/成功大學</div>
                     <div class="card-text">
-                      我是銘傳大學國企系的黃稔桐，當初會想加入的原因是想增加自己的見聞，想增加一些對fintech
-                      的知識。認識了一班積極的人，又為我未來發展提供了許多有用的意見！
+                      擔任校園大使的過程中，普匯的正職和實習生都非常認真的帶領我們，每一次的培訓課都學習到很多職場與商業市場上應具備的思維，期間也參與了一些記者會、發表會，讓我大開了眼界。在提案過程中學習到提案的技巧、溝通表達、成本效益估算等，這些是學校接觸不到的～如果還在猶豫要不要擔任普匯校園大使的同學，報名下去就對了，絕對會收穫滿滿的！
                     </div>
                   </div>
                 </div>
@@ -344,7 +343,7 @@
                   <div class="card-body">
                     <div class="card-title">鄭裕庭/海洋大學</div>
                     <div class="card-text">
-                      我是鄭裕庭，大學就讀位於基隆的海洋大學，科系是電機系。我對金融以及科技的應用都十分感興趣，因此我在大四的時候加入了普匯校園大使的大家庭。
+                      加入普匯後，我認識了許多其他不同學校的校園大使，每次在發表會上聽到各組的提案，都讓我吸收到了不同的觀點、想法，非常的充實！在普匯你可以盡情揮灑你的創意，發揮你的才能，祝福校園大使們在任期結束後可以收穫滿滿！
                     </div>
                   </div>
                 </div>
@@ -358,21 +357,131 @@
               </div>
             </div>
             <div class="swiper-slide">
+              <div class="slide-content">
+                <div>
+                  <img
+                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-3.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-title">林亭妤/成功大學</div>
+                    <div class="card-text">
+                      因想更了解金融科技領域而家入校園大使，學到很多提案技巧、邏輯及發想方法，每組都激發出各種有創意的提案，最棒的是能實際體驗職場上的提案環節！雖然非常的緊張，但完全被公司和善的氣氛感染，期間也會參與記者會、發表會等金融科技盛事。非常推薦大家～
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="slide-content slide-content-2">
                 <div class="card">
                   <div class="card-body">
-                    <div class="card-title">鄭裕庭/海洋大學</div>
+                    <div class="card-title">林旼潔/淡江大學</div>
                     <div class="card-text">
-                      我是鄭裕庭，大學就讀位於基隆的海洋大學，科系是電機系。我對金融以及科技的應用都十分感興趣，因此我在大四的時候加入了普匯校園大使的大家庭。
+                      加入普匯後，我學到行銷方法和金融知識，也從組員們身上看到如何有效率地規劃事情。在參與校園大使的過程中，讓我最印象深刻的事莫過於向CEO提案，既緊張又害怕，幸好組員很給力，這是很難得的經驗～想對下一屆校園大使說期待你們辦更有創意的活動，體驗更多沒有做過的事！
                     </div>
                   </div>
                 </div>
                 <div>
                   <img
-                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-2.png"
+                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-7.png"
                     alt=""
                     class="img-fluid"
                   />
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="slide-content">
+                <div>
+                  <img
+                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-8.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-title">邱上銘/大學</div>
+                    <div class="card-text">
+                      這次參加校園大使的活動，讓我受益良多，以前會覺得參加這種長期活動會花費很多時間，但加入後才發現，可以讓我們將學校所學的知識實際操作出來，也讓我更了解現在的趨勢，不只是會死讀書而能夠學以致用，謝謝普匯讓我有機會接觸到金融科技產業～
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slide-content slide-content-2">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-title">曾柔瑄/台北商業大學</div>
+                    <div class="card-text">
+                      當初在學校聽到金融科技的演講就很想了解相關的資訊，剛好看到普匯有在徵校園大使就決定報名了，過程中不但可以學習金融科技知識還可以讓我們自己的提案落地，真正執行後也才知道其實需要考慮的東西很多，也會有許多困難需要克服，希望未來的校園大使能互相團結合作，想出更棒的提案。
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <img
+                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-6.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="slide-content">
+                <div>
+                  <img
+                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-4.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-title">張若瑜/大學</div>
+                    <div class="card-text">
+                      當初因為活動內容和自己科系有關係，也想多增加自己的經歷因此選擇加入校園大使，加入後主要負責宣傳普匯產品、學習舉辦活動，也認識到普匯品牌和借貸市場的一些知識，增加了我的視野～
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="slide-content slide-content-2">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-title">林沛含/清華大學</div>
+                    <div class="card-text">
+                      擔任校園大使期間，和組員們之間每一次的討論和任務都很順利，印象最深刻的是辦理線上和實體講座的過程，希望未來普匯的大使都能把握認識不同校同學的機會，開拓自己的提案與執行能力～
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <img
+                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-5.png"
+                    alt=""
+                    class="img-fluid"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="slide-content">
+                <div>
+                  <img
+                    src="@/asset/images/2022_campus_ambassador/2022-campus-history-1.png"
+                    alt=""
+                    class="img-fluid history-img"
+                  />
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-title">黃稔桐/銘傳大學</div>
+                    <div class="card-text">
+                      當初會想加入的原因是想增加自己的見聞，想增加一些對fintech
+                      的知識。認識了一班積極的人，又為我未來發展提供了許多有用的意見！
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1121,7 +1230,7 @@ $color__background--primary: #f3f9fc;
   }
   .campus-2022 {
     .cover .cover-join {
-      bottom: 60px;
+      bottom: 36%;
     }
     .intro {
       padding: 60px 0 200px;
@@ -1321,16 +1430,21 @@ $color__background--primary: #f3f9fc;
       .swiper {
         margin-top: 15px;
       }
+      .swiper-wrapper {
+        align-items: center;
+      }
       .slide-content {
         &-2 {
           grid-template-columns: 7fr 5fr;
         }
         display: grid;
         gap: 15px;
+        align-items: center;
         grid-template-columns: 5fr 7fr;
         width: fit-content;
         margin: 0 auto;
         padding-bottom: 40px;
+        overflow: hidden;
       }
       .history-img {
         transform: scale(1.25);
