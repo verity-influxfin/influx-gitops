@@ -124,7 +124,7 @@
                                 if ( ! isset($group_permission_data[$model_key][$submodel_key])) continue;
                                 ?>
                                 <div class="checkbox-group">
-                                    <div class="check-title"><?= $submodel_key_value ?></div>
+                                    <div class="check-title"><?= $submodel_key_value['name'] ?? '' ?></div>
 
                                     <?php foreach ($action_type_list as $action_type_value)
                                     {
@@ -162,7 +162,7 @@
                                 if ( ! isset($admin_permission_data[$model_key][$submodel_key])) continue;
                                 ?>
                                 <div class="checkbox-group">
-                                    <div class="check-title"><?= $submodel_key_value ?></div>
+                                    <div class="check-title"><?= $submodel_key_value['name'] ?? '' ?></div>
 
                                     <?php foreach ($action_type_list as $action_type_value)
                                     {

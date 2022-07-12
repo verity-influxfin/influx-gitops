@@ -108,7 +108,7 @@
                     <div class="panel-body">
                         <?php foreach ($value['menu'] as $submodel_key => $submodel_key_value) { ?>
                             <div class="checkbox-group">
-                                <div class="check-title"><?= $submodel_key_value ?></div>
+                                <div class="check-title"><?= $submodel_key_value['name'] ?? '' ?></div>
                                 <?php foreach ($action_type_list as $action_type_value)
                                 {
                                     $id = "{$model_key}_{$submodel_key}_{$action_type_value['key']}";
