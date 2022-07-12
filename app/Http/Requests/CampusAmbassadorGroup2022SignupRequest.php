@@ -27,9 +27,10 @@ class CampusAmbassadorGroup2022SignupRequest extends FormRequest
     public function rules()
     {
         return [
+            'agree' => ['accepted'],
             'leader' => ['required', 'boolean'],
             'group_name' => ['required', 'max:20'],
-            'name' => ['required'],
+            'name' => ['required', 'max:20'],
             'birthday' => ['required', 'date'],
             'phone' => ['required', new mobile(), 'unique:campus_ambassador_2022,phone'],
             'email' => ['required', 'email'],
@@ -38,7 +39,7 @@ class CampusAmbassadorGroup2022SignupRequest extends FormRequest
             'grade' => ['required', 'in:1,2,3,4,5,6,7'],
             'school_city' => ['required'],
             'social' => ['required', 'url'],
-            'image' => ['required', 'max:3072', 'mimes:jpeg'],
+            'photo' => ['required', 'max:3072', 'mimes:jpeg'],
             'introduction_brief' => ['required', 'max:20'],
             'introduction' => ['required', 'between:200,500'],
             'qa_1' => ['required', 'in:1,2,3'],
@@ -62,12 +63,15 @@ class CampusAmbassadorGroup2022SignupRequest extends FormRequest
             'mimes' => ':attribute檔案格式錯誤',
             'max' => ':attribute檔案過大',
             'between' => ':attribute字數需介於:min-:max',
-            'unique' => ':attribute重複報名',
+            'unique' => '此:attribute重複報名',
             'in' => ':attribute選項有誤',
             'boolean' => ':attribute格式錯誤',
             //
+            'agree.accepted' => '請先閱讀並同意詳情活動辦法及說明',
+            'group_name.max' => ':attribute字數不可大於:max',
+            'name.max' => ':attribute字數不可大於:max',
             'photo.max' => ':attribute檔案過大',
-            'introduction_brief.max' => ':attribute字數不可大於:size',
+            'introduction_brief.max' => ':attribute字數不可大於:max',
             'proposal.max' => ':attribute檔案過大',
             'portfolio.max' => ':attribute檔案過大',
             'video.max' => ':attribute檔案過大',

@@ -55,6 +55,7 @@ class CampusAmbassador2022Controller extends Controller
     public function sign_up_individual(CampusAmbassadorIndividual2022SignupRequest $request): JsonResponse
     {
         try {
+            $input = $request->validated();
             // 檢查上傳檔案
             $file_err_msg = $this->_chk_file($request, array_merge(
                 $this->_get_upload_list_proposal(),
@@ -66,28 +67,31 @@ class CampusAmbassador2022Controller extends Controller
             DB::beginTransaction();
             // 寫入提案作品資料
             $proposal = CampusAmbassadorProposal2022::create([
-                'proposal' => $this->_upload_file($request->post('phone'), 'proposal'),
-                'portfolio' => $this->_upload_file($request->post('phone'), 'portfolio'),
-                'video' => $this->_upload_file($request->post('phone'), 'video'),
+                'proposal' => $this->_upload_file($input['phone'], 'proposal'),
+                'portfolio' => $this->_upload_file($input['phone'], 'portfolio'),
+                'video' => $this->_upload_file($input['phone'], 'video'),
+                'video_link' => $input['video_link'] ?? null,
             ]);
             // 寫入大使資料
             $ambassador = CampusAmbassador2022::create([
+                'agree' => $input['agree'] ? 1 : 0,
                 'identity' => self::IDENTITY_INDIVIDUAL,
                 'proposal_id' => $proposal['id'],
-                'name' => $request->post('name'),
-                'birthday' => $request->post('birthday'),
-                'phone' => $request->post('phone'),
-                'email' => $request->post('email'),
-                'school' => $request->post('school'),
-                'major' => $request->post('major'),
-                'grade' => $request->post('grade'),
-                'school_city' => $request->post('school_city'),
-                'social' => $request->post('social'),
-                'introduction_brief' => $request->post('introduction_brief'),
-                'introduction' => $request->post('introduction'),
-                'qa_1' => $request->post('qa_1'),
-                'qa_2' => $request->post('qa_2'),
-                'qa_3' => $request->post('qa_3'),
+                'name' => $input['name'],
+                'birthday' => $input['birthday'],
+                'phone' => $input['phone'],
+                'email' => $input['email'],
+                'school' => $input['school'],
+                'major' => $input['major'],
+                'grade' => $input['grade'],
+                'school_city' => $input['school_city'],
+                'social' => $input['social'],
+                'introduction_brief' => $input['introduction_brief'],
+                'introduction' => $input['introduction'],
+                'qa_1' => $input['qa_1'],
+                'qa_2' => $input['qa_2'],
+                'qa_3' => $input['qa_3'],
+                'created_ip' => $request->ip(),
             ]);
             CampusAmbassador2022::where('id', $ambassador['phone'])->update([
                 'photo' => $this->_upload_file($ambassador['phone'], 'photo', 'individual')
@@ -107,6 +111,7 @@ class CampusAmbassador2022Controller extends Controller
     public function sign_up_group(CampusAmbassadorGroup2022SignupRequest $request): JsonResponse
     {
         try {
+            $input = $request->validated();
             // 檢查上傳檔案
             $file_err_msg = $this->_chk_file($request, array_merge(
                 $this->_get_upload_list_proposal(),
@@ -117,44 +122,46 @@ class CampusAmbassador2022Controller extends Controller
             }
             DB::beginTransaction();
             // 寫入提案作品資料
-            $proposal = CampusAmbassadorProposal2022::where('group_name', $request->post('group_name'))
+            $proposal = CampusAmbassadorProposal2022::where('group_name', $input['group_name'])
                 ->orderBy('created_at', 'desc')
                 ->first();
             if (empty($proposal)) {
-                $proposal = CampusAmbassadorProposal2022::create(['group_name' => $request->post('group_name')]);
+                $proposal = CampusAmbassadorProposal2022::create(['group_name' => $input['group_name']]);
             }
-            if ($request->post('leader')) {
+            if ($input['leader']) {
                 CampusAmbassadorProposal2022::where('id', $proposal['id'])->update([
-                    'group_name' => $request->post('group_name'),
-                    'proposal' => $this->_upload_file($request->post('phone'), 'proposal'),
-                    'portfolio' => $this->_upload_file($request->post('phone'), 'portfolio'),
-                    'video' => $this->_upload_file($request->post('phone'), 'video'),
+                    'proposal' => $this->_upload_file($input['phone'], 'proposal'),
+                    'portfolio' => $this->_upload_file($input['phone'], 'portfolio'),
+                    'video' => $this->_upload_file($input['phone'], 'video'),
+                    'video_link' => $input['video_link'] ?? null,
                 ]);
             }
             // 寫入大使資料
             $ambassador = CampusAmbassador2022::create([
-                'identity' => $request->post('leader') ? self::IDENTITY_GROUP_LEADER : self::IDENTITY_GROUP_MEMBER,
+                'agree' => $input['agree'] ? 1 : 0,
+                'identity' => $input['leader'] ? self::IDENTITY_GROUP_LEADER : self::IDENTITY_GROUP_MEMBER,
                 'proposal_id' => $proposal['id'],
-                'name' => $request->post('name'),
-                'birthday' => $request->post('birthday'),
-                'phone' => $request->post('phone'),
-                'email' => $request->post('email'),
-                'school' => $request->post('school'),
-                'major' => $request->post('major'),
-                'grade' => $request->post('grade'),
-                'school_city' => $request->post('school_city'),
-                'social' => $request->post('social'),
-                'introduction_brief' => $request->post('introduction_brief'),
-                'introduction' => $request->post('introduction'),
-                'qa_1' => $request->post('qa_1'),
-                'qa_2' => $request->post('qa_2'),
-                'qa_3' => $request->post('qa_3'),
+                'name' => $input['name'],
+                'birthday' => $input['birthday'],
+                'phone' => $input['phone'],
+                'email' => $input['email'],
+                'school' => $input['school'],
+                'major' => $input['major'],
+                'grade' => $input['grade'],
+                'school_city' => $input['school_city'],
+                'social' => $input['social'],
+                'introduction_brief' => $input['introduction_brief'],
+                'introduction' => $input['introduction'],
+                'qa_1' => $input['qa_1'],
+                'qa_2' => $input['qa_2'],
+                'qa_3' => $input['qa_3'],
+                'created_ip' => $request->ip(),
             ]);
             CampusAmbassador2022::where('id', $ambassador['phone'])->update([
                 'photo' => $this->_upload_file($ambassador['phone'], 'photo', 'individual')
             ]);
             DB::commit();
-            return $this->_return_success(['name' => $ambassador['name']], '報名成功', 201);
+            return $this->_return_success(['group_name' => $proposal['group_name']], '報名成功', 201);
         } catch (\Exception $e) {
             DB::rollBack();
             if (!empty($ambassador['phone'])) {

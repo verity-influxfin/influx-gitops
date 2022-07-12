@@ -29,7 +29,8 @@ class CampusAmbassadorIndividual2022SignupRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required'],
+            'agree' => ['accepted'],
+            'name' => ['required', 'max:20'],
             'birthday' => ['required', 'date'],
             'phone' => ['required', new mobile(), 'unique:campus_ambassador_2022,phone'],
             'email' => ['required', 'email'],
@@ -60,11 +61,13 @@ class CampusAmbassadorIndividual2022SignupRequest extends FormRequest
             'date' => ':attribute日期格式錯誤',
             'mimes' => ':attribute檔案格式錯誤',
             'between' => ':attribute字數需介於:min-:max',
-            'unique' => ':attribute重複報名',
+            'unique' => '此:attribute重複報名',
             'in' => ':attribute選項有誤',
             //
+            'agree.accepted' => '請先閱讀並同意詳情活動辦法及說明',
+            'name.max' => ':attribute字數不可大於:max',
             'photo.max' => ':attribute檔案過大',
-            'introduction_brief.max' => ':attribute字數不可大於:size',
+            'introduction_brief.max' => ':attribute字數不可大於:max',
             'proposal.max' => ':attribute檔案過大',
             'portfolio.max' => ':attribute檔案過大',
             'video.max' => ':attribute檔案過大',

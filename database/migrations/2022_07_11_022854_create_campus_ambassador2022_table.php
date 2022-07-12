@@ -15,6 +15,7 @@ class CreateCampusAmbassador2022Table extends Migration
     {
         Schema::create('campus_ambassador_2022', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('agree')->nullable(false)->default(0)->comment('同意活動辦法(0:不同意,1:同意)');
             $table->tinyInteger('identity')->nullable(false)->comment('身份別(1:個人組,2:團體組組長,3:團體組組員)');
             $table->integer('proposal_id')->nullable(false)->comment('提案作品id');
             $table->string('name', 50)->nullable(false)->comment('姓名');
