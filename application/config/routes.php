@@ -148,6 +148,8 @@ $route['admin/(Passbook|passbook)/user_bankaccount_edit'] = 'admin/Certification
 // [法人管理]
 $route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)'] = 'admin/Judicialperson/index';
 $route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)_edit'] = 'admin/Judicialperson/edit';
+$route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)_success'] = 'admin/Judicialperson/apply_success';
+$route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)_failed'] = 'admin/Judicialperson/apply_failed';
 $route['admin/(Judicialperson|judicialperson)/cooperation_(apply|management)'] = 'admin/Judicialperson/cooperation';
 $route['admin/(Judicialperson|judicialperson)/cooperation_(apply|management)_edit'] = 'admin/Judicialperson/cooperation_edit';
 $route['admin/(Judicialperson|judicialperson)/cooperation_(apply|management)_success'] = 'admin/Judicialperson/cooperation_success';
