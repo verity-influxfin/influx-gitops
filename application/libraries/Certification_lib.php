@@ -318,9 +318,10 @@ class Certification_lib{
 			$info = $this->CI->user_certification_model->get($id);
             if ($info && $info->status != CERTIFICATION_STATUS_FAILED)
             {
-				$info->content 			= json_decode($info->content,true);
-                $info->remark           = $info->remark!=''?json_decode($info->remark,true):[];
-				$info->remark['fail'] 	= $fail;
+                $info->content = isJson($info->content) ? json_decode($info->content, TRUE) : [];
+                $info->remark = json_decode($info->remark, TRUE);
+                $info->remark = is_array($info->remark) ? $info->remark : [];
+                $info->remark['fail'] = $fail;
 				$certification 	= $this->certification[$info->certification_id];
 				$param = [
                     'status'    => 2,
@@ -769,7 +770,6 @@ class Certification_lib{
             $content = json_decode($info->content, TRUE);
             $verifiedResult = new StudentCertificationResult(CERTIFICATION_STATUS_SUCCEED);
             $sys_check = SYSTEM_CHECK;
-            $reference = $content['front_image_id'] . '-' . $content['back_image_id'];
             $content['meta'] ?? [];
 
             $this->CI->load->library('scraper/sip_lib');
@@ -806,7 +806,7 @@ class Certification_lib{
                                                 // 判斷是否有資料
                                                 if ($sip_data && isset($sip_data['response']['result']))
                                                 {   
-                                                    $name = $name ?? '';
+                                                    $name = $user_info['name']  ?? '';
                                                     $id_number = $user_info['id_number'] ?? '';
                                                     $sip_name = $sip_data['response']['result']['name'] ?? '';
                                                     $sip_id_number = $sip_data['response']['result']['idNumber'] ?? '';
@@ -2555,19 +2555,20 @@ class Certification_lib{
 	private function diploma_success($info){
 		if($info){
 			$content 	= $info->content;
-			$data 		= array(
-				'diploma_status'	=> 1,
-				'diploma_name'		=> $content['school'],
-                'diploma_major'		=> $content['major'],
-                'diploma_department'=> $content['department'],
-                'diploma_system'	=> $content['system'],
-				'diploma_image'		=> $content['diploma_image'][0],
-			);
+            if ( ! empty($content) && ! empty($content['school']))
+            {
+                $data = array(
+                    'diploma_status' => 1,
+                    'diploma_name' => $content['school'],
+                    'diploma_major' => $content['major'],
+                    'diploma_department' => $content['department'],
+                    'diploma_system' => $content['system'],
+                    'diploma_image' => $content['diploma_image'][0],
+                );
 
-            $rs = $this->user_meta_progress($data,$info);
-			if($rs){
-                return $this->fail_other_cer($info);
-			}
+                $this->user_meta_progress($data, $info);
+            }
+			return $this->fail_other_cer($info);
 		}
 		return false;
 	}
@@ -3168,6 +3169,18 @@ class Certification_lib{
                 }
             }
 
+            $skip_certification_ids = [];
+            if ( ! empty($target))
+            {
+                $this->CI->load->model('loan/target_meta_model');
+                $target_meta = $this->CI->target_meta_model->as_array()->get_by([
+                    'target_id' => $target->id,
+                    'meta_key' => 'skip_certification_ids'
+                ]);
+                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
+                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
+            }
+
 			foreach($certification as $key => $value){
 				$userId = $user_id;
 				if($company){
@@ -3185,14 +3198,21 @@ class Certification_lib{
                     $value['expire_time'] = $user_certification->expire_time;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
-				}else{
-					$value['user_status'] 		 = null;
-					$value['certification_id'] 	 = null;
-					$value['updated_at'] 		 = null;
-                    $value['expire_time'] = NULL;
 				}
+                else
+                {
+                    $value['user_status'] = NULL;
+                    $value['certification_id'] = NULL;
+                    $value['updated_at'] = NULL;
+                    $value['expire_time'] = NULL;
+                }
 
-                    $certification_list[$key] = $value;
+                if (in_array($key, $skip_certification_ids))
+                {
+                    $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                }
+
+                $certification_list[$key] = $value;
             }
 			return $certification_list;
 		}

@@ -699,7 +699,7 @@ class Target_model extends MY_Model
     public function get_by_multi_product(int $user_id, array $target_status, array $prod_subprod_id)
     {
         $this->db
-            ->select('id')
+            ->select('id, status, sub_status')
             ->from('p2p_loan.targets')
             ->where('user_id', $user_id)
             ->where_in('status', $target_status);
@@ -769,6 +769,7 @@ class Target_model extends MY_Model
         $month_end = $month_end->setTime(0, 0, 0)->getTimestamp();
 
         $sub_query = "SELECT
+            t.`id`,
             t.`user_id`,
             t.`product_id`,
             t.`sub_product_id`,
@@ -781,6 +782,7 @@ class Target_model extends MY_Model
 
         $this->load->model('loan/target_model');
         $loan_targets = $this->target_model->db->select([
+            'id',
             'user_id',
             'product_id',
             'sub_product_id',
@@ -815,6 +817,19 @@ class Target_model extends MY_Model
     // 統計各種案件數量，針對申貸&成交都可以用
     private function _list_products_at_targets($targets)
     {
+        $subloan_target_ids = [];
+        if ( ! empty($targets))
+        {
+            $this->db->select('new_target_id')
+                ->from('p2p_loan.subloan')
+                ->where_in('target_id', array_column($targets, 'id'));
+            $rs = $this->db->get()->result_array();
+            if ( ! empty($rs))
+            {
+                $subloan_target_ids = array_column($rs, 'new_target_id');
+            }
+        }
+
         $result = [
             'SMART_STUDENT' => 0,
             'STUDENT' => 0,
@@ -826,6 +841,12 @@ class Target_model extends MY_Model
 
         foreach ($targets as $target)
         {
+            // 產轉的案件不能計算進來
+            if ( ! empty($subloan_target_ids) && in_array($target['id'], $subloan_target_ids))
+            {
+                continue;
+            }
+
             switch (TRUE)
             {
             case $target['product_id'] == PRODUCT_ID_STUDENT && $target['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT:
@@ -863,4 +884,32 @@ class Target_model extends MY_Model
         }
         return FALSE;
     }
+
+    /**
+     * 取得案件詳細相關資訊
+     * @param $conditions
+     * @return array
+     */
+    public function get_targets_detail($conditions): array
+    {
+        if ( ! empty($conditions))
+        {
+            $this->_set_where([$conditions]);
+        }
+
+        $this->_database->select('*')
+            ->from('`p2p_loan`.`targets`');
+        $target_query = $this->_database->get_compiled_select('', TRUE);
+
+        $rs = $this->_database
+            ->select('`r`.*, `c`.`level`, `c`.`points`, `c`.`amount` AS `credit_amount`, `c`.`status` AS `credit_status`')
+            ->select('`c`.`expire_time` AS `credit_expire_time`, `c`.`created_at` AS `credit_created_at`')
+            ->select('`cs`.`unused_credit_line`')
+            ->from('`p2p_loan`.`credit_sheet` AS `cs`')
+            ->join("($target_query) as `r`", '`cs`.`target_id` = `r`.`id`', 'right')
+            ->join('`p2p_loan`.`credits` AS `c`', '`c`.`id` = `cs`.`credit_id`', 'left');
+
+        return $rs->get()->result_array();
+    }
+
 }

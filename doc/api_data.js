@@ -7237,6 +7237,19 @@ define({
                     ]
                 }
             },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "target_id",
+                            "description": "<p>案件流水號</p>"
+                        }
+                    ]
+                }
+            },
             "success": {
                 "fields": {
                     "Success 200": [
@@ -22550,6 +22563,34 @@ define({
                             "type": "Number",
                             "field": "repayment",
                             "description" : "<p>還款方式<br/>1:本息均攤<br/>2:繳息不還本</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "company_category",
+                            "description" : "<p>選擇職業<br/>1:一般企業<br/>2:金融機構<br/>3:公家機關<br/>4:上市櫃</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_contract_images",
+                            "description" : "<p>購車合約照片 (多張使用逗號,隔開)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "house_contract_images",
+                            "description" : "<p>購屋合約照片 (多張使用逗號,隔開)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "renovation_contract_images",
+                            "description" : "<p>裝修合約照片 (多張使用逗號,隔開)</p>"
                         }
                     ]
                 }
@@ -49768,6 +49809,120 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/product/re_submit"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/product/skip_certification",
+            "title": "借款方 略過徵信項資料上傳",
+            "version": "0.2.0",
+            "name": "PostProductSkipCertification",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>案件流水號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "certification_ids",
+                            "description": "<p>欲略過的徵信項號碼 (以,分隔)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    \"result\":\"SUCCESS\",\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "8",
+                            "description": "<p>資料庫發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "801",
+                            "description": "<p>標的不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "807",
+                            "description": "<p>標的狀態不符</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "8",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"data\": {},\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"data\": {},\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "801",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"data\": {},\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "807",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"data\": {},\n}",
+                        "type": "Object"
+                    },
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/skip_certification"
                 }
             ]
         }

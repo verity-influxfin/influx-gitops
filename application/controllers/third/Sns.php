@@ -103,9 +103,14 @@ class Sns extends REST_Controller {
                         ]);
                         $this->process_mail($info, null, $cert_info, $s3_url, $certification_id);
                     } else {
-                        // 沒附件直接失敗
-                        $this->certification_lib->set_failed($info[0]->id, '資料缺少附件', true);
-                        $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
+                        // 針對沒有附件的徵信項才退
+                        $content = json_decode($info[0]->content, TRUE);
+                        if ( ! $content['mail_file_status'])
+                        {
+                            // 沒附件直接失敗
+                            $this->certification_lib->set_failed($info[0]->id, '資料缺少附件', TRUE);
+                            $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
+                        }
                     }
                 }
 			}
