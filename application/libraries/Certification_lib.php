@@ -468,7 +468,7 @@ class Certification_lib{
             'content' => $info->content,
             'risVerified' => FALSE, // 勾稽戶役政 API
             'risVerificationFailed' => TRUE, // 勾稽戶役政 API
-            'ocrCheckFailed' => TRUE,
+            'ocrCheckFailed' => FALSE,
         ];
 
         $content = json_decode($info->content, TRUE);
@@ -523,14 +523,6 @@ class Certification_lib{
         {
             $return_data['remark']['error'] = 'OCR 沒有在正常時間內回應，無法進行實名驗證.<br/>';
             return $return_data;
-        }
-
-        // 檢查三張證件照的資料是否完整
-        if ($ocr_result['infoValidation']['id_card']['is_info_complete']
-            && $ocr_result['infoValidation']['id_card_back']['is_info_complete']
-            && $ocr_result['infoValidation']['health_card']['is_info_complete'])
-        {
-            $return_data['ocrCheckFailed'] = FALSE;
         }
 
         // 補上 OCR 辨識結果的錯誤訊息
