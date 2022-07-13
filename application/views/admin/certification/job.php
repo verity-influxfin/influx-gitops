@@ -37,22 +37,12 @@
 										</a>
 									</div>
                                     <div class="form-group">
-                                        <label>公司</label>
+                                        <label>公司統編</label>
                                         <p class="form-control-static"><?=isset($content['tax_id'])?$content['tax_id']:""?></p>
-                                    <?
-                                    if(($data->status==3||$data->status==4)){
-                                        echo '<form role="form" method="post">
-                                        <div class="form-group">
-                                            <input type="text" name="company" value="' . ($content['company'] ?? '') . '" />
-                                            <input type="hidden" name="id" value="' . $data->id . '" >
-                                            <input type="hidden" name="from" value="' . $from . '" >
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">確認公司名</button>
-                                        </form>';
-                                    }
-                                    else {
-                                        echo '<p class="form-control-static">'.(isset($content['company'])?$content['company']:"").'</p>';
-                                    } ?>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>公司名稱</label>
+                                        <p class="form-control-static"><?=(isset($content['company'])?$content['company']:"")?></p>
                                     </div>
                                     <?
                                     if(isset($content['company_address'])) {

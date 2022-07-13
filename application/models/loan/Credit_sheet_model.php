@@ -55,11 +55,12 @@ class Credit_sheet_model extends MY_Model
     }
 
     public function insertWhenEmpty($insertData, $condition) {
-        $this->db
+        $this->_database
             ->select('*')
-            ->from('`p2p_loan`.`credit_sheet`')
-            ->where($condition);
-        $subQuery = $this->db->get_compiled_select('', TRUE);
+            ->from('`p2p_loan`.`credit_sheet`');
+        $this->_set_where([$condition]);
+
+        $subQuery = $this->_database->get_compiled_select('', TRUE);
         $keys = array_keys($insertData);
         $values = array_values($insertData);
         $sql = 'INSERT INTO `p2p_loan`.`credit_sheet` ('.

@@ -516,10 +516,7 @@ abstract class Certification_base implements Certification_definition
         {
             foreach ($target_list as $value)
             {
-                $this->CI->target_model->update_by(
-                    ['id' => $value['id']],
-                    ['status' => $value['status'] == TARGET_WAITING_SIGNING ? TARGET_WAITING_APPROVE : TARGET_ORDER_WAITING_VERIFY]
-                );
+                $this->CI->target_lib->withdraw_target_to_unapproved($value);
             }
         }
 

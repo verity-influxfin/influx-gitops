@@ -646,6 +646,7 @@ class Certification extends MY_Admin_Controller {
 					$page_data['verify_list'] 			= $this->user_bankaccount_model->verify_list;
 					$page_data['investor_list'] 		= $this->user_bankaccount_model->investor_list;
                     $page_data['status_list'] 			= $this->user_certification_model->status_list;
+                    $page_data['certifications_msg'] = $this->config->item('certifications_msg');
 
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
@@ -675,33 +676,40 @@ class Certification extends MY_Admin_Controller {
 				alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
 			}
 		}else{
-			if(!empty($post['id'])){
-				$info = $this->user_bankaccount_model->get($post['id']);
-				if($info){
-					if($post['status']=='2'){
-						$this->load->model('log/log_usercertification_model');
+            if ( ! empty($post['id']))
+            {
+                $info = $this->user_bankaccount_model->get($post['id']);
+                $fail = $post['fail'] ?? '';
+                $fail = empty($post['fail2']) ? $fail : $post['fail2'];
+                if ($info)
+                {
+                    $cert = Certification_factory::get_instance_by_id($info->user_certification_id);
+                    if ( ! $cert->is_failed())
+                    {
+                        $this->load->model('log/log_usercertification_model');
                         $this->log_usercertification_model->insert(array(
-                            'user_certification_id'	=> $info->user_certification_id,
-                            'status'				=> 2,
-                            'change_admin'			=> $this->login_info->id,
+                            'user_certification_id' => $info->user_certification_id,
+                            'status' => 2,
+                            'change_admin' => $this->login_info->id,
                         ));
-                        $cert = Certification_factory::get_instance_by_id($info->user_certification_id);
-                        $cert->set_failure(FALSE, '您的金融認證驗證失敗，請重新提供');
-                        $this->user_bankaccount_model->update($post['id'],array('verify'=>4,'status'=>0));
-                        $rs = true;
+                        $cert->set_failure(FALSE, $fail);
+                        $this->user_bankaccount_model->update($post['id'], array('verify' => 4, 'status' => 0));
+                        alert('更新成功', admin_url('close'));
                     }
-
-                    if($rs===true){
-                        alert('更新成功',admin_url('certification/user_bankaccount_list'));
-                    }else{
-                        alert('更新失敗，請洽工程師',admin_url('certification/user_bankaccount_list'));
+                    else
+                    {
+                        alert('金融驗證已經是失敗狀態，無法更新', admin_url('close'));
                     }
-				}else{
-					alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
-				}
-			}else{
-				alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
-			}
+                }
+                else
+                {
+                    alert('ERROR , id is not exist', admin_url('close'));
+                }
+            }
+            else
+            {
+                alert('ERROR , id is not exist', admin_url('close'));
+            }
 		}
 	}
 

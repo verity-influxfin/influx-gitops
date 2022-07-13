@@ -56,7 +56,8 @@ class PersonalCreditSheet extends CreditSheetBase {
         $this->user = $user;
         $filteredTime = time();
 
-        $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0]);
+        $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0,
+            'status' => [self::STATUS_UNAPPROVED, self::STATUS_APPROVED]]);
         if(isset($this->creditSheetRecord)) {
             $this->finalReviewerLevel = $this->creditSheetRecord->review_level;
             if ($this->creditSheetRecord->status == 1) {
@@ -65,16 +66,17 @@ class PersonalCreditSheet extends CreditSheetBase {
             }
         } else {
             $this->CI->credit_sheet_model->insertWhenEmpty(
-                ['target_id' => $this->target->id ?? 0, 'status' => 0,
+                ['target_id' => $this->target->id ?? 0, 'status' => self::STATUS_UNAPPROVED,
                     'review_level' => $this->finalReviewerLevel,
                     'relation' => '{}', 'certification_list' => '[]',
                     'interest_type' => self::INTEREST_TYPE_EQUAL_TOTAL_PAYMENT,
                     'drawdown_type' => self::DRAWDOWN_TYPE_PARTIAL,
                     'note' => '',
-                    ],
-                ['target_id' => $this->target->id ?? 0]
+                ],
+                ['target_id' => $this->target->id ?? 0, 'status' => [self::STATUS_UNAPPROVED, self::STATUS_APPROVED]]
             );
-            $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0]);
+            $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0,
+                'status' => [self::STATUS_UNAPPROVED, self::STATUS_APPROVED]]);
         }
 
         $this->repayableTargets = $this->CI->target_model->getRepaymentingTargets(
@@ -293,12 +295,32 @@ class PersonalCreditSheet extends CreditSheetBase {
                 'credit_category' => $this->basicInfo->getCreditCategory(),
                 'product_category' => json_encode($productCategories),
                 'note' => '',
-                'status' => 1,
+                'status' => self::STATUS_APPROVED,
             ]);
         } else {
             return FALSE;
         }
         return TRUE;
+    }
+
+    /**
+     * 失效授審表
+     * @return bool
+     */
+    public function cancel(): bool
+    {
+        if ( ! empty($this->creditRecord))
+        {
+            $this->CI->credit_model->update_by(
+                ['id' => $this->creditRecord->id],
+                ['status' => 0]
+            );
+        }
+        return $this->CI->credit_sheet_model->update_by(['id' => $this->creditSheetRecord->id],
+            [
+                'status' =>  self::STATUS_CANCELED
+            ]
+        );
     }
 
     /**
