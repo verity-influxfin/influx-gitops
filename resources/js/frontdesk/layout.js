@@ -184,6 +184,11 @@ $(() => {
                 this.isSended = false;
                 this.isReset = !this.isReset;
             },
+            loginReload(path) {
+              // path with Reload
+              const reloadPath = ['/invest-report', '/risk', '/2022-campus-ambassador']
+              return reloadPath.some(x => x === path)
+            },
             goFeedback() {
                 let { userData, $router } = this;
 
@@ -223,8 +228,8 @@ $(() => {
                                 .then((res) => {
                                     this.$store.commit('mutationUserData', res.data);
                                     $(this.$refs.loginForm).modal("hide");
-                                    // 5th
-                                    if (this.$route.path === '/5th-anniversary'|| this.$route.path === '/invest-report' || this.$route.path === '/risk' ) {
+                                    // check reload
+                                    if(this.loginReload(this.$route.path)){
                                         location.reload()
                                         return
                                     }
