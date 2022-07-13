@@ -3,7 +3,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Cron extends CI_Controller
 {
-
+    function test()
+    {
+        $a=['a'=>['aa'=>null,'bb'=>null]];
+        if(!isset($a['a']['aa']))
+        {
+            echo 'N';
+        }
+        else
+        {
+            echo 'Y';
+        }
+    }
 
 	function __construct()
 	{

@@ -290,14 +290,23 @@ class Cert_job extends Certification_base
     private function _get_ocr_info()
     {
         $result = [];
-        if ( ! isset($this->content['ocr_marker']['res']) || $this->content['ocr_marker']['res'] !== TRUE)
+        if ( ! isset($this->content['ocr_marker']['res']))
         {
             $cert_ocr_marker = Ocr_marker_factory::get_instance($this->certification);
             $ocr_marker_result = $cert_ocr_marker->get_result();
-            if ($ocr_marker_result['success'] === TRUE && $ocr_marker_result['code'] != 201)
+            if ($ocr_marker_result['success'] === TRUE)
             {
+                if ($ocr_marker_result['code'] == 201 || $ocr_marker_result['code'] == 202)
+                { // OCR 任務剛建立，或是 OCR 任務尚未辨識完成
+                    return $result;
+                }
                 $result['ocr_marker']['res'] = TRUE;
                 $result['ocr_marker']['content'] = $ocr_marker_result['data'];
+            }
+            else
+            {
+                $result['ocr_marker']['res'] = FALSE;
+                $result['ocr_marker']['msg'] = $ocr_marker_result['msg'];
             }
         }
 

@@ -234,7 +234,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         }
         if (empty($res['response_body']))
         {
-            return $this->return_failure('Task processing has not done yet.');
+            return $this->return_success([], 'Task processing has not done yet.', 202);
         }
         return $this->return_success($res['response_body']);
     }
