@@ -2612,11 +2612,10 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
 			];
 
             if ($cer_exists) {
-                $param['status'] = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
                 $rs = $this->user_certification_model->update($cer_exists->id, $param);
             }else{
                 $rs = $this->user_certification_model->insert($param);

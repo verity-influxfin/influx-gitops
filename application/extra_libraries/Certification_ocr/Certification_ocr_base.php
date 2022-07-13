@@ -145,6 +145,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
             return $this->create_ocr_task($body['data']);
         }
 
+        // OCR 任務 response
         $res = $this->get_ocr_task_response($task_id);
         if ($res['success'] === FALSE)
         {

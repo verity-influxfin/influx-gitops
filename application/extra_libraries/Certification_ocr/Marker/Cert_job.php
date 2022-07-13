@@ -61,8 +61,8 @@ class Cert_job extends Ocr_marker_base
             }
             $content[] = [
                 'url' => $img['url'],
-                'input_kw_list' => $img['input_kw_list'] ?? [],
-                'salary_kw_list' => $img['salary_kw_list'] ?? []
+                'input_kw_mat' => $img['input_kw_mat'] ?? [],
+                'salary_kw_mat' => $img['salary_kw_mat'] ?? []
             ];
         }
         return $content;

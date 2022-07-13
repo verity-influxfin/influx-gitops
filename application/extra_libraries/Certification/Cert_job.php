@@ -312,6 +312,10 @@ class Cert_job extends Certification_base
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
             return FALSE;
         }
+        else
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        }
         return TRUE;
     }
 }

@@ -274,7 +274,7 @@
                                                 <?php
                                                 foreach ($content['ocr_marker']['content'] as $value)
                                                 {
-                                                    if (empty($value['input_kw_list']) && empty($value['salary_kw_list']))
+                                                    if (empty($value['input_kw_mat']) && empty($value['salary_kw_mat']))
                                                     {
                                                         continue;
                                                     } ?>
@@ -285,15 +285,17 @@
                                                                      style="width:100%;max-width:300px">
                                                             </a>
                                                         </div>
-                                                        <div class="col-lg-3">
+                                                        <div class="col-lg-9">
                                                             <label>身份關鍵字：</label>
                                                             <br/>
-                                                            <?= implode("<br/>", $value['input_kw_list']) ?>
-                                                        </div>
-                                                        <div class="col-lg-6">
+                                                            <?php foreach ($value['input_kw_mat'] as $kw_value) {
+                                                                echo implode(' ', $kw_value) . '<br/>';
+                                                            } ?>
                                                             <label>收入關鍵字：</label>
                                                             <br/>
-                                                            <?= implode("<br/>", $value['salary_kw_list']) ?>
+                                                            <?php foreach ($value['salary_kw_mat'] as $kw_value) {
+                                                                echo implode(' ', $kw_value) . '<br/>';
+                                                            } ?>
                                                         </div>
                                                     </div>
                                                     <hr/>

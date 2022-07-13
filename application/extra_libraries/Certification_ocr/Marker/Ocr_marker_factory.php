@@ -18,7 +18,7 @@ class Ocr_marker_factory
             case CERTIFICATION_JOB:
                 return new Cert_job($info);
             default:
-                log_msg('error', "欲建立未支援的認證徵信OCR項目 (認證編號:{$info['certification_id']}) ");
+                log_msg('error', "欲建立未支援的認證徵信 OCR marker 項目 (認證編號:{$info['certification_id']}) ");
                 return NULL;
         }
     }
