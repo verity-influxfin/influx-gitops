@@ -368,7 +368,6 @@
                 name="social"
                 placeholder="請輸入您的社群連結"
                 required
-                maxlength="20"
               />
             </div>
           </div>
