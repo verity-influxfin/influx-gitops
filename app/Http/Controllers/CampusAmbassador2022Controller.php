@@ -8,6 +8,7 @@ use App\Models\CampusAmbassador2022;
 use App\Models\CampusAmbassadorProposal2022;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CampusAmbassador2022Controller extends Controller
 {
@@ -209,8 +210,17 @@ class CampusAmbassador2022Controller extends Controller
             return null;
         }
         $file = $this->file_list[$file_list_index]['file'];
+
+        if (file_get_contents($file) === FALSE) {
+            return null;
+        }
+
         $filename = ($this->file_list[$file_list_index]['name'] ?? $file_list_index) . "_{$phone}." . $file->getClientOriginalExtension();
-        $file->move("{$this->base_upload_dir}/{$type}/{$phone}", $filename);
+
+        Storage::disk('local')->put(
+            "{$this->base_upload_dir}/{$type}/{$phone}/{$filename}",
+            file_get_contents($file)
+        );
 
         return $filename;
     }
