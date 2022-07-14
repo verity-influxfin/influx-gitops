@@ -1515,17 +1515,6 @@ class Product extends REST_Controller {
                     ];
                 }
             }
-            $skip_certification_ids = [];
-            if ( ! empty($target))
-            {
-                $this->load->model('loan/target_meta_model');
-                $target_meta = $this->target_meta_model->as_array()->get_by([
-                    'target_id' => $target->id,
-                    'meta_key' => 'skip_certification_ids'
-                ]);
-                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
-                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
-            }
             if(!empty($certification_list)){
                 $this->load->helper('target');
                 $this->load->helper('user_certification');
@@ -1562,11 +1551,7 @@ class Product extends REST_Controller {
 					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
-                        if (in_array($key, $skip_certification_ids))
-                        {
-                            $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
-                        }
-                        else if (certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0))
+                        if (certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0))
                         {
                             $value['user_status'] = NULL;
                             $value['certification_id'] = NULL;
