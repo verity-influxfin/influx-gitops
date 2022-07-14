@@ -847,10 +847,10 @@ $color--primary: #f2b162;
       }
       .rating-row {
         display: grid;
-        padding: 8px 35px;
+        padding: 8px 30px;
         max-width: 600px;
         margin: 0 auto;
-        grid-template-columns: 1fr 3fr 1fr;
+        grid-template-columns: 3fr 5fr 2fr;
         justify-content: center;
         align-items: center;
         gap: 15px;
