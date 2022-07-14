@@ -161,7 +161,7 @@ class CampusAmbassador2022Controller extends Controller
                 'photo' => $this->_upload_file($ambassador['phone'], 'photo', 'individual')
             ]);
             DB::commit();
-            return $this->_return_success(['group_name' => $proposal['group_name']], '報名成功', 201);
+            return $this->_return_success(['group_name' => $proposal['group_name'], 'name' => $ambassador['name']], '報名成功', 201);
         } catch (\Exception $e) {
             DB::rollBack();
             if (!empty($ambassador['phone'])) {
