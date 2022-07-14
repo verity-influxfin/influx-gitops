@@ -113,18 +113,19 @@ class Cert_diploma extends Certification_base
     public function post_success($sys_check): bool
     {
         $content = $this->content;
-        if ( ! empty($content) && ! empty($content['school']))
-        {
-            $data = array(
-                'diploma_status' => 1,
-                'diploma_name' => $content['school'] ?? '',
-                'diploma_major' => $content['major'] ?? '',
-                'diploma_department' => $content['department'] ?? '',
-                'diploma_system' => $content['system'] ?? '',
-                'diploma_image' => $content['diploma_image'][0] ?? '',
-            );
+        $data = array(
+            'diploma_status' => 1,
+            'diploma_name' => $content['school'],
+            'diploma_major' => $content['major'],
+            'diploma_department' => $content['department'],
+            'diploma_system' => $content['system'],
+            'diploma_image' => $content['diploma_image'][0],
+        );
 
-            $this->CI->certification_lib->user_meta_progress($data, $this->certification);
+        $rs = $this->CI->certification_lib->user_meta_progress($data, $this->certification);
+        if ( ! $rs)
+        {
+            return FALSE;
         }
 
         return $this->CI->certification_lib->fail_other_cer($this->certification);

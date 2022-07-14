@@ -394,31 +394,4 @@ class Transaction_model extends MY_Model
         return $this->db->get()->result_array();
     }
 
-    public function get_targets_account_payable_amount($target_ids, $sources, $group_by_target = TRUE, $group_by_investment = FALSE)
-    {
-        $this->db
-            ->select('id, user_id')
-            ->from('`p2p_loan`.`targets`')
-            ->where_in('status', [TARGET_REPAYMENTING]);
-        if ( ! empty($target_ids))
-        {
-            $this->db->where_in('id', $target_ids);
-        }
-        $subquery = $this->db->get_compiled_select('', TRUE);
-        $this->db
-            ->select('`t`.`user_id`, SUM(tra.amount) as total_amount')
-            ->from('`p2p_transaction`.`transactions` AS `tra`')
-            ->join("($subquery) as `t`", '`tra`.`target_id` = `t`.`id`')
-            ->where_in('source', $sources)
-            ->where_in('status', [TRANSACTION_STATUS_TO_BE_PAID]);
-        if ($group_by_target)
-        {
-            $this->db->select('`tra`.`target_id`')->group_by('`tra`.`target_id`');
-        }
-        else if ($group_by_investment)
-        {
-            $this->db->select('`tra`.`investment_id`')->group_by('`tra`.`investment_id`');
-        }
-        return $this->db->get()->result_array();
-    }
 }
