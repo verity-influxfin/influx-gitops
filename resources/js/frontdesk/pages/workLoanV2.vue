@@ -70,8 +70,9 @@
             data-aos="zoom-in-up"
             data-aos-duration="800"
           >
-            <div class="d-flex align-items-center suit-title-container">
+            <div class="d-sm-flex align-items-center suit-title-container">
               <div class="suit-title">適用對象</div>
+              <div class="suit-underline d-md-none"></div>
             </div>
             <div class="suit-item">•20~45歲</div>
             <div class="suit-item">•持雙證件自拍上傳</div>
@@ -83,7 +84,11 @@
           超過10萬用戶使用
         </h1>
         <h2 class="h2" data-aos="fade-right" data-aos-duration="800">
-          體驗超簡便快速、安全又隱私的金融科技貸款服務
+          <div class="d-md-block d-none">
+            體驗超簡便快速、安全又隱私的金融科技貸款服務
+          </div>
+          <div class="d-md-none d-block">體驗超簡便快速、安全又隱私的</div>
+          <div class="d-md-none d-block">金融科技貸款服務</div>
         </h2>
         <div class="feature-user">
           <div class="card" data-aos="fade-up" data-aos-duration="800">
@@ -243,7 +248,7 @@
         </div>
         <div class="form-title">專人溫馨服務</div>
         <form action="" class="row no-gutters justify-content-center">
-          <div class="col">
+          <div class="col-md col-12">
             <div class="row no-gutters mb-3">
               <div class="form-item-text">*您的尊稱：</div>
               <input
@@ -299,11 +304,11 @@
               <input type="text" name="" id="" class="form-item-input col" />
             </div>
             <div class="row no-gutters">
-              <div class="form-item-text"></div>
+              <div class="form-item-text d-md-block d-none"></div>
               <button class="btn btn-block btn-form-submit col">送出</button>
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-md-6 col-12">
             <img
               src="@/asset/images/workloan/form-cover-1.png"
               alt=""
@@ -326,8 +331,14 @@
                 <div>量身製定資金需求</div>
                 <div>提供您更滿意的貸款</div>
               </div>
-              <img src="@/asset/images/workloan/step-1-1.png" alt="" />
-              <img src="@/asset/images/workloan/step-1-2.png" alt="" />
+              <img
+                src="@/asset/images/workloan/step-1-1.png"
+                class="step-img"
+              />
+              <img
+                src="@/asset/images/workloan/step-1-2.png"
+                class="step-img"
+              />
               <div class="swiper-step">
                 <div class="swiper-step-title">Step 1：</div>
                 <div class="swiper-step-info">• 選擇「申貸專案」</div>
@@ -351,10 +362,22 @@
                   <div>(4)近年度扣繳憑單</div>
                 </div>
                 <div class="swiper-text-3">•個人聯徵信用報告</div>
-                <a href="http://" target="_blank" rel="noopener noreferrer" class="swiper-text-link">如何申請聯徵？</a>
+                <a
+                  href="http://"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="swiper-text-link"
+                  >如何申請聯徵？</a
+                >
               </div>
-              <img src="@/asset/images/workloan/step-2-1.png" alt="" />
-              <img src="@/asset/images/workloan/step-2-2.png" alt="" />
+              <img
+                src="@/asset/images/workloan/step-2-1.png"
+                class="step-img"
+              />
+              <img
+                src="@/asset/images/workloan/step-2-2.png"
+                class="step-img"
+              />
               <div class="swiper-step">
                 <div class="swiper-step-title">Step 2：</div>
                 <div class="swiper-step-info">• 完成「身分驗證」</div>
@@ -377,8 +400,14 @@
                   </div>
                 </div>
               </div>
-              <img src="@/asset/images/workloan/step-3-1.png" alt="" />
-              <img src="@/asset/images/workloan/step-3-2.png" alt="" />
+              <img
+                src="@/asset/images/workloan/step-3-1.png"
+                class="step-img"
+              />
+              <img
+                src="@/asset/images/workloan/step-3-2.png"
+                class="step-img"
+              />
               <div class="swiper-step">
                 <div class="swiper-step-title">Step 3：</div>
                 <div class="swiper-step-info">• 取得核准額度</div>
@@ -396,8 +425,14 @@
                   <div>立馬到帳！</div>
                 </div>
               </div>
-              <img src="@/asset/images/workloan/step-4-1.png" alt="" />
-              <img src="@/asset/images/workloan/step-4-2.png" alt="" />
+              <img
+                src="@/asset/images/workloan/step-4-1.png"
+                class="step-img"
+              />
+              <img
+                src="@/asset/images/workloan/step-4-2.png"
+                class="step-img"
+              />
               <div class="swiper-step">
                 <div class="swiper-step-title">Step 4：</div>
                 <div class="swiper-step-info">• 案件上架</div>
@@ -512,7 +547,13 @@
     <div class="case-share">
       <div class="block-content">
         <h1 class="h1">優質案例分享</h1>
-        <h2 class="h2">已有數萬位使用者取得資金，您還在等什麼？</h2>
+        <h2 class="h2">
+          <div class="d-md-block d-none">
+            已有數萬位使用者取得資金，您還在等什麼？
+          </div>
+          <div class="d-md-none d-block">已有數萬位使用者取得資金</div>
+          <div class="d-md-none d-block">您還在等什麼？</div>
+        </h2>
         <div class="row no-gutters swiper-row">
           <div class="swiper">
             <!-- Additional required wrapper -->
@@ -565,19 +606,35 @@
       <div class="block-content">
         <h1 class="h1">上傳分享</h1>
         <div class="row no-gutters form-row">
-          <div class="col-5">
+          <div class="col-md-5 col-12">
             <img
               src="@/asset/images/workloan/exp-share.png"
               class="img-fluid"
             />
           </div>
-          <div class="col">
-            <div class="form-title">立即上傳分享您在普匯的借款體驗！</div>
+          <div class="col-md col-12">
+            <div class="form-title">
+              <div class="d-md-block d-none">立即上傳分享</div>
+              <div class="d-md-none d-block">立即上傳分享</div>
+              <div class="d-md-none d-block">您在普匯的借款體驗！</div>
+            </div>
             <div class="form-text">
-              下次申貸時系統將為您的信用分數加分，有助於提高您的核准額度
+              <div class="d-md-block d-none">
+                下次申貸時系統將為您的信用分數加分，有助於提高您的核准額度
+              </div>
+              <div class="d-md-none d-block">
+                下次申貸時系統將為您的信用分數加分
+              </div>
+              <div class="d-md-none d-block">有助於提高您的核准額度</div>
             </div>
             <div class="form-hint">
-              *平台不會公開借款人個人基本資料，請借款人安心上傳
+              <div class="d-md-block d-none">
+                *平台不會公開借款人個人基本資料，請借款人安心上傳
+              </div>
+              <div class="d-md-none d-block">
+                *平台不會公開借款人個人基本資料
+              </div>
+              <div class="d-md-none d-block">請借款人安心上傳</div>
             </div>
             <form>
               <div class="row no-gutters mb-3">
@@ -700,6 +757,7 @@ export default {
   },
   mounted() {
     SwiperCore.use([Navigation, Pagination])
+    AOS.init({disable: 'mobile'})
     const swiper = new Swiper('.swiper', {
       navigation: {
         nextEl: '.swiper-button-next',
@@ -1333,6 +1391,417 @@ $color__background--primary: #f3f9fc;
       .portrait {
         width: 56px;
         border-radius: 50%;
+      }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .h1 {
+    font-size: 28px;
+  }
+  .h2 {
+    font-size: 18px;
+  }
+  .block-content {
+    padding: 0 15px;
+  }
+  .form-item-text {
+    font-size: 16px;
+    min-width: 125px;
+  }
+  .form-item-input {
+    padding: 4px 12px;
+    font-size: 14px;
+  }
+  .form-item-label {
+    font-size: 14px;
+    margin-right: 15px;
+  }
+  .features {
+    padding: 36px 0;
+    .h2 {
+      margin-top: 8px;
+    }
+    .feature-grid {
+      display: grid;
+      margin: 24px auto 0;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      .card {
+        width: 100%;
+        border: none;
+        box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
+        border-radius: 16px;
+        .card-body {
+          padding: 12px;
+        }
+        .card-cover {
+          width: 60px;
+          margin: 0 auto 10px;
+          padding: 9px;
+        }
+        .card-title {
+          font-size: 18px;
+        }
+        .card-divider {
+          width: 30px;
+        }
+      }
+    }
+    .feature-suit {
+      margin: 15px 0 50px;
+      padding: 20px 25px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      .suit-title {
+        text-align: center;
+        font-size: 28px;
+        line-height: 1.4;
+        height: auto;
+        border-right: none;
+        padding-right: 0;
+      }
+      .suit-underline {
+        width: 40px;
+        margin: 0 auto;
+        text-align: center;
+        border-bottom: 3px solid #036eb7;
+      }
+      .suit-item {
+        font-size: 18px;
+        color: #ffffff;
+      }
+    }
+    .feature-user {
+      display: grid;
+      gap: 60px;
+      margin-top: 110px;
+      grid-template-columns: 1fr;
+      .card {
+        width: 100%;
+        border: none;
+        background: linear-gradient(90deg, #3781c7 0%, #74bbe4 100%);
+        border-radius: 16px;
+        position: relative;
+        .bg-text {
+          position: absolute;
+          z-index: 1;
+          font-size: 46px;
+          top: 120px;
+          left: -105px;
+          transform: rotate(90deg);
+        }
+        .card-body {
+          z-index: 2;
+          padding-top: 120px;
+          height: 365px;
+          .portrait {
+            position: absolute;
+            top: -95px;
+            right: -20px;
+            z-index: -1;
+            transform: scale(0.88);
+          }
+          .portrait-info {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 1.4;
+            color: $color--primary;
+            padding: 4px 16px;
+            background: #ffffff;
+            width: fit-content;
+          }
+          .card-text {
+            margin-top: 18px;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 2;
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+  .purpose {
+    padding: 36px 0;
+    background: $color__background--primary;
+    .h1 {
+      color: $color--primary;
+    }
+    .h2 {
+      color: $color--primary;
+      opacity: 0.64;
+      margin-top: 24px;
+    }
+    .purpose-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      height: auto;
+      .purpose-col {
+        padding: 15px 15px 0 15px;
+      }
+      .purpose-img {
+        &-1 {
+          margin-top: 0;
+        }
+        &-2 {
+          margin-top: 0;
+        }
+        &-3 {
+          margin-top: 0;
+        }
+      }
+      .purpose-col-title {
+        margin-top: -5px;
+        font-size: 18px;
+      }
+      .purpose-col-text {
+        margin-top: 6px;
+        font-size: 16px;
+      }
+    }
+    .form-title {
+      margin: 32px 0 24px;
+      font-size: 24px;
+    }
+    .form-cover {
+      position: relative;
+      top: 0;
+    }
+    .btn-form-submit {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 1.4;
+      color: #ffffff;
+      background-color: $color--primary;
+      border-radius: 12px;
+    }
+  }
+  .diagram {
+    padding: 32px 0;
+    .h1 {
+      color: $color--primary;
+    }
+    .h2 {
+      color: $color--primary;
+      opacity: 0.64;
+      margin-top: 24px;
+    }
+    .swiper {
+      margin-top: 32px;
+    }
+    .swiper-slide {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding-bottom: 40px;
+    }
+    .swiper-left {
+      justify-self: end;
+      .swiper-text-info {
+        margin: 8px 0 8px 18px;
+      }
+    }
+    .swiper-text {
+      &-1 {
+        font-size: 18px;
+      }
+      &-2 {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.4;
+        color: $color--primary;
+      }
+      &-3 {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 1.4;
+        color: $color--primary;
+      }
+      &-link {
+        margin-left: 18px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 1.4;
+        color: $color--primary;
+        text-decoration-line: underline;
+      }
+    }
+    .swiper {
+      &-step-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 1.4;
+        color: $color--primary;
+        margin-bottom: 16px;
+      }
+      &-step-next {
+        background-image: url('~images/workloan/step-next.png');
+        width: 16px;
+        height: 22px;
+        margin: 4px 0;
+      }
+      &-step-info {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 1.4;
+        color: #393939;
+      }
+      &-slogan {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 1.4;
+        color: #036eb7;
+        .em {
+          font-family: 'Arial';
+          font-style: italic;
+          font-weight: 700;
+          font-size: 40px;
+          line-height: 1.4;
+          color: #f29500;
+        }
+      }
+      .step-img {
+        width: 148px;
+      }
+    }
+  }
+  .product-feature {
+    padding: 32px 0;
+    .h2 {
+      margin-top: 8px;
+    }
+    .product-feature-grid {
+      display: grid;
+      margin: 24px 0;
+      grid-template-columns: 1fr;
+      // grid-template-rows: 1fr 1fr 1fr;
+      gap: 18x;
+      .product-feature {
+        &-img {
+          display: none;
+        }
+        &-title {
+          display: flex;
+          align-items: center;
+          font-size: 20px;
+          &::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            margin-right: 12px;
+          }
+        }
+        &-text {
+          margin: 12px 0;
+          font-size: 14px;
+        }
+      }
+    }
+    .slogan {
+      font-size: 24px;
+    }
+    .btn-download {
+      font-size: 16px;
+      line-height: 1.4;
+      padding: 6px 40px;
+    }
+  }
+  .case-share {
+    padding: 32px 0;
+    .h1 {
+      color: $color--primary;
+    }
+    .h2 {
+      margin-top: 8px;
+    }
+    .swiper {
+      margin-top: 36px;
+    }
+    .swiper-slide {
+      display: grid;
+      padding-bottom: 40px;
+      gap: 15px;
+      grid-template-columns: auto;
+      justify-content: center;
+    }
+    .case-container {
+      transform: scale(0.75);
+    }
+  }
+  .experience-share {
+    padding: 32px 0;
+    .h2 {
+      margin-top: 8px;
+    }
+    .form-row {
+      margin-top: 24px;
+      gap: 32px;
+      flex-direction: column-reverse;
+    }
+    .form-title {
+      font-size: 24px;
+      text-align: center;
+    }
+    .form-text {
+      margin-top: 25px;
+      font-size: 18px;
+      text-align: center;
+    }
+    .form-hint {
+      margin: 8px 0 24px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .form-item-text {
+      min-width: 95px;
+    }
+    .btn-form-submit {
+      font-size: 16px;
+      padding: 4px;
+      width: 100%;
+    }
+  }
+  .experience {
+    padding: 64px 0;
+    background: linear-gradient(90deg, #a8b3c8 0%, #d2d8e6 50%);
+    .h1 {
+      color: #fff;
+    }
+    .h2 {
+      font-size: 24px;
+      color: #393939;
+      margin-top: 12px;
+    }
+    .swiper-row {
+      margin-top: 100px;
+    }
+    .user-comment {
+      margin-top: 30px;
+      justify-content: center;
+      flex-direction: column;
+      .comment-card {
+        width: 360px;
+        padding: 10px;
+        .star {
+          color: #f3cd03;
+        }
+        .portrait {
+          width: 56px;
+          border-radius: 50%;
+        }
       }
     }
   }
