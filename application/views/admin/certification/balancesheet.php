@@ -49,23 +49,26 @@
                                 </a>
                             </div>
                             <div class="form-group">
-                                <?php $content = [];
+                                <?php
+                                $content = [];
+                                $ocr_parser_content = [];
                                 if ( ! empty($data->content)) {
                                     $content = json_decode($data->content, TRUE);
+                                    $ocr_parser_content = $content['ocr_parser']['content'] ?? [];
                                 } ?>
                                 <table>
                                     <tr>
                                         <td>資產總額</td>
-                                        <td><?= isset($content['assetsAmount']) && is_numeric($content['assetsAmount']) ? number_format($content['assetsAmount']) : '-' ?></td></tr>
+                                        <td><?= isset($ocr_parser_content['assetsAmount']) && is_numeric($ocr_parser_content['assetsAmount']) ? number_format($ocr_parser_content['assetsAmount']) : '-' ?></td></tr>
                                     <tr>
                                         <td>負債總額</td>
-                                        <td><?= isset($content['assetsAmount']) && is_numeric($content['liabilitiesAmount']) ? number_format($content['liabilitiesAmount']) : '-' ?></td></tr>
+                                        <td><?= isset($ocr_parser_content['assetsAmount']) && is_numeric($ocr_parser_content['liabilitiesAmount']) ? number_format($ocr_parser_content['liabilitiesAmount']) : '-' ?></td></tr>
                                     <tr>
                                         <td>權益總額</td>
-                                        <td><?= isset($content['equityAmount']) && is_numeric($content['equityAmount']) ? number_format($content['equityAmount']) : '-' ?></td></tr>
+                                        <td><?= isset($ocr_parser_content['equityAmount']) && is_numeric($ocr_parser_content['equityAmount']) ? number_format($ocr_parser_content['equityAmount']) : '-' ?></td></tr>
                                     <tr>
                                         <td>負債及權益總額</td>
-                                        <td><?= isset($content['liabEquityAmount']) && is_numeric($content['liabEquityAmount']) ? number_format($content['liabEquityAmount']) : '-' ?></td></tr>
+                                        <td><?= isset($ocr_parser_content['liabEquityAmount']) && is_numeric($ocr_parser_content['liabEquityAmount']) ? number_format($ocr_parser_content['liabEquityAmount']) : '-' ?></td></tr>
                                 </table>
                             </div>
                             <div class="form-group">

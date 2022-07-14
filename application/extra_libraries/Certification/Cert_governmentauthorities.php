@@ -2,7 +2,7 @@
 
 namespace Certification;
 
-use Certification_ocr\Certification_ocr_factory;
+use Certification_ocr\Parser\Ocr_parser_factory;
 use CertificationResult\MessageDisplay;
 
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -50,15 +50,7 @@ class Cert_governmentauthorities extends Certification_base
      */
     public function parse()
     {
-        $cert_ocr = Certification_ocr_factory::get_instance($this->certification);
-        $ocr_result = $cert_ocr->get_result();
-        if ($ocr_result['success'] === TRUE)
-        { // 把 OCR 解析到的內容補到 content 的空格裡
-            $this->content = array_replace_recursive($ocr_result['data'], $this->content);
-            $this->content['ocr_result'] = TRUE;
-            $this->content['ocr_result_content'] = $ocr_result['data'];
-        }
-        return $this->content;
+        return array_merge($this->content, $this->_get_ocr_info());
     }
 
     /**
@@ -87,10 +79,9 @@ class Cert_governmentauthorities extends Certification_base
      */
     public function verify_data($content): bool
     {
-        if ( ! isset($content['ocr_result']) || $content['ocr_result'] === FALSE)
+        if ($this->_chk_ocr_status($content) === FALSE)
         {
-            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
-            return TRUE;
+            return FALSE;
         }
 
         $data = [];
@@ -322,6 +313,48 @@ class Cert_governmentauthorities extends Certification_base
      */
     public function post_review($sys_check): bool
     {
+        return TRUE;
+    }
+
+    // 要跑的 OCR 辨識
+    private function _get_ocr_info(): array
+    {
+        $result = [];
+        if ( ! isset($this->content['ocr_parser']['res']))
+        {
+            $cert_ocr_parser = Ocr_parser_factory::get_instance($this->certification);
+            $ocr_parser_result = $cert_ocr_parser->get_result();
+            if ($ocr_parser_result['success'] === TRUE)
+            {
+                if ($ocr_parser_result['code'] == 201 || $ocr_parser_result['code'] == 202)
+                { // OCR 任務剛建立，或是 OCR 任務尚未辨識完成
+                    return $result;
+                }
+                $result['ocr_parser']['res'] = TRUE;
+                $result['ocr_parser']['content'] = $ocr_parser_result['data'];
+            }
+            else
+            {
+                $result['ocr_parser']['res'] = FALSE;
+                $result['ocr_parser']['msg'] = $ocr_parser_result['msg'];
+            }
+        }
+
+        return $result;
+    }
+
+    // OCR 辨識後的檢查
+    private function _chk_ocr_status($content): bool
+    {
+        if ( ! isset($content['ocr_parser']['res']))
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
+            return FALSE;
+        }
+        else
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        }
         return TRUE;
     }
 }

@@ -9,12 +9,22 @@ use GuzzleHttp\Exception\RequestException;
 
 abstract class Certification_ocr_base implements Certification_ocr_definition
 {
-    private $api_url;
+    const TYPE_PARSER = 1;
+    const TYPE_MARKER = 2;
+
     private $client;
 
+    protected $api_url;
     protected $CI;
     protected $certification;
+    protected $content;
     protected $task_path;
+    // OCR 任務類型
+    protected $task_type;
+    protected $task_type_list = [
+        self::TYPE_PARSER, // 一般的資料解析
+        self::TYPE_MARKER, // 標記圖片上的關鍵訊息
+    ];
 
     public function __construct($certification)
     {
@@ -22,18 +32,28 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         $this->CI->load->model('user/user_certification_ocr_task_model');
         $this->CI->load->model('log/log_certification_ocr_model');
         $this->certification = $certification;
-        $this->api_url = 'http://' . getenv('CERT_OCR_IP') . ':' . getenv('CERT_OCR_PORT');
         $this->client = new Client(['base_uri' => $this->api_url]);
+        
+        if ( ! empty($this->certification['content']))
+        {
+            $this->content = json_decode($this->certification['content'], TRUE);
+        }
+        else
+        {
+            $this->content = [];
+        }
     }
 
     /**
      * 取得該徵信項的 OCR 任務 id
+     * @param $type
      * @return string
      */
-    public function get_ocr_task_id(): string
+    public function get_ocr_task_id($type): string
     {
         $res = $this->CI->user_certification_ocr_task_model->get_by([
-            'user_certification_id' => $this->certification['id']
+            'user_certification_id' => $this->certification['id'],
+            'type' => $type
         ]);
 
         return $res->task_id ?? '';
@@ -41,11 +61,11 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
 
     /**
      * 建立該徵信項的 OCR 任務
-     * @param array $image_list : 欲解析的圖片 url
+     * @param $body : 欲解析的圖片 url 及相關資訊
      * @return array
      * @throws RequestException
      */
-    public function create_ocr_task(array $image_list): array
+    public function create_ocr_task($body): array
     {
         try
         {
@@ -54,9 +74,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
                     'accept' => 'application/json',
                     'Content-Type' => 'application/json'
                 ],
-                'body' => json_encode([
-                    'url_list' => $image_list,
-                ])
+                'body' => json_encode($body)
             ]);
             $res_content = $request->getBody()->getContents();
             $this->_insert_log($request->getStatusCode(), $res_content);
@@ -119,17 +137,25 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
      */
     public function get_result(): array
     {
-        $task_id = $this->get_ocr_task_id();
-        if (empty($task_id))
+        // OCR 任務類型
+        if ($this->get_task_type() === FALSE)
         {
-            $image_list = $this->get_image_list();
-            if (empty($image_list))
-            {
-                return $this->_return_failure('Empty image list!');
-            }
-            return $this->create_ocr_task($image_list);
+            return $this->return_failure('Cannot figure out the task type!');
         }
 
+        // OCR 任務 id
+        $task_id = $this->get_ocr_task_id($this->task_type);
+        if (empty($task_id))
+        {
+            $body = $this->get_request_body();
+            if ( ! isset($body['success']) || $body['success'] !== TRUE || empty($body['data']))
+            {
+                return $this->return_failure($body['msg'] ?? 'Cannot get request body!');
+            }
+            return $this->create_ocr_task($body['data']);
+        }
+
+        // OCR 任務 response
         $res = $this->get_ocr_task_response($task_id);
         if ($res['success'] === FALSE)
         {
@@ -137,7 +163,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         }
 
         $content = $this->data_mapping($res['data']);
-        return $this->_return_success($content, '', 200);
+        return $this->return_success($content, '', 200);
     }
 
     /**
@@ -145,7 +171,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
      * @param string $code
      * @return array
      */
-    private function _return_failure(string $msg = '', string $code = ''): array
+    public function return_failure(string $msg = '', string $code = ''): array
     {
         return ['success' => FALSE, 'msg' => $msg, 'code' => $code];
     }
@@ -156,7 +182,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
      * @param string $code
      * @return array
      */
-    private function _return_success(array $data = [], string $msg = '', string $code = ''): array
+    public function return_success(array $data = [], string $msg = '', string $code = ''): array
     {
         return ['success' => TRUE, 'data' => $data, 'msg' => $msg, 'code' => $code];
     }
@@ -186,7 +212,8 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     {
         $this->CI->user_certification_ocr_task_model->insert([
             'user_certification_id' => $this->certification['id'],
-            'task_id' => $task_id
+            'task_id' => $task_id,
+            'type' => $this->task_type,
         ]);
     }
 
@@ -199,9 +226,9 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     {
         if ($res === TRUE)
         {
-            return $this->_return_success([], 'OCR task is created successfully.', 201);
+            return $this->return_success([], 'OCR task is created successfully.', 201);
         }
-        return $this->_return_failure('OCR task is created unsuccessfully.');
+        return $this->return_failure('OCR task is created unsuccessfully.');
     }
 
     /**
@@ -213,12 +240,28 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     {
         if ($res === FALSE)
         {
-            return $this->_return_failure('Exception occurred while attempting to GET task response.');
+            return $this->return_failure('Exception occurred while attempting to GET task response.');
         }
         if (empty($res['response_body']))
         {
-            return $this->_return_failure('Task processing has not done yet.');
+            return $this->return_success([], 'Task processing has not done yet.', 202);
         }
-        return $this->_return_success($res['response_body']);
+        return $this->return_success($res['response_body']);
     }
+
+    /**
+     * 取得 OCR 任務類型
+     * @return bool
+     */
+    public function get_task_type(): bool
+    {
+        if ( ! in_array($this->task_type, $this->task_type_list))
+        {
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+
 }

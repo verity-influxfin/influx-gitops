@@ -3227,7 +3227,8 @@ class Certification extends REST_Controller {
                 'investor'			=> $investor,
                 'content'			=> json_encode($content),
                 // Frank 表示先直接過，二審會審
-                'status' => CERTIFICATION_STATUS_SUCCEED
+                // 改放在 Certification/Cert_incomestatement 的 OCR 辨識完成後
+                // 'status' => CERTIFICATION_STATUS_SUCCEED
             ];
             $insert = $this->user_certification_model->insert($param);
             if($insert){

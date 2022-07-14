@@ -1,13 +1,16 @@
 <?php
 
-namespace Certification_ocr;
+namespace Certification_ocr\Parser;
 
 /**
- * 資產負債表
+ * OCR 辨識
+ * Type : 一般的資料解析
+ * Cert : 資產負債表
  */
-class Cert_balancesheet extends Certification_ocr_base
+class Cert_balancesheet extends Ocr_parser_base
 {
     protected $task_path = '/ocr/balance_sheet';
+    protected $task_type = self::TYPE_PARSER;
 
     /**
      * 回傳欲解析的圖片 url
@@ -15,10 +18,9 @@ class Cert_balancesheet extends Certification_ocr_base
      */
     public function get_image_list(): array
     {
-        $content = json_decode($this->certification['content'], TRUE);
-        if ( ! empty($content['balance_sheet_image']))
+        if ( ! empty($this->content['balance_sheet_image']))
         {
-            return $content['balance_sheet_image'];
+            return is_array($this->content['balance_sheet_image']) ? $this->content['balance_sheet_image'] : [$this->content['balance_sheet_image']];
         }
         return [];
     }
@@ -36,5 +38,22 @@ class Cert_balancesheet extends Certification_ocr_base
             'equityAmount' => (int) str_replace(',', '', $task_res_data['3000']), // 權益總額
             'liabEquityAmount' => (int) str_replace(',', '', $task_res_data['9000']), // 負債及權益總額
         ];
+    }
+
+    /**
+     * 取得 OCR 欲解析的圖片及其相關資訊
+     * @return array
+     */
+    public function get_request_body(): array
+    {
+        $url_list = $this->get_image_list();
+        if (empty($url_list))
+        {
+            return $this->return_failure('Empty image list!');
+        }
+
+        return $this->return_success([
+            'url_list' => $url_list,
+        ]);
     }
 }

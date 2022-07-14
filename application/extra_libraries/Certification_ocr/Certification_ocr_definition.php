@@ -7,16 +7,17 @@ interface Certification_ocr_definition
 {
     /**
      * 取得該徵信項的 OCR 任務 id
+     * @param $type : 辨識類型
      * @return string
      */
-    public function get_ocr_task_id(): string;
+    public function get_ocr_task_id($type): string;
 
     /**
      * 建立該徵信項的 OCR 任務
-     * @param array $image_list : 欲解析的圖片 url
+     * @param $body : 欲解析的圖片 url 及相關資訊
      * @return array
      */
-    public function create_ocr_task(array $image_list): array;
+    public function create_ocr_task($body): array;
 
     /**
      * 取得該徵信項的 OCR 結果
@@ -32,10 +33,10 @@ interface Certification_ocr_definition
     public function get_result(): array;
 
     /**
-     * 回傳欲解析的圖片 url
+     * 取得 OCR 欲解析的圖片及其相關資訊
      * @return array
      */
-    public function get_image_list(): array;
+    public function get_request_body(): array;
 
     /**
      * 把任務的回傳值填到對應的 content key

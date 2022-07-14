@@ -1,13 +1,16 @@
 <?php
 
-namespace Certification_ocr;
+namespace Certification_ocr\Parser;
 
 /**
- * 近三年401/403/405表
+ * OCR 辨識
+ * Type : 一般的資料解析
+ * Cert : 近三年401/403/405表
  */
-class Cert_businesstax extends Certification_ocr_base
+class Cert_businesstax extends Ocr_parser_base
 {
     protected $task_path = '/ocr/table_401';
+    protected $task_type = self::TYPE_PARSER;
 
     /**
      * 回傳欲解析的圖片 url
@@ -16,9 +19,8 @@ class Cert_businesstax extends Certification_ocr_base
     public function get_image_list(): array
     {
         $image_list = [];
-        $content = json_decode($this->certification['content'], TRUE);
         $image_fields = $this->get_image_fields();
-        array_walk($content, function ($element, $key) use (&$image_list, &$image_fields) {
+        array_walk($this->content, function ($element, $key) use (&$image_list, &$image_fields) {
             if (in_array($key, $image_fields))
             {
                 unset($image_fields[$key]);
@@ -72,12 +74,31 @@ class Cert_businesstax extends Certification_ocr_base
      */
     public function data_mapping($task_res_data): array
     {
-        // todo: OCR只辨識第一張，問欄位值怎麼處理
-        // https://dev-c.influxfin.com/doc/#api-Certification-PostCertificationBusinessTax
-        // 預設填入近一年申報的相關資料
-        // todo: 開立發票金額是對應文件上的哪個欄位
-        return [
-            'businessTaxLastOneYear' => $task_res_data['yyy'],
-        ];
+        $result = [];
+        foreach ($task_res_data as $value)
+        {
+            $result[] = [
+                'businessTaxLastOneYear' => $value['yyy'],
+                'lastOneYearInvoiceAmountM1M2' => (int) str_replace(',', '', $value['21']) + (int) str_replace(',', '', $value['22']),
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * 取得 OCR 欲解析的圖片及其相關資訊
+     * @return array
+     */
+    public function get_request_body(): array
+    {
+        $url_list = $this->get_image_list();
+        if (empty($url_list))
+        {
+            return $this->return_failure('Empty image list!');
+        }
+
+        return $this->return_success([
+            'url_list' => $url_list,
+        ]);
     }
 }
