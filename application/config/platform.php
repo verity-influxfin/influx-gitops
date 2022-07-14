@@ -437,15 +437,9 @@ $config['product_list'] = [
             'salary_below' => 35000,
             'rate' => 4.5
         ],
-        'available_company_categories' => [
-            COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
-            COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
-            COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
-            COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
-        ],
         'charge_platform' => 4,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [5001, STAGE_CER_TARGET, 1, SUB_PRODUCT_ID_SALARY_MAN_CAR, SUB_PRODUCT_ID_SALARY_MAN_HOUSE, SUB_PRODUCT_ID_SALARY_MAN_RENOVATION],
+        'sub_product' => [5001, STAGE_CER_TARGET, 1],
         'certifications' => [
             CERTIFICATION_IDENTITY,
             CERTIFICATION_DEBITCARD,
@@ -460,12 +454,10 @@ $config['product_list'] = [
         ],
         // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
-            CERTIFICATION_REPAYMENT_CAPACITY,
-            CERTIFICATION_DIPLOMA,
+            CERTIFICATION_REPAYMENT_CAPACITY
         ],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
-            CERTIFICATION_DIPLOMA
         ],
         'certifications_stage' => [
             [
@@ -494,7 +486,7 @@ $config['product_list'] = [
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
         'allow_age_range' => [20, 45],
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
+        'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000',
         'checkOwner' => false,
     ],
     4 => [
@@ -1163,7 +1155,7 @@ $config['visul_id_des'] = [
     ],
     'LF1' => [
         'name' => '上班族貸',
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'><span style=\'font-size:14px;color:#4a4a4a\'>*毋須提供相關佐證</span>',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'url' => '',
@@ -1252,30 +1244,6 @@ $config['visul_id_des'] = [
     'LS1P1' => [
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
-    ],
-    'LF2' => [
-        'name' => '購新車，貸頭款',
-        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供購車合約上傳</span>',
-        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
-        'url' => '',
-        'status' => 1
-    ],
-    'LF3' => [
-        'name' => '購新房，貸你幸福',
-        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供購屋合約上傳</span>',
-        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
-        'url' => '',
-        'status' => 1
-    ],
-    'LF4' => [
-        'name' => '裝修房，貸你夢想',
-        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供裝潢合約上傳</span>',
-        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
-        'url' => '',
-        'status' => 1
     ],
 ];
 $config['sub_product_mapping'] = [
@@ -1675,273 +1643,6 @@ $config['sub_product_list'] = [
         ],
         'status' => 0
     ],
-    7 => [
-        'visul_id' => 'LF2',
-        'identity' => [
-            2 => [
-                'visul_id' => 'LF2P1',
-                'name' => '上班族貸(購車)',
-                'product_id' => '3:7',
-                'loan_range_s' => 30000,
-                'loan_range_e' => 300000,
-                'apply_range_s' => 30000,
-                'apply_range_e' => 300000,
-                'interest_rate_s' => 5.5,
-                'interest_rate_e' => 16,
-                'condition_rate' => [
-                    'salary_below' => 35000,
-                    'rate' => 4.5
-                ],
-                'need_upload_images' => [
-                    [
-                        'optional' => FALSE,
-                        'max_images' => 15,
-                        'contract_name' => '購車合約',
-                        'meta_name' => 'car_contract_images',
-                        'argument_name' => 'car_contract_images',
-                    ]
-                ],
-                'available_company_categories' => [
-                    COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
-                    COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
-                    COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
-                    COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
-                ],
-                'charge_platform' => 4,
-                'charge_platform_min' => PLATFORM_FEES_MIN,
-                'certifications' => [
-                    CERTIFICATION_IDENTITY,
-                    CERTIFICATION_DEBITCARD,
-                    CERTIFICATION_SOCIAL,
-                    CERTIFICATION_EMERGENCY,
-                    CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIALWORKER,
-                    CERTIFICATION_DIPLOMA,
-                    CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB,
-                    CERTIFICATION_REPAYMENT_CAPACITY
-                ],
-                // [APP]上選填的徵信項，避免系統無法一審
-                'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY,
-                    CERTIFICATION_DIPLOMA
-                ],
-                // [後台]上選填的徵信項，避免人工無法二三四..審
-                'backend_option_certifications' => [
-                    CERTIFICATION_DIPLOMA
-                ],
-                'certifications_stage' => [
-                    [
-                        CERTIFICATION_IDENTITY,
-                        CERTIFICATION_DEBITCARD,
-                    ],
-                    [
-                        CERTIFICATION_SOCIAL,
-                        CERTIFICATION_EMERGENCY,
-                        CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIALWORKER,
-                        CERTIFICATION_DIPLOMA,
-                        CERTIFICATION_INVESTIGATION,
-                        CERTIFICATION_JOB,
-                        CERTIFICATION_REPAYMENT_CAPACITY
-                    ]
-                ],
-                'default_reason' => '購車',
-                'instalment' => [3, 6, 12, 18, 24],
-                'repayment' => [1],
-                'targetData' => [],
-                'secondInstance' => false,
-                'weight' => [],
-                'status' => 1,
-                'dealer' => [],
-                'multi_target' => 0,
-                'hiddenMainProduct' => false,
-                'hiddenSubProduct' => false,
-                'allow_age_range' => [20, 45],
-                'description' => '*須提供購車合約上傳',
-                'checkOwner' => false,
-            ]
-        ],
-        'status' => 1
-    ],
-    8 => [
-        'visul_id' => 'LF3',
-        'identity' => [
-            2 => [
-                'visul_id' => 'LF3P1',
-                'name' => '上班族貸(購房)',
-                'product_id' => '3:8',
-                'loan_range_s' => 30000,
-                'loan_range_e' => 300000,
-                'apply_range_s' => 30000,
-                'apply_range_e' => 2000000,
-                'interest_rate_s' => 5.5,
-                'interest_rate_e' => 16,
-                'condition_rate' => [
-                    'salary_below' => 35000,
-                    'rate' => 4.5
-                ],
-                'need_upload_images' => [
-                    [
-                        'optional' => FALSE,
-                        'max_images' => 15,
-                        'contract_name' => '購房合約',
-                        'meta_name' => 'house_contract_images',
-                        'argument_name' => 'house_contract_images',
-                    ]
-                ],
-                'available_company_categories' => [
-                    COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
-                    COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
-                    COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
-                    COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
-                ],
-                'charge_platform' => 4,
-                'charge_platform_min' => PLATFORM_FEES_MIN,
-                'certifications' => [
-                    CERTIFICATION_IDENTITY,
-                    CERTIFICATION_DEBITCARD,
-                    CERTIFICATION_SOCIAL,
-                    CERTIFICATION_EMERGENCY,
-                    CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIALWORKER,
-                    CERTIFICATION_DIPLOMA,
-                    CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB,
-                    CERTIFICATION_REPAYMENT_CAPACITY
-                ],
-                // [APP]上選填的徵信項，避免系統無法一審
-                'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY,
-                    CERTIFICATION_DIPLOMA
-                ],
-                // [後台]上選填的徵信項，避免人工無法二三四..審
-                'backend_option_certifications' => [
-                    CERTIFICATION_DIPLOMA
-                ],
-                'certifications_stage' => [
-                    [
-                        CERTIFICATION_IDENTITY,
-                        CERTIFICATION_DEBITCARD,
-                    ],
-                    [
-                        CERTIFICATION_SOCIAL,
-                        CERTIFICATION_EMERGENCY,
-                        CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIALWORKER,
-                        CERTIFICATION_DIPLOMA,
-                        CERTIFICATION_INVESTIGATION,
-                        CERTIFICATION_JOB,
-                        CERTIFICATION_REPAYMENT_CAPACITY
-                    ]
-                ],
-                'default_reason' => '購房',
-                'instalment' => [3, 6, 12, 18, 24],
-                'repayment' => [1],
-                'targetData' => [],
-                'secondInstance' => false,
-                'weight' => [],
-                'status' => 1,
-                'dealer' => [],
-                'multi_target' => 0,
-                'hiddenMainProduct' => false,
-                'hiddenSubProduct' => false,
-                'allow_age_range' => [20, 45],
-                'description' => '*須提供購屋合約上傳',
-                'checkOwner' => false,
-            ]
-        ],
-        'status' => 1
-    ],
-    9 => [
-        'visul_id' => 'LF4',
-        'identity' => [
-            2 => [
-                'visul_id' => 'LF4P1',
-                'name' => '上班族貸(裝修)',
-                'product_id' => '3:9',
-                'loan_range_s' => 30000,
-                'loan_range_e' => 300000,
-                'apply_range_s' => 30000,
-                'apply_range_e' => 1000000,
-                'interest_rate_s' => 5.5,
-                'interest_rate_e' => 16,
-                'condition_rate' => [
-                    'salary_below' => 35000,
-                    'rate' => 4.5
-                ],
-                'need_upload_images' => [
-                    [
-                        'optional' => FALSE,
-                        'max_images' => 15,
-                        'contract_name' => '裝修合約',
-                        'meta_name' => 'renovation_contract_images',
-                        'argument_name' => 'renovation_contract_images',
-                    ]
-                ],
-                'available_company_categories' => [
-                    COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
-                    COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
-                    COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
-                    COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
-                ],
-                'charge_platform' => 4,
-                'charge_platform_min' => PLATFORM_FEES_MIN,
-                'certifications' => [
-                    CERTIFICATION_IDENTITY,
-                    CERTIFICATION_DEBITCARD,
-                    CERTIFICATION_SOCIAL,
-                    CERTIFICATION_EMERGENCY,
-                    CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIALWORKER,
-                    CERTIFICATION_DIPLOMA,
-                    CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB,
-                    CERTIFICATION_REPAYMENT_CAPACITY
-                ],
-                // [APP]上選填的徵信項，避免系統無法一審
-                'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY,
-                    CERTIFICATION_DIPLOMA
-                ],
-                // [後台]上選填的徵信項，避免人工無法二三四..審
-                'backend_option_certifications' => [
-                    CERTIFICATION_DIPLOMA
-                ],
-                'certifications_stage' => [
-                    [
-                        CERTIFICATION_IDENTITY,
-                        CERTIFICATION_DEBITCARD,
-                    ],
-                    [
-                        CERTIFICATION_SOCIAL,
-                        CERTIFICATION_EMERGENCY,
-                        CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIALWORKER,
-                        CERTIFICATION_DIPLOMA,
-                        CERTIFICATION_INVESTIGATION,
-                        CERTIFICATION_JOB,
-                        CERTIFICATION_REPAYMENT_CAPACITY
-                    ]
-                ],
-                'default_reason' => '房屋裝修',
-                'instalment' => [3, 6, 12, 18, 24],
-                'repayment' => [1],
-                'targetData' => [],
-                'secondInstance' => false,
-                'weight' => [],
-                'status' => 1,
-                'dealer' => [],
-                'multi_target' => 0,
-                'hiddenMainProduct' => false,
-                'hiddenSubProduct' => false,
-                'allow_age_range' => [20, 45],
-                'description' => '*須提供裝潢合約上傳',
-                'checkOwner' => false,
-            ]
-        ],
-        'status' => 1
-    ],
     5000 => [
         'visul_id' => 'LS1',
         'identity' => [
@@ -2007,12 +1708,6 @@ $config['sub_product_list'] = [
                 'interest_rate_s' => 5.5,
                 'interest_rate_e' => 16,
                 'charge_platform' => 4,
-                'available_company_categories' => [
-                    COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
-                    COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
-                    COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
-                    COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
-                ],
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
                     CERTIFICATION_IDENTITY,
@@ -2032,7 +1727,6 @@ $config['sub_product_list'] = [
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
-                    CERTIFICATION_DIPLOMA
                 ],
                 'certifications_stage' => [
                     [
@@ -2058,7 +1752,7 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [20, 45],
-                'description' => '*毋須提供相關佐證',
+                'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000',
                 'checkOwner' => false,
             ]
         ],
@@ -2215,7 +1909,7 @@ $config['sub_product_list'] = [
                 'targetData' => [],
                 'secondInstance' => false,
                 'weight' => [],
-                'status' => 0,
+                'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [20, 45],

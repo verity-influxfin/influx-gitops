@@ -87,7 +87,6 @@ class Certification extends REST_Controller {
      * @apiGroup Certification
      *
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-     * @apiParam {Number} target_id 案件流水號(選填)
      * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Certification ID
 	 * @apiSuccess {String} name 名稱
@@ -129,16 +128,7 @@ class Certification extends REST_Controller {
 		$investor 			= $this->user_info->investor;
 		$company 			= $this->user_info->company;
         $incharge           = $this->user_info->incharge;
-
-        $input = $this->input->get(NULL, TRUE);
-        $target = FALSE;
-        if (isset($input['target_id']))
-        {
-            $this->load->model('loan/target_model');
-            $target = $this->target_model->get_by(['id' => $input['target_id']]);
-        }
-
-        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, TRUE, $target, FALSE, TRUE);
+        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, TRUE, FALSE, FALSE, TRUE);
 		$list				= array();
 		if(!empty($certification_list)){
 		    $sort = $this->config->item('certifications_sort');

@@ -400,7 +400,6 @@ class Qrcode_lib
      * 取得 subcode 列表
      * @param $company_user_id
      * @param $conditions
-     * @param array $subcode_conditions
      * @return array
      */
     public function get_subcode_list($company_user_id, $conditions, $subcode_conditions=[]): array
@@ -533,7 +532,7 @@ class Qrcode_lib
         $subcode_list = array_column($subcode_list, NULL, 'user_qrcode_id');
 
         $this->CI->load->library('qrcode_lib');
-        $user_qrcode_id_list = array_keys($subcode_list);
+        $user_qrcode_id_list = array_keys( $subcode_list);
 
         if ( ! empty($subcode_list))
         {
@@ -831,89 +830,5 @@ class Qrcode_lib
         }
 
         return $list;
-    }
-
-
-    /**
-     * 取得申貸的案件列表
-     * @param array $where
-     * @param array $status_list
-     * @param string $start_date
-     * @param string $end_date
-     * @return array
-     */
-    public function get_target_apply_list(array $where, array $status_list, string $start_date = '', string $end_date = '')
-    {
-        $this->CI->load->library('user_lib');
-        $list = [];
-
-        foreach ($this->CI->user_lib->rewardCategories as $category => $productIdList)
-        {
-            $rs = $this->CI->user_qrcode_model->get_target_apply_list($where, $productIdList, $status_list, $start_date, $end_date);
-            foreach ($rs as $apply_target)
-            {
-                $list[$apply_target['user_qrcode_id']][$category][] = $apply_target;
-            }
-        }
-        return $list;
-    }
-
-    /**
-     * 取得推薦碼獎勵及相關資訊
-     * @param array $where
-     * @param string $start_date
-     * @param string $end_date
-     * @param int $limit
-     * @param int $offset
-     * @return array
-     */
-    public function get_promoted_apply_info(array $where, string $start_date = '', string $end_date = '', int $limit = 0, int $offset = 0): array
-    {
-        $this->CI->load->library('user_lib');
-        $filter_status = [
-            TARGET_WAITING_APPROVE,
-            TARGET_WAITING_SIGNING,
-            TARGET_WAITING_VERIFY,
-            TARGET_WAITING_BIDDING,
-            TARGET_WAITING_LOAN,
-            TARGET_REPAYMENTING,
-            TARGET_CANCEL,
-            TARGET_FAIL,
-            TARGET_REPAYMENTED,
-            TARGET_BANK_VERIFY,
-            TARGET_BANK_GUARANTEE,
-            TARGET_BANK_LOAN,
-            TARGET_BANK_REPAYMENTING,
-            TARGET_BANK_FAIL,
-            TARGET_BANK_REPAYMENTED
-        ];
-
-        $promote_codes = $this->get_user_qrcode_info([], $where, $limit, $offset);
-        if (empty($promote_codes))
-        {
-            return [];
-        }
-        else
-        {
-            $main_qrcode_ids = array_column($promote_codes, 'id');
-        }
-
-        // 主推薦碼的推薦申貸案件
-        $this->CI->load->model('user/user_qrcode_model');
-        $main_qrcode_reward_list = $this->get_target_apply_list($where, $filter_status, $start_date, $end_date);
-
-        // 子推薦碼的推薦申貸案件
-        $subcode_reward_list = [];
-        $subcode_list = $this->CI->user_subcode_model->get_subcode_list($main_qrcode_ids);
-        $subcode_list = array_column($subcode_list, NULL, 'user_qrcode_id');
-        $user_qrcode_id_list = array_keys($subcode_list);
-
-        if ( ! empty($subcode_list))
-        {
-            $where = ['id' => array_values($user_qrcode_id_list)];
-            $subcode_reward_list = $this->get_target_apply_list($where, $filter_status, $start_date, $end_date);
-        }
-
-        return array_replace($main_qrcode_reward_list, $subcode_reward_list);
     }
 }
