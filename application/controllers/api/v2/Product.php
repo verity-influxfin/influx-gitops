@@ -1468,8 +1468,14 @@ class Product extends REST_Controller {
 						$content_array_data = new StdClass();
 					}
                     $diploma = $key==8?$value:null;
+
+                    // 找當前登入的 user 所需的徵信項
                     $this->load->library('loanmanager/product_lib');
-                    $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
+                    $this->load->model('loan/target_associate_model');
+                    $get_associate_info = $this->target_associate_model->as_array()->get_by(['target_id' => $target->id, 'user_id' => $user_id,]);
+                    $associate_character = ! empty($get_associate_info['character']) ? $get_associate_info['character'] : ASSOCIATES_CHARACTER_REGISTER_OWNER;
+                    $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, [$associate_character]);
+
                     if (in_array($key, $product_certs) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL)
                     {
                         $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target);

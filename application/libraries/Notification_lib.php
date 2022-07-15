@@ -878,12 +878,12 @@ econtent;
 
 	public function notify_target_product_1002_associates($mail, $username, $subProduct, $character){
 
-		$title = "【普匯微企e秒貸】新增 「負責人配偶/保證人」";
+		$title = "【普匯信保專案融資】新增 「負責人配偶/保證人」";
 		$content = "「{$username}」公司已申請加入您作為「負責人配偶/保證人」
 請下載「普匯 influx」APP，並完成以下流程：
-1.註冊「一般使用者」並登入帳號，並從「資料中心」完成實名認證
-2.至「產品列表」中「普匯微企e秒貸」點選「查看狀態」
-3.完成其餘資料更新（個人資料表、聯徵報告...）";
+1.註冊「一般使用者」並登入帳號
+2.至首頁產品列表中「信保專案融資」點選「查看狀態」
+3.完成實名認證與其他資料更新";
 
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->email_notification($mail,$title,nl2br($content));

@@ -942,8 +942,8 @@ $config['product_list'] = [
         'identity' => 3,
         'alias' => 'SSM',
         'name' => '普匯信保專案融資',
-        'loan_range_s' => 500000,
-        'loan_range_e' => 6000000,
+        'loan_range_s' => 1000000,
+        'loan_range_e' => 1000000,
         'interest_rate_s' => 5,
         'interest_rate_e' => 20,
         'charge_platform' => PLATFORM_FEES,
@@ -986,7 +986,7 @@ $config['product_list'] = [
             ]
         ],
         'check_associates_certs' => TRUE,
-        'instalment' => [12, 24, 36, 48, 60, 72],
+        'instalment' => [36],
         'repayment' => [1],
         'targetData' => [],
         'secondInstance' => false,
@@ -1029,7 +1029,6 @@ $config['associates_certifications'] = [
         ASSOCIATES_CHARACTER_SPOUSE => [
             CERTIFICATION_IDENTITY,
             CERTIFICATION_EMAIL,
-            CERTIFICATION_PROFILE,
             CERTIFICATION_SIMPLIFICATIONJOB,
             CERTIFICATION_PASSBOOKCASHFLOW_2
         ],
@@ -1101,8 +1100,8 @@ $config['visul_id_des'] = [
     ],
     'J2' => [
         'name' => '信保專案融資',
-        'description' => '<span style=\'font-size:14px;color:white\'>1.額度最高600萬、1~5年期。<br>
-2.由銀行簽約對保放款。</span>',
+        'description' => '<span style=\'font-size:14px;color:white\'>1.額度最高100萬、3年期、利率3.8%<br>
+2.由銀行簽約對保放款<br/>3.信保基金保證、最低8成、最高95成</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',

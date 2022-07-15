@@ -2285,7 +2285,7 @@ class Target_lib
     {
         $this->CI->load->model('loan/target_associate_model');
         $this->CI->load->library('loanmanager/product_lib');
-        $product_certs = $this->CI->product_lib->get_product_certs_by_product($product, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
+
         $get_associates_list = $this->CI->target_associate_model->get_many_by([
             'target_id' => $target_id,
             'status <=' => 1,
@@ -2312,6 +2312,7 @@ class Target_lib
                     $certification = $self ? $self_certification : [];
                     $user_id = $self ? $self_user_id : '';
                     $temp['character'] == '' && $self ? $temp['character'] = $value->character : '' ;
+                    $product_certs = $this->CI->product_lib->get_product_certs_by_product($product, [$value->character]);
                     if(is_null($value->user_id)){
                         $content = json_decode($value->content);
                         $name = $content->name;
