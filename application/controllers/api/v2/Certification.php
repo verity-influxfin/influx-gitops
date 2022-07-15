@@ -3194,6 +3194,9 @@ class Certification extends REST_Controller {
             //     }
             // }
 
+            // 使用者手填資料
+            $content = $input;
+
             $file_fields = ['income_statement_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
@@ -3218,8 +3221,36 @@ class Certification extends REST_Controller {
                 }
             }
 
-			// 使用者手填資料
-			$content = $input;
+            $pic_fields = [
+                'nearly_a_year_image',
+                'nearly_two_year_image',
+                'nearly_three_year_image',
+            ];
+            $pic_ids = [];
+            foreach ($pic_fields as $pic)
+            {
+                if (empty($input[$pic . '_id']))
+                {
+                    $content[$pic . '_id'] = '';
+                    continue;
+                }
+                $content[$pic . '_url'] = $pic_ids[$pic . '_url'] = (int) $input[$pic . '_id'];
+            }
+            if ( ! empty($pic_ids))
+            {
+                $list = $this->log_image_model->get_many_by([
+                    'id' => $pic_ids,
+                    'user_id' => $user_id,
+                ]);
+                if (count($list) !== count($pic_ids))
+                {
+                    $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+                }
+                array_walk($list, function ($item) use ($pic_ids, &$content) {
+                    $key = array_search($item->id, $pic_ids);
+                    $content[$key] = $item->url;
+                });
+            }
 
             $param		= [
                 'user_id'			=> $user_id,

@@ -173,6 +173,36 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><span>近一年營業收入分類標準</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode1">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近二年營業收入分類標準</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近三年營業收入分類標準</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode3">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近一年營業收入淨額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome1">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近二年營業收入淨額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近三年營業收入淨額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome3">
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
                                     </tr>
                                     </tbody>
@@ -299,6 +329,36 @@
                                     <tr>
                                         <td><span>近三年變動成本</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearVariableCost">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近一年營業收入分類標準</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode1">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近二年營業收入分類標準</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近三年營業收入分類標準</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode3">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近一年營業收入淨額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome1">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近二年營業收入淨額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近三年營業收入淨額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome3">
                                         </td>
                                     </tr>
                                     <tr>
@@ -491,6 +551,7 @@
                     }
                 }).then(({ data }) => {
                     mergeDeep(this.formData, data.response)
+                    console.log(this.formData);
                 })
             }
         },

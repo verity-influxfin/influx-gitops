@@ -18,21 +18,31 @@ class Cert_incomestatement extends Ocr_parser_base
      */
     public function get_image_list(): array
     {
-        if (empty($this->content['income_statement_image']))
-        {
-            return [];
-        }
-
-        $this->CI->load->model('log/log_image_model');
-        $image_log = $this->CI->log_image_model->as_array()->get_many(explode(',', $this->content['income_statement_image']));
         $image_list = [];
-        array_walk($image_log, function ($element) use (&$image_list) {
-            if ( ! empty($element['url']))
+        $image_fields = $this->get_image_fields();
+        array_walk($this->content, function ($element, $key) use (&$image_list, &$image_fields) {
+            if (in_array($key, $image_fields))
             {
-                $image_list[] = $element['url'];
+                if ( ! empty($element))
+                {
+                    $image_list[] = $element;
+                }
             }
         });
         return $image_list;
+    }
+
+    /**
+     * 取得 content 中儲存圖片的 key
+     * @return string[]
+     */
+    private function get_image_fields(): array
+    {
+        return [
+            'nearly_a_year_image_url',
+            'nearly_two_year_image_url',
+            'nearly_three_year_image_url',
+        ];
     }
 
     /**
@@ -45,11 +55,23 @@ class Cert_incomestatement extends Ocr_parser_base
         $result = [];
         foreach ($task_res_data as $value)
         {
+            $image_key = array_search($value['img_url'], $this->content, TRUE);
+            if ($image_key === FALSE)
+            {
+                continue;
+            }
+            preg_match('/nearly_(\w+)_year_image_url/', $image_key, $matches);
+            if (empty($matches))
+            {
+                continue;
+            }
+            $year = array_search($matches[1], [1 => 'a', 2 => 'two', 3 => 'three'], TRUE);
             $result[] = [
-                'CompName1' => $value['company_name'], // 近一年損益表營利事業名稱
-                'CompId1' => $value['company_tax_id_no'], // 近一年損益表營利事業統一編號
-                'IndustryCode1' => $value['89'], // 近一年損益表營業收入分類標準代號
-                'AnnualIncome1' => str_replace(',', '', $value['90']), // 近一年損益表營業收入淨額
+                'img_url' => $value['img_url'],
+                "CompName{$year}" => $value['company_name'], // 近一年損益表營利事業名稱
+                "CompId{$year}" => $value['company_tax_id_no'], // 近一年損益表營利事業統一編號
+                "IndustryCode{$year}" => $value['89'], // 近一年損益表營業收入分類標準代號
+                "AnnualIncome{$year}" => str_replace(',', '', $value['90']), // 近一年損益表營業收入淨額
             ];
         }
         return $result;

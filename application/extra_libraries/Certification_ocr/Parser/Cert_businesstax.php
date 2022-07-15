@@ -23,7 +23,6 @@ class Cert_businesstax extends Ocr_parser_base
         array_walk($this->content, function ($element, $key) use (&$image_list, &$image_fields) {
             if (in_array($key, $image_fields))
             {
-                unset($image_fields[$key]);
                 if ( ! empty($element))
                 {
                     $image_list[] = $element;
@@ -77,9 +76,22 @@ class Cert_businesstax extends Ocr_parser_base
         $result = [];
         foreach ($task_res_data as $value)
         {
+            $image_key = array_search($value['img_url'], $this->content, TRUE);
+            if ($image_key === FALSE)
+            {
+                continue;
+            }
+            preg_match('/(last(One|Two|Three|Four)YearInvoice)Image(M\dM\d)/', $image_key, $matches);
+            if (empty($matches))
+            {
+                continue;
+            }
+            $year = $matches[2];
+            $month = $matches[3];
             $result[] = [
-                'businessTaxLastOneYear' => $value['yyy'],
-                'lastOneYearInvoiceAmountM1M2' => (int) str_replace(',', '', $value['21']) + (int) str_replace(',', '', $value['22']),
+                'img_url' => $value['img_url'],
+                "businessTaxLast{$year}Year" => $value['yyy'],
+                "last{$year}YearInvoiceAmount{$month}" => (int) str_replace(',', '', $value['21']) + (int) str_replace(',', '', $value['22']),
             ];
         }
         return $result;

@@ -1573,16 +1573,31 @@ class Certification extends MY_Admin_Controller {
         }
 
         $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
-
-        // 公司資料表
-        if($certification_info->certification_id == 1018 && !empty($content)){
-            $replace_content = $content;
-            foreach($replace_content as $key => $value){
-                if(is_array($value)){
-                    unset($replace_content[$key]);
-                }
+        if ( ! empty($content))
+        {
+            switch ($certification_info->certification_id)
+            {
+                case CERTIFICATION_PROFILEJUDICIAL: // 公司資料表
+                    $replace_content = $content;
+                    foreach($replace_content as $key => $value){
+                        if(is_array($value)){
+                            unset($replace_content[$key]);
+                        }
+                    }
+                    $response_data = $replace_content;
+                    break;
+                case CERTIFICATION_BUSINESSTAX: // 近三年401/403/405表
+                case CERTIFICATION_INCOMESTATEMENT: // 近三年所得稅結算申報書
+                    $ocr_parser_content = call_user_func_array('array_merge', $content['ocr_parser']['content']);
+                    foreach ($ocr_parser_content as $key => $value)
+                    {
+                        if (empty($content[$key]))
+                        {
+                            $content[$key] = $value;
+                        }
+                    }
+                    break;
             }
-            $response_data = $replace_content;
         }
 
         if(isset($content) && !empty($content)){
