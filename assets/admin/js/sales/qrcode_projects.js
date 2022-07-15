@@ -105,6 +105,7 @@ var app = new Vue({
         download: 0,
     },
     context: '',
+		inputKeys: [],
     contract_printing: '',
     data: [],
     is_waiting_response: false,
@@ -194,7 +195,7 @@ var app = new Vue({
         this.get_context(apply_id, function (contract) {
             self.mode = 'edit';
             self.context = contract.split(/\%(\S+)\%/g).filter((x, i) => i % 2 == 0);
-            console.log(self.context);
+            self.inputKeys = contract.split(/\%(\S+)\%/g).filter((x, i) => i % 2 == 1);
         });
     },
     cancel: function () {
