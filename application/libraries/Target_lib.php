@@ -2216,14 +2216,19 @@ class Target_lib
             'charge_platform' => $sub_product['charge_platform'],
             'charge_platform_min' => $sub_product['charge_platform_min'],
             'certifications' => $sub_product['certifications'],
+            'option_certifications' => $sub_product['option_certifications'],
+            'backend_option_certifications' => $sub_product['backend_option_certifications'],
             'instalment' => $sub_product['instalment'],
             'repayment' => $sub_product['repayment'],
             'targetData' => $sub_product['targetData'],
             'secondInstance' => $sub_product['secondInstance'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
-            'checkOwner' => isset($product['checkOwner']) ? $product['checkOwner'] : false,
+            'checkOwner' => $product['checkOwner'] ?? FALSE,
             'status' => $sub_product['status'],
+            'need_upload_images' => $sub_product['need_upload_images'] ?? null,
+            'available_company_categories' => $sub_product['available_company_categories'] ?? null,
+            'default_reason' => $sub_product['default_reason'] ?? ''
         );
     }
 
@@ -2546,5 +2551,155 @@ class Target_lib
         );
 
         return TRUE;
+    }
+    
+    /**
+     * 取得案件相關的詳細資訊
+     * @param array $target_ids
+     * @return mixed
+     */
+    public function get_targets_detail(array $target_ids)
+    {
+        $this->CI->load->model('loan/target_model');
+        $this->CI->load->model('transaction/transaction_model');
+        $this->CI->load->model('user/user_certification_model');
+        $this->CI->load->library('credit_lib');
+
+        $product_list = $this->CI->config->item('product_list');
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        $subloan_list = $this->CI->config->item('subloan_list');
+        $temp_remain_amount_list = [];
+
+        $targets = $this->CI->target_model->get_targets_detail(['id' => $target_ids]);
+        $user_loaned_count_list = $this->CI->target_model->getUserStatusByTargetId($target_ids);
+        $user_loaned_count_list = array_column($user_loaned_count_list, 'total_count', 'user_id');
+
+        $where = ['investor' => USER_BORROWER, 'status' => 1];
+        $user_cert_list = $this->CI->user_certification_model->getCertificationsByTargetId($target_ids, $where);
+
+        $remain_principle_List = $this->CI->transaction_model->get_targets_account_payable_amount($target_ids, SOURCE_AR_PRINCIPAL, $group_by_target=TRUE);
+        $remain_principle_List = array_column($remain_principle_List, 'total_count', 'target_id');
+
+        foreach ($targets as &$target)
+        {
+            $user_id = $target['user_id'];
+            $product_id = $target['product_id'];
+            $sub_product_id = $target['sub_product_id'];
+            if ( ! array_key_exists($user_id, $temp_remain_amount_list))
+            {
+                $remain_amount = $this->CI->credit_lib->get_remain_amount($user_id, $product_id, $sub_product_id);
+                $temp_remain_amount_list[$user_id] = $remain_amount;
+            }
+
+            $target['product_name'] = $product_list[$product_id]['name'] . ($sub_product_id != 0 ? '/' . $sub_product_list[$sub_product_id]['identity'][$product_list[$product_id]['identity']]['name'] : '') . (preg_match('/' . $subloan_list . '/', $target['target_no']) ? '(產品轉換)' : '');
+            $target['user_loyalty_status'] = ($user_loaned_count_list[$user_id] ?? 0) > 0 ? '舊戶':'新戶';
+            $target['user_identity'] = (isset($user_cert_list[$user_id]) && isset($user_cert_list[$user_id][CERTIFICATION_IDENTITY]) ? "是" : "否");
+            $target['apply_date'] = date('Y-m-d',$target['created_at']);
+            $target['apply_time'] = date('H:i:s',$target['created_at']);
+            // TODO: 封存當下的可動用額度，還是匯出當下的？
+            $target['unused_credit_line'] = floor($target['unused_credit_line'] / 1000) * 1000;
+            // $target['unused_credit_line'] = $temp_remain_amount_list[$user_id]['user_available_amount'];
+            $target['principle_balance'] = $remain_principle_List[$target['id']] ?? 0;
+        }
+
+        return $targets;
+    }
+    
+    /**
+     * 取得產品設定結構
+     * @param $product_id
+     * @param $sub_product_id
+     * @return array|mixed
+     */
+    public function get_product_info($product_id, $sub_product_id)
+    {
+        $product_list = $this->CI->config->item('product_list');
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        $product = $product_list[$product_id];
+        if (isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product']))
+        {
+            $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+            $product = $this->sub_product_profile($product, $sub_product_data);
+
+        }
+        return $product;
+    }
+
+    /**
+     * 將 Target meta value 轉換成有意義的顯示文字
+     * @param $meta_key
+     * @param $meta_value
+     * @return string
+     */
+    public function convert_meta_value(string $meta_key, $meta_value)
+    {
+        switch ($meta_key)
+        {
+            case TARGET_META_COMPANY_CATEGORY_NUMBER:
+                switch ($meta_value)
+                {
+                    case COMPANY_CATEGORY_NORMAL: return COMPANY_CATEGORY_NAME_NORMAL;
+                    case COMPANY_CATEGORY_FINANCIAL: return COMPANY_CATEGORY_NAME_FINANCIAL;
+                    case COMPANY_CATEGORY_GOVERNMENT: return COMPANY_CATEGORY_NAME_GOVERNMENT;
+                    case COMPANY_CATEGORY_LISTED: return COMPANY_CATEGORY_NAME_LISTED;
+                }
+                break;
+        }
+        return $meta_value;
+    }
+
+    /**
+     * 將 Target meta key 轉換成有意義的顯示文字
+     * @param string $meta_key
+     * @return string
+     */
+    public function convert_meta_key(string $meta_key)
+    {
+        switch ($meta_key)
+        {
+            case TARGET_META_COMPANY_CATEGORY_NUMBER:
+                return '自填職業';
+        }
+        return $meta_key;
+    }
+
+    /**
+     * 取得案件 meta 列表
+     * @param $target_id
+     * @return array
+     */
+    public function get_meta_list($target_id) : array {
+        $target_meta = [];
+        $this->CI->load->model('loan/target_meta_model');
+        $rs = $this->CI->target_meta_model->as_array()->get_many_by(['target_id' => $target_id]);
+
+        foreach ($rs as &$meta)
+        {
+            if (isJson($meta['meta_value']))
+            {
+                $meta['meta_value'] = json_decode($meta['meta_value'], TRUE);
+            }
+
+            if (is_array($meta['meta_value']))
+            {
+                foreach ($meta['meta_value'] as $value)
+                {
+                    $meta['meta_value_alias'] = $this->convert_meta_value($meta['meta_key'], $value);
+                }
+            }
+            else
+            {
+                $meta['meta_value_alias'] = $this->convert_meta_value($meta['meta_key'], $meta['meta_value']);
+            }
+
+            $target_meta[] = [
+                'meta_key' => $meta['meta_key'],
+                'meta_key_alias' => $this->convert_meta_key($meta['meta_key']),
+                'meta_value' => $meta['meta_value'],
+                'meta_value_alias' => $meta['meta_value_alias']
+            ];
+        }
+
+        return $target_meta;
     }
 }
