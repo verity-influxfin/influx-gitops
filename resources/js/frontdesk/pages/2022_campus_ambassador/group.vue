@@ -6,7 +6,7 @@
         <div class="page-header-title-text">團體組</div>
         <div class="page-header-title-underline"></div>
       </div>
-      <div class="step-back" v-if="currentStep > 1 && currentStep < 5">
+      <div class="step-back" v-if="currentStep > 1 && currentStep < 6">
         <button
           class="btn btn-link"
           @click="
@@ -14,7 +14,7 @@
             error = false
           "
         >
-          <img src="@/asset/images/2022_campus_ambassador/Arrow 4.svg" />
+          <img src="@/asset/images/2022_campus_ambassador/Arrow 4_2.svg" />
         </button>
       </div>
     </div>
@@ -200,6 +200,7 @@
                 name="school"
                 v-model="formSchool"
                 placeholder="請選擇您的學校"
+                required
               >
                 <option selected disabled value="">-請選擇-</option>
                 <option
@@ -221,6 +222,7 @@
                 class="item-input"
                 name="school_city"
                 placeholder="請選擇您學校所在縣市"
+                required
               >
                 <option selected disabled value="">-請選擇-</option>
                 <option value="臺北市">臺北市</option>
@@ -272,6 +274,7 @@
                 class="item-input"
                 name="major"
                 placeholder="請選擇您的科系"
+                required
               >
                 <option selected disabled value="">-請選擇-</option>
                 <option
@@ -291,8 +294,8 @@
               <select
                 class="item-input"
                 name="grade"
-                id=""
                 placeholder="請選擇您的年級"
+                required
               >
                 <option selected disabled value="">-請選擇-</option>
                 <option value="1">大一</option>
@@ -323,7 +326,7 @@
           <div class="col-md-6 col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
               <span class="item required">你的生日:</span>
-              <input type="date" class="item-input" name="birthday" />
+              <input type="date" class="item-input" name="birthday" required />
             </div>
           </div>
         </div>
@@ -457,7 +460,7 @@
                     required
                   />
                   <span class="outside"><span class="inside"></span></span>
-                  台唯一榮獲金控創投投資的金融科技公司
+                  台灣唯一榮獲金控創投投資的金融科技公司
                 </label>
                 <label class="w-100">
                   <input
@@ -795,6 +798,9 @@ $color--primary: #1981db;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 26px;
 }
+.btn-link {
+  transform: scale(1.5);
+}
 .btn-choose-primary {
   padding: 8px;
   border-radius: 8px;
@@ -1064,6 +1070,9 @@ $color--primary: #1981db;
     padding: 5px 22px;
     font-size: 13px;
     line-height: 19px;
+  }
+  .btn-link {
+    transform: scale(1);
   }
   .btn-choose-primary {
     padding: 5px;

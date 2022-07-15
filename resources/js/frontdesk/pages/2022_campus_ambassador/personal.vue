@@ -166,7 +166,7 @@
           <div class="col-md-6 col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-1">
               <span class="item required">你的生日:</span>
-              <input type="date" class="item-input" name="birthday" />
+              <input type="date" class="item-input" name="birthday" required />
             </div>
           </div>
         </div>
@@ -208,6 +208,7 @@
                 name="school"
                 v-model="formSchool"
                 placeholder="請選擇您的學校"
+                required
               >
                 <option selected disabled value="">-請選擇-</option>
                 <option
@@ -229,6 +230,7 @@
                 class="item-input"
                 name="major"
                 placeholder="請選擇您的科系"
+                required
               >
                 <option selected disabled value="">-請選擇-</option>
                 <option
@@ -248,8 +250,8 @@
               <select
                 class="item-input"
                 name="grade"
-                id=""
                 placeholder="請選擇您的年級"
+                required
               >
                 <option selected disabled value="">-請選擇-</option>
                 <option value="1">大一</option>
@@ -271,6 +273,7 @@
                 class="item-input"
                 name="school_city"
                 placeholder="請選擇您學校所在縣市"
+                required
               >
                 <option selected disabled value="">-請選擇-</option>
                 <option value="臺北市">臺北市</option>
@@ -415,7 +418,7 @@
                     required
                   />
                   <span class="outside"><span class="inside"></span></span>
-                  台唯一榮獲金控創投投資的金融科技公司
+                  台灣唯一榮獲金控創投投資的金融科技公司
                 </label>
                 <label class="w-100">
                   <input
@@ -731,6 +734,9 @@ $color--primary: #f2b162;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 26px;
 }
+.btn-link {
+  transform: scale(1.5);
+}
 .form {
   .item {
     font-style: normal;
@@ -953,6 +959,9 @@ $color--primary: #f2b162;
     background-color: $color--primary;
     font-size: 13px;
     line-height: 19px;
+  }
+  .btn-link {
+    transform: scale(1);
   }
   .form {
     .item {
