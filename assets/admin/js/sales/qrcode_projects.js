@@ -253,11 +253,11 @@ var app = new Vue({
             alert('下載獎金 必須是數字')
             return
         }
-		if (enterprise_reward === NaN) {
+		if (small_enterprise_reward_amount === NaN) {
 			alert('第三⽅合作個⼈產品 必須是數字')
 			return
 		}
-		if (enterprise_platform_fee === NaN) {
+		if (small_enterprise_platform_fee === NaN) {
 			alert('第三⽅合作企業產品 必須是數字')
 			return
 		}
