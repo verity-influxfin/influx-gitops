@@ -113,7 +113,7 @@
                                             <td><?= (($value['loanedCount']['small_enterprise']??0)+(array_sum($value['collaborationCount']??[]))) ?></td>
                                             <td><?= $value['totalRewardAmount']??'' ?></td>
                                             <td><?= ($value['info']['status']??'')==1?"啟用":"停用" ?></td>
-											<td><a href="<?=admin_url('sales/promote_edit')."?id=".$value['info']['id'] ?><?=isset($_GET['sdate'])&&$_GET['sdate']!=''?"&sdate=".$_GET['sdate']:''?><?=isset($_GET['edate'])&&$_GET['edate']!=''?"&edate=".$_GET['edate']:''?>" target="_blank" class="btn btn-default">詳細資訊</a></td>
+											<td><a href="<?=admin_url('sales/promote_detail')."?id=".$value['info']['id'] ?><?=isset($_GET['sdate'])&&$_GET['sdate']!=''?"&sdate=".$_GET['sdate']:''?><?=isset($_GET['edate'])&&$_GET['edate']!=''?"&edate=".$_GET['edate']:''?>" target="_blank" class="btn btn-default">詳細資訊</a></td>
                                         </tr>
 									<?php
 									}}

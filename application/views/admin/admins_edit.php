@@ -58,17 +58,6 @@
 												<input id="email" name="email" class="form-control" placeholder="Enter Email">
 											<? } ?>
                                         </div>
-										<div class="form-group">
-                                            <label>角色</label>
-                                            <select class="form-control" id="role_id" name="role_id">
-												<? 
-												if(isset($role_name) && !empty($role_name)){
-													foreach($role_name as $key => $value){
-												?>
-                                                <option value="<?=$key; ?>" <?=isset($data->role_id)&&$data->role_id==$key?"selected":"";?>><?=$value; ?></option>
-												<? }} ?>
-                                            </select>
-                                        </div>
 										<?
 											if($type!="edit"){
 										?>

@@ -72,7 +72,7 @@
 											<td><?=isset($value->prepayment->damage)?$value->prepayment->damage:"" ?></td>
 											<td><?=isset($value->prepayment->settlement_date)?$value->prepayment->settlement_date:"" ?></td>
                                             <td><?=isset($value->prepayment->created_at)?date("Y-m-d H:i:s",$value->prepayment->created_at):"" ?></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+											<td><a href="<?=admin_url('target/target_prepayment_detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                        
 									<?php 
 										}}

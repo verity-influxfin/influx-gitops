@@ -10,7 +10,7 @@
                 <a class="navbar-brand" href="<?=admin_url('AdminDashboard') ?>">
                     <img src="<?=FRONT_CDN_URL ?>public/logo.png" alt="" width="150px" />
                 </a>
-                <h5 class="navbar-brand"><?=isset($login_info->name)?$login_info->name:''?> [ <?=isset($role_name)?$role_name:''?> ]</h5>
+                <h5 class="navbar-brand"><?=isset($login_info->name)?$login_info->name:''?> [ <?= "{$role_info['department']} {$role_info['position']}" ?> ]</h5>
             </div>
             <!-- /.navbar-header -->
 
@@ -38,23 +38,23 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                     <?php if (! empty($menu)):?>
-                    <?php foreach ($menu as $key => $value):?>
-                        <?php if (isset($value['name'])):?>
-                            <li class="<?=($active == $key)?'active':''?>">
-                                <a href="<?=admin_url($key)?>/"><?=$value['name']?></a>
+                        <?php foreach ($menu as $key => $value):
+                            if (empty($value['parent_url']) || empty($value['parent_name'])) continue; ?>
+                            <li data-id="<?= $key ?>" class="<?= (strtolower($active) == strtolower($key)) ? 'active' : '' ?>">
+                                <a href="<?= $value['parent_url'] ?>"><?= $value['parent_name'] ?>
+                                    <?= ! empty($value['sub']) ? '<span class="fa arrow"></span>' : '' ?>
+                                </a>
+                                <?php if ( ! empty($value['sub']))
+                                { ?>
+                                    <ul class="nav nav-second-level">
+                                        <?php array_map(function ($item) {
+                                            if (empty($item['url']) || empty($item['name'])) return;
+                                            echo '<li><a href="' . $item['url'] . '">' . $item['name'] . '</a></li>';
+                                        }, $value['sub']); ?>
+                                    </ul>
+                                <?php } ?>
                             </li>
-                        <?php else:?>
-                            <li data-id="<?=$key?>" class="<?=($active == $key)?'active':''?>">
-                                <a href="#"><?=$value['parent_name']?><span class="fa arrow"></span></a>
-                                <ul class="nav nav-second-level">
-                                    <?php unset($value["parent_icon"],$value["parent_name"]); ?>
-                                    <?php foreach($value as $k => $v):?>
-                                    <li><a href="<?=admin_url($key . '/' . $k)?>"><?=$v?></a></li>
-                                    <?php endforeach;?>
-                                </ul>
-                            </li>
-                        <?php endif;?>
-                    <?php endforeach;?>
+                        <?php endforeach; ?>
                     <?php endif;?>
                     <?php if (is_development()): ?>
                         <li><a href="<?=admin_url('TestScript/')?>">測試工具</a></li>

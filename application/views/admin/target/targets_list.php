@@ -22,9 +22,10 @@
                     var status 				= $('#status :selected').val();
                     var exports 			= $('#export :selected').val();
                     var dateRange           = '&sdate='+$('#sdate').val()+'&edate='+$('#edate').val();
+                    const url = new URL(location.href);
                     if(tsearch==''&&delay==''&&status==''){
                         if(confirm("即將撈取各狀態案件，過程可能需點時間，請勿直接關閉， 確認是否執行？")) {
-                            top.location = './index?status=99'+(exports==1?'&export=1':'')+dateRange;
+                            top.location = url.pathname + '?status=99'+(exports==1?'&export=1':'')+dateRange;
                         }
                     }
                     else{
@@ -38,7 +39,7 @@
 								exports_query_str = '&export=2';
 								break;
 						}
-						top.location = './index?delay=' + delay + '&status=' + status + '&tsearch=' + tsearch + exports_query_str + dateRange;
+						top.location = url.pathname + '?delay=' + delay + '&status=' + status + '&tsearch=' + tsearch + exports_query_str + dateRange;
                     }
 				}
                 $(document).off("keypress","input[type=text]").on("keypress","input[type=text]" ,  function(e){
@@ -170,7 +171,7 @@
                                             <td><?=isset($value->credit->created_at)?date("Y-m-d H:i:s",$value->credit->created_at):'' ?></td>
                                             <td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
                                             <td><?=isset($value->remark)?nl2br($value->remark):'' ?></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
+											<td><a href="<?=admin_url('target/detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>
 									<?php
 									}}

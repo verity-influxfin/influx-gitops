@@ -38,7 +38,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <form action="<?=admin_url('target/target_export') ?>" method="post" style="display: inline-block">
+                            <form action="<?=admin_url('target/target_repayment_export') ?>" method="post" style="display: inline-block">
                                 <input type="submit" class="btn btn-primary float-right" value="匯出Excel" disabled />
                                 <input id="target_export" type="hidden" name="ids" />
                             </form>
@@ -106,7 +106,7 @@
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><?=isset($value->credit)?date("Y-m-d H:i:s",$value->credit->created_at):"" ?></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+											<td><a href="<?=admin_url('target/target_repayment_detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                
 									<?php 
 										}}
