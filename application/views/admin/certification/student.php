@@ -370,7 +370,7 @@
                                     </table>
                                 </form>
                             </div>
-                            <form role="form" method="post">
+                            <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                 <div class="form-group">
                                     <label>專業證書加分 (最高4級)</label>
                                     <?php if ($data->status == 1) { ?>
@@ -482,7 +482,7 @@
                                     ?>
                                 </div>
                                 <h4>審核</h4>
-                                <form role="form" method="post">
+                                <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                     <fieldset>
                                         <div class="form-group">
                                             <select id="status" name="status" class="form-control"
