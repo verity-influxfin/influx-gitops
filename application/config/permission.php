@@ -81,7 +81,7 @@ $config['permission'] = [
             'loan_return' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'update'],
             'loan_success' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'update'],
             'loan_failed' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'update'],
-            'transaction_display' => ['model' => 'Target', 'submodel' => 'index', 'action' => 'update'],
+            'transaction_display' => ['model' => 'Target', 'submodel' => 'index', 'action' => 'read'],
             'target_repayment_export' => ['model' => 'Target', 'submodel' => 'repayment', 'action' => 'read'],
             'target_repayment_detail' => ['model' => 'Target', 'submodel' => 'repayment', 'action' => 'read'],
             'target_finished_export' => ['model' => 'Target', 'submodel' => 'finished', 'action' => 'read'],
