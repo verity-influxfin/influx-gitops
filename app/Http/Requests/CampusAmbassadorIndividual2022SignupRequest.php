@@ -88,7 +88,7 @@ class CampusAmbassadorIndividual2022SignupRequest extends FormRequest
             'school_city' => '學校所在地',
             'social' => '社群連結',
             'photo' => '生活照',
-            'introduction_brief' => '一句話形容你自己',
+            'introduction_brief' => '一句話行銷你自己',
             'introduction' => '自我介紹',
             'qa_1' => '普匯知多少第 1 題',
             'qa_2' => '普匯知多少第 2 題',

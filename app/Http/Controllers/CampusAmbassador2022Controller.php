@@ -94,7 +94,7 @@ class CampusAmbassador2022Controller extends Controller
                 'qa_3' => $input['qa_3'],
                 'created_ip' => $request->ip(),
             ]);
-            CampusAmbassador2022::where('id', $ambassador['phone'])->update([
+            CampusAmbassador2022::where('id', $ambassador['id'])->update([
                 'photo' => $this->_upload_file($ambassador['phone'], 'photo', 'individual')
             ]);
             DB::commit();
@@ -158,7 +158,7 @@ class CampusAmbassador2022Controller extends Controller
                 'qa_3' => $input['qa_3'],
                 'created_ip' => $request->ip(),
             ]);
-            CampusAmbassador2022::where('id', $ambassador['phone'])->update([
+            CampusAmbassador2022::where('id', $ambassador['id'])->update([
                 'photo' => $this->_upload_file($ambassador['phone'], 'photo', 'individual')
             ]);
             DB::commit();
