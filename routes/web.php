@@ -309,23 +309,6 @@ Route::post('setGamePrize','Cardgamecontroller@setGamePrize');
 
 Route::view('/cardgame/{path?}', 'cardgame');
 
-Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
-
-    $name = str_replace('-', '_', strtolower($name));
-
-    switch (true)
-    {
-
-        // 報名截止跳轉活動介紹頁
-        case $name == '2021_campus_ambassador' && $path != 'index':
-            return redirect('/campaign/2021-campus-ambassador');
-
-        case view()->exists($path = sprintf('campaigns/%s/%s', $name, $path)):
-            return view($path);
-    }
-    throw new NotFoundHttpException();
-});
-
 Route::view('/{path?}', 'index');
 
 

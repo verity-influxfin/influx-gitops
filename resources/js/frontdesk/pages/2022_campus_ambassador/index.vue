@@ -684,6 +684,7 @@ export default {
     }
   },
   mounted() {
+    $('title').text('2022普匯校園大使')
     SwiperCore.use([Navigation, Pagination])
     const swiper = new Swiper('.swiper', {
       navigation: {
