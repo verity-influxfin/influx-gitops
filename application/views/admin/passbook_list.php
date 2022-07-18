@@ -26,14 +26,14 @@
                                         <td>
                                             <?=PLATFORM_VIRTUAL_ACCOUNT ?>
                                         </td>
-                                        <td><a href="<?=admin_url('passbook/edit')."?id=".PLATFORM_VIRTUAL_ACCOUNT ?>" class="btn btn-default">查看明細</a></td>
+                                        <td><a href="<?=admin_url('passbook/detail')."?id=".PLATFORM_VIRTUAL_ACCOUNT ?>" class="btn btn-default">查看明細</a></td>
                                     </tr>
                                    <tr class="list 0">
                                         <td>平台台新虛擬帳號</td>
                                         <td>
                                             <?=PLATFORM_TAISHIN_VIRTUAL_ACCOUNT ?>
                                         </td>
-                                        <td><a href="<?=admin_url('passbook/edit')."?id=".PLATFORM_TAISHIN_VIRTUAL_ACCOUNT ?>" class="btn btn-default">查看明細</a></td>
+                                        <td><a href="<?=admin_url('passbook/detail')."?id=".PLATFORM_TAISHIN_VIRTUAL_ACCOUNT ?>" class="btn btn-default">查看明細</a></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -88,7 +88,7 @@
 											<td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('passbook/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+											<td><a href="<?=admin_url('passbook/detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                        
 									<?php 
 										}}

@@ -145,6 +145,7 @@ $route['admin/(Passbook|passbook)/user_bankaccount_failed'] = 'admin/Certificati
 $route['admin/(Passbook|passbook)/user_bankaccount_resend'] = 'admin/Certification/user_bankaccount_resend';
 $route['admin/(Passbook|passbook)/user_bankaccount_verify'] = 'admin/Certification/user_bankaccount_verify';
 $route['admin/(Passbook|passbook)/user_bankaccount_edit'] = 'admin/Certification/user_bankaccount_edit';
+$route['admin/(Passbook|passbook)/detail'] = 'admin/Passbook/edit';
 // [法人管理]
 $route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)'] = 'admin/Judicialperson/index';
 $route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)_edit'] = 'admin/Judicialperson/edit';
