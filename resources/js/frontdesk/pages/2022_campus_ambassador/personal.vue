@@ -336,7 +336,7 @@
         <div class="row no-gutters">
           <div class="col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
-              <span class="item required">你的生活照:</span>
+              <span class="item required">你的生活照(3MB內JPG檔):</span>
               <input
                 type="file"
                 class="item-input"
@@ -557,7 +557,7 @@
         <div class="row no-gutters">
           <div class="col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
-              <span class="item">作品集:</span>
+              <span class="item">作品集(5MB內PDF檔):</span>
               <input
                 type="file"
                 class="item-input"
@@ -570,7 +570,7 @@
         <div class="row no-gutters">
           <div class="col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
-              <span class="item">影片上傳:</span>
+              <span class="item">影片上傳(30MB內MP4檔):</span>
               <input
                 type="file"
                 class="item-input"
@@ -584,7 +584,7 @@
         <div class="row no-gutters">
           <div class="col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
-              <span class="item">影片連結:</span>
+              <span class="item">影片連結(如影片過大，請提供連結):</span>
               <input type="url" class="item-input" name="video_link" />
             </div>
           </div>
