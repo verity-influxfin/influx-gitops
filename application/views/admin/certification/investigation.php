@@ -94,7 +94,7 @@
 								?>
 								</div>
 								<div class="col-lg-12">
-									<form role="form" method="post">
+									<form role="form" method="post" action="/admin/certification/user_certification_edit">
                                     <? if ($data->status == 1) { ?>
                                         <div class="form-group">
                                             <label>查詢次數</label>
