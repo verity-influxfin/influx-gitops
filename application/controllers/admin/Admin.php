@@ -27,7 +27,6 @@ class Admin extends MY_Admin_Controller {
 			$page_data['list'] 			= $list;
 			$page_data['name_list'] 	= $this->admin_model->get_name_list();
 			$page_data['status_list'] 	= $this->admin_model->status_list;
-			$page_data['role_name'] = $this->role_model->get_name_list();
 		}
 
 
@@ -93,8 +92,7 @@ class Admin extends MY_Admin_Controller {
 	}
 
 	public function add(){
-		$role_name 	= $this->role_model->get_name_list();
-		$page_data 	= array('type'=>'add','role_name'=>$role_name);
+		$page_data 	= array('type'=>'add');
 		$data		= array();
 		$post 		= $this->input->post(NULL, TRUE);
 		if(empty($post)){
@@ -103,7 +101,7 @@ class Admin extends MY_Admin_Controller {
 			$this->load->view('admin/admins_edit',$page_data);
 			$this->load->view('admin/_footer');
 		}else{
-			$required_fields 	= [ 'account', 'role_id', 'name', 'phone', 'birthday', 'email', 'password'];
+			$required_fields 	= [ 'account', 'name', 'phone', 'birthday', 'email', 'password'];
 			foreach ($required_fields as $field) {
 				if (empty($post[$field])) {
 					alert($field.' is empty',admin_url('admin/index'));
@@ -130,8 +128,7 @@ class Admin extends MY_Admin_Controller {
 	}
 
 	public function edit(){
-		$role_name 	= $this->role_model->get_name_list();
-		$page_data 	= array('type'=>'edit','role_name'=>$role_name);
+		$page_data 	= array('type'=>'edit');
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
 
@@ -156,7 +153,7 @@ class Admin extends MY_Admin_Controller {
 			}
 		}else{
 			if(!empty($post['id'])){
-				$fields = ['name', 'role_id', 'phone', 'birthday', 'password','status'];
+				$fields = ['name', 'phone', 'birthday', 'password','status'];
 				foreach ($fields as $field) {
 					if (isset($post[$field])) {
 						$data[$field] = $post[$field];
@@ -316,5 +313,387 @@ class Admin extends MY_Admin_Controller {
 			return $code;
 		}
 	}
+
+    // 部門權限設定
+    public function group_permission_list()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/group_permission_list');
+        $this->load->view('admin/_footer');
+    }
+
+    // 部門權限設定-取列表資料
+    public function get_group_permission_list()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        $where = [];
+        if ( ! empty($get['division']))
+        {
+            $where['division LIKE'] = "%{$get['division']}%";
+        }
+
+        echo json_encode([
+            'list' => $this->group_model->get_many_by($where),
+            'position_list' => $this->position_list,
+        ]);
+    }
+
+    // 部門權限設定-編輯
+    public function group_permission_edit()
+    {
+        $post = $this->input->post(NULL, TRUE);
+        $get = $this->input->get(NULL, TRUE);
+
+        if (empty($post)) // 瀏覽表單
+        {
+            $id = (int) ($get['id'] ?? 0);
+            if ( ! $id)
+            { // query string沒有帶id
+                alert('查無此部門權限', admin_url('admin/group_permission_list'));
+            }
+
+            $group_info = $this->group_model->get_data_by_id($id);
+            if ( ! $group_info)
+            { // id撈不到東西
+                alert('查無此部門權限', admin_url('admin/group_permission_list'));
+            }
+            $this->load->library('permission_lib');
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/group_permission_edit', [
+                'data' => $group_info,
+                'position_list' => $this->position_list,
+                'permission_list' => $this->permission_list,
+                'action_type_list' => $this->action_type_list,
+                'permission_data' => $this->permission_lib->mapping_permission_data($group_info['permission']),
+            ]);
+            $this->load->view('admin/_footer');
+        }
+        else // 儲存表單
+        {
+            $id = (int) ($post['id'] ?? 0);
+            if ( ! $id)
+            { // 表單沒有帶id
+                alert('查無此部門權限', admin_url('admin/group_permission_list'));
+            }
+
+            $data = $this->_check_form_data(
+                $post,
+                ['division' => '部門', 'department' => '組別', 'position' => '角色名稱', 'permission' => '權限設定']
+            );
+            $data['updated_admin_id'] = $this->login_info->id;
+            unset($data['permission']);
+            $permission_data = $post['permission'];
+
+            if ($this->group_model->update_form_data($id, $data, $permission_data) === TRUE)
+            {
+                $this->admin_model->update_by(['group_id' => $id], ['permission_status' => 0]);
+                alert('更新成功', admin_url('admin/group_permission_list'));
+            }
+            else
+            {
+                alert('更新失敗，請洽工程師', admin_url('admin/group_permission_list'));
+            }
+        }
+    }
+
+    // 部門權限設定-新增
+    public function group_permission_add()
+    {
+        $post = $this->input->post(NULL, TRUE);
+
+        if (empty($post)) // 瀏覽表單
+        {
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/group_permission_edit', [
+                'position_list' => $this->position_list,
+                'permission_list' => $this->permission_list,
+                'action_type_list' => $this->action_type_list,
+            ]);
+            $this->load->view('admin/_footer');
+        }
+        else // 儲存表單
+        {
+            $data = $this->_check_form_data(
+                $post,
+                ['division' => '部門', 'department' => '組別', 'position' => '角色名稱', 'permission' => '權限設定']
+            );
+            $data['created_admin_id'] = $data['updated_admin_id'] = $this->login_info->id;
+            unset($data['permission']);
+            $permission_data = $post['permission'];
+
+            if ($this->group_model->insert_form_data($data, $permission_data) === TRUE)
+            {
+                alert('新增成功', admin_url('admin/group_permission_list'));
+            }
+            else
+            {
+                alert('新增失敗，請洽工程師', admin_url('admin/group_permission_list'));
+            }
+        }
+    }
+
+    // 人員權限設定
+    public function admin_permission_list()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/admin_permission_list');
+        $this->load->view('admin/_footer');
+    }
+
+    // 人員權限設定-取列表資料
+    public function get_admin_permission_list()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        $where = [];
+        if (isset($get['name']) && ! empty($get['name']))
+        {
+            $where['name LIKE'] = "%{$get['name']}%";
+        }
+
+        echo json_encode([
+            'list' => $this->admin_model->get_admin_group_data($where),
+            'position_list' => $this->position_list,
+        ]);
+    }
+
+    // 人員權限設定-編輯
+    public function admin_permission_edit()
+    {
+        $post = $this->input->post(NULL, TRUE);
+        $get = $this->input->get(NULL, TRUE);
+
+        if (empty($post)) // 瀏覽表單
+        {
+            $id = (int) ($get['id'] ?? 0);
+            if ( ! $id)
+            { // query string沒有帶id
+                alert('查無此人員權限', admin_url('admin/admin_permission_list'));
+            }
+
+            $admin_info = $this->admin_model->get_data_by_id($id);
+            if ( ! $admin_info)
+            { // id撈不到東西
+                alert('查無此人員權限', admin_url('admin/admin_permission_list'));
+            }
+            $this->load->library('permission_lib');
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/admin_permission_edit', [
+                'data' => $admin_info,
+                'permission_list' => $this->permission_list,
+                'action_type_list' => $this->action_type_list,
+                'admin_list' => [[
+                    'id' => $admin_info['id'] ?? 0,
+                    'email' => $admin_info['email'] ?? '',
+                    'name' => $admin_info['name'],
+                ]],
+                'position_list' => $this->position_list,
+                'permission_data' => $this->permission_lib->mapping_permission_data($admin_info['permission']),
+            ]);
+            $this->load->view('admin/_footer');
+        }
+        else // 儲存表單
+        {
+            $id = (int) ($post['id'] ?? 0);
+            if ( ! $id)
+            { // 表單沒有帶id
+                alert('查無此人員權限', admin_url('admin/admin_permission_list'));
+            }
+
+            $data = $this->_check_form_data(
+                $post,
+                ['group_id' => '部門']
+            );
+            $data['permission_status'] = 0;
+            $permission_data = $post['permission'] ?? [];
+
+            if ($this->admin_model->update_permission_data($id, $data, $permission_data) === TRUE)
+            {
+                alert('更新成功', admin_url('admin/admin_permission_list'));
+            }
+            else
+            {
+                alert('更新失敗，請洽工程師', admin_url('admin/admin_permission_list'));
+            }
+        }
+    }
+
+    // 人員權限設定-新增
+    public function admin_permission_add()
+    {
+        $post = $this->input->post(NULL, TRUE);
+
+        if (empty($post)) // 瀏覽表單
+        {
+            $admin_list = $this->admin_model->get_no_group_list();
+            array_unshift($admin_list, ['id' => 0, 'email' => '請選擇']);
+
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/admin_permission_edit', [
+                'permission_list' => $this->permission_list,
+                'action_type_list' => $this->action_type_list,
+                'admin_list' => $admin_list,
+                'position_list' => $this->position_list,
+            ]);
+            $this->load->view('admin/_footer');
+        }
+        else // 儲存表單
+        {
+            $data = $this->_check_form_data(
+                $post,
+                ['id' => '帳號', 'group_id' => '部門']
+            );
+            $permission_data = $post['permission'] ?? [];
+
+            if ($this->admin_model->update_permission_data($post['id'], $data, $permission_data) === TRUE)
+            {
+                alert('新增成功', admin_url('admin/admin_permission_list'));
+            }
+            else
+            {
+                alert('新增失敗，請洽工程師', admin_url('admin/admin_permission_list'));
+            }
+        }
+    }
+
+    // 權限審核
+    public function permission_grant_list()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/permission_grant_list');
+        $this->load->view('admin/_footer');
+    }
+
+    // 權限審核-取列表資料
+    public function get_permission_list()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        $where = [];
+        if ( ! empty($get['name']))
+        {
+            $where['name LIKE'] = "%{$get['name']}%";
+        }
+        if ( ! empty($get['division']))
+        {
+            $where['division LIKE'] = "%{$get['division']}%";
+        }
+
+        echo json_encode([
+            'list' => $this->admin_model->get_admin_group_data($where),
+            'position_list' => $this->position_list,
+        ]);
+    }
+
+    // 權限查詢
+    public function permission_search()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/permission_search');
+        $this->load->view('admin/_footer');
+    }
+
+    // 權限查詢-細節
+    public function permission_detail()
+    {
+        $get = $this->input->get(NULL, TRUE);
+
+        $id = (int) ($get['id'] ?? 0);
+        if ( ! $id)
+        { // query string沒有帶id
+            alert('ERROR , id is not exist', admin_url('admin/role_permission_list'));
+        }
+
+        $admin_info = $this->admin_model->get_data_by_id($id);
+        if ( ! $admin_info || ! isset($admin_info['group_id']))
+        { // id撈不到東西
+            alert('ERROR , id is not exist', admin_url('admin/role_permission_list'));
+        }
+
+        $admin_info['position'] = $this->position_list[$admin_info['position'] ?? ''] ?? '';
+        $admin_info['group_permission'] = $this->group_model->get_permission_by_group_id($admin_info['group_id']);
+        $this->load->library('permission_lib');
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/permission_detail', [
+            'data' => $admin_info,
+            'permission_list' => $this->permission_list,
+            'action_type_list' => $this->action_type_list,
+            'group_permission_data' => $this->permission_lib->mapping_permission_data($admin_info['group_permission']),
+            'admin_permission_data' => $this->permission_lib->mapping_permission_data($admin_info['permission'])
+        ]);
+        $this->load->view('admin/_footer');
+    }
+
+    /**
+     * 檢查表單是否有欄位未填寫
+     * @param array $post : 表單傳來的資料
+     * @param array $fields : 欲檢查的欄位名稱
+     * @return array
+     */
+    private function _check_form_data(array $post, array $fields)
+    {
+        if (empty($post))
+        {
+            alert('查無欄位');
+        }
+        $data = [];
+        foreach ($fields as $field_key => $field_name)
+        {
+            if (empty($post[$field_key]))
+            {
+                alert($field_name . '必填');
+            }
+            $data[$field_key] = $post[$field_key];
+        }
+        return $data;
+    }
+
+    // 更新權限審核啟用狀態(admins.permission_status)
+    public function update_permission_status()
+    {
+        $post = $this->input->post(NULL, TRUE);
+
+        if ( ! isset($post['admin_id']) || ! $post['admin_id'])
+        {
+            $result = FALSE;
+        }
+        elseif ( ! isset($post['permission_status']))
+        {
+            $result = FALSE;
+        }
+        else
+        {
+            $result = $this->admin_model->update($post['admin_id'], ['permission_status' => $post['permission_status'] ? 1 : 0]);
+        }
+        echo json_encode(['result' => $result]);
+    }
+
+    public function get_group_list()
+    {
+        $data = [];
+
+        foreach (($this->group_model->get_group_list()) as $value)
+        {
+            if ( ! isset($value['division']) || ! isset($value['department']))
+            {
+                continue;
+            }
+
+            $department = json_decode(("[{$value['department']}]"), TRUE);
+
+            $data[] = [
+                'name' => $value['division'],
+                'department' => $department,
+            ];
+        }
+
+        echo json_encode(['data' => $data]);
+    }
 }
-?>

@@ -18,7 +18,7 @@
         if(id){
             create.attr('disabled',true);
             $.ajax({
-                url: '../judicialperson/cooperation_edit',
+                url: '../judicialperson/cooperation_management_edit',
                 data: 'id='+id+'&create_taishin=1',
                 type: 'POST',
                 success: function (e) {

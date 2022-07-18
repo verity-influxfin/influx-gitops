@@ -97,7 +97,7 @@
                             </td>
                         </tr>
                     </table>
-                    <form action="<?= admin_url('transfer/assets_export') ?>" method="post"
+                    <form action="<?= admin_url('transfer/obligation_assets_export') ?>" method="post"
                           style="display: inline-block">
                         <input type="submit" class="btn btn-primary float-right" value="債權明細表" disabled/>
                         <input id="assets_export" type="hidden" name="ids"/>
@@ -171,7 +171,7 @@
                                         <td><?= $value->transfer_status == 2 ? $transfer_status_list[$value->transfer_status] : $investment_status_list[$value->status] ?></td>
                                         <td><?= $value->transfer_status == 2 && isset($transfers[$value->id]->transfer_date) ? $transfers[$value->id]->transfer_date : "" ?></td>
                                         <td><?= isset($status_list[$target->status]) ? $status_list[$target->status] : "" ?></td>
-                                        <td><a target="_blank" href="<?= admin_url('target/edit') . "?id=" . $target->id ?>"
+                                        <td><a target="_blank" href="<?= admin_url('target/obligations_detail') . "?id=" . $target->id ?>"
                                                class="btn btn-default">Detail</a></td>
                                     </tr>
                                     <?php

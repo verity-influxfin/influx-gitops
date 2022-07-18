@@ -164,7 +164,7 @@
                                             <td><?=isset($value->instalment)?$value->instalment:"" ?></td>
                                             <td><?=isset($value->expire_time)?date("Y-m-d H:i:s",$value->expire_time):"" ?></td>
                                             <td><button class="btn btn-danger" onclick="cancel(<?=isset($value->id)?$value->id:"" ?>)">退回債轉</button></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->target->id ?>" class="btn btn-default" target="_blank">Detail</a></td>
+											<td><a href="<?=admin_url('target/waiting_transfer_success_detail')."?id=".$value->target->id ?>" class="btn btn-default" target="_blank">Detail</a></td>
                                         </tr>                                        
 									<?php 
 										}}

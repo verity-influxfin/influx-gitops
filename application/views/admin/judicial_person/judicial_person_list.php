@@ -10,7 +10,7 @@
 					if(confirm("確認審核通過？")){
 						if(id){
 							$.ajax({
-								url: './apply_success?id='+id,
+								url: './<?=(isset($method_name[0]) ? ($method_name[0].'_') : '')?>success?id='+id,
 								type: 'GET',
 								success: function(response) {
 									alert(response);
@@ -25,7 +25,7 @@
 					if(confirm("確認審核失敗？")){
 						if(id){
 							$.ajax({
-								url: './apply_failed?id='+id,
+								url: './<?=(isset($method_name[0]) ? ($method_name[0].'_') : '')?>failed?id='+id,
 								type: 'GET',
 								success: function(response) {
 									alert(response);
@@ -40,7 +40,7 @@
 					var user_id 		= $('#user_id').val();
 					var tax_id 			= $('#tax_id').val();
 					var status 			= $('#status :selected').val();
-					top.location = './index?status='+status+'&user_id='+user_id+'&tax_id='+tax_id;
+                    top.location = './<?=(isset($method_name[0]) ? ($method_name[0]) : '')?>?status=' + status + '&user_id=' + user_id + '&tax_id=' + tax_id;
 				}
 			</script>
             <!-- /.row -->
@@ -115,7 +115,7 @@
                                             <td><?=isset($value->remark)?$value->remark:"" ?></td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a target="_blank" href="<?=admin_url('judicialperson/edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
+											<td><a target="_blank" href="<?=admin_url('judicialperson/' .(isset($method_name[0]) ? ($method_name[0].'_') : ''). 'edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
                                         </tr>
 									<?php 
 										}}

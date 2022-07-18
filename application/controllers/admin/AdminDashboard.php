@@ -210,8 +210,7 @@ class AdminDashboard extends MY_Admin_Controller {
 	}
 
 	public function personal(){
-		$role_name 	= $this->role_model->get_name_list();
-		$page_data 	= array("type"=>"edit","role_name"=>$role_name);
+		$page_data 	= array("type"=>"edit");
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
 		$id 		= $this->login_info->id;

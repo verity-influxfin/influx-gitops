@@ -94,7 +94,7 @@
 				let target = targets[i];
 				let user = users[i];
 
-				let detailButton = '<a href="/admin/target/final_validations?id=' + target.id + '&user_id=' + user.id +'" target="_blank"><button class="btn btn-danger">審核</button></a>';
+				let detailButton = '<a href="/admin/target/final_validations_detail?id=' + target.id + '&user_id=' + user.id +'" target="_blank"><button class="btn btn-danger">審核</button></a>';
 				$("<tr>").append(
                     getCenterTextCell(target.number),
 					getCenterTextCell(target.product.name),

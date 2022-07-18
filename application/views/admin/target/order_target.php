@@ -71,7 +71,7 @@
                                             }
                                             ?>
                                         </td>
-                                        <td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
+                                        <td><a href="<?=admin_url('target/order_target_detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                     </tr>
                                     <?php
                                 }}
