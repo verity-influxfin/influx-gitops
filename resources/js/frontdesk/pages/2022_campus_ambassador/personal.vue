@@ -350,7 +350,7 @@
         <div class="row no-gutters">
           <div class="col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
-              <span class="item required">一句話形容你自己:</span>
+              <span class="item required">一句話行銷自己:</span>
               <input
                 type="text"
                 class="item-input"
@@ -760,6 +760,7 @@ $color--primary: #f2b162;
     border: 1px solid #afafaf;
     border-radius: 8px;
     margin-right: 25px;
+    min-height: 28.1px;
     width: 100%;
   }
   .item-label {
