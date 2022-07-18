@@ -173,6 +173,7 @@ $config['permission'] = [
         'permission' => [
             'user_bankaccount_list' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
             'index' => ['model' => 'Passbook', 'submodel' => 'index', 'action' => 'read'],
+            'detail' => ['model' => 'Passbook', 'submodel' => 'index', 'action' => 'read'],
             'withdraw_list' => ['model' => 'Passbook', 'submodel' => 'withdraw_list', 'action' => 'read'],
             'withdraw_waiting' => ['model' => 'Passbook', 'submodel' => 'withdraw_waiting', 'action' => 'read'],
             'unknown_funds' => ['model' => 'Passbook', 'submodel' => 'unknown_funds', 'action' => 'read'],
