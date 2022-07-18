@@ -224,19 +224,23 @@ INSERT INTO p2p_admin.group_permission (group_id, model_key, submodel_key, actio
 # 管理員
 UPDATE p2p_admin.admins SET `group_id`=0, `permission_status`=0;
 UPDATE p2p_admin.admins SET `group_id`=1, `permission_status`=1 WHERE `id`=1;
-UPDATE p2p_admin.admins SET `group_id`=4, `permission_status`=1 WHERE `email` IN ('tsufrank29@influxfin.com', 'qqq0123@influxfin.com');
+UPDATE p2p_admin.admins SET `group_id`=4, `permission_status`=1 WHERE `email` IN ('frank@influxfin.com', 'qqq0123@influxfin.com');
 UPDATE p2p_admin.admins SET `group_id`=7, `permission_status`=1 WHERE `email` IN ('timlee@influxfin.com');
 UPDATE p2p_admin.admins SET `group_id`=11, `permission_status`=1 WHERE `email` IN ('katia@influxfin.com');
+UPDATE p2p_admin.admins SET `group_id`=11, `permission_status`=1 WHERE `email` IN ('mori@influxfin.com');
 UPDATE p2p_admin.admins SET `group_id`=18, `permission_status`=1 WHERE `email` IN ('wayne@influxfin.com');
 UPDATE p2p_admin.admins SET `group_id`=19, `permission_status`=1 WHERE `email` IN ('nabroux@influxfin.com');
-INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Risk', 'black_list', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 # 管理員權限
 TRUNCATE table p2p_admin.`admin_permission`;
-INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'bidding', 1 FROM p2p_admin.admins a WHERE a.email='tsufrank29@influxfin.com';
-INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'index', 1 FROM p2p_admin.admins a WHERE a.email='tsufrank29@influxfin.com';
-INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'obligations', 1 FROM p2p_admin.admins a WHERE a.email='tsufrank29@influxfin.com';
-INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'waiting_transfer', 1 FROM p2p_admin.admins a WHERE a.email='tsufrank29@influxfin.com';
-INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'waiting_transfer_success', 1 FROM p2p_admin.admins a WHERE a.email='tsufrank29@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT `id`, 'Sales', 'bonus_report', 1 FROM `p2p_admin`.`admins` WHERE `email`='mori@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT `id`, 'Sales', 'qrcode_contracts', 1 FROM `p2p_admin`.`admins` WHERE `email`='mori@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT `id`, 'Sales', 'qrcode_projects', 1 FROM `p2p_admin`.`admins` WHERE `email`='mori@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT `id`, 'Sales', 'register_report', 1 FROM `p2p_admin`.`admins` WHERE `email`='mori@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'bidding', 1 FROM p2p_admin.admins a WHERE a.email='frank@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'index', 1 FROM p2p_admin.admins a WHERE a.email='frank@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'obligations', 1 FROM p2p_admin.admins a WHERE a.email='frank@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'waiting_transfer', 1 FROM p2p_admin.admins a WHERE a.email='frank@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Transfer', 'waiting_transfer_success', 1 FROM p2p_admin.admins a WHERE a.email='frank@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Account', 'daily_report', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Account', 'estatement', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Account', 'index', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
@@ -269,6 +273,7 @@ INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, actio
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'PostLoan', 'deduct', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'PostLoan', 'legal_doc', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Product', 'index', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Risk', 'black_list', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Risk', 'credit', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Risk', 'credit_management', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Risk', 'investor', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
