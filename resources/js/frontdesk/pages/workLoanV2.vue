@@ -296,12 +296,26 @@
               <input type="text" name="" id="" class="form-item-input col" />
             </div>
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">*資金需求原因：</div>
-              <input type="text" name="" id="" class="form-item-input col" />
+              <div class="form-item-text">*聯絡時間：</div>
+              <select
+                type="text"
+                class="form-item-input col"
+                name="contact_time"
+              >
+                <option selected disabled value="">-請選擇-</option>
+                <option value="隨時">隨時</option>
+                <option value="上午(09:00 ~ 12:00)">上午(09:00 ~ 12:00)</option>
+                <option value="下午(13:30 ~ 18:00)">下午(13:30 ~ 18:00)</option>
+              </select>
             </div>
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">*聯絡時間：</div>
-              <input type="text" name="" id="" class="form-item-input col" />
+              <div class="form-item-text">*資金需求原因：</div>
+              <textarea
+                type="text"
+                name=""
+                style="min-height: 15vh"
+                class="form-item-input col"
+              ></textarea>
             </div>
             <div class="row no-gutters">
               <div class="form-item-text d-md-block d-none"></div>
@@ -642,7 +656,8 @@
                 <input
                   type="text"
                   name="userId"
-                  id=""
+                  v-model="userId"
+                  :disabled="userIdDisabled"
                   class="form-item-input col"
                 />
               </div>
@@ -752,12 +767,14 @@ export default {
   },
   data() {
     return {
-      cases: []
+      cases: [],
+      userId:'',
+      userIdDisabled:false
     }
   },
   mounted() {
     SwiperCore.use([Navigation, Pagination])
-    AOS.init({disable: 'mobile'})
+    AOS.init({ disable: 'mobile' })
     const swiper = new Swiper('.swiper', {
       navigation: {
         nextEl: '.swiper-button-next',
@@ -772,6 +789,14 @@ export default {
     }).catch((error) => {
       console.error('getCase 發生錯誤，請稍後再試');
     });
+    // check login
+    const userData = sessionStorage.getItem('userData')
+    if(userData){
+        this.userId = JSON.parse(userData)?.id
+        if(this.userId){
+            this.userIdDisabled = true
+        }
+    }
   },
 }
 </script>
