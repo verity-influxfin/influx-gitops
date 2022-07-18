@@ -28,8 +28,8 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
-    <meta name="keywords" content="手機ATM、分期、網路借貸、貸款、借貸平台、學生貸款、社團、投資、 複利、債權投資、金融科技">
-    <meta name="description" content="首創台灣「AI風控審核無人化融資系統」，利用高端科技，全程無人為干擾，一支手機完成借貸！">
+    <meta name="keywords" content="新北產業發展論壇、一金二造三區域、信貸、小額貸款、房貸試算、裝潢貸款、車貸試算、投資、債務整合、p2p金融科技、智慧製造、中小企業、中小企業融資">
+    <meta name="description" content="普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。">
     <meta name="site_name" content="inFlux普匯金融科技">
     <meta name="title" content="inFlux普匯金融科技">
     <meta name="google-site-verification" content="2arsm3rXMMsobi4wX5akzPpQO6-Q6zgUjqwIT0P9UKo" />

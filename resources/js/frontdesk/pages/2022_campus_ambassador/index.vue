@@ -678,7 +678,13 @@ import 'swiper/components/navigation/navigation.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import SwiperCore, { Navigation, Pagination } from 'swiper/core'
 export default {
+  data() {
+    return {
+      flag: ''
+    }
+  },
   mounted() {
+    $('title').text('2022普匯校園大使')
     SwiperCore.use([Navigation, Pagination])
     const swiper = new Swiper('.swiper', {
       navigation: {
@@ -689,6 +695,7 @@ export default {
         el: '.swiper-pagination',
       },
     })
+    this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
   },
   methods: {
     scrollToJoin() {
@@ -701,9 +708,13 @@ export default {
       $('#rating-modal').modal('show')
     },
     goApply(type) {
-      alert('2022普匯校園大使將於7/19(二)開放報名')
+      if (this.flag !== 'login') {
+        this.$store.commit('mutationLogin')
+        return
+      }
+      this.$router.push('/2022-campus-ambassador/' + type)
+      // alert('2022普匯校園大使將於7/19(二)開放報名')
       // return
-      // this.$router.push('/2022-campus-ambassador/' + type)
     }
   },
 }

@@ -8,6 +8,7 @@ use App\Models\CampusAmbassador2022;
 use App\Models\CampusAmbassadorProposal2022;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CampusAmbassador2022Controller extends Controller
 {
@@ -93,7 +94,7 @@ class CampusAmbassador2022Controller extends Controller
                 'qa_3' => $input['qa_3'],
                 'created_ip' => $request->ip(),
             ]);
-            CampusAmbassador2022::where('id', $ambassador['phone'])->update([
+            CampusAmbassador2022::where('id', $ambassador['id'])->update([
                 'photo' => $this->_upload_file($ambassador['phone'], 'photo', 'individual')
             ]);
             DB::commit();
@@ -157,11 +158,11 @@ class CampusAmbassador2022Controller extends Controller
                 'qa_3' => $input['qa_3'],
                 'created_ip' => $request->ip(),
             ]);
-            CampusAmbassador2022::where('id', $ambassador['phone'])->update([
+            CampusAmbassador2022::where('id', $ambassador['id'])->update([
                 'photo' => $this->_upload_file($ambassador['phone'], 'photo', 'individual')
             ]);
             DB::commit();
-            return $this->_return_success(['group_name' => $proposal['group_name']], '報名成功', 201);
+            return $this->_return_success(['group_name' => $proposal['group_name'], 'name' => $ambassador['name']], '報名成功', 201);
         } catch (\Exception $e) {
             DB::rollBack();
             if (!empty($ambassador['phone'])) {
@@ -209,8 +210,17 @@ class CampusAmbassador2022Controller extends Controller
             return null;
         }
         $file = $this->file_list[$file_list_index]['file'];
+
+        if (file_get_contents($file) === FALSE) {
+            return null;
+        }
+
         $filename = ($this->file_list[$file_list_index]['name'] ?? $file_list_index) . "_{$phone}." . $file->getClientOriginalExtension();
-        $file->move("{$this->base_upload_dir}/{$type}/{$phone}", $filename);
+
+        Storage::disk('local')->put(
+            "{$this->base_upload_dir}/{$type}/{$phone}/{$filename}",
+            file_get_contents($file)
+        );
 
         return $filename;
     }
