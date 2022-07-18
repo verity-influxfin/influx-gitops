@@ -217,10 +217,8 @@ $config['permission'] = [
     'Creditmanagement' => [
         'name' => '授審表',
         'menu' => [
-            'index' => ['name' => '列表(還沒做)'],
         ],
         'permission' => [
-            'index' => ['model' => 'Creditmanagement', 'submodel' => 'index', 'action' => 'read'],
             'report_final_validations' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'read'],
             'report_natural_person' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
             'report_targets_edit' => ['model' => 'Target', 'submodel' => 'waiting_signing', 'action' => 'read'],
