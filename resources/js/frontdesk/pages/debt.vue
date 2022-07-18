@@ -127,7 +127,6 @@ export default {
         .post("getRecoveriesList")
         .then((res) => {
           this.recoveriesData = res.data.data.list.groupBy("target", "product_name");
-
           this.groupList = Object.keys(this.recoveriesData);
         })
         .catch((error) => {
@@ -143,7 +142,9 @@ export default {
       let total = 0;
 
       data.forEach((row, index) => {
-        total += row.accounts_receivable.principal;
+        if(!isNaN(row.accounts_receivable.principal)){
+          total += row.accounts_receivable.principal;
+        }
       });
 
       return this.format(total);
@@ -152,8 +153,9 @@ export default {
       let total = 0;
 
       data.forEach((row, index) => {
-        total +=
-          row.accounts_receivable.delay_interest + row.accounts_receivable.interest;
+        if(!isNaN(row.accounts_receivable.delay_interest) && !isNaN(row.accounts_receivable.interest)){
+          total += row.accounts_receivable.delay_interest + row.accounts_receivable.interest;
+        }
       });
 
       return this.format(total);
