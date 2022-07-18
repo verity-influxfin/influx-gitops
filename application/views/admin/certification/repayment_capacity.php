@@ -37,7 +37,7 @@ else
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <form role="form" method="post">
+                    <form role="form" method="post" action="/admin/certification/user_certification_edit">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">

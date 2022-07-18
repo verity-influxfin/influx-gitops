@@ -217,10 +217,8 @@ $config['permission'] = [
     'Creditmanagement' => [
         'name' => '授審表',
         'menu' => [
-            'index' => ['name' => '列表(還沒做)'],
         ],
         'permission' => [
-            'index' => ['model' => 'Creditmanagement', 'submodel' => 'index', 'action' => 'read'],
             'report_final_validations' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'read'],
             'report_natural_person' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
             'report_targets_edit' => ['model' => 'Target', 'submodel' => 'waiting_signing', 'action' => 'read'],
@@ -244,6 +242,7 @@ $config['permission'] = [
             'user_certification_list' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'difficult_word_list' => ['model' => 'Certification', 'submodel' => 'difficult_word_list', 'action' => 'read'],
             'user_certification_edit' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'user_certification_detail' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'user_bankaccount_edit' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
             'user_bankaccount_success' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
             'user_bankaccount_failed' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
@@ -260,7 +259,7 @@ $config['permission'] = [
             'sendskbank' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'getskbank' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'save_meta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
-            'getmeta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'getmeta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'job_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'joint_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'sip' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],

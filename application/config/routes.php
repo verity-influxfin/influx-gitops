@@ -165,3 +165,4 @@ $route['admin/(Article|article)/(article|news)_del'] = 'admin/Article/del';
 $route['admin/(Sales|sales)/promote_detail'] = 'admin/sales/promote_edit';
 $route['admin/postloan'] = 'admin/PostLoan';
 $route['admin/(User|user)/detail'] = 'admin/user/edit';
+$route['admin/(Certification|certification)/user_certification_detail'] = 'admin/Certification/user_certification_edit';

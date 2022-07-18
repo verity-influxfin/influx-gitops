@@ -167,7 +167,7 @@
                                         <p class="form-control-static"><?=isset($content['salary'])?$content['salary']:""?></p>
                                     </div>
                                     <?}else{?>
-                                        <form role="form" method="post">
+                                        <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                             <div class="form-group">
                                                 <label>月薪</label><br />
                                                 <input type="text" name="salary" value="<?=isset($content['salary']) ? $content['salary'] : '0' ?>" />
@@ -209,7 +209,7 @@
 											}
 										?>
 									</div>
-                                    <form role="form" method="post">
+                                    <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                     <div class="form-group">
 										<label>備註</label>
 										<?
