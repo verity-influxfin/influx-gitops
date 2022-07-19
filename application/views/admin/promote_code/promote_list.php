@@ -85,7 +85,7 @@
                                             <th>類型</th>
                                             <th>名稱</th>
                                             <th>邀請碼</th>
-                                            <th>註冊+下載核貸數量</th>
+                                            <th>註冊+下載數量</th>
                                             <th>學生貸核貸數量</th>
                                             <th>上班族貸核貸數量</th>
                                             <th>合作產品核貸數量</th>
@@ -113,7 +113,7 @@
                                             <td><?= (($value['loanedCount']['small_enterprise']??0)+(array_sum($value['collaborationCount']??[]))) ?></td>
                                             <td><?= $value['totalRewardAmount']??'' ?></td>
                                             <td><?= ($value['info']['status']??'')==1?"啟用":"停用" ?></td>
-											<td><a href="<?=admin_url('sales/promote_edit')."?id=".$value['info']['id'] ?><?=isset($_GET['sdate'])&&$_GET['sdate']!=''?"&sdate=".$_GET['sdate']:''?><?=isset($_GET['edate'])&&$_GET['edate']!=''?"&edate=".$_GET['edate']:''?>" target="_blank" class="btn btn-default">詳細資訊</a></td>
+											<td><a href="<?=admin_url('sales/promote_detail')."?id=".$value['info']['id'] ?><?=isset($_GET['sdate'])&&$_GET['sdate']!=''?"&sdate=".$_GET['sdate']:''?><?=isset($_GET['edate'])&&$_GET['edate']!=''?"&edate=".$_GET['edate']:''?>" target="_blank" class="btn btn-default">詳細資訊</a></td>
                                         </tr>
 									<?php
 									}}

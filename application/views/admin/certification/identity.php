@@ -187,7 +187,7 @@
 
                             <?
                             if($content['name']==''&&$data->status==3){
-                                echo '<form role="form" method="post">
+                                echo '<form role="form" method="post" action="/admin/certification/user_certification_edit">
                                 <div class="form-group">
                                     <label>姓名</label>
                                     <input type="text" name="name" value="' . $content['name'] . '" />
@@ -246,7 +246,7 @@
                             </div>
                             <?
                             if($content['address']==''&&$data->status==3){
-                                echo '<form role="form" method="post">
+                                echo '<form role="form" method="post" action="/admin/certification/user_certification_edit">
                                 <div class="form-group">
                                     <label>地址</label>
                                     <input type="text" name="address" value="' . $content['address'] . '" />
@@ -370,7 +370,7 @@
                                 ?>
                             </div>
                             <h4>審核</h4>
-                            <form role="form" method="post">
+                            <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                 <fieldset>
                                     <div class="form-group">
                                         <select id="status" name="status" class="form-control" onchange="check_fail();" >

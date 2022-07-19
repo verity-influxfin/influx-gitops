@@ -136,15 +136,7 @@ class Cert_debitcard extends Certification_base
         {
             foreach ($target_list as $value)
             {
-
-                $this->CI->target_model->update_by(
-                    ['id' => $value['id']],
-                    [
-                        'status' => TARGET_WAITING_APPROVE,
-                        'sub_status' => $value['sub_status'] == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET ? TARGET_SUBSTATUS_NORNAL : $value['sub_status'],
-                        'certificate_status' => TARGET_CERTIFICATE_SUBMITTED
-                    ]
-                );
+                $this->CI->target_lib->withdraw_target_to_unapproved($value);
             }
         }
         return TRUE;

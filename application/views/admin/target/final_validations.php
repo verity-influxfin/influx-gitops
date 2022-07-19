@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo base_url();?>assets/admin/js/common/datetime.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/admin/js/common/datetime.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/user.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/verification.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/bankaccount.js"></script>
@@ -158,7 +158,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<iframe id="creditManagementTable"
-								src="../creditmanagement/report?target_id=<?=$_GET['id']?>&type=person"
+								src="../creditmanagement/report_final_validations?target_id=<?=$_GET['id']?>&type=person"
 								scrolling='no'></iframe>
 							<div class="table-responsive">
 								<table class="table table-bordered">
@@ -553,6 +553,61 @@
 				</div>
 			</div>
 		</div>
+
+        <div class="col-lg-12" style="display: flex;">
+            <div style="width: 32.33%;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        其他資訊
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">項目名稱</th>
+                                            <th class="center-text" width="60%">項目值</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="meta-table-body">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 32.33%;" class="ml-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        上傳合約
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">合約名稱</th>
+                                            <th class="center-text" width="60%">合約內容</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="uploaded-contract-table">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 		<!-- <div class="col-lg-12">
 			<div class="panel panel-default">
@@ -1053,22 +1108,22 @@
 		}
 	}
 
-	// 取得授審表設定檔資料
-	function get_default_item(target_id, type) {
-		let report_item = {};
-		$.ajax({
-			type: "GET",
-			url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=person`,
-			async: false,
-			success: function (response) {
-				report_item = response.response;
-			},
-			error: function (error) {
-				alert(error);
-			}
-		});
-		return report_item;
-	}
+    // 取得授審表設定檔資料
+    function get_default_item(target_id,type){
+        let report_item = {};
+        $.ajax({
+            type: "GET",
+            url: `/admin/creditmanagement/final_validations_get_structural_data?target_id=${target_id}&type=person`,
+            async: false,
+            success: function (response) {
+                report_item = response.response;
+            },
+            error: function(error) {
+                alert(error);
+            }
+        });
+        return report_item;
+    }
 
 	// 取得授審表案件核貸資料
 	function get_report_data(target_id) {
@@ -1176,7 +1231,7 @@
 				const buttonToID = (id) => {
 					return `<div class="d-flex">
 						<button class="btn btn-default mr-2">
-							<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
+							<a href="/admin/user/detail?id=${id}" target="_blank">查看</a>
 						</button>
 					</div>`
 				}
@@ -1344,6 +1399,8 @@
 					targets.push(new Target(targetsJson[i]));
 				}
 				fillTargets(targets);
+				fillTargetMeta(response.response.target_meta);
+				fillUploadedContract(response.response.contract_list);
 
 			},
 			error: function (error) {
@@ -1446,7 +1503,7 @@
 		function fetchBrookesiaUserRuleHit(userId) {
 			$.ajax({
 				type: "GET",
-				url: "/admin/brookesia/user_rule_hit" + "?userId=" + userId,
+                url: "/admin/brookesia/final_valid_user_rule_hit" + "?userId=" + userId,
 				beforeSend: function () {
 					brookesiaDatalock = true;
 				},
@@ -1503,7 +1560,7 @@
 		function fetchRelatedUsers(userId) {
 			$.ajax({
 				type: "GET",
-				url: "/admin/brookesia/user_related_user" + "?userId=" + userId,
+				url: "/admin/brookesia/final_valid_user_related_user" + "?userId=" + userId,
 				beforeSend: function () {
 					relatedUserAjaxLock = true;
 				},
@@ -1732,7 +1789,7 @@
 
 		function fillCompanyUserInfo(user) {
 			$(".company #id").text(user.id);
-			$(".company #name").html(user.name + " - <a target='_blank' href='.././judicialperson/edit?id=" + user.judicial_id + "'>法人申請資料</a> / <a target='_blank' href='.././judicialperson/cooperation_edit?id=" + user.judicial_id + "'>經銷商申請資料</a>");
+			$(".company #name").html(user.name + " - <a target='_blank' href='.././judicialperson/edit?id=" + user.judicial_id + "'>法人申請資料</a> / <a target='_blank' href='.././judicialperson/cooperation_management_edit?id=" + user.judicial_id + "'>經銷商申請資料</a>");
 			$(".company #gender").text(user.gender);
 			$(".company #birthday").text(user.birthday);
 			$(".company #email").text(user.contact.email);
@@ -1927,6 +1984,30 @@
 				).appendTo("#targets");
 			}
 		}
+
+        function fillTargetMeta(meta) {
+            for (let i = 0; i < meta.length; i++) {
+                pTag = '<p class="form-control-static">' + meta[i]['meta_key_alias'] + '</p>';
+                pTag2 = '<p class="form-control-static">' + meta[i]['meta_value_alias'] + '</p>';
+                $("<tr>").append(
+                    $('<td class="table-field center-text">').append(pTag),
+                    $('<td class="center-text">').append(pTag2),
+                ).appendTo("#meta-table-body");
+            }
+        }
+
+        function fillUploadedContract(contracts) {
+            for (let i = 0; i < contracts.length; i++) {
+                pTag = '<p class="form-control-static">' + contracts[i]['contract_name'] + '</p>';
+                aTag = '<p class="form-control-static"><a class="btn btn-default" href="/admin/target/uploaded_contract?id=' + caseId +
+                    "&meta_name=" + contracts[i]['meta_name'] + '" target="_blank">查看合約</a></p>';
+                $("<tr>").append(
+                    $('<td class="table-field center-text">').append(pTag),
+                    $('<td class="center-text">').append(aTag)
+                ).appendTo("#uploaded-contract-table");
+            }
+        }
+
 
 		function getCenterTextCell(value, additionalCssClass = "") {
 			return '<td class="center-text ' + additionalCssClass + '">' + value + '</td>';

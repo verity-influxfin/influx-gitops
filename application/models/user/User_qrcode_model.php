@@ -324,4 +324,40 @@ class user_qrcode_model extends MY_Model
             ->update();
 
     }
+
+    /**
+     * 取得使用推薦碼申貸的列表
+     * @param array $qrcodeWhere 推薦碼篩選條件
+     * @param array $productIdList 產品編號列表
+     * @param string $startTime 篩選起始時間
+     * @param string $endTime 篩選結束時間
+     * @param bool $returnSQL 是否回傳SQL語句
+     * @return mixed
+     */
+    public function get_target_apply_list(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime = '', string $endTime = '', bool $returnSQL = FALSE)
+    {
+        $subQuery = $this->getRegisteredUserByPromoteCode($qrcodeWhere, '', '', TRUE);
+
+        $this->_database
+            ->select("r.user_qrcode_id, r.promote_code, r.settings, t.id, t.user_id, t.product_id, t.status, DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(t.created_at), '%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) AS created_at")
+            ->from('`p2p_loan`.`targets` AS `t`')
+            ->join("({$subQuery}) as `r`", "`t`.`user_id` = `r`.`user_id`")
+            ->where_in("t.status", $statusList)
+            ->where_in("t.product_id", $productIdList)
+            ->where("DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(t.created_at), '%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) BETWEEN `r`.`start_time` AND `r`.`end_time`");
+
+        $fullQuery = $this->_database->get_compiled_select('', TRUE);
+
+        $this->_database
+            ->select('r.*')
+            ->from("({$fullQuery}) AS `r`");
+        if ($startTime != '')
+            $this->_database->where("r.created_at >=", $startTime);
+        if ($endTime != '')
+            $this->_database->where("r.created_at <", $endTime);
+
+        if ($returnSQL)
+            return $this->_database->get_compiled_select('', TRUE);
+        return $this->_database->get()->result_array();
+    }
 }

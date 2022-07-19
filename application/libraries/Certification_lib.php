@@ -318,9 +318,10 @@ class Certification_lib{
 			$info = $this->CI->user_certification_model->get($id);
             if ($info && $info->status != CERTIFICATION_STATUS_FAILED)
             {
-				$info->content 			= json_decode($info->content,true);
-                $info->remark           = $info->remark!=''?json_decode($info->remark,true):[];
-				$info->remark['fail'] 	= $fail;
+                $info->content = isJson($info->content) ? json_decode($info->content, TRUE) : [];
+                $info->remark = json_decode($info->remark, TRUE);
+                $info->remark = is_array($info->remark) ? $info->remark : [];
+                $info->remark['fail'] = $fail;
 				$certification 	= $this->certification[$info->certification_id];
 				$param = [
                     'status'    => 2,
@@ -468,7 +469,7 @@ class Certification_lib{
             'content' => $info->content,
             'risVerified' => FALSE, // 勾稽戶役政 API
             'risVerificationFailed' => TRUE, // 勾稽戶役政 API
-            'ocrCheckFailed' => TRUE,
+            'ocrCheckFailed' => FALSE,
         ];
 
         $content = json_decode($info->content, TRUE);
@@ -523,14 +524,6 @@ class Certification_lib{
         {
             $return_data['remark']['error'] = 'OCR 沒有在正常時間內回應，無法進行實名驗證.<br/>';
             return $return_data;
-        }
-
-        // 檢查三張證件照的資料是否完整
-        if ($ocr_result['infoValidation']['id_card']['is_info_complete']
-            && $ocr_result['infoValidation']['id_card_back']['is_info_complete']
-            && $ocr_result['infoValidation']['health_card']['is_info_complete'])
-        {
-            $return_data['ocrCheckFailed'] = FALSE;
         }
 
         // 補上 OCR 辨識結果的錯誤訊息
@@ -2554,19 +2547,20 @@ class Certification_lib{
 	private function diploma_success($info){
 		if($info){
 			$content 	= $info->content;
-			$data 		= array(
-				'diploma_status'	=> 1,
-				'diploma_name'		=> $content['school'],
-                'diploma_major'		=> $content['major'],
-                'diploma_department'=> $content['department'],
-                'diploma_system'	=> $content['system'],
-				'diploma_image'		=> $content['diploma_image'][0],
-			);
+            if ( ! empty($content) && ! empty($content['school']))
+            {
+                $data = array(
+                    'diploma_status' => 1,
+                    'diploma_name' => $content['school'],
+                    'diploma_major' => $content['major'],
+                    'diploma_department' => $content['department'],
+                    'diploma_system' => $content['system'],
+                    'diploma_image' => $content['diploma_image'][0],
+                );
 
-            $rs = $this->user_meta_progress($data,$info);
-			if($rs){
-                return $this->fail_other_cer($info);
-			}
+                $this->user_meta_progress($data, $info);
+            }
+			return $this->fail_other_cer($info);
 		}
 		return false;
 	}
@@ -3167,6 +3161,18 @@ class Certification_lib{
                 }
             }
 
+            $skip_certification_ids = [];
+            if ( ! empty($target))
+            {
+                $this->CI->load->model('loan/target_meta_model');
+                $target_meta = $this->CI->target_meta_model->as_array()->get_by([
+                    'target_id' => $target->id,
+                    'meta_key' => 'skip_certification_ids'
+                ]);
+                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
+                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
+            }
+
 			foreach($certification as $key => $value){
 				$userId = $user_id;
 				if($company){
@@ -3184,14 +3190,21 @@ class Certification_lib{
                     $value['expire_time'] = $user_certification->expire_time;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
-				}else{
-					$value['user_status'] 		 = null;
-					$value['certification_id'] 	 = null;
-					$value['updated_at'] 		 = null;
-                    $value['expire_time'] = NULL;
 				}
+                else
+                {
+                    $value['user_status'] = NULL;
+                    $value['certification_id'] = NULL;
+                    $value['updated_at'] = NULL;
+                    $value['expire_time'] = NULL;
+                }
 
-                    $certification_list[$key] = $value;
+                if (in_array($key, $skip_certification_ids))
+                {
+                    $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                }
+
+                $certification_list[$key] = $value;
             }
 			return $certification_list;
 		}

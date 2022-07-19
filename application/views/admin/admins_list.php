@@ -20,10 +20,9 @@
                                         <tr>
                                             <th>NO.</th>
                                             <th>帳號</th>
-                                            <th>角色</th>
                                             <th>姓名</th>
                                             <th>電話</th>
-                                            <th>地址</th>
+                                            <th>生日</th>
                                             <th>Email</th>
                                             <th>QR code</th>
                                             <th>創建者</th>
@@ -41,7 +40,6 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->account)?$value->account:"" ?></td>
-                                            <td><?=isset($role_name[$value->role_id])?$role_name[$value->role_id]:"" ?></td>
                                             <td><?=isset($value->name)?$value->name:"" ?></td>
                                             <td><?=isset($value->phone)?$value->phone:"" ?></td>
                                             <td><?=isset($value->birthday)?date("m/d",strtotime($value->birthday)):"" ?></td>

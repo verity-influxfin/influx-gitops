@@ -444,7 +444,7 @@
         function getMappingMsgNo(target_id,action,data_type,result){
       	  $.ajax({
                 type: "GET",
-                url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
+                url: `/admin/bankdata/waiting_reinspection/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
                 success: function (response) {
                     response = response.response;
                     result(response);
@@ -540,8 +540,8 @@
 			<div class="panel panel-default">
 				<!-- /.panel-heading -->
 				<div class="panel-body">
-                    <iframe id="creditManagementTable" src="../creditmanagementtable/report?target_id=<?=$get['target_id']?>&table_type=management" scrolling='no' ></iframe>
-                    <iframe id="riskPage" src="../Risk/index?target_id=<?=$get['target_id']?>&investor=0&company=1" scrolling='no' ></iframe>
+                    <iframe id="creditManagementTable" src="../creditmanagementtable/waiting_reinspection_report?target_id=<?=$get['target_id']?>&table_type=management" scrolling='no' ></iframe>
+                    <iframe id="riskPage" src="../Risk/juridical_person?target_id=<?=$get['target_id']?>&investor=0&company=1" scrolling='no' ></iframe>
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">

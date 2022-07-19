@@ -41,7 +41,7 @@ class Judicialperson extends MY_Admin_Controller {
 		$page_data['status_list'] 		= $this->judicial_person_model->status_list;
 		$page_data['name_list'] 		= $this->admin_model->get_name_list();
 		$page_data['company_type'] 		= $this->config->item('company_type');
-
+        $page_data['method_name'] = explode('/', preg_replace('/^admin\/judicialperson\//', '', strtolower(uri_string())));
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -81,6 +81,7 @@ class Judicialperson extends MY_Admin_Controller {
 		$page_data 	= array('type'=>'edit');
         $post 		= $this->input->post(NULL, TRUE);
         $get 		= $this->input->get(NULL, TRUE);
+        $method_name = explode('/', preg_replace('/^admin\/judicialperson\//', '', strtolower(uri_string())));
         if(empty($post)) {
             $id = isset($get['id']) ? intval($get['id']) : 0;
             if ($id) {
@@ -187,16 +188,17 @@ class Judicialperson extends MY_Admin_Controller {
 					}
 					$page_data['jid'] = $get['id'];
                     $page_data['company_type'] = $this->config->item('company_type');
+                    $page_data['method_name'] = $method_name;
                     $this->load->view('admin/_header');
 					$this->load->view('admin/_title', $this->menu);
 
                     $this->load->view('admin/judicial_person/judicial_person_edit', $page_data);
                     $this->load->view('admin/_footer');
                 } else {
-                    alert('查無此ID', admin_url('edit?id='.$post['id']));
+                    alert('查無此ID', admin_url(($method_name[0] ?? '') . '?id='.$post['id']));
                 }
             } else {
-                alert('查無此ID', admin_url('edit?id='.$post['id']));
+                alert('查無此ID', admin_url(($method_name[0] ?? '') . '?id='.$post['id']));
             }
         }else {
 			if (!empty($post['id'])) {
@@ -210,17 +212,17 @@ class Judicialperson extends MY_Admin_Controller {
 					}
 
 					if ($rs === true) {
-						alert('更新成功', 'edit?id='.$post['id']);
+						alert('更新成功', ($method_name[0] ?? '') . '?id='.$post['id']);
 					} else {
-						alert('更新失敗，請洽工程師', 'edit?id='.$post['id']);
+						alert('更新失敗，請洽工程師', ($method_name[0] ?? '') . '?id='.$post['id']);
 					}
 				} else if ($info && (empty($media_data) || !isset($media_data['judi_admin_video']) || !isset($media_data['judi_user_video']))) {
-					alert('請先上傳法人或請負責人上傳對保影片', 'edit?id='.$post['id']);
+					alert('請先上傳法人或請負責人上傳對保影片', ($method_name[0] ?? '') . '?id='.$post['id']);
 				} else {
-					alert('查無此ID', admin_url('edit?id='.$post['id']));
+					alert('查無此ID', admin_url(($method_name[0] ?? '') . '?id='.$post['id']));
 				}
 			} else {
-				alert('查無此ID', admin_url('edit?id='.$post['id']));
+				alert('查無此ID', admin_url(($method_name[0] ?? '') . '?id='.$post['id']));
 			}
         }
 	}
@@ -296,6 +298,7 @@ class Judicialperson extends MY_Admin_Controller {
 		$page_data['list'] 				= $list;
 		$page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
 		$page_data['status_list'] 		= isset($input['cooperation'])?$input['cooperation']:2;
+        $page_data['method_name'] = explode('/', preg_replace('/^admin\/judicialperson\/cooperation_/', '', strtolower(uri_string())));
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -307,6 +310,7 @@ class Judicialperson extends MY_Admin_Controller {
 		$page_data 	= array('type'=>'edit');
         $post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
+        $method_name = explode('/', preg_replace('/^admin\/judicialperson\//', '', strtolower(uri_string())));
         if(empty($post)) {
             $id 		= isset($get['id'])?intval($get['id']):0;
             if($id){
@@ -341,10 +345,10 @@ class Judicialperson extends MY_Admin_Controller {
 					$this->load->view('admin/judicial_person/cooperation_edit',$page_data);
                     $this->load->view('admin/_footer');
                 }else{
-                    alert('查無此ID',admin_url('cooperation?cooperation=2'));
+                    alert('查無此ID',admin_url('cooperation_apply?cooperation=2'));
                 }
             }else{
-                alert('查無此ID',admin_url('cooperation?cooperation=2'));
+                alert('查無此ID',admin_url('cooperation_apply?cooperation=2'));
             }
         }else {
             if (!empty($post['id'])) {
@@ -374,14 +378,14 @@ class Judicialperson extends MY_Admin_Controller {
                         $rs = $this->judicialperson_lib->cooperation_failed($post['id']);
 						$data['msg'] = $rs?'變更成功':'變更失敗';
 					}
-					alert($data['msg'],admin_url('judicialperson/cooperation_edit?id='.$post['id']));
+					alert($data['msg'],admin_url('judicialperson/' . ($method_name[0] ?? '') . '?id='.$post['id']));
 					//echo json_encode($data);
                 } else {
-                    alert('查無此ID', admin_url('cooperation?cooperation=2'));
+                    alert('查無此ID', admin_url('cooperation_apply?cooperation=2'));
                 }
             }
             else {
-                alert('查無此ID', admin_url('cooperation?cooperation=2'));
+                alert('查無此ID', admin_url('cooperation_apply?cooperation=2'));
             }
         }
 	}

@@ -96,3 +96,74 @@ $route['api/v2/judicialperson/agent/(:num)']= 'api/v2/judicialperson/agent/$1';
 $route['api/v2/certifications/(:any)'] 		= 'api/v2/certifications/$1';
 
 $route['api/v2/version/(:any)'] 		    = 'api/v2/version/$1';
+
+/*-----------
+ *  sidebar
+ -----------*/
+// [借款管理]
+$route['admin/(Target|target)/repayment_delayed'] = 'admin/target/index';
+$route['admin/(Target|target)/target_repayment_export'] = 'admin/target/target_export';
+$route['admin/(Target|target)/target_finished_export'] = 'admin/target/target_export';
+$route['admin/(Target|target)/target_waiting_signing_export'] = 'admin/target/target_export';
+$route['admin/(Target|target)/detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/target_waiting_signing_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/target_waiting_verify_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/target_finished_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/target_repayment_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/target_prepayment_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/target_loan_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/legal_doc_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/transfer_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/obligations_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/waiting_transfer_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/waiting_transfer_success_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/order_target_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/waiting_approve_order_transfer_detail'] = 'admin/target/edit';
+$route['admin/(Target|target)/final_validations_detail'] = 'admin/target/final_validations';
+$route['admin/creditmanagementtable/waiting_reinspection_report'] = 'admin/creditmanagementtable/report';
+$route['admin/creditmanagement/waiting_bidding_report'] = 'admin/creditmanagement/report';
+// [債權管理]
+$route['admin/(Transfer|transfer)/transfer_assets_export'] = 'admin/transfer/assets_export';
+$route['admin/(Transfer|transfer)/obligation_assets_export'] = 'admin/transfer/assets_export';
+$route['admin/(Brookesia|brookesia)/final_valid_user_rule_hit'] = 'admin/brookesia/user_rule_hit';
+$route['admin/(Brookesia|brookesia)/final_valid_user_related_user'] = 'admin/brookesia/user_related_user';
+// [風控專區]
+$route['admin/(Risk|risk)/juridical_person'] = 'admin/Risk/index';
+$route['admin/(Risk|risk)/investor'] = 'admin/Risk/index';
+$route['admin/creditmanagementtable/juridical_person_report'] = 'admin/creditmanagementtable/report';
+$route['admin/(Creditmanagement|creditmanagement)/report_natural_person'] = 'admin/creditmanagement/report';
+$route['admin/(Creditmanagement|creditmanagement)/report_final_validations'] = 'admin/creditmanagement/report';
+$route['admin/(Creditmanagement|creditmanagement)/report_targets_edit'] = 'admin/creditmanagement/report';
+$route['admin/(Creditmanagement|creditmanagement)/report_final_validations'] = 'admin/creditmanagement/report';
+$route['admin/(Creditmanagement|creditmanagement)/final_validations_get_structural_data'] = 'admin/Creditmanagement/get_structural_data';
+$route['admin/(Creditmanagement|creditmanagement)/natural_person_get_structural_data'] = 'admin/Creditmanagement/get_structural_data';
+$route['admin/bankdata/juridical_person_report'] = 'admin/bankdata/report';
+// [虛擬帳號管理]
+$route['admin/(Passbook|passbook)/user_bankaccount_list'] = 'admin/Certification/user_bankaccount_list';
+$route['admin/(Passbook|passbook)/user_bankaccount_success'] = 'admin/Certification/user_bankaccount_success';
+$route['admin/(Passbook|passbook)/user_bankaccount_failed'] = 'admin/Certification/user_bankaccount_failed';
+$route['admin/(Passbook|passbook)/user_bankaccount_resend'] = 'admin/Certification/user_bankaccount_resend';
+$route['admin/(Passbook|passbook)/user_bankaccount_verify'] = 'admin/Certification/user_bankaccount_verify';
+$route['admin/(Passbook|passbook)/user_bankaccount_edit'] = 'admin/Certification/user_bankaccount_edit';
+$route['admin/(Passbook|passbook)/detail'] = 'admin/Passbook/edit';
+// [法人管理]
+$route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)'] = 'admin/Judicialperson/index';
+$route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)_edit'] = 'admin/Judicialperson/edit';
+$route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)_success'] = 'admin/Judicialperson/apply_success';
+$route['admin/(Judicialperson|judicialperson)/juridical_(apply|management)_failed'] = 'admin/Judicialperson/apply_failed';
+$route['admin/(Judicialperson|judicialperson)/cooperation_(apply|management)'] = 'admin/Judicialperson/cooperation';
+$route['admin/(Judicialperson|judicialperson)/cooperation_(apply|management)_edit'] = 'admin/Judicialperson/cooperation_edit';
+$route['admin/(Judicialperson|judicialperson)/cooperation_(apply|management)_success'] = 'admin/Judicialperson/cooperation_success';
+$route['admin/(Judicialperson|judicialperson)/cooperation_(apply|management)_failed'] = 'admin/Judicialperson/cooperation_failed';
+// [活動及最新消息]
+$route['admin/(Article|article)/news'] = 'admin/Article/index';
+$route['admin/(Article|article)/(article|news)_add'] = 'admin/Article/add';
+$route['admin/(Article|article)/(article|news)_edit'] = 'admin/Article/edit';
+$route['admin/(Article|article)/(article|news)_success'] = 'admin/Article/success';
+$route['admin/(Article|article)/(article|news)_failed'] = 'admin/Article/failed';
+$route['admin/(Article|article)/(article|news)_del'] = 'admin/Article/del';
+// [業務報表]
+$route['admin/(Sales|sales)/promote_detail'] = 'admin/sales/promote_edit';
+$route['admin/postloan'] = 'admin/PostLoan';
+$route['admin/(User|user)/detail'] = 'admin/user/edit';
+$route['admin/(Certification|certification)/user_certification_detail'] = 'admin/Certification/user_certification_edit';

@@ -124,7 +124,7 @@ $this_id = isset($data->id) && is_numeric($data->id) ? $data->id : '';
                                     </form>
                                 </div>
                                 <h4>審核</h4>
-                                <form role="form" method="post">
+                                <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                     <fieldset>
                                         <div class="form-group">
                                             <select id="status" name="status" class="form-control"
@@ -380,7 +380,7 @@ $this_id = isset($data->id) && is_numeric($data->id) ? $data->id : '';
                                     ?>
                                 </div>
                                 <h4>審核</h4>
-                                <form role="form" method="post">
+                                <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                     <fieldset>
                                         <div class="form-group">
                                             <select id="status" name="status" class="form-control"
