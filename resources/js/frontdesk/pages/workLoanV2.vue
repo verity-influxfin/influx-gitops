@@ -1,16 +1,60 @@
 <template>
   <div class="work-loan">
-    <div class="banner">
-      <img
-        src="@/asset/images/workloan/workloan-cover.png"
-        alt="普匯上班族貸banner"
-        class="img-fluid d-sm-block d-none"
-      />
-      <img
-        src="@/asset/images/workloan/workloan-cover-phone.png"
-        alt="普匯上班族貸banner"
-        class="img-fluid d-sm-none d-block"
-      />
+    <div class="banner-swiper position-relative">
+      <!-- Additional required wrapper -->
+      <div class="swiper-wrapper">
+        <!-- Slides -->
+        <div class="swiper-slide">
+          <img
+            src="@/asset/images/workloan/workloan-cover.png"
+            alt="普匯上班族貸主banner"
+            class="img-fluid d-sm-block d-none"
+          />
+          <img
+            src="@/asset/images/workloan/workloan-cover-phone.png"
+            alt="普匯上班族貸主banner"
+            class="img-fluid d-sm-none d-block"
+          />
+        </div>
+        <div class="swiper-slide">
+          <img
+            src="@/asset/images/workloan/workloan-cover-1.png"
+            alt="普匯上班族購房貸banner"
+            class="img-fluid d-sm-block d-none"
+          />
+          <img
+            src="@/asset/images/workloan/workloan-cover-phone-1.png"
+            alt="普匯上班族購房貸banner"
+            class="img-fluid d-sm-none d-block"
+          />
+        </div>
+        <div class="swiper-slide">
+          <img
+            src="@/asset/images/workloan/workloan-cover-2.png"
+            alt="普匯上班族裝修貸banner"
+            class="img-fluid d-sm-block d-none"
+          />
+          <img
+            src="@/asset/images/workloan/workloan-cover-phone-2.png"
+            alt="普匯上班族裝修貸banner"
+            class="img-fluid d-sm-none d-block"
+          />
+        </div>
+        <div class="swiper-slide">
+          <img
+            src="@/asset/images/workloan/workloan-cover-3.png"
+            alt="普匯上班族購車貸banner"
+            class="img-fluid d-sm-block d-none"
+          />
+          <img
+            src="@/asset/images/workloan/workloan-cover-phone-3.png"
+            alt="普匯上班族購車貸banner"
+            class="img-fluid d-sm-none d-block"
+          />
+        </div>
+      </div>
+      <!-- If we need pagination -->
+      <div class="swiper-pagination"></div>
     </div>
     <div class="features">
       <div class="block-content">
@@ -814,6 +858,15 @@ export default {
       },
       pagination: {
         el: '.swiper-pagination',
+      },
+    })
+    const swiper2 = new Swiper('.banner-swiper', {
+      pagination: {
+        el: '.swiper-pagination',
+      },
+      loop: true,
+      autoplay: {
+        delay: 5000,
       },
     })
     axios.post(`/getCase`, { status: 10, product_id: 3 }).then((res) => {
