@@ -6,6 +6,11 @@
         alt="普匯上班族貸banner"
         class="img-fluid d-sm-block d-none"
       />
+      <img
+        src="@/asset/images/workloan/workloan-cover-phone.png"
+        alt="普匯上班族貸banner"
+        class="img-fluid d-sm-none d-block"
+      />
     </div>
     <div class="features">
       <div class="block-content">
