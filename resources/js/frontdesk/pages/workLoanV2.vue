@@ -247,21 +247,30 @@
           </div>
         </div>
         <div class="form-title">專人溫馨服務</div>
-        <form action="" class="row no-gutters justify-content-center">
+        <form
+          ref="contactForm"
+          @submit.prevent="doContact"
+          class="row no-gutters justify-content-center"
+        >
           <div class="col-md col-12">
             <div class="row no-gutters mb-3">
               <div class="form-item-text">*您的尊稱：</div>
               <input
                 type="text"
-                name=""
-                id=""
+                name="name"
                 class="form-item-input col"
+                maxlength="20"
                 required
               />
             </div>
             <div class="row no-gutters mb-3">
               <div class="form-item-text">*手機號碼：</div>
-              <input type="text" name="" id="" class="form-item-input col" />
+              <input
+                type="text"
+                name="phone"
+                maxlength="10"
+                class="form-item-input col"
+              />
             </div>
             <div class="row no-gutters mb-3">
               <div class="form-item-text">*身分證性別：</div>
@@ -271,7 +280,8 @@
                     type="radio"
                     name="gender"
                     class="radio-inline"
-                    value="0"
+                    value="1"
+                    required
                   />
                   <span class="outside"><span class="inside"></span></span>男
                 </label>
@@ -280,20 +290,31 @@
                     type="radio"
                     name="gender"
                     class="radio-inline"
-                    value="1"
-                    checked
+                    value="2"
+                    required
                   />
                   <span class="outside"><span class="inside"></span></span>女
                 </label>
               </div>
             </div>
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">LINE帳號：</div>
-              <input type="text" name="" id="" class="form-item-input col" />
+              <div class="form-item-text">*LINE帳號：</div>
+              <input
+                type="text"
+                name="line"
+                maxlength="40"
+                required
+                class="form-item-input col"
+              />
             </div>
             <div class="row no-gutters mb-3">
               <div class="form-item-text">*電子信箱：</div>
-              <input type="text" name="" id="" class="form-item-input col" />
+              <input
+                type="text"
+                name="email"
+                class="form-item-input col"
+                required
+              />
             </div>
             <div class="row no-gutters mb-3">
               <div class="form-item-text">*聯絡時間：</div>
@@ -301,20 +322,23 @@
                 type="text"
                 class="form-item-input col"
                 name="contact_time"
+                required
               >
                 <option selected disabled value="">-請選擇-</option>
-                <option value="隨時">隨時</option>
-                <option value="上午(09:00 ~ 12:00)">上午(09:00 ~ 12:00)</option>
-                <option value="下午(13:30 ~ 18:00)">下午(13:30 ~ 18:00)</option>
+                <option value="1">隨時</option>
+                <option value="2">上午(09:00 ~ 12:00)</option>
+                <option value="3">下午(13:30 ~ 18:00)</option>
               </select>
             </div>
             <div class="row no-gutters mb-3">
               <div class="form-item-text">*資金需求原因：</div>
               <textarea
                 type="text"
-                name=""
+                name="reason"
                 style="min-height: 15vh"
                 class="form-item-input col"
+                maxlength="100"
+                required
               ></textarea>
             </div>
             <div class="row no-gutters">
@@ -650,22 +674,24 @@
               </div>
               <div class="d-md-none d-block">請借款人安心上傳</div>
             </div>
-            <form>
+            <form ref="shareForm" @submit.prevent="doShare">
               <div class="row no-gutters mb-3">
                 <div class="form-item-text">使用者編號：</div>
                 <input
                   type="text"
-                  name="userId"
+                  name="user_id"
                   v-model="userId"
                   :disabled="userIdDisabled"
                   class="form-item-input col"
+                  required
                 />
               </div>
               <div class="row no-gutters mb-3">
                 <div class="form-item-text">借款體驗：</div>
                 <textarea
-                  name="exp"
+                  name="experience"
                   class="form-item-input col form-textarea"
+                  required
                 ></textarea>
               </div>
               <div class="text-center">
@@ -760,6 +786,7 @@ import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import SwiperCore, { Navigation, Pagination } from 'swiper/core'
+import Axios from 'axios';
 export default {
   components: {
     featureCard,
@@ -768,8 +795,8 @@ export default {
   data() {
     return {
       cases: [],
-      userId:'',
-      userIdDisabled:false
+      userId: '',
+      userIdDisabled: false
     }
   },
   mounted() {
@@ -791,11 +818,63 @@ export default {
     });
     // check login
     const userData = sessionStorage.getItem('userData')
-    if(userData){
-        this.userId = JSON.parse(userData)?.id
-        if(this.userId){
-            this.userIdDisabled = true
+    if (userData) {
+      this.userId = JSON.parse(userData)?.id
+      if (this.userId) {
+        this.userIdDisabled = true
+      }
+    }
+  },
+  methods: {
+    doContact() {
+      const data = new FormData(this.$refs.contactForm)
+      Axios({
+        url: '/api/v1/work-loan/contact',
+        method: 'POST',
+        data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
         }
+      }).then(({ data }) => {
+        if (data.success) {
+          this.$refs.contactForm.reset()
+          alert(data.msg)
+        }
+      }).catch(({ response }) => {
+        const d = response.data.data
+        let errorMsg = ''
+        for (const item in d) {
+          errorMsg += d[item].toString() + '\n'
+
+        }
+        alert(errorMsg)
+      })
+    },
+    doShare() {
+      const data = new FormData(this.$refs.shareForm)
+      Axios({
+        url: '/api/v1/work-loan/share',
+        method: 'POST',
+        data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        }
+      }).then(({ data }) => {
+        if (data.success) {
+          this.$refs.shareForm.reset()
+          alert(data.msg)
+        }
+      }).catch(({ response }) => {
+        const d = response.data.data
+        let errorMsg = ''
+        for (const item in d) {
+          errorMsg += d[item].toString() + '\n'
+
+        }
+        alert(errorMsg)
+      })
     }
   },
 }
