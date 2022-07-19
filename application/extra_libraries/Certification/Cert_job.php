@@ -3,6 +3,7 @@
 namespace Certification;
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use Certification_ocr\Marker\Ocr_marker_factory;
 use CertificationResult\MessageDisplay;
 
 /**
@@ -105,7 +106,8 @@ class Cert_job extends Certification_base
                 $parsed_content['salary'] = $this->transform_data['last_insurance_info']['insuranceSalary'];
             }
         }
-        return $parsed_content;
+
+        return array_merge($parsed_content, $this->_get_ocr_info());
     }
 
     /**
@@ -140,6 +142,10 @@ class Cert_job extends Certification_base
      */
     public function verify_data($content): bool
     {
+        if ($this->_chk_ocr_status($content) === FALSE)
+        {
+            return FALSE;
+        }
         // 勞保異動明細正確性驗證
         $this->CI->load->library('verify/data_legalize_lib');
         $this->result = $this->CI->data_legalize_lib->legalize_job($this->result, $this->certification['user_id'],
@@ -280,5 +286,45 @@ class Cert_job extends Certification_base
         return TRUE;
     }
 
+    // 要跑的 OCR 辨識
+    private function _get_ocr_info()
+    {
+        $result = [];
+        if ( ! isset($this->content['ocr_marker']['res']))
+        {
+            $cert_ocr_marker = Ocr_marker_factory::get_instance($this->certification);
+            $ocr_marker_result = $cert_ocr_marker->get_result();
+            if ($ocr_marker_result['success'] === TRUE)
+            {
+                if ($ocr_marker_result['code'] == 201 || $ocr_marker_result['code'] == 202)
+                { // OCR 任務剛建立，或是 OCR 任務尚未辨識完成
+                    return $result;
+                }
+                $result['ocr_marker']['res'] = TRUE;
+                $result['ocr_marker']['content'] = $ocr_marker_result['data'];
+            }
+            else
+            {
+                $result['ocr_marker']['res'] = FALSE;
+                $result['ocr_marker']['msg'] = $ocr_marker_result['msg'];
+            }
+        }
 
+        return $result;
+    }
+
+    // OCR 辨識後的檢查
+    private function _chk_ocr_status($content)
+    {
+        if ( ! isset($content['ocr_marker']['res']))
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
+            return FALSE;
+        }
+        else
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        }
+        return TRUE;
+    }
 }
