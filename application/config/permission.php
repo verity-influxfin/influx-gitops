@@ -258,7 +258,7 @@ $config['permission'] = [
             'media_upload' => ['model' => 'Certification', 'submodel' => 'index', 'action' => 'update'],
             'hasspouse' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'sendskbank' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
-            'getskbank' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'getskbank' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'save_meta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'getmeta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'job_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
