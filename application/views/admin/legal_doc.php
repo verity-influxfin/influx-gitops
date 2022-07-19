@@ -378,7 +378,7 @@
 													}
 												?>
 											</td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->target_id ?>" class="btn btn-default" target="_blank" rel="noopener noreferrer">Detail</a></td>
+											<td><a href="<?=admin_url('target/legal_doc_detail')."?id=".$value->target_id ?>" class="btn btn-default" target="_blank" rel="noopener noreferrer">Detail</a></td>
 										</tr>
 									<?php
 										}}

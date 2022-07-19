@@ -117,7 +117,7 @@
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                             <td><?=isset($value->remark)?$value->remark:'' ?></td>
-											<td><a target="_blank" href="<? echo  admin_url('target/edit')."?id=".$value->id  ?>" class="btn btn-<? echo 'default' ?>"><? echo '詳情' ?></a></td>
+											<td><a target="_blank" href="<? echo !$isExternalCoop ? admin_url('target/target_waiting_verify_detail')."?id=".$value->id : admin_url('target/waiting_reinspection')."?target_id=".$value->id ?>" class="btn btn-<? echo !$unFinish || !$isExternalCoop ? 'default' : 'danger' ?>"><? echo !$isExternalCoop ? '詳情' : '二審' ?></a></td>
                                         </tr>                                        
 									<?php 
 										}}

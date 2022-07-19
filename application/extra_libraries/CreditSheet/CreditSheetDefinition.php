@@ -7,9 +7,11 @@ interface CreditSheetDefinition
 {
     public const STATUS_UNAPPROVED = 0;
     public const STATUS_APPROVED = 1;
+    public const STATUS_CANCELED = 2;
     public const STATUS_LIST = [
         self::STATUS_UNAPPROVED => '未核准',
         self::STATUS_APPROVED => '已核准',
+        self::STATUS_CANCELED => '已取消',
     ];
 
     public const TYPE_PERSONAL = 1;

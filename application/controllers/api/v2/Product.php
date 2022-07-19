@@ -274,8 +274,8 @@ class Product extends REST_Controller {
                     'identity' 				=> $value['identity'],
                     'name' 					=> $value['name'],
                     'description' 			=> $value['description'],
-                    'loan_range_s'			=> $value['loan_range_s'],
-                    'loan_range_e'			=> $value['loan_range_e'],
+                    'loan_range_s'			=> $value['apply_range_s'] ?? $value['loan_range_s'],
+                    'loan_range_e'			=> $value['apply_range_e'] ?? $value['loan_range_e'],
                     'interest_rate_s'		=> $value['interest_rate_s'],
                     'interest_rate_e'		=> $value['interest_rate_e'],
                     'charge_platform'		=> $value['charge_platform'],
@@ -290,6 +290,11 @@ class Product extends REST_Controller {
                     'target'                => isset($target[$value['id']][0])?$target[$value['id']][0]:[],
                     'certification'         => $certification,
                 );
+
+                if (isset($value['available_company_categories']) && is_array($value['available_company_categories']))
+                {
+                    $parm['available_company_categories'] = $value['available_company_categories'];
+                }
 
                 if($login){
                     if($this->user_info->investor == 0 && $this->user_info->designate==$value['dealer']){
@@ -324,7 +329,8 @@ class Product extends REST_Controller {
                         foreach ($t2 as $key3 => $t3) {
                             $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : '';
                             $data = $t3;
-                            unset($data['sealler'], $data['sub_product'], $data['hiddenMainProduct'], $data['checkOwner']);
+                            unset($data['sealler'], $data['sub_product'], $data['hiddenMainProduct'], $data['checkOwner'],
+                                $data['apply_range_s'], $data['apply_range_e'], $data['available_company_categories']);
                             $identityList[$key3] = $data;
 
                             //sub_products
@@ -341,10 +347,26 @@ class Product extends REST_Controller {
                                         $sub_product_list[$t4]['status'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['status'];
                                         $sub_product_list[$t4]['banner'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['banner'];
                                         foreach ($sub_product_list[$t4]['identity'] as $idekey => $ideval) {
+                                            $sub_product_list[$t4]['identity'][$idekey]['loan_range_s']	= $sub_product_list[$t4]['identity'][$idekey]['apply_range_s'] ?? $sub_product_list[$t4]['identity'][$idekey]['loan_range_s'];
+                                            $sub_product_list[$t4]['identity'][$idekey]['loan_range_e']	= $sub_product_list[$t4]['identity'][$idekey]['apply_range_e'] ?? $sub_product_list[$t4]['identity'][$idekey]['loan_range_e'];
                                             unset($sub_product_list[$t4]['identity'][$idekey]['targetData'],
                                                 $sub_product_list[$t4]['identity'][$idekey]['dealer'],
                                                 $sub_product_list[$t4]['identity'][$idekey]['secondInstance'],
-                                                $sub_product_list[$t4]['identity'][$idekey]['multi_target']);
+                                                $sub_product_list[$t4]['identity'][$idekey]['multi_target'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['condition_rate'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['option_certifications'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['backend_option_certifications'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['certifications_stage'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['targetData'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['apply_range_s'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['apply_range_e']
+                                            );
+                                            if(isset($sub_product_list[$t4]['identity'][$idekey]['need_upload_images']))
+                                            {
+                                                array_walk($sub_product_list[$t4]['identity'][$idekey]['need_upload_images'], function (&$val) {
+                                                    unset($val['meta_name']);
+                                                });
+                                            }
                                             $exp_product = explode(':', $ideval['product_id']);
                                             if (!empty($certification_list)) {
                                                 $certification = [];
@@ -698,6 +720,7 @@ class Product extends REST_Controller {
         $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
 
         // 確認黑名單結果是否禁止申貸
+        /*
         $this->load->library('brookesia/black_list_lib');
         $is_user_blocked = $this->black_list_lib->check_user($user_id, CHECK_APPLY_PRODUCT);
 
@@ -715,6 +738,7 @@ class Product extends REST_Controller {
                 ]
             );
         }
+*/
 
         if ($product) {
 
@@ -777,6 +801,73 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR', 'error' => PRODUCT_CLOSE));
             }
 
+            // 由於 input 需帶入到成立案件的 function，故需把 target meta 寫入 input 內
+            // 但不能由使用者自行輸入，若有自己輸入則回傳錯誤
+            if (isset($input['target_meta']))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            else
+            {
+                $input['target_meta'] = [];
+            }
+
+            // 申貸產品需上傳照片
+            if ( ! empty($product['need_upload_images']))
+            {
+                $this->load->model('log/log_image_model');
+
+                foreach ($product['need_upload_images'] as $validation_image)
+                {
+                    $arg_name = $validation_image['argument_name'];
+                    if($validation_image['optional'] === FALSE && !isset($input[$arg_name]))
+                    {
+                        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                    }
+
+                    $list = [];
+                    $image_ids = explode(',', $input[$arg_name]);
+                    if ( ! empty($image_ids))
+                    {
+                        $image_ids = array_filter($image_ids);
+                        $image_ids = array_map('intval', $image_ids);
+
+                        $list = $this->log_image_model->get_many_by([
+                            'id' => $image_ids,
+                            'user_id' => $user_id,
+                        ]);
+                    }
+
+                    if ( empty($image_ids) || count($list) != count($image_ids))
+                    {
+                        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                    }
+                    else
+                    {
+                        $input['target_meta'][] = [
+                            'meta_key' => $validation_image['meta_name'],
+                            'meta_value' => json_encode($image_ids)
+                        ];
+                    }
+                }
+            }
+
+            // 申貸產品需選擇職業(公司類型)
+            if ( ! empty($product['available_company_categories']))
+            {
+                if (isset($input['company_category']))
+                {
+                    if ( ! array_key_exists($input['company_category'], $product['available_company_categories']))
+                    {
+                        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => 'The parameter company_category is not correct.'));
+                    }
+                    $input['target_meta'][] = [
+                        'meta_key' => TARGET_META_COMPANY_CATEGORY_NUMBER,
+                        'meta_value' => (int)$input['company_category']
+                    ];
+                }
+            }
+
             // 外匯車判斷
             if($product['id'] == PRODUCT_FOREX_CAR_VEHICLE){
                 $input['instalment'] = 90;
@@ -793,7 +884,7 @@ class Product extends REST_Controller {
                     $this->response(array('result' => 'ERROR', 'error' => PRODUCT_INSTALMENT_ERROR));
                 }
                 // 貸款金額判斷
-                if (($amount < $product['loan_range_s'] || $amount > $product['loan_range_e']) && $product['type'] != 2) {
+                if (($amount < ($product['apply_range_s'] ?? $product['loan_range_s']) || $amount > ($product['apply_range_e'] ?? $product['loan_range_e'])) && $product['type'] != 2) {
                     $this->response(array('result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE));
                 }
             }
@@ -1431,6 +1522,17 @@ class Product extends REST_Controller {
                         "completeness" => ceil($cervalue[0] == 1?$completeness_level:0)
                     ];
                 }
+            }
+            $skip_certification_ids = [];
+            if ( ! empty($target))
+            {
+                $this->load->model('loan/target_meta_model');
+                $target_meta = $this->target_meta_model->as_array()->get_by([
+                    'target_id' => $target->id,
+                    'meta_key' => 'skip_certification_ids'
+                ]);
+                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
+                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
             }
             if(!empty($certification_list)){
                 $this->load->helper('target');
@@ -2817,6 +2919,11 @@ class Product extends REST_Controller {
             'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
             'status' => $sub_product['status'],
             'allow_age_range' => $sub_product['allow_age_range'] ?? [20, 55],
+            'apply_range_s' => $sub_product['apply_range_s'] ?? null,
+            'apply_range_e' => $sub_product['apply_range_e'] ?? null,
+            'need_upload_images' => $sub_product['need_upload_images'] ?? null,
+            'available_company_categories' => $sub_product['available_company_categories'] ?? null,
+            'default_reason' => $sub_product['default_reason'] ?? ''
         );
     }
 
@@ -2870,7 +2977,7 @@ class Product extends REST_Controller {
             }
         }
 
-        isset($input['reason'])?$param['reason'] = $input['reason']:'';
+        $param['reason'] = $input['reason'] ?? ($product['default_reason'] ?? '');
         if(isset($input['reason_description'])&&!empty($input['reason_description'])){
             $build = [
                 'reason' => $param['reason'],
@@ -2906,6 +3013,14 @@ class Product extends REST_Controller {
         }
 
         if ($insert) {
+
+            if ( ! empty($input['target_meta']) && is_array($input['target_meta']))
+            {
+                $target_id_list = array_fill(0, count($input['target_meta']), ['target_id' => $insert]);
+                $target_meta_list = array_replace_recursive($input['target_meta'], $target_id_list);
+                $this->load->model('loan/target_meta_model');
+                $this->target_meta_model->insert_many($target_meta_list);
+            }
 
             $target = $this->target_model->get_by(['id' => $insert]);
             $this->load->helper('product');
@@ -3128,6 +3243,15 @@ class Product extends REST_Controller {
                 $this->notification_lib->notice_order_apply($company_user_id,$item_name,$instalment,$delivery);
                 $this->load->library('Certification_lib');
                 $this->certification_lib->expire_certification($user_id);
+
+                if ( ! empty($input['target_meta']) && is_array($input['target_meta']))
+                {
+                    $target_id_list = array_fill(0, count($input['target_meta']), ['target_id' => $insert]);
+                    $target_meta_list = array_replace_recursive($input['target_meta'], $target_id_list);
+                    $this->load->model('loan/target_meta_model');
+                    $this->target_meta_model->insert_many($target_meta_list);
+                }
+
                 $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
             }
             $this->target_lib->cancel_order($order_insert,$merchant_order_no,$user_id,$phone);

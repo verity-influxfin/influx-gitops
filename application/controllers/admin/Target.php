@@ -879,8 +879,25 @@ class Target extends MY_Admin_Controller {
 				$otherTarget->credit = $credit;
 			}
 
-			$this->load->library('output/loan/target_output', ['data' => $targets]);
+            $allowed_display_meta = [
+                TARGET_META_COMPANY_CATEGORY_NUMBER
+            ];
 
+            $target_meta_list = [];
+            $target_meta = $this->target_lib->get_meta_list($target->id);
+            foreach ($target_meta as $meta)
+            {
+                if ( in_array($meta['meta_key'], $allowed_display_meta))
+                {
+                    $target_meta_list[] = $meta;
+                }
+            }
+
+            $product = $this->target_lib->get_product_info($target->product_id, $target->sub_product_id);
+            $display_contract_cols = ['contract_name', 'meta_name'];
+            $contract_list = array_columns($product['need_upload_images'] ?? [], $display_contract_cols);
+
+            $this->load->library('output/loan/target_output', ['data' => $targets]);
 			$response = [
 				"target" => $this->current_target_output->toOne(),
 				"user" => $this->user_output->toOne(true),
@@ -889,6 +906,8 @@ class Target extends MY_Admin_Controller {
 				"bank_accounts" => $this->bank_account_output->toMany(),
 				"virtual_accounts" => $this->virtual_account_output->toMany(),
 				"targets" => $this->target_output->toMany(),
+                'target_meta' => $target_meta_list,
+                'contract_list' => $contract_list
 			];
 
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
@@ -2295,6 +2314,66 @@ class Target extends MY_Admin_Controller {
         }
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
+    }
+
+    public function uploaded_contract()
+    {
+        $get = $this->input->get(NULL, TRUE);
+
+        $target_id = isset($get['id']) ? intval($get['id']) : 0;
+        $meta_name = $get['meta_name'] ?? '';
+        $contract_name = $meta_name;
+
+        if (empty($meta_name) || empty($target_id))
+        {
+            alert('網頁帶入資訊有缺少，請確認是否有誤。', admin_url('AdminDashboard'));
+        }
+        $target = $this->target_model->get($target_id);
+        if ( ! isset($target))
+        {
+            alert('查無案件', admin_url('AdminDashboard'));
+        }
+
+        $target_meta = $this->target_lib->get_meta_list($target->id);
+        $target_meta = array_column($target_meta, NULL, 'meta_key');
+        if (empty($target_meta) || ! array_key_exists($meta_name, $target_meta))
+        {
+            alert('查無合約', admin_url('AdminDashboard'));
+        }
+
+        $product = $this->target_lib->get_product_info($target->product_id, $target->sub_product_id);
+        foreach ($product['need_upload_images'] as $contract)
+        {
+            if ($meta_name == $contract['meta_name'])
+            {
+                $contract_name = $contract['contract_name'];
+            }
+        }
+
+        $this->load->model('log/log_image_model');
+        $image_url_list = [];
+        $image_ids = $target_meta[$meta_name]['meta_value'];
+        if ( ! empty($image_ids) && is_array($image_ids))
+        {
+            $list = $this->log_image_model->as_array()->get_many_by([
+                'id' => $image_ids,
+                'user_id' => $target->user_id,
+            ]);
+            $image_url_list = array_column($list, 'url');
+        }
+
+        $page_data = [
+            'image_url_list' => $image_url_list,
+            'contract_name' => $contract_name,
+            'target_no' => $target->target_no,
+            'target_id' => $target->id,
+            'user_id' => $target->user_id,
+        ];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/target/uploaded_contract', $page_data);
+        $this->load->view('admin/_footer');
     }
 
     // 渲染「DD查核」頁面

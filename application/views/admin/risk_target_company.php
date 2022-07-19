@@ -435,9 +435,9 @@
                                                     if(isset($input['company']) && $input['company'] == 1){ ?>
                                                     <? if($isExternalCoop){ ?>
                                                             <? if(!isset($input['target_id'])){ ?>
-                                                                <td><a class="btn btn-primary btn-info" href="/admin/creditmanagementtable/report?target_id=<?=isset($value->id)?$value->id:"" ?>&table_type=management" target="_blank" >查看<br />授信審核表</a></td>
+                                                                <td><a class="btn btn-primary btn-info" href="/admin/creditmanagementtable/juridical_person_report?target_id=<?=isset($value->id)?$value->id:"" ?>&table_type=management" target="_blank" >查看<br />授信審核表</a></td>
                                                             <? } ?>
-                                                            <td><a class="btn btn-primary" href="/admin/bankdata/report?target_id=<?=isset($value->id)?$value->id:"" ?>&table_type=check" target="_blank" >查看<br />送件檢核表</a></td>
+                                                            <td><a class="btn btn-primary" href="/admin/bankdata/juridical_person_report?target_id=<?=isset($value->id)?$value->id:"" ?>&table_type=check" target="_blank" >查看<br />送件檢核表</a></td>
                                                     <? }
                                                     }
                                                 }

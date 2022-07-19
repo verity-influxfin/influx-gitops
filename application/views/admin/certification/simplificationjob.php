@@ -36,7 +36,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-6">	
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>會員 ID</label>
                                         <a class="fancyframe" href="<?=admin_url('User/display?id='.$data->user_id) ?>" >
@@ -251,10 +251,11 @@
                                         <?}} ?>
                                     <br />
                                     <div class="form-group">
-                                        <label>備註</label>
-                                    </div>
-                                    <h4>審核</h4>
-                                    <form role="form" method="post">
+										<label>備註</label>
+
+									</div>
+									<h4>審核</h4>
+                                    <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                     <fieldset>
                                                <div class="form-group">
                                                 <select id="status" name="status" class="form-control" onchange="check_fail();" >

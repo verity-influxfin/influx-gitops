@@ -52,7 +52,7 @@
                                                 <td><?=isset($value->platform_fee)?$value->platform_fee:"" ?></td>
                                                 <td><?=isset($value->instalment)?$value->instalment:"" ?></td>
                                                 <td><?=isset($value->expire_time)?date("Y-m-d",$value->expire_time):"" ?></td>
-                                                <td><a href="<?=admin_url('target/edit')."?id=".$value->target->id ?>" class="btn btn-default" target="_blank">Detail</a></td>
+                                                <td><a href="<?=admin_url('target/waiting_transfer_detail')."?id=".$value->target->id ?>" class="btn btn-default" target="_blank">Detail</a></td>
                                             </tr>
                                             <?php
                                         }}

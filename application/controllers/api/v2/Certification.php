@@ -128,6 +128,7 @@ class Certification extends REST_Controller {
 		$investor 			= $this->user_info->investor;
 		$company 			= $this->user_info->company;
         $incharge           = $this->user_info->incharge;
+
         $input = $this->input->get(NULL, TRUE);
         $target = FALSE;
         if (isset($input['target_id']))
@@ -136,7 +137,7 @@ class Certification extends REST_Controller {
             $target = $this->target_model->get_by(['id' => $input['target_id']]);
         }
 
-        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, FALSE, $target);
+        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company, TRUE, $target, FALSE, TRUE);
 		$list				= array();
 		if(!empty($certification_list)){
 		    $sort = $this->config->item('certifications_sort');

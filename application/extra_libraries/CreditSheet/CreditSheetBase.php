@@ -77,6 +77,12 @@ abstract class CreditSheetBase implements CreditSheetDefinition
     abstract public function archive(array $credit): bool;
 
     /**
+     * 失效授審表
+     * @return bool
+     */
+    abstract public function cancel(): bool;
+
+    /**
      * 設定最終核准層次
      * @param int $level
      * @return bool

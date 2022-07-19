@@ -97,7 +97,7 @@
 		}
 
         function fillTargetsInfo(targets, users) {
-            let validation_url = url.searchParams.get('tab') === 'enterprise' ? 'waiting_reinspection?target_id=' : 'final_validations?id=';
+            let validation_url = url.searchParams.get('tab') === 'enterprise' ? 'waiting_reinspection?target_id=' : 'final_validations_detail?id=';
 			for (var i = 0; i < targets.length; i++) {
 				let target = targets[i];
 				let user = users[i];

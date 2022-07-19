@@ -14,8 +14,6 @@ $config['influx_user_list'] = [
         'user_id' => 99],
     [ // 蔡蔡
         'user_id' => 23643],
-    [ // Alex
-        'user_id' => 41777],
     [ // Frankie
         'user_id' => 47141],
     [ // Frank
@@ -38,8 +36,8 @@ $config['influx_user_list'] = [
         'user_id' => 83529],
     [ // 汪芸瑄
         'user_id' => 83848],
-    [ // 蔡泓霖
-        'user_id' => 51365],
     [ // 黃偉銘John
         'user_id' => 84644],
+    [ // 許良
+        'user_id' => 85279],
 ];

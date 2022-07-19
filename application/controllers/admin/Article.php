@@ -25,6 +25,7 @@ class Article extends MY_Admin_Controller {
 		$page_data['name_list'] 	= $this->admin_model->get_name_list();
 		$page_data['status_list'] 	= $this->article_model->status_list;
 		$page_data['type_list'] 	= $this->article_model->type_list;
+        $page_data['type_name'] = (int) $type === 1 ? 'article' : 'news';
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/article_list',$page_data);
@@ -39,6 +40,7 @@ class Article extends MY_Admin_Controller {
 			$page_data['type'] 			= $type;
 			$page_data['status_list'] 	= $this->article_model->status_list;
 			$page_data['type_list'] 	= $this->article_model->type_list;
+            $page_data['type_name'] = (int) $type === 1 ? 'article' : 'news';
 			$this->load->view('admin/_header');
 			$this->load->view('admin/_title',$this->menu);
 			$this->load->view('admin/article_edit',$page_data);
@@ -58,10 +60,12 @@ class Article extends MY_Admin_Controller {
 			}
 			
 			$rs = $this->article_model->insert($data);
+            $data['type'] = (int) ($data['type'] ?? 1);
+            $type_name = $data['type'] === 1 ? 'index' : 'news';
 			if($rs){
-				alert('新增成功',admin_url('Article/index?type='.$data['type']));
+                alert('新增成功', admin_url('Article/'.$type_name.'?type='.$data['type']));
 			}else{
-				alert('更新失敗，請洽工程師',admin_url('Article/index?type='.$data['type']));
+                alert('更新失敗，請洽工程師', admin_url('Article/'.$type_name.'?type='.$data['type']));
 			}
 		}
 	}
@@ -71,6 +75,7 @@ class Article extends MY_Admin_Controller {
 		$post 		= $this->input->post(NULL, TRUE);
 		if(empty($post)){
 			$id = isset($get['id'])?intval($get['id']):0;
+            $type = (int) ($get['type'] ?? 0);
 			if($id){
 				$info = $this->article_model->get($id);
 				if($info){
@@ -78,15 +83,16 @@ class Article extends MY_Admin_Controller {
 					$page_data['data'] 			= $info;
 					$page_data['status_list'] 	= $this->article_model->status_list;
 					$page_data['type_list'] 	= $this->article_model->type_list;
+                    $page_data['type_name'] = $type === 1 ? 'article' : 'news';
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
 					$this->load->view('admin/article_edit',$page_data);
 					$this->load->view('admin/_footer');
 				}else{
-					alert('ERROR , id is not exist',admin_url('Article/index?type='.$data['type']));
+					alert('ERROR , id is not exist',admin_url('Article/index?type='.$type));
 				}
 			}else{
-				alert('ERROR , id is not exist',admin_url('Article/index?type='.$data['type']));
+				alert('ERROR , id is not exist',admin_url('Article/index?type='.$type));
 			}
 		}else{
 			$id = isset($post['id'])?intval($post['id']):0;
@@ -105,10 +111,12 @@ class Article extends MY_Admin_Controller {
 				}
 				
 				$rs = $this->article_model->update($id,$data);
+                $data['type'] = (int) ($data['type'] ?? 1);
+                $type_name = $data['type'] === 1 ? 'index' : 'news';
 				if($rs){
-					alert('新增成功',admin_url('Article/index?type='.$data['type']));
+                    alert('更新成功', admin_url('Article/'.$type_name.'?type='.$data['type']));
 				}else{
-					alert('更新失敗，請洽工程師',admin_url('Article/index?type='.$data['type']));
+                    alert('更新失敗，請洽工程師', admin_url('Article/'.$type_name.'?type='.$data['type']));
 				}
 			}else{
 				alert('ERROR , id is not exist',admin_url('Article/index?type='.$data['type']));

@@ -901,7 +901,7 @@
                                 ?>
                             </div>
                             <h4>審核</h4>
-                            <form role="form" method="post">
+                            <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                 <fieldset>
                                     <div class="form-group">
                                         <select id="status" name="status" class="form-control" onchange="check_fail();">

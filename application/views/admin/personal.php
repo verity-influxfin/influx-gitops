@@ -46,10 +46,6 @@
 											<p class="form-control-static"><?=isset($data->email)?$data->email:"";?></p>
                                         </div>
 										<div class="form-group">
-                                            <label>角色</label>
-											<p class="form-control-static"><?=isset($data->role_id)?$role_name[$data->role_id]:"";?></p>
-                                        </div>
-										<div class="form-group">
 											<label>新密碼</label> 
 											<input type="password" id="password" name="password" class="form-control" placeholder="Enter Password">
 										</div>

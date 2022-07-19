@@ -10,7 +10,7 @@
 					if(confirm("確認審核通過？")){
 						if(id){
 							$.ajax({
-								url: './cooperation_success?id='+id,
+                                url: './cooperation_<?=isset($method_name[0]) ? ($method_name[0].'_') : ''?>success?id=' + id,
 								type: 'GET',
 								success: function(response) {
 									alert(response);
@@ -25,7 +25,7 @@
 					if(confirm("確認審核失敗？")){
 						if(id){
 							$.ajax({
-								url: './cooperation_failed?id='+id,
+								url: './cooperation_<?=isset($method_name[0]) ? ($method_name[0].'_') : ''?>failed?id='+id,
 								type: 'GET',
 								success: function(response) {
 									alert(response);
@@ -46,7 +46,7 @@
 					var user_id = $('#user_id').val();
 					var tax_id 			= $('#tax_id').val();
 					var cooperation 	= $('#cooperation :selected').val();
-					top.location = './cooperation?cooperation='+cooperation+'&user_id='+user_id+'&tax_id='+tax_id;
+					top.location = './cooperation<?=isset($method_name[0]) ? ('_'.$method_name[0]) : ''?>?cooperation='+cooperation+'&user_id='+user_id+'&tax_id='+tax_id;
 				}
 			</script>
             <!-- /.row -->
@@ -135,7 +135,7 @@
                                                 <? } ?>
                                             </td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-                                            <td><a target="_blank" href="<?=admin_url('judicialperson/cooperation_edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
+                                            <td><a target="_blank" href="<?=admin_url('judicialperson/cooperation_' . (isset($method_name[0]) ? ($method_name[0] . '_') : '') . 'edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
                                         </tr>
 									<?php
 										}}

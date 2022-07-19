@@ -608,7 +608,7 @@
 						const buttonToID = (id) => {
 							return `<div class="d-flex">
 								<button class="btn btn-default mr-2">
-									<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
+									<a href="/admin/user/detail?id=${id}" target="_blank">查看</a>
 								</button>
 							</div>`
 						}

@@ -480,7 +480,7 @@ class Certification_lib{
             'content' => $info->content,
             'risVerified' => FALSE, // 勾稽戶役政 API
             'risVerificationFailed' => TRUE, // 勾稽戶役政 API
-            'ocrCheckFailed' => TRUE,
+            'ocrCheckFailed' => FALSE,
         ];
 
         $content = json_decode($info->content, TRUE);
@@ -535,14 +535,6 @@ class Certification_lib{
         {
             $return_data['remark']['error'] = 'OCR 沒有在正常時間內回應，無法進行實名驗證.<br/>';
             return $return_data;
-        }
-
-        // 檢查三張證件照的資料是否完整
-        if ($ocr_result['infoValidation']['id_card']['is_info_complete']
-            && $ocr_result['infoValidation']['id_card_back']['is_info_complete']
-            && $ocr_result['infoValidation']['health_card']['is_info_complete'])
-        {
-            $return_data['ocrCheckFailed'] = FALSE;
         }
 
         // 補上 OCR 辨識結果的錯誤訊息
@@ -2248,19 +2240,20 @@ class Certification_lib{
 	private function diploma_success($info){
 		if($info){
 			$content 	= $info->content;
-			$data 		= array(
-				'diploma_status'	=> 1,
-				'diploma_name'		=> $content['school'],
-                'diploma_major'		=> $content['major'],
-                'diploma_department'=> $content['department'],
-                'diploma_system'	=> $content['system'],
-				'diploma_image'		=> $content['diploma_image'][0],
-			);
+            if ( ! empty($content) && ! empty($content['school']))
+            {
+                $data = array(
+                    'diploma_status' => 1,
+                    'diploma_name' => $content['school'],
+                    'diploma_major' => $content['major'],
+                    'diploma_department' => $content['department'],
+                    'diploma_system' => $content['system'],
+                    'diploma_image' => $content['diploma_image'][0],
+                );
 
-            $rs = $this->user_meta_progress($data,$info);
-			if($rs){
-                return $this->fail_other_cer($info);
-			}
+                $this->user_meta_progress($data, $info);
+            }
+			return $this->fail_other_cer($info);
 		}
 		return false;
 	}
@@ -2888,7 +2881,7 @@ class Certification_lib{
                     $value['expire_time'] = $user_certification->expire_time;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
-                }
+				}
                 else
                 {
                     $value['user_status'] = NULL;
@@ -3106,7 +3099,6 @@ class Certification_lib{
 		$user_certifications 	= $this->CI->user_certification_model->order_by('certification_id','ASC')->get_many_by(array(
 			'status'				=> 0,
 			'certification_id !='	=> 3,
-            'id' => 1007800
 		));
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
