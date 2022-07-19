@@ -256,7 +256,42 @@
                                 </div>
 								<div class="col-lg-6">
                                     <h1>圖片</h1>
-									<fieldset disabled>
+                                    <fieldset disabled>
+                                        <div class="form-group">
+                                            <?php if ( ! empty($content['ocr_marker']['res']) && $content['ocr_marker']['res'] === TRUE)
+                                            { ?>
+                                                <label for="disabledSelect">OCR 關鍵字標記</label><br>
+                                                <?php
+                                                foreach ($content['ocr_marker']['content'] as $value)
+                                                {
+                                                    if (empty($value['input_kw_mat']) && empty($value['salary_kw_mat']))
+                                                    {
+                                                        continue;
+                                                    } ?>
+                                                    <div class="row" style="width: 100%">
+                                                        <div class="col-lg-3">
+                                                            <a href="<?= $value['url']; ?>" data-fancybox="images">
+                                                                <img alt="" src="<?= $value['url']; ?>"
+                                                                     style="width:100%;max-width:300px">
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-lg-9">
+                                                            <label>身份關鍵字：</label>
+                                                            <br/>
+                                                            <?php foreach ($value['input_kw_mat'] as $kw_value) {
+                                                                echo implode(' ', $kw_value) . '<br/>';
+                                                            } ?>
+                                                            <label>收入關鍵字：</label>
+                                                            <br/>
+                                                            <?php foreach ($value['salary_kw_mat'] as $kw_value) {
+                                                                echo implode(' ', $kw_value) . '<br/>';
+                                                            } ?>
+                                                        </div>
+                                                    </div>
+                                                    <hr/>
+                                                <?php }
+                                            } ?>
+                                        </div>
                                         <? if ($data->status!=4) { ?>
                                             <? if (!isset($content['financial_image'])) { ?>
                                             <? if (isset($content['labor_image'])) { ?>
