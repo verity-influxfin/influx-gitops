@@ -189,7 +189,7 @@ $config['permission'] = [
             'user_bankaccount_success' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
             'user_bankaccount_failed' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
             'user_bankaccount_resend' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
-            'user_bankaccount_verify' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
+            'user_bankaccount_verify' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
         ],
     ],
     'Judicialperson' => [
@@ -248,7 +248,7 @@ $config['permission'] = [
             'user_bankaccount_success' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
             'user_bankaccount_failed' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
             'user_bankaccount_resend' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
-            'user_bankaccount_verify' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
+            'user_bankaccount_verify' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'update'],
             'difficult_word_add' => ['model' => 'Certification', 'submodel' => 'difficult_word_list', 'action' => 'create'],
             'difficult_word_edit' => ['model' => 'Certification', 'submodel' => 'difficult_word_list', 'action' => 'update'],
             'verdict_statuses' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
@@ -265,6 +265,7 @@ $config['permission'] = [
             'joint_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'sip' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'sip_login' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'user_bankaccount_list' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
         ],
     ],
     'Scraper' => [
