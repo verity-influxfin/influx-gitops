@@ -27,7 +27,7 @@ class Transaction_lib{
             $frozen_arr = $frozenes;
 			$last_recharge_date	= '';
 			$this->CI->load->model('transaction/virtual_passbook_model');
-
+			$this->CI->load->model('transaction/transaction_model');
 			$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array('virtual_account' => $virtual_account));
 
 			$frozen_amount 		= $this->CI->frozen_amount_model->get_many_by(array('virtual_account' => $virtual_account,'status' => 1));
@@ -35,6 +35,11 @@ class Transaction_lib{
 				foreach($virtual_passbook as $key => $value){
 					$total = $total + intval($value->amount);
 					if(intval($value->amount) > 0 && $value->tx_datetime > $last_recharge_date){
+                        $remark = json_decode($value->remark, TRUE);
+                        if (isset($remark['source']) && in_array($remark['source'], [SOURCE_RECHARGE, SOURCE_LENDING]))
+                        {
+                            continue;
+                        }
 						$last_recharge_date = $value->tx_datetime;
 					}
 				}
