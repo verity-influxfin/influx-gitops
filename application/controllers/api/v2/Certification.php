@@ -3903,13 +3903,23 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['governmentauthorities_image'];
-            foreach ($fields as $field) {
-                if (empty($input[$field])) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }else{
-                    $content[$field] = $input[$field];
+            $fields 	= ['governmentauthorities_image', 'CompName',
+                'CompId', 'CompDate', 'CompCapital', 'CompRegAddress', 'PrName'];
+            foreach ($fields as $field)
+            {
+                if (empty($input[$field]))
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
                 }
+                else
+                {
+                    $content[lcfirst($field)] = $input[$field];
+                }
+            }
+
+            if (strlen($content['compId']) != 8)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
             }
 
             $file_fields = ['governmentauthorities_image'];
@@ -3947,15 +3957,24 @@ class Certification extends REST_Controller {
             $content['principalId'] = $input['PrincipalId'] ?? '';
             for ($i = ord('A'); $i <= ord('G'); $i++)
             {
-                $content['director{' . chr($i) . 'Id'] = $input['Director{' . chr($i) . 'Id'] ?? '';;
-                $content['director{' . chr($i) . 'Name'] = $input['Director{' . chr($i) . 'Name'] ?? '';;
+                $content['director' . chr($i) . 'Id'] = $input['Director' . chr($i) . 'Id'] ?? '';;
+                $content['director' . chr($i) . 'Name'] = $input['Director' . chr($i) . 'Name'] ?? '';;
             }
 
             // 商業司爬蟲
             $company_user_info = $this->user_model->get_by(array( 'id' => $this->user_info->id ));
-            if($company_user_info && !empty($company_user_info->id_number)){
+            if ($company_user_info && ! empty($content['compId']))
+            {
                 $this->load->library('scraper/Findbiz_lib');
-                $this->findbiz_lib->requestFindBizData($company_user_info->id_number);
+                $resp = $this->findbiz_lib->getFindBizStatus($content['compId']);
+                if ( ! isset($resp['response']['result']['status']) || ($resp['response']['result']['status'] != 'failure' && $resp['response']['result']['status'] != 'finished'))
+                {
+                    // 爬蟲沒打過重打一次
+                    if ($resp && isset($resp['status']) && $resp['status'] == self::HTTP_NO_CONTENT)
+                    {
+                        $this->findbiz_lib->requestFindBizData($content['compId']);
+                    }
+                }
             }
 
             $param		= [

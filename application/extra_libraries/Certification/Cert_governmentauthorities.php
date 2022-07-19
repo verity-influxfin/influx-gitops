@@ -50,7 +50,9 @@ class Cert_governmentauthorities extends Certification_base
      */
     public function parse()
     {
-        return array_merge($this->content, $this->_get_ocr_info());
+        $content = array_merge($this->content, $this->_get_ocr_info());
+
+        return $content;
     }
 
     /**
@@ -183,29 +185,34 @@ class Cert_governmentauthorities extends Certification_base
         $user_info = $this->CI->user_model->get_by(array('id' => $this->certification['user_id']));
         if ($user_info && ! empty($user_info->id_number))
         {
-            $this->CI->load->library('scraper/Findbiz_lib');
             // 確認爬蟲狀態
-            $scraper_status = $this->CI->findbiz_lib->getFindBizStatus($user_info->id_number);
-            if ( ! $scraper_status || ! isset($scraper_status->response->result->status) || ($scraper_status->response->result->status != 'failure' && $scraper_status->response->result->status != 'finished'))
+            $this->CI->load->library('scraper/Findbiz_lib');
+            $resp = $this->CI->findbiz_lib->getFindBizStatus($this->content['compId']);
+            if ( ! isset($resp['response']['result']['status']) || ($resp['response']['result']['status'] != 'failure' && $resp['response']['result']['status'] != 'finished'))
             {
                 // 爬蟲沒打過重打一次
-                if ($scraper_status && isset($scraper_status->status) && $scraper_status->status == 204)
+                if ($resp && isset($resp['status']) && $resp['status'] == 204)
                 {
-                    $this->CI->findbiz_lib->requestFindBizData($user_info->id_number);
+                    $this->CI->findbiz_lib->requestFindBizData($this->content['compId']);
                 }
                 $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
                 return FALSE;
             }
             // 商業司截圖(for新光普匯微企e秒貸)
-            $company_image_url = $this->CI->findbiz_lib->getFindBizImage($user_info->id_number, $user_info->id);
+            $company_image_url = $this->CI->findbiz_lib->getFindBizImage($this->content['compId'], $user_info->id);
             if ($company_image_url)
             {
                 $this->additional_data['governmentauthorities_image'][] = $company_image_url;
             }
             // 商業司歷任負責人
-            $company_scraper_info = $this->CI->findbiz_lib->getResultByBusinessId($user_info->id_number);
-            if ($company_scraper_info)
+            $company_scraper_info = $this->CI->findbiz_lib->getResultByBusinessId($this->content['compId']);
+            if ($company_scraper_info && $company_scraper_info['status'] == 200)
             {
+                if ( ! isset($this->additional_data['scraper']))
+                {
+                    $this->additional_data['scraper'] = [];
+                }
+                $this->additional_data['scraper']['DepartmentOfCommerce'] = json_encode($company_scraper_info['response']['result']['firstPage']);
                 $company_user_info = $this->CI->findbiz_lib->searchEachTermOwner($company_scraper_info);
                 if ($company_user_info)
                 {
@@ -235,6 +242,13 @@ class Cert_governmentauthorities extends Certification_base
                         $num++;
                     }
                 }
+            }
+
+            $this->CI->load->library('scraper/business_registration_lib');
+            $business_register = $this->CI->business_registration_lib->getResultByBusinessId($this->content['compId']);
+            if (isset($business_register) && $business_register['status'] == 200)
+            {
+                $this->additional_data['scraper']['MinistryOfFinance'] = $business_register['response'];
             }
         }
         return TRUE;

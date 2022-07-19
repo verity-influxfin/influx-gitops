@@ -399,14 +399,74 @@
                             <fieldset disabled>
                                 <div class="form-group">
                                     <label>事業變更登記表</label><br>
-                                    <? isset($content['governmentauthorities_image']) && !is_array($content['governmentauthorities_image']) ? $content['governmentauthorities_image'] = array($content['governmentauthorities_image']) : '';
-                                    if(!empty($content['governmentauthorities_image'])){
-                                        foreach ($content['governmentauthorities_image'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a>
-                                        <? }
-                                    }?>
+                                    <div class="row" style="width: 100%">
+                                        <div class="col-lg-3">
+                                            <? isset($content['governmentauthorities_image']) && !is_array($content['governmentauthorities_image']) ? $content['governmentauthorities_image'] = array($content['governmentauthorities_image']) : '';
+                                            if(!empty($content['governmentauthorities_image'])){
+                                                foreach ($content['governmentauthorities_image'] as $key => $value) { ?>
+                                                    <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                        <img src="<?= $value ? $value : "" ?>" style='width:100%;'>
+                                                    </a>
+                                                <? }
+                                            }?>
+                                        </div>
+                                        <div class="col-lg-9">
+                                            <label>商業司資料</label>
+                                            <table class="table table-striped table-bordered table-hover dataTable">
+                                                <tbody>
+                                                <?
+                                                    foreach (($content['scraper']['DepartmentOfCommerce']['firstPageCompanyInfo'] ?? []) as $key => $value)
+                                                    {
+                                                        if(is_array($value))
+                                                            continue;
+                                                ?>
+                                                        <tr>
+                                                            <td><?=$key?></td><td><?=$value?></td>
+                                                        </tr>
+                                                <?
+                                                    }
+                                                ?>
+                                                </tbody>
+                                            </table>
+                                            <label class="mt-3">董監事持股狀況</label>
+                                            <table class="table table-striped table-bordered table-hover dataTable">
+                                                <tbody>
+                                                <?
+                                                foreach (($content['scraper']['DepartmentOfCommerce']['firstPageDirectorInfo'] ?? []) as $key => $value)
+                                                {
+                                                ?>
+                                                    <tr>
+                                                        <td>姓名</td><td><?=$value['姓名']?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>職稱</td><td><?=$value['職稱']?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>持有股份數(股)</td><td><?=$value['持有股份數(股)']?></td>
+                                                    </tr>
+                                                    <?
+                                                }
+                                                ?>
+                                                </tbody>
+                                            </table>
+                                            <label class="mt-3">財政部登記資訊</label>
+                                            <? if(isset($content['scraper']['MinistryOfFinance'])) { ?>
+                                            <table class="table table-striped table-bordered table-hover dataTable">
+                                                <tbody>
+                                                    <tr><td>營業人統一編號</td><td><?=$content['scraper']['MinistryOfFinance']['businessId'] ?? ''?></td></tr>
+                                                    <tr><td>營業人名稱</td><td><?=$content['scraper']['MinistryOfFinance']['nameOfBusinessEntity'] ?? ''?></td></tr>
+                                                    <tr><td>營業（稅籍）登記地址</td><td><?=$content['scraper']['MinistryOfFinance']['address'] ?? ''?></td></tr>
+                                                    <tr><td>資本額(元)</td><td><?=$content['scraper']['MinistryOfFinance']['amountOfCapital'] ?? ''?></td></tr>
+                                                    <tr><td>組織種類</td><td><?=$content['scraper']['MinistryOfFinance']['organizationType'] ?? ''?></td></tr>
+                                                    <tr><td>設立日期</td><td><?=$content['scraper']['MinistryOfFinance']['dateOfIncorporation'] ?? ''?></td></tr>
+                                                    <tr><td>登記營業代碼</td><td><?=$content['scraper']['MinistryOfFinance']['industryCode'] ?? ''?></td></tr>
+                                                    <tr><td>登記營業項目</td><td><?=$content['scraper']['MinistryOfFinance']['industryName'] ?? ''?></td></tr>
+                                                    <tr><td>是否使用發票</td><td><?=$content['scraper']['MinistryOfFinance']['useOfUniformInvoice'] ?? ''?></td></tr>
+                                                </tbody>
+                                            </table>
+                                            <? } ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </fieldset>
                             <?php if ( ! empty($ocr['upload_page']))

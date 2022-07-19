@@ -99,6 +99,10 @@ class Certification extends MY_Admin_Controller {
 					$page_data['certification_list'] = $this->certification_name_list;
 					$page_data['data'] = $info;
 					$page_data['content'] = json_decode($info->content, true);
+					if(isset($page_data['content']['scraper']['DepartmentOfCommerce']) && isJson($page_data['content']['scraper']['DepartmentOfCommerce']))
+                    {
+                        $page_data['content']['scraper']['DepartmentOfCommerce'] = json_decode($page_data['content']['scraper']['DepartmentOfCommerce'], TRUE);
+                    }
 				}
                 $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
 				if($cid == CERTIFICATION_CERCREDITJUDICIAL || $info->certification_id == CERTIFICATION_CERCREDITJUDICIAL){
