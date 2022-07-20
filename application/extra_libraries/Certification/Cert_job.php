@@ -244,6 +244,12 @@ class Cert_job extends Certification_base
      */
     public function pre_failure($sys_check): bool
     {
+        // 系統過的暫時全部轉人工
+        if($sys_check == TRUE)
+        {
+            $this->set_review(TRUE);
+            return FALSE;
+        }
         return TRUE;
     }
 
