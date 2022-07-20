@@ -1209,7 +1209,10 @@ $color__background--primary: #f3f9fc;
 }
 .purpose {
   padding: 120px 0;
-  background: $color__background--primary;
+  background: url('~images/workloan/purpose-bg.png'),
+    $color__background--primary;
+  background-repeat: no-repeat;
+  background-position: center 194px;
   .h1 {
     color: $color--primary;
   }
@@ -1223,6 +1226,7 @@ $color__background--primary: #f3f9fc;
     grid-template-columns: repeat(4, minmax(320px, 1fr));
     gap: 16px;
     height: 450px;
+
     .purpose-col {
       padding: 15px 15px 0 15px;
     }
@@ -1529,7 +1533,10 @@ $color__background--primary: #f3f9fc;
 }
 .experience {
   padding: 64px 0;
-  background: linear-gradient(90deg, #a8b3c8 0%, #d2d8e6 50%);
+  background: url('~images/workloan/exp-bg.png'),
+    linear-gradient(90deg, #a8b3c8 0%, #d2d8e6 50%);
+  background-repeat: no-repeat;
+  background-position-x: 80%;
   .h1 {
     color: #fff;
   }
@@ -1555,6 +1562,11 @@ $color__background--primary: #f3f9fc;
         border-radius: 50%;
       }
     }
+  }
+}
+@media screen and (max-width: 1720px) {
+  .experience {
+    background-position-x: right;
   }
 }
 @media screen and (max-width: 767px) {
