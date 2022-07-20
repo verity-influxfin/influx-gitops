@@ -217,7 +217,7 @@
                 <div>• 快速審核、持證自拍</div>
                 <div>• 免跑銀行、免受干擾</div>
                 <div>• 台積電、日月光等大企業</div>
-                <div>• 都選擇使用普匯APP！</div>
+                <div class="card-text-pl">都選擇使用普匯APP！</div>
               </div>
             </div>
           </div>
@@ -442,7 +442,7 @@
                   class="swiper-text-2 btn btn-link"
                   @click="showCheckList = !showCheckList"
                 >
-                  Check list：
+                  Check list
                 </button>
                 <transition name="fade">
                   <div class="check-list-content" v-show="showCheckList">
@@ -764,7 +764,7 @@
       <div class="block-content">
         <h1 class="h1">用戶體驗</h1>
         <h2 class="h2">我們提供最溫暖的金融科技服務</h2>
-        <div class="swiper">
+        <div class="swiper d-sm-block d-none">
           <div class="swiper-wrapper">
             <div class="swiper-slide">
               <div class="row no-gutters user-comment">
@@ -786,7 +786,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-auto mx-5 d-sm-block d-none">
+                <div class="col-auto">
                   <div class="card comment-card">
                     <div class="card-body">
                       <div class="card-title star">
@@ -804,7 +804,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-auto d-sm-block d-none">
+                <div class="col-auto">
                   <div class="card comment-card">
                     <div class="card-body">
                       <div class="card-title star">
@@ -819,6 +819,73 @@
                         </div>
                         <span> 林先生 </span>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 導覽按鈕 -->
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+        <div class="swiper d-sm-none d-block">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <div class="user-comment">
+                <div class="card comment-card">
+                  <div class="card-body">
+                    <div class="card-title star">
+                      <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                    </div>
+                    <div class="card-text">
+                      很棒的平台，是一個不錯的投資管道，創造穩定的現金流，不用怕被股市震盪影響心情。
+                    </div>
+                    <div class="mt-2 d-flex align-items-center">
+                      <div class="portrait mr-2">
+                        <img src="@/asset/images/ue-1.png" alt="" />
+                      </div>
+                      <span> 王先生 </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="user-comment">
+                <div class="card comment-card">
+                  <div class="card-body">
+                    <div class="card-title star">
+                      <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                    </div>
+                    <div class="card-text">
+                      很棒的新創公司，雖然成立時間不長，但是在選校園大使期間，也感受到這間公司的氛圍是很棒的，是歡樂的。
+                    </div>
+                    <div class="mt-2 d-flex align-items-center">
+                      <div class="portrait mr-2">
+                        <img src="@/asset/images/ue-2.png" alt="" />
+                      </div>
+                      <span> 陳小姐 </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="user-comment">
+                <div class="card comment-card">
+                  <div class="card-body">
+                    <div class="card-title star">
+                      <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                    </div>
+                    <div class="card-text">
+                      對於實習生培訓企劃用心且真誠，老闆會針對提案親自給予回饋，在乎並深耕於教育與人才養成
+                    </div>
+                    <div class="mt-2 d-flex align-items-center">
+                      <div class="portrait mr-2">
+                        <img src="@/asset/images/ue-3.png" alt="" />
+                      </div>
+                      <span> 林先生 </span>
                     </div>
                   </div>
                 </div>
@@ -1037,6 +1104,9 @@ $color__background--primary: #f3f9fc;
 $color--primary: #036eb7;
 $color__text--primary: #023d64;
 $color__background--primary: #f3f9fc;
+.btn-link {
+  text-decoration: underline;
+}
 .h1 {
   text-align: center;
   font-style: normal;
@@ -1218,6 +1288,9 @@ $color__background--primary: #f3f9fc;
           font-size: 16px;
           line-height: 2;
           color: #ffffff;
+          &-pl {
+            padding-left: 20px;
+          }
         }
       }
     }
@@ -1567,6 +1640,7 @@ $color__background--primary: #f3f9fc;
   .user-comment {
     margin-top: 100px;
     justify-content: center;
+    gap: 60px;
     .comment-card {
       width: 360px;
       padding: 10px;
@@ -1978,15 +2052,26 @@ $color__background--primary: #f3f9fc;
     .swiper-row {
       margin-top: 100px;
     }
+    .swiper-button-next {
+      right: 0;
+      transform: scale(0.7);
+    }
+    .swiper-button-prev {
+      left: 0;
+      transform: scale(0.7);
+    }
     .user-comment {
       margin-top: 30px;
       justify-content: center;
       flex-direction: column;
       .comment-card {
-        width: 360px;
+        width: auto;
         padding: 10px;
         .star {
           color: #f3cd03;
+        }
+        .card-text {
+          font-size: 16px;
         }
         .portrait {
           width: 56px;
