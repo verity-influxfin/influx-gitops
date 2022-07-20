@@ -190,15 +190,7 @@ class Cert_identity extends Certification_base
                 continue;
             }
 
-            $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name, $domicile);
-            if(isset($verdicts_statuses['status']))
-            {
-                if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
-                    || $verdicts_statuses['status'] == 204)
-                {
-                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($name, $domicile);
-                }
-            }
+            $this->CI->judicial_yuan_lib->request_verdicts($name, $domicile);
 
             $google_statuses = $this->CI->google_lib->get_google_status($name);
             if (isset($google_statuses['status']))

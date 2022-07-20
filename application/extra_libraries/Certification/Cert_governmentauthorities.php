@@ -286,6 +286,17 @@ class Cert_governmentauthorities extends Certification_base
      */
     public function post_success($sys_check): bool
     {
+        $this->CI->load->helper('user_certification');
+        $domicile = get_domicile($this->content['compRegAddress']);
+        if ($domicile != '')
+        {
+            $this->CI->judicial_yuan_lib->request_verdicts($this->content['compName'], $domicile);
+        }
+        else
+        {
+            log_message('error', '[post_success]變更登記卡的爬蟲因找不到縣市而忽略觸發。地址：{$domicile}');
+        }
+
         return $this->CI->certification_lib->fail_other_cer($this->certification);
     }
 
