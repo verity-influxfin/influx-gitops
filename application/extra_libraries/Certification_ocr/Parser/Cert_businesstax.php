@@ -89,9 +89,11 @@ class Cert_businesstax extends Ocr_parser_base
             $year = $matches[2];
             $month = $matches[3];
             $result[] = [
-                'img_url' => $value['img_url'],
-                "businessTaxLast{$year}Year" => $value['yyy'],
-                "last{$year}YearInvoiceAmount{$month}" => (int) str_replace(',', '', $value['21']) + (int) str_replace(',', '', $value['22']),
+                'img_url' => $value['img_url'] ?? '',
+                "businessTaxLast{$year}Year" => $value['yyy'] ?? '',
+                "last{$year}YearInvoiceAmount{$month}" => empty($value['21']) || empty($value['22'])
+                    ? ''
+                    : (int) str_replace(',', '', $value['21']) + (int) str_replace(',', '', $value['22']),
             ];
         }
         return $result;

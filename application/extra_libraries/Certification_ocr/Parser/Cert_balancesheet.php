@@ -33,10 +33,10 @@ class Cert_balancesheet extends Ocr_parser_base
     public function data_mapping($task_res_data): array
     {
         return [
-            'assetsAmount' => (int) str_replace(',', '', $task_res_data['1000']), // 資產總額
-            'liabilitiesAmount' => (int) str_replace(',', '', $task_res_data['2000']), // 負債總額
-            'equityAmount' => (int) str_replace(',', '', $task_res_data['3000']), // 權益總額
-            'liabEquityAmount' => (int) str_replace(',', '', $task_res_data['9000']), // 負債及權益總額
+            'assetsAmount' => empty($task_res_data['1000']) ? '' : (int) str_replace(',', '', $task_res_data['1000']), // 資產總額
+            'liabilitiesAmount' => empty($task_res_data['2000']) ? '' : (int) str_replace(',', '', $task_res_data['2000']), // 負債總額
+            'equityAmount' => empty($task_res_data['3000']) ? '' : (int) str_replace(',', '', $task_res_data['3000']), // 權益總額
+            'liabEquityAmount' => empty($task_res_data['9000']) ? '' : (int) str_replace(',', '', $task_res_data['9000']), // 負債及權益總額
         ];
     }
 

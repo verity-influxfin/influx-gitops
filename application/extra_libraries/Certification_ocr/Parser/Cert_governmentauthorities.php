@@ -33,10 +33,10 @@ class Cert_governmentauthorities extends Ocr_parser_base
     public function data_mapping($task_res_data): array
     {
         return [
-            'compName' => $task_res_data['company_name'],
-            'compId' => $task_res_data['company_tax_id_no'],
-            'stampDate' => $task_res_data['company_articles_date'],
-            'prName' => $task_res_data['manager_name'],
+            'compName' => $task_res_data['company_name'] ?? '',
+            'compId' => $task_res_data['company_tax_id_no'] ?? '',
+            'stampDate' => $task_res_data['company_articles_date'] ?? '',
+            'prName' => $task_res_data['manager_name'] ?? '',
         ];
     }
 

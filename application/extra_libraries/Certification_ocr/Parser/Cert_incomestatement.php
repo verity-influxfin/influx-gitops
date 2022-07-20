@@ -67,11 +67,11 @@ class Cert_incomestatement extends Ocr_parser_base
             }
             $year = array_search($matches[1], [1 => 'a', 2 => 'two', 3 => 'three'], TRUE);
             $result[] = [
-                'img_url' => $value['img_url'],
-                "CompName{$year}" => $value['company_name'], // 近一年損益表營利事業名稱
-                "CompId{$year}" => $value['company_tax_id_no'], // 近一年損益表營利事業統一編號
+                'img_url' => $value['img_url'] ?? '',
+                "CompName{$year}" => $value['company_name'] ?? '', // 近一年損益表營利事業名稱
+                "CompId{$year}" => $value['company_tax_id_no'] ?? '', // 近一年損益表營利事業統一編號
                 "IndustryCode{$year}" => $value['89'], // 近一年損益表營業收入分類標準代號
-                "AnnualIncome{$year}" => str_replace(',', '', $value['90']), // 近一年損益表營業收入淨額
+                "AnnualIncome{$year}" => empty($value['90']) ? '' : (int) str_replace(',', '', $value['90']), // 近一年損益表營業收入淨額
             ];
         }
         return $result;
