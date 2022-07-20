@@ -338,6 +338,10 @@ Route::prefix('api/v1')->group(function() {
     Route::post('/user/upload_pdf', 'ProductController@postUploadPdf');
     Route::post('/user/upload', 'ProductController@postUpload');
 
+    // 上班族貸
+    Route::post('/work-loan/contact', 'WorkLoanController@save_contact');
+    Route::post('/work-loan/share', 'WorkLoanController@save_share');
+
     // 活動
     Route::get('/campaign2022/list', 'Campaign2022Controller@get_all');
     Route::get('/campaign2022/list/page/{page}', 'Campaign2022Controller@get_by_page');

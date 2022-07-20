@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Calculate;
 use App\Rules\mobile;
 use App\Rules\identity;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
@@ -978,5 +979,15 @@ class Controller extends BaseController
         }
 
         return response()->json('', 400);
+    }
+
+    public function return_success($data = [], string $msg = null, $status = 200): JsonResponse
+    {
+        return response()->json(['success' => true, 'data' => $data, 'msg' => $msg], $status);
+    }
+
+    public function return_failed(string $msg, $data = null, $status = 400): JsonResponse
+    {
+        return response()->json(['success' => false, 'msg' => $msg, 'data' => $data], $status);
     }
 }

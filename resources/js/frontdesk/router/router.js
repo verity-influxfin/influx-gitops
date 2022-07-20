@@ -39,7 +39,7 @@ import invest from '../pages/alesis-invest';
 import faq from '../pages/alesis-faq';
 import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
-import workLoan from '../pages/alesis-workLoan';
+import workLoan from '../pages/workLoanV2';
 import collegeLoan from "../pages/collegeLoanV2";
 import investReport from "../pages/investReport"
 import search from "../pages/search.vue";
