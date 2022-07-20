@@ -755,72 +755,70 @@
       <div class="block-content">
         <h1 class="h1">用戶體驗</h1>
         <h2 class="h2">我們提供最溫暖的金融科技服務</h2>
-        <div class="row no-gutters">
-          <div class="swiper">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <div class="row no-gutters user-comment">
-                  <div class="col-auto">
-                    <div class="card comment-card">
-                      <div class="card-body">
-                        <div class="card-title star">
-                          <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <div class="row no-gutters user-comment">
+                <div class="col-auto">
+                  <div class="card comment-card">
+                    <div class="card-body">
+                      <div class="card-title star">
+                        <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                      </div>
+                      <div class="card-text">
+                        很棒的平台，是一個不錯的投資管道，創造穩定的現金流，不用怕被股市震盪影響心情。
+                      </div>
+                      <div class="mt-2 d-flex align-items-center">
+                        <div class="portrait mr-2">
+                          <img src="@/asset/images/ue-1.png" alt="" />
                         </div>
-                        <div class="card-text">
-                          很棒的平台，是一個不錯的投資管道，創造穩定的現金流，不用怕被股市震盪影響心情。
-                        </div>
-                        <div class="mt-2 d-flex align-items-center">
-                          <div class="portrait mr-2">
-                            <img src="@/asset/images/ue-1.png" alt="" />
-                          </div>
-                          <span> 王先生 </span>
-                        </div>
+                        <span> 王先生 </span>
                       </div>
                     </div>
                   </div>
-                  <div class="col-auto mx-5 d-sm-block d-none">
-                    <div class="card comment-card">
-                      <div class="card-body">
-                        <div class="card-title star">
-                          <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                </div>
+                <div class="col-auto mx-5 d-sm-block d-none">
+                  <div class="card comment-card">
+                    <div class="card-body">
+                      <div class="card-title star">
+                        <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                      </div>
+                      <div class="card-text">
+                        很棒的新創公司，雖然成立時間不長，但是在選校園大使期間，也感受到這間公司的氛圍是很棒的，是歡樂的。
+                      </div>
+                      <div class="mt-2 d-flex align-items-center">
+                        <div class="portrait mr-2">
+                          <img src="@/asset/images/ue-2.png" alt="" />
                         </div>
-                        <div class="card-text">
-                          很棒的新創公司，雖然成立時間不長，但是在選校園大使期間，也感受到這間公司的氛圍是很棒的，是歡樂的。
-                        </div>
-                        <div class="mt-2 d-flex align-items-center">
-                          <div class="portrait mr-2">
-                            <img src="@/asset/images/ue-2.png" alt="" />
-                          </div>
-                          <span> 陳小姐 </span>
-                        </div>
+                        <span> 陳小姐 </span>
                       </div>
                     </div>
                   </div>
-                  <div class="col-auto d-sm-block d-none">
-                    <div class="card comment-card">
-                      <div class="card-body">
-                        <div class="card-title star">
-                          <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                </div>
+                <div class="col-auto d-sm-block d-none">
+                  <div class="card comment-card">
+                    <div class="card-body">
+                      <div class="card-title star">
+                        <i class="fa fa-star" v-for="i in 5" :key="i"></i>
+                      </div>
+                      <div class="card-text">
+                        對於實習生培訓企劃用心且真誠，老闆會針對提案親自給予回饋，在乎並深耕於教育與人才養成
+                      </div>
+                      <div class="mt-2 d-flex align-items-center">
+                        <div class="portrait mr-2">
+                          <img src="@/asset/images/ue-3.png" alt="" />
                         </div>
-                        <div class="card-text">
-                          對於實習生培訓企劃用心且真誠，老闆會針對提案親自給予回饋，在乎並深耕於教育與人才養成
-                        </div>
-                        <div class="mt-2 d-flex align-items-center">
-                          <div class="portrait mr-2">
-                            <img src="@/asset/images/ue-3.png" alt="" />
-                          </div>
-                          <span> 林先生 </span>
-                        </div>
+                        <span> 林先生 </span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- 導覽按鈕 -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
           </div>
+          <!-- 導覽按鈕 -->
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
         </div>
       </div>
     </div>
@@ -1153,7 +1151,7 @@ $color__background--primary: #f3f9fc;
     display: grid;
     gap: 46.5px;
     margin-top: 150px;
-    grid-template-columns: repeat(4, 328px);
+    grid-template-columns: repeat(4, 1fr);
     .card {
       width: 100%;
       border: none;
