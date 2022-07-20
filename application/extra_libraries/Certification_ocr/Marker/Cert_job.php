@@ -102,6 +102,8 @@ class Cert_job extends Ocr_marker_base
             'user_name' => $user_info['name'],
             'user_person_id' => $user_info['id_number'],
             'company_name' => $company,
+            'thumbnail_len' => 2500,
+            'quality_int' => 80
         ]);
     }
 
