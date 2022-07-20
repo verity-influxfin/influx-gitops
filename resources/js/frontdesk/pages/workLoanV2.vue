@@ -438,24 +438,33 @@
             <div class="swiper-slide">
               <div class="swiper-left">
                 <div class="swiper-text-1">需要準備什麼資料？</div>
-                <div class="swiper-text-2">Check list：</div>
-                <div class="swiper-text-3">•雙證件</div>
-                <div class="swiper-text-3">•銀行存款金融卡</div>
-                <div class="swiper-text-3">•工作收入證明</div>
-                <div class="swiper-text-info">
-                  <div>(1)勞保異動明細</div>
-                  <div>(2)近三個月薪資憑證</div>
-                  <div>(3)近三個月存摺封面與內頁</div>
-                  <div>(4)近年度扣繳憑單</div>
-                </div>
-                <div class="swiper-text-3">•個人聯徵信用報告</div>
-                <a
-                  href="http://"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="swiper-text-link"
-                  >如何申請聯徵？</a
+                <button
+                  class="swiper-text-2 btn btn-link"
+                  @click="showCheckList = !showCheckList"
                 >
+                  Check list：
+                </button>
+                <transition name="fade">
+                  <div class="check-list-content" v-show="showCheckList">
+                    <div class="swiper-text-3">•雙證件</div>
+                    <div class="swiper-text-3">•銀行存款金融卡</div>
+                    <div class="swiper-text-3">•工作收入證明</div>
+                    <div class="swiper-text-info">
+                      <div>(1)勞保異動明細</div>
+                      <div>(2)近三個月薪資憑證</div>
+                      <div>(3)近三個月存摺封面與內頁</div>
+                      <div>(4)近年度扣繳憑單</div>
+                    </div>
+                    <div class="swiper-text-3">•個人聯徵信用報告</div>
+                    <a
+                      href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=92&pid=73&docid=54"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="swiper-text-link"
+                      >如何申請聯徵？</a
+                    >
+                  </div>
+                </transition>
               </div>
               <img
                 src="@/asset/images/workloan/step-2-1.png"
@@ -843,7 +852,8 @@ export default {
     return {
       cases: [],
       userId: '',
-      userIdDisabled: false
+      userIdDisabled: false,
+      showCheckList: false
     }
   },
   mounted() {
@@ -1068,6 +1078,14 @@ $color__background--primary: #f3f9fc;
   opacity: 0.7;
   width: fit-content;
   margin-right: 15px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 .features {
   padding: 100px;
