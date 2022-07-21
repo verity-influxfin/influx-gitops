@@ -339,11 +339,9 @@ class Certification_lib{
                         'status'	=> array(1,23)
                     ));
                     if($targets){
-                        foreach($targets as $key => $value){
-                            $this->CI->target_model->update_by(
-                                ['id'  => $value->id],
-                                ['status'	=> $value->status==1?0:22]
-                            );
+                        foreach ($targets as $value)
+                        {
+                            $this->CI->target_lib->withdraw_target_to_unapproved($value, 0, 0, $sys_check);
                         }
                     }
                     $this->CI->load->model('loan/credit_model');
@@ -399,12 +397,10 @@ class Certification_lib{
 						'status'	=> array(1,23)
 					));
 					if($targets){
-						foreach($targets as $key => $value){
-							$this->CI->target_model->update_by(
-								['id'  => $value->id],
-								['status'	=> $value->status==1?0:22]
-							);
-						}
+                        foreach ($targets as $value)
+                        {
+                            $this->CI->target_lib->withdraw_target_to_unapproved($value, 0, 0, $sys_check);
+                        }
 					}
 					$this->CI->load->model('loan/credit_model');
 					$credit_list = $this->CI->credit_model->get_many_by(array(

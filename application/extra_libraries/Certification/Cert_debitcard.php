@@ -136,7 +136,7 @@ class Cert_debitcard extends Certification_base
         {
             foreach ($target_list as $value)
             {
-                $this->CI->target_lib->withdraw_target_to_unapproved($value);
+                $this->CI->target_lib->withdraw_target_to_unapproved($value, 0, 0, $sys_check);
             }
         }
         return TRUE;
