@@ -355,13 +355,10 @@ class Certification extends MY_Admin_Controller {
                     'status'	=> array(1,2)
                 ));
                 if($targets){
-                    $param = [
-                        'status'      => 0,
-                    ];
                     $this->load->library('Target_lib');
-                    foreach($targets as $key => $value){
-                        $this->target_model->update($value->id,$param);
-                        $this->target_lib->insert_change_log($value->id,$param);
+                    foreach ($targets as $value)
+                    {
+                        $this->target_lib->withdraw_target_to_unapproved($value, 0, $this->login_info->id, 0);
                     }
                 }
                 alert('更新成功','user_certification_edit?id='.$id);
