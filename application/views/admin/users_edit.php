@@ -370,19 +370,19 @@
 																	$certification_id = $value['certification_id'];
 																	switch ($value['user_status']) {
 																		case '3':
-                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" >驗證</a>';
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" >驗證</a>';
                                                                             break;
 																		case '0':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
                                                                         case '6':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
 																		case '2':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
@@ -437,19 +437,19 @@
 																	$certification_id = $value['certification_id'];
 																	switch ($value['user_status']) {
 																		case '3':
-                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" >驗證</a>';
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" >驗證</a>';
                                                                             break;
                                                                         case '6':
-                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" >驗證</a>';
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" >驗證</a>';
                                                                             break;
 																		case '0':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
 																		case '2':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
