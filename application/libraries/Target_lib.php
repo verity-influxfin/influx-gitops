@@ -2496,9 +2496,12 @@ class Target_lib
     /**
      * 退案件回待核可
      * @param $target
+     * @param int $user_id
+     * @param int $admin_id
+     * @param int $sys_check
      * @return bool
      */
-    public function withdraw_target_to_unapproved($target): bool
+    public function withdraw_target_to_unapproved($target, $user_id = 0, $admin_id = 0, $sys_check = 1): bool
     {
         if (is_object($target))
         {
@@ -2545,10 +2548,18 @@ class Target_lib
                 break;
         }
 
+        $update_param = ['status' => $status, 'sub_status' => $sub_status, 'certificate_status' => TARGET_CERTIFICATE_SUBMITTED];
         $this->CI->target_model->update_by(
             ['id' => $target['id']],
-            ['status' => $status, 'sub_status' => $sub_status, 'certificate_status' => TARGET_CERTIFICATE_SUBMITTED]
+            $update_param
         );
+        $this->insert_change_log($target['id'], [
+            'status' => $status,
+            'sub_status' => $sub_status,
+            'change_user' => $user_id,
+            'change_admin' => $admin_id,
+            'sys_check' => $sys_check
+        ]);
 
         return TRUE;
     }
