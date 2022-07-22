@@ -12,8 +12,6 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     const TYPE_PARSER = 1;
     const TYPE_MARKER = 2;
 
-    private $client;
-
     protected $api_url;
     protected $CI;
     protected $certification;
@@ -59,13 +57,14 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     {
         try
         {
-            $request = $this->client->request('POST', 'task/' . urlencode($this->task_path), [
-                'headers' => [
-                    'accept' => 'application/json',
-                    'Content-Type' => 'application/json'
-                ],
-                'body' => json_encode($body)
-            ]);
+            $request = (new Client(['base_uri' => $this->api_url]))
+                ->request('POST', 'task/' . urlencode($this->task_path), [
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'Content-Type' => 'application/json'
+                    ],
+                    'body' => json_encode($body)
+                ]);
             $res_content = $request->getBody()->getContents();
             $this->_insert_log($request->getStatusCode(), $res_content);
 
@@ -98,12 +97,13 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     {
         try
         {
-            $request = $this->client->request('GET', "/task/{$task_id}", [
-                'headers' => [
-                    'accept' => 'application/json',
-                    'Content-Type' => 'application/json'
-                ]
-            ]);
+            $request = (new Client(['base_uri' => $this->api_url]))
+                ->request('GET', "/task/{$task_id}", [
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'Content-Type' => 'application/json'
+                    ]
+                ]);
             $res_content = $request->getBody()->getContents();
             $this->_insert_log($request->getStatusCode(), $res_content);
             $result = json_decode($res_content, TRUE);
