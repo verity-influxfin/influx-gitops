@@ -220,7 +220,7 @@ $color__background--primary: #f3f9fc;
         rgba(223, 226, 240, 0.8) 100%
       );
       box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
-      border-radius: 0px 0px 0px 24px;
+      border-radius: 24px 0px 0px 24px;
       width: max-content;
     }
   }
