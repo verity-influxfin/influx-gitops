@@ -15,6 +15,8 @@ class Ocr_parser_factory
 
         switch ($info['certification_id'])
         {
+            case CERTIFICATION_INVESTIGATION:
+                return new Cert_investigation($info);
             case CERTIFICATION_JOB:
                 return new Cert_job($info);
             default:
