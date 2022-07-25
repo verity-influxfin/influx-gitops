@@ -459,3 +459,7 @@ INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, actio
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Contact', 'certifications', 1 FROM p2p_admin.admins a WHERE a.email='timlee@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Contact', 'index', 3 FROM p2p_admin.admins a WHERE a.email='timlee@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Contact', 'send_email', 3 FROM p2p_admin.admins a WHERE a.email='timlee@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT `id`, 'Passbook', 'index', 1 FROM `p2p_admin`.`admins` WHERE `email`='timlee@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Target', 'index', 1 FROM `p2p_admin`.`admins` a WHERE a.email='timlee@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT `id`, 'Transfer', 'index', 1 FROM `p2p_admin`.`admins` WHERE `email`='timlee@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT `id`, 'User', 'index', 1 FROM `p2p_admin`.`admins` WHERE `email`='timlee@influxfin.com';
