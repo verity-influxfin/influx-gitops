@@ -1,15 +1,530 @@
 <template>
-    <div>
-
+  <div class="investment">
+    <div class="banner">
+      <h1 class="banner-title">普匯債權投資</h1>
+      <h2 class="banner-title">P2P認購債權 公開透明安全</h2>
+      <img
+        src="@/asset/images/investment/investment-banner.png"
+        class="w-100"
+      />
+      <button class="btn btn-banner">
+        立即投資 <i class="fa fa-chevron-right"></i>
+      </button>
     </div>
+    <div class="slogan">
+      <div class="block-content">
+        <div class="slogan-title">
+          成功媒合投資金額已達
+          <span class="em">5.4</span>
+          億！
+        </div>
+        <div class="slogan-text">
+          <div>已有超過千萬位投資人365天24小時隨時隨地利用普匯AI智能投資</div>
+          <div>不斷創造被動收入，享受投資理財樂趣與生活</div>
+        </div>
+      </div>
+    </div>
+    <div class="product">
+      <div class="block-content">
+        <div>
+          <h1 class="h1">產品種類</h1>
+          <h2 class="h2">
+            <div>科技理財：投資不求人</div>
+            <div>理專、業務也讚嘆</div>
+          </h2>
+        </div>
+        <div class="product-row">
+          <div>
+            <div class="product-row-title">1. 債權投資</div>
+            <div class="product-row-intro">
+              <div>
+                P2P金融科技媒合，不受營業時間影響，隨時下單小額、分散，低風險、高報酬
+              </div>
+            </div>
+            <div class="product-row-item">
+              <div>
+                <div class="product-row-item-title">開始使用：</div>
+                <div class="product-row-sub-text">
+                  下載普匯投資人App，瀏覽「債權投資」分頁，選擇欲投資的債權並下標。操作容易，快速上手。全程沒有任何推銷話術，不干擾您的決策。
+                </div>
+              </div>
+            </div>
+            <div class="product-row-item">
+              <div>
+                <div class="product-row-item-title">投資心法：</div>
+                <div class="product-row-sub-text">
+                  隨著各借款人條件，每個債權標的的利率也有所不同。您可依照自身投資能力與習慣，自由選擇欲投資的債權；分散投資標的，享受穩定收益。
+                </div>
+              </div>
+            </div>
+            <div class="product-row-item">
+              <div>
+                <div class="product-row-item-title">風險管理：</div>
+                <div class="product-row-sub-text">
+                  普匯金融科技透過嚴格的徵信審核流程，竭盡所能降低您的投資風險，幫助您創造資產的更高價值。
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img src="@/asset/images/investment/product-row-p1.png" />
+          </div>
+        </div>
+        <div class="product-row">
+          <div>
+            <img src="@/asset/images/investment/product-row-p2.png" />
+          </div>
+          <div>
+            <div class="product-row-title">2. 債權轉讓</div>
+            <div class="product-row-intro">
+              <div>
+                隨時轉讓手中債權，提供其他投資人認購，立即變現
+                追求財富最大收益，妥善調度資金
+              </div>
+            </div>
+            <div class="product-row-sub-title">
+              您有提早拿回投資金額的需求？
+            </div>
+            <div class="product-row-sub-text">
+              別擔心，普匯金融科技提供「債權轉讓」功能，所有的投資人，皆可
+              將手中持有的債權上架至平台，提供其他投資人認購。讓您在獲利的
+              路上，擁有更多的機會與選擇。
+            </div>
+          </div>
+        </div>
+        <div class="product-row">
+          <div>
+            <div class="product-row-title">3. AI智能投資</div>
+            <div class="product-row-intro">
+              <div>設定您的喜好類別，配對標的</div>
+              <div>分秒必爭的新時代，掌握投資先機</div>
+            </div>
+            <div class="product-row-sub-title">
+              <div>
+                優良債權太熱門，您還在無時不刻的盯盤嗎？現在有更好的選擇！
+              </div>
+              <div class="my-3">
+                <div>
+                  使用普匯金融科技開發的AI智能投資功能，讓您依照自身喜好，
+                </div>
+                <div>量身打造最符合您需求的投資條件。</div>
+              </div>
+              <div>
+                只要動動手指，即可掌握投資先機，不必擔心優良債權一上架就被秒殺！
+              </div>
+            </div>
+          </div>
+          <div>
+            <img src="@/asset/images/investment/product-row-p3.png" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="block-content">
+        <div>
+          <h1 class="h1">投資工具比一比</h1>
+          <h2 class="h2">深入分析、權衡風險，掌握理財訣竅</h2>
+        </div>
+        <div class="compare-table">
+          <investmentTable />
+        </div>
+      </div>
+    </div>
+    <div class="process">
+      <div class="block-content">
+        <h1 class="h1">投資流程</h1>
+        <h2 class="h2">
+          <div>您的一小筆錢，可能幫他圓夢</div>
+          <div>更可能救了他的人生</div>
+        </h2>
+        <div class="step-main">
+          <div class="step-content-1">
+            <div class="step-content-title">步驟一</div>
+            <div class="step-content-info">
+              <div>進入我的資產</div>
+            </div>
+            <div class="step-content-img">
+              <img
+                class="img-fluid"
+                src="@/asset/images/index/invest-step-1.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="step-content-2">
+            <div class="step-content-title">步驟二</div>
+            <div class="step-content-info">
+              <div>選擇單筆/打包出售</div>
+            </div>
+            <div class="step-content-img">
+              <img
+                class="img-fluid"
+                src="@/asset/images/index/invest-step-2.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="step-content-3">
+            <div class="step-content-title">步驟三</div>
+            <div class="step-content-info">
+              <div>調整出讓金額，並點選出讓</div>
+              <div>詳閱轉讓協議書</div>
+            </div>
+            <div class="step-content-img">
+              <img
+                class="img-fluid"
+                src="@/asset/images/index/invest-step-3.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="step-content-4">
+            <div class="step-content-title">步驟四</div>
+            <div class="step-content-info">
+              <div>上架成功，等待媒合</div>
+            </div>
+            <div class="step-content-img">
+              <img
+                class="img-fluid"
+                src="@/asset/images/index/invest-step-4.png"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cases">
+      <div class="block-content">
+        <h1 class="h1">現有案件</h1>
+        <h2 class="h2">優良債權任君挑選，現在就開始您的投資！</h2>
+        <div class="case-title">債權投資專區</div>
+        <div></div>
+        <div class="case-title">債權轉讓專區</div>
+        <div></div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
+import investmentTable from '@/component/investmentTable';
+export default {
+  components: {
+    investmentTable,
+  },
 
-    }
+}
 </script>
 
 <style lang="scss" scoped>
-
+$color--primary: #036eb7;
+$color__text--primary: #023d64;
+$color__background--primary: #f3f9fc;
+.block-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.h1 {
+  text-align: center;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 1.4;
+}
+.h2 {
+  text-align: center;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1.4;
+}
+.investment {
+  .banner {
+    position: relative;
+    .banner-title {
+      position: absolute;
+      color: transparent;
+    }
+    .btn-banner {
+      position: absolute;
+      top: 63.5%;
+      left: 12.5vw;
+      border-radius: 12px;
+      padding: 10px;
+      color: #fff;
+      background: #083a6e;
+      box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
+      width: 250px;
+      font-size: 28px;
+    }
+  }
+  .slogan {
+    .block-content {
+      background-color: #f2f5fd;
+      background-image: url('~images/investment/investment-slogan-bg.png');
+      padding: 40px 30px 25px;
+      .slogan-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 52px;
+        line-height: 1.6;
+        text-align: center;
+        letter-spacing: 0.14em;
+        color: transparent;
+        background: linear-gradient(90deg, #036eb7 60%, #6ab0d5 100%);
+        background-clip: text;
+        .em {
+          font-size: 120px;
+        }
+      }
+      .slogan-text {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 23px;
+        text-align: center;
+        letter-spacing: 7px;
+        color: #393939;
+      }
+    }
+  }
+  .product {
+    padding: 100px 0;
+    .h1 {
+      color: $color--primary;
+    }
+    .h2 {
+      color: $color--primary;
+      opacity: 0.64;
+      margin-top: 24px;
+    }
+    .product-row {
+      &:nth-child(odd) {
+        grid-template-columns: 11fr 12fr;
+      }
+      align-items: center;
+      display: grid;
+      grid-template-columns: 9fr 8fr;
+      gap: 64px;
+      margin: 50px 0;
+      &-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 48px;
+        line-height: 1.4;
+        color: $color--primary;
+        margin-bottom: 12px;
+      }
+      &-intro {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 30px;
+        line-height: 1.4;
+        color: #036eb7;
+        opacity: 0.64;
+        margin-bottom: 32px;
+      }
+      &-item {
+        display: flex;
+        &::before {
+          display: block;
+          content: '';
+          background-image: url('~images/investment/Vector65.svg');
+          background-position: center;
+          background-repeat: no-repeat;
+          margin-right: 15px;
+          flex: 0 0 56px;
+          width: 56px;
+          height: 56px;
+          position: relative;
+          top: -4px;
+          border-radius: 50%;
+          border: 2px solid #036fb7;
+        }
+        &-title {
+          font-style: normal;
+          font-weight: 700;
+          font-size: 32px;
+          line-height: 1.4;
+          color: $color__text--primary;
+          margin-bottom: 12px;
+        }
+      }
+      &-sub-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 1.4;
+        color: $color__text--primary;
+        margin-bottom: 12px;
+      }
+      &-sub-text {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 1.4;
+        color: $color__text--primary;
+        opacity: 0.56;
+        margin-bottom: 30px;
+      }
+    }
+  }
+  .compare {
+    padding: 50px 0 120px;
+    background-color: $color__background--primary;
+    .h1 {
+      color: $color--primary;
+    }
+    .h2 {
+      color: $color--primary;
+      opacity: 0.64;
+      margin-top: 24px;
+    }
+    &-table {
+      margin-top: 84px;
+    }
+  }
+  .process {
+    padding: 64px 0;
+    .h1 {
+      color: $color--primary;
+    }
+    .h2 {
+      color: $color--primary;
+      opacity: 0.64;
+      margin-top: 24px;
+    }
+    .step-content-1 {
+      width: 300px;
+      padding: 0 15px 40px 40px;
+      border-left: 5px solid $color--primary;
+      .step-content-title::before {
+        content: '1';
+        background: $color--primary;
+      }
+      .step-content-img {
+        opacity: 1;
+        z-index: 3;
+      }
+    }
+    .step-content-2 {
+      width: 300px;
+      padding: 0 15px 40px 40px;
+      border-left: 5px solid $color--primary;
+      .step-content-title::before {
+        content: '2';
+        background: $color--primary;
+      }
+      &:hover,
+      &:focus-within {
+        .step-content-img {
+          z-index: 10;
+          opacity: 1;
+          transition-property: opacity;
+          transition-duration: 1s;
+        }
+      }
+    }
+    .step-content-3 {
+      width: 300px;
+      padding: 0 15px 25px 40px;
+      border-left: 5px solid $color--primary;
+      .step-content-title::before {
+        content: '3';
+        background: $color--primary;
+      }
+      &:hover,
+      &:focus-within {
+        .step-content-img {
+          z-index: 10;
+          opacity: 1;
+          transition-property: opacity;
+          transition-duration: 1s;
+        }
+      }
+    }
+    .step-content-4 {
+      width: 300px;
+      padding: 0 15px 10px 40px;
+      .step-content-title::before {
+        content: '4';
+        background: $color--primary;
+      }
+      &:hover,
+      &:focus-within {
+        .step-content-img {
+          z-index: 10;
+          opacity: 1;
+          transition-property: opacity;
+          transition-duration: 1s;
+        }
+      }
+    }
+    .step-main {
+      margin: 45px auto;
+      width: 650px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .step-content-title {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 36px;
+      color: #036fb7;
+      &::before {
+        background: #036fb7;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 36px;
+        font-style: normal;
+        font-weight: 500;
+        position: absolute;
+        right: 269px;
+        text-align: center;
+        width: 60px;
+        height: 60px;
+      }
+    }
+    .step-content-info {
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 23px;
+      color: #023d64;
+      opacity: 0.56;
+    }
+    .step-content-img {
+      top: 0;
+      left: 15px;
+      position: absolute;
+      transition-property: opacity;
+      transition-duration: 1s;
+      opacity: 0;
+    }
+  }
+  .cases {
+    padding: 64px 0;
+    background: $color__background--primary;
+    .h1 {
+      color: $color--primary;
+    }
+    .h2 {
+      color: $color--primary;
+      opacity: 0.64;
+      margin-top: 24px;
+    }
+    .case-title {
+      margin-left: 40px;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 1.4;
+      color: $color__text--primary;
+    }
+  }
+}
 </style>

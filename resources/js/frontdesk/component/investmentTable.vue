@@ -226,7 +226,7 @@ $color__background--primary: #f3f9fc;
   }
   .table-panel {
     background: #ffffff;
-    padding: 11px;
+    padding: 11px 11px 90px;
     border-radius: 0 24px 24px 24px;
   }
   .table-element {
