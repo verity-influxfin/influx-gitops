@@ -66,6 +66,15 @@
           <div class="rating-content">
             <div>活動目的、活動內容、</div>
             <div>執行方式、人力&預算</div>
+            <div>
+              <a
+                class="btn-link"
+                href="https://www.influxfin.com/upload/%E6%A0%A1%E5%9C%92%E5%A4%A7%E4%BD%BF%E4%BC%81%E5%8A%83%E6%8E%A8%E5%BB%A3%E7%AF%84%E4%BE%8B.pdf"
+                target="_blank"
+              >
+                點此下載範例
+              </a>
+            </div>
           </div>
           <div class="rating-percent">25%</div>
         </div>
@@ -94,7 +103,7 @@
     <div class="step-choose" v-show="currentStep === 1">
       <div class="step-title">選擇你是誰?</div>
       <div class="intro-text text-center">
-        <div>*每隊需先堆派組長人選</div>
+        <div>*每隊需先推派組長人選</div>
         <div>由組長統一提供團隊提案與作品集</div>
       </div>
       <div class="mt-4">
@@ -584,14 +593,22 @@
         <div class="row no-gutters">
           <div class="col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
-              <span class="item required">校園推廣企劃提案: </span>
+              <span class="item"
+                >校園推廣企劃提案:
+                <a
+                  class="btn-link"
+                  href="https://www.influxfin.com/upload/%E6%A0%A1%E5%9C%92%E5%A4%A7%E4%BD%BF%E4%BC%81%E5%8A%83%E6%8E%A8%E5%BB%A3%E7%AF%84%E4%BE%8B.pdf"
+                  target="_blank"
+                >
+                  點此下載範例
+                </a>
+              </span>
               <input
                 type="file"
                 accept=".pdf"
                 class="item-input"
                 name="proposal"
                 placeholder="僅接受PDF檔，10MB內"
-                required
               />
             </div>
           </div>
