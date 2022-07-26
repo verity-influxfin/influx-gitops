@@ -94,7 +94,7 @@
     <div class="step-choose" v-show="currentStep === 1">
       <div class="step-title">選擇你是誰?</div>
       <div class="intro-text text-center">
-        <div>*每隊需先堆派組長人選</div>
+        <div>*每隊需先推派組長人選</div>
         <div>由組長統一提供團隊提案與作品集</div>
       </div>
       <div class="mt-4">
@@ -584,14 +584,13 @@
         <div class="row no-gutters">
           <div class="col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
-              <span class="item required">校園推廣企劃提案: </span>
+              <span class="item">校園推廣企劃提案: <a href="" target="_blank">點此下載範例</a></span>
               <input
                 type="file"
                 accept=".pdf"
                 class="item-input"
                 name="proposal"
                 placeholder="僅接受PDF檔，10MB內"
-                required
               />
             </div>
           </div>
@@ -686,8 +685,8 @@ export default {
       schoolDisciplines: {},
       schools: [],
       formSchool: '',
-      leader: 0,
-      currentStep: 0,
+      leader: 1,
+      currentStep: 5,
       groupName: '',
       name: '',
       error: false,

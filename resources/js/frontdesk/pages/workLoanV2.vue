@@ -1101,9 +1101,6 @@ export default {
 $color--primary: #036eb7;
 $color__text--primary: #023d64;
 $color__background--primary: #f3f9fc;
-$color--primary: #036eb7;
-$color__text--primary: #023d64;
-$color__background--primary: #f3f9fc;
 .btn-link {
   text-decoration: underline;
 }
@@ -1257,8 +1254,9 @@ $color__background--primary: #f3f9fc;
         letter-spacing: 0.1em;
         color: #60a2d4;
         opacity: 0.64;
-        top: 120px;
-        left: -120px;
+        top: 140px;
+        left: -130px;
+        width: 380px;
         transform: rotate(90deg);
       }
       .card-body {
@@ -1749,12 +1747,7 @@ $color__background--primary: #f3f9fc;
         border-radius: 16px;
         position: relative;
         .bg-text {
-          position: absolute;
-          z-index: 1;
           font-size: 46px;
-          top: 120px;
-          left: -105px;
-          transform: rotate(90deg);
         }
         .card-body {
           z-index: 2;
