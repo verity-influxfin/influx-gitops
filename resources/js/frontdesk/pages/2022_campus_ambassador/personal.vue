@@ -67,6 +67,11 @@
           <div class="rating-content">
             <div>活動目的、活動內容、</div>
             <div>執行方式、人力&預算</div>
+            <div>
+              <a class="btn-link" href="http://" target="_blank">
+                點此下載範例
+              </a>
+            </div>
           </div>
           <div class="rating-percent">25%</div>
         </div>
@@ -542,7 +547,12 @@
         <div class="row no-gutters">
           <div class="col-12">
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
-              <span class="item">校園推廣企劃提案: </span>
+              <span class="item"
+                >校園推廣企劃提案:
+                <a class="btn-link" href="http://" target="_blank"
+                  >點此下載範例</a
+                >
+              </span>
               <input
                 type="file"
                 accept=".pdf"

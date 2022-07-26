@@ -403,7 +403,7 @@
                 </div>
                 <div class="card">
                   <div class="card-body">
-                    <div class="card-title">邱上銘/大學</div>
+                    <div class="card-title">邱上銘/臺北商業大學</div>
                     <div class="card-text">
                       這次參加校園大使的活動，讓我受益良多，以前會覺得參加這種長期活動會花費很多時間，但加入後才發現，可以讓我們將學校所學的知識實際操作出來，也讓我更了解現在的趨勢，不只是會死讀書而能夠學以致用，謝謝普匯讓我有機會接觸到金融科技產業～
                     </div>
@@ -440,7 +440,7 @@
                 </div>
                 <div class="card">
                   <div class="card-body">
-                    <div class="card-title">張若瑜/大學</div>
+                    <div class="card-title">張若瑜/銘傳大學</div>
                     <div class="card-text">
                       當初因為活動內容和自己科系有關係，也想多增加自己的經歷因此選擇加入校園大使，加入後主要負責宣傳普匯產品、學習舉辦活動，也認識到普匯品牌和借貸市場的一些知識，增加了我的視野～
                     </div>
@@ -639,7 +639,7 @@
                   *團體報名者，每隊需先訂定團隊名稱並選任組長，報名時填上同一團隊名稱，並由組長統一彙整提供『校園推廣企劃案』、『作品集』兩項資料
                 </div>
                 <div class="hint">
-                  *校園推廣企劃案請以『推廣普匯進入校園』為主題
+                  *校園推廣企劃案請以『推廣普匯進入校園』為主題 <a class="btn-link" href="http://" target="_blank">點此下載範例</a>
                 </div>
               </div>
             </div>
@@ -658,6 +658,30 @@
                 </li>
                 <li>若有任何未盡事宜，由主辦單位解釋。</li>
               </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="alert-modal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h1 class="h1">【公告】普匯校園大使招募收件倒數中！！</h1>
+            <div class="modal-text">
+              <div>小提醒~校園推廣企劃提案現為「非必要提供資料」！！</div>
+              <div>請各位同學把握黃金報名時間儘速卡位～～</div>
+              <button class="mt-3 btn btn-campus-primary" data-dismiss="modal">確定</button>
             </div>
           </div>
         </div>
@@ -690,6 +714,10 @@ export default {
       },
     })
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
+    if(!sessionStorage.getItem('alert')){
+      $('#alert-modal').modal('show')
+    }
+    sessionStorage.setItem('alert','ok')
   },
   methods: {
     scrollToJoin() {
