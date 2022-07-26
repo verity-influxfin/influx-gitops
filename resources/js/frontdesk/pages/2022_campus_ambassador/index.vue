@@ -639,7 +639,13 @@
                   *團體報名者，每隊需先訂定團隊名稱並選任組長，報名時填上同一團隊名稱，並由組長統一彙整提供『校園推廣企劃案』、『作品集』兩項資料
                 </div>
                 <div class="hint">
-                  *校園推廣企劃案請以『推廣普匯進入校園』為主題 <a class="btn-link" href="http://" target="_blank">點此下載範例</a>
+                  *校園推廣企劃案請以『推廣普匯進入校園』為主題
+                  <a
+                    class="btn-link"
+                    href="https://www.influxfin.com/upload/%E6%A0%A1%E5%9C%92%E5%A4%A7%E4%BD%BF%E4%BC%81%E5%8A%83%E6%8E%A8%E5%BB%A3%E7%AF%84%E4%BE%8B.pdf"
+                    target="_blank"
+                    >點此下載範例</a
+                  >
                 </div>
               </div>
             </div>
@@ -681,7 +687,9 @@
             <div class="modal-text">
               <div>小提醒~校園推廣企劃提案現為「非必要提供資料」！！</div>
               <div>請各位同學把握黃金報名時間儘速卡位～～</div>
-              <button class="mt-3 btn btn-campus-primary" data-dismiss="modal">確定</button>
+              <button class="mt-3 btn btn-campus-primary" data-dismiss="modal">
+                確定
+              </button>
             </div>
           </div>
         </div>
@@ -714,10 +722,10 @@ export default {
       },
     })
     this.flag = sessionStorage.getItem('flag') ? sessionStorage.getItem('flag') : '';
-    if(!sessionStorage.getItem('alert')){
+    if (!sessionStorage.getItem('alert')) {
       $('#alert-modal').modal('show')
     }
-    sessionStorage.setItem('alert','ok')
+    sessionStorage.setItem('alert', 'ok')
   },
   methods: {
     scrollToJoin() {

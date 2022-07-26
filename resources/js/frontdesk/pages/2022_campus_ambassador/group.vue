@@ -67,7 +67,11 @@
             <div>活動目的、活動內容、</div>
             <div>執行方式、人力&預算</div>
             <div>
-              <a class="btn-link" href="http://" target="_blank">
+              <a
+                class="btn-link"
+                href="https://www.influxfin.com/upload/%E6%A0%A1%E5%9C%92%E5%A4%A7%E4%BD%BF%E4%BC%81%E5%8A%83%E6%8E%A8%E5%BB%A3%E7%AF%84%E4%BE%8B.pdf"
+                target="_blank"
+              >
                 點此下載範例
               </a>
             </div>
@@ -591,10 +595,14 @@
             <div class="d-flex align-items-center flex-wrap mb-md-4 mb-2">
               <span class="item"
                 >校園推廣企劃提案:
-                <a class="btn-link" href="http://" target="_blank"
-                  >點此下載範例</a
-                ></span
-              >
+                <a
+                  class="btn-link"
+                  href="https://www.influxfin.com/upload/%E6%A0%A1%E5%9C%92%E5%A4%A7%E4%BD%BF%E4%BC%81%E5%8A%83%E6%8E%A8%E5%BB%A3%E7%AF%84%E4%BE%8B.pdf"
+                  target="_blank"
+                >
+                  點此下載範例
+                </a>
+              </span>
               <input
                 type="file"
                 accept=".pdf"
