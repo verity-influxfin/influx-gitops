@@ -72,6 +72,7 @@ class CampusAmbassadorGroup2022SignupRequest extends FormRequest
             'name.max' => ':attribute字數不可大於:max',
             'photo.max' => ':attribute檔案過大',
             'introduction_brief.max' => ':attribute字數不可大於:max',
+            'introduction.max' => ':attribute字數不可大於:max',
             'proposal.max' => ':attribute檔案過大',
             'portfolio.max' => ':attribute檔案過大',
             'video.max' => ':attribute檔案過大',
