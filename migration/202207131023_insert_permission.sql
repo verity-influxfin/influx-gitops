@@ -346,6 +346,7 @@ INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, actio
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Sales', 'register_report', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Sales', 'sales_report', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Sales', 'valuable_report', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
+INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Scraper', 'index', 3 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Target', 'finished', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Target', 'index', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT id, 'Target', 'order_target', 1 FROM p2p_admin.admins a WHERE a.email='nabroux@influxfin.com';
