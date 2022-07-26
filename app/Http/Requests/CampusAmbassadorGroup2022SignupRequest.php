@@ -41,7 +41,7 @@ class CampusAmbassadorGroup2022SignupRequest extends FormRequest
             'social' => ['required', 'url'],
             'photo' => ['required', 'max:3072', 'mimes:jpeg'],
             'introduction_brief' => ['required', 'max:20'],
-            'introduction' => ['required', 'between:200,500'],
+            'introduction' => ['required', 'max:500'],
             'qa_1' => ['required', 'in:1,2,3'],
             'qa_2' => ['required', 'in:1,2,3'],
             'qa_3' => ['required', 'in:1,2,3'],

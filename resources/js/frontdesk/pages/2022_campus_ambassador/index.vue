@@ -632,6 +632,14 @@
                   <div class="rating-content">
                     <div>圖文作品/影音作品</div>
                     <div>活動企劃/其他作品集</div>
+                    <div>
+                      <a
+                        class="btn-link"
+                        href="https://www.influxfin.com/upload/%E6%A0%A1%E5%9C%92%E5%A4%A7%E4%BD%BF%E4%BC%81%E5%8A%83%E6%8E%A8%E5%BB%A3%E7%AF%84%E4%BE%8B.pdf"
+                        target="_blank"
+                        >點此下載範例</a
+                      >
+                    </div>
                   </div>
                   <div class="rating-percent">20%</div>
                 </div>
@@ -640,12 +648,6 @@
                 </div>
                 <div class="hint">
                   *校園推廣企劃案請以『推廣普匯進入校園』為主題
-                  <a
-                    class="btn-link"
-                    href="https://www.influxfin.com/upload/%E6%A0%A1%E5%9C%92%E5%A4%A7%E4%BD%BF%E4%BC%81%E5%8A%83%E6%8E%A8%E5%BB%A3%E7%AF%84%E4%BE%8B.pdf"
-                    target="_blank"
-                    >點此下載範例</a
-                  >
                 </div>
               </div>
             </div>
@@ -1225,6 +1227,9 @@ $color__background--primary: #f3f9fc;
       }
       &:first-child {
         background-color: #71bcf9;
+      }
+      .rating-content .btn-link {
+        font-size: inherit;
       }
     }
     .hint {
