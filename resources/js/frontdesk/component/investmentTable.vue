@@ -84,7 +84,9 @@
         </tbody>
       </table>
       <!-- table-2 -->
-      <div v-show="activeTab === 2"></div>
+      <div v-show="activeTab === 2">
+        <div class="chart" ref="chart"></div>
+      </div>
       <!-- table-3 -->
       <table class="table-element" v-show="activeTab === 3">
         <thead class="thead">
@@ -195,6 +197,74 @@ export default {
       activeTab: 1
     }
   },
+  mounted() {
+    this.createChart()
+  },
+  methods: {
+    createChart() {
+      let chart = echarts.init(this.$refs.chart)
+      const labelOption = {}
+      const option = {
+        title: {
+          text: '投資風險',
+          left: 'center',
+          textStyle: {
+            fontSize: 32
+          }
+        },
+        grid: {
+          top: '15%',
+        },
+        legend: {
+          top: '50px',
+          data: ['市場風險', '利率風險', '匯率風險', '營運風險']
+        },
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: { show: false },
+            data: ['普匯債權投資', '基金', '股票（台股）', '股票（美股）', '虛擬貨幣']
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            axisLabel: {
+              show: false
+            }
+          }
+        ],
+        series: [
+          {
+            name: '市場風險',
+            type: 'bar',
+            barGap: 1,
+            color: '#5071c2',
+            data: [100, 300, 300, 300, 400]
+          },
+          {
+            name: '利率風險',
+            type: 'bar',
+            color: '#e5813a',
+            data: [100, 300, 100, 100, 200]
+          },
+          {
+            name: '匯率風險',
+            type: 'bar',
+            color: '#a5a5a5',
+            data: [100, 300, 100, 300, 400]
+          },
+          {
+            name: '營運風險',
+            type: 'bar',
+            color: '#f8c226',
+            data: [100, 200, 200, 200, 400]
+          }
+        ]
+      }
+      chart.setOption(option)
+    }
+  },
 }
 </script>
 
@@ -223,6 +293,12 @@ $color__background--primary: #f3f9fc;
       border-radius: 24px 0px 0px 24px;
       width: max-content;
     }
+  }
+  .chart {
+    margin: 0 auto;
+    height: 600px;
+    max-width: 100%;
+    width: 900px;
   }
   .table-panel {
     background: #ffffff;
