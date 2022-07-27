@@ -200,21 +200,118 @@
         <h1 class="h1">現有案件</h1>
         <h2 class="h2">優良債權任君挑選，現在就開始您的投資！</h2>
         <div class="case-title">債權投資專區</div>
-        <div></div>
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">
+              <alesis-project v-bind="goodCase[0]"></alesis-project>
+              <alesis-project v-bind="goodCase[1]"></alesis-project>
+              <alesis-project v-bind="goodCase[2]"></alesis-project>
+            </div>
+            <div class="swiper-slide">
+              <alesis-project v-bind="goodCase[3]"></alesis-project>
+              <alesis-project v-bind="goodCase[4]"></alesis-project>
+              <alesis-project v-bind="goodCase[5]"></alesis-project>
+            </div>
+            <div class="swiper-slide">
+              <alesis-project v-bind="goodCase[6]"></alesis-project>
+              <alesis-project v-bind="goodCase[7]"></alesis-project>
+              <alesis-project v-bind="goodCase[8]"></alesis-project>
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
         <div class="case-title">債權轉讓專區</div>
-        <div></div>
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">
+              <transferCase v-bind="transferCase[0]" />
+              <transferCase v-bind="transferCase[1]" />
+              <transferCase v-bind="transferCase[2]" />
+            </div>
+            <div class="swiper-slide" v-if="transferCase.length > 3">
+              <transferCase v-bind="transferCase[3]" />
+              <transferCase v-bind="transferCase[4]" />
+              <transferCase v-bind="transferCase[5]" />
+            </div>
+            <div class="swiper-slide" v-if="transferCase.length > 6">
+              <transferCase v-bind="transferCase[6]" />
+              <transferCase v-bind="transferCase[7]" />
+              <transferCase v-bind="transferCase[8]" />
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </div>
+    </div>
+    <div class="download">
+      <div class="block-content">
+        <h1 class="h1">下載投資人App，享優越體驗</h1>
+        <div class="list">
+          <div class="list-item">•取得完整債權資訊</div>
+          <div class="list-item">•操作投資債權功能</div>
+          <div class="list-item">•操作轉讓債權功能</div>
+          <div class="list-item">•可設定AI智能投資</div>
+        </div>
+        <div class="download-group">
+          <h2 class="h2">立即加入</h2>
+          <div class="d-flex">
+            <img class="mr-3" src="@/asset/images/get-on-apple.png" />
+            <img src="@/asset/images/get-on-google.png" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import investmentTable from '@/component/investmentTable';
+import investmentTable from '@/component/investmentTable'
+import AlesisProject from '../component/alesis/AlesisProject'
+import TransferCase from '../component/TransferCase.vue'
+import 'swiper/swiper.scss'
+import 'swiper/components/navigation/navigation.min.css'
+import 'swiper/components/pagination/pagination.min.css'
+import SwiperCore, { Navigation, Pagination } from 'swiper/core'
 export default {
   components: {
     investmentTable,
+    AlesisProject,
+    TransferCase
   },
-
+  data() {
+    return {
+      goodCase: [],
+      transferCase: []
+    }
+  },
+  mounted() {
+    SwiperCore.use([Navigation, Pagination])
+    const swiper = new Swiper('.swiper', {
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+      },
+    })
+    axios.post(`/getCase`, { status: 10, product_id: 3 }).then((res) => {
+      this.goodCase = res.data.slice(0, 8)
+    }).catch((error) => {
+      console.error('getCase 發生錯誤，請稍後再試');
+    });
+    axios.post(`/getTransferCase`).then((res) => {
+      this.transferCase = res.data.slice(0, 8)
+    }).catch((error) => {
+      console.error('getCase 發生錯誤，請稍後再試');
+    });
+  },
 }
 </script>
 
@@ -389,6 +486,9 @@ $color__background--primary: #f3f9fc;
   }
   .process {
     padding: 64px 0;
+    background-image: url('~images/investment/investment-process-bg.png');
+    background-repeat: no-repeat;
+    background-position: center;
     .h1 {
       color: $color--primary;
     }
@@ -401,6 +501,15 @@ $color__background--primary: #f3f9fc;
       width: 300px;
       padding: 0 15px 40px 40px;
       border-left: 5px solid $color--primary;
+      &:hover,
+      &:focus-within {
+        .step-content-title {
+          color: $color__text--primary;
+        }
+        .step-content-info {
+          opacity: 1;
+        }
+      }
       .step-content-title::before {
         content: '1';
         background: $color--primary;
@@ -420,6 +529,12 @@ $color__background--primary: #f3f9fc;
       }
       &:hover,
       &:focus-within {
+        .step-content-title {
+          color: $color__text--primary;
+        }
+        .step-content-info {
+          opacity: 1;
+        }
         .step-content-img {
           z-index: 10;
           opacity: 1;
@@ -438,6 +553,12 @@ $color__background--primary: #f3f9fc;
       }
       &:hover,
       &:focus-within {
+        .step-content-title {
+          color: $color__text--primary;
+        }
+        .step-content-info {
+          opacity: 1;
+        }
         .step-content-img {
           z-index: 10;
           opacity: 1;
@@ -455,6 +576,12 @@ $color__background--primary: #f3f9fc;
       }
       &:hover,
       &:focus-within {
+        .step-content-title {
+          color: $color__text--primary;
+        }
+        .step-content-info {
+          opacity: 1;
+        }
         .step-content-img {
           z-index: 10;
           opacity: 1;
@@ -524,6 +651,45 @@ $color__background--primary: #f3f9fc;
       font-size: 36px;
       line-height: 1.4;
       color: $color__text--primary;
+    }
+    .swiper-slide {
+      display: flex;
+      justify-content: space-evenly;
+      padding: 35px 45px;
+      transform: scale(0.95);
+    }
+  }
+  .download {
+    padding: 64px 0;
+    background-image: url('~images/investment/investment-download-bg.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    .h1 {
+      color: $color--primary;
+      text-align: left;
+    }
+    .h2 {
+      color: $color__text--primary;
+      text-align: center;
+      font-size: 40px;
+      margin-bottom: 24px;
+    }
+    .list {
+      width: 300px;
+      gap: 12px;
+      margin: 16px 0;
+      padding-bottom: 24px;
+      border-bottom: 6px solid #dce9ed;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 46px;
+      color: $color--primary;
+      opacity: 0.64;
+    }
+    &-group {
+      width: 380px;
+      margin: 24px 0;
     }
   }
 }
