@@ -3829,11 +3829,17 @@ class Product extends REST_Controller {
 
         $this->target_model->update(
             $input['target_id'], [
+                'amount' => $input['amount'],
                 'loan_amount' => $input['amount'],
                 'platform_fee' => $this->financial_lib->get_platform_fee($input['amount'], $product_info['charge_platform']),
                 'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
             ]
         );
+        $this->log_targetschange_model->insert([
+            'target_id' => $target->id,
+            'amount' => $input['amount'],
+            'change_user' => $target->user_id
+        ]);
 
         $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => (int) $input['target_id']]]);
     }
