@@ -21,15 +21,47 @@ class Target_lib
         if (!empty($param)) {
             $param['target_no'] = $this->get_target_no($param['product_id']);
             $insert = $this->CI->target_model->insert($param);
+            $this->CI->load->model('log/log_targetschange_model');
             if ($insert) {
+                $this->CI->log_targetschange_model->insert(
+                    $this->get_target_log_param($insert, TRUE, $param)
+                );
                 return $insert;
             } else {
                 $param['target_no'] = $this->get_target_no($param['product_id']);
                 $insert = $this->CI->target_model->insert($param);
+                $this->CI->log_targetschange_model->insert(
+                    $this->get_target_log_param($insert, TRUE, $param)
+                );
                 return $insert;
             }
         }
         return false;
+    }
+
+    /**
+     * 取得異動 Target 的 Log 參數
+     * @param int $target_id
+     * @param bool $user_change : 是否為 end-user 的自主行為
+     * @param array $param : insert/update Target 的參數
+     * @param int $change_admin_id : 若由後台管理者修改，傳入管理者 ID，反之預設 0
+     * @return array
+     */
+    public function get_target_log_param(int $target_id, bool $user_change, array $param, int $change_admin_id = 0)
+    {
+        return [
+            'target_id' => $target_id,
+            'amount' => $param['amount'] ?? NULL,
+            'interest_rate' => $param['interest_rate'] ?? NULL,
+            'delay' => $param['delay'] ?? NULL,
+            'status' => $param['status'] ?? NULL,
+            'loan_status' => $param['loan_status'] ?? NULL,
+            'sub_status' => $param['sub_status'] ?? NULL,
+            'sys_check' => $param['sys_check'] ?? NULL,
+            'certificate_status' => $param['certificate_status'] ?? NULL,
+            'change_user' => $param['change_user'] ?? ($user_change ? $param['user_id'] ?? 0 : 0),
+            'change_admin' => $change_admin_id
+        ];
     }
 
     //新增target
