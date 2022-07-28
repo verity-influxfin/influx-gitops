@@ -822,7 +822,7 @@ class Target_model extends MY_Model
         {
             $this->db->select('new_target_id')
                 ->from('p2p_loan.subloan')
-                ->where_in('target_id', array_column($targets, 'id'));
+                ->where_in('new_target_id', array_column($targets, 'id'));
             $rs = $this->db->get()->result_array();
             if ( ! empty($rs))
             {
