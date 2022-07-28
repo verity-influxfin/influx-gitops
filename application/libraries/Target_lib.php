@@ -49,7 +49,7 @@ class Target_lib
      */
     public function get_target_log_param(int $target_id, bool $user_change, array $param, int $change_admin_id = 0)
     {
-        return [
+        $result = [
             'target_id' => $target_id,
             'amount' => $param['amount'] ?? NULL,
             'interest_rate' => $param['interest_rate'] ?? NULL,
@@ -58,10 +58,11 @@ class Target_lib
             'loan_status' => $param['loan_status'] ?? NULL,
             'sub_status' => $param['sub_status'] ?? NULL,
             'sys_check' => $param['sys_check'] ?? NULL,
-            'certificate_status' => $param['certificate_status'] ?? NULL,
             'change_user' => $param['change_user'] ?? ($user_change ? $param['user_id'] ?? 0 : 0),
             'change_admin' => $change_admin_id
         ];
+        ! isset($param['certificate_status']) ?: $result['certificate_status'] = $param['certificate_status'];
+        return $result;
     }
 
     //新增target
