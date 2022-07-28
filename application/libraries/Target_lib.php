@@ -59,7 +59,7 @@ class Target_lib
             'sub_status' => $param['sub_status'] ?? NULL,
             'sys_check' => $param['sys_check'] ?? NULL,
             'certificate_status' => $param['certificate_status'] ?? NULL,
-            'change_user' => $user_change ? $param['user_id'] ?? 0 : 0,
+            'change_user' => $param['change_user'] ?? ($user_change ? $param['user_id'] ?? 0 : 0),
             'change_admin' => $change_admin_id
         ];
     }

@@ -3832,7 +3832,8 @@ class Product extends REST_Controller {
         $this->load->library('target_lib');
         $this->log_targetschange_model->insert(
             $this->target_lib->get_target_log_param($input['target_id'], TRUE, [
-                'amount' => $input['amount']
+                'amount' => $input['amount'],
+                'change_user' => $target->user_id
             ])
         );
 
