@@ -85,7 +85,14 @@ class Cert_investigation extends Certification_base
                 $this->CI->load->library('mapping/time');
                 $printTimestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $this->transform_data['printDatetime']);
                 $printTimestamp = $this->CI->time->ROCDateToUnixTimestamp($printTimestamp);
-                $printDatetime = date('Y-m-d', $printTimestamp);
+                if($printTimestamp !== FALSE)
+                {
+                    $printDatetime = date('Y-m-d', $printTimestamp);
+                }
+                else
+                {
+                    $printDatetime = '';
+                }
 
                 $group_id = $this->content['group_id'] ?? time();
                 $parsed_content['group_id'] = $group_id;
@@ -124,6 +131,51 @@ class Cert_investigation extends Certification_base
         return TRUE;
     }
 
+    private function _chk_data_complete($content): bool
+    {
+        $chk_empty_cols = [
+            'liabilities' => [
+                'totalAmount' => ['existCreditInfo'],
+                'metaInfo' => ['existCreditInfo'],
+                'badDebtInfo' => ['existCreditInfo']
+            ],
+            'creditCard' => [
+                'cardInfo' => ['existCreditInfo'],
+                'totalAmount' => ['existCreditInfo'],
+            ],
+            'checkingAccount' => [
+                'largeAmount' => ['existCreditInfo'],
+                'rejectInfo' => ['existCreditInfo'],
+            ],
+            'queryLog' => [
+                'queriedLog' => ['existCreditInfo'],
+                'applierSelfQueriedLog' => ['existCreditInfo'],
+            ],
+            'other' => [
+                'extraInfo' => ['existCreditInfo'],
+                'mainInfo' => ['existCreditInfo'],
+                'metaInfo' => ['existCreditInfo'],
+                'creditCardTransferInfo' => ['existCreditInfo'],
+            ]
+        ];
+        $credit_info = $content['ocr_parser']['content']['applierInfo']['creditInfo'];
+        foreach ($chk_empty_cols as $key => $value)
+        {
+            foreach ($value as $inner_key => $inner_cols)
+            {
+                foreach ($inner_cols as $chk_col)
+                {
+                    if ( ! isset($credit_info[$key][$inner_key][$chk_col]) || empty($credit_info[$key][$inner_key][$chk_col]))
+                    {
+                        return FALSE;
+                    }
+                }
+            }
+        }
+
+        return TRUE;
+    }
+
     /**
      * 核實資料是否屬實
      * @param $content: 徵信內容
@@ -141,6 +193,13 @@ class Cert_investigation extends Certification_base
         if ($content['ocr_parser']['res'] === FALSE)
         {
             $this->result->addMessage('聯徵PDF解析失敗，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
+        }
+
+        if($this->_chk_data_complete($content) === FALSE)
+        {
+            $this->result->addMessage('聯徵PDF辨識結果有誤，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
         }
 
         // 自然人聯徵正確性驗證
