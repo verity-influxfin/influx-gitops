@@ -133,8 +133,10 @@ class Cert_investigation extends Certification_base
     {
         if ($this->_chk_ocr_status($content) === FALSE)
         {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
             return FALSE;
         }
+        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
 
         if ($content['ocr_parser']['res'] === FALSE)
         {
@@ -294,12 +296,7 @@ class Cert_investigation extends Certification_base
     {
         if ( ! isset($content['ocr_parser']['res']))
         {
-            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
             return FALSE;
-        }
-        else
-        {
-            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
         }
         return TRUE;
     }
