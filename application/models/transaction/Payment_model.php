@@ -39,6 +39,11 @@ class Payment_model extends MY_Model
 
     public function get_userid_by_payment($payment_id)
     {
+        if(empty($payment_id))
+        {
+            return [];
+        }
+
         $this->db
             ->select('*')
             ->from('`p2p_transaction`.`payments`')
