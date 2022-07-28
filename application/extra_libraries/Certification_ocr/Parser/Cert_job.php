@@ -35,7 +35,10 @@ class Cert_job extends Ocr_parser_base
      */
     public function data_mapping($task_res_data): array
     {
-        if (empty($task_res_data)) return [];
+        if (empty($task_res_data))
+        {
+            return [];
+        }
 
         $insurance_list = [];
         foreach ($task_res_data['laborRowData_list'] ?? [] as $value)

@@ -35,7 +35,10 @@ class Cert_investigation extends Ocr_parser_base
      */
     public function data_mapping($task_res_data): array
     {
-        if (empty($task_res_data)) return [];
+        if (empty($task_res_data))
+        {
+            return [];
+        }
         return [
             'applierInfo' => [
                 'basicInfo' => [
@@ -194,7 +197,10 @@ class Cert_investigation extends Ocr_parser_base
     private function _get_b1_data_list(array $b1_raw_data): array
     {
         $result = [];
-        if (empty($b1_raw_data)) return $result;
+        if (empty($b1_raw_data))
+        {
+            return $result;
+        }
         foreach ($b1_raw_data as $value)
         {
             $result[] = [
@@ -219,7 +225,10 @@ class Cert_investigation extends Ocr_parser_base
     private function _get_b1_extra_data_list(array $b1_extra_raw_data): array
     {
         $result = [];
-        if (empty($b1_extra_raw_data)) return $result;
+        if (empty($b1_extra_raw_data))
+        {
+            return $result;
+        }
         foreach ($b1_extra_raw_data as $value)
         {
             $result[] = [
@@ -244,13 +253,19 @@ class Cert_investigation extends Ocr_parser_base
     private function _get_b2_data_list($b2_partly_raw_data, int $part_no): array
     {
         $result = [];
-        if (empty($b2_partly_raw_data)) return $result;
+        if (empty($b2_partly_raw_data))
+        {
+            return $result;
+        }
         $field_list = [
             1 => ['co_borrower' => '主借款戶', 'loan_bank' => '承貸金融機構', 'unpaid_amount' => '未逾期金額', 'overdue_amount' => '逾期金額', 'subject' => '科目'],
             2 => ['main_borrower' => '主借款戶', 'loan_bank' => '承貸金融機構', 'unpaid_amount' => '未逾期金額', 'overdue_amount' => '逾期金額', 'subject' => '科目'],
             3 => ['main_borrower' => '主借款戶', 'loan_bank' => '承貸金融機構', 'unpaid_amount' => '未逾期金額', 'overdue_amount' => '逾期金額', 'subject' => '科目'],
         ];
-        if ( ! isset($field_list[$part_no])) return $result;
+        if ( ! isset($field_list[$part_no]))
+        {
+            return $result;
+        }
         foreach ($b2_partly_raw_data as $data_key => $data_value)
         {
             foreach ($field_list[$part_no] as $field_key => $field_value)
@@ -269,7 +284,10 @@ class Cert_investigation extends Ocr_parser_base
     private function _get_b3_data_list($b3_raw_data): array
     {
         $result = [];
-        if (empty($b3_raw_data)) return $result;
+        if (empty($b3_raw_data))
+        {
+            return $result;
+        }
         foreach ($b3_raw_data as $value)
         {
             $result[] = [
@@ -291,7 +309,10 @@ class Cert_investigation extends Ocr_parser_base
     private function _get_k1_data_list($k1_raw_data): array
     {
         $result = [];
-        if (empty($k1_raw_data)) return $result;
+        if (empty($k1_raw_data))
+        {
+            return $result;
+        }
         foreach ($k1_raw_data as $value)
         {
             $result[] = [
@@ -317,7 +338,10 @@ class Cert_investigation extends Ocr_parser_base
     private function _get_k2_data_list($k2_raw_data): array
     {
         $result = [];
-        if (empty($k2_raw_data)) return $result;
+        if (empty($k2_raw_data))
+        {
+            return $result;
+        }
         foreach ($k2_raw_data as $value)
         {
             $result[] = [
@@ -344,7 +368,10 @@ class Cert_investigation extends Ocr_parser_base
     private function _get_s1_data_list($s1_raw_data): array
     {
         $result = [];
-        if (empty($s1_raw_data)) return $result;
+        if (empty($s1_raw_data))
+        {
+            return $result;
+        }
         foreach ($s1_raw_data as $value)
         {
             $result[] = [
@@ -364,7 +391,10 @@ class Cert_investigation extends Ocr_parser_base
     private function _get_s2_data_list($s2_raw_data): array
     {
         $result = [];
-        if (empty($s2_raw_data)) return $result;
+        if (empty($s2_raw_data))
+        {
+            return $result;
+        }
         foreach ($s2_raw_data as $value)
         {
             $result[] = [
@@ -384,7 +414,10 @@ class Cert_investigation extends Ocr_parser_base
      */
     private function _get_score_cmment($score_comment)
     {
-        if (empty($score_comment)) return '';
+        if (empty($score_comment))
+        {
+            return '';
+        }
         return preg_replace('/^(\d{3})分$/i', '${1}', $score_comment);
     }
 
@@ -395,7 +428,10 @@ class Cert_investigation extends Ocr_parser_base
      */
     private function get_no_comment_reason(array $no_comment_reason): string
     {
-        if (empty($no_comment_reason)) return '';
+        if (empty($no_comment_reason))
+        {
+            return '';
+        }
         return '＊' . implode(' ＊', $no_comment_reason);
     }
 
