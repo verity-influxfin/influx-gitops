@@ -201,7 +201,7 @@ class Risk extends MY_Admin_Controller {
                     continue;
                 }
                 $additional_btn['report'] = '<a class="btn btn-primary btn-info" href="' .
-                    admin_url('Creditmanagement/report') . '?target_id=' . $target->id . '&type=person" target="_blank" >查看<br />授信審核表</a>';
+                    admin_url('Creditmanagement/report_natural_person') . '?target_id=' . $target->id . '&type=person" target="_blank" >查看<br />授信審核表</a>';
                 $additional_btn['fail'] = '<button class="btn btn-outline btn-danger" onclick="failed(' . $target->id . ',\'' . $target->target_no . '\')" >退件</button>';
             }
 
