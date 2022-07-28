@@ -1,36 +1,36 @@
 <template>
   <div class="row no-gutters investment-table">
-    <div class="investment-table-tabs col-auto">
+    <div class="investment-table-tabs col-md-auto col-12">
       <div
         class="investment-table-tab"
         @click="activeTab = 1"
         :class="{ active: activeTab === 1 }"
       >
-        <img src="@/asset/images/investment/investment-tab1.svg" />
+        <img class="img-icon" src="@/asset/images/investment/investment-tab1.svg" />
       </div>
       <div
         class="investment-table-tab"
         @click="activeTab = 2"
         :class="{ active: activeTab === 2 }"
       >
-        <img src="@/asset/images/investment/investment-tab2.svg" />
+        <img class="img-icon" src="@/asset/images/investment/investment-tab2.svg" />
       </div>
       <div
         class="investment-table-tab"
         @click="activeTab = 3"
         :class="{ active: activeTab === 3 }"
       >
-        <img src="@/asset/images/investment/investment-tab3.svg" />
+        <img class="img-icon" src="@/asset/images/investment/investment-tab3.svg" />
       </div>
       <div
         class="investment-table-tab"
         @click="activeTab = 4"
         :class="{ active: activeTab === 4 }"
       >
-        <img src="@/asset/images/investment/investment-tab4.svg" />
+        <img class="img-icon" src="@/asset/images/investment/investment-tab4.svg" />
       </div>
     </div>
-    <div class="table-panel col">
+    <div class="table-panel col-md col-12">
       <!-- table-1 -->
       <table class="table-element" v-show="activeTab === 1">
         <thead class="thead">
@@ -351,6 +351,81 @@ $color__background--primary: #f3f9fc;
       }
       .td-1 {
         color: #fff000;
+      }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .investment-table {
+    &-tabs {
+      flex-direction: row;
+      align-items: flex-end;
+      .investment-table-tab {
+        &.active {
+          background: #fff;
+          padding: 20px 8px 8px;
+        }
+        padding: 8px;
+        background: linear-gradient(
+          90deg,
+          #f2f3f6 0%,
+          rgba(223, 226, 240, 0.8) 100%
+        );
+        border-radius: 12px 12px 0px 0px;
+      }
+      .img-icon{
+        width: 28px;
+      }
+    }
+    .chart {
+      margin: 0 auto;
+      height: 600px;
+      max-width: initial;
+      width: 360px;
+    }
+    .table-panel {
+      background: #ffffff;
+      padding: 11px 11px 90px;
+      border-radius: 0 24px 24px 24px;
+      overflow: auto;
+    }
+    .table-element {
+      width: 100%;
+      .thead {
+        font-size: 14px;
+        .th {
+          padding: 9px 0;
+          min-width: 120px;
+        }
+        .th-1 {
+          font-size: 20px;
+        }
+      }
+      .tr {
+        font-size: 14px;
+        &:nth-child(odd) {
+          background: #fafbfe;
+        }
+        .td {
+          padding: 12px 4px;
+          width: max-content;
+        }
+        .td-1 {
+          color: $color--primary;
+        }
+      }
+      .tr.tr-1 {
+        background: $color--primary;
+      }
+      .tr-1 {
+        font-size: 14px;
+        line-height: 1.4;
+        .td {
+          color: #ffffff;
+        }
+        .td-1 {
+          color: #fff000;
+        }
       }
     }
   }

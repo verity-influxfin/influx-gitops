@@ -5,7 +5,11 @@
       <h2 class="banner-title">P2P認購債權 公開透明安全</h2>
       <img
         src="@/asset/images/investment/investment-banner.png"
-        class="w-100"
+        class="w-100 d-md-block d-none"
+      />
+      <img
+        src="@/asset/images/investment/investment-banner-phone.png"
+        class="w-100 d-md-none d-block"
       />
       <button class="btn btn-banner">
         立即投資 <i class="fa fa-chevron-right"></i>
@@ -18,9 +22,15 @@
           <span class="em">5.4</span>
           億！
         </div>
-        <div class="slogan-text">
+        <div class="slogan-text d-sm-block d-none">
           <div>已有超過千萬位投資人365天24小時隨時隨地利用普匯AI智能投資</div>
           <div>不斷創造被動收入，享受投資理財樂趣與生活</div>
+        </div>
+        <div class="slogan-text d-sm-none d-block">
+          <div>已有超過千萬位投資人365天24小時</div>
+          <div>隨時隨地利用普匯AI智能投資，</div>
+          <div>不斷創造被動收入，享受投資</div>
+          <div>理財樂趣與生活</div>
         </div>
       </div>
     </div>
@@ -67,12 +77,18 @@
             </div>
           </div>
           <div>
-            <img src="@/asset/images/investment/product-row-p1.png" />
+            <img
+              src="@/asset/images/investment/product-row-p1.png"
+              class="img-fluid"
+            />
           </div>
         </div>
         <div class="product-row">
           <div>
-            <img src="@/asset/images/investment/product-row-p2.png" />
+            <img
+              src="@/asset/images/investment/product-row-p2.png"
+              class="img-fluid"
+            />
           </div>
           <div>
             <div class="product-row-title">2. 債權轉讓</div>
@@ -115,7 +131,10 @@
             </div>
           </div>
           <div>
-            <img src="@/asset/images/investment/product-row-p3.png" />
+            <img
+              src="@/asset/images/investment/product-row-p3.png"
+              class="img-fluid"
+            />
           </div>
         </div>
       </div>
@@ -203,20 +222,27 @@
         <div class="swiper">
           <div class="swiper-wrapper">
             <!-- Slides -->
-            <div class="swiper-slide">
+            <div class="swiper-slide d-md-flex d-none">
               <alesis-project v-bind="goodCase[0]"></alesis-project>
               <alesis-project v-bind="goodCase[1]"></alesis-project>
               <alesis-project v-bind="goodCase[2]"></alesis-project>
             </div>
-            <div class="swiper-slide">
+            <div class="swiper-slide d-md-flex d-none">
               <alesis-project v-bind="goodCase[3]"></alesis-project>
               <alesis-project v-bind="goodCase[4]"></alesis-project>
               <alesis-project v-bind="goodCase[5]"></alesis-project>
             </div>
-            <div class="swiper-slide">
+            <div class="swiper-slide d-md-flex d-none">
               <alesis-project v-bind="goodCase[6]"></alesis-project>
               <alesis-project v-bind="goodCase[7]"></alesis-project>
               <alesis-project v-bind="goodCase[8]"></alesis-project>
+            </div>
+            <!-- phone -->
+            <div
+              class="swiper-slide d-md-none d-block"
+              v-for="item in goodCase"
+            >
+              <alesis-project v-bind="item" />
             </div>
           </div>
           <div class="swiper-pagination"></div>
@@ -227,20 +253,33 @@
         <div class="swiper">
           <div class="swiper-wrapper">
             <!-- Slides -->
-            <div class="swiper-slide">
+            <div class="swiper-slide d-md-flex d-none">
               <transferCase v-bind="transferCase[0]" />
               <transferCase v-bind="transferCase[1]" />
               <transferCase v-bind="transferCase[2]" />
             </div>
-            <div class="swiper-slide" v-if="transferCase.length > 3">
+            <div
+              class="swiper-slide d-md-flex d-none"
+              v-if="transferCase.length > 3"
+            >
               <transferCase v-bind="transferCase[3]" />
               <transferCase v-bind="transferCase[4]" />
               <transferCase v-bind="transferCase[5]" />
             </div>
-            <div class="swiper-slide" v-if="transferCase.length > 6">
+            <div
+              class="swiper-slide d-md-flex d-none"
+              v-if="transferCase.length > 6"
+            >
               <transferCase v-bind="transferCase[6]" />
               <transferCase v-bind="transferCase[7]" />
               <transferCase v-bind="transferCase[8]" />
+            </div>
+            <!-- phone -->
+            <div
+              class="swiper-slide d-md-none d-block"
+              v-for="item in transferCase"
+            >
+              <transferCase v-bind="item" />
             </div>
           </div>
           <div class="swiper-pagination"></div>
@@ -251,7 +290,13 @@
     </div>
     <div class="download">
       <div class="block-content">
-        <h1 class="h1">下載投資人App，享優越體驗</h1>
+        <h1 class="h1">
+          <div class="d-md-block d-none">下載投資人App，享優越體驗</div>
+          <div class="d-md-none d-block">
+            <div>下載投資人App</div>
+            <div>享優越體驗</div>
+          </div>
+        </h1>
         <div class="list">
           <div class="list-item">•取得完整債權資訊</div>
           <div class="list-item">•操作投資債權功能</div>
@@ -261,9 +306,19 @@
         <div class="download-group">
           <h2 class="h2">立即加入</h2>
           <div class="d-flex">
-            <img class="mr-3" src="@/asset/images/get-on-apple.png" />
-            <img src="@/asset/images/get-on-google.png" />
+            <a href="/investLink" target="_blank">
+              <img class="mr-3" src="@/asset/images/get-on-apple.png" />
+            </a>
+            <a href="/investLink" target="_blank">
+              <img src="@/asset/images/get-on-google.png" />
+            </a>
           </div>
+        </div>
+        <div class="d-md-none d-block">
+          <img
+            src="@/asset/images/investment/investment-download-bg-phone.png"
+            class="img-fluid"
+          />
         </div>
       </div>
     </div>
@@ -690,6 +745,275 @@ $color__background--primary: #f3f9fc;
     &-group {
       width: 380px;
       margin: 24px 0;
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .block-content {
+    padding: 0 15px;
+  }
+  .h1 {
+    font-size: 28px;
+  }
+  .h2 {
+    font-size: 18px;
+  }
+  .investment {
+    .banner {
+      .btn-banner {
+        position: absolute;
+        top: 40%;
+        left: 33.4vw;
+        padding: 6px;
+        width: 130px;
+        font-size: 14px;
+      }
+    }
+    .slogan {
+      .block-content {
+        background-position: center center;
+        padding: 36px 15px;
+        .slogan-title {
+          font-size: 28px;
+          .em {
+            font-size: 76px;
+          }
+        }
+        .slogan-text {
+          font-size: 12px;
+          line-height: 17px;
+        }
+      }
+    }
+    .product {
+      padding: 64px 0;
+      .h2 {
+        margin-top: 8px;
+      }
+      .product-row {
+        &:nth-child(odd) {
+          flex-direction: column-reverse;
+        }
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        margin: 36px 0;
+        &-title {
+          font-size: 24px;
+          margin-bottom: 8px;
+        }
+        &-intro {
+          font-size: 16px;
+          margin-bottom: 15px;
+        }
+        &-item {
+          display: flex;
+          &::before {
+            content: '';
+            background-size: 8px;
+            margin-right: 7px;
+            flex: 0 0 32px;
+            width: 28px;
+            height: 28px;
+            top: 0;
+          }
+          &-title {
+            font-size: 20px;
+            margin-bottom: 8px;
+          }
+        }
+        &-sub-title {
+          font-size: 20px;
+          margin-bottom: 8px;
+        }
+        &-sub-text {
+          font-size: 12px;
+          margin-bottom: 8px;
+        }
+      }
+    }
+    .compare {
+      padding: 48px 0;
+      .h2 {
+        margin-top: 8px;
+      }
+      &-table {
+        margin-top: 36px;
+      }
+    }
+    .process {
+      padding: 36px 0;
+      .h2 {
+        margin-top: 8px;
+      }
+      .step-content-1 {
+        width: 155px;
+        padding: 0 15px 15px 20px;
+        border-left: 5px solid $color--primary;
+        &:hover,
+        &:focus-within {
+          .step-content-title {
+            color: $color__text--primary;
+          }
+          .step-content-info {
+            opacity: 1;
+          }
+        }
+        .step-content-title::before {
+          content: '1';
+          background: $color--primary;
+        }
+        .step-content-img {
+          opacity: 1;
+          z-index: 3;
+        }
+      }
+      .step-content-2 {
+        width: 155px;
+        padding: 0 15px 15px 20px;
+        border-left: 5px solid $color--primary;
+        .step-content-title::before {
+          content: '2';
+          background: $color--primary;
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-title {
+            color: $color__text--primary;
+          }
+          .step-content-info {
+            opacity: 1;
+          }
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .step-content-3 {
+        width: 155px;
+        padding: 0 15px 15px 20px;
+        border-left: 5px solid $color--primary;
+        .step-content-title::before {
+          content: '3';
+          background: $color--primary;
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-title {
+            color: $color__text--primary;
+          }
+          .step-content-info {
+            opacity: 1;
+          }
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .step-content-4 {
+        width: 155px;
+        padding: 0 15px 15px 20px;
+        .step-content-title::before {
+          content: '4';
+          background: $color--primary;
+        }
+        &:hover,
+        &:focus-within {
+          .step-content-title {
+            color: $color__text--primary;
+          }
+          .step-content-info {
+            opacity: 1;
+          }
+          .step-content-img {
+            z-index: 10;
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: 1s;
+          }
+        }
+      }
+      .step-main {
+        margin: 45px auto;
+        width: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      .step-content-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        color: #036fb7;
+        &::before {
+          font-size: 14px;
+          line-height: 24px;
+          position: absolute;
+          right: 140px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+      .step-content-info {
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      .step-content-img {
+        top: -120px;
+        left: -10px;
+        transform: scale(0.55);
+        position: absolute;
+        transition-property: opacity;
+        transition-duration: 1s;
+        opacity: 0;
+      }
+    }
+    .cases {
+      padding: 36px 0;
+      .h2 {
+        margin-top: 8px;
+      }
+      .case-title {
+        margin-left: 0;
+        text-align: center;
+        font-size: 20px;
+      }
+      .swiper-slide {
+        padding: 0;
+        transform: scale(0.7);
+      }
+    }
+    .download {
+      padding: 64px 0;
+      background-image: none;
+      .h1 {
+        color: $color--primary;
+        text-align: center;
+      }
+      .h2 {
+        color: $color__text--primary;
+        text-align: center;
+        font-size: 20px;
+        margin-bottom: 16px;
+      }
+      .list {
+        width: 165px;
+        gap: 12px;
+        margin: 16px auto;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+      &-group {
+        width: 380px;
+        margin: 24px 0;
+      }
     }
   }
 }
