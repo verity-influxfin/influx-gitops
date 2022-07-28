@@ -120,7 +120,7 @@
 									<div class="form-group">
 										<label>勞保異動明細資料</label>
 										<? if(isset($content['pdf_info'])){ ?>
-											<table border="1">
+											<table>
 												<tbody>
 													<tr>
 														<td>姓名</td>
@@ -144,7 +144,7 @@
 													</tr>
 												</tbody>
 											</table>
-											<table border="1" style="margin-top:5px;">
+											<table>
 												<tbody>
 													<tr>
 														<td>保險證號</td><td>投保公司名稱</td><td>投保薪資</td><td>投保日期</td><td>退保日期</td><td>註記</td>
@@ -411,3 +411,14 @@
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
+
+        <style>
+            table {
+                margin-top: 5px;
+            }
+
+            table td {
+                border: 1px solid;
+                padding: 2px 2px 2px 2px;
+            }
+        </style>
