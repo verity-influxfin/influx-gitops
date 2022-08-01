@@ -470,6 +470,7 @@ class Credit_lib{
         }
 
         $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
+        $is_top_enterprise = 0;
         if ($approvalExtra) {
             if($approvalExtra->getExtraPoints())
             {
@@ -478,28 +479,7 @@ class Credit_lib{
                 $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
             }
             $special_info = $approvalExtra->getSpecialInfo();
-            if (isset($special_info['is_top_enterprise']) && $special_info['is_top_enterprise'] == 1 && $salary < 40000)
-            {
-                if (isset($this->credit['credit_amount_' . $product_id]))
-                {
-                    $credit_list = $this->credit['credit_amount_' . $product_id];
-                    function compare($a, $b)
-                    {
-                        return ($a['start'] < $b['start']);
-                    }
-                    usort($credit_list, "compare");
-
-                    foreach ($this->credit['credit_amount_' . $product_id] as $value)
-                    {
-                        if ($salary * $value['rate'] <= 100000)
-                        {
-                            $total = $value['end'];
-                            break;
-                        }
-                    }
-                    $this->scoreHistory[] = '中小企業以及月薪4萬以下,強制調整分數至額度10萬內: ' . $total;
-                }
-            }
+            $is_top_enterprise = $special_info['is_top_enterprise'] ?? 0;
         }
 
         $param['points'] = (int) $total;
@@ -543,6 +523,42 @@ class Credit_lib{
         $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_' . $product_id];
         $param['amount'] = round($param['amount'] * ($instalment_modifier_list[$instalment] ?? 1));
         $this->scoreHistory[] = '借款期數' . $instalment . '期: 額度 * ' . ($instalment_modifier_list[$instalment] ?? 1);
+
+        if ($is_top_enterprise == 0 && $salary < 40000 && $param['amount'] > 100000)
+        {
+            if (isset($this->credit['credit_amount_' . $product_id]))
+            {
+                $credit_list = $this->credit['credit_amount_' . $product_id];
+
+                function compare($a, $b)
+                {
+                    return ($a['start'] < $b['start']);
+                }
+                usort($credit_list, "compare");
+
+                foreach ($this->credit['credit_amount_' . $product_id] as $value)
+                {
+                    $modified_amount = $salary * $value['rate'];
+
+                    // 額度調整 = 額度 * 性別對應的系數
+                    if ($user_info->sex == 'M')
+                    {
+                        $modified_amount *= 0.9;
+                    }
+                    // 額度調整 = 額度 * 分期期數對應的系數
+                    $modified_amount = round($modified_amount * ($instalment_modifier_list[$instalment] ?? 1));
+
+                    if ($modified_amount <= 100000)
+                    {
+                        $param['amount'] = $modified_amount;
+                        $param['points'] = (int) $value['end'];
+                        break;
+                    }
+                }
+                $param['level'] = $this->get_credit_level($param['points'], $product_id, $sub_product_id, $stage_cer);
+                $this->scoreHistory[] = '中小企業以及月薪4萬以下,強制調整分數至額度10萬內: ' . $param['points'];
+            }
+        }
 
         // 額度不能「小」於產品的最「小」允許額度
         $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];

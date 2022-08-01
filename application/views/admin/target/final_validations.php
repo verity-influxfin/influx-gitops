@@ -624,7 +624,11 @@
                                         </tr>
                                         </thead>
                                         <tbody id="special-select-table">
-                                            <td>是否為千大企業</td>
+                                            <td>是否為千大企業
+                                                <a target="_blank" href="<?=admin_url('companyList/index') ?>" >
+                                                    (前往列表)
+                                                </a>
+                                            </td>
                                             <td>
                                                 <p id="job_company"></p>
                                                 <select id="is_top_enterprise" >
@@ -2057,6 +2061,7 @@
             $('#job_company').text(company);
             $('#is_top_enterprise').find("option:selected").removeAttr('selected');
             $('#is_top_enterprise').find("option[value="+is_top_enterprise+"]").attr('selected', 'selected');
+            $('input[name=is_top_enterprise]').val(is_top_enterprise);
         }
 
 		function getCenterTextCell(value, additionalCssClass = "") {
