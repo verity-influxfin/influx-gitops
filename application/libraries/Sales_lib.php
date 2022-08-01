@@ -109,7 +109,7 @@ class Sales_lib
         // 回傳結構
         $goal = array_fill(0, $this->days_in_month, $goal_per_day);
         $real = array_fill(0, $this->days_in_month, 0);
-        $rate = array_fill(0, $this->days_in_month, '0%');
+        $rate = array_fill(0, $this->days_in_month, 0);
 
         foreach ($type_datas as $value)
         {
@@ -143,10 +143,10 @@ class Sales_lib
     {
         if ($real == 0 || $goal == 0)
         {
-            return '0%';
+            return 0;
         }
 
-        return round($real / $goal * 100) . '%';
+        return round($real / $goal, 2);
     }
 
     private function _total_deal_content_type()

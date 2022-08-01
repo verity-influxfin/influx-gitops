@@ -40,4 +40,10 @@ $config['influx_user_list'] = [
         'user_id' => 84644],
     [ // 許良
         'user_id' => 85279],
+    [ // Darren
+        'user_id' => 88272],
+    [ // 子倩
+        'user_id' => 90053],
+    [ // 寶儀
+        'user_id' => 43224],
 ];

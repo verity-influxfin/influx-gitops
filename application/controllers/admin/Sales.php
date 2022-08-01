@@ -5,17 +5,29 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class Sales extends MY_Admin_Controller {
 	
 	protected $edit_method = array('promote_reward_loan');
 
-	public function __construct() {
+    private $excel_config;
+
+    public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_meta_model');
 		$this->load->model('admin/partner_model');
 		$this->load->model('admin/partner_type_model');
 		$this->load->model('user/sale_goals_model');
+        $this->excel_config = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'FFFFFFFFF'],
+                ]
+            ]
+        ];
  	}
 	
 	public function index(){
@@ -2271,6 +2283,8 @@ class Sales extends MY_Admin_Controller {
         $content2 = [];
 
         // 內容先塞月日星期
+        $format1 = [NumberFormat::FORMAT_GENERAL, NumberFormat::FORMAT_GENERAL];
+        $format2 = [NumberFormat::FORMAT_GENERAL, NumberFormat::FORMAT_GENERAL];
         $content1[] = $first_row;
         $content1[] = $second_row;
         $content2[] = $first_row;
@@ -2286,16 +2300,20 @@ class Sales extends MY_Admin_Controller {
                 'items' => [
                     [
                         'key' => sale_goals_model::GOAL_WEB_TRAFFIC,
-                        'kpi' => ['目標流量', '實際流量', '達成率']
+                        'kpi' => ['目標流量', '實際流量', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_USER_REGISTER,
-                        'kpi' => ['目標會員數', '實際總會員數', '達成率']
+                        'kpi' => ['目標會員數', '實際總會員數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_APP_DOWNLOAD,
-                        'kpi' => ['目標下載數', '實際下載數', '達成率']
+                        'kpi' => ['目標下載數', '實際下載數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_TOTAL,
-                        'kpi' => ['目標申貸戶數', '實際完成申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際完成申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ]
                 ]
             ]
@@ -2310,8 +2328,11 @@ class Sales extends MY_Admin_Controller {
                     continue;
                 }
                 $content1[] = $datas[$item_value['key']]['goal'];
+                $format1[] = $item_value['format'][0];
                 $content1[] = $datas[$item_value['key']]['real'];
+                $format1[] = $item_value['format'][1];
                 $content1[] = $datas[$item_value['key']]['rate'];
+                $format1[] = $item_value['format'][2];
             }
         }
 
@@ -2322,19 +2343,24 @@ class Sales extends MY_Admin_Controller {
                 'items' => [
                     [
                         'key' => sale_goals_model::GOAL_LOAN_SALARY_MAN,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_STUDENT,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_SMART_STUDENT,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_CREDIT_INSURANCE,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_SME,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ]
                 ]
             ], [
@@ -2342,23 +2368,28 @@ class Sales extends MY_Admin_Controller {
                 'items' => [
                     [
                         'key' => sale_goals_model::GOAL_DEAL_SALARY_MAN,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                     [
                         'key' => sale_goals_model::GOAL_DEAL_STUDENT,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                     [
                         'key' => sale_goals_model::GOAL_DEAL_SMART_STUDENT,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                     [
                         'key' => sale_goals_model::GOAL_DEAL_CREDIT_INSURANCE,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                     [
                         'key' => sale_goals_model::GOAL_DEAL_SME,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                 ]
             ]
@@ -2373,8 +2404,11 @@ class Sales extends MY_Admin_Controller {
                     continue;
                 }
                 $content2[] = $datas[$item_value['key']]['goal'];
+                $format2[] = $item_value['format'][0];
                 $content2[] = $datas[$item_value['key']]['real'];
+                $format2[] = $item_value['format'][1];
                 $content2[] = $datas[$item_value['key']]['rate'];
+                $format2[] = $item_value['format'][2];
             }
         }
 
@@ -2386,10 +2420,12 @@ class Sales extends MY_Admin_Controller {
             [
                 'sheet' => '貸前指標',
                 'content' => $content1,
+                'format' => $format1,
             ],
             [
                 'sheet' => '貸中指標',
                 'content' => $content2,
+                'format' => $format2,
             ],
         ];
         $sheet_highlight = 'KPI指標-' . $days_info['int_month'] . '月';
@@ -2407,7 +2443,7 @@ class Sales extends MY_Admin_Controller {
             {
                 $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
-                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center')->setVertical('center');
 
                 $index_a = 3;
                 $index_b = 3;
@@ -2418,7 +2454,7 @@ class Sales extends MY_Admin_Controller {
                 // 這邊反過來是因為要先設定 Sheet 不然會合併到前一個 sheet 的格子
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
                 $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
-                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+                $spreadsheet->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal('center')->setVertical('center');
 
                 $index_a = 3;
                 $index_b = 3;
@@ -2426,7 +2462,16 @@ class Sales extends MY_Admin_Controller {
 
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, '總數');
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . $index_b, '總成交數');
+                $contents['format'][] = NumberFormat::FORMAT_NUMBER;
+
+                $spreadsheet->getActiveSheet()->getStyle('B' . $index_b)->applyFromArray($this->excel_config);
+                $spreadsheet->getActiveSheet()->getStyle('C' . $index_b)->applyFromArray($this->excel_config);
             }
+
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(TRUE);
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(TRUE);
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(TRUE);
+            $width_list = [['column' => 'A', 'width' => 8.5], ['column' => 'B', 'width' => 12.5], ['column' => 'C', 'width' => 12.5]];
 
             // 從 D 行開始塞入上面整理的內容
             foreach ($contents['content'] as $key => $row_content)
@@ -2435,18 +2480,32 @@ class Sales extends MY_Admin_Controller {
                 {
                     $column = Coordinate::stringFromColumnIndex($content_index + 4); // A = 1
                     $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $value);
+                    $spreadsheet->getActiveSheet()->getStyle($column . $row)->applyFromArray($this->excel_config);
+                    $spreadsheet->getActiveSheet()->getStyle($column . $row)->getNumberFormat()->setFormatCode($contents['format'][$key]);
                     $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
+                    $spreadsheet->getActiveSheet($sheet)->getColumnDimension($column)->setAutoSize(TRUE);
                 }
                 $row++;
             }
 
             $spreadsheet->setActiveSheetIndex($sheet)->setTitle($contents['sheet']);
+
+            // 針對低於最小寬度的欄位重新調整
+            $spreadsheet->getActiveSheet()->calculateColumnWidths();
+            foreach ($width_list as $info)
+            {
+                if ($spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->getWidth() < $info['width'])
+                {
+                    $spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->setAutoSize(FALSE);
+                    $spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->setWidth($info['width']);
+                }
+            }
         }
         $spreadsheet->setActiveSheetIndex(0);
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename=' . 'testMergeCell' . '.xlsx');
+        header('Content-Disposition: attachment;filename=' . '績效統計表' . date('Ymd') . '.xlsx');
         header('Cache-Control: max-age=0');
 
         $writer->save('php://output');
@@ -2460,6 +2519,8 @@ class Sales extends MY_Admin_Controller {
         {
             $merge_col = count($sort['items']) * ($rowspan + 1);
             $spreadsheet->getActiveSheet()->mergeCells('A' . $index_a . ':A' . ($index_a + $merge_col - 1));
+            $spreadsheet->getActiveSheet()->getStyle('A' . $index_a)->getAlignment()->setHorizontal('center')->setVertical('center');
+            $spreadsheet->getActiveSheet()->getStyle('A' . $index_a . ':A' . ($index_a + $merge_col - 1))->applyFromArray($this->excel_config);
             $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A' . $index_a, $sort['title']);
             $index_a = $index_a + $merge_col;
 
@@ -2467,11 +2528,14 @@ class Sales extends MY_Admin_Controller {
             {
                 $kpi = $item['kpi'];
                 $spreadsheet->getActiveSheet()->mergeCells('B' . $index_b . ':B' . ($index_b + $rowspan));
+                $spreadsheet->getActiveSheet()->getStyle('B' . $index_b)->getAlignment()->setHorizontal('center')->setVertical('center');
+                $spreadsheet->getActiveSheet()->getStyle('B' . $index_b . ':B' . ($index_b + $rowspan))->applyFromArray($this->excel_config);
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, $this->sale_goals_model->type_name_mapping()[$item['key']]);
 
                 for ($i = 0; $i < count($kpi); $i++)
                 {
                     $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . ($index_b + $i), $kpi[$i]);
+                    $spreadsheet->getActiveSheet()->getStyle('C' . ($index_b + $i))->applyFromArray($this->excel_config);
                 }
 
                 $index_b += $rowspan + 1;

@@ -2883,6 +2883,7 @@ class Product extends REST_Controller {
 
             $target = $this->target_model->get_by(['id' => $insert]);
             $this->load->helper('product');
+            $this->load->model('log/log_targetschange_model');
             if (is_judicial_product($target->product_id) === FALSE && $target->status == TARGET_WAITING_SIGNING)
             {
                 // 該產品有未使用額度
@@ -2899,6 +2900,11 @@ class Product extends REST_Controller {
                     'interest_rate' => $interest_rate,
                     'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
                 ]);
+                $this->log_targetschange_model->insert(
+                    $this->target_lib->get_target_log_param($insert, FALSE, [
+                        'interest_rate' => $interest_rate
+                    ])
+                );
 
                 $this->load->model('loan/credit_sheet_model');
                 $credit_sheet_info = $this->credit_sheet_model->order_by('created_at', 'desc')->get_by([
@@ -2920,18 +2926,6 @@ class Product extends REST_Controller {
                     $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
                     $this->credit_sheet_model->update_by(['target_id' => $target->id], ['certification_list' => json_encode($certification_id)]);
                 }
-
-                // 寫log
-                $this->load->model('log/log_targetschange_model');
-                $this->log_targetschange_model->insert([
-                    'target_id' => $target->id,
-                    'interest_rate' => $target->interest_rate,
-                    'delay' => 0,
-                    'status' => $target->status,
-                    'loan_status' => $target->loan_status,
-                    'sub_status' => $target->sub_status,
-                    'sys_check' => $target->sys_check
-                ]);
             }
 
             $this->load->library('Certification_lib');
@@ -3829,10 +3823,18 @@ class Product extends REST_Controller {
 
         $this->target_model->update(
             $input['target_id'], [
+                'amount' => $input['amount'],
                 'loan_amount' => $input['amount'],
                 'platform_fee' => $this->financial_lib->get_platform_fee($input['amount'], $product_info['charge_platform']),
                 'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
             ]
+        );
+        $this->load->library('target_lib');
+        $this->log_targetschange_model->insert(
+            $this->target_lib->get_target_log_param($input['target_id'], TRUE, [
+                'amount' => $input['amount'],
+                'change_user' => $target->user_id
+            ])
         );
 
         $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => (int) $input['target_id']]]);

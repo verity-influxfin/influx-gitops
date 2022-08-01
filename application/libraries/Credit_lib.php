@@ -925,24 +925,31 @@ class Credit_lib{
                 //副產品減免
                 if($sub_product_id){
                     $info        = $this->CI->user_meta_model->get_many_by(['user_id'=>$target->user_id]);
-                    foreach($info as $key => $value){
+                    $data = [];
+                    foreach ($info as $key => $value)
+                    {
                         $data[$value->meta_key] = $value->meta_value;
                     }
                     $sub_product = $this->get_sub_product_data($sub_product_id);
                     //techie
-                    if ($sub_product && $sub_product_id == 1){
-                        if(isset($data['school_department'])){
-                            $rate -= in_array($data['school_department'],$sub_product->majorList)?1:0;
+                    if ($sub_product && $sub_product_id == 1)
+                    {
+                        if ( ! empty($data['school_department']))
+                        {
+                            $rate -= in_array($data['school_department'], $sub_product->majorList) ? 1 : 0;
                         }
-                        if ($product_id == 1){
-                            $rate -= isset($data['student_license_level'])?$data['student_license_level']*0.5:0;
-                            $rate -= isset($data['student_game_work_level'])?$data['student_game_work_level']*0.5:0;
-                        }elseif ($product_id == 3){
-                            $rate -= isset($data['job_license']) ? (int) $data['job_license'] * 0.5 : 0;
+                        if ($product_id == 1)
+                        {
+                            $rate -= ! empty($data['student_license_level']) && is_numeric($data['student_license_level']) ? $data['student_license_level'] * 0.5 : 0;
+                            $rate -= ! empty($data['student_game_work_level']) && is_numeric($data['student_game_work_level']) ? $data['student_game_work_level'] * 0.5 : 0;
+                        }
+                        elseif ($product_id == 3)
+                        {
+                            $rate -= ! empty($data['job_license']) ? (int) $data['job_license'] * 0.5 : 0;
                             //工作認證減免%
                             if (isset($sub_product->titleList->{$data['job_title']}))
                             {
-                                $rate -= isset($data['job_title']) ? $sub_product->titleList->{$data['job_title']}->level : 0;
+                                $rate -= ! empty($data['job_title']) ? $sub_product->titleList->{$data['job_title']}->level : 0;
                             }
                         }
                     }
