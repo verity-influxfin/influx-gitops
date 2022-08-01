@@ -16,7 +16,10 @@
         <button class="btn btn-campus-primary" @click="scrollToJoin">
           我要報名
         </button>
-        <router-link class="btn btn-campus-secondary" to="/2022-campus-ambassador/result">
+        <router-link
+          class="btn btn-campus-secondary"
+          to="/2022-campus-ambassador/result"
+        >
           2022 大使名單
         </router-link>
       </div>
@@ -274,7 +277,10 @@
             >
               個人報名
             </button>
-            <router-link class="btn btn-campus-outline-primary" to="/2022-campus-ambassador/result">
+            <router-link
+              class="btn btn-campus-outline-primary"
+              to="/2022-campus-ambassador/result"
+            >
               2022 大使名單
             </router-link>
           </div>
@@ -812,7 +818,7 @@ $color__background--primary: #f3f9fc;
 }
 .btn-campus-outline-primary {
   padding: 8px 39px;
-  background-color: fff;
+  background-color: #fff;
   font-style: normal;
   font-weight: 500;
   font-size: 32px;
@@ -988,7 +994,7 @@ $color__background--primary: #f3f9fc;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 1950px;
+    height: 2150px;
     background-image: url("~images/2022_campus_ambassador/2022-campus-mission-bg-1.png"),
       url("~images/2022_campus_ambassador/2022-campus-mission-bg-2.png");
     background-repeat: no-repeat;
@@ -1139,7 +1145,7 @@ $color__background--primary: #f3f9fc;
     }
   }
   .history {
-    padding-top: 240px;
+    padding-top: 165px;
     background: #e6f5ff;
     .history-title {
       position: relative;
@@ -1301,11 +1307,18 @@ $color__background--primary: #f3f9fc;
     line-height: 29px;
     border-radius: 10px;
   }
+  .btn-campus-outline-primary {
+    padding: 6px 24px;
+    font-size: 20px;
+    line-height: 29px;
+    border-radius: 10px;
+  }
   .btn-link {
     font-size: 13px;
   }
   .join {
     margin: 20px 0;
+    gap: 20px;
   }
   .campus-2022 {
     .cover .cover-join {
@@ -1401,7 +1414,6 @@ $color__background--primary: #f3f9fc;
     }
     .info {
       padding: 32px 15px;
-      height: 2000px;
       background-image: none;
       .card {
         width: 100%;
@@ -1491,7 +1503,7 @@ $color__background--primary: #f3f9fc;
       }
     }
     .history {
-      // padding-top: 60px;
+      padding-top: 120px;
       .history-title {
         position: relative;
         display: flex;
