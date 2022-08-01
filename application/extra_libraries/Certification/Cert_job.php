@@ -136,7 +136,10 @@ class Cert_job extends Certification_base
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
             return FALSE;
         }
-        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        if ($this->_is_only_image_submitted() === TRUE)
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        }
 
         if ($content['ocr_parser']['res'] === FALSE)
         {
@@ -355,6 +358,19 @@ class Cert_job extends Certification_base
     private function _chk_ocr_status($content): bool
     {
         if ( ! isset($content['ocr_marker']['res']) || ! isset($content['ocr_parser']['res']))
+        {
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    /**
+     * 是否僅提交工作收入證明相關圖片
+     * @return bool
+     */
+    private function _is_only_image_submitted(): bool
+    {
+        if ($this->content['labor_type'] == 1)
         {
             return FALSE;
         }
