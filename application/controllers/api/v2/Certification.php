@@ -2724,7 +2724,6 @@ class Certification extends REST_Controller {
             if (is_judicial_product($target->product_id) === FALSE)
             {
                 $this->target_model->update($targetId, [
-                    'status' => TARGET_WAITING_APPROVE,
                     'certificate_status' => TARGET_CERTIFICATE_SUBMITTED
                 ]);
             }
