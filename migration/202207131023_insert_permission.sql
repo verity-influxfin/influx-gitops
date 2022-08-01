@@ -284,6 +284,7 @@ UPDATE p2p_admin.admins SET `group_id`=11, `permission_status`=1 WHERE `email` I
 UPDATE p2p_admin.admins SET `group_id`=11, `permission_status`=1 WHERE `email` IN ('mori@influxfin.com');
 UPDATE p2p_admin.admins SET `group_id`=18, `permission_status`=1 WHERE `email` IN ('wayne@influxfin.com');
 UPDATE p2p_admin.admins SET `group_id`=19, `permission_status`=1 WHERE `email` IN ('nabroux@influxfin.com');
+UPDATE p2p_admin.admins SET `group_id`=9, `permission_status`=1 WHERE `email` IN ('haeyi@influxfin.com');
 # 管理員權限
 TRUNCATE table p2p_admin.`admin_permission`;
 INSERT INTO p2p_admin.admin_permission (admin_id, model_key, submodel_key, action_type) SELECT `id`, 'Sales', 'bonus_report', 1 FROM `p2p_admin`.`admins` WHERE `email`='mori@influxfin.com';
