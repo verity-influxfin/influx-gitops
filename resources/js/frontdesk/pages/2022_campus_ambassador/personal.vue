@@ -651,7 +651,10 @@ export default {
     }
   },
   mounted() {
-    this.initSchools();
+    alert('2022普匯校園大使報名已於07/28 (四)截止，感謝您的支持！\n請不吝給予未來的校園大使們多多關注喔！')
+    this.$router.back()
+    return
+    // this.initSchools();
   },
   methods: {
     initSchools() {

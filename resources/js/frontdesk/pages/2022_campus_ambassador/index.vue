@@ -697,15 +697,11 @@
             </button>
           </div>
           <div class="modal-body">
-            <h1 class="h1">【公告】2022校園大使名單出爐！</h1>
+            <h1 class="h1">【公告】2022普匯校園大使已截止報名</h1>
             <div class="modal-text">
-              <div>感謝同學熱烈報名</div>
-              <div>8/1-8/31 第二梯次擴大徵選中！</div>
-              <div>
-                此梯名額有限，
-                <em class="modal-em">先報先審</em>
-                ，快手刀卡位～～
-              </div>
+              <div>2022普匯校園大使報名已於07/28 (四)截止</div>
+              <div>感謝您的支持！</div>
+              <div>請不吝關注與鼓勵未來的校園大使們喔！</div>
               <button class="mt-3 btn btn-campus-primary" data-dismiss="modal">
                 確定
               </button>
@@ -757,13 +753,13 @@ export default {
       $('#rating-modal').modal('show')
     },
     goApply(type) {
-      if (this.flag !== 'login') {
-        this.$store.commit('mutationLogin')
-        return
-      }
-      this.$router.push('/2022-campus-ambassador/' + type)
-      // alert('2022普匯校園大使將於7/19(二)開放報名')
-      // return
+      // if (this.flag !== 'login') {
+      //   this.$store.commit('mutationLogin')
+      //   return
+      // }
+      // this.$router.push('/2022-campus-ambassador/' + type)
+      alert('2022普匯校園大使報名已於07/28 (四)截止，感謝您的支持！\n請不吝給予未來的校園大使們多多關注喔！')
+      return
     }
   },
 }
