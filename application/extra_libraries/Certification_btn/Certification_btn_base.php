@@ -25,7 +25,7 @@ abstract class Certification_btn_base
         $this->sub_status = ! isset($certification['sub_status']) ? 0 : (int) $certification['sub_status'];
         $this->sys_check = ! isset($certification['sys_check']) ? 0 : (int) $certification['sys_check'];
 
-        $cert = Certification_factory::get_instance_by_model_resource($certification);
+        $cert = Certification_factory::get_instance_by_id($this->id);
         $this->is_expired = isset($cert) && $cert->is_expired();
         $this->is_submitted = isset($cert) && $cert->is_submitted();
     }
