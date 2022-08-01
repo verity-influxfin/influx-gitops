@@ -64,6 +64,11 @@ class Cert_job extends Certification_base
         $parsed_content = $this->content ?? [];
         $url = $this->content['pdf_file'] ?? '';
 
+        $parsed_content = array_merge(
+            $parsed_content,
+            $this->_get_ocr_marker_info(),
+            $this->_get_ocr_parser_info()
+        );
         $mime = get_mime_by_extension($url);
         if (is_image($mime))
         {
@@ -72,11 +77,6 @@ class Cert_job extends Certification_base
         }
         else if (is_pdf($mime))
         {
-            $parsed_content = array_merge(
-                $parsed_content,
-                $this->_get_ocr_marker_info(),
-                $this->_get_ocr_parser_info()
-            );
             if ( ! empty($parsed_content['ocr_parser']['content']))
             {
                 $response = $parsed_content['ocr_parser']['content'];
