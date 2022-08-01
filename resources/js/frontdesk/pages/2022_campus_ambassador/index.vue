@@ -16,6 +16,9 @@
         <button class="btn btn-campus-primary" @click="scrollToJoin">
           我要報名
         </button>
+        <router-link class="btn btn-campus-secondary" to="/2022-campus-ambassador/result">
+          2022 大使名單
+        </router-link>
       </div>
     </div>
     <div class="intro">
@@ -271,6 +274,9 @@
             >
               個人報名
             </button>
+            <router-link class="btn btn-campus-outline-primary" to="/2022-campus-ambassador/result">
+              2022 大使名單
+            </router-link>
           </div>
           <div class="row no-gutters justify-content-center mb-2">
             <button class="btn btn-link btn-text" @click="showRating">
@@ -804,6 +810,19 @@ $color__background--primary: #f3f9fc;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 26px;
 }
+.btn-campus-outline-primary {
+  padding: 8px 39px;
+  background-color: fff;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 46px;
+  text-align: center;
+  color: $color--primary;
+  border: 1px solid $color--primary;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 26px;
+}
 .btn-link {
   font-weight: 400;
   font-size: 13px;
@@ -813,8 +832,9 @@ $color__background--primary: #f3f9fc;
   width: fit-content;
 }
 .join {
-  display: flex;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px 24px;
   margin: 48px 20px 60px;
 }
 .campus-2022 {
@@ -824,6 +844,8 @@ $color__background--primary: #f3f9fc;
     justify-content: center;
     .cover-join {
       position: absolute;
+      display: flex;
+      gap: 40px;
       bottom: 40px;
     }
   }
@@ -1111,6 +1133,9 @@ $color__background--primary: #f3f9fc;
           color: #000000;
         }
       }
+    }
+    .btn-campus-outline-primary {
+      grid-area: 2 / 1 / 3 / 3;
     }
   }
   .history {
