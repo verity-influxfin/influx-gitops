@@ -64,6 +64,11 @@ class Cert_job extends Certification_base
         $parsed_content = $this->content ?? [];
         $url = $this->content['pdf_file'] ?? '';
 
+        $parsed_content = array_merge(
+            $parsed_content,
+            $this->_get_ocr_marker_info(),
+            $this->_get_ocr_parser_info()
+        );
         $mime = get_mime_by_extension($url);
         if (is_image($mime))
         {
@@ -72,11 +77,6 @@ class Cert_job extends Certification_base
         }
         else if (is_pdf($mime))
         {
-            $parsed_content = array_merge(
-                $parsed_content,
-                $this->_get_ocr_marker_info(),
-                $this->_get_ocr_parser_info()
-            );
             if ( ! empty($parsed_content['ocr_parser']['content']))
             {
                 $response = $parsed_content['ocr_parser']['content'];
@@ -136,7 +136,10 @@ class Cert_job extends Certification_base
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
             return FALSE;
         }
-        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        if ($this->_is_only_image_submitted() === TRUE)
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        }
 
         if ($content['ocr_parser']['res'] === FALSE)
         {
@@ -355,6 +358,19 @@ class Cert_job extends Certification_base
     private function _chk_ocr_status($content): bool
     {
         if ( ! isset($content['ocr_marker']['res']) || ! isset($content['ocr_parser']['res']))
+        {
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    /**
+     * 是否僅提交工作收入證明相關圖片
+     * @return bool
+     */
+    private function _is_only_image_submitted(): bool
+    {
+        if ($this->content['labor_type'] == 1)
         {
             return FALSE;
         }
