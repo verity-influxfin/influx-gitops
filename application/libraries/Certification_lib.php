@@ -835,11 +835,14 @@ class Certification_lib{
                                 else
                                 {
                                     // SIP 帳號密碼判定正確，但登入爬取過程中出現異常
-                                    $verifiedResult->addMessage('SIP帳號密碼正確，爬蟲執行失敗，請確認是否為在學中帳號，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                                    $verifiedResult->addMessage('SIP帳號密碼正確，爬蟲執行失敗，請確認此學校狀態、以及是否為在學中帳號，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                 }
                             }
                             else
                             {
+                                $university_status_response = $this->CI->sip_lib->getUniversityModel($content['school']);
+                                $university_status = isset($university_status_response['response']) ? $university_status_response['response']['status'] : '';
+                                
                                 $status_mapping = [
                                     SCRAPER_SIP_RECAPTCHA => '驗證碼問題',
                                     SCRAPER_SIP_NORMALLY => '正常狀態',
@@ -850,8 +853,9 @@ class Certification_lib{
                                     SCRAPER_SIP_FILL_QUEST => '問卷問題',
                                     SCRAPER_SIP_UNSTABLE => '不穩定 有時有未知異常',
                                 ];
+
                                 $verifiedResult->addMessage('SIP登入失敗，學校狀態: ' .
-                                    $status_mapping[$sip_log['response']['universityStatus']] .
+                                    $status_mapping[$university_status] .
                                     '，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                             }
                         }
