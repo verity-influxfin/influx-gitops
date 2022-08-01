@@ -97,63 +97,6 @@
             fetchSipLogin(university, account)
         }
 
-        function getLoginStatusMapping() {
-            return {
-                'false': '登入失敗',
-                'true': '登入成功',
-                'started': '爬蟲正在執行中',
-                'requested': '爬蟲尚未開始',
-                'university_not_found': '不支援此學校',
-                'request_not_found': '請求未被收到',
-                'response_not_json': 'Server回傳資料非json格式'
-            }
-        }
-
-        $("#request-sip-login").click(function (e) {
-            var university = $("#university").text();
-            var account = $("#account").text();
-            var password = $("#password").text();
-
-            var sipResult = $("#sip-login-info").text();
-            if (sipResult == '登入成功') {
-                alert('已成功登入');
-            }
-
-            requestSipLogin(university, account, password);
-        });
-
-        function requestSipLogin(university, account, password) {
-            var data = {
-                'university': university,
-                'account': account,
-                'password': password
-            }
-
-            var url = '/admin/certification/sip_login'
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: data,
-                success: function (response) {
-                    if (!response) {
-                        alert('登入請求未成功送出');
-                        return;
-                    }
-                    if (response.status.code == 400) {
-                        alert('參數錯誤，登入請求未成功送出');
-                        return;
-                    }
-
-                    alert('登入請求已經送出');
-                    fillSipLogin('requested');
-                },
-                error: function () {
-                    alert('登入請求未成功送出');
-                }
-            });
-        }
-
         function fetchSipRisk(){
             $.ajax({
                 type: "GET",
@@ -286,13 +229,9 @@
 
                             <div class="form-group">
                                 <label>SIP 網址</label><br>
-                                <? if ( ! empty($content['sipURL'])) { ?>
-                                    <? foreach ($content['sipURL'] as $key => $value) { ?>
-                                        <a href="<?= isset($value) ? $value : "" ?>" target="_blank">SIP連結</a>
-                                    <? } ?>
-                                <? } else {
-                                    echo "無";
-                                } ?>
+                                <? if (isset($content['sipURL']) && ! empty($content['sipURL'])) { ?>
+                                    <a href="<?= $content['sipURL']?>" target="_blank"> <?=$content['sipUniversity']?> </a>
+                                <? } else { echo "無"; } ?>
                             </div>
 
                             <div class="form-group">

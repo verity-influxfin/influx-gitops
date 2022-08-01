@@ -263,8 +263,6 @@ $config['permission'] = [
             'getmeta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'job_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'joint_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
-            'sip' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
-            'sip_login' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
         ],
     ],
     'Scraper' => [
