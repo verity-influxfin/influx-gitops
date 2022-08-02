@@ -133,47 +133,7 @@ class Cert_investigation extends Certification_base
 
     private function _chk_data_complete($content): bool
     {
-        $chk_empty_cols = [
-            'liabilities' => [
-                'totalAmount' => ['existCreditInfo'],
-                'metaInfo' => ['existCreditInfo'],
-                'badDebtInfo' => ['existCreditInfo']
-            ],
-            'creditCard' => [
-                'cardInfo' => ['existCreditInfo'],
-                'totalAmount' => ['existCreditInfo'],
-            ],
-            'checkingAccount' => [
-                'largeAmount' => ['existCreditInfo'],
-                'rejectInfo' => ['existCreditInfo'],
-            ],
-            'queryLog' => [
-                'queriedLog' => ['existCreditInfo'],
-                'applierSelfQueriedLog' => ['existCreditInfo'],
-            ],
-            'other' => [
-                'extraInfo' => ['existCreditInfo'],
-                'mainInfo' => ['existCreditInfo'],
-                'metaInfo' => ['existCreditInfo'],
-                'creditCardTransferInfo' => ['existCreditInfo'],
-            ]
-        ];
-        $credit_info = $content['ocr_parser']['content']['applierInfo']['creditInfo'];
-        foreach ($chk_empty_cols as $key => $value)
-        {
-            foreach ($value as $inner_key => $inner_cols)
-            {
-                foreach ($inner_cols as $chk_col)
-                {
-                    if ( ! isset($credit_info[$key][$inner_key][$chk_col]) || empty($credit_info[$key][$inner_key][$chk_col]))
-                    {
-                        return FALSE;
-                    }
-                }
-            }
-        }
-
-        return TRUE;
+        return isset($content['ocr_parser']['content']['is_valid']) && $content['ocr_parser']['content']['is_valid'] === TRUE;
     }
 
     /**
