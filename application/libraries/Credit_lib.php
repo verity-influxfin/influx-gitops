@@ -489,8 +489,10 @@ class Credit_lib{
         }
 
         $param['level'] = $this->get_credit_level($total, $product_id, $sub_product_id, $stage_cer);
-        if (isset($this->credit['credit_amount_' . $product_id])) {
-            foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {
+        $credit_amount_list = $this->get_credit_amount_list($product_id, $sub_product_id);
+        if ( ! empty($credit_amount_list))
+        {
+            foreach ($credit_amount_list as $value) {
                 if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
                     $param['amount'] = $salary * $value['rate'];
                     break;
@@ -526,17 +528,18 @@ class Credit_lib{
 
         if ($is_top_enterprise == 0 && $salary < 40000 && $param['amount'] > 100000)
         {
-            if (isset($this->credit['credit_amount_' . $product_id]))
+            if ( ! empty($credit_amount_list))
             {
-                $credit_list = $this->credit['credit_amount_' . $product_id];
-
-                function compare($a, $b)
+                // 確保信評分數級距為降冪排列
+                usort($credit_amount_list, function ($a, $b)
                 {
-                    return ($a['start'] < $b['start']);
-                }
-                usort($credit_list, "compare");
+                    if ($a['start'] == $b['start']) {
+                        return 0;
+                    }
+                    return ($a['start'] < $b['start']) ? 1 : -1;
+                });
 
-                foreach ($this->credit['credit_amount_' . $product_id] as $value)
+                foreach ($credit_amount_list as $value)
                 {
                     $modified_amount = $salary * $value['rate'];
 
@@ -566,6 +569,8 @@ class Credit_lib{
         // 額度不能「大」於產品的最「大」允許額度
         $param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
 
+        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
+
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
 		}
@@ -579,7 +584,6 @@ class Credit_lib{
             ],
             ['status'=> 0]
         );
-        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
@@ -1003,6 +1007,20 @@ class Credit_lib{
 		}
 		return false;
 	}
+
+    public function get_credit_amount_list($product_id = 0, $sub_product_id = 0)
+    {
+        $list = [];
+        if ($product_id && isset($this->credit['credit_amount_' . $product_id]))
+        {
+            $list = $this->credit['credit_amount_' . $product_id];
+            if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
+            {
+                $list = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
+            }
+        }
+        return $list;
+    }
 
 	public function delay_credit($user_id,$delay_days=0){
 		if($user_id && $delay_days > GRACE_PERIOD){
