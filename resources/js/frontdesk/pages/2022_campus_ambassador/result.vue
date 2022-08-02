@@ -5,7 +5,10 @@
         src="@/asset/images/2022_campus_ambassador/2022-campus-result-banner.png"
         class="w-100 img-fluid d-sm-block d-none"
       />
-      <img src="@/asset/images/2022_campus_ambassador/2022-campus-result-banner-phone.png" class="w-100 img-fluid d-block d-sm-none" >
+      <img
+        src="@/asset/images/2022_campus_ambassador/2022-campus-result-banner-phone.png"
+        class="w-100 img-fluid d-block d-sm-none"
+      />
     </div>
     <div class="result-main mx-auto">
       <h1 class="h1">普匯明日之星-校園大使</h1>
@@ -50,6 +53,66 @@
           <div class="table-item-title">張靖玟</div>
           <div>國立彰化師範大學</div>
           <div>財務金融技術學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">丘又安</div>
+          <div>國立政治大學</div>
+          <div>企業管理學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">洪采翎</div>
+          <div>國立政治大學</div>
+          <div>財務管理學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">蕭如庭</div>
+          <div>國立政治大學</div>
+          <div>會計學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">許桂彰</div>
+          <div>國立政治大學</div>
+          <div>國際經營與貿易學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">黃翊瑄</div>
+          <div>國立清華大學</div>
+          <div>科技管理學院學士班</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">李庭旭</div>
+          <div>國立臺北大學</div>
+          <div>金融與合作經營學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">郭力權</div>
+          <div>國立臺灣大學</div>
+          <div>機械工程學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">張靖玟</div>
+          <div>國立彰化師範大學</div>
+          <div>財務金融技術學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">陳瑾叡</div>
+          <div>國立臺灣大學</div>
+          <div>資訊管理學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">張哲綱</div>
+          <div>國立臺灣大學</div>
+          <div>工商管理學系科技管理組</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">葉孝毅</div>
+          <div>淡江大學</div>
+          <div>資訊管理學系</div>
+        </div>
+        <div class="table-item">
+          <div class="table-item-title">蘇姸</div>
+          <div>銘傳大學</div>
+          <div>會計學系會計審計組(台北校區)</div>
         </div>
       </div>
     </div>
