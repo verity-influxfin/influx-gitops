@@ -469,10 +469,37 @@ class Credit_lib{
             $this->scoreHistory[] = "{$tmp_msg}; 因階段上架調整為: {$total} ---";
         }
 
-        if ($approvalExtra && $approvalExtra->getExtraPoints()) {
-            $extra_point = $approvalExtra->getExtraPoints();
-            $total += $extra_point;
-            $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
+        $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
+        if ($approvalExtra) {
+            if($approvalExtra->getExtraPoints())
+            {
+                $extra_point = $approvalExtra->getExtraPoints();
+                $total += $extra_point;
+                $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
+            }
+            $special_info = $approvalExtra->getSpecialInfo();
+            if (isset($special_info['is_top_enterprise']) && $special_info['is_top_enterprise'] == 1 && $salary < 40000)
+            {
+                if (isset($this->credit['credit_amount_' . $product_id]))
+                {
+                    $credit_list = $this->credit['credit_amount_' . $product_id];
+                    function compare($a, $b)
+                    {
+                        return ($a['start'] < $b['start']);
+                    }
+                    usort($credit_list, "compare");
+
+                    foreach ($this->credit['credit_amount_' . $product_id] as $value)
+                    {
+                        if ($salary * $value['rate'] <= 100000)
+                        {
+                            $total = $value['end'];
+                            break;
+                        }
+                    }
+                    $this->scoreHistory[] = '中小企業以及月薪4萬以下,強制調整分數至額度10萬內: ' . $total;
+                }
+            }
         }
 
         $param['points'] = (int) $total;
@@ -485,7 +512,6 @@ class Credit_lib{
         if (isset($this->credit['credit_amount_' . $product_id])) {
             foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {
                 if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
-                    $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
                     $param['amount'] = $salary * $value['rate'];
                     break;
                 }

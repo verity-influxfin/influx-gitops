@@ -11,8 +11,12 @@ class Creditapprovalextra
 	 * @var bool
 	 */
 	protected $skipInsertion;
+    /**
+     * @var array
+     */
+    private $specialInfo;
 
-	/**
+    /**
 	 * @return int
 	 */
 	public function getExtraPoints(): int
@@ -43,4 +47,20 @@ class Creditapprovalextra
 	{
 		$this->skipInsertion = $skipInsertion;
 	}
+
+    /**
+     * @param array $infos
+     */
+    public function setSpecialInfo(array $info): void
+    {
+        $this->specialInfo = $info;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSpecialInfo(): array
+    {
+        return $this->specialInfo;
+    }
 }

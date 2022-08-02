@@ -607,6 +607,39 @@
                     </div>
                 </div>
             </div>
+            <div style="width: 32.33%;" class="ml-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        特殊選項
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">項目名稱</th>
+                                            <th class="center-text" width="60%">項目內容</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="special-select-table">
+                                            <td>是否為千大企業</td>
+                                            <td>
+                                                <p id="job_company"></p>
+                                                <select id="is_top_enterprise" >
+                                                    <option value="0">否</option>
+                                                    <option value="1">是</option>
+                                                </select>
+                                            </td>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 		<!-- <div class="col-lg-12">
@@ -871,6 +904,7 @@
 						<div class="col-lg-12 text-center">
 							<input id="credit_test" type="text" name="score" value="0" / disabled>
 							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
+                            <input type="text" name="is_top_enterprise" value="0" hidden>
 							<button class="btn btn-warning" type="submit">額度試算</button>
 							<button class="btn btn-danger" data-url="/admin/Target/verify_failed"
 								id="verify_failed">不通過</button>
@@ -1086,6 +1120,7 @@
 	function send_opinion(target_id = '', group_id = '') {
 		let score = $(`#${group_id}_score`).val();
 		let opinion = $(`#${group_id}_opinion`).val();
+		let is_top_enterprise = $('#is_top_enterprise').val();
 		if (group_id && target_id) {
 			$.ajax({
 				type: "POST",
@@ -1095,6 +1130,7 @@
 					'score': score,
 					'opinion': opinion,
 					'group': group_id,
+					'is_top_enterprise': is_top_enterprise,
 					'type': 'person',
 				},
 				async: false,
@@ -1293,6 +1329,10 @@
 		location.reload()
         })
 
+        $('#is_top_enterprise').change(function() {
+            $('input[name=is_top_enterprise]').val($(this).val());
+        });
+
 		var urlString = window.location.href;
 		var url = new URL(urlString);
 		var caseId = url.searchParams.get("id");
@@ -1401,7 +1441,7 @@
 				fillTargets(targets);
 				fillTargetMeta(response.response.target_meta);
 				fillUploadedContract(response.response.contract_list);
-
+                fillTopSpecialList(response.response.special_list);
 			},
 			error: function (error) {
 				alert('資料載入失敗。請重新整理。');
@@ -2008,6 +2048,16 @@
             }
         }
 
+        function fillTopSpecialList(specialList) {
+		    let company = specialList?.job_company;
+		    let is_top_enterprise = specialList?.is_top_enterprise;
+            company = company === undefined ? '' : company;
+            is_top_enterprise = is_top_enterprise === undefined ? 0 : is_top_enterprise;
+
+            $('#job_company').text(company);
+            $('#is_top_enterprise').find("option:selected").removeAttr('selected');
+            $('#is_top_enterprise').find("option[value="+is_top_enterprise+"]").attr('selected', 'selected');
+        }
 
 		function getCenterTextCell(value, additionalCssClass = "") {
 			return '<td class="center-text ' + additionalCssClass + '">' + value + '</td>';
@@ -2035,10 +2085,11 @@
 			var form = $(this);
 			var url = form.attr('action');
 			var points = form.find('input[name="score"]').val();
+			var is_top_enterprise = form.find('input[name="is_top_enterprise"]').val();
 			var remark = form.find('input[name="description"]').val();
 			$.ajax({
 				type: "GET",
-				url: url + "?id=" + caseId + "&points=" + points,
+				url: url + "?id=" + caseId + "&points=" + points + "&is_top_enterprise=" + is_top_enterprise,
 				beforeSend: function () {
 					changeReevaluationLoading(true);
 					clearCreditInfo(true);
