@@ -275,10 +275,27 @@ class User_lib {
         {
             // 取得推薦碼下載數
             $this->CI->load->model('behavion/user_behavior_model');
-            $firstOpenRs = $this->CI->user_behavior_model->getFirstOpenCountByPromoteCode($promoteCodes, $startDate, $endDate);
+            $firstOpenRs = $this->CI->user_behavior_model->getFirstOpenCountByPromoteCode($promoteCodes, $startDate, $endDate, FALSE);
+            $no_duplicate_device_list = [];
             foreach ($firstOpenRs as $rs)
             {
-                $list[$rs['user_qrcode_id']]['downloadedCount'] = $rs['count'];
+                if ( ! isset($promoteCodeList[$rs['user_qrcode_id']]))
+                {
+                    continue;
+                }
+                $settings = json_decode($promoteCodeList[$rs['user_qrcode_id']]['settings'], TRUE) ?? [];
+                if (isset($settings['reward']['download']['amount']) && $settings['reward']['download']['amount'] > 0)
+                {
+                    if ( ! empty($rs['device_id']) && in_array($rs['device_id'], $no_duplicate_device_list[$rs['user_qrcode_id']]))
+                    {
+                        continue;
+                    }
+                }
+                $no_duplicate_device_list[$rs['user_qrcode_id']][] = $rs['device_id'];
+            }
+            foreach ($no_duplicate_device_list as $user_qrcode_id => $device_list)
+            {
+                $list[$user_qrcode_id]['downloadedCount'] = count($device_list);
             }
 
             // 取得推薦之註冊會員數
@@ -413,10 +430,19 @@ class User_lib {
             if ( ! isset($list[$userQrcodeId]['downloadedCount']))
                 $list[$userQrcodeId]['downloadedCount'] = 0;
 
-            if (isset($settings['reward']) && isset($settings['reward']['full_member']))
+            if (isset($settings['reward']))
             {
-                $list[$userQrcodeId]['fullMemberRewardAmount'] = $list[$userQrcodeId]['fullMemberCount'] * intval($settings['reward']['full_member']['amount']);
-                $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['fullMemberRewardAmount'];
+                if(isset($settings['reward']['full_member']))
+                {
+                    $list[$userQrcodeId]['fullMemberRewardAmount'] = $list[$userQrcodeId]['fullMemberCount'] * intval($settings['reward']['full_member']['amount']);
+                    $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['fullMemberRewardAmount'];
+                }
+
+                if (isset($settings['reward']['download']))
+                {
+                    $list[$userQrcodeId]['downloadRewardAmount'] = $list[$userQrcodeId]['downloadedCount'] * intval($settings['reward']['download']['amount']);
+                    $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['downloadRewardAmount'];
+                }
             }
         }
 

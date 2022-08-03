@@ -33,7 +33,7 @@ class User_behavior_model extends MY_Model
 	        return [];
 
         $this->db
-            ->select('data1 as promote_code, created_at')
+            ->select('data1 as promote_code, created_at, device_id')
             ->from('`behavion`.`user_behavior`')
             ->where('action', 'first_open');
 
@@ -44,10 +44,9 @@ class User_behavior_model extends MY_Model
 
         $subQuery = $this->db->get_compiled_select('', TRUE);
         $this->db
-            ->select('uq.id AS user_qrcode_id, r.promote_code, r.created_at')
+            ->select('uq.id AS user_qrcode_id, r.promote_code, r.created_at, r.device_id')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
             ->join("($subQuery) as `r`", "`r`.`promote_code` = `uq`.`promote_code`")
-            ->where('`uq`.`status`', 1)
             ->where('`r`.`created_at` >= `uq`.`start_time`')
             ->where('`r`.`created_at` < `uq`.`end_time`');
 
@@ -60,6 +59,7 @@ class User_behavior_model extends MY_Model
         {
             $this->db->select('1 as count');
         }
+
         if($startTime!='')
             $this->db->where("`r`.`created_at` >=",  $startTime);
         if($endTime!='')
