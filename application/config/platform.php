@@ -200,9 +200,12 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIAL
         ],
         // [APP]上選填的徵信項，避免系統無法一審
-        'option_certifications' => [],
+        'option_certifications' => [
+            CERTIFICATION_FINANCIAL
+        ],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
+            CERTIFICATION_FINANCIAL
         ],
         'certifications_stage' => [
             [
