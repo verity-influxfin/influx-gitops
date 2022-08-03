@@ -35,7 +35,7 @@ class Target extends MY_Admin_Controller {
 
 		if (isset($input['export'])) {
 			switch ($input['export']) {
-				case 2:
+				case 2: // Excel輸出-逾期債權 by 債權
 					$title_rows = [
 						'user_id' => ['name' => '借款人ID'],
 						'product_name' => ['name' => '產品名稱'],
@@ -45,13 +45,12 @@ class Target extends MY_Admin_Controller {
 						'user_meta_2' => ['name' => '科系/職位', 'width' => 25],
 						'invest_amount' => ['name' => '債權總額'],
 						'lender' => ['name' => '投資人ID'],
-						'unpaid_principal' => ['name' => '逾期本金'],
+						'unpaid_principal_by_investor' => ['name' => '逾期本金'],
 						'loan_date' => ['name' => '放款日期', 'width' => 12],
                         'limit_date' => ['name' => '首逾日期', 'width' => 12],
 						'delayed_days' => ['name' => '逾期天數'],
-						'unpaid_interest' => ['name' => '尚欠利息'],
-						'delay_interest' => ['name' => '延滯息'],
-						'damage' => ['name' => '違約金']
+						'unpaid_interest_by_investor' => ['name' => '尚欠利息'],
+						'delay_interest_by_investor' => ['name' => '尚欠利延滯息', 'width' => 14],
 					];
 					$data_rows = $this->target_model->getDelayedReport($input);
                     $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);

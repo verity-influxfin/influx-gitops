@@ -386,25 +386,28 @@ class Target_model extends MY_Model
 		//逾期本金
 		$subquery_unpaid_principal = $this->db
 			->select('target_id')
+            ->select('user_to')
 			->select_sum('amount')
 			->where(['status' => 1, 'source' => 11])
-			->group_by('target_id')
+			->group_by('target_id,user_to')
 			->get_compiled_select('p2p_transaction.transactions', TRUE);
 
 		//逾期利息
 		$subquery_unpaid_interest = $this->db
 			->select('target_id')
+            ->select('user_to')
 			->select_sum('amount')
 			->where(['status' => 1, 'source' => 13])
-			->group_by('target_id')
+			->group_by('target_id,user_to')
 			->get_compiled_select('p2p_transaction.transactions', TRUE);
 
 		//延滯息
 		$subquery_delay_interest = $this->db
 			->select('target_id')
+            ->select('user_to')
 			->select_sum('amount')
 			->where(['status' => 1, 'source' => 93])
-			->group_by('target_id')
+			->group_by('target_id,user_to')
 			->get_compiled_select('p2p_transaction.transactions', TRUE);
 
 		$this->db
@@ -412,7 +415,6 @@ class Target_model extends MY_Model
 				t.id,
 				t.user_id,
 				t.product_id,
-				p.name AS product_name,
 				t.target_no,
 				t.credit_level,
 				t.loan_date,
@@ -427,7 +429,6 @@ class Target_model extends MY_Model
 			')
             ->select('`tr`.`limit_date`')
 			->from('p2p_loan.targets t')
-			->join('p2p_loan.products p', 'p.id=t.product_id')
 			->join("($subquery_investment) a1", 'a1.target_id=t.id', 'left')
             ->join(
                 'p2p_transaction.transactions tr',
@@ -479,19 +480,19 @@ class Target_model extends MY_Model
         $this->db
             ->select('
                 CONCAT(i.target_id,"-",i.user_id) AS ary_key,
-                a3.amount AS unpaid_principal,
-                a4.amount AS unpaid_interest,
-                a5.amount AS delay_interest
+                a3.amount AS unpaid_principal_by_investor,
+                a4.amount AS unpaid_interest_by_investor,
+                a5.amount AS delay_interest_by_investor
             ')
             ->from('p2p_loan.investments i')
-            ->join("($subquery_unpaid_principal) a3", 'a3.target_id=i.target_id', 'left')
-            ->join("($subquery_unpaid_interest) a4", 'a4.target_id=i.target_id', 'left')
-            ->join("($subquery_delay_interest) a5", 'a5.target_id=i.target_id', 'left')
+            ->join("($subquery_unpaid_principal) a3", 'a3.target_id=i.target_id AND a3.user_to=i.user_id', 'left')
+            ->join("($subquery_unpaid_interest) a4", 'a4.target_id=i.target_id AND a4.user_to=i.user_id', 'left')
+            ->join("($subquery_delay_interest) a5", 'a5.target_id=i.target_id AND a5.user_to=i.user_id', 'left')
             ->where_in('i.target_id', $target_ids)
             ->where('i.status', INVESTMENT_STATUS_REPAYING);
 		$transaction_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
-
-		$target_rows = array_map(function ($value) {
+        $product_list = $this->config->item('product_list');
+		$target_rows = array_map(function ($value) use ($product_list) {
 			if (isset($value['school_department']) && !empty($value['school_department'])) {
 				$value['user_meta_2'][] = $value['school_department'];
 			}
@@ -500,7 +501,8 @@ class Target_model extends MY_Model
 				$value['user_meta_2'][] = $position_name[$value['job_position']] ?? '';
 			}
 
-			$value['user_meta_2'] = implode('/', $value['user_meta_2']);
+			$value['user_meta_2'] = implode('/', $value['user_meta_2'] ?? []);
+            $value['product_name'] = $product_list[$value['product_id']]['name'] ?? '';
 			return $value;
 		}, $target_rows);
 

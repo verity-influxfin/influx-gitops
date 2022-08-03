@@ -29,17 +29,23 @@
                         }
                     }
                     else{
-                        //top.location = './index?delay='+delay+'&status='+status+'&tsearch='+tsearch+(exports==1?'&export=1':'')+dateRange;
-						let exports_query_str = '';
+                        let searchParam = [
+                            ['delay', delay],
+                            ['status', status],
+                            ['tsearch', tsearch],
+                            ['sdate', $('#sdate').val()],
+                            ['edate', $('#edate').val()],
+                        ];
 						switch (exports) {
 							case '1':
-								exports_query_str = '&export=1';
+                                searchParam.push(['export', 1]);
 								break;
-							case '2':
-								exports_query_str = '&export=2';
+							case '2': // Excel輸出-逾期債權 by 債權
+                                searchParam.push(['export', 2]);
 								break;
 						}
-						top.location = url.pathname + '?delay=' + delay + '&status=' + status + '&tsearch=' + tsearch + exports_query_str + dateRange;
+                        url.search = new URLSearchParams(searchParam);
+						top.location = url.href;
                     }
 				}
                 $(document).off("keypress","input[type=text]").on("keypress","input[type=text]" ,  function(e){
