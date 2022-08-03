@@ -147,8 +147,8 @@ export default {
   .result-main {
     padding: 100px 150px;
     max-width: 1400px;
-    background-image: url("~images/2022_campus_ambassador/2022-campus-benefit-card-bg-2.png"),
-      url("~images/2022_campus_ambassador/2022-campus-mission-card-bg-1.png");
+    background-image: url('~images/2022_campus_ambassador/2022-campus-benefit-card-bg-2.png'),
+      url('~images/2022_campus_ambassador/2022-campus-mission-card-bg-1.png');
     background-repeat: no-repeat;
     background-position: left top, right bottom;
     .result-table {

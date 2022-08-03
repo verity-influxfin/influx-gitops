@@ -922,8 +922,8 @@ $color__background--primary: #f3f9fc;
       box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
       border-radius: 16px;
       border: none;
-      background-image: url("~images/2022_campus_ambassador/2022-campus-benefit-card-bg-1.png"),
-        url("~images/2022_campus_ambassador/2022-campus-benefit-card-bg-2.png");
+      background-image: url('~images/2022_campus_ambassador/2022-campus-benefit-card-bg-1.png'),
+        url('~images/2022_campus_ambassador/2022-campus-benefit-card-bg-2.png');
       background-repeat: no-repeat;
       background-position: left top, right 15px bottom 15px;
       .card-title {
@@ -991,8 +991,8 @@ $color__background--primary: #f3f9fc;
     flex-direction: column;
     align-items: center;
     height: 2150px;
-    background-image: url("~images/2022_campus_ambassador/2022-campus-mission-bg-1.png"),
-      url("~images/2022_campus_ambassador/2022-campus-mission-bg-2.png");
+    background-image: url('~images/2022_campus_ambassador/2022-campus-mission-bg-1.png'),
+      url('~images/2022_campus_ambassador/2022-campus-mission-bg-2.png');
     background-repeat: no-repeat;
     background-size: 450px, 235px;
     background-position: left top, right 30px bottom 30px;
@@ -1003,8 +1003,8 @@ $color__background--primary: #f3f9fc;
       border-radius: 16px;
       border: 2px solid #353535;
       &.card-1 {
-        background-image: url("~images/2022_campus_ambassador/2022-campus-mission-card-bg-1.png"),
-          url("~images/2022_campus_ambassador/2022-campus-mission-card-bg-2.png");
+        background-image: url('~images/2022_campus_ambassador/2022-campus-mission-card-bg-1.png'),
+          url('~images/2022_campus_ambassador/2022-campus-mission-card-bg-2.png');
         background-repeat: no-repeat;
         background-position: right top, left 15px bottom 15px;
         padding: 48px 100px;
@@ -1076,16 +1076,16 @@ $color__background--primary: #f3f9fc;
         color: #353535;
         margin-bottom: 8px;
         &::before {
-          content: "";
+          content: '';
           display: inline-block;
           margin-right: 10px;
-          background-image: url("~images/2022_campus_ambassador/2022-campus-check-square-orange.png");
+          background-image: url('~images/2022_campus_ambassador/2022-campus-check-square-orange.png');
           height: 24px;
           width: 24px;
         }
         &.required::before {
-          content: "";
-          background-image: url("~images/2022_campus_ambassador/2022-campus-check-square-blue.png");
+          content: '';
+          background-image: url('~images/2022_campus_ambassador/2022-campus-check-square-blue.png');
         }
         &-title {
           margin: 24px 0 18px;
@@ -1368,8 +1368,8 @@ $color__background--primary: #f3f9fc;
         margin: 0 20px;
         max-width: 500px;
         padding: 32px 25px;
-        background-image: url("~images/2022_campus_ambassador/2022-campus-benefit-card-bg-1.png"),
-          url("~images/2022_campus_ambassador/2022-campus-benefit-card-bg-2.png");
+        background-image: url('~images/2022_campus_ambassador/2022-campus-benefit-card-bg-1.png'),
+          url('~images/2022_campus_ambassador/2022-campus-benefit-card-bg-2.png');
         background-repeat: no-repeat;
         background-position: left top, right 15px bottom 15px;
         background-size: 46px, 46px;
@@ -1452,17 +1452,17 @@ $color__background--primary: #f3f9fc;
           font-size: 14px;
           margin-bottom: 8px;
           &::before {
-            content: "";
+            content: '';
             margin-right: 6px;
-            background-image: url("~images/2022_campus_ambassador/2022-campus-check-square-orange.png");
+            background-image: url('~images/2022_campus_ambassador/2022-campus-check-square-orange.png');
             background-repeat: no-repeat;
             background-size: 14px;
             height: 14px;
             width: 16px;
           }
           &.required::before {
-            content: "";
-            background-image: url("~images/2022_campus_ambassador/2022-campus-check-square-blue.png");
+            content: '';
+            background-image: url('~images/2022_campus_ambassador/2022-campus-check-square-blue.png');
             background-size: 14px;
           }
           &-title {
