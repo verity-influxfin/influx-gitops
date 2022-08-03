@@ -90,11 +90,6 @@
           <div>機械工程學系</div>
         </div>
         <div class="table-item">
-          <div class="table-item-title">張靖玟</div>
-          <div>國立彰化師範大學</div>
-          <div>財務金融技術學系</div>
-        </div>
-        <div class="table-item">
           <div class="table-item-title">陳瑾叡</div>
           <div>國立臺灣大學</div>
           <div>資訊管理學系</div>
