@@ -183,6 +183,7 @@ class Product extends REST_Controller {
         if(!empty($cproduct_list)){
             $this->load->helper('target');
             $this->load->helper('user_certification');
+            $this->load->helper('product');
             if (isset($this->user_info->id))
             {
                 $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
@@ -245,7 +246,10 @@ class Product extends REST_Controller {
                 $certification = [];
                 if (!empty($certification_list)) {
                     foreach ($certification_list as $k => $v) {
-                        $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0);
+                        $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
+                            USER_BORROWER,
+                            is_judicial_product($value['id'])
+                        );
                         if ($truly_failed)
                         {
                             $v['user_status'] = NULL;
@@ -365,7 +369,10 @@ class Product extends REST_Controller {
                                             if (!empty($certification_list)) {
                                                 $certification = [];
                                                 foreach ($certification_list as $k => $v) {
-                                                    $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0);
+                                                    $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
+                                                        USER_BORROWER,
+                                                        is_judicial_product($t3['id'])
+                                                    );
                                                     if ($truly_failed)
                                                     {
                                                         $v['user_status'] = NULL;
@@ -1529,6 +1536,7 @@ class Product extends REST_Controller {
             if(!empty($certification_list)){
                 $this->load->helper('target');
                 $this->load->helper('user_certification');
+                $this->load->helper('product');
                 $exist_target_submitted = chk_target_submitted($target->status, $target->certificate_status ?? 0);
 
                 foreach($certification_list as $key => $value){
@@ -1562,16 +1570,27 @@ class Product extends REST_Controller {
 					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
+                        $truly_failed = certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
+                            USER_BORROWER,
+                            is_judicial_product($target->product_id)
+                        );
                         if (in_array($key, $skip_certification_ids))
                         {
                             $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
                         }
-                        else if (certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0))
+                        else if ($truly_failed)
                         {
-                            $value['user_status'] = NULL;
-                            $value['certification_id'] = NULL;
-                            $value['remark'] = NULL;
-                            $content_array_data = [];
+                            if (in_array($target->status, [TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_WAITING_BIDDING, TARGET_WAITING_LOAN]))
+                            {
+                                $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                            }
+                            else
+                            {
+                                $value['user_status'] = NULL;
+                                $value['certification_id'] = NULL;
+                                $value['remark'] = NULL;
+                                $content_array_data = [];
+                            }
                         }
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
@@ -3672,7 +3691,8 @@ class Product extends REST_Controller {
                 ];
                 continue;
             }
-            $need_chk_cert = array_diff($product['certifications'], $product['option_certifications']);
+            $stage_cert_list = call_user_func_array('array_merge', $product['certifications_stage']);
+            $need_chk_cert = array_diff($stage_cert_list, $product['option_certifications']);
             $this->load->model('user_certification_model');
             $cert_list = $this->config->item('certifications');
             $failed_cert_reason = [];

@@ -147,7 +147,7 @@ class Certification extends REST_Controller {
             $this->load->helper('target');
             $this->load->helper('user_certification');
             $exist_target_submitted = exist_approving_target_submitted($user_id);
-
+            $is_judicial = (int) $this->user_info->company_status === 1;
 		    foreach ($sort as $key => $value){
                 if(isset($certification_list[$value])
                     && (
@@ -156,7 +156,7 @@ class Certification extends REST_Controller {
                     )
                 ){
                     count($certification_list[$value]['optional']) == 0 ? $certification_list[$value]['optional'] = false : '';
-                    $truly_failed = certification_truly_failed($exist_target_submitted, $certification_list[$value]['certification_id'] ?? 0, $this->user_info->investor);
+                    $truly_failed = certification_truly_failed($exist_target_submitted, $certification_list[$value]['certification_id'] ?? 0, $this->user_info->investor, $is_judicial);
                     if ($truly_failed)
                     {
                         $certification_list[$value]['user_status'] = NULL;
@@ -1645,7 +1645,8 @@ class Certification extends REST_Controller {
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->certification_lib->set_success($insert);
+                $cert = Certification_factory::get_instance_by_id($insert);
+                $cert->set_success(TRUE);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -4484,7 +4485,9 @@ class Certification extends REST_Controller {
         $this->load->helper('target');
         $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
         $this->load->helper('user_certification');
-        $truly_failed = certification_truly_failed($exist_target_submitted, $user_certification->id ?? 0, $this->user_info->investor);
+        $truly_failed = certification_truly_failed($exist_target_submitted, $user_certification->id ?? 0, $this->user_info->investor,
+            (int) $this->user_info->company_status === 1
+        );
 
         if($user_certification && ! $truly_failed){
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
