@@ -3394,15 +3394,35 @@ class Certification_lib{
         ], ['target_data' => json_encode($targetData, JSON_INVALID_UTF8_IGNORE)]);
 
         // 選填徵信項
+        $optional_cert_ids = [];
         if ( ! empty($productList[$target->product_id]['certifications']))
-        {
-            $option_cert_list = array_diff($productList[$target->product_id]['certifications'], $validateCertificationList);
-            $optional_cert_ids = array_filter(
-                array_column(array_reverse($userCertifications), 'id', 'certification_id'),
-                function ($key) use ($option_cert_list) {
-                    return in_array($key, $option_cert_list);
-                }, ARRAY_FILTER_USE_KEY
-            );
+        { // 取得各個徵信項最新的一筆
+            $newest_user_cert = [];
+            $user_cert_ary = json_decode(json_encode($userCertifications), TRUE);
+            usort($user_cert_ary, function ($a, $b) {
+                if ($a['created_at'] == $b['created_at']) {
+                    return 0;
+                }
+                return ($a['created_at'] > $b['created_at']) ? -1 : 1;
+            });
+            foreach ($user_cert_ary as $value)
+            {
+                if (empty($value['certification_id']) || empty($value['id']) || isset($newest_user_cert[$value['certification_id']]))
+                {
+                    continue;
+                }
+                $newest_user_cert[$value['certification_id']] = $value['id'];
+            }
+            if ( ! empty($newest_user_cert))
+            { // 篩選出選填的徵信項
+                $option_cert_list = array_diff($productList[$target->product_id]['certifications'], $validateCertificationList);
+                $optional_cert_ids = array_filter(
+                    $newest_user_cert,
+                    function ($key) use ($option_cert_list) {
+                        return in_array($key, $option_cert_list);
+                    }, ARRAY_FILTER_USE_KEY
+                );
+            }
         }
 
         $this->CI->user_certification_model->update_by(['id' => array_merge($verify_cert_ids, $optional_cert_ids)], [
