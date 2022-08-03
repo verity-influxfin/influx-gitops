@@ -16,6 +16,12 @@
         <button class="btn btn-campus-primary" @click="scrollToJoin">
           我要報名
         </button>
+        <router-link
+          class="btn btn-campus-secondary"
+          to="/2022-campus-ambassador/result"
+        >
+          2022 大使名單
+        </router-link>
       </div>
     </div>
     <div class="intro">
@@ -271,6 +277,12 @@
             >
               個人報名
             </button>
+            <router-link
+              class="btn btn-campus-outline-primary"
+              to="/2022-campus-ambassador/result"
+            >
+              2022 大使名單
+            </router-link>
           </div>
           <div class="row no-gutters justify-content-center mb-2">
             <button class="btn btn-link btn-text" @click="showRating">
@@ -685,10 +697,11 @@
             </button>
           </div>
           <div class="modal-body">
-            <h1 class="h1">【公告】普匯校園大使招募收件倒數中！！</h1>
+            <h1 class="h1">【公告】2022普匯校園大使已截止報名</h1>
             <div class="modal-text">
-              <div>小提醒~校園推廣企劃提案現為「非必要提供資料」！！</div>
-              <div>請各位同學把握黃金報名時間儘速卡位～～</div>
+              <div>2022普匯校園大使報名已於07/28 (四)截止</div>
+              <div>感謝您的支持！</div>
+              <div>請不吝關注與鼓勵未來的校園大使們喔！</div>
               <button class="mt-3 btn btn-campus-primary" data-dismiss="modal">
                 確定
               </button>
@@ -740,13 +753,13 @@ export default {
       $('#rating-modal').modal('show')
     },
     goApply(type) {
-      if (this.flag !== 'login') {
-        this.$store.commit('mutationLogin')
-        return
-      }
-      this.$router.push('/2022-campus-ambassador/' + type)
-      // alert('2022普匯校園大使將於7/19(二)開放報名')
-      // return
+      // if (this.flag !== 'login') {
+      //   this.$store.commit('mutationLogin')
+      //   return
+      // }
+      // this.$router.push('/2022-campus-ambassador/' + type)
+      alert('2022普匯校園大使報名已於07/28 (四)截止，感謝您的支持！\n請不吝給予未來的校園大使們多多關注喔！')
+      return
     }
   },
 }
@@ -799,6 +812,19 @@ $color__background--primary: #f3f9fc;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 26px;
 }
+.btn-campus-outline-primary {
+  padding: 8px 39px;
+  background-color: #fff;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 46px;
+  text-align: center;
+  color: $color--primary;
+  border: 1px solid $color--primary;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 26px;
+}
 .btn-link {
   font-weight: 400;
   font-size: 13px;
@@ -808,8 +834,9 @@ $color__background--primary: #f3f9fc;
   width: fit-content;
 }
 .join {
-  display: flex;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px 24px;
   margin: 48px 20px 60px;
 }
 .campus-2022 {
@@ -819,6 +846,8 @@ $color__background--primary: #f3f9fc;
     justify-content: center;
     .cover-join {
       position: absolute;
+      display: flex;
+      gap: 40px;
       bottom: 40px;
     }
   }
@@ -961,7 +990,7 @@ $color__background--primary: #f3f9fc;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 1950px;
+    height: 2150px;
     background-image: url('~images/2022_campus_ambassador/2022-campus-mission-bg-1.png'),
       url('~images/2022_campus_ambassador/2022-campus-mission-bg-2.png');
     background-repeat: no-repeat;
@@ -1107,9 +1136,12 @@ $color__background--primary: #f3f9fc;
         }
       }
     }
+    .btn-campus-outline-primary {
+      grid-area: 2 / 1 / 3 / 3;
+    }
   }
   .history {
-    padding-top: 240px;
+    padding-top: 165px;
     background: #e6f5ff;
     .history-title {
       position: relative;
@@ -1193,6 +1225,9 @@ $color__background--primary: #f3f9fc;
       text-align: center;
       color: #000000;
     }
+    .modal-em {
+      color: $color--primary;
+    }
     .join {
       margin: 20px 40px 20px;
     }
@@ -1268,11 +1303,18 @@ $color__background--primary: #f3f9fc;
     line-height: 29px;
     border-radius: 10px;
   }
+  .btn-campus-outline-primary {
+    padding: 6px 24px;
+    font-size: 20px;
+    line-height: 29px;
+    border-radius: 10px;
+  }
   .btn-link {
     font-size: 13px;
   }
   .join {
     margin: 20px 0;
+    gap: 20px;
   }
   .campus-2022 {
     .cover .cover-join {
@@ -1368,7 +1410,6 @@ $color__background--primary: #f3f9fc;
     }
     .info {
       padding: 32px 15px;
-      height: 2000px;
       background-image: none;
       .card {
         width: 100%;
@@ -1458,7 +1499,7 @@ $color__background--primary: #f3f9fc;
       }
     }
     .history {
-      // padding-top: 60px;
+      padding-top: 120px;
       .history-title {
         position: relative;
         display: flex;

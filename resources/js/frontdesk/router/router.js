@@ -53,6 +53,7 @@ import smeConsult from '../pages/BusinessLoan/sme/consult'
 import campus2022 from '../pages/2022_campus_ambassador/index'
 import campus2022Apply from '../pages/2022_campus_ambassador/applyTemplate'
 import campus2022Group from '../pages/2022_campus_ambassador/group'
+import campus2022Result from '../pages/2022_campus_ambassador/result'
 import campus2022Personal from '../pages/2022_campus_ambassador/personal'
 
 let routers = [
@@ -152,6 +153,7 @@ let routers = [
     { path: '/charitable-status', component: charitableStatus},
     { path: '/search',name:'search', component: search },
     { path: '/2022-campus-ambassador',name:'campus2022', component: campus2022 },
+    { path: '/2022-campus-ambassador/result', name: 'campus2022Result', component: campus2022Result },
     {
       path: '/2022-campus-ambassador', component: campus2022Apply, children: [
         { path: 'group', name: 'campus2022Group', component: campus2022Group },

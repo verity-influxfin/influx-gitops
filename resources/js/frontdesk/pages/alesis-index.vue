@@ -5,6 +5,17 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <a
+                class="swiper-slide"
+                href="https://www.influxfin.com/articlepage?q=news-8202"
+                target="_blank"
+              >
+                <div class="row no-gutters mt-4">
+                  <div class="col-12">
+                    <img src="@/asset/images/index/header/header-csr-phone.png" class="w-100 img-fluid">
+                  </div>
+                </div>
+              </a>
               <div class="swiper-slide">
                 <div class="row no-gutters campus-ambassador">
                   <div class="col-auto">
@@ -68,7 +79,7 @@
                       <img
                         src="@/asset/images/index/header/general.png"
                         alt="普匯influx"
-                        style="width: 178px"
+                        style="width: 215px"
                       />
                     </div>
                     <div class="solgan">提供公開 透明 安全的金融科技服務</div>
@@ -91,6 +102,17 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <a
+                class="swiper-slide"
+                href="https://www.influxfin.com/articlepage?q=news-8202"
+                target="_blank"
+              >
+                <div class="row no-gutters">
+                  <div class="col-12">
+                    <img src="@/asset/images/index/header/header-csr.png" class="w-100 img-fluid pb-5 mb-5">
+                  </div>
+                </div>
+              </a>
               <div class="swiper-slide">
                 <div class="row no-gutters campus-ambassador">
                   <div class="col-auto">
@@ -1432,7 +1454,7 @@ export default {
         flex-wrap: nowrap;
         .text-bg {
           margin-top: -20px;
-          height: 265px;
+          height: 325px;
           width: 726px;
         }
         .links {
@@ -1481,7 +1503,7 @@ export default {
       .speech {
         flex-wrap: nowrap;
         .text-bg {
-          height: 192px;
+          height:245px;
           width: 472px;
         }
         .solgan {
@@ -1495,14 +1517,14 @@ export default {
         .speech-cover {
           left: 60px;
           position: relative;
-          height: 458px;
-          top: -60px;
+          height: 485px;
+          top: -50px;
         }
       }
       .general {
         flex-wrap: nowrap;
         .text-bg {
-          height: 192px;
+          height: 245px;
           width: 472px;
         }
         .solgan {
@@ -1514,7 +1536,7 @@ export default {
           color: #ffffff;
         }
         .man {
-          left: 200px;
+          left: 350px;
           position: relative;
           height: 695px;
           top: -76px;
@@ -1523,8 +1545,8 @@ export default {
     }
     .intro-products {
       position: relative;
-      top: -360px;
-      margin-bottom: -360px;
+      top: -300px;
+      margin-bottom: -300px;
       .group {
         &.group-web {
           display: grid;
@@ -2475,7 +2497,7 @@ export default {
           flex-wrap: wrap;
           padding-top: 20px;
           .text-bg {
-            height: 170px;
+            height: 200px;
             width: 315px;
           }
           .links {
@@ -2498,16 +2520,16 @@ export default {
           }
           .img57 {
             position: relative;
-            height: 250px;
-            top: -185px;
-            left: 145px;
+            height: 200px;
+            top: -195px;
+            left: 140px;
           }
         }
         .speech {
           padding-top: 20px;
           flex-wrap: wrap;
           .text-bg {
-            height: 192px;
+            height: 210px;
             width: 178px;
           }
           .solgan {
@@ -2515,8 +2537,8 @@ export default {
             font-size: 14px;
           }
           .speech-cover {
-            left: -35px;
-            top: -250px;
+            left: 0;
+            top: -260px;
             position: relative;
             height: 258px;
           }
@@ -2526,7 +2548,7 @@ export default {
           padding-top: 20px;
           .text-bg {
             height: 104px;
-            width: 178px;
+            width: 215px;
           }
           .solgan {
             margin-top: 182px;
@@ -2543,7 +2565,7 @@ export default {
       .intro-products {
         margin-top: -10px;
         padding-bottom: 45px;
-        top: -300px;
+        top: -275px;
         margin-bottom: -300px;
         .group {
           &.group-web {
