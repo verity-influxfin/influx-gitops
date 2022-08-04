@@ -11,9 +11,9 @@
         src="@/asset/images/investment/investment-banner-phone.png"
         class="w-100 d-md-none d-block"
       />
-      <button class="btn btn-banner">
+      <a class="btn btn-banner" target="_blank" href="/investLink">
         立即投資 <i class="fa fa-chevron-right"></i>
-      </button>
+      </a>
     </div>
     <div class="slogan">
       <div class="block-content">
@@ -105,6 +105,11 @@
               別擔心，普匯金融科技提供「債權轉讓」功能，所有的投資人，皆可
               將手中持有的債權上架至平台，提供其他投資人認購。讓您在獲利的
               路上，擁有更多的機會與選擇。
+            </div>
+            <div class="mt-3 d-md-block d-flex justify-content-center">
+              <router-link class="product-link" to="/transfer">
+                查看更多
+              </router-link>
             </div>
           </div>
         </div>
@@ -305,12 +310,12 @@
         </div>
         <div class="download-group">
           <h2 class="h2">立即加入</h2>
-          <div class="d-flex">
-            <a href="/investLink" target="_blank">
-              <img class="mr-3" src="@/asset/images/get-on-apple.png" />
+          <div class="d-flex justify-content-center">
+            <a href="/investLink" target="_blank" class="col-5">
+              <img class="img-fluid" src="@/asset/images/get-on-apple.png" />
             </a>
-            <a href="/investLink" target="_blank">
-              <img src="@/asset/images/get-on-google.png" />
+            <a href="/investLink" target="_blank" class="col-5">
+              <img src="@/asset/images/get-on-google.png" class="img-fluid" />
             </a>
           </div>
         </div>
@@ -522,6 +527,16 @@ $color__background--primary: #f3f9fc;
         opacity: 0.56;
         margin-bottom: 30px;
       }
+    }
+    &-link {
+      padding: 10px 64px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 1.4;
+      color: $color--primary;
+      border: 2px solid $color--primary;
+      border-radius: 10px;
     }
   }
   .compare {
@@ -831,6 +846,10 @@ $color__background--primary: #f3f9fc;
           margin-bottom: 8px;
         }
       }
+      &-link {
+        padding: 10px 40px;
+        font-size: 16px;
+      }
     }
     .compare {
       padding: 48px 0;
@@ -967,7 +986,7 @@ $color__background--primary: #f3f9fc;
       }
       .step-content-img {
         top: -120px;
-        left: -10px;
+        left: -35px;
         transform: scale(0.55);
         position: absolute;
         transition-property: opacity;
@@ -987,7 +1006,12 @@ $color__background--primary: #f3f9fc;
       }
       .swiper-slide {
         padding: 0;
-        transform: scale(0.7);
+        transform: scale(0.65);
+        right: 15px;
+      }
+      .swiper-button-next,
+      .swiper-button-prev {
+        transform: scale(0.65);
       }
     }
     .download {

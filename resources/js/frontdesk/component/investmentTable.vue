@@ -6,28 +6,40 @@
         @click="activeTab = 1"
         :class="{ active: activeTab === 1 }"
       >
-        <img class="img-icon" src="@/asset/images/investment/investment-tab1.svg" />
+        <img
+          class="img-icon"
+          src="@/asset/images/investment/investment-tab1.svg"
+        />
       </div>
       <div
         class="investment-table-tab"
         @click="activeTab = 2"
         :class="{ active: activeTab === 2 }"
       >
-        <img class="img-icon" src="@/asset/images/investment/investment-tab2.svg" />
+        <img
+          class="img-icon"
+          src="@/asset/images/investment/investment-tab2.svg"
+        />
       </div>
       <div
         class="investment-table-tab"
         @click="activeTab = 3"
         :class="{ active: activeTab === 3 }"
       >
-        <img class="img-icon" src="@/asset/images/investment/investment-tab3.svg" />
+        <img
+          class="img-icon"
+          src="@/asset/images/investment/investment-tab3.svg"
+        />
       </div>
       <div
         class="investment-table-tab"
         @click="activeTab = 4"
         :class="{ active: activeTab === 4 }"
       >
-        <img class="img-icon" src="@/asset/images/investment/investment-tab4.svg" />
+        <img
+          class="img-icon"
+          src="@/asset/images/investment/investment-tab4.svg"
+        />
       </div>
     </div>
     <div class="table-panel col-md col-12">
@@ -221,16 +233,53 @@ export default {
         },
         xAxis: [
           {
-            type: 'category',
             axisTick: { show: false },
-            data: ['普匯債權投資', '基金', '股票（台股）', '股票（美股）', '虛擬貨幣']
+            splitArea: {
+              show: true,
+              areaStyle: { color: ['#DFE2F060', '#ffffff10', '#ffffff10', '#ffffff10', '#ffffff10'] }
+            },
+            axisLabel: {
+              formatter: function (value) {
+                if (value === 'Puhey') return '{' + value + '| }'
+                return value
+              },
+              rich: {
+                Puhey: {
+                  height: window.innerWidth < 800 ? 30 : 45,
+                  align: 'center',
+                  backgroundColor: {
+                    image: require('@/asset/images/logo_puhey.png')
+                  }
+                }
+              }
+            },
+            data: ['Puhey', '基金', '股票（台股）', '股票（美股）', '虛擬貨幣']
           }
         ],
         yAxis: [
           {
             type: 'value',
+            name: '風險等級',
             axisLabel: {
-              show: false
+              formatter: function (value, index) {
+                switch (index) {
+                  case 0:
+                    return ''
+                  case 1:
+                    return '低'
+                  case 2:
+                    return '中'
+                  case 3:
+                    return '高'
+                  case 4:
+                    return '極高'
+                  default:
+                    return value
+                }
+              }
+            },
+            axisLine: {
+              show: true
             }
           }
         ],
@@ -238,7 +287,6 @@ export default {
           {
             name: '市場風險',
             type: 'bar',
-            barGap: 1,
             color: '#5071c2',
             data: [100, 300, 300, 300, 400]
           },
@@ -373,15 +421,15 @@ $color__background--primary: #f3f9fc;
         );
         border-radius: 12px 12px 0px 0px;
       }
-      .img-icon{
+      .img-icon {
         width: 28px;
       }
     }
     .chart {
       margin: 0 auto;
-      height: 600px;
+      height: 500px;
       max-width: initial;
-      width: 360px;
+      width: 600px;
     }
     .table-panel {
       background: #ffffff;
