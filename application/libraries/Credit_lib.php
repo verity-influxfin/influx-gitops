@@ -333,7 +333,7 @@ class Credit_lib{
         $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
 
         // 額度不能「大」於產品的最「大」允許額度
-		$param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
+		$param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
 		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
             return $param;
@@ -522,7 +522,7 @@ class Credit_lib{
         $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
 
         // 額度不能「大」於產品的最「大」允許額度
-        $param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
+        $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
@@ -1143,5 +1143,29 @@ class Credit_lib{
         }
 
         return $result;
+    }
+
+    public function get_credit_max_amount($points, $product_id, $sub_product_id = 0)
+    {
+        $loan_range_end = $this->product_list[$product_id]['loan_range_e'];
+        $credit_amount_list = $this->credit['credit_amount_' . $product_id];
+        if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
+        {
+            $credit_amount_list = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
+        }
+
+        if (isset($credit_amount_list))
+        {
+            foreach ($credit_amount_list as $value)
+            {
+                if ($points >= $value['start'] && $points <= $value['end'] && isset($value['max_amount']))
+                {
+                    $loan_range_end = $value['max_amount'];
+                    break;
+                }
+            }
+        }
+
+        return $loan_range_end;
     }
 }
