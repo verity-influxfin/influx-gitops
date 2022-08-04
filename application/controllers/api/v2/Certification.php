@@ -1625,7 +1625,8 @@ class Certification extends REST_Controller {
                         'user_id' => $this->user_info->originalID,
                     ]);
 
-                    if ($list && count($list) == count($image_ids)) {
+                    if ( ! empty($list) && count($list) == count($image_ids))
+                    {
                         $content[$fieldS] = [];
                         foreach ($list as $k => $v) {
                             $content[$fieldS][] = $v->url;
@@ -1794,7 +1795,8 @@ class Certification extends REST_Controller {
                         'user_id' => $user_id,
                     ]);
 
-                    if ($list && count($list) == count($image_ids)) {
+                    if ( ! empty($list) && count($list) == count($image_ids))
+                    {
                         $should_check = true;
                         $content[$fieldS] = [];
                         foreach ($list as $k => $v) {
