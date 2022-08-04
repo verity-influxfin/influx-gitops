@@ -604,6 +604,7 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
+		$is_top_enterprise = $get["is_top_enterprise"] ?? 0;
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -621,6 +622,7 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
+		$this->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);
 
         $level = false;
         if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
@@ -659,6 +661,7 @@ class Target extends MY_Admin_Controller {
 		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
 		$points = isset($post["points"]) ? intval($post["points"]) : 0;
 		$remark = isset($post["reason"]) ? strval($post["reason"]) : false;
+        $is_top_enterprise = $post["is_top_enterprise"] ?? 0;
 
         if ($points > 400) $points = 400;
         if ($points < -400) $points = -400;
@@ -686,6 +689,7 @@ class Target extends MY_Admin_Controller {
             $this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
             $this->approvalextra->setSkipInsertion(true);
             $this->approvalextra->setExtraPoints($points);
+            $this->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);
 
             $level = false;
             if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
@@ -762,7 +766,7 @@ class Target extends MY_Admin_Controller {
 			$userId = $target->user_id;
 			$user = $this->user_model->get($userId);
 
-			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
+            $userMeta = $this->user_meta_model->get_many_by(['user_id' => $userId]);
 			$this->load->library('credit_lib');
 			$credits = $this->credit_lib->get_credit($userId, $target->product_id, $target->sub_product_id);
 			$credits["product_id"] = $target->product_id;
@@ -885,6 +889,30 @@ class Target extends MY_Admin_Controller {
             $display_contract_cols = ['contract_name', 'meta_name'];
             $contract_list = array_columns($product['need_upload_images'] ?? [], $display_contract_cols);
 
+            $meta_list_by_key = array_column($userMeta, NULL, 'meta_key');
+            $meta_info = $meta_list_by_key['job_company'] ?? new stdclass();
+            $job_company = $meta_info->meta_value ?? '';
+            if (isset($target_meta['is_top_enterprise']))
+            {
+                $is_top_enterprise = $target_meta['is_top_enterprise'];
+            }
+            else if ( ! empty($job_company))
+            {
+                $this->config->load('top_enterprise');
+                $top_enterprise_list = $this->config->item("top_enterprise");
+                $m_array = preg_grep('/' . mb_substr($job_company, 0, 4) . '.*/', $top_enterprise_list);
+                $is_top_enterprise = ! empty($m_array) ? 1 : 0;
+            }
+            else
+            {
+                $is_top_enterprise = 0;
+            }
+
+            $special_list = [
+                'is_top_enterprise' => $is_top_enterprise,
+                'job_company' => $job_company,
+            ];
+
             $this->load->library('output/loan/target_output', ['data' => $targets]);
 			$response = [
 				"target" => $this->current_target_output->toOne(),
@@ -895,6 +923,7 @@ class Target extends MY_Admin_Controller {
 				"virtual_accounts" => $this->virtual_account_output->toMany(),
 				"targets" => $this->target_output->toMany(),
                 'target_meta' => $target_meta_list,
+                'special_list' => $special_list,
                 'contract_list' => $contract_list
 			];
 
