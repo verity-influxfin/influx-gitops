@@ -549,6 +549,15 @@ $config['permission'] = [
             'final_valid_user_related_user' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
         ],
     ],
+    'companyList' => [
+        'name' => '千大企業清單',
+        'menu' => [
+            'index' => ['name' => '千大企業清單'],
+        ],
+        'permission' => [
+            'index' => ['model' => 'companyList', 'submodel' => 'index', 'action' => 'read']
+        ],
+    ],
     'Certificationreport' => [
         'permission' => [
             'index' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'read'],
