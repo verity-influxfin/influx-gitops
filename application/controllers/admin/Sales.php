@@ -782,7 +782,11 @@ class Sales extends MY_Admin_Controller {
         }
         $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
-        $fullPromoteList = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'], $input['edate']);
+        $fullPromoteList = [];
+        if ( ! empty($where) || ! empty($input['sdate']) || ! empty($input['edate']))
+        {
+            $fullPromoteList = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'], $input['edate']);
+        }
 
         if (isset($input['export']))
         { // 匯出報表
