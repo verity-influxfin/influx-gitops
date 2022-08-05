@@ -784,30 +784,71 @@ class Sales extends MY_Admin_Controller {
 
         $fullPromoteList = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'], $input['edate']);
 
-        $config = pagination_config();
-        $config['per_page'] = 40; //每頁顯示的資料數
-        $config['base_url'] = admin_url('sales/promote_list');
-        $config["total_rows"] = count($fullPromoteList);
+        if (isset($input['export']))
+        { // 匯出報表
+            $this->load->library('Spreadsheet_lib');
+            switch ($input['export'])
+            {
+                case 1:
+                    $title_rows = [
+                        'contract_end_time' => ['name' => '合約截止日', 'width' => 20],
+                        'user_id' => ['name' => '會員 ID'],
+                        'settings' => ['name' => '類型', 'width' => 15],
+                        'name' => ['name' => '名稱', 'width' => 10],
+                        'promote_code' => ['name' => '邀請碼', 'width' => 14],
+                        'fullMemberCount' => ['name' => '註冊+下載數量', 'width' => 16],
+                        'loaned_count_student' => ['name' => '學生貸核貸數量', 'width' => 16],
+                        'loaned_count_salary_man' => ['name' => '上班族貸核貸數量', 'width' => 18],
+                        'loaned_count_collaboration' => ['name' => '合作產品核貸數量', 'width' => 18],
+                        'totalRewardAmount' => ['name' => '累計獎金', 'width' => 12],
+                        'status' => ['name' => '狀態']
+                    ];
+                    $data_rows = array_map(function ($element) {
+                        $element['contract_end_time'] = $element['info']['contract_end_time'] ?? '';
+                        $element['user_id'] = $element['info']['user_id'] ?? '';
+                        $element['settings'] = $element['info']['settings']['description'] ?? '';
+                        $element['name'] = $element['info']['name'] ?? '';
+                        $element['promote_code'] = $element['info']['promote_code'] ?? '';
+                        $element['loaned_count_student'] = $element['loanedCount']['student']??'';
+                        $element['loaned_count_salary_man'] = $element['loanedCount']['salary_man']??'';
+                        $element['loaned_count_collaboration'] = (($element['loanedCount']['small_enterprise'] ?? 0) + (array_sum($element['collaborationCount'] ?? [])));
+                        $element['status'] = ($element['info']['status'] ?? '') == 1 ? '啟用' : '停用';
+                        return $element;
+                    }, $fullPromoteList);
+                    $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
+                    $this->spreadsheet_lib->download('推薦有賞報表.xlsx', $spreadsheet);
+                    return;
+                default:
+                    return;
+            }
+        }
+        else
+        { // 畫列表
+            $config = pagination_config();
+            $config['per_page'] = 40; //每頁顯示的資料數
+            $config['base_url'] = admin_url('sales/promote_list');
+            $config["total_rows"] = count($fullPromoteList);
 
-        $this->pagination->initialize($config);
-        $page_data["links"] = $this->pagination->create_links();
+            $this->pagination->initialize($config);
+            $page_data["links"] = $this->pagination->create_links();
 
-        $current_page = max(1, intval($input['per_page'] ?? '1'));
-        $offset = ($current_page - 1) * $config['per_page'];
+            $current_page = max(1, intval($input['per_page'] ?? '1'));
+            $offset = ($current_page - 1) * $config['per_page'];
 
-        $list = array_slice($fullPromoteList, $offset, $config['per_page']);
+            $list = array_slice($fullPromoteList, $offset, $config['per_page']);
 
-        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
-        $alias_list = ['all' => "全部方案"];
-        $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
+            $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+            $alias_list = ['all' => "全部方案"];
+            $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
 
-        $page_data['list'] = $list;
-        $page_data['alias_list'] = $alias_list;
+            $page_data['list'] = $list;
+            $page_data['alias_list'] = $alias_list;
 
-        $this->load->view('admin/_header');
-        $this->load->view('admin/_title', $this->menu);
-        $this->load->view('admin/promote_code/promote_list', $page_data);
-        $this->load->view('admin/_footer');
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/promote_code/promote_list', $page_data);
+            $this->load->view('admin/_footer');
+        }
     }
 
     public function promote_edit()
