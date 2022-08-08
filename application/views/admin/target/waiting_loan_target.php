@@ -177,7 +177,7 @@
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?></td>
 											<td><? echo isset($sub_status_list[$value->sys_check])&&$value->sys_check!=0?$sub_status_list[$value->sys_check]:'系統尚未驗證' ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
-											<td><a href="<?=admin_url('target/waiting_loan_detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
+											<td><a href="<?=admin_url('target/target_loan_detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                        
 									<?php 
 										}}
