@@ -253,5 +253,21 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         return TRUE;
     }
 
+    /**
+     * @param $value
+     * @return int
+     */
+    public function get_number_only($value): int
+    {
+        if ( ! is_string($value) && ! is_numeric($value))
+        {
+            return '';
+        }
 
+        return (int) preg_replace(
+            '/(?<=([\x{4e00}-\x{9fa5}]))\s+(?=[\x{4e00}-\x{9fa5}])/u',
+            '',
+            str_replace(["\n", ','], '', trim($value))
+        );
+    }
 }
