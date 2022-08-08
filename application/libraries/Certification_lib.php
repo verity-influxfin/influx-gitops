@@ -339,11 +339,9 @@ class Certification_lib{
                         'status'	=> array(1,23)
                     ));
                     if($targets){
-                        foreach($targets as $key => $value){
-                            $this->CI->target_model->update_by(
-                                ['id'  => $value->id],
-                                ['status'	=> $value->status==1?0:22]
-                            );
+                        foreach ($targets as $value)
+                        {
+                            $this->CI->target_lib->withdraw_target_to_unapproved($value, 0, 0, $sys_check);
                         }
                     }
                     $this->CI->load->model('loan/credit_model');
@@ -399,12 +397,10 @@ class Certification_lib{
 						'status'	=> array(1,23)
 					));
 					if($targets){
-						foreach($targets as $key => $value){
-							$this->CI->target_model->update_by(
-								['id'  => $value->id],
-								['status'	=> $value->status==1?0:22]
-							);
-						}
+                        foreach ($targets as $value)
+                        {
+                            $this->CI->target_lib->withdraw_target_to_unapproved($value, 0, 0, $sys_check);
+                        }
 					}
 					$this->CI->load->model('loan/credit_model');
 					$credit_list = $this->CI->credit_model->get_many_by(array(
@@ -469,7 +465,7 @@ class Certification_lib{
             'content' => $info->content,
             'risVerified' => FALSE, // 勾稽戶役政 API
             'risVerificationFailed' => TRUE, // 勾稽戶役政 API
-            'ocrCheckFailed' => TRUE,
+            'ocrCheckFailed' => FALSE,
         ];
 
         $content = json_decode($info->content, TRUE);
@@ -524,14 +520,6 @@ class Certification_lib{
         {
             $return_data['remark']['error'] = 'OCR 沒有在正常時間內回應，無法進行實名驗證.<br/>';
             return $return_data;
-        }
-
-        // 檢查三張證件照的資料是否完整
-        if ($ocr_result['infoValidation']['id_card']['is_info_complete']
-            && $ocr_result['infoValidation']['id_card_back']['is_info_complete']
-            && $ocr_result['infoValidation']['health_card']['is_info_complete'])
-        {
-            $return_data['ocrCheckFailed'] = FALSE;
         }
 
         // 補上 OCR 辨識結果的錯誤訊息
@@ -847,11 +835,14 @@ class Certification_lib{
                                 else
                                 {
                                     // SIP 帳號密碼判定正確，但登入爬取過程中出現異常
-                                    $verifiedResult->addMessage('SIP帳號密碼正確，爬蟲執行失敗，請確認是否為在學中帳號，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                                    $verifiedResult->addMessage('SIP帳號密碼正確，爬蟲執行失敗，請確認此學校狀態、以及是否為在學中帳號，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                                 }
                             }
                             else
                             {
+                                $university_status_response = $this->CI->sip_lib->getUniversityModel($content['school']);
+                                $university_status = isset($university_status_response['response']) ? $university_status_response['response']['status'] : '';
+                                
                                 $status_mapping = [
                                     SCRAPER_SIP_RECAPTCHA => '驗證碼問題',
                                     SCRAPER_SIP_NORMALLY => '正常狀態',
@@ -862,8 +853,9 @@ class Certification_lib{
                                     SCRAPER_SIP_FILL_QUEST => '問卷問題',
                                     SCRAPER_SIP_UNSTABLE => '不穩定 有時有未知異常',
                                 ];
+
                                 $verifiedResult->addMessage('SIP登入失敗，學校狀態: ' .
-                                    $status_mapping[$sip_log['response']['universityStatus']] .
+                                    $status_mapping[$university_status] .
                                     '，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                             }
                         }
@@ -3392,6 +3384,7 @@ class Certification_lib{
             return FALSE;
         }
 
+        // 必填徵信項
         $targetData = json_decode($target->target_data, TRUE);
         $verify_cert_ids = array_column($pendingCertifications, 'id');
         $targetData['verify_cetification_list'] = json_encode($verify_cert_ids);
@@ -3400,7 +3393,39 @@ class Certification_lib{
             'id' => $target->id
         ], ['target_data' => json_encode($targetData, JSON_INVALID_UTF8_IGNORE)]);
 
-        $this->CI->user_certification_model->update_by(['id' => $verify_cert_ids], [
+        // 選填徵信項
+        $optional_cert_ids = [];
+        if ( ! empty($productList[$target->product_id]['certifications']))
+        { // 取得各個徵信項最新的一筆
+            $newest_user_cert = [];
+            $user_cert_ary = json_decode(json_encode($userCertifications), TRUE);
+            usort($user_cert_ary, function ($a, $b) {
+                if ($a['created_at'] == $b['created_at']) {
+                    return 0;
+                }
+                return ($a['created_at'] > $b['created_at']) ? -1 : 1;
+            });
+            foreach ($user_cert_ary as $value)
+            {
+                if (empty($value['certification_id']) || empty($value['id']) || isset($newest_user_cert[$value['certification_id']]))
+                {
+                    continue;
+                }
+                $newest_user_cert[$value['certification_id']] = $value['id'];
+            }
+            if ( ! empty($newest_user_cert))
+            { // 篩選出選填的徵信項
+                $option_cert_list = array_diff($productList[$target->product_id]['certifications'], $validateCertificationList);
+                $optional_cert_ids = array_filter(
+                    $newest_user_cert,
+                    function ($key) use ($option_cert_list) {
+                        return in_array($key, $option_cert_list);
+                    }, ARRAY_FILTER_USE_KEY
+                );
+            }
+        }
+
+        $this->CI->user_certification_model->update_by(['id' => array_merge($verify_cert_ids, $optional_cert_ids)], [
             'certificate_status' => 1
         ]);
         return TRUE;

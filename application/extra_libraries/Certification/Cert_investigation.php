@@ -3,6 +3,7 @@
 namespace Certification;
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use Certification_ocr\Parser\Ocr_parser_factory;
 use CertificationResult\MessageDisplay;
 
 /**
@@ -68,26 +69,14 @@ class Cert_investigation extends Certification_base
         }
         else if (is_pdf($mime))
         {
-            $text = '';
-            $parser = new \Smalot\PdfParser\Parser();
-            try
+            $parsed_content = array_merge(
+                $parsed_content,
+                $this->_get_ocr_parser_info()
+            );
+            if ( ! empty($parsed_content['ocr_parser']['content']))
             {
-                $pdf = $parser->parseFile($url);
-                $text = $pdf->getText();
-                $this->CI->load->library('joint_credit_lib');
-                $response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
-            }
-            catch (\Exception $e)
-            {
-                $response = FALSE;
-            }
+                $response = $parsed_content['ocr_parser']['content'];
 
-            if ( ! $response || strpos($text, '綜合信用報告') === FALSE)
-            {
-                $this->result->addMessage('聯徵PDF解析失敗，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            }
-            else
-            {
                 // 資料轉 result
                 $this->CI->load->library('mapping/user/Certification_data');
                 $this->transform_data = $this->CI->certification_data->transformJointCreditToResult($response);
@@ -96,7 +85,14 @@ class Cert_investigation extends Certification_base
                 $this->CI->load->library('mapping/time');
                 $printTimestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $this->transform_data['printDatetime']);
                 $printTimestamp = $this->CI->time->ROCDateToUnixTimestamp($printTimestamp);
-                $printDatetime = date('Y-m-d', $printTimestamp);
+                if($printTimestamp !== FALSE)
+                {
+                    $printDatetime = date('Y-m-d', $printTimestamp);
+                }
+                else
+                {
+                    $printDatetime = '';
+                }
 
                 $group_id = $this->content['group_id'] ?? time();
                 $parsed_content['group_id'] = $group_id;
@@ -135,6 +131,11 @@ class Cert_investigation extends Certification_base
         return TRUE;
     }
 
+    private function _chk_data_complete($content): bool
+    {
+        return isset($content['ocr_parser']['content']['is_valid']) && $content['ocr_parser']['content']['is_valid'] === TRUE;
+    }
+
     /**
      * 核實資料是否屬實
      * @param $content: 徵信內容
@@ -142,6 +143,25 @@ class Cert_investigation extends Certification_base
      */
     public function verify_data($content): bool
     {
+        if ($this->_chk_ocr_status($content) === FALSE)
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
+            return FALSE;
+        }
+        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+
+        if ($content['ocr_parser']['res'] === FALSE)
+        {
+            $this->result->addMessage('聯徵PDF解析失敗，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
+        }
+
+        if($this->_chk_data_complete($content) === FALSE)
+        {
+            $this->result->addMessage('聯徵PDF辨識結果有誤，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
+        }
+
         // 自然人聯徵正確性驗證
         $this->CI->load->library('verify/data_legalize_lib');
         $this->result = $this->CI->data_legalize_lib->legalize_investigation($this->result, $this->certification['user_id'],
@@ -256,4 +276,47 @@ class Cert_investigation extends Certification_base
         return TRUE;
     }
 
+
+    /**
+     * OCR 解析結果
+     * @return array
+     */
+    private function _get_ocr_parser_info(): array
+    {
+        $result = [];
+        if ( ! isset($this->content['ocr_parser']['res']))
+        {
+            $cert_ocr_parser = Ocr_parser_factory::get_instance($this->certification);
+            $ocr_parser_result = $cert_ocr_parser->get_result();
+            if ($ocr_parser_result['success'] === TRUE)
+            {
+                if ($ocr_parser_result['code'] == 201 || $ocr_parser_result['code'] == 202)
+                { // OCR 任務剛建立，或是 OCR 任務尚未辨識完成
+                    return $result;
+                }
+                $result['ocr_parser']['res'] = TRUE;
+                $result['ocr_parser']['content'] = $ocr_parser_result['data'];
+            }
+            else
+            {
+                $result['ocr_parser']['res'] = FALSE;
+                $result['ocr_parser']['msg'] = $ocr_parser_result['msg'];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * OCR 辨識後的檢查
+     * @param $content
+     * @return bool
+     */
+    private function _chk_ocr_status($content): bool
+    {
+        if ( ! isset($content['ocr_parser']['res']))
+        {
+            return FALSE;
+        }
+        return TRUE;
+    }
 }

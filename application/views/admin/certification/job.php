@@ -120,7 +120,7 @@
 									<div class="form-group">
 										<label>勞保異動明細資料</label>
 										<? if(isset($content['pdf_info'])){ ?>
-											<table border="1">
+											<table>
 												<tbody>
 													<tr>
 														<td>姓名</td>
@@ -144,7 +144,7 @@
 													</tr>
 												</tbody>
 											</table>
-											<table border="1" style="margin-top:5px;">
+											<table>
 												<tbody>
 													<tr>
 														<td>保險證號</td><td>投保公司名稱</td><td>投保薪資</td><td>投保日期</td><td>退保日期</td><td>註記</td>
@@ -256,7 +256,42 @@
                                 </div>
 								<div class="col-lg-6">
                                     <h1>圖片</h1>
-									<fieldset disabled>
+                                    <fieldset disabled>
+                                        <div class="form-group">
+                                            <?php if ( ! empty($content['ocr_marker']['res']) && $content['ocr_marker']['res'] === TRUE)
+                                            { ?>
+                                                <label for="disabledSelect">OCR 關鍵字標記</label><br>
+                                                <?php
+                                                foreach ($content['ocr_marker']['content'] as $value)
+                                                {
+                                                    if (empty($value['input_kw_mat']) && empty($value['salary_kw_mat']))
+                                                    {
+                                                        continue;
+                                                    } ?>
+                                                    <div class="row" style="width: 100%">
+                                                        <div class="col-lg-3">
+                                                            <a href="<?= $value['url']; ?>" data-fancybox="images">
+                                                                <img alt="" src="<?= $value['url']; ?>"
+                                                                     style="width:100%;max-width:300px">
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-lg-9">
+                                                            <label>身份關鍵字：</label>
+                                                            <br/>
+                                                            <?php foreach ($value['input_kw_mat'] as $kw_value) {
+                                                                echo implode(' ', $kw_value) . '<br/>';
+                                                            } ?>
+                                                            <label>收入關鍵字：</label>
+                                                            <br/>
+                                                            <?php foreach ($value['salary_kw_mat'] as $kw_value) {
+                                                                echo implode(' ', $kw_value) . '<br/>';
+                                                            } ?>
+                                                        </div>
+                                                    </div>
+                                                    <hr/>
+                                                <?php }
+                                            } ?>
+                                        </div>
                                         <? if ($data->status!=4) { ?>
                                             <? if (!isset($content['financial_image'])) { ?>
                                             <? if (isset($content['labor_image'])) { ?>
@@ -376,3 +411,14 @@
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
+
+        <style>
+            table {
+                margin-top: 5px;
+            }
+
+            table td {
+                border: 1px solid;
+                padding: 2px 2px 2px 2px;
+            }
+        </style>

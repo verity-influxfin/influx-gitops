@@ -183,6 +183,7 @@ class Product extends REST_Controller {
         if(!empty($cproduct_list)){
             $this->load->helper('target');
             $this->load->helper('user_certification');
+            $this->load->helper('product');
             if (isset($this->user_info->id))
             {
                 $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
@@ -245,7 +246,10 @@ class Product extends REST_Controller {
                 $certification = [];
                 if (!empty($certification_list)) {
                     foreach ($certification_list as $k => $v) {
-                        $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0);
+                        $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
+                            USER_BORROWER,
+                            is_judicial_product($value['id'])
+                        );
                         if ($truly_failed)
                         {
                             $v['user_status'] = NULL;
@@ -365,7 +369,10 @@ class Product extends REST_Controller {
                                             if (!empty($certification_list)) {
                                                 $certification = [];
                                                 foreach ($certification_list as $k => $v) {
-                                                    $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0);
+                                                    $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
+                                                        USER_BORROWER,
+                                                        is_judicial_product($t3['id'])
+                                                    );
                                                     if ($truly_failed)
                                                     {
                                                         $v['user_status'] = NULL;
@@ -846,18 +853,17 @@ class Product extends REST_Controller {
             // 申貸產品需選擇職業(公司類型)
             if ( ! empty($product['available_company_categories']))
             {
-                if ( ! isset($input['company_category']))
+                if (isset($input['company_category']))
                 {
-                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => 'The parameters are lack of company_category.'));
+                    if ( ! array_key_exists($input['company_category'], $product['available_company_categories']))
+                    {
+                        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => 'The parameter company_category is not correct.'));
+                    }
+                    $input['target_meta'][] = [
+                        'meta_key' => TARGET_META_COMPANY_CATEGORY_NUMBER,
+                        'meta_value' => (int)$input['company_category']
+                    ];
                 }
-                else if ( ! array_key_exists($input['company_category'], $product['available_company_categories']))
-                {
-                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => 'The parameter company_category is not correct.'));
-                }
-                $input['target_meta'][] = [
-                    'meta_key' => TARGET_META_COMPANY_CATEGORY_NUMBER,
-                    'meta_value' => (int)$input['company_category']
-                ];
             }
 
             // 外匯車判斷
@@ -1516,9 +1522,21 @@ class Product extends REST_Controller {
                     ];
                 }
             }
+            $skip_certification_ids = [];
+            if ( ! empty($target))
+            {
+                $this->load->model('loan/target_meta_model');
+                $target_meta = $this->target_meta_model->as_array()->get_by([
+                    'target_id' => $target->id,
+                    'meta_key' => 'skip_certification_ids'
+                ]);
+                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
+                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
+            }
             if(!empty($certification_list)){
                 $this->load->helper('target');
                 $this->load->helper('user_certification');
+                $this->load->helper('product');
                 $exist_target_submitted = chk_target_submitted($target->status, $target->certificate_status ?? 0);
 
                 foreach($certification_list as $key => $value){
@@ -1552,12 +1570,27 @@ class Product extends REST_Controller {
 					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
-                        if (certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0))
+                        $truly_failed = certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
+                            USER_BORROWER,
+                            is_judicial_product($target->product_id)
+                        );
+                        if (in_array($key, $skip_certification_ids))
                         {
-                            $value['user_status'] = NULL;
-                            $value['certification_id'] = NULL;
-                            $value['remark'] = NULL;
-                            $content_array_data = [];
+                            $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                        }
+                        else if ($truly_failed)
+                        {
+                            if (in_array($target->status, [TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_WAITING_BIDDING, TARGET_WAITING_LOAN]))
+                            {
+                                $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                            }
+                            else
+                            {
+                                $value['user_status'] = NULL;
+                                $value['certification_id'] = NULL;
+                                $value['remark'] = NULL;
+                                $content_array_data = [];
+                            }
                         }
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
@@ -2869,6 +2902,7 @@ class Product extends REST_Controller {
 
             $target = $this->target_model->get_by(['id' => $insert]);
             $this->load->helper('product');
+            $this->load->model('log/log_targetschange_model');
             if (is_judicial_product($target->product_id) === FALSE && $target->status == TARGET_WAITING_SIGNING)
             {
                 // 該產品有未使用額度
@@ -2885,6 +2919,11 @@ class Product extends REST_Controller {
                     'interest_rate' => $interest_rate,
                     'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
                 ]);
+                $this->log_targetschange_model->insert(
+                    $this->target_lib->get_target_log_param($insert, FALSE, [
+                        'interest_rate' => $interest_rate
+                    ])
+                );
 
                 $this->load->model('loan/credit_sheet_model');
                 $credit_sheet_info = $this->credit_sheet_model->order_by('created_at', 'desc')->get_by([
@@ -2906,18 +2945,6 @@ class Product extends REST_Controller {
                     $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
                     $this->credit_sheet_model->update_by(['target_id' => $target->id], ['certification_list' => json_encode($certification_id)]);
                 }
-
-                // 寫log
-                $this->load->model('log/log_targetschange_model');
-                $this->log_targetschange_model->insert([
-                    'target_id' => $target->id,
-                    'interest_rate' => $target->interest_rate,
-                    'delay' => 0,
-                    'status' => $target->status,
-                    'loan_status' => $target->loan_status,
-                    'sub_status' => $target->sub_status,
-                    'sys_check' => $target->sys_check
-                ]);
             }
 
             $this->load->library('Certification_lib');
@@ -3664,7 +3691,8 @@ class Product extends REST_Controller {
                 ];
                 continue;
             }
-            $need_chk_cert = array_diff($product['certifications'], $product['option_certifications']);
+            $stage_cert_list = call_user_func_array('array_merge', $product['certifications_stage']);
+            $need_chk_cert = array_diff($stage_cert_list, $product['option_certifications']);
             $this->load->model('user_certification_model');
             $cert_list = $this->config->item('certifications');
             $failed_cert_reason = [];
@@ -3815,10 +3843,18 @@ class Product extends REST_Controller {
 
         $this->target_model->update(
             $input['target_id'], [
+                'amount' => $input['amount'],
                 'loan_amount' => $input['amount'],
                 'platform_fee' => $this->financial_lib->get_platform_fee($input['amount'], $product_info['charge_platform']),
                 'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
             ]
+        );
+        $this->load->library('target_lib');
+        $this->log_targetschange_model->insert(
+            $this->target_lib->get_target_log_param($input['target_id'], TRUE, [
+                'amount' => $input['amount'],
+                'change_user' => $target->user_id
+            ])
         );
 
         $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => (int) $input['target_id']]]);

@@ -333,7 +333,7 @@ class Credit_lib{
         $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
 
         // 額度不能「大」於產品的最「大」允許額度
-		$param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
+		$param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
 		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
             return $param;
@@ -469,10 +469,17 @@ class Credit_lib{
             $this->scoreHistory[] = "{$tmp_msg}; 因階段上架調整為: {$total} ---";
         }
 
-        if ($approvalExtra && $approvalExtra->getExtraPoints()) {
-            $extra_point = $approvalExtra->getExtraPoints();
-            $total += $extra_point;
-            $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
+        $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
+        $is_top_enterprise = 0;
+        if ($approvalExtra) {
+            if($approvalExtra->getExtraPoints())
+            {
+                $extra_point = $approvalExtra->getExtraPoints();
+                $total += $extra_point;
+                $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
+            }
+            $special_info = $approvalExtra->getSpecialInfo();
+            $is_top_enterprise = $special_info['is_top_enterprise'] ?? 0;
         }
 
         $param['points'] = (int) $total;
@@ -482,10 +489,11 @@ class Credit_lib{
         }
 
         $param['level'] = $this->get_credit_level($total, $product_id, $sub_product_id, $stage_cer);
-        if (isset($this->credit['credit_amount_' . $product_id])) {
-            foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {
+        $credit_amount_list = $this->get_credit_amount_list($product_id, $sub_product_id);
+        if ( ! empty($credit_amount_list))
+        {
+            foreach ($credit_amount_list as $value) {
                 if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
-                    $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
                     $param['amount'] = $salary * $value['rate'];
                     break;
                 }
@@ -518,11 +526,50 @@ class Credit_lib{
         $param['amount'] = round($param['amount'] * ($instalment_modifier_list[$instalment] ?? 1));
         $this->scoreHistory[] = '借款期數' . $instalment . '期: 額度 * ' . ($instalment_modifier_list[$instalment] ?? 1);
 
+        if ($is_top_enterprise == 0 && $salary < 40000 && $param['amount'] > 100000)
+        {
+            if ( ! empty($credit_amount_list))
+            {
+                // 確保信評分數級距為降冪排列
+                usort($credit_amount_list, function ($a, $b)
+                {
+                    if ($a['start'] == $b['start']) {
+                        return 0;
+                    }
+                    return ($a['start'] < $b['start']) ? 1 : -1;
+                });
+
+                foreach ($credit_amount_list as $value)
+                {
+                    $modified_amount = $salary * $value['rate'];
+
+                    // 額度調整 = 額度 * 性別對應的系數
+                    if ($user_info->sex == 'M')
+                    {
+                        $modified_amount *= 0.9;
+                    }
+                    // 額度調整 = 額度 * 分期期數對應的系數
+                    $modified_amount = round($modified_amount * ($instalment_modifier_list[$instalment] ?? 1));
+
+                    if ($modified_amount <= 100000)
+                    {
+                        $param['amount'] = $modified_amount;
+                        $param['points'] = (int) $value['end'];
+                        break;
+                    }
+                }
+                $param['level'] = $this->get_credit_level($param['points'], $product_id, $sub_product_id, $stage_cer);
+                $this->scoreHistory[] = '中小企業以及月薪4萬以下,強制調整分數至額度10萬內: ' . $param['points'];
+            }
+        }
+
         // 額度不能「小」於產品的最「小」允許額度
         $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
 
         // 額度不能「大」於產品的最「大」允許額度
-        $param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
+        $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
+
+        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
@@ -537,7 +584,6 @@ class Credit_lib{
             ],
             ['status'=> 0]
         );
-        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
@@ -839,6 +885,7 @@ class Credit_lib{
 			$param = array(
 				'user_id'			=> $user_id,
 				'product_id'		=> $product_id,
+                'sub_product_id' => $sub_product_id,
 				'status'			=> 1,
 				'expire_time >='	=> time(),
 			);
@@ -924,24 +971,31 @@ class Credit_lib{
                 //副產品減免
                 if($sub_product_id){
                     $info        = $this->CI->user_meta_model->get_many_by(['user_id'=>$target->user_id]);
-                    foreach($info as $key => $value){
+                    $data = [];
+                    foreach ($info as $key => $value)
+                    {
                         $data[$value->meta_key] = $value->meta_value;
                     }
                     $sub_product = $this->get_sub_product_data($sub_product_id);
                     //techie
-                    if ($sub_product && $sub_product_id == 1){
-                        if(isset($data['school_department'])){
-                            $rate -= in_array($data['school_department'],$sub_product->majorList)?1:0;
+                    if ($sub_product && $sub_product_id == 1)
+                    {
+                        if ( ! empty($data['school_department']))
+                        {
+                            $rate -= in_array($data['school_department'], $sub_product->majorList) ? 1 : 0;
                         }
-                        if ($product_id == 1){
-                            $rate -= isset($data['student_license_level'])?$data['student_license_level']*0.5:0;
-                            $rate -= isset($data['student_game_work_level'])?$data['student_game_work_level']*0.5:0;
-                        }elseif ($product_id == 3){
-                            $rate -= isset($data['job_license']) ? (int) $data['job_license'] * 0.5 : 0;
+                        if ($product_id == 1)
+                        {
+                            $rate -= ! empty($data['student_license_level']) && is_numeric($data['student_license_level']) ? $data['student_license_level'] * 0.5 : 0;
+                            $rate -= ! empty($data['student_game_work_level']) && is_numeric($data['student_game_work_level']) ? $data['student_game_work_level'] * 0.5 : 0;
+                        }
+                        elseif ($product_id == 3)
+                        {
+                            $rate -= ! empty($data['job_license']) ? (int) $data['job_license'] * 0.5 : 0;
                             //工作認證減免%
                             if (isset($sub_product->titleList->{$data['job_title']}))
                             {
-                                $rate -= isset($data['job_title']) ? $sub_product->titleList->{$data['job_title']}->level : 0;
+                                $rate -= ! empty($data['job_title']) ? $sub_product->titleList->{$data['job_title']}->level : 0;
                             }
                         }
                     }
@@ -953,6 +1007,20 @@ class Credit_lib{
 		}
 		return false;
 	}
+
+    public function get_credit_amount_list($product_id = 0, $sub_product_id = 0)
+    {
+        $list = [];
+        if ($product_id && isset($this->credit['credit_amount_' . $product_id]))
+        {
+            $list = $this->credit['credit_amount_' . $product_id];
+            if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
+            {
+                $list = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
+            }
+        }
+        return $list;
+    }
 
 	public function delay_credit($user_id,$delay_days=0){
 		if($user_id && $delay_days > GRACE_PERIOD){
@@ -1135,5 +1203,29 @@ class Credit_lib{
         }
 
         return $result;
+    }
+
+    public function get_credit_max_amount($points, $product_id, $sub_product_id = 0)
+    {
+        $loan_range_end = $this->product_list[$product_id]['loan_range_e'];
+        $credit_amount_list = $this->credit['credit_amount_' . $product_id];
+        if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
+        {
+            $credit_amount_list = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
+        }
+
+        if (isset($credit_amount_list))
+        {
+            foreach ($credit_amount_list as $value)
+            {
+                if ($points >= $value['start'] && $points <= $value['end'] && isset($value['max_amount']))
+                {
+                    $loan_range_end = $value['max_amount'];
+                    break;
+                }
+            }
+        }
+
+        return $loan_range_end;
     }
 }

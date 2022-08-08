@@ -21,15 +21,48 @@ class Target_lib
         if (!empty($param)) {
             $param['target_no'] = $this->get_target_no($param['product_id']);
             $insert = $this->CI->target_model->insert($param);
+            $this->CI->load->model('log/log_targetschange_model');
             if ($insert) {
+                $this->CI->log_targetschange_model->insert(
+                    $this->get_target_log_param($insert, TRUE, $param)
+                );
                 return $insert;
             } else {
                 $param['target_no'] = $this->get_target_no($param['product_id']);
                 $insert = $this->CI->target_model->insert($param);
+                $this->CI->log_targetschange_model->insert(
+                    $this->get_target_log_param($insert, TRUE, $param)
+                );
                 return $insert;
             }
         }
         return false;
+    }
+
+    /**
+     * 取得異動 Target 的 Log 參數
+     * @param int $target_id
+     * @param bool $user_change : 是否為 end-user 的自主行為
+     * @param array $param : insert/update Target 的參數
+     * @param int $change_admin_id : 若由後台管理者修改，傳入管理者 ID，反之預設 0
+     * @return array
+     */
+    public function get_target_log_param(int $target_id, bool $user_change, array $param, int $change_admin_id = 0)
+    {
+        $result = [
+            'target_id' => $target_id,
+            'amount' => $param['amount'] ?? NULL,
+            'interest_rate' => $param['interest_rate'] ?? NULL,
+            'delay' => $param['delay'] ?? NULL,
+            'status' => $param['status'] ?? NULL,
+            'loan_status' => $param['loan_status'] ?? NULL,
+            'sub_status' => $param['sub_status'] ?? NULL,
+            'sys_check' => $param['sys_check'] ?? NULL,
+            'change_user' => $param['change_user'] ?? ($user_change ? $param['user_id'] ?? 0 : 0),
+            'change_admin' => $change_admin_id
+        ];
+        ! isset($param['certificate_status']) ?: $result['certificate_status'] = $param['certificate_status'];
+        return $result;
     }
 
     //新增target
@@ -2493,6 +2526,77 @@ class Target_lib
         return $date;
     }
 
+    /**
+     * 退案件回待核可
+     * @param $target
+     * @param int $user_id
+     * @param int $admin_id
+     * @param int $sys_check
+     * @return bool
+     */
+    public function withdraw_target_to_unapproved($target, $user_id = 0, $admin_id = 0, $sys_check = 1): bool
+    {
+        if (is_object($target))
+        {
+            $target = json_decode(json_encode($target), TRUE);
+        }
+
+        if ( ! in_array($target['status'], [TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_ORDER_WAITING_SHIP]))
+        {
+            log_message('error', '[withdraw_target_to_unapproved]案件非處於允許的狀態。');
+            return FALSE;
+        }
+
+        $creditSheet = CreditSheetFactory::getInstance($target['id']);
+        if($creditSheet)
+        {
+            $canceled = $creditSheet->cancel();
+            if ( ! $canceled)
+            {
+                log_message('error', '[withdraw_target_to_unapproved]發生不明原因導致授審表取消失敗。');
+                return FALSE;
+            }
+        }
+
+        $status = $target['status'];
+        switch ($target['status'])
+        {
+            // 個金案件：待簽約&待驗證皆要退回待核可
+            // 企金案件：待驗證要退回待核可（目前無待簽約階段）
+            case TARGET_WAITING_SIGNING:
+            case TARGET_WAITING_VERIFY:
+                $status = TARGET_WAITING_APPROVE;
+                break;
+            case TARGET_ORDER_WAITING_SHIP:
+                $status = TARGET_ORDER_WAITING_VERIFY;
+                break;
+        }
+
+        $sub_status = $target['sub_status'];
+        switch ($target['sub_status'])
+        {
+            case TARGET_SUBSTATUS_SECOND_INSTANCE:
+            case TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET:
+                $sub_status = TARGET_SUBSTATUS_NORNAL;
+                break;
+        }
+
+        $update_param = ['status' => $status, 'sub_status' => $sub_status, 'certificate_status' => TARGET_CERTIFICATE_SUBMITTED];
+        $this->CI->target_model->update_by(
+            ['id' => $target['id']],
+            $update_param
+        );
+        $this->insert_change_log($target['id'], [
+            'status' => $status,
+            'sub_status' => $sub_status,
+            'change_user' => $user_id,
+            'change_admin' => $admin_id,
+            'sys_check' => $sys_check
+        ]);
+
+        return TRUE;
+    }
+    
     /**
      * 取得案件相關的詳細資訊
      * @param array $target_ids

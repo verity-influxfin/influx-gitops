@@ -265,8 +265,6 @@ $config['permission'] = [
             'getmeta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'job_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'joint_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
-            'sip' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
-            'sip_login' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'user_bankaccount_list' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
         ],
     ],
@@ -551,6 +549,15 @@ $config['permission'] = [
             'final_valid_user_rule_hit' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'user_related_user' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'update'],
             'final_valid_user_related_user' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
+        ],
+    ],
+    'companyList' => [
+        'name' => '千大企業清單',
+        'menu' => [
+            'index' => ['name' => '千大企業清單'],
+        ],
+        'permission' => [
+            'index' => ['model' => 'companyList', 'submodel' => 'index', 'action' => 'read']
         ],
     ],
     'Certificationreport' => [

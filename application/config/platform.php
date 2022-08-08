@@ -200,9 +200,12 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIAL
         ],
         // [APP]上選填的徵信項，避免系統無法一審
-        'option_certifications' => [],
+        'option_certifications' => [
+            CERTIFICATION_FINANCIAL
+        ],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
+            CERTIFICATION_FINANCIAL
         ],
         'certifications_stage' => [
             [
@@ -2470,7 +2473,8 @@ $config['certifications_msg'] = [
         '請寄送完整版電子聯徵資料至credit@influxfin.com，感謝您的配合！',
         '聯徵資料與平台規範不符',
         '聯徵報告非近一個月申請',
-        '請提供完整聯徵PDF資料，謝謝您。'
+        '請提供完整聯徵PDF資料，謝謝您。',
+        '請勿使用Google雲端夾帶檔案的方式上傳附件'
     ],
     CERTIFICATION_JOB => [
         '勞保資料有誤，請您查閱最新的“勞保投保異動明細表”後上傳，感謝您的配合！',
@@ -2483,7 +2487,8 @@ $config['certifications_msg'] = [
         '請提供近三個月內薪資轉入存摺資料(需有帳號明細)及存摺封面，謝謝您。',
         '請提供110年度扣繳憑單，謝謝您。',
         '請提供近三個月內薪資證明，謝謝您。',
-        '請提供完整勞保異動明細，謝謝您。'
+        '請提供完整勞保異動明細，謝謝您。',
+        '請勿使用Google雲端夾帶檔案的方式上傳附件'
     ],
     CERTIFICATION_PROFILE => [
         '系統無法判讀為本人，煩請您重新拍攝',

@@ -98,7 +98,7 @@
                     "sInfo":"顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
                     "sInfoEmpty":"顯示第 0 至 0 項結果，共 0 項",
                     "sInfoFiltered":"(從 _MAX_ 項結果過濾)",
-                    "sSearch":"模糊搜尋:",
+                    "sSearch":"模糊搜尋: _INPUT_ tip:找台灣積體電路股份有限公司 可用“台 積”查詢到",
                     "oPaginate":{"sFirst":"首頁",
                         "sPrevious":"上頁",
                         "sNext":"下頁",
