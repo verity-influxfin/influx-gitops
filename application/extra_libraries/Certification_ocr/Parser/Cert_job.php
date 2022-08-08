@@ -48,7 +48,7 @@ class Cert_job extends Ocr_parser_base
                 'companyName' => $value['unit_str'],
                 'detailList' => [
                     [
-                        'insuranceSalary' => $value['salary_str'] ?? '',
+                        'insuranceSalary' => ! isset($value['salary_str']) ? '' : $this->get_number_only($value['salary_str']),
                         'startDate' => $value['start_date_str'] ?? '',
                         'endDate' => $value['end_date_str'] ?? '',
                         'comment' => $value['remark_str'] ?? '',
