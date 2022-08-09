@@ -43,6 +43,9 @@
 							case '2': // Excel輸出-逾期債權 by 債權
                                 searchParam.push(['export', 2]);
 								break;
+							case '3': // Excel輸出-逾期債權 by 案件
+                                searchParam.push(['export', 3]);
+								break;
 						}
                         url.search = new URLSearchParams(searchParam);
 						top.location = url.href;
@@ -95,10 +98,14 @@
                                     <td>
                                         <select id="export">
                                             <option value='0' >頁面顯示</option>
-                                            <option value='1' >Excel輸出</option>
 											<?php if (isset($_GET['delay']) && $_GET['delay'] === '1' && isset($_GET['status']) && $_GET['status'] == '5') {
-												echo "<option value='2' >Excel輸出-逾期債權</option>";
-											} ?>
+                                                echo "<option value='3' >Excel輸出-逾期債權 by 案件</option>";
+												echo "<option value='2' >Excel輸出-逾期債權 by 債權</option>";
+											}
+                                            else
+                                            {
+                                                echo "<option value='1' >Excel輸出</option>";
+                                            }?>
                                         </select>
                                     </td>
                                     <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>

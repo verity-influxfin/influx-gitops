@@ -833,7 +833,7 @@ class Target_lib
     //借款端還款計畫
     public function get_amortization_table($target = [])
     {
-
+        $target = is_array($target) && ! empty($target) ? json_decode(json_encode($target)) : $target;
         $schedule = [
             'amount' => intval($target->loan_amount),
             'remaining_principal' => intval($target->loan_amount),
