@@ -5,7 +5,7 @@
       <div class="col-12">
         <div class="text-bg">
           <img
-            src="@/asset/images/index/header/workloan-header-text-phone.png"
+            src="@/asset/images/index/header/collegeloan-header-text-phone.png"
             class="mx-auto d-block"
             alt="上班族信貸"
           />
@@ -13,7 +13,7 @@
       </div>
       <div class="col-12 position-releative">
         <img
-          src="@/asset/images/index/header/workloan-header-people-phone.png"
+          src="@/asset/images/index/header/collegeloan-header-people-phone.png"
           class="people-bg"
         />
       </div>
@@ -23,9 +23,9 @@
       <div class="col-auto pl-2">
         <div class="text-bg">
           <img
-            src="@/asset/images/index/header/workloan-header-text.png"
-            alt="上班族信貸"
-            style="width: 529px"
+            src="@/asset/images/index/header/collegeloan-header-text.png"
+            alt="學生貸"
+            style="width: 530px"
           />
         </div>
         <div class="links">
@@ -36,9 +36,9 @@
           </a>
         </div>
       </div>
-      <div class="col-auto">
+      <div class="col-auto position-relative">
         <img
-          src="@/asset/images/index/header/workloan-header-people.png"
+          src="@/asset/images/index/header/collegeloan-header-people.png"
           class="people-bg"
         />
       </div>
@@ -61,6 +61,8 @@
   font-size: 28px;
 }
 .people-bg {
+  top: -35px;
+  position: relative;
   padding-right: 75px;
 }
 @media screen and (max-width: 576px) {
@@ -71,7 +73,7 @@
   .people-bg {
     padding-right: 0;
     display: block;
-    margin: 35px auto 0;
+    margin: 65px auto 0;
   }
 }
 </style>
