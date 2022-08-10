@@ -7,7 +7,7 @@
           <img
             src="@/asset/images/index/header/collegeloan-header-text-phone.png"
             class="mx-auto d-block"
-            alt="上班族信貸"
+            alt="學生貸"
           />
         </div>
       </div>
@@ -29,7 +29,7 @@
           />
         </div>
         <div class="links">
-          <a href="/workLoan">
+          <a href="/collegeLoan">
             <button class="btn btn-join">
               了解更多 <i class="fa fa-chevron-right"></i>
             </button>

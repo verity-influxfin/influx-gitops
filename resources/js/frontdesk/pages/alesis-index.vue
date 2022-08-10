@@ -8,7 +8,7 @@
               <a class="swiper-slide" href="/workLoan" target="_blank">
                 <workloan-header />
               </a>
-              <a class="swiper-slide" href="/workLoan" target="_blank">
+              <a class="swiper-slide" href="/collegeLoan" target="_blank">
                 <collegeloan-header />
               </a>
               <a
@@ -1416,6 +1416,9 @@ export default {
     // banner
     new Swiper('.sw-headers', {
       loop: true,
+      autoplay: {
+        delay: 5000,
+      },
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev'
