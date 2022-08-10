@@ -19,7 +19,7 @@
       <div class="block-content">
         <div class="slogan-title">
           成功媒合投資金額已達
-          <span class="em">5.4</span>
+          <span class="em">{{ format(tweenTotal) }}</span>
           億！
         </div>
         <div class="slogan-text d-sm-block d-none">
@@ -43,7 +43,7 @@
             <div>理專、業務也讚嘆</div>
           </h2>
         </div>
-        <div class="product-row">
+        <div class="product-row" data-aos="fade-left" data-aos-duration="800">
           <div>
             <div class="product-row-title">1. 債權投資</div>
             <div class="product-row-intro">
@@ -83,7 +83,7 @@
             />
           </div>
         </div>
-        <div class="product-row">
+        <div class="product-row" data-aos="fade-right" data-aos-duration="800">
           <div>
             <img
               src="@/asset/images/investment/product-row-p2.png"
@@ -113,7 +113,7 @@
             </div>
           </div>
         </div>
-        <div class="product-row">
+        <div class="product-row" data-aos="fade-left" data-aos-duration="800">
           <div>
             <div class="product-row-title">3. AI智能投資</div>
             <div class="product-row-intro">
@@ -338,6 +338,7 @@ import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import SwiperCore, { Navigation, Pagination } from 'swiper/core'
+import { gsap } from 'gsap/dist/gsap'
 export default {
   components: {
     investmentTable,
@@ -347,11 +348,14 @@ export default {
   data() {
     return {
       goodCase: [],
-      transferCase: []
+      transferCase: [],
+      total: 0,
+      tweenTotal: 0
     }
   },
   mounted() {
     SwiperCore.use([Navigation, Pagination])
+    AOS.init({ disable: 'mobile' })
     const swiper = new Swiper('.swiper', {
       navigation: {
         nextEl: '.swiper-button-next',
@@ -371,6 +375,19 @@ export default {
     }).catch((error) => {
       console.error('getCase 發生錯誤，請稍後再試');
     });
+    this.total = 5.4
+  },
+  methods: {
+    format(x) {
+      return x.toFixed(1)
+    }
+  },
+  watch: {
+    total(newValue) {
+      gsap.to(this.$data, {
+        duration: 3, tweenTotal: newValue
+      });
+    },
   },
 }
 </script>
