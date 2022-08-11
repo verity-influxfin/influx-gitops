@@ -16,6 +16,8 @@
                 }
             </style>
 			<script type="text/javascript">
+                const url = new URL(location.href);
+
                 function showChang(){
                     var tsearch 			= $('#tsearch').val();
                     var alias 				= $('#alias :selected').val();
@@ -33,6 +35,18 @@
                         showChang();
                     }
                 });
+
+                function promote_export_list() {
+                    let searchParams = {
+                        tsearch: $('#tsearch').val(),
+                        alias: $('#alias :selected').val(),
+                        sdate: $('#sdate').val(),
+                        edate: $('#edate').val(),
+                        export: 1
+                    };
+                    url.search = new URLSearchParams(searchParams);
+                    top.location = url.href;
+                }
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -70,6 +84,7 @@
                                     justify-content: flex-end;
                                     align-self: flex-start;
                                      ">
+                                    <a type="button" href="javascript:void(0)" class="btn btn-default" onclick="promote_export_list()">報表匯出</a>&nbsp;
                                     <a type="button" href="<?=admin_url('sales/promote_import_list') ?>" class="btn btn-primary">前往報表匯入</a>
                                 </div>
                             </div>

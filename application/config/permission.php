@@ -428,6 +428,8 @@ $config['permission'] = [
             'promote_detail' => ['model' => 'Sales', 'submodel' => 'promote_list', 'action' => 'read'],
             'promote_reward_loan' => ['model' => 'Sales', 'submodel' => 'promote_reward_list', 'action' => 'update'],
             'promote_report_export' => ['model' => 'Sales', 'submodel' => 'promote_list', 'action' => 'read'],
+            'promote_import_list' => ['model' => 'Sales', 'submodel' => 'promote_list', 'action' => 'update'],
+            'promote_export_list' => ['model' => 'Sales', 'submodel' => 'promote_list', 'action' => 'read'],
         ],
     ],
     'Account' => [
