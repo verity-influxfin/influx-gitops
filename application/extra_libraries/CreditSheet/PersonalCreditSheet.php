@@ -269,7 +269,19 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->target_model->update($this->target->id,$param);
         }
         else{
-            $this->CI->target_lib->approve_target($this->target,FALSE,TRUE);
+            // 檢查是否為產轉案件
+            $this->CI->load->model('loan/subloan_model');
+            $subloan = $this->CI->subloan_model->get_by(['new_target_id' => $this->target->id]);
+            if ( ! empty($subloan))
+            {
+                $subloan_status = TRUE;
+            }
+            else
+            {
+                $subloan_status = FALSE;
+            }
+
+            $this->CI->target_lib->approve_target($this->target, FALSE, TRUE, FALSE, FALSE, $subloan_status);
         }
     }
 
