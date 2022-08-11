@@ -29,17 +29,26 @@
                         }
                     }
                     else{
-                        //top.location = './index?delay='+delay+'&status='+status+'&tsearch='+tsearch+(exports==1?'&export=1':'')+dateRange;
-						let exports_query_str = '';
+                        let searchParam = [
+                            ['delay', delay],
+                            ['status', status],
+                            ['tsearch', tsearch],
+                            ['sdate', $('#sdate').val()],
+                            ['edate', $('#edate').val()],
+                        ];
 						switch (exports) {
 							case '1':
-								exports_query_str = '&export=1';
+                                searchParam.push(['export', 1]);
 								break;
-							case '2':
-								exports_query_str = '&export=2';
+							case '2': // Excel輸出-逾期債權 by 債權
+                                searchParam.push(['export', 2]);
+								break;
+							case '3': // Excel輸出-逾期債權 by 案件
+                                searchParam.push(['export', 3]);
 								break;
 						}
-						top.location = url.pathname + '?delay=' + delay + '&status=' + status + '&tsearch=' + tsearch + exports_query_str + dateRange;
+                        url.search = new URLSearchParams(searchParam);
+						top.location = url.href;
                     }
 				}
                 $(document).off("keypress","input[type=text]").on("keypress","input[type=text]" ,  function(e){
@@ -89,10 +98,14 @@
                                     <td>
                                         <select id="export">
                                             <option value='0' >頁面顯示</option>
-                                            <option value='1' >Excel輸出</option>
 											<?php if (isset($_GET['delay']) && $_GET['delay'] === '1' && isset($_GET['status']) && $_GET['status'] == '5') {
-												echo "<option value='2' >Excel輸出-逾期債權</option>";
-											} ?>
+                                                echo "<option value='3' >Excel輸出-逾期債權 by 案件</option>";
+												echo "<option value='2' >Excel輸出-逾期債權 by 債權</option>";
+											}
+                                            else
+                                            {
+                                                echo "<option value='1' >Excel輸出</option>";
+                                            }?>
                                         </select>
                                     </td>
                                     <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>
