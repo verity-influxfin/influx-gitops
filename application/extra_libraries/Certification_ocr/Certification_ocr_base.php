@@ -232,7 +232,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         {
             return $this->return_failure('Exception occurred while attempting to GET task response.');
         }
-        if (empty($res['response_body']))
+        if (empty($res['response_body']) || ! is_array($res['response_body']))
         {
             return $this->return_success([], 'Task processing has not done yet.', 202);
         }
