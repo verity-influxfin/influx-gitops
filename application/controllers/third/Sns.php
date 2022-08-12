@@ -117,21 +117,25 @@ class Sns extends REST_Controller {
 		}
 	}
 
-	private function process_mail($info, $attachments, $cert_info, $s3_url,$certification_id)
-	{
-		$url = $this->attachment_pdf($attachments, $cert_info, $s3_url,$certification_id);
-		$this->certification_lib->save_mail_url($info['0'],$url);
-	}
+    private function process_mail($info, $attachments, $cert_info, $s3_url, $certification_id)
+    {
+        $rs = $this->attachment_pdf($attachments, $cert_info, $s3_url, $certification_id);
+        if ( ! empty($rs))
+        {
+            $this->certification_lib->save_mail_url($info['0'], $rs['url'], $rs['is_valid_pdf']);
+        }
+    }
 
-	private function attachment_pdf($attachments,$cert_info,$s3_url,$certification_id)
-	{
-		$name=($certification_id===9)? 'investigation':'job';
-        $url = "";
-		if(isset($attachments)) {
-            $url = $this->s3_lib->credit_mail_pdf($attachments, $cert_info->user_id, $name, 'user_upload/' . $cert_info->user_id);
+    private function attachment_pdf($attachments, $cert_info, $s3_url, $certification_id): array
+    {
+        $name = ($certification_id === 9) ? 'investigation' : 'job';
+        $rs = [];
+        if (isset($attachments))
+        {
+            $rs = $this->s3_lib->credit_mail_pdf($attachments, $cert_info->user_id, $name, 'user_upload/' . $cert_info->user_id);
         }
         $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
 
-        return $url;
-	}
+        return $rs;
+    }
 }

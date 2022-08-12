@@ -1908,9 +1908,12 @@ class Certification_lib{
 		return false;
 	}
 
-	public function save_mail_url($info = array(),$url) {
-		$content=json_decode($info->content,true);
-		$content['pdf_file']=$url;
+    public function save_mail_url($info = array(), $url, $is_valid_pdf)
+    {
+        $content = json_decode($info->content, TRUE);
+        $content['pdf_file'] = $url;
+        $content['is_valid_pdf'] = $is_valid_pdf;
+
 		if($url){
 			$content['mail_file_status'] = 1;
 		}else{
