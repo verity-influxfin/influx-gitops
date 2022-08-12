@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Target extends MY_Admin_Controller {
 
-	protected $edit_method = array('edit','verify_success','verify_failed','order_fail','waiting_verify','evaluation_approval','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer','legalAffairs','waiting_reinspection');
+	protected $edit_method = array('edit','verify_success','verify_failed','order_fail','waiting_verify','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer','legalAffairs','waiting_reinspection');
 
 	public function __construct() {
 		parent::__construct();
@@ -759,88 +759,6 @@ class Target extends MY_Admin_Controller {
 		];
 		$this->json_output->setStatusCode(200)->setResponse($response)->send();
 	}
-
-	public function evaluation_approval()
-	{
-		$post = $this->input->post(NULL, TRUE);
-        $newCredits = false;
-
-		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
-		$points = isset($post["points"]) ? intval($post["points"]) : 0;
-		$remark = isset($post["reason"]) ? strval($post["reason"]) : false;
-        $is_top_enterprise = $post["is_top_enterprise"] ?? 0;
-
-        if ($points > 400) $points = 400;
-        if ($points < -400) $points = -400;
-
-		$this->load->library('output/json_output');
-
-		$target = $this->target_model->get($targetId);
-		if (!$target) {
-			$this->json_output->setStatusCode(404)->send();
-		}
-
-		if ($target->status !=0 && $target->sub_status != 9) {
-			$this->json_output->setStatusCode(404)->send();
-		}
-
-		$userId = $target->user_id;
-		$credit = $this->credit_model->get_by([
-            'user_id' => $userId,
-            'product_id' => $target->product_id,
-            'sub_product_id'=> $target->sub_product_id,
-            'status' => 1
-        ]);
-
-		if($target->sub_product_id != STAGE_CER_TARGET || $target->product_id == 3){
-            $this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
-            $this->approvalextra->setSkipInsertion(true);
-            $this->approvalextra->setExtraPoints($points);
-            $this->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);
-
-            $level = false;
-            if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
-                $this->load->library('Certification_lib');
-                $certification = $this->certification_lib->get_certification_info($userId, 8, 0);
-                $certificationStatus = isset($certification) && $certification
-                    ? ($certification->status == 1 ? true : false)
-                    : false;
-                $level = $certificationStatus ? 3 : 4 ;
-            }
-            $this->load->library('credit_lib');
-            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment);
-        }
-
-        $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);
-
-		if ($newCredits &&
-            ($newCredits["amount"] != $credit->amount
-			|| $newCredits["points"] != $credit->points
-			|| $newCredits["level"] != $credit->level)
-		) {
-            $this->credit_model->update_by(
-                [
-                    'user_id' => $userId,
-                    'product_id' => $target->product_id,
-                    'sub_product_id'=> $target->sub_product_id,
-                    'status' => 1,
-                ],
-                ['status'=> 0]
-            );
-			$this->credit_model->insert($newCredits);
-		}
-
-		if($target->sub_product_id == STAGE_CER_TARGET && $target->product_id == 1){
-            $param['status'] = 1;
-            $param['sub_status'] = 10;
-            $param['remark'] = $remark;
-            $this->target_model->update($target->id,$param);
-        }
-        else{
-            $this->target_lib->approve_target($target,$remark,true);
-        }
-        $this->json_output->setStatusCode(200)->send();
-    }
 
 	public function final_validations()
 	{
