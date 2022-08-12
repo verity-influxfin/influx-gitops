@@ -172,10 +172,9 @@
                                                     <a href="/business-loan/sme" class="link-text">企業主速貸</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <div class="link-text">
+                                                    <a href="/business-loan/smeg" class="link-text">
                                                         <div>信保專案(銀行合作)</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
-                                                    </div>
+                                                    </a>
                                                 </div>
                                                 <div class="link-item">
                                                     <div class="link-text">

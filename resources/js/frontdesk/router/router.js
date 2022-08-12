@@ -50,6 +50,7 @@ import businessEnd from '../pages/BusinessLoan/end'
 import smeIndex from '../pages/BusinessLoan/smeLoan'
 import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
+import smeg from '../pages/BusinessLoan/smeg'
 import campus2022 from '../pages/2022_campus_ambassador/index'
 import campus2022Apply from '../pages/2022_campus_ambassador/applyTemplate'
 import campus2022Group from '../pages/2022_campus_ambassador/group'
@@ -127,6 +128,11 @@ let routers = [
                 path: 'end',
                 props: true,
                 component: businessEnd
+            },
+            {
+                name: 'smeg',
+                path: 'smeg',
+                component: smeg
             }
         ]
     },
