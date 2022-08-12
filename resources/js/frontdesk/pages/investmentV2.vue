@@ -232,12 +232,18 @@
               <alesis-project v-bind="goodCase[1]"></alesis-project>
               <alesis-project v-bind="goodCase[2]"></alesis-project>
             </div>
-            <div class="swiper-slide d-md-flex d-none">
+            <div
+              class="swiper-slide d-md-flex d-none"
+              v-if="goodCase.length > 3"
+            >
               <alesis-project v-bind="goodCase[3]"></alesis-project>
               <alesis-project v-bind="goodCase[4]"></alesis-project>
               <alesis-project v-bind="goodCase[5]"></alesis-project>
             </div>
-            <div class="swiper-slide d-md-flex d-none">
+            <div
+              class="swiper-slide d-md-flex d-none"
+              v-if="goodCase.length > 6"
+            >
               <alesis-project v-bind="goodCase[6]"></alesis-project>
               <alesis-project v-bind="goodCase[7]"></alesis-project>
               <alesis-project v-bind="goodCase[8]"></alesis-project>
