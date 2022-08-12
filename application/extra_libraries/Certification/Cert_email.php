@@ -166,6 +166,7 @@ class Cert_email extends Certification_base
      */
     public function post_failure($sys_check): bool
     {
+        $this->CI->user_certification_model->update($this->certification['id'], ['certificate_status' => 1]);
         return TRUE;
     }
 
