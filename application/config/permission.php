@@ -71,7 +71,6 @@ $config['permission'] = [
             'verify_failed' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'update'],
             'order_fail' => ['model' => 'Target', 'submodel' => 'waiting_signing', 'action' => 'update'],
             'credits' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
-            'evaluation_approval' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'final_validations' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'final_validations_detail' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'read'],
             'target_loan' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'update'],
