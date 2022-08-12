@@ -5,6 +5,12 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <a class="swiper-slide" href="/workLoan" target="_blank">
+                <workloan-header />
+              </a>
+              <a class="swiper-slide" href="/collegeLoan" target="_blank">
+                <collegeloan-header />
+              </a>
               <a
                 class="swiper-slide"
                 href="https://www.influxfin.com/articlepage?q=news-8202"
@@ -12,7 +18,10 @@
               >
                 <div class="row no-gutters mt-4">
                   <div class="col-12">
-                    <img src="@/asset/images/index/header/header-csr-phone.png" class="w-100 img-fluid">
+                    <img
+                      src="@/asset/images/index/header/header-csr-phone.png"
+                      class="w-100 img-fluid"
+                    />
                   </div>
                 </div>
               </a>
@@ -102,6 +111,12 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <workloan-header />
+              </div>
+              <div class="swiper-slide">
+                <collegeloan-header />
+              </div>
               <a
                 class="swiper-slide"
                 href="https://www.influxfin.com/articlepage?q=news-8202"
@@ -109,7 +124,10 @@
               >
                 <div class="row no-gutters">
                   <div class="col-12">
-                    <img src="@/asset/images/index/header/header-csr.png" class="w-100 img-fluid pb-5 mb-5">
+                    <img
+                      src="@/asset/images/index/header/header-csr.png"
+                      class="w-100 img-fluid pb-5 mb-5"
+                    />
                   </div>
                 </div>
               </a>
@@ -1296,6 +1314,8 @@
 <script>
 import AlesisCounter from '../component/alesis/AlesisCounter'
 import float from '../component/floatComponent'
+import workloanHeader from '../component/index/header/workloanHeader.vue'
+import collegeloanHeader from '../component/index/header/collegeloanHeader.vue'
 import { alesisIndexCounter } from './api'
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
@@ -1306,7 +1326,9 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 export default {
   components: {
     float,
-    AlesisCounter
+    AlesisCounter,
+    workloanHeader,
+    collegeloanHeader
   },
   data: () => ({
     indexCounter: {}
@@ -1394,6 +1416,9 @@ export default {
     // banner
     new Swiper('.sw-headers', {
       loop: true,
+      autoplay: {
+        delay: 5000,
+      },
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev'
@@ -1503,7 +1528,7 @@ export default {
       .speech {
         flex-wrap: nowrap;
         .text-bg {
-          height:245px;
+          height: 245px;
           width: 472px;
         }
         .solgan {
