@@ -35,7 +35,7 @@ import obank from '../pages/obank';
 
 import index from "../pages/alesis-index";
 import borrow from '../pages/alesis-borrow';
-import invest from '../pages/alesis-invest';
+import invest from '../pages/investmentV2';
 import faq from '../pages/alesis-faq';
 import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
