@@ -62,7 +62,9 @@ class Cert_investigation extends Certification_base
         $url = $this->content['pdf_file'] ?? '';
 
         $mime = get_mime_by_extension($url);
-        if (is_image($mime))
+        if (is_image($mime) ||
+            // 由圖片組成的 PDF 會將 is_valid_pdf 標記為 0, 需直接轉人工
+            (isset($this->content['is_valid_pdf']) && $this->content['is_valid_pdf'] == 0))
         {
             $this->result->addMessage('需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
