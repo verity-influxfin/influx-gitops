@@ -23,7 +23,7 @@
         <div class="資訊">
             <div class="項目">
                 <div class="標題">金額</div>
-                <div class="數值">{{ loan_amount | format }} 元</div>
+                <div class="數值">{{ format(loan_amount) }} 元</div>
             </div>
             <div class="項目">
                 <div class="標題">期數(本息均攤)</div>

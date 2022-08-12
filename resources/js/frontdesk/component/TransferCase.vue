@@ -22,7 +22,7 @@
         <div class="資訊">
             <div class="項目">
                 <div class="標題">預期收益</div>
-                <div class="數值">{{ accounts_receivable - amount | format }} 元</div>
+                <div class="數值">{{ format(accounts_receivable - amount) }} 元</div>
             </div>
             <div class="項目">
                 <div class="標題">剩餘帳期</div>
