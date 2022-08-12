@@ -820,7 +820,23 @@ class Sales extends MY_Admin_Controller {
                         return $element;
                     }, $fullPromoteList);
                     $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
-                    $this->spreadsheet_lib->download('推薦有賞報表.xlsx', $spreadsheet);
+
+                    $start_date = '';
+                    $end_date = '';
+                    if ( ! empty($input['sdate']) && ($start_timestamp = strtotime($input['sdate'])) !== FALSE)
+                    {
+                        $start_date = date("Ymd", $start_timestamp);
+                    }
+                    if ( ! empty($input['edate']) && ($end_timestamp = strtotime($input['edate'])) !== FALSE)
+                    {
+                        $end_date = date("Ymd", $end_timestamp);
+                    }
+                    else if ( ! isset($start_timestamp) || $start_timestamp === FALSE)
+                    {
+                        $end_date = date("Ymd");
+                    }
+
+                    $this->spreadsheet_lib->download("推薦有賞報表({$start_date}-{$end_date}).xlsx", $spreadsheet);
                     return;
                 default:
                     return;
