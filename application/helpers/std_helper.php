@@ -226,8 +226,7 @@
 						'S'=>'26','T'=>'27','U'=>'28','V'=>'29','W'=>'32','X'=>'30','Y'=>'31','Z'=>'33'];
 			if(strlen($cardid)==10){
 				$alpha = substr($cardid,0,1);
-				$alpha = strtoupper($alpha);
-				if(preg_match("/[A-Za-z]/",$alpha)){
+				if(preg_match("/[A-Z]/",$alpha)){
 					$nx 	= $alphabet[$alpha];
 					$total 	= $nx[0] + $nx[1]*9 + substr($cardid,8,1) + substr($cardid,9,1);
 					if(in_array(substr($cardid,1,1),['1','2'])){
