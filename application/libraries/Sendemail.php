@@ -1,4 +1,7 @@
 <?php
+
+use Certification\Certification_factory;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Sendemail
@@ -98,7 +101,12 @@ class Sendemail
                     if($certification->certification_id == 2){
                         $this->CI->user_certification_model->update($rs->certification_id,['status'=>3]);
                     }else{
-                        $this->CI->certification_lib->set_success($rs->certification_id);
+
+                        $cert = Certification_factory::get_instance_by_id($rs->certification_id);
+                        if (isset($cert))
+                        {
+                            return $cert->set_success(TRUE);
+                        }
                     }
 				}
 				return true;
