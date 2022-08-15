@@ -2227,6 +2227,12 @@ class Certification_lib{
 	}
 
 	private function email_success($info){
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        if (isset($cert))
+        {
+            return $cert->set_success(TRUE);
+        }
+
 		if($info){
             if (empty($info->content))
             {

@@ -142,7 +142,18 @@ class Cert_email extends Certification_base
                 $this->CI->user_model->update($judicial_person->company_user_id, array('email' => $content['email']));
             }
 
-            // todo: 不管investor是多少，後面認證的會蓋過前面的值？
+            $this->CI->user_model->update($this->certification['user_id'], array('email' => $content['email']));
+            $meta_key = $this->certification['investor'] == INVESTOR ? 'email_investor' : 'email_borrower';
+            $param = ['user_id' => $this->certification['user_id'], 'meta_key' => $meta_key];
+            if ($this->CI->user_meta_model->get_by($param))
+            {
+                $this->CI->user_meta_model->update_by($param, ['meta_value' => $content['email']]);
+            }
+            else
+            {
+                $this->CI->user_meta_model->insert(array_merge($param, ['meta_value' => $content['email']]));
+            }
+
             $this->CI->user_model->update($this->certification['user_id'], array('email' => $content['email']));
             return $this->CI->certification_lib->fail_other_cer($this->certification);
         }
