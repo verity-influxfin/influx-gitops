@@ -2230,7 +2230,7 @@ class Certification_lib{
         $cert = Certification_factory::get_instance_by_model_resource($info);
         if (isset($cert))
         {
-            return $cert->set_success(FALSE);
+            return $cert->set_success(TRUE);
         }
 
 		if($info){
