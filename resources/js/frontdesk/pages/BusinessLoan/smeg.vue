@@ -122,7 +122,30 @@
         <div>您是否也有其他申請人常遇到的問題？</div>
         <div>您想知道的，這裡通通有！</div>
       </h2>
-      <div class="question-rows"></div>
+      <div class="question-rows">
+        <faq-row title="• 普匯信保融資專案貸款的申請資格？" bg-text="ISSUE 01">
+          <div class="faq-content">
+            <div>1. 具有合法公司登記或商業登記</div>
+            <div>2. 非金融及保險業、宗教職業及類似組織、特殊娛樂業</div>
+            <div>3. 實收資本額小於1億元</div>
+            <div>4. 員工人數少於200人</div>
+            <div>5. 企業與關係人票債信正常</div>
+          </div>
+        </faq-row>
+        <faq-row
+          title="• 普匯信保融資專案貸款額度與借款期間？"
+          bg-text="ISSUE 02"
+        ></faq-row>
+        <faq-row title="• 還款方式與利率？" bg-text="ISSUE 03"></faq-row>
+        <faq-row
+          title="• 服務費、手續費的收費方式？"
+          bg-text="ISSUE 04"
+        ></faq-row>
+        <faq-row
+          title="• 申請到撥款，有哪些流程？大概多久？"
+          bg-text="ISSUE 05"
+        ></faq-row>
+      </div>
       <div class="row">
         <div class="col"></div>
         <button class="btn btn-smeg-outline-primary">立即申辦</button>
@@ -149,9 +172,11 @@
 
 <script>
 import featureCard from '../../component/index/featureCard'
+import faqRow from '@/component/faqRow';
 export default {
   components: {
     featureCard,
+    faqRow
   },
   data() {
     return {
@@ -367,11 +392,12 @@ $color__background--primary: #f3f9fc;
   .advantage-title-group {
     padding: 120px 0 60px;
     .advantage-title-1 {
+      position: relative;
       font-style: normal;
       font-weight: 700;
       font-size: 40px;
       line-height: 1.4;
-      text-align: center;
+      margin-left: 25%;
       color: $color__text--primary;
       .em {
         color: $color--primary;
@@ -409,8 +435,9 @@ $color__background--primary: #f3f9fc;
     }
   }
   .advantage-row {
-    padding: 36px 140px;
-    margin: 24px 15px;
+    padding: 36px 80px;
+    max-width: 1100px;
+    margin: 24px auto;
     background-color: #fff;
     box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
     border-radius: 16px;
@@ -422,7 +449,7 @@ $color__background--primary: #f3f9fc;
       content: '';
       width: 238px;
       height: 295px;
-      right: 80px;
+      right: 20px;
       bottom: 188px;
     }
     &:nth-child(even) {
@@ -471,7 +498,20 @@ $color__background--primary: #f3f9fc;
     margin-top: 24px;
   }
   .question-rows {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: 24px;
     padding: 80px 0;
+  }
+  .faq-content {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 2;
+    letter-spacing: 0.04em;
+    color: #707070;
   }
 }
 .require-data {
