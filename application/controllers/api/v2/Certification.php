@@ -4772,6 +4772,7 @@ class Certification extends REST_Controller {
             'employeeNum',              // 企業員工人數
             'hasForeignInvestment',     // 是否有海外投資
             'isCovidAffected',          // 受嚴重特殊傳染性肺炎影響之企業
+            'getRelief',                // 支票存款戶經票據交換所註記為 ⌜紓困⌟
             'isBizAddrEqToBizRegAddr',  // 實際營業地址是否等於營業登記地址
             'realBizAddress',           // 實際營業地址
             'realBizRegAddressOwner',   // 營業登記地址是否自有

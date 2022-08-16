@@ -12,7 +12,7 @@ class Adapter_kgi_bank extends Adapter_base
         'bizRegAddress' => 'bizRegAddress', 'hasJuridicalInvest' => 'hasJuridicalInvest', 'juridicalInvestRate' => 'juridicalInvestRate',
         'bizTaxFileWay' => 'bizTaxFileWay', 'businessType2' => 'businessType', 'isManufacturing' => 'isManufacturing',
         'lastYearRevenue' => 'lastYearRevenue', 'dailyWorkingCapital' => 'dailyWorkingCapital', 'operatingCycle' => 'operatingCycle',
-        'liabilitiesAmount' => 'liabilitiesAmount', 'equityAmount' => 'equityAmount', 'compDuType' => 'compDuType', 'isCovidAffected' => 'isCovidAffected',
+        'liabilitiesAmount' => 'liabilitiesAmount', 'equityAmount' => 'equityAmount', 'compDuType' => 'compDuType', 'isCovidAffected' => 'isCovidAffected', 'getRelief' => 'getRelief',
         'isBizRegAddrSelfOw' => 'realBizRegAddressOwner', 'bizRegAddrOwner' => 'bizRegAddrOwner', 'isBizAddrEqToBizRegAddr' => 'isBizAddrEqToBizRegAddr',
         'realBizAddress' => 'realBizAddress', 'isRealBizAddrSelfOwn' => 'realBizAddressOwner', 'realBizAddrOwner' => 'realBizAddrOwner',
         'compContactName' => 'compContactName', 'compContact' => 'compContact', 'compTelExt' => 'compContactExt', 'financialOfficerName' => 'financialOfficerName',

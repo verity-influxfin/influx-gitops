@@ -7102,6 +7102,13 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": false,
+                            "field": "getRelief",
+                            "description": "支票存款戶經票據交換所註記為 ⌜紓困⌟<br/>1:是 0:否",
+                            "allowedValues": [1, 0]
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
                             "field": "isBizAddrEqToBizRegAddr",
                             "description": "實際營業地址是否等於營業登記地址<br/>1:是 0:否",
                             "allowedValues": [1, 0]
