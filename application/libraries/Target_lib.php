@@ -409,11 +409,11 @@ class Target_lib
                                         && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
                                         // 依照產品部門需求，上班族暫時全部強制進待二審
                                         && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
+                                        || $subloan_status
                                         || $renew
                                         || $evaluation_status
                                         || $creditSheet->hasCreditLine()
                                     )
-                                    || $subloan_status
                                 ) {
                                     $param['status'] = TARGET_WAITING_SIGNING;
 
