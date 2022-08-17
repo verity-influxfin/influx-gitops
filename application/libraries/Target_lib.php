@@ -403,16 +403,16 @@ class Target_lib
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
                                 if (
                                     // 命中反詐欺或黑名單，一定要進待二審
-                                    !$matchBrookesia && (
-                                    !$product_info['secondInstance']
-                                    && !$second_instance_check
-                                    && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
-                                    // 依照產品部門需求，上班族暫時全部強制進待二審
-                                    && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
-                                    || $subloan_status
-                                    || $renew
-                                    || $evaluation_status
-                                    || $creditSheet->hasCreditLine()
+                                    ! $matchBrookesia && (
+                                        ! $product_info['secondInstance']
+                                        && ! $second_instance_check
+                                        && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
+                                        // 依照產品部門需求，上班族暫時全部強制進待二審
+                                        && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
+                                        || $subloan_status
+                                        || $renew
+                                        || $evaluation_status
+                                        || $creditSheet->hasCreditLine()
                                     )
                                 ) {
                                     $param['status'] = TARGET_WAITING_SIGNING;
