@@ -17,9 +17,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
 
 Route::fallback(function () {
     return view('index');
@@ -327,7 +324,7 @@ Route::get('/campaign/{name}/{path?}', function (string $name, string $path='ind
     throw new NotFoundHttpException();
 });
 
-Route::get('/{path?}', function (Request $request, $path) {
+Route::get('/{path?}', function (Request $request, $path = '') {
     $default_desc = '首創台灣「AI風控審核無人化融資系統」，利用高端科技，全程無人為干擾，一支手機完成借貸！';
     $default_title = 'inFlux普匯金融科技';
     $default_og_img = asset('images/site_icon.png');
