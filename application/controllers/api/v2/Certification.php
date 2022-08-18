@@ -1202,7 +1202,15 @@ class Certification extends REST_Controller {
 					$bankaccount_info['verify'] = 2;
 				}else{
                     isset($this->user_info->naturalPerson) ? $user_id = [$user_id, $this->user_info->originalID] : '';
-					$this->certification_lib->set_success($insert);
+                    $cert = Certification_factory::get_instance_by_id($insert);
+                    if (isset($cert))
+                    {
+                        $cert->set_success(FALSE);
+                    }
+                    else
+                    {
+                        $this->certification_lib->set_success($insert);
+                    }
 					$target = $this->target_model->get_by([
 						'user_id'	=> $user_id,
 						'status'	=> 2,
