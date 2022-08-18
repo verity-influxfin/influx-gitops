@@ -338,8 +338,8 @@ Route::get('/{path?}', function (Request $request, $path = '') {
 
         if (!empty($knowledge_info['post_content'])) {
             $meta_description = substr(
-                    preg_replace("/&.+;/m", '', trim(
-                        preg_replace("/(<([^>]+)>)/i", '', $knowledge_info['post_content']))
+                    preg_replace("/&.+;/m", '',
+                        preg_replace("/(<([^>]+)>)/i", '', trim($knowledge_info['post_content']))
                     ),
                     0, 140
                 ) . '...';
