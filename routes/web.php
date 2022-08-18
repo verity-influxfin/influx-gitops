@@ -325,7 +325,7 @@ Route::get('/campaign/{name}/{path?}', function (string $name, string $path='ind
 });
 
 Route::get('/{path?}', function (Request $request, $path = '') {
-    $default_desc = '首創台灣「AI風控審核無人化融資系統」，利用高端科技，全程無人為干擾，一支手機完成借貸！';
+    $default_desc = '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。';
     $default_title = 'inFlux普匯金融科技';
     $default_og_img = asset('images/site_icon.png');
 
