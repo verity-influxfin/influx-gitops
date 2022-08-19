@@ -29,11 +29,11 @@
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="keywords" content="新北產業發展論壇、一金二造三區域、信貸、小額貸款、房貸試算、裝潢貸款、車貸試算、投資、債務整合、p2p金融科技、智慧製造、中小企業、中小企業融資">
-    <meta property="og:description" content="{{ $meta_description }}">
+    <meta property="og:description" content="{{ $meta_description ?? '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。' }}">
     <meta property="og:site_name" content="inFlux普匯金融科技">
-    <meta property="og:title" content="{{ $meta_title }}">
+    <meta property="og:title" content="{{ $meta_title ?? 'inFlux普匯金融科技' }}">
     <meta name="google-site-verification" content="2arsm3rXMMsobi4wX5akzPpQO6-Q6zgUjqwIT0P9UKo" />
-    <meta property="og:image" content="{{ $meta_og_image }}">
+    <meta property="og:image" content="{{ $meta_og_image ?? asset('images/site_icon.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="fb:app_id" content="2194926914163491">
     <title>inFlux普匯金融科技</title>
