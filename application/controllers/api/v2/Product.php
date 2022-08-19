@@ -3232,7 +3232,12 @@ class Product extends REST_Controller {
         ]);
         if($bank_account){
             if($bank_account->verify==0) {
-                $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                $bankaccount_info = ['verify' => 2];
+                $this->user_bankaccount_model->update($bank_account->id, $bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($bank_account->id, $bankaccount_info);
             }
         }else{
             $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));

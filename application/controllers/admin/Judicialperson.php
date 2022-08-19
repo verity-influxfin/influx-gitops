@@ -455,17 +455,22 @@ class Judicialperson extends MY_Admin_Controller {
 			]);
 			if (count($user_bankaccount) == 1) {
 				$user_bankaccount[0]->investor = 0;
-				$this->user_bankaccount_model->insert([
-					"user_id" => $user_bankaccount[0]->user_id,
-					"investor" => 0,
-					"user_certification_id" => $user_bankaccount[0]->user_certification_id,
-					"bank_code" => $user_bankaccount[0]->bank_code,
-					"branch_code" => $user_bankaccount[0]->branch_code,
-					"bank_account" => $user_bankaccount[0]->bank_account,
-					"front_image" => $user_bankaccount[0]->front_image,
-					"back_image" => $user_bankaccount[0]->back_image,
-					"verify" => 2,
-				]);
+                $bankaccount_info = [
+                    "user_id" => $user_bankaccount[0]->user_id,
+                    "investor" => 0,
+                    "user_certification_id" => $user_bankaccount[0]->user_certification_id,
+                    "bank_code" => $user_bankaccount[0]->bank_code,
+                    "branch_code" => $user_bankaccount[0]->branch_code,
+                    "bank_account" => $user_bankaccount[0]->bank_account,
+                    "front_image" => $user_bankaccount[0]->front_image,
+                    "back_image" => $user_bankaccount[0]->back_image,
+                    "verify" => 2,
+                ];
+				$user_bankaccount_id = $this->user_bankaccount_model->insert($bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($user_bankaccount_id, $bankaccount_info);
 			}
 		}
 	}

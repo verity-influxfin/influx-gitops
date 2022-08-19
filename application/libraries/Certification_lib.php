@@ -283,7 +283,12 @@ class Certification_lib{
                 ]);
                 if ($bank_account)
                 {
-                    $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                    $bankaccount_info = ['verify' => 2];
+                    $this->CI->user_bankaccount_model->update($bank_account->id, $bankaccount_info);
+
+                    // 寫 Log
+                    $this->CI->load->library('user_bankaccount_lib');
+                    $this->CI->user_bankaccount_lib->insert_change_log($bank_account->id, $bankaccount_info);
                 }
 
                 $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", CERTIFICATION_STATUS_SUCCEED);
