@@ -3230,12 +3230,9 @@ class Product extends REST_Controller {
             //'verify'	=> 0,
             'user_id'	=> $user_id
         ]);
-        if($bank_account){
-            if($bank_account->verify==0) {
-                $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
-            }
-        }else{
-            $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+        if (empty($bank_account))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => NO_BANK_ACCOUNT));
         }
 
         //上傳檔案欄位
@@ -3262,7 +3259,14 @@ class Product extends REST_Controller {
             }
         }
 
-        $this->target_lib->signing_target($target->id, $param, $user_id);
+        $signing_res = $this->target_lib->signing_target($target->id, $param, $user_id);
+        if ($signing_res !== FALSE)
+        {
+            if ($bank_account->verify == 0)
+            {
+                $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+            }
+        }
 
         $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
         if (in_array($product['id'], $allow_fast_verify_product)
