@@ -329,7 +329,8 @@ Route::get('/{path?}', function (Request $request, $path = '') {
     $default_title = 'inFlux普匯金融科技';
     $default_og_img = asset('images/site_icon.png');
 
-    if ($path == 'articlepage' && preg_match("/^knowledge-([\d]+)$/i", $request->get('q'), $matches) !== FALSE) {
+    preg_match("/^knowledge-([\d]+)$/i", $request->get('q'), $matches);
+    if ($path == 'articlepage' && isset($matches[1])) {
         // 小學堂文章 meta data
         $knowledge_info = KnowledgeArticle::select(['media_link', 'post_title', 'post_content'])
             ->where('id', $matches[1])
