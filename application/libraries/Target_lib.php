@@ -502,7 +502,12 @@ class Target_lib
                                             'user_id' => $user_id
                                         ]);
                                         if ($bank_account) {
-                                            $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                                            $bankaccount_info = ['verify' => 2];
+                                            $this->CI->user_bankaccount_model->update($bank_account->id, $bankaccount_info);
+
+                                            // 寫 Log
+                                            $this->CI->load->library('user_bankaccount_lib');
+                                            $this->CI->user_bankaccount_lib->insert_change_log($bank_account->id, $bankaccount_info);
                                         }
                                     }
                                 } else {

@@ -294,8 +294,12 @@ class Payment_lib{
 						}
 						$user_info->name = $name;
 					}
+                    $bankaccount_info = array("verify" => 3, "verify_at" => time(), "sys_check" => 0);
+                    $this->CI->user_bankaccount_model->update($value->id, $bankaccount_info);
 
-					$this->CI->user_bankaccount_model->update($value->id,array("verify"=>3,"verify_at"=>time(),"sys_check"=>0));
+                    // 寫 Log
+                    $this->CI->load->library('user_bankaccount_lib');
+                    $this->CI->user_bankaccount_lib->insert_change_log($value->id, $bankaccount_info);
 
 					$data = array(
 						"code"			=> "0",
