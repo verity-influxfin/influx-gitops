@@ -1703,6 +1703,20 @@ class Target_lib
                         if ($this->is_sub_product($product, $sub_product_id)) {
                             $product = $this->trans_sub_product($product, $sub_product_id);
                         }
+
+                        // 判斷是否符合產品申貸年齡限制
+                        $this->CI->load->helper('product');
+                        if (is_judicial_product($value->product_id) === FALSE)
+                        { // 先限制個金產品，若年紀不符合者，直接將案件失敗
+                            $user_info = $this->CI->user_model->get($value->user_id);
+                            $age = get_age($user_info->birthday);
+                            if ($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55))
+                            {
+                                $this->target_verify_failed($value, 0, '身份非平台服務範圍');
+                                return false;
+                            }
+                        }
+
                         $product_certification = $product['certifications'];
                         $finish = true;
 

@@ -3255,6 +3255,8 @@ class Product extends REST_Controller {
             $age = get_age($this->user_info->birthday);
 
             if($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55) ){
+                $this->load->library('target_lib');
+                $this->target_lib->target_verify_failed($target, 0, '身份非平台服務範圍');
                 $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
             }
         }
