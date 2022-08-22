@@ -3,19 +3,7 @@
     <section class="banner">
       <div class="block-content">
         <div class="banner-text">
-          <h1 class="h1">信保融資專案</h1>
-          <div class="banner-divider"></div>
-          <h2 class="h2">
-            <div>最高<span class="em">600</span>萬額度！</div>
-            <div>無人化 無業務介入 不必看人臉色</div>
-          </h2>
-          <h3 class="h3">
-            <div class="h3-em">1</div>
-            <div>
-              <div>支手機申請 <span class="dark">線上快速完成申貸</span></div>
-              <div>份資料填寫 <span class="dark">多家銀行同步進件</span></div>
-            </div>
-          </h3>
+          <h1 class="h1 d-none">信保融資專案</h1>
           <div class="links">
             <button class="btn btn-smeg-primary">立即申辦</button>
             <button class="btn btn-smeg-secondary">上傳資料(已申請)</button>
@@ -286,63 +274,25 @@ $color__background--primary: #f3f9fc;
   border-radius: 12px;
 }
 .banner {
-  background: url('~images/bussinessLoan/smeg-bannner-bg.png'),
-    linear-gradient(
-      90deg,
-      #ffffff 0%,
-      rgba(246, 246, 246, 0.98) 74.48%,
-      rgba(243, 243, 243, 0.1) 100%
-    );
+  background: url('~images/bussinessLoan/smeg-banner-bg-all.png');
   background-repeat: no-repeat;
-  background-position: right bottom, left top;
+  background-position: center;
+  background-size: cover;
+  height: 800px;
+  position: relative;
   .block-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    background: url('~images/bussinessLoan/smeg-bannner-bg.png');
+    background-position: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
   }
   .banner-text {
-    margin: 145px 0;
-    .h1 {
-      color: $color__text--primary;
-      text-align: left;
-    }
-    .banner-divider {
-      width: 230px;
-      border: 4px solid $color--primary;
-    }
-    .h2 {
-      color: $color--primary;
-      text-align: left;
-      .em {
-        font-size: 84px;
-        font-weight: 700;
-        color: #f29500;
-        line-height: 1.4;
-        margin: 0 3px;
-      }
-    }
-    .h3 {
-      .h3-em {
-        font-size: 114px;
-        line-height: 1.4;
-        letter-spacing: 0.08em;
-        color: #f29500;
-      }
-      display: flex;
-      align-items: center;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 34px;
-      line-height: 1.4;
-      letter-spacing: 0.08em;
-      color: #707070;
-      .dark {
-        color: #393939;
-      }
-    }
+    position: absolute;
+    bottom: 96px;
     .links {
-      margin-top: 24px;
       display: flex;
-      gap: 32px;
+      gap: 550px;
       .btn-smeg-primary {
         padding: 12px 78px;
       }
