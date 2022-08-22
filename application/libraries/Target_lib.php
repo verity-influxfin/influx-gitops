@@ -1705,14 +1705,15 @@ class Target_lib
                         }
 
                         // 判斷是否符合產品申貸年齡限制
-                        $this->CI->load->helper('product');
-                        if (is_judicial_product($value->product_id) === FALSE)
-                        { // 先限制個金產品，若年紀不符合者，直接將案件失敗
+                        $this->CI->load->library('loanmanager/product_lib');
+                        if ($this->CI->product_lib->need_chk_allow_age($value->product_id) === TRUE)
+                        {
                             $user_info = $this->CI->user_model->get($value->user_id);
                             $age = get_age($user_info->birthday);
-                            if ($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55))
+                            if ($this->CI->product_lib->is_age_available($age, $value->product_id, $value->sub_product_id) === FALSE)
                             {
                                 $this->target_verify_failed($value, 0, '身份非平台服務範圍');
+                                $this->CI->target_model->update($value->id, ['script_status' => 0]);
                                 return false;
                             }
                         }
