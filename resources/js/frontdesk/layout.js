@@ -186,7 +186,7 @@ $(() => {
             },
             loginReload(path) {
               // path with Reload
-              const reloadPath = ['/invest-report', '/risk', '/2022-campus-ambassador']
+              const reloadPath = ['/invest-report', '/risk']
               return reloadPath.some(x => x === path)
             },
             goFeedback() {
