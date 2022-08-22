@@ -20,8 +20,8 @@
     </section>
     <section class="advantage">
       <div class="block-content">
-        <h1 class="h1">全台首創 線上企業信保貸款平台</h1>
-        <h2 class="h2">無人化、免仲介，讓信保為您加分 快速申請、快速撥款</h2>
+        <h1 class="h1">產品資訊與服務說明</h1>
+        <h2 class="h2">讓普匯協助您 一次申請多家銀行 取得資金</h2>
         <div class="features">
           <featureCard title="有營登即可申請" info="" :icon="ficon1">
             <div class="feature-info">有統編，無分行業皆可</div>
@@ -150,6 +150,9 @@
         <div>全線上申請 x 手機上傳資料 x 5天內銀行放款</div>
         <div>貸你解決企業資金周轉難題</div>
       </h2>
+      <div class="block-content">
+        <stepGroup :steps="steps" content-class="content-group" />
+      </div>
     </section>
     <section class="consultation">
       <h1 class="h1">需要專人服務嗎？</h1>
@@ -161,17 +164,41 @@
 <script>
 import featureCard from '../../component/index/featureCard'
 import faqRow from '@/component/faqRow';
+import stepGroup from '@/component/index/stepGroup';
 export default {
   components: {
     featureCard,
-    faqRow
+    faqRow,
+    stepGroup
   },
   data() {
     return {
       ficon1: require('@/asset/images/workloan/feature-icon-1.png'),
       ficon2: require('@/asset/images/workloan/feature-icon-2.png'),
       ficon3: require('@/asset/images/workloan/feature-icon-3.png'),
-      ficon4: require('@/asset/images/workloan/feature-icon-4.png')
+      ficon4: require('@/asset/images/workloan/feature-icon-4.png'),
+      steps: [
+        {
+          img: require('@/asset/images/index/invest-step-1.png'),
+          title: '步驟一',
+          info: '<div>申請「信保專案融資」</div><div>完成法人註冊、負責人實名認證</div>'
+        },
+        {
+          img: require('@/asset/images/index/invest-step-2.png'),
+          title: '步驟二',
+          info: '確認借款期間與額度，同意申請'
+        },
+        {
+          img: require('@/asset/images/index/invest-step-3.png'),
+          title: '步驟三',
+          info: '<div>完成負責人、公司資料提供</div><div>(包含負責人配偶、新增保證人)</div>'
+        },
+        {
+          img: require('@/asset/images/index/invest-step-4.png'),
+          title: '步驟四',
+          info: '<div>等待系統審核並媒合資金方(銀行)</div><div>銀行最終核准後、簽約對保、立即撥款</div>'
+        }
+      ]
     }
   },
 }
@@ -489,7 +516,14 @@ $color__background--primary: #f3f9fc;
     opacity: 0.64;
     margin-top: 24px;
   }
+  .block-content {
+    width: 700px;
+    &::v-deep .content-group {
+      width: 365px;
+    }
+  }
 }
+
 .consultation {
   padding: 80px;
   background: $color__background--primary;

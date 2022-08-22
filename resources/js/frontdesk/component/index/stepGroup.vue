@@ -1,6 +1,10 @@
 <template>
   <div class="step-main">
-    <div class="step-content" v-for="(step, index) in steps" :key="index">
+    <div
+      v-for="(step, index) in steps"
+      :key="index"
+      :class="['step-content', contentClass]"
+    >
       <div class="step-content-title" :data-step="index + 1">
         {{ step.title }}
       </div>
@@ -40,6 +44,10 @@ export default {
         }
       ]
     },
+    contentClass: {
+      type: String,
+      default: ''
+    }
   },
 }
 </script>
@@ -78,13 +86,13 @@ $color__text--primary: #023d64;
 }
 .step-main {
   margin: 45px auto;
-  width: 650px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 .step-content-title {
+  position: relative;
   font-style: normal;
   font-weight: 700;
   font-size: 36px;
@@ -100,7 +108,7 @@ $color__text--primary: #023d64;
     height: 60px;
     line-height: 60px;
     position: absolute;
-    right: 269px;
+    left: -72px;
     text-align: center;
     width: 60px;
   }
@@ -170,7 +178,7 @@ $color__text--primary: #023d64;
       height: 24px;
       line-height: 24px;
       position: absolute;
-      right: 143px;
+      left: -33px;
       width: 24px;
     }
   }
