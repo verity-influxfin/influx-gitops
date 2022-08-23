@@ -3251,7 +3251,7 @@ class Product extends REST_Controller {
         if ($this->product_lib->need_chk_allow_age($target->product_id, $target->sub_prduct_id ?? 0) === TRUE)
         {
             $age = get_age($this->user_info->birthday);
-            if ($this->product_lib->is_age_available($age, $target->product_id, $target->sub_product_id) === FALSE)
+            if ($this->product_lib->is_age_available($age, $target->product_id, $target->sub_product_id ?? 0) === FALSE)
             {
                 $this->load->library('target_lib');
                 $this->target_lib->target_verify_failed($target, 0, '身份非平台服務範圍');
