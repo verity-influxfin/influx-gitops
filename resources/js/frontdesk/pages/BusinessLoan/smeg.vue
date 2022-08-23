@@ -60,6 +60,9 @@
     <section class="require-data">
       <h1 class="h1">申請需準備什麼資料呢？</h1>
       <h2 class="h2">提供負責人與公司相關資料，即時為您送件</h2>
+      <div class="block-content">
+        <smegRequireData />
+      </div>
     </section>
     <section class="step">
       <h1 class="h1">申貸簡單四步驟</h1>
@@ -305,10 +308,12 @@
 <script>
 import faqRow from '@/component/faqRow';
 import stepGroup from '@/component/index/stepGroup';
+import smegRequireData from '@/component/smegRequireData';
 export default {
   components: {
     faqRow,
-    stepGroup
+    stepGroup,
+    smegRequireData
   },
   data() {
     return {
@@ -627,7 +632,7 @@ $color__background--primary: #f3f9fc;
       }
       .item {
         padding-left: 36px;
-        margin-bottom: 5px;
+        margin-bottom: 12px;
         transform: skewX(25deg);
         font-style: normal;
         font-weight: 700;
@@ -658,8 +663,9 @@ $color__background--primary: #f3f9fc;
     opacity: 0.64;
     margin-top: 24px;
   }
-  .question-rows {
-    padding: 80px 0;
+  .block-content{
+    margin-top: 84px;
+    margin-bottom: 40px;
   }
 }
 .step {
