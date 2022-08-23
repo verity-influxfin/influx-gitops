@@ -1704,20 +1704,6 @@ class Target_lib
                             $product = $this->trans_sub_product($product, $sub_product_id);
                         }
 
-                        // 判斷是否符合產品申貸年齡限制
-                        $this->CI->load->library('loanmanager/product_lib');
-                        if ($this->CI->product_lib->need_chk_allow_age($value->product_id) === TRUE)
-                        {
-                            $user_info = $this->CI->user_model->get($value->user_id);
-                            $age = get_age($user_info->birthday);
-                            if ($this->CI->product_lib->is_age_available($age, $value->product_id, $value->sub_product_id) === FALSE)
-                            {
-                                $this->target_verify_failed($value, 0, '身份非平台服務範圍');
-                                $this->CI->target_model->update($value->id, ['script_status' => 0]);
-                                return false;
-                            }
-                        }
-
                         $product_certification = $product['certifications'];
                         $finish = true;
 
@@ -1865,6 +1851,20 @@ class Target_lib
                         }
 
                         if ($finish) {
+                            // 判斷是否符合產品申貸年齡限制
+                            $this->CI->load->library('loanmanager/product_lib');
+                            if ($this->CI->product_lib->need_chk_allow_age($value->product_id) === TRUE)
+                            {
+                                $user_info = $this->CI->user_model->get($value->user_id);
+                                $age = get_age($user_info->birthday);
+                                if ($this->CI->product_lib->is_age_available($age, $value->product_id, $value->sub_product_id) === FALSE)
+                                {
+                                    $this->target_verify_failed($value, 0, '身份非平台服務範圍');
+                                    $this->CI->target_model->update($value->id, ['script_status' => 0]);
+                                    return false;
+                                }
+                            }
+
                             // 檢查黑名單結果，是否需要處置
                             $this->CI->load->library('brookesia/black_list_lib');
                             $is_user_blocked = $this->CI->black_list_lib->check_user($value->user_id, CHECK_APPLY_PRODUCT);
