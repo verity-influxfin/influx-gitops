@@ -1220,7 +1220,11 @@ class Certification extends REST_Controller {
 					}
 				}
 
-				$this->user_bankaccount_model->insert($bankaccount_info);
+                $user_bankaccount_id = $this->user_bankaccount_model->insert($bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($user_bankaccount_id, $bankaccount_info);
 
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
@@ -3576,7 +3580,11 @@ class Certification extends REST_Controller {
                     }
                 }
 
-                $this->user_bankaccount_model->insert($bankaccount_info);
+                $user_bankaccount_id = $this->user_bankaccount_model->insert($bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($user_bankaccount_id, $bankaccount_info);
 
                 $this->response(array('result' => 'SUCCESS'));
             }

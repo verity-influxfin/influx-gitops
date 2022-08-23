@@ -502,7 +502,12 @@ class Target_lib
                                             'user_id' => $user_id
                                         ]);
                                         if ($bank_account) {
-                                            $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                                            $bankaccount_info = ['verify' => 2];
+                                            $this->CI->user_bankaccount_model->update($bank_account->id, $bankaccount_info);
+
+                                            // 寫 Log
+                                            $this->CI->load->library('user_bankaccount_lib');
+                                            $this->CI->user_bankaccount_lib->insert_change_log($bank_account->id, $bankaccount_info);
                                         }
                                     }
                                 } else {
@@ -1703,6 +1708,21 @@ class Target_lib
                         if ($this->is_sub_product($product, $sub_product_id)) {
                             $product = $this->trans_sub_product($product, $sub_product_id);
                         }
+
+                        // 判斷是否符合產品申貸年齡限制
+                        $this->CI->load->library('loanmanager/product_lib');
+                        if ($this->CI->product_lib->need_chk_allow_age($value->product_id) === TRUE)
+                        {
+                            $user_info = $this->CI->user_model->get($value->user_id);
+                            $age = get_age($user_info->birthday);
+                            if ($this->CI->product_lib->is_age_available($age, $value->product_id, $value->sub_product_id) === FALSE)
+                            {
+                                $this->target_verify_failed($value, 0, '身份非平台服務範圍');
+                                $this->CI->target_model->update($value->id, ['script_status' => 0]);
+                                return false;
+                            }
+                        }
+
                         $product_certification = $product['certifications'];
                         $finish = true;
 

@@ -3230,12 +3230,9 @@ class Product extends REST_Controller {
             //'verify'	=> 0,
             'user_id'	=> $user_id
         ]);
-        if($bank_account){
-            if($bank_account->verify==0) {
-                $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
-            }
-        }else{
-            $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+        if (empty($bank_account))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => NO_BANK_ACCOUNT));
         }
 
         //上傳檔案欄位
@@ -3250,16 +3247,26 @@ class Product extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
         }
 
-        $company = ['DS2P1'];
-        if(!in_array($product['visul_id'],$company)){
+        $this->load->library('loanmanager/product_lib');
+        if ($this->product_lib->need_chk_allow_age($target->product_id, $target->sub_prduct_id ?? 0) === TRUE)
+        {
             $age = get_age($this->user_info->birthday);
-
-            if($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55) ){
+            if ($this->product_lib->is_age_available($age, $target->product_id, $target->sub_product_id) === FALSE)
+            {
+                $this->load->library('target_lib');
+                $this->target_lib->target_verify_failed($target, 0, '身份非平台服務範圍');
                 $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
             }
         }
 
-        $this->target_lib->signing_target($target->id, $param, $user_id);
+        $signing_res = $this->target_lib->signing_target($target->id, $param, $user_id);
+        if ($signing_res !== FALSE)
+        {
+            if ($bank_account->verify == 0)
+            {
+                $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+            }
+        }
 
         $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
         if (in_array($product['id'], $allow_fast_verify_product)

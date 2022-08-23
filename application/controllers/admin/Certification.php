@@ -694,7 +694,13 @@ class Certification extends MY_Admin_Controller {
                             'change_admin' => $this->login_info->id,
                         ));
                         $cert->set_failure(FALSE, $fail);
-                        $this->user_bankaccount_model->update($post['id'], array('verify' => 4, 'status' => 0));
+                        $bankaccount_info = array('verify' => 4, 'status' => 0);
+                        $this->user_bankaccount_model->update($post['id'], $bankaccount_info);
+
+                        // 寫 Log
+                        $this->load->library('user_bankaccount_lib');
+                        $this->user_bankaccount_lib->insert_change_log($post['id'], $bankaccount_info);
+
                         alert('更新成功', admin_url('close'));
                     }
                     else
@@ -728,7 +734,12 @@ class Certification extends MY_Admin_Controller {
 				));
 				$this->load->library('Certification_lib');
 				$this->certification_lib->set_success($info->user_certification_id);
-				$this->user_bankaccount_model->update($id,array('verify'=>1));
+                $bankaccount_info = array('verify' => 1);
+                $this->user_bankaccount_model->update($id, $bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($id, $bankaccount_info);
 
 				// 如果是借款人的金融帳號通過，才需要對案件進行處理
 				if($info->investor == 0) {
@@ -800,7 +811,13 @@ class Certification extends MY_Admin_Controller {
 					'change_admin'			=> $this->login_info->id,
 				));
 				$this->user_certification_model->update($info->user_certification_id,array('status'=>2));
-				$this->user_bankaccount_model->update($id,array('verify'=>4,'status'=>0));
+                $bankaccount_info = array('verify' => 4, 'status' => 0);
+                $this->user_bankaccount_model->update($id, $bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($id, $bankaccount_info);
+
 				$this->load->library('Notification_lib');
 				$this->notification_lib->bankaccount_verify_failed($info->user_id,$info->investor);
 				echo '更新成功';die();
@@ -818,7 +835,13 @@ class Certification extends MY_Admin_Controller {
 		if($id){
 			$info = $this->user_bankaccount_model->get($id);
 			if($info && $info->verify==3){
-				$this->user_bankaccount_model->update($id,array('verify'=>2));
+                $bankaccount_info = array('verify' => 2);
+                $this->user_bankaccount_model->update($id, $bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($id, $bankaccount_info);
+
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();
