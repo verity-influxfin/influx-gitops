@@ -18,90 +18,249 @@
         <h2 class="h2">攜手建立事業版圖 貸您邁向事業成功</h2>
       </div>
     </section>
-    <section class="advantage">
+    <section class="info">
       <div class="block-content">
         <h1 class="h1">產品資訊與服務說明</h1>
         <h2 class="h2">讓普匯協助您 一次申請多家銀行 取得資金</h2>
         <div class="features">
-          <featureCard title="有營登即可申請" info="" :icon="ficon1">
-            <div class="feature-info">有統編，無分行業皆可</div>
-          </featureCard>
-          <featureCard
-            title="一支手機搞定"
-            info="APP線上快速申請核准"
-            :icon="ficon2"
-          >
-            <div class="feature-info">APP線上快速申請核准</div>
-          </featureCard>
-          <featureCard
-            title="銀行快速撥款"
-            info="直送多家合作銀行審查"
-            :icon="ficon3"
-          >
-            <div class="feature-info">直送多家合作銀行審查</div>
-          </featureCard>
-          <featureCard
-            title="0手續費，0服務費"
-            info="普匯平台不收取客戶費用"
-            :icon="ficon4"
-          >
-            <div class="feature-info">普匯平台不收取客戶費用</div>
-          </featureCard>
-        </div>
-        <div class="advantage-title-group">
-          <div class="advantage-title-1">
-            <span class="pos-1">全台唯一</span>
-            <span class="em">銀行信保資金媒合</span>
+          <div>
+            <div class="feature-slogan-1">
+              <div>Product</div>
+              <div>Information</div>
+            </div>
+            <div class="feature-slogan-2">Open Banking API</div>
           </div>
-          <div class="advantage-title-2">
-            金融科技
-            <img src="@/asset/images/coin.png" alt="" />
-            銀行資金
-            <img src="@/asset/images/coin.png" alt="" />
-            信保保證
+          <div class="feature-items">
+            <div class="item">
+              •資格：有合法
+              <span class="text-color-dark em">公司或商業登記</span>
+            </div>
+            <div class="item">
+              •用途：營運所需 <span class="text-color-dark em">資金周轉</span>
+            </div>
+            <div class="item">
+              •貸款額度 最高 <span class="text-color-orange em">600萬</span>
+            </div>
+            <div class="item">
+              •貸款期間 最長 <span class="text-color-dark em">5年</span>
+            </div>
+            <div class="item">
+              •普匯平台不收取客戶費用
+              <span class="text-color-orange em">0</span> 手續費 ,
+              <span class="text-color-orange em">0</span> 服務費
+            </div>
+            <div class="item">
+              •國家級 <span class="text-color-dark em">信保基金</span> 為您擔保
+              , <span class="text-color-dark em">免抵押品</span>
+            </div>
           </div>
         </div>
-        <div class="advantage-rows">
-          <div class="advantage-row advantage-row-1">
-            <div class="advantage-row-title">真正普匯金融</div>
-            <div class="advantage-row-text">
-              <div>•麵攤老闆、一人公司</div>
-              <div>•有統編，通通可以申請！</div>
-            </div>
-            <div class="advantage-row-bg">ADVANTAGE 01</div>
-          </div>
-          <div class="advantage-row">
-            <div class="advantage-row-title">數位金融第一品牌</div>
-            <div class="advantage-row-text">
-              <div>•近100萬筆申貸資料</div>
-              <div>•全台最強AI智能</div>
-            </div>
-            <div class="advantage-row-bg">ADVANTAGE 02</div>
-          </div>
-          <div class="advantage-row">
-            <div class="advantage-row-title">多家金融機構合作</div>
-            <div class="advantage-row-text">
-              <div>•普匯審核、銀行放款</div>
-              <div>•加速資金取得</div>
-            </div>
-            <div class="advantage-row-bg">ADVANTAGE 03</div>
-          </div>
-          <div class="advantage-row">
-            <div class="advantage-row-title">結合信保基金</div>
-            <div class="advantage-row-text">
-              <div>•政策扶持，信保機制</div>
-              <div>•中小微企業融資最強擔保</div>
-            </div>
-            <div class="advantage-row-bg">ADVANTAGE 04</div>
-          </div>
-          <div class="advantage-row">
-            <div class="advantage-row-title">最靈活融資管道</div>
-            <div class="advantage-row-text">
-              •滿足1萬元的急用週轉，到600萬的資金需求
-            </div>
-            <div class="advantage-row-bg">ADVANTAGE 05</div>
-          </div>
+      </div>
+    </section>
+    <section class="require-data">
+      <h1 class="h1">申請需準備什麼資料呢？</h1>
+      <h2 class="h2">提供負責人與公司相關資料，即時為您送件</h2>
+    </section>
+    <section class="step">
+      <h1 class="h1">申貸簡單四步驟</h1>
+      <h2 class="h2">
+        <div>全線上申請 x 手機上傳資料 x 5天內銀行放款</div>
+        <div>貸你解決企業資金周轉難題</div>
+      </h2>
+      <div class="block-content">
+        <stepGroup :steps="steps" content-class="content-group" />
+      </div>
+    </section>
+    <section class="advantage">
+      <div class="advantage-title-group">
+        <div class="advantage-title-1">
+          <span class="pos-1">全台唯一</span>
+          <span class="em">銀行信保資金媒合</span>
         </div>
+        <div class="advantage-title-2">
+          金融科技
+          <img src="@/asset/images/coin.png" alt="" />
+          銀行資金
+          <img src="@/asset/images/coin.png" alt="" />
+          信保保證
+        </div>
+      </div>
+      <div class="advantage-rows">
+        <div class="advantage-row advantage-row-1">
+          <div class="advantage-row-icon">
+            <img
+              src="@/asset/images/bussinessLoan/smeg-advantage-1.svg"
+              alt=""
+            />
+          </div>
+          <div class="advantage-row-title">真正普匯金融</div>
+          <div class="advantage-row-text">
+            <div>•麵攤老闆、一人公司</div>
+            <div>•有統編，通通可以申請！</div>
+          </div>
+          <div class="advantage-row-bg">ADVANTAGE 01</div>
+        </div>
+        <div class="advantage-row">
+          <div class="advantage-row-icon">
+            <img
+              src="@/asset/images/bussinessLoan/smeg-advantage-2.svg"
+              alt=""
+            />
+          </div>
+          <div class="advantage-row-title">數位金融第一品牌</div>
+          <div class="advantage-row-text">
+            <div>•近100萬筆申貸資料</div>
+            <div>•全台最強AI智能</div>
+          </div>
+          <div class="advantage-row-bg">ADVANTAGE 02</div>
+        </div>
+        <div class="advantage-row">
+          <div class="advantage-row-icon">
+            <img src="@/asset/images/bussinessLoan/smeg-advantage-3.svg" />
+          </div>
+          <div class="advantage-row-title">多家金融機構合作</div>
+          <div class="advantage-row-text">
+            <div>•普匯審核、銀行放款</div>
+            <div>•加速資金取得</div>
+          </div>
+          <div class="advantage-row-bg">ADVANTAGE 03</div>
+        </div>
+        <div class="advantage-row">
+          <div class="advantage-row-icon">
+            <img src="@/asset/images/bussinessLoan/smeg-advantage-4.svg" />
+          </div>
+          <div class="advantage-row-title">結合信保基金</div>
+          <div class="advantage-row-text">
+            <div>•政策扶持，信保機制</div>
+            <div>•中小微企業融資最強擔保</div>
+          </div>
+          <div class="advantage-row-bg">ADVANTAGE 04</div>
+        </div>
+        <div class="advantage-row">
+          <div class="advantage-row-icon">
+            <img src="@/asset/images/bussinessLoan/smeg-advantage-5.svg" />
+          </div>
+          <div class="advantage-row-title">最靈活融資管道</div>
+          <div class="advantage-row-text">
+            •滿足1萬元的急用週轉，到600萬的資金需求
+          </div>
+          <div class="advantage-row-bg">ADVANTAGE 05</div>
+        </div>
+      </div>
+    </section>
+    <section class="consultation">
+      <h1 class="h1">需要專人服務嗎？</h1>
+      <h2 class="h2">請留下簡單訊息，將由融資專人為您解惑！</h2>
+      <div class="block-content">
+        <form
+          ref="contactForm"
+          @submit.prevent
+          class="row no-gutters justify-content-center"
+        >
+          <div class="col-md col-12">
+            <div class="row no-gutters mb-3">
+              <div class="form-item-text">姓名：</div>
+              <input
+                type="text"
+                name="name"
+                class="form-item-input col"
+                maxlength="20"
+                required
+              />
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="form-item-text">身分性別：</div>
+              <div class="radio-custom">
+                <label class="form-item-label">
+                  <input
+                    type="radio"
+                    name="gender"
+                    class="radio-inline"
+                    value="1"
+                    required
+                  />
+                  <span class="outside"><span class="inside"></span></span>男
+                </label>
+                <label class="form-item-label">
+                  <input
+                    type="radio"
+                    name="gender"
+                    class="radio-inline"
+                    value="2"
+                    required
+                  />
+                  <span class="outside"><span class="inside"></span></span>女
+                </label>
+              </div>
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="form-item-text">公司名稱：</div>
+              <input
+                type="text"
+                name="phone"
+                maxlength="10"
+                class="form-item-input col"
+              />
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="form-item-text">電子信箱：</div>
+              <input
+                type="text"
+                name="line"
+                maxlength="40"
+                required
+                class="form-item-input col"
+              />
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="form-item-text">聯絡時間：</div>
+              <select
+                type="text"
+                class="form-item-input col"
+                name="contact_time"
+                required
+              >
+                <option selected disabled value="">-請選擇-</option>
+                <option value="1">隨時</option>
+                <option value="2">上午(09:00 ~ 12:00)</option>
+                <option value="3">下午(13:30 ~ 18:00)</option>
+              </select>
+            </div>
+            <div class="row no-gutters mb-3">
+              <div class="form-item-text">資金需求</div>
+              <input
+                type="text"
+                name="email"
+                class="form-item-input col"
+                required
+              />
+            </div>
+
+            <div class="row no-gutters mb-3">
+              <div class="form-item-text">需求原因：</div>
+              <textarea
+                type="text"
+                name="reason"
+                style="min-height: 15vh"
+                class="form-item-input col"
+                maxlength="100"
+                required
+              ></textarea>
+            </div>
+            <div class="row no-gutters">
+              <div class="form-item-text d-md-block d-none"></div>
+              <button class="btn btn-block btn-form-submit col">
+                立即諮詢
+              </button>
+            </div>
+          </div>
+          <div class="col-md-6 col-12">
+            <img
+              src="@/asset/images/bussinessLoan/smeg-form-cover.png"
+              class="img-fluid form-cover"
+            />
+          </div>
+        </form>
       </div>
     </section>
     <section class="question">
@@ -140,34 +299,14 @@
         <div class="col"></div>
       </div>
     </section>
-    <section class="require-data">
-      <h1 class="h1">信保融資專案需準備什麼資料？</h1>
-      <h2 class="h2">提供負責人與公司相關資料，即時為您送件</h2>
-    </section>
-    <section class="step">
-      <h1 class="h1">申貸簡單四步驟</h1>
-      <h2 class="h2">
-        <div>全線上申請 x 手機上傳資料 x 5天內銀行放款</div>
-        <div>貸你解決企業資金周轉難題</div>
-      </h2>
-      <div class="block-content">
-        <stepGroup :steps="steps" content-class="content-group" />
-      </div>
-    </section>
-    <section class="consultation">
-      <h1 class="h1">需要專人服務嗎？</h1>
-      <h2 class="h2">請留下簡單訊息，將由融資專人為您解惑！</h2>
-    </section>
   </main>
 </template>
 
 <script>
-import featureCard from '../../component/index/featureCard'
 import faqRow from '@/component/faqRow';
 import stepGroup from '@/component/index/stepGroup';
 export default {
   components: {
-    featureCard,
     faqRow,
     stepGroup
   },
@@ -204,6 +343,91 @@ export default {
 }
 </script>
 
+<style lang="scss">
+.radio-custom-work {
+  display: contents;
+  label {
+    display: inline-block;
+    position: relative;
+    padding-left: 23px;
+    cursor: pointer;
+    width: auto;
+    margin-right: 20px;
+    line-height: 29px;
+  }
+
+  input {
+    height: 1px;
+    width: 1px;
+    opacity: 0;
+  }
+
+  .work-input-outside {
+    display: inline-block;
+    position: absolute;
+    left: 0%;
+    top: 30%;
+    margin-top: 0;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #036eb7;
+    border-radius: 12px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #fff;
+  }
+
+  .work-input-inside {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    border-radius: 12px;
+    width: 12px;
+    height: 12px;
+    background: #036eb7;
+    left: 3px;
+    top: 3px;
+    -webkit-transform: scale(0, 0);
+    transform: scale(0, 0);
+  }
+  .no-transforms .work-input-inside {
+    left: auto;
+    top: auto;
+    width: 0;
+    height: 0;
+  }
+
+  input:checked + .work-input-outside .work-input-inside {
+    -webkit-animation: radio-select 0.1s linear;
+    animation: radio-select 0.1s linear;
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+  }
+  .no-transforms input:checked + .work-input-outside .work-input-inside {
+    width: 10px;
+    height: 10px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .radio-custom-work label {
+    margin-right: 10px;
+  }
+  .radio-custom-work .work-input-outside {
+    margin-top: -6px;
+    width: 22px;
+    height: 22px;
+  }
+  .radio-custom-work .work-input-inside {
+    width: 16px;
+    height: 16px;
+    top: 1px;
+    left: 1px;
+  }
+}
+</style>
 <style lang="scss" scoped>
 $color--primary: #036eb7;
 $color__text--primary: #023d64;
@@ -300,6 +524,15 @@ $color__background--primary: #f3f9fc;
   text-align: center;
   border-radius: 12px;
 }
+.btn-form-submit {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.4;
+  color: #ffffff;
+  background-color: $color--primary;
+  border-radius: 12px;
+}
 .banner {
   background: url('~images/bussinessLoan/smeg-banner-bg-all.png');
   background-repeat: no-repeat;
@@ -340,9 +573,8 @@ $color__background--primary: #f3f9fc;
     margin-top: 24px;
   }
 }
-.advantage {
+.info {
   padding: 80px;
-  background: $color__background--primary;
   .h1 {
     color: $color--primary;
   }
@@ -353,19 +585,103 @@ $color__background--primary: #f3f9fc;
   }
   .features {
     display: grid;
-    margin-top: 56px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 48px;
-    .feature-info {
-      font-style: normal;
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 1.4;
-      text-align: center;
-      color: $color--primary;
-      opacity: 0.64;
+    grid-template-columns: 1fr auto;
+    gap: 42px;
+    padding: 84px 0;
+    .feature-slogan {
+      &-1 {
+        font-family: 'Arial';
+        font-style: italic;
+        font-weight: 700;
+        font-size: 96px;
+        line-height: 110px;
+        text-align: right;
+        color: $color--primary;
+        opacity: 0.1;
+      }
+      &-2 {
+        margin-top: 42px;
+        padding-left: 30px;
+        font-family: 'Arial';
+        font-style: italic;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 41px;
+        letter-spacing: 0.08em;
+        color: #023d64;
+        opacity: 0.4;
+      }
+    }
+    .feature-items {
+      font-size: 36px;
+      position: relative;
+      transform: skewX(-25deg);
+      &::before {
+        width: 3px;
+        background: linear-gradient(180deg, #036eb7 0%, #ffffff 100%),
+          linear-gradient(0deg, #afd6e2, #afd6e2);
+        content: '';
+        top: 10%;
+        height: 80%;
+        position: absolute;
+      }
+      .item {
+        padding-left: 36px;
+        margin-bottom: 5px;
+        transform: skewX(25deg);
+        font-style: normal;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 1.4;
+        color: $color--primary;
+        .em {
+          font-size: 40px;
+        }
+        .text-color-dark {
+          color: $color__text--primary;
+        }
+        .text-color-orange {
+          color: #f29500;
+        }
+      }
     }
   }
+}
+.require-data {
+  padding: 80px;
+  background: $color__background--primary;
+  .h1 {
+    color: $color--primary;
+  }
+  .h2 {
+    color: $color--primary;
+    opacity: 0.64;
+    margin-top: 24px;
+  }
+  .question-rows {
+    padding: 80px 0;
+  }
+}
+.step {
+  padding: 80px;
+  .h1 {
+    color: $color--primary;
+  }
+  .h2 {
+    color: $color--primary;
+    opacity: 0.64;
+    margin-top: 24px;
+  }
+  .block-content {
+    width: 700px;
+    &::v-deep .content-group {
+      width: 365px;
+    }
+  }
+}
+.advantage {
+  padding: 80px;
+  background: $color__background--primary;
   .advantage-title-group {
     padding: 120px 0 60px;
     .advantage-title-1 {
@@ -412,13 +728,29 @@ $color__background--primary: #f3f9fc;
     }
   }
   .advantage-row {
-    padding: 36px 80px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 36px;
+    grid-template-rows: auto auto;
+    padding: 26px 80px;
     max-width: 1100px;
     margin: 24px auto;
     background-color: #fff;
     box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
     border-radius: 16px;
     position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      width: 170px;
+      height: 170px;
+      right: 115px;
+      bottom: 45px;
+      background-image: url('~images/2022_campus_ambassador/2022-campus-benefit-card-bg-1.png');
+      background-repeat: no-repeat;
+      transform: rotate(40deg);
+      opacity: 0.9;
+    }
     &-1::after {
       display: block;
       position: absolute;
@@ -427,14 +759,24 @@ $color__background--primary: #f3f9fc;
       width: 238px;
       height: 295px;
       right: 20px;
-      bottom: 188px;
+      bottom: 203px;
     }
     &:nth-child(even) {
       .advantage-row-title {
         color: $color__text--primary;
       }
+      .advantage-row-icon {
+        border: 2px solid $color__text--primary;
+      }
+    }
+    &-icon {
+      grid-area: 1 / 1 / 3 / 2;
+      border-radius: 50%;
+      padding: 34px;
+      border: 2px solid $color--primary;
     }
     &-title {
+      grid-area: 1 / 2 / 2 / 3;
       font-style: normal;
       font-weight: 700;
       font-size: 36px;
@@ -443,6 +785,7 @@ $color__background--primary: #f3f9fc;
       margin-bottom: 9px;
     }
     &-text {
+      grid-area: 2 / 2 / 3 / 3;
       font-style: normal;
       font-weight: 400;
       font-size: 20px;
@@ -462,6 +805,23 @@ $color__background--primary: #f3f9fc;
       color: $color__text--primary;
       opacity: 0.05;
     }
+  }
+}
+.consultation {
+  padding: 80px;
+  .h1 {
+    color: $color--primary;
+  }
+  .h2 {
+    color: $color--primary;
+    opacity: 0.64;
+    margin-top: 24px;
+  }
+  .block-content {
+    margin-top: 120px;
+  }
+  .form-cover {
+    margin-left: 155px;
   }
 }
 .question {
@@ -489,51 +849,6 @@ $color__background--primary: #f3f9fc;
     line-height: 2;
     letter-spacing: 0.04em;
     color: #707070;
-  }
-}
-.require-data {
-  padding: 80px;
-  background: $color__background--primary;
-  .h1 {
-    color: $color--primary;
-  }
-  .h2 {
-    color: $color--primary;
-    opacity: 0.64;
-    margin-top: 24px;
-  }
-  .question-rows {
-    padding: 80px 0;
-  }
-}
-.step {
-  padding: 80px;
-  .h1 {
-    color: $color--primary;
-  }
-  .h2 {
-    color: $color--primary;
-    opacity: 0.64;
-    margin-top: 24px;
-  }
-  .block-content {
-    width: 700px;
-    &::v-deep .content-group {
-      width: 365px;
-    }
-  }
-}
-
-.consultation {
-  padding: 80px;
-  background: $color__background--primary;
-  .h1 {
-    color: $color--primary;
-  }
-  .h2 {
-    color: $color--primary;
-    opacity: 0.64;
-    margin-top: 24px;
   }
 }
 </style>

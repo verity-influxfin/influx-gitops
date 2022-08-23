@@ -945,7 +945,7 @@ export default {
       },
     })
     axios.post(`/getCase`, { status: 10, product_id: 3 }).then((res) => {
-      this.cases = res.data.slice(0, 8)
+      this.cases = res.data.slice(0, 9)
     }).catch((error) => {
       console.error('getCase 發生錯誤，請稍後再試');
     });
