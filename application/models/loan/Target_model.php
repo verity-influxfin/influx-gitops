@@ -355,7 +355,7 @@ class Target_model extends MY_Model
 	{
 		//投資人ID/債權總額
 		$subquery_investment = $this->db
-			->select('target_id,user_id,amount')
+			->select('target_id,user_id,amount,id')
 			->where('status', 3)
 			->get_compiled_select('p2p_loan.investments', TRUE);
 
@@ -420,7 +420,7 @@ class Target_model extends MY_Model
 				t.loan_date,
 				a1.amount AS invest_amount,
 				a1.user_id AS lender,
-				CONCAT(a1.target_id,"-",a1.user_id) AS ary_key,
+				CONCAT(a1.target_id,"-",a1.id) AS ary_key,
 				tr.entering_date,
 				t.delay_days AS delayed_days,
 				a6.user_meta_1,
@@ -479,7 +479,7 @@ class Target_model extends MY_Model
 
         $this->db
             ->select('
-                CONCAT(i.target_id,"-",i.user_id) AS ary_key,
+                CONCAT(i.target_id,"-",i.id) AS ary_key,
                 a3.amount AS unpaid_principal_by_investor,
                 a4.amount AS unpaid_interest_by_investor,
                 a5.amount AS delay_interest_by_investor
