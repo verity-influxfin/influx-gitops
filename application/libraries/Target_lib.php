@@ -2360,6 +2360,16 @@ class Target_lib
                             $temp['addspouse'] = false;
                         }
                     }
+                    $associate_content = json_decode($value->content, TRUE);
+                    if (json_last_error() !== JSON_ERROR_NONE)
+                    {
+                        $email = NULL;
+                    }
+                    else
+                    {
+                        $email = ! empty($associate_content['mail']) ? $associate_content['mail'] : NULL;
+                    }
+
                     $data = [
                         'user_id' => $user_id,
                         'name' => $name,
@@ -2370,6 +2380,8 @@ class Target_lib
                         'guarantor' => ($value->guarantor == 1),
                         'self' => $self,
                         'certification' => $certification,
+                        'relationship' => $value->relationship ?? NULL,
+                        'email' => $email
                     ];
                     $guarantor_type = [
                        2 => 'A',

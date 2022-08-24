@@ -17278,13 +17278,6 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
-                            "field": "associate.agitate.identity",
-                            "description": "<p>身分 1:學生 2:上班族 3:法人</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "Number",
-                            "optional": false,
                             "field": "associate.agitate.status",
                             "description": "<p>狀態 0:尚未回覆 1:同意 2:拒絕</p>"
                         },
@@ -17336,6 +17329,20 @@ define({
                             "optional": false,
                             "field": "associate.agitate.certification.user_status",
                             "description": "<p>用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.agitate.relationship",
+                            "description": "<p>與負責人關係</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.agitate.email",
+                            "description": "<p>電子信箱</p>"
                         }
                     ]
                 },
@@ -17483,7 +17490,9 @@ define({
                             "                        }\n" +
                             "                    ],\n" +
                             "                    \"status\": 1,\n" +
-                            "                    \"self\": false\n" +
+                            "                    \"self\": false,\n" +
+                            "                    \"relationship\": \"3\",\n" +
+                            "                    \"email\": \"test@influxfin.com\"\n" +
                             "                },\n" +
                             "                {\n" +
                             "                    \"name\": \"侯威綸\",\n" +
