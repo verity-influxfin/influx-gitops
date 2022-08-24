@@ -55,6 +55,47 @@
             </div>
           </div>
         </div>
+        <div class="feature-graph-group">
+          <div class="feature-graph-center">
+            <div class="feature-graph-center-logo">
+              <img src="@/asset/images/logo_puhey.png" />
+            </div>
+            <div class="feature-graph-center-circle-1">
+              <img
+                src="@/asset/images/bussinessLoan/smeg-feature-graph-center-circle-1.svg"
+              />
+            </div>
+            <div class="feature-graph-center-circle-2">
+              <img
+                src="@/asset/images/bussinessLoan/smeg-feature-graph-center-circle-2.svg"
+              />
+            </div>
+          </div>
+          <div class="feature-graph-item feature-graph-item-1">
+            <div class="feature-graph-item-title">•創新又快速</div>
+            <div class="feature-graph-item-divider"></div>
+            <div class="feature-graph-item-info">
+              <div>全線上金融科技與銀行合作，</div>
+              <div>政府信保基金來保證</div>
+            </div>
+          </div>
+          <div class="feature-graph-item feature-graph-item-2">
+            <div class="feature-graph-item-title">•簡單又環保</div>
+            <div class="feature-graph-item-divider"></div>
+            <div class="feature-graph-item-info">
+              <div>一次送案多家銀行，</div>
+              <div>節省時間又環保</div>
+            </div>
+          </div>
+          <div class="feature-graph-item feature-graph-item-3">
+            <div class="feature-graph-item-title">•隱私又安全</div>
+            <div class="feature-graph-item-divider"></div>
+            <div class="feature-graph-item-info">
+              <div>一支手機搞定貸款、全線上無人化，</div>
+              <div>不怕洩漏個資</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <section class="require-data">
@@ -437,6 +478,27 @@ export default {
 $color--primary: #036eb7;
 $color__text--primary: #023d64;
 $color__background--primary: #f3f9fc;
+@mixin animate-set {
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotate2 {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
 .btn-link {
   text-decoration: underline;
 }
@@ -651,6 +713,106 @@ $color__background--primary: #f3f9fc;
       }
     }
   }
+  .feature-graph-group {
+    display: grid;
+    grid-template-columns: 1fr 455px 1fr;
+    grid-template-rows: 206px 152px auto;
+    gap: 10px 0px;
+
+    .feature-graph-center {
+      grid-area: 1 / 2 / 4 / 3;
+      position: relative;
+      z-index: 5;
+      &-logo {
+        position: absolute;
+        left: 22%;
+        top: 140px;
+      }
+      &-circle-1 {
+        position: absolute;
+        left: 12%;
+        top: 75px;
+        animation-name: rotate;
+        @include animate-set;
+      }
+      &-circle-2 {
+        position: absolute;
+        top: -10px;
+        left: 3%;
+        animation-name: rotate2;
+        @include animate-set;
+      }
+    }
+    .feature-graph-item {
+      &-1 {
+        grid-area: 1 / 3 / 2 / 4;
+        position: relative;
+        align-self: end;
+        &::before {
+          position: absolute;
+          display: block;
+          width: 115px;
+          height: 27px;
+          left: -110px;
+          top: 20px;
+          content: '';
+          background-image: url('~images/bussinessLoan/smeg-feature-graph-item-1.png');
+        }
+      }
+      &-2 {
+        grid-area: 2 / 1 / 3 / 2;
+        justify-self: right;
+        padding-right: 35px;
+        position: relative;
+        &::before {
+          position: absolute;
+          display: block;
+          width: 168px;
+          height: 55px;
+          right: -63px;
+          top: -11px;
+          content: '';
+          background-image: url('~images/bussinessLoan/smeg-feature-graph-item-2.png');
+        }
+      }
+      &-3 {
+        grid-area: 3 / 3 / 4 / 4;
+        position: relative;
+        padding-left: 15px;
+        &::before {
+          position: absolute;
+          display: block;
+          width: 115px;
+          height: 26px;
+          left: -104px;
+          top: -4px;
+          content: '';
+          background-image: url('~images/bussinessLoan/smeg-feature-graph-item-3.png');
+        }
+      }
+      &-title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 28px;
+        line-height: 1.4;
+        color: $color__text--primary;
+      }
+      &-divider {
+        margin: 6px 0 6px 35px;
+        width: 60px;
+        border-top: 4px solid #393939;
+        opacity: 0.25;
+      }
+      &-info {
+        margin-left: 35px;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 1.4;
+        color: $color--primary;
+      }
+    }
+  }
 }
 .require-data {
   padding: 80px;
@@ -663,7 +825,7 @@ $color__background--primary: #f3f9fc;
     opacity: 0.64;
     margin-top: 24px;
   }
-  .block-content{
+  .block-content {
     margin-top: 84px;
     margin-bottom: 40px;
   }
