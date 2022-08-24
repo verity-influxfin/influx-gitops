@@ -1015,7 +1015,7 @@ class Estatement_lib{
 					$estatement_url  		= $estatement->url;
 					$investor_status=$user_info->investor_status;
 					$title = '【普匯金融科技交易對帳單】';
-					$invest_report_desc = $estatement->investor == 1 ? '<br>普匯官網查看投資人報告書：'.$this->CI->config->base_url('invest-report') : '';
+					$invest_report_desc = $estatement->investor == 1 ? '<br>普匯官網查看投資人報告書：https://www.influxfin.com/invest-report' : '';
 					$content = '親愛的 '.$user_info->name.' '.($user_info->sex=='M'?'先生':($user_info->sex=='F'?'小姐':'')).'您好：<br> 　　此為您'.$y.'年'.$m.'月帳戶交易對帳單，請您核對確認。<br>若有疑問請洽Line@客服，我們將竭誠為您服務。'.$invest_report_desc.'<br>普匯金融科技有限公司　敬上 <br><p style="color:red;font-size:14px;">＊附件綜合對帳單已設為加密信件，開啟密碼個人戶為身分證字號(英文字母請輸入大寫)，公司戶為統一編號。</p>';
 					return $this->CI->sendemail->email_file_estatement($user_info->email,$title,$content,$estatement_url,$estatement_detail_url,$investor_status);
 				}
