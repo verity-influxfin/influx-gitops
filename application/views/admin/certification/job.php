@@ -198,7 +198,18 @@
                                                         <p>尚未收到回信PDF</p>
                                             <?}?>
                                         </div>
-                                        <?}} ?>
+                                        <?php
+                                        }
+                                    }
+                                    elseif ( ! empty($content['pdf_file']))
+                                    {
+                                        ?>
+                                        <div class="form-group">
+                                            <label>勞保卡</label><br>
+                                            <a href="<?= $content['pdf_file']; ?>" target="_blank">下載</a>
+                                        </div>
+                                    <?php } ?>
+
 									<div class="form-group">
 										<label>驗證結果</label>
 										<?
