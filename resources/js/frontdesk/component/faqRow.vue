@@ -72,11 +72,11 @@ export default {
       font-weight: 700;
       font-size: 62px;
       line-height: 1.4;
-      opacity: 0.4;
+      opacity: 0.2;
       right: 100px;
       bottom: -5px;
       -webkit-text-fill-color: transparent;
-      -webkit-text-stroke-width: 1.5px;
+      -webkit-text-stroke-width: 1px;
       -webkit-text-stroke-color: white;
     }
   }

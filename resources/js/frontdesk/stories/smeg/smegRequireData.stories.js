@@ -1,7 +1,7 @@
 import smegRequireData  from '@/component/smegRequireData';
 
 export default {
-    title: 'Components/smegRequireData',
+    title: '信保專案/smegRequireData',
     component: smegRequireData,
 };
 

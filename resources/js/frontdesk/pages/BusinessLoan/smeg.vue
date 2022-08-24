@@ -13,9 +13,13 @@
       </div>
     </section>
     <section class="suit">
+      <h1 class="h1">適用對象</h1>
+      <h2 class="h2">攜手建立事業版圖 貸您邁向事業成功</h2>
+      <div class="block-content"></div>
+    </section>
+    <section class="suit-persons">
       <div class="block-content">
-        <h1 class="h1">適用對象</h1>
-        <h2 class="h2">攜手建立事業版圖 貸您邁向事業成功</h2>
+        <smeg-suit />
       </div>
     </section>
     <section class="info">
@@ -350,11 +354,15 @@
 import faqRow from '@/component/faqRow';
 import stepGroup from '@/component/index/stepGroup';
 import smegRequireData from '@/component/smegRequireData';
+import smegSuit from '@/component/smegSuit';
+
+
 export default {
   components: {
     faqRow,
     stepGroup,
-    smegRequireData
+    smegRequireData,
+    smegSuit
   },
   data() {
     return {
@@ -639,6 +647,12 @@ $color__background--primary: #f3f9fc;
     opacity: 0.64;
     margin-top: 24px;
   }
+}
+.suit-persons {
+  background-image: url('~images/bussinessLoan/smeg-suit-person-bg.png');
+  padding: 140px 0 100px;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 .info {
   padding: 80px;
