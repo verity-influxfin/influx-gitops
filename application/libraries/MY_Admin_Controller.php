@@ -178,12 +178,12 @@ class MY_Admin_Controller extends CI_Controller{
                 if (empty($method_value['model']) || empty($method_value['submodel'])) continue;
                 $model = $method_value['model'];
                 $submodel = $method_value['submodel'];
-                $action_type_a = $admin_permission[$model][$submodel] ?? 0;
-                $action_type_g = $group_permission[$model][$submodel] ?? 0;
+                $action_type_a = (int) ($admin_permission[$model][$submodel] ?? 0);
+                $action_type_g = (int) ($group_permission[$model][$submodel] ?? 0);
                 $this->permission_granted[strtolower($controller)][$method] = [
                     'action' => [
                         'granted' => $action_type_a | $action_type_g,
-                        'valid' => $this->action_type_list[$method_value['action']]['key']
+                        'valid' => (int) ($this->action_type_list[$method_value['action']]['key'])
                     ],
                     'url' => "{$controller}/{$method}",
                 ];
