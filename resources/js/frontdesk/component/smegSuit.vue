@@ -39,7 +39,10 @@
             </div>
           </div>
           <div>
-            <img src="@/asset/images/bussinessLoan/smeg-suit-conent-1.png" class="img-fluid">
+            <img
+              src="@/asset/images/bussinessLoan/smeg-suit-conent-1.png"
+              class="img-fluid"
+            />
           </div>
         </div>
       </div>
@@ -70,7 +73,10 @@
             </div>
           </div>
           <div>
-            <img src="@/asset/images/bussinessLoan/smeg-suit-conent-2.png" class="img-fluid">
+            <img
+              src="@/asset/images/bussinessLoan/smeg-suit-conent-2.png"
+              class="img-fluid"
+            />
           </div>
         </div>
       </div>
@@ -100,7 +106,10 @@
             </div>
           </div>
           <div>
-            <img src="@/asset/images/bussinessLoan/smeg-suit-conent-3.png" class="img-fluid">
+            <img
+              src="@/asset/images/bussinessLoan/smeg-suit-conent-3.png"
+              class="img-fluid"
+            />
           </div>
         </div>
       </div>
@@ -237,5 +246,83 @@ export default {
   line-height: 1.4;
   text-align: center;
   border-radius: 12px;
+}
+@media screen and (max-width: 767px) {
+  .smeg-suit {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+  }
+  .tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    .tab {
+      font-size: 14px;
+      border-radius: 16px 0 0 16px;
+      padding: 4px;
+      cursor: pointer;
+      &.active {
+        padding: 12px;
+        background: #ffffff;
+        font-size: 16px;
+        color: #036eb7;
+      }
+    }
+  }
+  .main-content {
+    padding: 24px 12px;
+    .content {
+      &-title {
+        margin-bottom: 4px;
+        font-size: 16px;
+      }
+      &-sub-title {
+        font-size: 12px;
+      }
+      &-sub-divider {
+        margin: 4px auto;
+        width: 36px;
+        border-bottom: 1px solid #036eb7;
+      }
+      &-sub-title-2 {
+        font-size: 14px;
+        line-height: 1.4;
+      }
+    }
+    .article-content {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 30px;
+      .article-title {
+        font-size: 14px;
+        padding-left: 10px;
+        .em {
+          &::before {
+            content: '•';
+            margin-right: 3px;
+          }
+          margin-left: -10px;
+        }
+      }
+      .article-info {
+        margin-top: 8px;
+        padding-left: 10px;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 20px;
+      }
+    }
+  }
+  .btn-outline-primary {
+  &::before {
+    content: '';
+  }
+  position: relative;
+  padding: 10px 30px;
+  font-size: 14px;
+  line-height: 1.4;
+  border-radius: 12px;
+}
 }
 </style>

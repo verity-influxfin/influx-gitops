@@ -84,4 +84,32 @@ export default {
     padding: 20px 45px;
   }
 }
+@media screen and (max-width: 767px) {
+  .faq-row {
+    .faq-row-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 12px 40px;
+      .faq-row-title {
+        font-size: 16px;
+      }
+      .faq-row-expand {
+        font-size: 16px;
+        position: absolute;
+        right: 15px;
+        bottom: 12px;
+      }
+      .faq-row-bg-text {
+        position: absolute;
+        font-size: 29px;
+        left: 15px;
+        right: 0;
+        bottom: 3px;
+      }
+    }
+    .faq-row-content {
+      padding: 16px 20px;
+    }
+  }
+}
 </style>
