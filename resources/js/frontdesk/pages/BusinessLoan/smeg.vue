@@ -15,7 +15,20 @@
     <section class="suit">
       <h1 class="h1">適用對象</h1>
       <h2 class="h2">攜手建立事業版圖 貸您邁向事業成功</h2>
-      <div class="block-content"></div>
+      <div class="block-content">
+        <img
+          src="@/asset/images/bussinessLoan/smeg-suit-1.png"
+          class="suit-1-img"
+        />
+        <img
+          src="@/asset/images/bussinessLoan/smeg-suit-2.png"
+          class="suit-2-img"
+        />
+        <img
+          src="@/asset/images/bussinessLoan/smeg-suit-3.png"
+          class="suit-3-img"
+        />
+      </div>
     </section>
     <section class="suit-persons">
       <div class="block-content">
@@ -577,17 +590,6 @@ $color__background--primary: #f3f9fc;
   border-radius: 12px;
 }
 .btn-smeg-outline-primary {
-  &::before {
-    content: '';
-    position: absolute;
-    top: -2.4px;
-    left: -2.4px;
-    bottom: -2.4px;
-    right: -2px;
-    background: linear-gradient(90deg, #3781c7 0%, #74bbe4 100%);
-    border-radius: 12px;
-    z-index: -1;
-  }
   position: relative;
   padding: 10px 120px;
   color: $color--primary;
@@ -596,6 +598,7 @@ $color__background--primary: #f3f9fc;
   font-weight: 500;
   font-size: 24px;
   line-height: 1.4;
+  border: 1.5px solid #036eb7;
   text-align: center;
   border-radius: 12px;
 }
@@ -646,6 +649,31 @@ $color__background--primary: #f3f9fc;
     color: $color--primary;
     opacity: 0.64;
     margin-top: 24px;
+  }
+  .block-content {
+    position: relative;
+    width: fit-content;
+    padding: 80px 0;
+  }
+  &-1-img {
+    position: relative;
+    z-index: 2;
+  }
+  &-2-img {
+    position: absolute;
+    left: 236px;
+    top: 114px;
+    animation: rotate;
+    @include animate-set;
+    z-index: -1;
+  }
+  &-3-img {
+    position: absolute;
+    left: 272px;
+    top: 151px;
+    animation: rotate2;
+    @include animate-set;
+    z-index: -1;
   }
 }
 .suit-persons {
@@ -863,7 +891,10 @@ $color__background--primary: #f3f9fc;
 }
 .advantage {
   padding: 80px;
-  background: $color__background--primary;
+  background: url('~images/bussinessLoan/smeg-advantage-bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   .advantage-title-group {
     padding: 120px 0 60px;
     .advantage-title-1 {
@@ -1008,6 +1039,7 @@ $color__background--primary: #f3f9fc;
 }
 .question {
   padding: 80px;
+  background: $color__background--primary;
   .h1 {
     color: $color--primary;
   }

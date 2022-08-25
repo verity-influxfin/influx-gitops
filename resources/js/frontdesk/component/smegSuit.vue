@@ -38,7 +38,9 @@
               <div>現在就找普匯信保專案融資，讓普匯當您溫暖的事業後盾。</div>
             </div>
           </div>
-          <div></div>
+          <div>
+            <img src="@/asset/images/bussinessLoan/smeg-suit-conent-1.png" class="img-fluid">
+          </div>
         </div>
       </div>
       <div v-show="tab === 1">
@@ -67,6 +69,9 @@
               <div>現在就找普匯信保專案融資，讓普匯當您溫暖的事業後盾。</div>
             </div>
           </div>
+          <div>
+            <img src="@/asset/images/bussinessLoan/smeg-suit-conent-2.png" class="img-fluid">
+          </div>
         </div>
       </div>
       <div v-show="tab === 2">
@@ -93,6 +98,9 @@
               <div>現在就與普匯一起做打拼吧！透過我們申請信保專案貸款，</div>
               <div>讓您事半功倍。</div>
             </div>
+          </div>
+          <div>
+            <img src="@/asset/images/bussinessLoan/smeg-suit-conent-3.png" class="img-fluid">
           </div>
         </div>
       </div>
