@@ -969,21 +969,6 @@ class Product extends REST_Controller {
                 {
                     $param['loan_amount'] = $product['loan_range_e'];
                 }
-//
-//                // 自動過件者的 target_data 參考上一筆申貸案
-//                $last_same_product_target = $this->target_model->as_array()->order_by('created_at', 'DESC')->get_by([
-//                    'product_id' => $product['id'],
-//                    'user_id' => $user_id,
-//                    'status NOT' => [TARGET_WAITING_APPROVE, TARGET_CANCEL, TARGET_FAIL]
-//                ]);
-//                if ( ! empty($last_same_product_target['target_data']))
-//                {
-//                    $target_data = json_decode($last_same_product_target['target_data'], TRUE);
-//                    $target_data = array_filter($target_data, function ($key) {
-//                        return in_array($key, ['verify_cetification_list', 'certification_id']);
-//                    }, ARRAY_FILTER_USE_KEY);
-//                    $param['target_data'] = json_encode($target_data);
-//                }
             }
 
             // 舊版一鍵送出流程殘留的狀態，在起案的時候應改回待驗證
