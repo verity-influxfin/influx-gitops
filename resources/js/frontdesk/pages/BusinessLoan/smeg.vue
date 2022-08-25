@@ -641,7 +641,7 @@ $color__background--primary: #f3f9fc;
   }
 }
 .suit {
-  padding: 100px;
+  padding: 100px 0 10px;
   .h1 {
     color: $color--primary;
   }
@@ -653,7 +653,10 @@ $color__background--primary: #f3f9fc;
   .block-content {
     position: relative;
     width: fit-content;
-    padding: 80px 0;
+    padding: 80px 0 160px;
+    background-image: url('~images/bussinessLoan/smeg-robot-hand.png');
+    background-repeat: no-repeat;
+    background-position: 171px 380px;
   }
   &-1-img {
     position: relative;
