@@ -969,6 +969,21 @@ class Product extends REST_Controller {
                 {
                     $param['loan_amount'] = $product['loan_range_e'];
                 }
+//
+//                // 自動過件者的 target_data 參考上一筆申貸案
+//                $last_same_product_target = $this->target_model->as_array()->order_by('created_at', 'DESC')->get_by([
+//                    'product_id' => $product['id'],
+//                    'user_id' => $user_id,
+//                    'status NOT' => [TARGET_WAITING_APPROVE, TARGET_CANCEL, TARGET_FAIL]
+//                ]);
+//                if ( ! empty($last_same_product_target['target_data']))
+//                {
+//                    $target_data = json_decode($last_same_product_target['target_data'], TRUE);
+//                    $target_data = array_filter($target_data, function ($key) {
+//                        return in_array($key, ['verify_cetification_list', 'certification_id']);
+//                    }, ARRAY_FILTER_USE_KEY);
+//                    $param['target_data'] = json_encode($target_data);
+//                }
             }
 
             // 舊版一鍵送出流程殘留的狀態，在起案的時候應改回待驗證
@@ -2940,10 +2955,29 @@ class Product extends REST_Controller {
                 // 回寫當初給額度時，授審表封存的徵信項（更新 targets.target_data、credit_sheet.certification_list）
                 if ( ! empty($credit_sheet_info->certification_list))
                 {
-                    $target_data = json_decode($target->target_data ?? '', TRUE);
-                    $target_data['certification_id'] = $certification_id = json_decode($credit_sheet_info->certification_list, TRUE);
-                    $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
+                    $certification_id = json_decode($credit_sheet_info->certification_list, TRUE);
                     $this->credit_sheet_model->update_by(['target_id' => $target->id], ['certification_list' => json_encode($certification_id)]);
+
+                    $last_target = $this->target_model->as_array()->order_by('created_at', 'DESC')->get_by([
+                        'id !=' => $target->id,
+                        'product_id' => $target->product_id,
+                        'user_id' => $target->user_id,
+                        'status NOT' => [TARGET_WAITING_APPROVE, TARGET_CANCEL, TARGET_FAIL]
+                    ]);
+                    $last_target_data = ! empty($last_target['target_data']) ? json_decode($last_target['target_data'], TRUE) : [];
+                    $target_data = json_decode($target->target_data ?? '', TRUE);
+                    if ( ! empty($last_target_data['verify_cetification_list']))
+                    {
+                        $tmp = json_decode($last_target_data['verify_cetification_list'], TRUE);
+                        $target_data['verify_cetification_list'] = json_encode(array_intersect($tmp, $certification_id));
+
+                    }
+                    if ( ! empty($last_target_data['certification_id']))
+                    {
+                        $target_data['certification_id'] = array_intersect($last_target_data['certification_id'], $certification_id);
+
+                    }
+                    $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
                 }
             }
 
