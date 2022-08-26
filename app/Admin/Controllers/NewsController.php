@@ -183,7 +183,7 @@ class NewsController extends Controller
 			$footer->disableCreatingCheck();
 
 		});
-        $form->text('post_title', '標題')->required();
+        $form->text('post_title', '文章標題')->required();
         $form->image('image_url', '圖片')->required()->move('/upload/article')->rules('max:8192',['max'=>'圖片檔案大小不能超過8MB']);
         $form->ckeditor('post_content','內容');
         $form->switch('isActive', '是否上架')->states([
@@ -194,6 +194,14 @@ class NewsController extends Controller
             'on' => ['value' => 1, 'text' => '是', 'color' => 'primary'],
             'off' => ['value' => 0, 'text' => '否', 'color' => 'default'],
         ])->default('off');
+
+        $form->divider();
+        $form->html('<h3>SEO 相關設定</h3>');
+        $form->text('web_title', '網頁title')->placeholder('預設為本篇文章標題；建議中文保持在 30 個字元、英文 60 個字元以內。');
+        $form->text('meta_description', '網頁description')->placeholder('本網頁於搜尋結果的描述；建議文意通順，提綱挈領。');
+        $form->text('meta_og_description', 'og:description')->placeholder('本篇文章分享至社交平台的內文預覽；建議文意通順，提綱挈領。');
+        $form->text('meta_og_title', 'og:title')->placeholder('本篇文章分享至社交平台的標題；建議中文保持在 30 個字元、英文 60 個字元以內。');
+        $form->text('meta_og_image', 'og:image')->placeholder('本篇文章分享至社交平台時可見的縮圖。預設為本文第一張圖。');
         return $form;
     }
 
