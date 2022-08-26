@@ -5,7 +5,9 @@
         <div class="banner-text">
           <h1 class="h1 d-none">信保融資專案</h1>
           <div class="links">
-            <button class="btn btn-smeg-primary">立即申辦</button>
+            <a href="/borrowLink" target="_blank">
+              <button class="btn btn-smeg-primary">立即申辦</button>
+            </a>
             <button class="btn btn-smeg-secondary">上傳資料(已申請)</button>
           </div>
         </div>
@@ -233,7 +235,7 @@
         >
           <div class="col-md col-12">
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">姓名：</div>
+              <div class="form-item-text">*姓名：</div>
               <input
                 type="text"
                 name="name"
@@ -243,7 +245,7 @@
               />
             </div>
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">身分性別：</div>
+              <div class="form-item-text">*身分性別：</div>
               <div class="radio-custom">
                 <label class="form-item-label">
                   <input
@@ -268,7 +270,7 @@
               </div>
             </div>
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">公司名稱：</div>
+              <div class="form-item-text">*公司名稱：</div>
               <input
                 type="text"
                 name="phone"
@@ -277,7 +279,7 @@
               />
             </div>
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">電子信箱：</div>
+              <div class="form-item-text">*電子信箱：</div>
               <input
                 type="text"
                 name="line"
@@ -287,7 +289,7 @@
               />
             </div>
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">聯絡時間：</div>
+              <div class="form-item-text">*聯絡時間：</div>
               <select
                 type="text"
                 class="form-item-input col"
@@ -301,7 +303,7 @@
               </select>
             </div>
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">資金需求</div>
+              <div class="form-item-text">*資金需求</div>
               <input
                 type="text"
                 name="email"
@@ -309,9 +311,8 @@
                 required
               />
             </div>
-
             <div class="row no-gutters mb-3">
-              <div class="form-item-text">需求原因：</div>
+              <div class="form-item-text">*需求原因：</div>
               <textarea
                 type="text"
                 name="reason"
@@ -369,7 +370,9 @@
       </div>
       <div class="row">
         <div class="col"></div>
-        <button class="btn btn-smeg-outline-primary">立即申辦</button>
+        <a href="/borrowLink" target="_blank">
+          <button class="btn btn-smeg-outline-primary">立即申辦</button>
+        </a>
         <div class="col"></div>
       </div>
     </section>
@@ -512,7 +515,7 @@ $color--primary: #036eb7;
 $color__text--primary: #023d64;
 $color__background--primary: #f3f9fc;
 @mixin animate-set {
-  animation-duration: 18s;
+  animation-duration: 12s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
@@ -624,14 +627,14 @@ $color__background--primary: #f3f9fc;
   border-radius: 12px;
 }
 .banner {
-  background: url('~images/bussinessLoan/smeg-banner-bg-all.png');
+  background: url("~images/bussinessLoan/smeg-banner-bg-all.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   height: 800px;
   position: relative;
   .block-content {
-    background: url('~images/bussinessLoan/smeg-bannner-bg.png');
+    background: url("~images/bussinessLoan/smeg-bannner-bg.png");
     background-position: center;
     height: 100%;
     display: flex;
@@ -666,7 +669,7 @@ $color__background--primary: #f3f9fc;
     position: relative;
     width: fit-content;
     padding: 80px 0 160px;
-    background-image: url('~images/bussinessLoan/smeg-robot-hand.png');
+    background-image: url("~images/bussinessLoan/smeg-robot-hand.png");
     background-repeat: no-repeat;
     background-position: 171px 380px;
   }
@@ -692,7 +695,7 @@ $color__background--primary: #f3f9fc;
   }
 }
 .suit-persons {
-  background-image: url('~images/bussinessLoan/smeg-suit-person-bg.png');
+  background-image: url("~images/bussinessLoan/smeg-suit-person-bg.png");
   padding: 140px 0 100px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -714,7 +717,7 @@ $color__background--primary: #f3f9fc;
     padding: 84px 0;
     .feature-slogan {
       &-1 {
-        font-family: 'Arial';
+        font-family: "Arial";
         font-style: italic;
         font-weight: 700;
         font-size: 96px;
@@ -726,7 +729,7 @@ $color__background--primary: #f3f9fc;
       &-2 {
         margin-top: 42px;
         padding-left: 30px;
-        font-family: 'Arial';
+        font-family: "Arial";
         font-style: italic;
         font-weight: 700;
         font-size: 36px;
@@ -744,7 +747,7 @@ $color__background--primary: #f3f9fc;
         width: 3px;
         background: linear-gradient(180deg, #036eb7 0%, #ffffff 100%),
           linear-gradient(0deg, #afd6e2, #afd6e2);
-        content: '';
+        content: "";
         top: 10%;
         height: 80%;
         position: absolute;
@@ -812,8 +815,8 @@ $color__background--primary: #f3f9fc;
           height: 27px;
           left: -110px;
           top: 20px;
-          content: '';
-          background-image: url('~images/bussinessLoan/smeg-feature-graph-item-1.png');
+          content: "";
+          background-image: url("~images/bussinessLoan/smeg-feature-graph-item-1.png");
         }
       }
       &-2 {
@@ -828,8 +831,8 @@ $color__background--primary: #f3f9fc;
           height: 55px;
           right: -63px;
           top: -11px;
-          content: '';
-          background-image: url('~images/bussinessLoan/smeg-feature-graph-item-2.png');
+          content: "";
+          background-image: url("~images/bussinessLoan/smeg-feature-graph-item-2.png");
         }
       }
       &-3 {
@@ -843,8 +846,8 @@ $color__background--primary: #f3f9fc;
           height: 26px;
           left: -104px;
           top: -4px;
-          content: '';
-          background-image: url('~images/bussinessLoan/smeg-feature-graph-item-3.png');
+          content: "";
+          background-image: url("~images/bussinessLoan/smeg-feature-graph-item-3.png");
         }
       }
       &-title {
@@ -906,7 +909,7 @@ $color__background--primary: #f3f9fc;
 }
 .advantage {
   padding: 80px;
-  background: url('~images/bussinessLoan/smeg-advantage-bg.png');
+  background: url("~images/bussinessLoan/smeg-advantage-bg.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -931,7 +934,7 @@ $color__background--primary: #f3f9fc;
           right: -15px;
           z-index: -1;
           position: absolute;
-          content: 'NO 1';
+          content: "NO 1";
           font-style: normal;
           font-weight: 900;
           font-size: 128px;
@@ -968,13 +971,13 @@ $color__background--primary: #f3f9fc;
     border-radius: 16px;
     position: relative;
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       width: 170px;
       height: 170px;
       right: 115px;
       bottom: 45px;
-      background-image: url('~images/2022_campus_ambassador/2022-campus-benefit-card-bg-1.png');
+      background-image: url("~images/2022_campus_ambassador/2022-campus-benefit-card-bg-1.png");
       background-repeat: no-repeat;
       transform: rotate(40deg);
       opacity: 0.9;
@@ -982,8 +985,8 @@ $color__background--primary: #f3f9fc;
     &-1::after {
       display: block;
       position: absolute;
-      background-image: url('~images/boss.png');
-      content: '';
+      background-image: url("~images/boss.png");
+      content: "";
       width: 238px;
       height: 295px;
       right: 20px;
@@ -1025,7 +1028,7 @@ $color__background--primary: #f3f9fc;
       position: absolute;
       right: 0;
       bottom: 0;
-      font-family: 'Arial';
+      font-family: "Arial";
       font-style: italic;
       font-weight: 700;
       font-size: 76px;
@@ -1123,7 +1126,7 @@ $color__background--primary: #f3f9fc;
     font-size: 14px;
   }
   .banner {
-    background: url('~images/bussinessLoan/smeg-bannner-bg-phone.png');
+    background: url("~images/bussinessLoan/smeg-bannner-bg-phone.png");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -1172,7 +1175,7 @@ $color__background--primary: #f3f9fc;
     }
   }
   .suit-persons {
-    background-image: url('~images/bussinessLoan/smeg-suit-person-bg.png');
+    background-image: url("~images/bussinessLoan/smeg-suit-person-bg.png");
     padding: 80px 0 80px;
     .block-content {
       width: 90%;
@@ -1214,7 +1217,7 @@ $color__background--primary: #f3f9fc;
         transform: none;
         &::before {
           width: 40px;
-          content: '';
+          content: "";
           top: -10px;
           left: 40%;
           height: 2px;
@@ -1283,9 +1286,9 @@ $color__background--primary: #f3f9fc;
           &::before {
             left: -85px;
             top: 3px;
-            content: '';
+            content: "";
             transform: scale(0.45);
-            background-image: url('~images/bussinessLoan/smeg-feature-graph-item-1.png');
+            background-image: url("~images/bussinessLoan/smeg-feature-graph-item-1.png");
           }
         }
         &-2 {
@@ -1296,9 +1299,9 @@ $color__background--primary: #f3f9fc;
           &::before {
             right: -63px;
             top: -11px;
-            content: '';
+            content: "";
             transform: scale(0.45);
-            background-image: url('~images/bussinessLoan/smeg-feature-graph-item-2.png');
+            background-image: url("~images/bussinessLoan/smeg-feature-graph-item-2.png");
           }
         }
         &-3 {
@@ -1308,9 +1311,9 @@ $color__background--primary: #f3f9fc;
           &::before {
             left: -70px;
             top: -8px;
-            content: '';
+            content: "";
             transform: scale(0.45);
-            background-image: url('~images/bussinessLoan/smeg-feature-graph-item-3.png');
+            background-image: url("~images/bussinessLoan/smeg-feature-graph-item-3.png");
           }
         }
         &-title {
@@ -1369,7 +1372,7 @@ $color__background--primary: #f3f9fc;
           &::before {
             bottom: 7px;
             right: -80px;
-            content: 'NO 1';
+            content: "NO 1";
             font-size: 64px;
             width: 160px;
           }
@@ -1403,7 +1406,7 @@ $color__background--primary: #f3f9fc;
         transform: scale(0.45) rotate(70deg);
       }
       &-1::after {
-        content: '';
+        content: "";
         transform: scale(0.5);
         right: -30px;
         bottom: 10px;
@@ -1438,7 +1441,7 @@ $color__background--primary: #f3f9fc;
         position: absolute;
         right: 15px;
         bottom: 0;
-        font-family: 'Arial';
+        font-family: "Arial";
         font-style: italic;
         font-weight: 700;
         font-size: 18px;

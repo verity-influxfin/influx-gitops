@@ -40,3 +40,8 @@ second.args = {
     contentClass: 'test'
 
 };
+
+export const swiperMode = Template.bind({});
+swiperMode.args = {
+    swiperMode: true
+};

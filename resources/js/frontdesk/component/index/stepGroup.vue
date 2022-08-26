@@ -1,6 +1,6 @@
 <template>
   <div class="step-main swiper-mode" v-if="swiperMode">
-    <div class="d-none d-sm-block">
+    <div class="d-none d-md-block">
       <div
         v-for="(step, index) in steps"
         :key="index"
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="d-sm-none d-block">
+    <div class="d-md-none d-block">
       <div class="swiper-step">
         <div class="swiper-wrapper">
           <div
@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import SwiperCore, { Navigation, Pagination } from 'swiper/core'
-import Swiper from 'swiper/bundle'
+import Swiper from 'swiper/bundle';
+
 export default {
   props: {
     steps: {
@@ -94,7 +94,6 @@ export default {
   },
   mounted() {
     if (this.swiperMode) {
-      SwiperCore.use([Navigation, Pagination])
       const swiper = new Swiper('.swiper-step', {
         pagination: {
           el: '.swiper-pagination',
@@ -182,6 +181,9 @@ $color__text--primary: #023d64;
   transition-duration: 1s;
   opacity: 0;
 }
+.swiper-slide {
+  position: initial;
+}
 @media screen and (max-width: 767px) {
   .step-content {
     width: 155px;
@@ -252,6 +254,9 @@ $color__text--primary: #023d64;
   .swiper-step {
     // width: 400px;
     height: 620px;
+    .swiper-slide {
+      position: relative;
+    }
     .step-content {
       padding: 15px;
       border-left: none;
@@ -279,6 +284,13 @@ $color__text--primary: #023d64;
       transform: scale(0.95);
       opacity: 1;
     }
+  }
+  .swiper-pagination {
+    gap: 5px;
+    display: flex;
+    justify-content: center;
+    transform: scale(1.2);
+    position: relative;
   }
 }
 </style>

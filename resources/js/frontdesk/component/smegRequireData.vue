@@ -226,6 +226,14 @@ export default {
       width: 330px;
       height: 650px;
     }
+    .swiper-pagination{
+        bottom: 8px;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        transform: scale(1.25);
+        position: relative;
+    }
     .tab-content {
       margin-top: 22px;
       height: auto;

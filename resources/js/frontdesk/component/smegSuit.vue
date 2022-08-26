@@ -97,7 +97,7 @@
             <div class="article-info">
               <div>通膨發酵，生意大受影響？</div>
               <div>經營擴張，需要更多成長資金？</div>
-              <div>想要取得更多資金，提高企業在商場叢林中的競爭籌碼嗎？</div>
+              <div>想要提高企業在商場叢林中的競爭籌碼嗎？</div>
               <div class="my-4">
                 商場上，各種五花八門的需求，都圍繞著資金打轉！
               </div>
@@ -114,7 +114,9 @@
         </div>
       </div>
       <div class="mt-4 text-center">
-        <button class="btn btn-outline-primary">立即申辦</button>
+        <a href="/borrowLink" target="_blank">
+          <button class="btn btn-outline-primary">立即申辦</button>
+        </a>
       </div>
     </div>
   </div>
@@ -205,7 +207,7 @@ export default {
       .em {
         &::before {
           display: inline-block;
-          content: '•';
+          content: "•";
           margin-right: 5px;
         }
         font-weight: 700;
@@ -226,7 +228,7 @@ export default {
 }
 .btn-outline-primary {
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -2.4px;
     left: -2.4px;
@@ -299,7 +301,7 @@ export default {
         padding-left: 10px;
         .em {
           &::before {
-            content: '•';
+            content: "•";
             margin-right: 3px;
           }
           margin-left: -10px;
@@ -315,14 +317,14 @@ export default {
     }
   }
   .btn-outline-primary {
-  &::before {
-    content: '';
+    &::before {
+      content: "";
+    }
+    position: relative;
+    padding: 10px 30px;
+    font-size: 14px;
+    line-height: 1.4;
+    border-radius: 12px;
   }
-  position: relative;
-  padding: 10px 30px;
-  font-size: 14px;
-  line-height: 1.4;
-  border-radius: 12px;
-}
 }
 </style>
