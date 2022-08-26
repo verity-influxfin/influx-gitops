@@ -131,7 +131,7 @@
         <div>貸你解決企業資金周轉難題</div>
       </h2>
       <div class="block-content">
-        <stepGroup :steps="steps" content-class="content-group" />
+        <stepGroup :steps="steps" content-class="content-group" swiper-mode />
       </div>
     </section>
     <section class="advantage">
@@ -1119,14 +1119,20 @@ $color__background--primary: #f3f9fc;
     padding: 12px 46px;
     font-size: 14px;
   }
+  .btn-form-submit {
+    font-size: 14px;
+  }
   .banner {
-    background: url('~images/bussinessLoan/smeg-banner-bg-all.png');
-    height: 800px;
+    background: url('~images/bussinessLoan/smeg-bannner-bg-phone.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    height: 760px;
     .block-content {
       background: none;
     }
     .banner-text {
-      bottom: 426px;
+      bottom: 366px;
       .links {
         gap: 24px;
         .btn-smeg-primary {
@@ -1168,7 +1174,7 @@ $color__background--primary: #f3f9fc;
   .suit-persons {
     background-image: url('~images/bussinessLoan/smeg-suit-person-bg.png');
     padding: 80px 0 80px;
-    .block-content{
+    .block-content {
       width: 90%;
     }
   }
@@ -1319,6 +1325,32 @@ $color__background--primary: #f3f9fc;
           font-size: 12px;
           width: 84px;
         }
+      }
+    }
+  }
+  .require-data {
+    padding: 80px 15px 80px 0;
+    .h2 {
+      margin-top: 8px;
+    }
+    .block-content {
+      margin-top: 18px;
+      margin-bottom: 15px;
+    }
+  }
+  .step {
+    padding: 80px 0;
+    .h1 {
+      color: $color--primary;
+    }
+    .h2 {
+      margin-top: 9px;
+      margin-bottom: 25px;
+    }
+    .block-content {
+      width: 90%;
+      &::v-deep .content-group {
+        width: 155px;
       }
     }
   }

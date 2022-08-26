@@ -1,5 +1,42 @@
 <template>
-  <div class="step-main">
+  <div class="step-main swiper-mode" v-if="swiperMode">
+    <div class="d-none d-sm-block">
+      <div
+        v-for="(step, index) in steps"
+        :key="index"
+        :class="['step-content', 'swiper-slide', contentClass]"
+      >
+        <div class="step-content-title" :data-step="index + 1">
+          {{ step.title }}
+        </div>
+        <div class="step-content-info" v-html="step.info"></div>
+        <div class="step-content-img">
+          <img class="img-fluid" :src="step.img" />
+        </div>
+      </div>
+    </div>
+    <div class="d-sm-none d-block">
+      <div class="swiper-step">
+        <div class="swiper-wrapper">
+          <div
+            v-for="(step, index) in steps"
+            :key="index"
+            :class="['step-content', 'swiper-slide', contentClass]"
+          >
+            <div class="step-content-title" :data-step="index + 1">
+              {{ step.title }}
+            </div>
+            <div class="step-content-info" v-html="step.info"></div>
+            <div class="step-content-img">
+              <img class="img-fluid" :src="step.img" />
+            </div>
+          </div>
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+  </div>
+  <div class="step-main" v-else>
     <div
       v-for="(step, index) in steps"
       :key="index"
@@ -17,6 +54,8 @@
 </template>
 
 <script>
+import SwiperCore, { Navigation, Pagination } from 'swiper/core'
+import Swiper from 'swiper/bundle'
 export default {
   props: {
     steps: {
@@ -47,6 +86,20 @@ export default {
     contentClass: {
       type: String,
       default: ''
+    },
+    swiperMode: {
+      type: Boolean,
+      default: false
+    }
+  },
+  mounted() {
+    if (this.swiperMode) {
+      SwiperCore.use([Navigation, Pagination])
+      const swiper = new Swiper('.swiper-step', {
+        pagination: {
+          el: '.swiper-pagination',
+        },
+      })
     }
   },
 }
@@ -190,6 +243,42 @@ $color__text--primary: #023d64;
     top: -114px;
     left: -45px;
     transform: scale(0.55);
+  }
+  .step-main.swiper-mode {
+    margin: 22px auto;
+    position: relative;
+    display: block;
+  }
+  .swiper-step {
+    // width: 400px;
+    height: 620px;
+    .step-content {
+      padding: 15px;
+      border-left: none;
+    }
+    .step-content-title {
+      font-size: 18px;
+      text-align: center;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      &::before {
+        display: none;
+      }
+    }
+    .step-content-info {
+      text-align: center;
+      font-size: 12px;
+      line-height: 16px;
+    }
+    .step-content-img {
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      transform: scale(0.95);
+      opacity: 1;
+    }
   }
 }
 </style>
