@@ -2955,12 +2955,12 @@ class Product extends REST_Controller {
                     if ( ! empty($last_target_data['verify_cetification_list']))
                     {
                         $tmp = json_decode($last_target_data['verify_cetification_list'], TRUE);
-                        $target_data['verify_cetification_list'] = json_encode(array_intersect($tmp, $certification_id));
+                        $target_data['verify_cetification_list'] = json_encode(array_values(array_intersect($tmp, $certification_id)));
 
                     }
                     if ( ! empty($last_target_data['certification_id']))
                     {
-                        $target_data['certification_id'] = array_intersect($last_target_data['certification_id'], $certification_id);
+                        $target_data['certification_id'] = array_values(array_intersect($last_target_data['certification_id'], $certification_id));
 
                     }
                     $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
