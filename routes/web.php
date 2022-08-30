@@ -329,32 +329,32 @@ Route::get('/{path?}', function (Request $request, $path = '') {
     $default_title = 'inFlux普匯金融科技';
     $default_og_img = asset('images/site_icon.png');
 
-    preg_match("/^knowledge-([\d]+)$/i", $request->get('q'), $matches);
-    if ($path == 'articlepage' && isset($matches[1])) {
-        // 小學堂文章 meta data
-        $knowledge_info = KnowledgeArticle::select(['media_link', 'post_title', 'post_content'])
-            ->where('id', $matches[1])
-            ->get()
-            ->first();
-
-        if (!empty($knowledge_info['post_content'])) {
-            $meta_description = substr(
-                    preg_replace("/&.+;/m", '',
-                        preg_replace("/(<([^>]+)>)/i", '', trim($knowledge_info['post_content']))
-                    ),
-                    0, 140
-                ) . '...';
+    preg_match("/^(knowledge|news)-([\d]+)$/i", $request->get('q'), $matches);
+    if ($path == 'articlepage' && !empty($matches[1]) && !empty($matches[2])) {
+        $type = $matches[1];
+        $id = $matches[2];
+        switch ($type) {
+            case 'knowledge': // 小學堂文章
+                $meta_data = (new App\Http\Controllers\KnowledgeArticleController)->get_meta_info($id);
+                break;
+            case 'news': // 最新消息
+                $meta_data = (new App\Http\Controllers\NewsController)->get_meta_info($id);
+                break;
         }
 
         return view('index', [
-            'meta_description' => $meta_description ?? $default_desc,
-            'meta_title' => (!empty($knowledge_info['post_title']) ? $knowledge_info['post_title'] . ' - ' : '') . 'inFlux普匯金融科技',
-            'meta_og_image' => asset($knowledge_info['media_link'])
+            'meta_description' => !empty($meta_data['meta_description']) ? $meta_data['meta_description'] : $default_desc,
+            'meta_og_description' => !empty($meta_data['meta_og_description']) ? $meta_data['meta_og_description'] : $default_desc,
+            'web_title' => !empty($meta_data['web_title']) ? $meta_data['web_title'] : $default_title,
+            'meta_og_title' => !empty($meta_data['meta_og_title']) ? $meta_data['meta_og_title'] : $default_title,
+            'meta_og_image' => !empty($meta_data['meta_og_image']) ? $meta_data['meta_og_image'] : $default_og_img
         ]);
     } else {
         return view('index', [
             'meta_description' => $default_desc,
-            'meta_title' => $default_title,
+            'meta_og_description' => $default_desc,
+            'web_title' => $default_title,
+            'meta_og_title' => $default_title,
             'meta_og_image' => $default_og_img
         ]);
     }
