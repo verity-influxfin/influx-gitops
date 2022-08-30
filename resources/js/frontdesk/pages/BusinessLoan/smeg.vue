@@ -274,7 +274,7 @@
               <div class="form-item-text">*公司名稱：</div>
               <input
                 type="text"
-                name="phone"
+                name="company_name"
                 maxlength="10"
                 class="form-item-input col"
               />
@@ -283,7 +283,7 @@
               <div class="form-item-text">*電子信箱：</div>
               <input
                 type="text"
-                name="line"
+                name="email"
                 maxlength="40"
                 required
                 class="form-item-input col"
