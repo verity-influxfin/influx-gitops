@@ -1,52 +1,99 @@
 <template>
   <div class="require-datas">
     <div class="require-tabs">
-      <div class="item active">負責人資料</div>
-      <div class="item">公司資料</div>
+      <div class="item" @click="tab = 0" :class="{ active: tab === 0 }">
+        負責人資料
+      </div>
+      <div class="item" @click="tab = 1" :class="{ active: tab === 1 }">
+        公司資料
+      </div>
     </div>
     <div class="tab-content d-sm-block d-none">
-      <div class="content-item">
+      <div class="content-item" v-show="tab === 0">
         <div class="content-row">
           <div class="content-row-title">實名認證</div>
           <div class="content-row-info">請填寫並提供證件資料，以完成實名制</div>
           <div class="content-row-img">
-            <img src="@/asset/images/bussinessLoan/smeg-require-1.png" />
+            <img src="@/asset/images/bussinessLoan/smeg-require-1-1.png" />
           </div>
         </div>
         <div class="content-row">
           <div class="content-row-title">常用電子信箱</div>
           <div class="content-row-info">請提供我們方便聯絡的電子信箱</div>
           <div class="content-row-img">
-            <img src="@/asset/images/index/invest-step-1.png" />
+            <img src="@/asset/images/bussinessLoan/smeg-require-1-2.png" />
           </div>
         </div>
         <div class="content-row">
           <div class="content-row-title">個人基本資料</div>
           <div class="content-row-info">請提供審核所需個資，以便徵審</div>
           <div class="content-row-img">
-            <img src="@/asset/images/index/invest-step-1.png" />
+            <img src="@/asset/images/bussinessLoan/smeg-require-1-3.png" />
           </div>
         </div>
         <div class="content-row">
           <div class="content-row-title">個人所得資料</div>
           <div class="content-row-info">請提供所得資料文件，以供信用評級</div>
           <div class="content-row-img">
-            <img src="@/asset/images/index/invest-step-1.png" />
+            <img src="@/asset/images/bussinessLoan/smeg-require-1-4.png" />
           </div>
         </div>
         <div class="content-row">
           <div class="content-row-title">近六個月往來存摺封面及內頁</div>
           <div class="content-row-info">請提供近期個人存摺往來資料</div>
           <div class="content-row-img">
-            <img src="@/asset/images/index/invest-step-1.png" />
+            <img src="@/asset/images/bussinessLoan/smeg-require-1-5.png" />
           </div>
         </div>
       </div>
-      <!-- <div class="content-item"></div> -->
+      <div class="content-item" v-show="tab === 1">
+        <div class="content-row">
+          <div class="content-row-title">設立(變更)事項登記表</div>
+          <div class="content-row-info">請上傳公司設立(變更)事項登記表</div>
+          <div class="content-row-img">
+            <img src="@/asset/images/bussinessLoan/smeg-require-2-1.png" />
+          </div>
+        </div>
+        <div class="content-row">
+          <div class="content-row-title">公司基本資料</div>
+          <div class="content-row-info">請提供您公司之基本資料</div>
+          <div class="content-row-img">
+            <img src="@/asset/images/bussinessLoan/smeg-require-2-2.png" />
+          </div>
+        </div>
+        <div class="content-row">
+          <div class="content-row-title">公司電子信箱</div>
+          <div class="content-row-info">請提供公司電子信箱</div>
+          <div class="content-row-img">
+            <img src="@/asset/images/bussinessLoan/smeg-require-2-3.png" />
+          </div>
+        </div>
+        <div class="content-row">
+          <div class="content-row-title">近六個月往來存招封面及內頁</div>
+          <div class="content-row-info">請提供近期公司存摺往來資料</div>
+          <div class="content-row-img">
+            <img src="@/asset/images/bussinessLoan/smeg-require-2-4.png" />
+          </div>
+        </div>
+        <div class="content-row">
+          <div class="content-row-title">近三年所得稅結算申報書(稅簽)</div>
+          <div class="content-row-info">請上傳近三年公司所得稅捷報申請書</div>
+          <div class="content-row-img">
+            <img src="@/asset/images/bussinessLoan/smeg-require-2-5.png" />
+          </div>
+        </div>
+        <div class="content-row">
+          <div class="content-row-title">近三年401/403/405表</div>
+          <div class="content-row-info">請上傳近三年401/403/405表單</div>
+          <div class="content-row-img">
+            <img src="@/asset/images/bussinessLoan/smeg-require-2-6.png" />
+          </div>
+        </div>
+      </div>
     </div>
     <div class="tab-content d-sm-none d-block">
       <div class="tab-content">
-        <div class="content-item swiper">
+        <div class="content-item swiper-require" v-show="tab === 0">
           <div class="swiper-wrapper">
             <div class="content-row swiper-slide">
               <div class="content-row-title">實名認證</div>
@@ -55,7 +102,7 @@
               </div>
               <div class="content-row-img">
                 <img
-                  src="@/asset/images/bussinessLoan/smeg-require-1.png"
+                  src="@/asset/images/bussinessLoan/smeg-require-1-1.png"
                   class="img-fluid"
                 />
               </div>
@@ -64,14 +111,14 @@
               <div class="content-row-title">常用電子信箱</div>
               <div class="content-row-info">請提供我們方便聯絡的電子信箱</div>
               <div class="content-row-img">
-                <img src="@/asset/images/index/invest-step-1.png" />
+                <img src="@/asset/images/bussinessLoan/smeg-require-1-2.png" />
               </div>
             </div>
             <div class="content-row swiper-slide">
               <div class="content-row-title">個人基本資料</div>
               <div class="content-row-info">請提供審核所需個資，以便徵審</div>
               <div class="content-row-img">
-                <img src="@/asset/images/index/invest-step-1.png" />
+                <img src="@/asset/images/bussinessLoan/smeg-require-1-3.png" />
               </div>
             </div>
             <div class="content-row swiper-slide">
@@ -80,20 +127,68 @@
                 請提供所得資料文件，以供信用評級
               </div>
               <div class="content-row-img">
-                <img src="@/asset/images/index/invest-step-1.png" />
+                <img src="@/asset/images/bussinessLoan/smeg-require-1-4.png" />
               </div>
             </div>
             <div class="content-row swiper-slide">
               <div class="content-row-title">近六個月往來存摺封面及內頁</div>
               <div class="content-row-info">請提供近期個人存摺往來資料</div>
               <div class="content-row-img">
-                <img src="@/asset/images/index/invest-step-1.png" />
+                <img src="@/asset/images/bussinessLoan/smeg-require-1-5.png" />
               </div>
             </div>
           </div>
           <div class="swiper-pagination"></div>
         </div>
-        <!-- <div class="content-item"></div> -->
+        <div class="content-item swiper-require2" v-show="tab === 1">
+          <div class="swiper-wrapper">
+            <div class="content-row swiper-slide">
+              <div class="content-row-title">設立(變更)事項登記表</div>
+              <div class="content-row-info">請上傳公司設立(變更)事項登記表</div>
+              <div class="content-row-img">
+                <img src="@/asset/images/bussinessLoan/smeg-require-2-1.png" />
+              </div>
+            </div>
+            <div class="content-row swiper-slide">
+              <div class="content-row-title">公司基本資料</div>
+              <div class="content-row-info">請提供您公司之基本資料</div>
+              <div class="content-row-img">
+                <img src="@/asset/images/bussinessLoan/smeg-require-2-2.png" />
+              </div>
+            </div>
+            <div class="content-row swiper-slide">
+              <div class="content-row-title">公司電子信箱</div>
+              <div class="content-row-info">請提供公司電子信箱</div>
+              <div class="content-row-img">
+                <img src="@/asset/images/bussinessLoan/smeg-require-2-3.png" />
+              </div>
+            </div>
+            <div class="content-row swiper-slide">
+              <div class="content-row-title">近六個月往來存招封面及內頁</div>
+              <div class="content-row-info">請提供近期公司存摺往來資料</div>
+              <div class="content-row-img">
+                <img src="@/asset/images/bussinessLoan/smeg-require-2-4.png" />
+              </div>
+            </div>
+            <div class="content-row swiper-slide">
+              <div class="content-row-title">近三年所得稅結算申報書(稅簽)</div>
+              <div class="content-row-info">
+                請上傳近三年公司所得稅捷報申請書
+              </div>
+              <div class="content-row-img">
+                <img src="@/asset/images/bussinessLoan/smeg-require-2-5.png" />
+              </div>
+            </div>
+            <div class="content-row swiper-slide">
+              <div class="content-row-title">近三年401/403/405表</div>
+              <div class="content-row-info">請上傳近三年401/403/405表單</div>
+              <div class="content-row-img">
+                <img src="@/asset/images/bussinessLoan/smeg-require-2-6.png" />
+              </div>
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -103,9 +198,19 @@
 import SwiperCore, { Navigation, Pagination } from 'swiper/core'
 import Swiper from 'swiper/bundle'
 export default {
+  data() {
+    return {
+      tab: 0
+    }
+  },
   mounted() {
     SwiperCore.use([Navigation, Pagination])
-    const swiper = new Swiper('.swiper', {
+    const swiper = new Swiper('.swiper-require', {
+      pagination: {
+        el: '.swiper-pagination',
+      },
+    })
+    const swiper2 = new Swiper('.swiper-require2', {
       pagination: {
         el: '.swiper-pagination',
       },
@@ -226,13 +331,13 @@ export default {
       width: 330px;
       height: 650px;
     }
-    .swiper-pagination{
-        bottom: 8px;
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-        transform: scale(1.25);
-        position: relative;
+    .swiper-pagination {
+      bottom: 8px;
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      transform: scale(1.25);
+      position: relative;
     }
     .tab-content {
       margin-top: 22px;

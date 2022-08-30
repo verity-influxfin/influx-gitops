@@ -176,7 +176,7 @@ $color__text--primary: #023d64;
   top: -4px;
   left: 15px;
   position: absolute;
-  transform: scale(0.97);
+  width: 262px;
   transition-property: opacity;
   transition-duration: 1s;
   opacity: 0;
@@ -244,7 +244,7 @@ $color__text--primary: #023d64;
   .step-content-img {
     top: -114px;
     left: -45px;
-    transform: scale(0.55);
+    width: 144px;
   }
   .step-main.swiper-mode {
     margin: 22px auto;
@@ -281,7 +281,8 @@ $color__text--primary: #023d64;
       display: flex;
       justify-content: center;
       position: relative;
-      transform: scale(0.95);
+      width: initial;
+      max-height: 520px;
       opacity: 1;
     }
   }
