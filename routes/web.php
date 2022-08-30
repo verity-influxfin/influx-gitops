@@ -342,6 +342,9 @@ Route::prefix('api/v1')->group(function() {
     Route::post('/work-loan/contact', 'WorkLoanController@save_contact');
     Route::post('/work-loan/share', 'WorkLoanController@save_share');
 
+    // 上班族貸
+    Route::post('/business-loan/contact', 'BusinessLoanController@save_contact');
+
     // 活動
     Route::get('/campaign2022/list', 'Campaign2022Controller@get_all');
     Route::get('/campaign2022/list/page/{page}', 'Campaign2022Controller@get_by_page');
