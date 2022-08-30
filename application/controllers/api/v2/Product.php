@@ -2952,15 +2952,39 @@ class Product extends REST_Controller {
                     ]);
                     $last_target_data = ! empty($last_target['target_data']) ? json_decode($last_target['target_data'], TRUE) : [];
                     $target_data = json_decode($target->target_data ?? '', TRUE);
+
+                    // Get product certifications.
+                    $product_certifications = [];
+                    $product_info2 = $this->product_lib->get_exact_product($target->product_id, $target->sub_product_id);
+                    if (array_key_exists('certifications_stage', $product_info2)) {
+                        $certifications = [];
+
+                        // Merge certifications_stage.
+                        foreach ($product_info2['certifications_stage'] as $stage) {
+                            $certifications = array_merge($certifications, $stage);
+                        }
+
+                        // Substract option_certifications.
+                        $option_certifications = [];
+                        if (array_key_exists('option_certifications', $product_info2)) {
+                            $option_certifications = $product_info2['option_certifications'];
+                        }
+                        $certifications = array_values(array_diff($certifications, $option_certifications));
+
+                        // Cast elements to string.
+                        foreach ($certifications as $cert) {
+                            $product_certifications[] = (string)$cert;
+                        }
+                    }
+
                     if ( ! empty($last_target_data['verify_cetification_list']))
                     {
-                        $tmp = json_decode($last_target_data['verify_cetification_list'], TRUE);
-                        $target_data['verify_cetification_list'] = json_encode(array_values(array_intersect($tmp, $certification_id)));
+                        $target_data['verify_cetification_list'] = json_encode(array_values(array_intersect($product_certifications, $certification_id)));
 
                     }
                     if ( ! empty($last_target_data['certification_id']))
                     {
-                        $target_data['certification_id'] = array_values(array_intersect($last_target_data['certification_id'], $certification_id));
+                        $target_data['certification_id'] = $certification_id;
 
                     }
                     $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
