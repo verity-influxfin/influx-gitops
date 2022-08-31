@@ -84,7 +84,15 @@ class Certification_factory
             return NULL;
         }
 
-        $certification_result = CertificationResultFactory::getInstance($certification['certification_id'], CERTIFICATION_STATUS_SUCCEED);
+        if ($certification['certification_id'] == CERTIFICATION_EMAIL)
+        { // 當徵信項為「常用電子信箱」時 result 預設為待驗證
+            $certification_result = CertificationResultFactory::getInstance($certification['certification_id'], CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
+        }
+        else
+        { // 其餘徵信項的 result 預設為成功
+            $certification_result = CertificationResultFactory::getInstance($certification['certification_id'], CERTIFICATION_STATUS_SUCCEED);
+        }
+
         switch ($certification['certification_id']) {
             case CERTIFICATION_IDENTITY: // 實名認證
                 return new Cert_identity($certification, $certification_result);

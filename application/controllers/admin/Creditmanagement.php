@@ -116,6 +116,19 @@ class Creditmanagement extends MY_Admin_Controller
             }
         }
 
+        if (isset($this->inputData['is_top_enterprise']))
+        {
+            $this->load->model('loan/target_meta_model');
+            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_top_enterprise']);
+            if (isset($rs))
+            {
+                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_top_enterprise'], ['meta_value' => $this->inputData['is_top_enterprise']]);
+            }
+            else
+            {
+                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_top_enterprise', 'meta_value' => $this->inputData['is_top_enterprise']]);
+            }
+        }
         $adminId 		= $this->login_info->id;
         $rs = $this->creditSheet->approve(intval($this->inputData['group']), $this->inputData['opinion'],
             intval($this->inputData['score']), $adminId);

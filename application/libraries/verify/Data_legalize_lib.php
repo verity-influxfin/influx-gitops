@@ -585,7 +585,6 @@ class Data_legalize_lib{
 				intval($regexResult['month']), intval($regexResult['day']));
 			$reportDate = DateTime::createFromFormat('Y-m-d', $date);
 			$certificationSubmitDate = new DateTime();
-			$certificationSubmitDate->setTimestamp($created_at);
 			$diffDate = $certificationSubmitDate->diff($reportDate);
 			if($diffDate->m >= 1) {
 				$res->addMessage('勞保非近一個月申請', 2, MessageDisplay::Client);

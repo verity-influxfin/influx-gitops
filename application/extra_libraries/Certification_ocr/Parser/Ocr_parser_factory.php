@@ -1,7 +1,6 @@
 <?php
 
 namespace Certification_ocr\Parser;
-
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Ocr_parser_factory
@@ -16,6 +15,10 @@ class Ocr_parser_factory
 
         switch ($info['certification_id'])
         {
+            case CERTIFICATION_INVESTIGATION:
+                return new Cert_investigation($info);
+            case CERTIFICATION_JOB:
+                return new Cert_job($info);
             case CERTIFICATION_BUSINESSTAX:
                 return new Cert_businesstax($info);
             case CERTIFICATION_BALANCESHEET:

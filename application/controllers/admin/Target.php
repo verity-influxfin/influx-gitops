@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Target extends MY_Admin_Controller {
 
-	protected $edit_method = array('edit','verify_success','verify_failed','order_fail','waiting_verify','evaluation_approval','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer','legalAffairs','waiting_reinspection');
+	protected $edit_method = array('edit','verify_success','verify_failed','order_fail','waiting_verify','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer','legalAffairs','waiting_reinspection');
 
 	public function __construct() {
 		parent::__construct();
@@ -35,7 +35,7 @@ class Target extends MY_Admin_Controller {
 
 		if (isset($input['export'])) {
 			switch ($input['export']) {
-				case 2:
+				case 2: // Excel輸出-逾期債權 by 債權
 					$title_rows = [
 						'user_id' => ['name' => '借款人ID'],
 						'product_name' => ['name' => '產品名稱'],
@@ -45,18 +45,54 @@ class Target extends MY_Admin_Controller {
 						'user_meta_2' => ['name' => '科系/職位', 'width' => 25],
 						'invest_amount' => ['name' => '債權總額'],
 						'lender' => ['name' => '投資人ID'],
-						'unpaid_principal' => ['name' => '逾期本金'],
+						'unpaid_principal_by_investor' => ['name' => '逾期本金'],
 						'loan_date' => ['name' => '放款日期', 'width' => 12],
                         'limit_date' => ['name' => '首逾日期', 'width' => 12],
 						'delayed_days' => ['name' => '逾期天數'],
-						'unpaid_interest' => ['name' => '尚欠利息'],
-						'delay_interest' => ['name' => '延滯息'],
-						'damage' => ['name' => '違約金']
+						'unpaid_interest_by_investor' => ['name' => '尚欠利息'],
+						'delay_interest_by_investor' => ['name' => '尚欠利延滯息', 'width' => 14],
 					];
-					$data_rows = $this->target_model->getDelayedReport($input);
+					$data_rows = $this->target_model->get_delayed_report_by_investor($input);
                     $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
                     $this->spreadsheet_lib->download('export2.xlsx', $spreadsheet);
 					return;
+                case 3: // Excel輸出-逾期債權 by 案件
+                    $title_rows = [
+                        'target_no' => ['name' => '案號', 'width' => 20],
+                        'product_name' => ['name' => '產品', 'width' => 12],
+                        'user_id' => ['name' => '會員ID'],
+                        'new_or_old' => ['name' => '新舊戶'],
+                        'credit_level' => ['name' => '信評'],
+                        'user_meta_1' => ['name' => '公司/學校', 'width' => 20],
+                        'school_department' => ['name' => '科系', 'width' => 20],
+                        'finish_cert_identity' => ['name' => '是否完成實名驗證', 'width' => 20],
+                        'amount' => ['name' => '申請金額'],
+                        'credit_amount' => ['name' => '核准金額'],
+                        'loan_amount' => ['name' => '動用金額'],
+                        'user_available_amount' => ['name' => '可動用額度', 'width' => 14],
+                        'remaining_principal' => ['name' => '本金餘額'],
+                        'interest_rate' => ['name' => '年化利率'],
+                        'instalment' => ['name' => '期數'],
+                        'repayment' => ['name' => '還款方式'],
+                        'loan_date' => ['name' => '放款日期', 'width' => 12],
+                        'delay' => ['name' => '逾期狀況'],
+                        'delay_days' => ['name' => '逾期天數'],
+                        'unpaid_damage' => ['name' => '尚欠違約金', 'width' => 10],
+                        'unpaid_interest' => ['name' => '尚欠利息'],
+                        'unpaid_delayinterest' => ['name' => '尚欠延滯息', 'width' => 10],
+                        'status' => ['name' => '狀態'],
+                        'reason' => ['name' => '借款原因', 'width' => 25],
+                        'target_created_date' => ['name' => '申請日期', 'width' => 12],
+                        'target_created_time' => ['name' => '申請時間'],
+                        'credit_created_date' => ['name' => '核准日期', 'width' => 12],
+                        'credit_created_time' => ['name' => '核准時間'],
+                        'promote_code' => ['name' => '邀請碼'],
+                        'remark' => ['name' => '備註'],
+                    ];
+                    $data_rows = $this->_get_delayed_report_by_target($input);
+                    $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
+                    $this->spreadsheet_lib->download('All_targets_' . date('Ymd') . '.xls', $spreadsheet);
+                    return;
 			}
 		}
 
@@ -263,6 +299,77 @@ class Target extends MY_Admin_Controller {
             $this->load->view('admin/target/targets_list',$page_data);
             $this->load->view('admin/_footer');
         }
+    }
+
+    private function _get_delayed_report_by_target($input)
+    {
+        $this->load->library('credit_lib');
+        $this->load->library('target_lib');
+        $this->load->model('user/user_certification_model');
+
+        $instalment_list = $this->config->item('instalment');
+        $repayment_type = $this->config->item('repayment_type');
+        $status_list = $this->target_model->status_list;
+        $delay_list = $this->target_model->delay_list;
+        $product_list = $this->config->item('product_list');
+
+        $list = $this->target_model->get_delayed_report_by_target($input);
+
+        $target_ids = array_column($list, 'id');
+        $user_loaned_count = array_column(
+            $this->target_model->getUserStatusByTargetId($target_ids),
+            'total_count',
+            'user_id'
+        );
+
+        $where = ['investor' => USER_BORROWER, 'status' => 1];
+        if (! empty($input['edate']) && strtotime($input['edate']))
+        {
+            $where['updated_at <= '] = strtotime($input['edate']);
+        }
+        $user_cert_list = $this->user_certification_model->getCertificationsByTargetId($target_ids, $where);
+
+        return array_map(function ($element) use ($user_loaned_count, $user_cert_list, $instalment_list, $repayment_type, $status_list, $delay_list, $product_list) {
+            $amortization_table = $this->target_lib->get_amortization_table($element);
+            $element['remaining_principal'] = $amortization_table['remaining_principal'];
+
+            $remain_amount = $this->credit_lib->get_remain_amount($element['user_id'], $element['product_id'], $element['sub_product_id']);
+            $element['user_available_amount'] = $remain_amount['instalment'] == $element['instalment'] ? $remain_amount['user_available_amount'] : '-';
+
+            $element['instalment'] = $instalment_list[$element['instalment']] ?? '';
+            $element['repayment'] = $repayment_type[$element['repayment']] ?? '';
+            $element['delay'] = $delay_list[$element['delay']] ?? '';
+            $element['status'] = $status_list[$element['status']] ?? '';
+            $element['product_name'] = $product_list[$element['product_id']]['name'] ?? '';
+            $element['new_or_old'] = ! empty($user_loaned_count[$element['user_id']]) && $user_loaned_count[$element['user_id']] > 0 ? '舊戶' : '新戶';
+            $element['finish_cert_identity'] = !empty($user_cert_list[$element['user_id']][CERTIFICATION_IDENTITY]) ? '是' : '否';
+            if ( ! empty($element['created_at']))
+            {
+                $element['target_created_date'] = date('Y-m-d', $element['created_at']);
+                $element['target_created_time'] = date('H:i:s', $element['created_at']);
+            }
+            else
+            {
+                $element['target_created_date'] = '';
+                $element['target_created_time'] = '';
+            }
+            if ( ! empty($element['credit_created_at']))
+            {
+                $element['credit_created_date'] = date('Y-m-d', $element['credit_created_at']);
+                $element['credit_created_time'] = date('H:i:s', $element['credit_created_at']);
+            }
+            else
+            {
+                $element['credit_created_date'] = '';
+                $element['credit_created_time'] = '';
+            }
+            if ($this->isJson($element['reason']))
+            {
+                $reason_json = json_decode($element['reason'], TRUE);
+                $element['reason'] = sprintf("原因: %s, 敘述: %s", $reason_json["reason"], $reason_json["reason_description"]);
+            }
+            return $element;
+        }, $list);
     }
 
 	public function edit(){
@@ -616,6 +723,7 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
+		$is_top_enterprise = $get["is_top_enterprise"] ?? 0;
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -633,6 +741,7 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
+		$this->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);
 
         $level = false;
         if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
@@ -774,7 +883,7 @@ class Target extends MY_Admin_Controller {
 			$userId = $target->user_id;
 			$user = $this->user_model->get($userId);
 
-			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
+            $userMeta = $this->user_meta_model->get_many_by(['user_id' => $userId]);
 			$this->load->library('credit_lib');
 			$credits = $this->credit_lib->get_credit($userId, $target->product_id, $target->sub_product_id);
 			$credits["product_id"] = $target->product_id;
@@ -897,6 +1006,30 @@ class Target extends MY_Admin_Controller {
             $display_contract_cols = ['contract_name', 'meta_name'];
             $contract_list = array_columns($product['need_upload_images'] ?? [], $display_contract_cols);
 
+            $meta_list_by_key = array_column($userMeta, NULL, 'meta_key');
+            $meta_info = $meta_list_by_key['job_company'] ?? new stdclass();
+            $job_company = $meta_info->meta_value ?? '';
+            if (isset($target_meta['is_top_enterprise']))
+            {
+                $is_top_enterprise = $target_meta['is_top_enterprise'];
+            }
+            else if ( ! empty($job_company))
+            {
+                $this->config->load('top_enterprise');
+                $top_enterprise_list = $this->config->item("top_enterprise");
+                $m_array = preg_grep('/' . mb_substr($job_company, 0, 4) . '.*/', $top_enterprise_list);
+                $is_top_enterprise = ! empty($m_array) ? 1 : 0;
+            }
+            else
+            {
+                $is_top_enterprise = 0;
+            }
+
+            $special_list = [
+                'is_top_enterprise' => $is_top_enterprise,
+                'job_company' => $job_company,
+            ];
+
             $this->load->library('output/loan/target_output', ['data' => $targets]);
 			$response = [
 				"target" => $this->current_target_output->toOne(),
@@ -907,6 +1040,7 @@ class Target extends MY_Admin_Controller {
 				"virtual_accounts" => $this->virtual_account_output->toMany(),
 				"targets" => $this->target_output->toMany(),
                 'target_meta' => $target_meta_list,
+                'special_list' => $special_list,
                 'contract_list' => $contract_list
 			];
 

@@ -1629,8 +1629,9 @@ class Transfer extends REST_Controller {
     }
 	
 	private function check_adult(){
-		
-		//檢查認證 NOT_VERIFIED
+        $is_company = $this->user_info->investor == 1 && $this->user_info->company == 1;
+
+        //檢查認證 NOT_VERIFIED
 		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ]);
 		}
@@ -1656,9 +1657,10 @@ class Transfer extends REST_Controller {
 			$this->response(['result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD]);
 		}
 
-		if(get_age($this->user_info->birthday) < 20){
-			$this->response(['result' => 'ERROR','error' => UNDER_AGE ]);
-		}
+        if (get_age($this->user_info->birthday) < 20 && ! $is_company)
+        {
+            $this->response(['result' => 'ERROR', 'error' => UNDER_AGE]);
+        }
 	}
     private function is_sub_product($product,$sub_product_id){
         $sub_product_list = $this->config->item('sub_product_list');

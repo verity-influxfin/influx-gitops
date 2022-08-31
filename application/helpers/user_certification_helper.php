@@ -27,8 +27,10 @@ function certification_truly_failed($exist_target_submitted, $certification_id, 
         return FALSE;
     }
 
-    // 投資端的判斷
-    if ($investor == USER_INVESTOR)
+    if ($investor == USER_INVESTOR ||
+        $is_judicial_product === TRUE ||
+        ($exist_target_submitted === TRUE || ($exist_target_submitted === FALSE && $cert->is_submit_to_review()))
+    )
     {
         if ($cert->is_failed())
         {
@@ -38,36 +40,6 @@ function certification_truly_failed($exist_target_submitted, $certification_id, 
         if ($cert->is_expired())
         {
             return TRUE;
-        }
-        return FALSE;
-    }
-
-    // 借款端的判斷
-    if ($is_judicial_product === TRUE)
-    { // 企金
-        if ($cert->is_failed())
-        {
-            return TRUE;
-        }
-
-        if ($cert->is_expired())
-        {
-            return TRUE;
-        }
-    }
-    else
-    { // 個金
-        if ($exist_target_submitted === TRUE || ($exist_target_submitted === FALSE && $cert->is_submit_to_review()))
-        {
-            if ($cert->is_failed())
-            {
-                return TRUE;
-            }
-
-            if ($cert->is_expired())
-            {
-                return TRUE;
-            }
         }
     }
 

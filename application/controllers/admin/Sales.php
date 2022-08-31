@@ -5,17 +5,29 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class Sales extends MY_Admin_Controller {
 	
 	protected $edit_method = array('promote_reward_loan');
 
-	public function __construct() {
+    private $excel_config;
+
+    public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_meta_model');
 		$this->load->model('admin/partner_model');
 		$this->load->model('admin/partner_type_model');
 		$this->load->model('user/sale_goals_model');
+        $this->excel_config = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'FFFFFFFFF'],
+                ]
+            ]
+        ];
  	}
 	
 	public function index(){
@@ -770,32 +782,93 @@ class Sales extends MY_Admin_Controller {
         }
         $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
-        $fullPromoteList = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'], $input['edate']);
+        $fullPromoteList = [];
+        if ( ! empty($where) || ! empty($input['sdate']) || ! empty($input['edate']))
+        {
+            $fullPromoteList = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'], $input['edate']);
+        }
 
-        $config = pagination_config();
-        $config['per_page'] = 40; //每頁顯示的資料數
-        $config['base_url'] = admin_url('sales/promote_list');
-        $config["total_rows"] = count($fullPromoteList);
+        if (isset($input['export']))
+        { // 匯出報表
+            $this->load->library('Spreadsheet_lib');
+            switch ($input['export'])
+            {
+                case 1:
+                    $title_rows = [
+                        'contract_end_time' => ['name' => '合約截止日', 'width' => 20],
+                        'user_id' => ['name' => '會員 ID'],
+                        'settings' => ['name' => '類型', 'width' => 15],
+                        'name' => ['name' => '名稱', 'width' => 10],
+                        'promote_code' => ['name' => '邀請碼', 'width' => 14],
+                        'fullMemberCount' => ['name' => '註冊+下載數量', 'width' => 16],
+                        'loaned_count_student' => ['name' => '學生貸核貸數量', 'width' => 16],
+                        'loaned_count_salary_man' => ['name' => '上班族貸核貸數量', 'width' => 18],
+                        'loaned_count_collaboration' => ['name' => '合作產品核貸數量', 'width' => 18],
+                        'totalRewardAmount' => ['name' => '累計獎金', 'width' => 12],
+                        'status' => ['name' => '狀態']
+                    ];
+                    $data_rows = array_map(function ($element) {
+                        $element['contract_end_time'] = $element['info']['contract_end_time'] ?? '';
+                        $element['user_id'] = $element['info']['user_id'] ?? '';
+                        $element['settings'] = $element['info']['settings']['description'] ?? '';
+                        $element['name'] = $element['info']['name'] ?? '';
+                        $element['promote_code'] = $element['info']['promote_code'] ?? '';
+                        $element['loaned_count_student'] = $element['loanedCount']['student']??'';
+                        $element['loaned_count_salary_man'] = $element['loanedCount']['salary_man']??'';
+                        $element['loaned_count_collaboration'] = (($element['loanedCount']['small_enterprise'] ?? 0) + (array_sum($element['collaborationCount'] ?? [])));
+                        $element['status'] = ($element['info']['status'] ?? '') == 1 ? '啟用' : '停用';
+                        return $element;
+                    }, $fullPromoteList);
+                    $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
 
-        $this->pagination->initialize($config);
-        $page_data["links"] = $this->pagination->create_links();
+                    $start_date = '';
+                    $end_date = '';
+                    if ( ! empty($input['sdate']) && ($start_timestamp = strtotime($input['sdate'])) !== FALSE)
+                    {
+                        $start_date = date("Ymd", $start_timestamp);
+                    }
+                    if ( ! empty($input['edate']) && ($end_timestamp = strtotime($input['edate'])) !== FALSE)
+                    {
+                        $end_date = date("Ymd", $end_timestamp);
+                    }
+                    else if ( ! isset($start_timestamp) || $start_timestamp === FALSE)
+                    {
+                        $end_date = date("Ymd");
+                    }
 
-        $current_page = max(1, intval($input['per_page'] ?? '1'));
-        $offset = ($current_page - 1) * $config['per_page'];
+                    $this->spreadsheet_lib->download("推薦有賞報表({$start_date}-{$end_date}).xlsx", $spreadsheet);
+                    return;
+                default:
+                    return;
+            }
+        }
+        else
+        { // 畫列表
+            $config = pagination_config();
+            $config['per_page'] = 40; //每頁顯示的資料數
+            $config['base_url'] = admin_url('sales/promote_list');
+            $config["total_rows"] = count($fullPromoteList);
 
-        $list = array_slice($fullPromoteList, $offset, $config['per_page']);
+            $this->pagination->initialize($config);
+            $page_data["links"] = $this->pagination->create_links();
 
-        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
-        $alias_list = ['all' => "全部方案"];
-        $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
+            $current_page = max(1, intval($input['per_page'] ?? '1'));
+            $offset = ($current_page - 1) * $config['per_page'];
 
-        $page_data['list'] = $list;
-        $page_data['alias_list'] = $alias_list;
+            $list = array_slice($fullPromoteList, $offset, $config['per_page']);
 
-        $this->load->view('admin/_header');
-        $this->load->view('admin/_title', $this->menu);
-        $this->load->view('admin/promote_code/promote_list', $page_data);
-        $this->load->view('admin/_footer');
+            $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+            $alias_list = ['all' => "全部方案"];
+            $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
+
+            $page_data['list'] = $list;
+            $page_data['alias_list'] = $alias_list;
+
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/promote_code/promote_list', $page_data);
+            $this->load->view('admin/_footer');
+        }
     }
 
     public function promote_edit()
@@ -2271,6 +2344,8 @@ class Sales extends MY_Admin_Controller {
         $content2 = [];
 
         // 內容先塞月日星期
+        $format1 = [NumberFormat::FORMAT_GENERAL, NumberFormat::FORMAT_GENERAL];
+        $format2 = [NumberFormat::FORMAT_GENERAL, NumberFormat::FORMAT_GENERAL];
         $content1[] = $first_row;
         $content1[] = $second_row;
         $content2[] = $first_row;
@@ -2286,16 +2361,20 @@ class Sales extends MY_Admin_Controller {
                 'items' => [
                     [
                         'key' => sale_goals_model::GOAL_WEB_TRAFFIC,
-                        'kpi' => ['目標流量', '實際流量', '達成率']
+                        'kpi' => ['目標流量', '實際流量', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_USER_REGISTER,
-                        'kpi' => ['目標會員數', '實際總會員數', '達成率']
+                        'kpi' => ['目標會員數', '實際總會員數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_APP_DOWNLOAD,
-                        'kpi' => ['目標下載數', '實際下載數', '達成率']
+                        'kpi' => ['目標下載數', '實際下載數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_TOTAL,
-                        'kpi' => ['目標申貸戶數', '實際完成申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際完成申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ]
                 ]
             ]
@@ -2310,8 +2389,11 @@ class Sales extends MY_Admin_Controller {
                     continue;
                 }
                 $content1[] = $datas[$item_value['key']]['goal'];
+                $format1[] = $item_value['format'][0];
                 $content1[] = $datas[$item_value['key']]['real'];
+                $format1[] = $item_value['format'][1];
                 $content1[] = $datas[$item_value['key']]['rate'];
+                $format1[] = $item_value['format'][2];
             }
         }
 
@@ -2322,19 +2404,24 @@ class Sales extends MY_Admin_Controller {
                 'items' => [
                     [
                         'key' => sale_goals_model::GOAL_LOAN_SALARY_MAN,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_STUDENT,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_SMART_STUDENT,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_CREDIT_INSURANCE,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ], [
                         'key' => sale_goals_model::GOAL_LOAN_SME,
-                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率']
+                        'kpi' => ['目標申貸戶數', '實際申貸戶數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ]
                 ]
             ], [
@@ -2342,23 +2429,28 @@ class Sales extends MY_Admin_Controller {
                 'items' => [
                     [
                         'key' => sale_goals_model::GOAL_DEAL_SALARY_MAN,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                     [
                         'key' => sale_goals_model::GOAL_DEAL_STUDENT,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                     [
                         'key' => sale_goals_model::GOAL_DEAL_SMART_STUDENT,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                     [
                         'key' => sale_goals_model::GOAL_DEAL_CREDIT_INSURANCE,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                     [
                         'key' => sale_goals_model::GOAL_DEAL_SME,
-                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率']
+                        'kpi' => ['目標成交筆數', '實際成交筆數', '達成率'],
+                        'format' => [NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_NUMBER, NumberFormat::FORMAT_PERCENTAGE]
                     ],
                 ]
             ]
@@ -2373,8 +2465,11 @@ class Sales extends MY_Admin_Controller {
                     continue;
                 }
                 $content2[] = $datas[$item_value['key']]['goal'];
+                $format2[] = $item_value['format'][0];
                 $content2[] = $datas[$item_value['key']]['real'];
+                $format2[] = $item_value['format'][1];
                 $content2[] = $datas[$item_value['key']]['rate'];
+                $format2[] = $item_value['format'][2];
             }
         }
 
@@ -2386,10 +2481,12 @@ class Sales extends MY_Admin_Controller {
             [
                 'sheet' => '貸前指標',
                 'content' => $content1,
+                'format' => $format1,
             ],
             [
                 'sheet' => '貸中指標',
                 'content' => $content2,
+                'format' => $format2,
             ],
         ];
         $sheet_highlight = 'KPI指標-' . $days_info['int_month'] . '月';
@@ -2407,7 +2504,7 @@ class Sales extends MY_Admin_Controller {
             {
                 $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
-                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center')->setVertical('center');
 
                 $index_a = 3;
                 $index_b = 3;
@@ -2418,7 +2515,7 @@ class Sales extends MY_Admin_Controller {
                 // 這邊反過來是因為要先設定 Sheet 不然會合併到前一個 sheet 的格子
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A1', $sheet_highlight);
                 $spreadsheet->getActiveSheet()->mergeCells('A1:C2');
-                $spreadsheet->getActiveSheet($sheet)->getStyle('A1')->getAlignment()->setHorizontal('center');
+                $spreadsheet->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal('center')->setVertical('center');
 
                 $index_a = 3;
                 $index_b = 3;
@@ -2426,7 +2523,16 @@ class Sales extends MY_Admin_Controller {
 
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, '總數');
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . $index_b, '總成交數');
+                $contents['format'][] = NumberFormat::FORMAT_NUMBER;
+
+                $spreadsheet->getActiveSheet()->getStyle('B' . $index_b)->applyFromArray($this->excel_config);
+                $spreadsheet->getActiveSheet()->getStyle('C' . $index_b)->applyFromArray($this->excel_config);
             }
+
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(TRUE);
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(TRUE);
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(TRUE);
+            $width_list = [['column' => 'A', 'width' => 8.5], ['column' => 'B', 'width' => 12.5], ['column' => 'C', 'width' => 12.5]];
 
             // 從 D 行開始塞入上面整理的內容
             foreach ($contents['content'] as $key => $row_content)
@@ -2435,18 +2541,32 @@ class Sales extends MY_Admin_Controller {
                 {
                     $column = Coordinate::stringFromColumnIndex($content_index + 4); // A = 1
                     $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $value);
+                    $spreadsheet->getActiveSheet()->getStyle($column . $row)->applyFromArray($this->excel_config);
+                    $spreadsheet->getActiveSheet()->getStyle($column . $row)->getNumberFormat()->setFormatCode($contents['format'][$key]);
                     $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
+                    $spreadsheet->getActiveSheet($sheet)->getColumnDimension($column)->setAutoSize(TRUE);
                 }
                 $row++;
             }
 
             $spreadsheet->setActiveSheetIndex($sheet)->setTitle($contents['sheet']);
+
+            // 針對低於最小寬度的欄位重新調整
+            $spreadsheet->getActiveSheet()->calculateColumnWidths();
+            foreach ($width_list as $info)
+            {
+                if ($spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->getWidth() < $info['width'])
+                {
+                    $spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->setAutoSize(FALSE);
+                    $spreadsheet->getActiveSheet()->getColumnDimension($info['column'])->setWidth($info['width']);
+                }
+            }
         }
         $spreadsheet->setActiveSheetIndex(0);
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename=' . 'testMergeCell' . '.xlsx');
+        header('Content-Disposition: attachment;filename=' . '績效統計表' . date('Ymd') . '.xlsx');
         header('Cache-Control: max-age=0');
 
         $writer->save('php://output');
@@ -2460,6 +2580,8 @@ class Sales extends MY_Admin_Controller {
         {
             $merge_col = count($sort['items']) * ($rowspan + 1);
             $spreadsheet->getActiveSheet()->mergeCells('A' . $index_a . ':A' . ($index_a + $merge_col - 1));
+            $spreadsheet->getActiveSheet()->getStyle('A' . $index_a)->getAlignment()->setHorizontal('center')->setVertical('center');
+            $spreadsheet->getActiveSheet()->getStyle('A' . $index_a . ':A' . ($index_a + $merge_col - 1))->applyFromArray($this->excel_config);
             $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('A' . $index_a, $sort['title']);
             $index_a = $index_a + $merge_col;
 
@@ -2467,11 +2589,14 @@ class Sales extends MY_Admin_Controller {
             {
                 $kpi = $item['kpi'];
                 $spreadsheet->getActiveSheet()->mergeCells('B' . $index_b . ':B' . ($index_b + $rowspan));
+                $spreadsheet->getActiveSheet()->getStyle('B' . $index_b)->getAlignment()->setHorizontal('center')->setVertical('center');
+                $spreadsheet->getActiveSheet()->getStyle('B' . $index_b . ':B' . ($index_b + $rowspan))->applyFromArray($this->excel_config);
                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('B' . $index_b, $this->sale_goals_model->type_name_mapping()[$item['key']]);
 
                 for ($i = 0; $i < count($kpi); $i++)
                 {
                     $spreadsheet->setActiveSheetIndex($sheet)->setCellValue('C' . ($index_b + $i), $kpi[$i]);
+                    $spreadsheet->getActiveSheet()->getStyle('C' . ($index_b + $i))->applyFromArray($this->excel_config);
                 }
 
                 $index_b += $rowspan + 1;

@@ -3,6 +3,8 @@
 namespace Certification;
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use Certification_ocr\Marker\Ocr_marker_factory;
+use Certification_ocr\Parser\Ocr_parser_factory;
 use CertificationResult\MessageDisplay;
 
 /**
@@ -62,34 +64,24 @@ class Cert_job extends Certification_base
         $parsed_content = $this->content ?? [];
         $url = $this->content['pdf_file'] ?? '';
 
+        $parsed_content = array_merge(
+            $parsed_content,
+            $this->_get_ocr_marker_info(),
+            $this->_get_ocr_parser_info()
+        );
         $mime = get_mime_by_extension($url);
-        if (is_image($mime))
+        if (is_image($mime) ||
+            // 由圖片組成的 PDF 會將 is_valid_pdf 標記為 0, 需直接轉人工
+            (isset($this->content['is_valid_pdf']) && $this->content['is_valid_pdf'] == 0))
         {
             $this->result->addMessage('需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
         }
         else if (is_pdf($mime))
         {
-            $text = '';
-            $this->CI->load->library('labor_insurance_lib');
-            $parser = new \Smalot\PdfParser\Parser();
-            try
+            if ( ! empty($parsed_content['ocr_parser']['content']))
             {
-                $pdf = $parser->parseFile($url);
-                $text = $pdf->getText();
-                $response = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
-            }
-            catch (\Exception $e)
-            {
-                $response = FALSE;
-            }
-
-            if ( ! $response || strpos($text, '勞動部勞工保險局ｅ化服務系統') === FALSE)
-            {
-                $this->result->addMessage('勞保PDF解析失敗，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            }
-            else
-            {
+                $response = $parsed_content['ocr_parser']['content'];
                 // 用統編檢查商業司
                 if (isset($parsed_content['tax_id']) && $parsed_content['tax_id'])
                 {
@@ -105,6 +97,7 @@ class Cert_job extends Certification_base
                 $parsed_content['salary'] = $this->transform_data['last_insurance_info']['insuranceSalary'];
             }
         }
+
         return $parsed_content;
     }
 
@@ -140,6 +133,21 @@ class Cert_job extends Certification_base
      */
     public function verify_data($content): bool
     {
+        if ($this->_chk_ocr_status($content) === FALSE)
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
+            return FALSE;
+        }
+        if ($this->_is_only_image_submitted() === TRUE)
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+        }
+
+        if ($content['ocr_parser']['res'] === FALSE)
+        {
+            $this->result->addMessage('勞保PDF解析失敗，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+        }
+
         // 勞保異動明細正確性驗證
         $this->CI->load->library('verify/data_legalize_lib');
         $this->result = $this->CI->data_legalize_lib->legalize_job($this->result, $this->certification['user_id'],
@@ -238,6 +246,12 @@ class Cert_job extends Certification_base
      */
     public function pre_failure($sys_check): bool
     {
+        // 系統過的暫時全部轉人工
+        if($sys_check == TRUE)
+        {
+            $this->set_review(TRUE);
+            return FALSE;
+        }
         return TRUE;
     }
 
@@ -280,5 +294,88 @@ class Cert_job extends Certification_base
         return TRUE;
     }
 
+    /**
+     * OCR 標記結果
+     * @return array
+     */
+    private function _get_ocr_marker_info(): array
+    {
+        $result = [];
+        if ( ! isset($this->content['ocr_marker']['res']))
+        {
+            $cert_ocr_marker = Ocr_marker_factory::get_instance($this->certification);
+            $ocr_marker_result = $cert_ocr_marker->get_result();
+            if ($ocr_marker_result['success'] === TRUE)
+            {
+                if ($ocr_marker_result['code'] == 201 || $ocr_marker_result['code'] == 202)
+                { // OCR 任務剛建立，或是 OCR 任務尚未辨識完成
+                    return $result;
+                }
+                $result['ocr_marker']['res'] = TRUE;
+                $result['ocr_marker']['content'] = $ocr_marker_result['data'];
+            }
+            else
+            {
+                $result['ocr_marker']['res'] = FALSE;
+                $result['ocr_marker']['msg'] = $ocr_marker_result['msg'];
+            }
+        }
+        return $result;
+    }
 
+    /**
+     * OCR 解析結果
+     * @return array
+     */
+    private function _get_ocr_parser_info(): array
+    {
+        $result = [];
+        if ( ! isset($this->content['ocr_parser']['res']))
+        {
+            $cert_ocr_parser = Ocr_parser_factory::get_instance($this->certification);
+            $ocr_parser_result = $cert_ocr_parser->get_result();
+            if ($ocr_parser_result['success'] === TRUE)
+            {
+                if ($ocr_parser_result['code'] == 201 || $ocr_parser_result['code'] == 202)
+                { // OCR 任務剛建立，或是 OCR 任務尚未辨識完成
+                    return $result;
+                }
+                $result['ocr_parser']['res'] = TRUE;
+                $result['ocr_parser']['content'] = $ocr_parser_result['data'];
+            }
+            else
+            {
+                $result['ocr_parser']['res'] = FALSE;
+                $result['ocr_parser']['msg'] = $ocr_parser_result['msg'];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * OCR 辨識後的檢查
+     * @param $content
+     * @return bool
+     */
+    private function _chk_ocr_status($content): bool
+    {
+        if ( ! isset($content['ocr_marker']['res']) || ! isset($content['ocr_parser']['res']))
+        {
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    /**
+     * 是否僅提交工作收入證明相關圖片
+     * @return bool
+     */
+    private function _is_only_image_submitted(): bool
+    {
+        if ($this->content['labor_type'] == 1)
+        {
+            return FALSE;
+        }
+        return TRUE;
+    }
 }

@@ -22,7 +22,7 @@
 					</button>
 				</div>
 				<div class="panel-group" role="tablist" aria-multiselectable="true">
-					<div class="panel panel-default" v-for="(item,index) in rules">
+				<div class="panel" v-for="(item,index) in rules" :class="panelClass(item)">
 						<button class="panel-heading btn w-100 text-left" role="tab" id="headingOne"
 							data-toggle="collapse" data-parent="#accordion" :href="'#collapse-'+index">
 							<h5 class="panel-title">
@@ -109,6 +109,15 @@
 					})
 					return {...x, rules: filterRules}
 				})
+			},
+			panelClass(item){
+				if(item.isJuridicalRule){
+					return 'panel-warning'
+				}
+				else if(item.typeId === '999999'){
+					return 'panel-info'
+				}
+				return 'panel-default'
 			}
 		},
 		watch: {

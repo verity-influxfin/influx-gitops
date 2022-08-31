@@ -1592,10 +1592,17 @@ class Product extends REST_Controller {
                         }
                         else if ($truly_failed)
                         {
-                            $value['user_status'] = NULL;
-                            $value['certification_id'] = NULL;
-                            $value['remark'] = NULL;
-                            $content_array_data = [];
+                            if (in_array($target->status, [TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_WAITING_BIDDING, TARGET_WAITING_LOAN]))
+                            {
+                                $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                            }
+                            else
+                            {
+                                $value['user_status'] = NULL;
+                                $value['certification_id'] = NULL;
+                                $value['remark'] = NULL;
+                                $content_array_data = [];
+                            }
                         }
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
@@ -3024,6 +3031,7 @@ class Product extends REST_Controller {
 
             $target = $this->target_model->get_by(['id' => $insert]);
             $this->load->helper('product');
+            $this->load->model('log/log_targetschange_model');
             if (is_judicial_product($target->product_id) === FALSE && $target->status == TARGET_WAITING_SIGNING)
             {
                 // 該產品有未使用額度
@@ -3040,6 +3048,11 @@ class Product extends REST_Controller {
                     'interest_rate' => $interest_rate,
                     'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
                 ]);
+                $this->log_targetschange_model->insert(
+                    $this->target_lib->get_target_log_param($insert, FALSE, [
+                        'interest_rate' => $interest_rate
+                    ])
+                );
 
                 $this->load->model('loan/credit_sheet_model');
                 $credit_sheet_info = $this->credit_sheet_model->order_by('created_at', 'desc')->get_by([
@@ -3061,18 +3074,6 @@ class Product extends REST_Controller {
                     $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
                     $this->credit_sheet_model->update_by(['target_id' => $target->id], ['certification_list' => json_encode($certification_id)]);
                 }
-
-                // 寫log
-                $this->load->model('log/log_targetschange_model');
-                $this->log_targetschange_model->insert([
-                    'target_id' => $target->id,
-                    'interest_rate' => $target->interest_rate,
-                    'delay' => 0,
-                    'status' => $target->status,
-                    'loan_status' => $target->loan_status,
-                    'sub_status' => $target->sub_status,
-                    'sys_check' => $target->sys_check
-                ]);
             }
 
             $this->load->library('Certification_lib');
@@ -3358,12 +3359,9 @@ class Product extends REST_Controller {
             //'verify'	=> 0,
             'user_id'	=> $user_id
         ]);
-        if($bank_account){
-            if($bank_account->verify==0) {
-                $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
-            }
-        }else{
-            $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+        if (empty($bank_account))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => NO_BANK_ACCOUNT));
         }
 
         //上傳檔案欄位
@@ -3378,16 +3376,26 @@ class Product extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
         }
 
-        $company = ['DS2P1'];
-        if(!in_array($product['visul_id'],$company)){
+        $this->load->library('loanmanager/product_lib');
+        if ($this->product_lib->need_chk_allow_age($target->product_id, $target->sub_prduct_id ?? 0) === TRUE)
+        {
             $age = get_age($this->user_info->birthday);
-
-            if($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55) ){
+            if ($this->product_lib->is_age_available($age, $target->product_id, $target->sub_product_id ?? 0) === FALSE)
+            {
+                $this->load->library('target_lib');
+                $this->target_lib->target_verify_failed($target, 0, '身份非平台服務範圍');
                 $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
             }
         }
 
-        $this->target_lib->signing_target($target->id, $param, $user_id);
+        $signing_res = $this->target_lib->signing_target($target->id, $param, $user_id);
+        if ($signing_res !== FALSE)
+        {
+            if ($bank_account->verify == 0)
+            {
+                $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+            }
+        }
 
         $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
         if (in_array($product['id'], $allow_fast_verify_product)
@@ -3971,10 +3979,18 @@ class Product extends REST_Controller {
 
         $this->target_model->update(
             $input['target_id'], [
+                'amount' => $input['amount'],
                 'loan_amount' => $input['amount'],
                 'platform_fee' => $this->financial_lib->get_platform_fee($input['amount'], $product_info['charge_platform']),
                 'contract_id' => $this->contract_lib->sign_contract($contract_type, $contract_data)
             ]
+        );
+        $this->load->library('target_lib');
+        $this->log_targetschange_model->insert(
+            $this->target_lib->get_target_log_param($input['target_id'], TRUE, [
+                'amount' => $input['amount'],
+                'change_user' => $target->user_id
+            ])
         );
 
         $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => (int) $input['target_id']]]);

@@ -169,7 +169,7 @@
                                             <? } ?>
 										</div>
                                         <? } ?>
-                                        <? if(isset($content['bill_phone_image'])){ ?>
+                                        <? if ( ! empty($content['bill_phone_image'])) { ?>
                                             <div class="form-group">
                                                 <label for="disabledSelect">電話帳單</label><br>
                                                 <?

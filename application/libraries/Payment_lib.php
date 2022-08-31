@@ -168,13 +168,15 @@ class Payment_lib{
 				$count++;
 			}
 
-			// 入金時針對借款人的逾期案部分金額沖償
+            // 入金時針對借款人的逾期案部分金額沖償
             $users = $this->CI->payment_model->get_userid_by_payment($receipt_payment_id);
             $user_ids = array_column($users, 'user_id');
-			if(!empty($user_ids)) {
+            if ( ! empty($user_ids))
+            {
                 $delayed_target = $this->CI->target_model->get_many_by(['user_id' => $user_ids, 'delay_days >' => GRACE_PERIOD, 'status' => 5]);
                 $delayed_userid_list = array_unique(array_column($delayed_target, 'user_id'));
-                foreach ($delayed_userid_list as $user_id) {
+                foreach ($delayed_userid_list as $user_id)
+                {
                     $this->CI->charge_lib->charge_delayed_target($user_id);
                 }
             }
@@ -292,8 +294,12 @@ class Payment_lib{
 						}
 						$user_info->name = $name;
 					}
+                    $bankaccount_info = array("verify" => 3, "verify_at" => time(), "sys_check" => 0);
+                    $this->CI->user_bankaccount_model->update($value->id, $bankaccount_info);
 
-					$this->CI->user_bankaccount_model->update($value->id,array("verify"=>3,"verify_at"=>time(),"sys_check"=>0));
+                    // 寫 Log
+                    $this->CI->load->library('user_bankaccount_lib');
+                    $this->CI->user_bankaccount_lib->insert_change_log($value->id, $bankaccount_info);
 
 					$data = array(
 						"code"			=> "0",

@@ -15,7 +15,6 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     protected $api_url;
     protected $CI;
     protected $certification;
-    protected $content;
     protected $task_path;
     // OCR 任務類型
     protected $task_type;
@@ -30,15 +29,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         $this->CI->load->model('user/user_certification_ocr_task_model');
         $this->CI->load->model('log/log_certification_ocr_model');
         $this->certification = $certification;
-
-        if ( ! empty($this->certification['content']))
-        {
-            $this->content = json_decode($this->certification['content'], TRUE);
-        }
-        else
-        {
-            $this->content = [];
-        }
+        $this->client = new Client(['base_uri' => $this->api_url]);
     }
 
     /**
@@ -156,7 +147,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
 
         // OCR 任務 response
         $res = $this->get_ocr_task_response($task_id);
-        if ($res['success'] === FALSE)
+        if ($res['success'] === FALSE || empty($res['data']))
         {
             return $res;
         }
@@ -241,7 +232,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         {
             return $this->return_failure('Exception occurred while attempting to GET task response.');
         }
-        if (empty($res['response_body']))
+        if (empty($res['response_body']) || ! is_array($res['response_body']))
         {
             return $this->return_success([], 'Task processing has not done yet.', 202);
         }
@@ -262,5 +253,21 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         return TRUE;
     }
 
+    /**
+     * @param $value
+     * @return int
+     */
+    public function get_number_only($value): int
+    {
+        if ( ! is_string($value) && ! is_numeric($value))
+        {
+            return '';
+        }
 
+        return (int) preg_replace(
+            '/(?<=([\x{4e00}-\x{9fa5}]))\s+(?=[\x{4e00}-\x{9fa5}])/u',
+            '',
+            str_replace(["\n", ','], '', trim($value))
+        );
+    }
 }

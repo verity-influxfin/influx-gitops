@@ -139,14 +139,18 @@ class Certification extends MY_Admin_Controller {
 					}
 					alert('此廠商類別無報告樣板',base_url('admin/Judicialperson/cooperation?cooperation=1'));
 				}
-				elseif($info->certification_id == CERTIFICATION_STUDENT) {
-					//加入SIP網址++
-					$school_data = trim(file_get_contents(FRONT_CDN_URL.'json/school_with_loaction.json'), "\xEF\xBB\xBF");
-					$school_data = json_decode($school_data, true);
-					$school = $page_data['content']['school'];
-					$sipURL = isset($school_data[$school]['sipURL']) ? $school_data[$school]['sipURL'] : '';
-					$page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
-					//加入SIP網址--
+                elseif($info->certification_id == CERTIFICATION_STUDENT) {
+                    $this->load->library('scraper/sip_lib');
+
+                    $school_status = $this->sip_lib->getUniversityModel($page_data['content']['school']);
+                    if (isset($school_status['response']))
+                    {
+                        $sipURL = $school_status['response']['url'];
+                        $sipUniversity = $school_status['response']['university'];
+                    }
+
+                    $page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
+                    $page_data['content']['sipUniversity'] = isset($sipURL) ? $sipUniversity : "";
 
 				}
                 elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
@@ -389,13 +393,10 @@ class Certification extends MY_Admin_Controller {
                     'status'	=> array(1,2)
                 ));
                 if($targets){
-                    $param = [
-                        'status'      => 0,
-                    ];
                     $this->load->library('Target_lib');
-                    foreach($targets as $key => $value){
-                        $this->target_model->update($value->id,$param);
-                        $this->target_lib->insert_change_log($value->id,$param);
+                    foreach ($targets as $value)
+                    {
+                        $this->target_lib->withdraw_target_to_unapproved($value, 0, $this->login_info->id, 0);
                     }
                 }
                 alert('更新成功','user_certification_edit?id='.$id);
@@ -472,7 +473,7 @@ class Certification extends MY_Admin_Controller {
 			}elseif(!empty($post['id'])){
 				$from 	= isset($post['from'])?$post['from']:'';
                 $fail   = $post['fail'] ?? '';
-                $fail   = $post['fail2'] ?? $fail;
+                $fail   = ! empty($post['fail2']) ? $post['fail2'] : $fail;
 				if(!empty($from)){
 					//$back_url = admin_url($from);
 					$back_url = admin_url('close');
@@ -769,7 +770,13 @@ class Certification extends MY_Admin_Controller {
                             'change_admin' => $this->login_info->id,
                         ));
                         $cert->set_failure(FALSE, $fail);
-                        $this->user_bankaccount_model->update($post['id'], array('verify' => 4, 'status' => 0));
+                        $bankaccount_info = array('verify' => 4, 'status' => 0);
+                        $this->user_bankaccount_model->update($post['id'], $bankaccount_info);
+
+                        // 寫 Log
+                        $this->load->library('user_bankaccount_lib');
+                        $this->user_bankaccount_lib->insert_change_log($post['id'], $bankaccount_info);
+
                         alert('更新成功', admin_url('close'));
                     }
                     else
@@ -803,7 +810,12 @@ class Certification extends MY_Admin_Controller {
 				));
 				$this->load->library('Certification_lib');
 				$this->certification_lib->set_success($info->user_certification_id);
-				$this->user_bankaccount_model->update($id,array('verify'=>1));
+                $bankaccount_info = array('verify' => 1);
+                $this->user_bankaccount_model->update($id, $bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($id, $bankaccount_info);
 
 				// 如果是借款人的金融帳號通過，才需要對案件進行處理
 				if($info->investor == 0) {
@@ -875,7 +887,13 @@ class Certification extends MY_Admin_Controller {
 					'change_admin'			=> $this->login_info->id,
 				));
 				$this->user_certification_model->update($info->user_certification_id,array('status'=>2));
-				$this->user_bankaccount_model->update($id,array('verify'=>4,'status'=>0));
+                $bankaccount_info = array('verify' => 4, 'status' => 0);
+                $this->user_bankaccount_model->update($id, $bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($id, $bankaccount_info);
+
 				$this->load->library('Notification_lib');
 				$this->notification_lib->bankaccount_verify_failed($info->user_id,$info->investor);
 				echo '更新成功';die();
@@ -893,7 +911,13 @@ class Certification extends MY_Admin_Controller {
 		if($id){
 			$info = $this->user_bankaccount_model->get($id);
 			if($info && $info->verify==3){
-				$this->user_bankaccount_model->update($id,array('verify'=>2));
+                $bankaccount_info = array('verify' => 2);
+                $this->user_bankaccount_model->update($id, $bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($id, $bankaccount_info);
+
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();
@@ -1100,45 +1124,6 @@ class Certification extends MY_Admin_Controller {
 	    $this->load->view('admin/certification/joint_credits',$page_data);
 	    $this->load->view('admin/_footer');
 	}
-
-    public function sip()
-    {
-        $input = $this->input->get(NULL, TRUE);
-        $university = isset($input['university']) ? $input['university'] : '';
-        $account = isset($input['account']) ? $input['account'] : '';
-        $this->load->library('scraper/sip_lib');
-        $loginInfo = $this->sip_lib->getSipLogin($university, $account);
-
-        $this->load->library('output/json_output');
-        if (!$loginInfo) {
-            $this->json_output->setStatusCode(204)->send();
-        }
-
-        $response = ["sip" => json_decode(json_encode($loginInfo), true)];
-        $this->json_output->setStatusCode(200)->setResponse($response)->send();
-    }
-
-    public function sip_login()
-    {
-        $input = $this->input->post(NULL, TRUE);
-        $university = isset($input['university']) ? $input['university'] : '';
-        $account = isset($input['account']) ? $input['account'] : '';
-        $password = isset($input['password']) ? $input['password'] : '';
-
-        $this->load->library('output/json_output');
-        if (!$university || !$account || !$password) {
-            $this->json_output->setStatusCode(400)->send();
-        }
-
-        $this->load->library('scraper/sip_lib.php');
-        $this->sip_lib->requestSipLogin(
-            $university,
-            $account,
-            $password
-        );
-
-        $this->json_output->setStatusCode(200)->send();
-    }
 
     public function migrate_ocr()
     {

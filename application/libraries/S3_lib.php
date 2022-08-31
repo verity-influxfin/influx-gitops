@@ -138,12 +138,14 @@ class S3_lib {
 			echo "unknown_mail: The resource can't be accessed. ($s3_url)";
 		}
 	}
-	public function credit_mail_pdf($attachments, $user_id = 0, $name = 'credit', $type = 'test')
+	public function credit_mail_pdf($attachments, $user_id = 0, $name = 'credit', $type = 'test') : array
 	{
 		$images = [];
 		$fileList = [];
 		$pdfPath = '';
 		$result = [];
+        $is_valid_pdf = 1;
+
 		try {
 			if (!$attachments)
 				return '';
@@ -166,6 +168,7 @@ class S3_lib {
 				$pdfImagick = new Imagick($images);
 				$pdfImagick->setImageFormat('pdf');
 				$pdfImagick->writeImages($pdfPath, true);
+                $is_valid_pdf = 0;
 			}
 
 			$content = @file_get_contents($pdfPath);
@@ -184,11 +187,16 @@ class S3_lib {
 			}
 		}
 
-		if (isset($result['ObjectURL'])) {
-			return $result['ObjectURL'];
-		} else {
-			return '';
-		}
+        $res = [
+            'url' => '',
+            'is_valid_pdf' => $is_valid_pdf,
+        ];
+
+        if (isset($result['ObjectURL']))
+        {
+            $res['url'] = $result['ObjectURL'];
+        }
+        return $res;
 	}
 
     // 新光附件圖片壓 pdf

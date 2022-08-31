@@ -2,6 +2,8 @@
 
 namespace Certification_ocr\Parser;
 
+use Certification\Certification_factory;
+
 /**
  * OCR 辨識
  * Type : 一般的資料解析
@@ -11,18 +13,19 @@ class Cert_governmentauthorities extends Ocr_parser_base
 {
     protected $task_path = '/ocr/company_modify_or_establish_sheet';
     protected $task_type = self::TYPE_PARSER;
+    private $content;
 
-    /**
-     * 回傳欲解析的圖片 url
-     * @return array
-     */
-    public function get_image_list(): array
+    public function __construct($certification)
     {
-        if ( ! empty($this->content['governmentauthorities_image']))
+        parent::__construct($certification);
+        if ( ! empty($this->certification['content']))
         {
-            return is_array($this->content['governmentauthorities_image']) ? $this->content['governmentauthorities_image'] : [$this->content['governmentauthorities_image']];
+            $this->content = json_decode($this->certification['content'], TRUE);
         }
-        return [];
+        else
+        {
+            $this->content = [];
+        }
     }
 
     /**
@@ -32,6 +35,11 @@ class Cert_governmentauthorities extends Ocr_parser_base
      */
     public function data_mapping($task_res_data): array
     {
+        if (empty($task_res_data))
+        {
+            return [];
+        }
+
         return [
             'compName' => $task_res_data['company_name'] ?? '',
             'compId' => $task_res_data['company_tax_id_no'] ?? '',
@@ -46,14 +54,33 @@ class Cert_governmentauthorities extends Ocr_parser_base
      */
     public function get_request_body(): array
     {
-        $url_list = $this->get_image_list();
-        if (empty($url_list))
+        $get_image = $this->get_image_list();
+        if ($get_image['success'])
         {
-            return $this->return_failure('Empty image list!');
+            return $this->return_failure($get_image['msg']);
         }
 
         return $this->return_success([
-            'url_list' => $url_list,
+            'url_list' => $get_image['data']['url_list'],
         ]);
+    }
+
+    /**
+     * 取得欲解析的圖片 url
+     * @return array
+     */
+    public function get_image_list(): array
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($this->certification);
+        if (empty($cert))
+        {
+            return $this->return_failure('Cannot find image list.');
+        }
+        if (empty($this->content['governmentauthorities_image']))
+        {
+            return $this->return_failure('Empty image list!');
+        }
+        $governmentauthorities_image = is_array($this->content['governmentauthorities_image']) ? $this->content['governmentauthorities_image'] : [$this->content['governmentauthorities_image']];
+        return $this->return_success(['url_list' => $governmentauthorities_image]);
     }
 }

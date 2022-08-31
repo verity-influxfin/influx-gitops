@@ -1215,7 +1215,15 @@ class Certification extends REST_Controller {
 					$bankaccount_info['verify'] = 2;
 				}else{
                     isset($this->user_info->naturalPerson) ? $user_id = [$user_id, $this->user_info->originalID] : '';
-					$this->certification_lib->set_success($insert);
+                    $cert = Certification_factory::get_instance_by_id($insert);
+                    if (isset($cert))
+                    {
+                        $cert->set_success(FALSE);
+                    }
+                    else
+                    {
+                        $this->certification_lib->set_success($insert);
+                    }
 					$target = $this->target_model->get_by([
 						'user_id'	=> $user_id,
 						'status'	=> 2,
@@ -1225,7 +1233,11 @@ class Certification extends REST_Controller {
 					}
 				}
 
-				$this->user_bankaccount_model->insert($bankaccount_info);
+                $user_bankaccount_id = $this->user_bankaccount_model->insert($bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($user_bankaccount_id, $bankaccount_info);
 
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
@@ -1638,7 +1650,8 @@ class Certification extends REST_Controller {
                         'user_id' => $this->user_info->originalID,
                     ]);
 
-                    if ($list && count($list) == count($image_ids)) {
+                    if ( ! empty($list) && count($list) == count($image_ids))
+                    {
                         $content[$fieldS] = [];
                         foreach ($list as $k => $v) {
                             $content[$fieldS][] = $v->url;
@@ -1658,7 +1671,8 @@ class Certification extends REST_Controller {
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->certification_lib->set_success($insert);
+                $cert = Certification_factory::get_instance_by_id($insert);
+                $cert->set_success(TRUE);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -1806,7 +1820,8 @@ class Certification extends REST_Controller {
                         'user_id' => $user_id,
                     ]);
 
-                    if ($list && count($list) == count($image_ids)) {
+                    if ( ! empty($list) && count($list) == count($image_ids))
+                    {
                         $should_check = true;
                         $content[$fieldS] = [];
                         foreach ($list as $k => $v) {
@@ -2635,11 +2650,10 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
 			];
 
             if ($cer_exists) {
-                $param['status'] = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
                 $rs = $this->user_certification_model->update($cer_exists->id, $param);
             }else{
                 $rs = $this->user_certification_model->insert($param);
@@ -2738,7 +2752,6 @@ class Certification extends REST_Controller {
             if (is_judicial_product($target->product_id) === FALSE)
             {
                 $this->target_model->update($targetId, [
-                    'status' => TARGET_WAITING_APPROVE,
                     'certificate_status' => TARGET_CERTIFICATE_SUBMITTED
                 ]);
             }
@@ -3877,7 +3890,11 @@ class Certification extends REST_Controller {
                     }
                 }
 
-                $this->user_bankaccount_model->insert($bankaccount_info);
+                $user_bankaccount_id = $this->user_bankaccount_model->insert($bankaccount_info);
+
+                // 寫 Log
+                $this->load->library('user_bankaccount_lib');
+                $this->user_bankaccount_lib->insert_change_log($user_bankaccount_id, $bankaccount_info);
 
                 $this->response(array('result' => 'SUCCESS'));
             }

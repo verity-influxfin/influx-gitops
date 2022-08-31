@@ -21,15 +21,48 @@ class Target_lib
         if (!empty($param)) {
             $param['target_no'] = $this->get_target_no($param['product_id']);
             $insert = $this->CI->target_model->insert($param);
+            $this->CI->load->model('log/log_targetschange_model');
             if ($insert) {
+                $this->CI->log_targetschange_model->insert(
+                    $this->get_target_log_param($insert, TRUE, $param)
+                );
                 return $insert;
             } else {
                 $param['target_no'] = $this->get_target_no($param['product_id']);
                 $insert = $this->CI->target_model->insert($param);
+                $this->CI->log_targetschange_model->insert(
+                    $this->get_target_log_param($insert, TRUE, $param)
+                );
                 return $insert;
             }
         }
         return false;
+    }
+
+    /**
+     * 取得異動 Target 的 Log 參數
+     * @param int $target_id
+     * @param bool $user_change : 是否為 end-user 的自主行為
+     * @param array $param : insert/update Target 的參數
+     * @param int $change_admin_id : 若由後台管理者修改，傳入管理者 ID，反之預設 0
+     * @return array
+     */
+    public function get_target_log_param(int $target_id, bool $user_change, array $param, int $change_admin_id = 0)
+    {
+        $result = [
+            'target_id' => $target_id,
+            'amount' => $param['amount'] ?? NULL,
+            'interest_rate' => $param['interest_rate'] ?? NULL,
+            'delay' => $param['delay'] ?? NULL,
+            'status' => $param['status'] ?? NULL,
+            'loan_status' => $param['loan_status'] ?? NULL,
+            'sub_status' => $param['sub_status'] ?? NULL,
+            'sys_check' => $param['sys_check'] ?? NULL,
+            'change_user' => $param['change_user'] ?? ($user_change ? $param['user_id'] ?? 0 : 0),
+            'change_admin' => $change_admin_id
+        ];
+        ! isset($param['certificate_status']) ?: $result['certificate_status'] = $param['certificate_status'];
+        return $result;
     }
 
     //新增target
@@ -370,17 +403,17 @@ class Target_lib
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
                                 if (
                                     // 命中反詐欺或黑名單，一定要進待二審
-                                    !$matchBrookesia && (
-                                    !$product_info['secondInstance']
-                                    && !$second_instance_check
-                                    && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
-                                    // 依照產品部門需求，上班族暫時全部強制進待二審
-                                    && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
-                                    || $subloan_status
-                                    || $renew
-                                    || $evaluation_status
-                                    || $creditSheet->hasCreditLine()
+                                    ! $matchBrookesia && (
+                                        ! $product_info['secondInstance']
+                                        && ! $second_instance_check
+                                        && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
+                                        // 依照產品部門需求，上班族暫時全部強制進待二審
+                                        && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
+                                        || $renew
+                                        || $evaluation_status
+                                        || $creditSheet->hasCreditLine()
                                     )
+                                    || $subloan_status
                                 ) {
                                     $param['status'] = TARGET_WAITING_SIGNING;
 
@@ -469,7 +502,12 @@ class Target_lib
                                             'user_id' => $user_id
                                         ]);
                                         if ($bank_account) {
-                                            $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                                            $bankaccount_info = ['verify' => 2];
+                                            $this->CI->user_bankaccount_model->update($bank_account->id, $bankaccount_info);
+
+                                            // 寫 Log
+                                            $this->CI->load->library('user_bankaccount_lib');
+                                            $this->CI->user_bankaccount_lib->insert_change_log($bank_account->id, $bankaccount_info);
                                         }
                                     }
                                 } else {
@@ -800,7 +838,7 @@ class Target_lib
     //借款端還款計畫
     public function get_amortization_table($target = [])
     {
-
+        $target = is_array($target) && ! empty($target) ? json_decode(json_encode($target)) : $target;
         $schedule = [
             'amount' => intval($target->loan_amount),
             'remaining_principal' => intval($target->loan_amount),
@@ -1772,6 +1810,20 @@ class Target_lib
                         }
 
                         if ($finish) {
+                            // 判斷是否符合產品申貸年齡限制
+                            $this->CI->load->library('loanmanager/product_lib');
+                            if ($this->CI->product_lib->need_chk_allow_age($value->product_id) === TRUE)
+                            {
+                                $user_info = $this->CI->user_model->get($value->user_id);
+                                $age = get_age($user_info->birthday);
+                                if ($this->CI->product_lib->is_age_available($age, $value->product_id, $value->sub_product_id) === FALSE)
+                                {
+                                    $this->target_verify_failed($value, 0, '身份非平台服務範圍');
+                                    $this->CI->target_model->update($value->id, ['script_status' => 0]);
+                                    return false;
+                                }
+                            }
+
                             // 檢查黑名單結果，是否需要處置
                             $this->CI->load->library('brookesia/black_list_lib');
                             $is_user_blocked = $this->CI->black_list_lib->check_user($value->user_id, CHECK_APPLY_PRODUCT);
@@ -2489,9 +2541,12 @@ class Target_lib
     /**
      * 退案件回待核可
      * @param $target
+     * @param int $user_id
+     * @param int $admin_id
+     * @param int $sys_check
      * @return bool
      */
-    public function withdraw_target_to_unapproved($target): bool
+    public function withdraw_target_to_unapproved($target, $user_id = 0, $admin_id = 0, $sys_check = 1): bool
     {
         if (is_object($target))
         {
@@ -2538,10 +2593,18 @@ class Target_lib
                 break;
         }
 
+        $update_param = ['status' => $status, 'sub_status' => $sub_status, 'certificate_status' => TARGET_CERTIFICATE_SUBMITTED];
         $this->CI->target_model->update_by(
             ['id' => $target['id']],
-            ['status' => $status, 'sub_status' => $sub_status, 'certificate_status' => TARGET_CERTIFICATE_SUBMITTED]
+            $update_param
         );
+        $this->insert_change_log($target['id'], [
+            'status' => $status,
+            'sub_status' => $sub_status,
+            'change_user' => $user_id,
+            'change_admin' => $admin_id,
+            'sys_check' => $sys_check
+        ]);
 
         return TRUE;
     }

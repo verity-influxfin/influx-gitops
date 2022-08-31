@@ -594,7 +594,13 @@ class Product extends REST_Controller {
 				));
 				if($bank_account){
 					if($bank_account->verify==0){
-						$this->user_bankaccount_model->update($bank_account->id,array("verify"=>2));
+                        $bankaccount_info = array("verify" => 2);
+                        $this->user_bankaccount_model->update($bank_account->id, $bankaccount_info);
+
+                        // 寫 Log
+                        $this->load->library('user_bankaccount_lib');
+                        $this->user_bankaccount_lib->insert_change_log($bank_account->id, $bankaccount_info);
+
 						$this->load->library('Sendemail');
 						$this->sendemail->admin_notification("新的一筆金融帳號驗證 借款端會員ID:".$user_id,"有新的一筆金融帳號驗證 借款端會員ID:".$user_id);
 					}
