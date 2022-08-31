@@ -477,6 +477,8 @@ $config['permission'] = [
             'update_deduct_info' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'update'],
             'save_status' => ['model' => 'PostLoan', 'submodel' => 'legal_doc', 'action' => 'update'],
             'legal_doc_status' => ['model' => 'PostLoan', 'submodel' => 'legal_doc', 'action' => 'read'],
+            'get_deduct_user_info' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'read'],
+            'get_deduct_info' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'read'],
         ],
     ],
     'Article' => [
