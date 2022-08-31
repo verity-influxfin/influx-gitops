@@ -70,7 +70,7 @@
             </div>
             <div class="item">
               •國家級 <span class="text-color-dark em">信保基金</span> 為您擔保
-              , <span class="text-color-dark em">免抵押品</span>
+              , <span class="text-color-dark em">銀行放款</span>
             </div>
           </div>
         </div>

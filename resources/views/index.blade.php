@@ -173,7 +173,7 @@
                                                         <div>信保專案(銀行合作)</div>
                                                     </a>
                                                 </div>
-                                                <div class="link-text">
+                                                <div class="link-item">
                                                     <div class="link-text">
                                                         <div>企業主速貸</div>
                                                         <div class="link-coming-soon">(coming soon)</div>
@@ -364,7 +364,7 @@
                         </div>
                         <a href="/business-loan/smeg" class="item">中小企業融資(信保)</a>
                         <div class="item -disabled">企業主速貸 (coming soon)</div>
-                        <div class="item -disabled">一般企業融資 (coming soon)</div>
+                        <div class="item -disabled">中小企業信貸 (coming soon)</div>
                     </div>
                 </div>
                 <div class="item -dropdown">

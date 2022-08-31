@@ -792,18 +792,15 @@ $ci-color: #153a71;
                     flex-direction: column;
                     font-size: 0.9rem;
                     margin-top: 1.5rem;
+                    gap: 6px;
 
                     @include rwd {
                         margin-top: 0rem;
+                        gap: 14px;
                     }
 
                     > a {
                         color: #fff;
-                        margin: 0.25rem 0;
-
-                        @include rwd {
-                            margin: 0.7rem 0;
-                        }
                     }
                 }
 
