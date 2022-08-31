@@ -282,9 +282,9 @@
                 </div>
               </div>
             </div>
-            <div class="product-item">
+            <router-link to="/business-loan/smeg" class="product-item">
               <div class="card">
-                <div class="card-title">信保專案(銀行合作)</div>
+                <div class="card-title">中小企業融資(信保)</div>
                 <div class="card-sub">銀行放款</div>
                 <div class="card-content">
                   <div class="card-subtitle">
@@ -295,7 +295,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </router-link>
             <div class="product-item">
               <div class="card">
                 <div class="card-title">中小企業信貸</div>
@@ -412,18 +412,18 @@
                 </div>
               </div>
             </div>
-            <div class="product-item">
+            <router-link to="/business-loan/smeg" class="product-item">
               <div class="card">
                 <div class="card-image">
                   <img src="@/asset/images/index/bank1.png" class="p7" />
                 </div>
-                <div class="card-title">信保專案</div>
+                <div class="card-title">中小企業融資(信保)</div>
                 <div class="card-sub">銀行放款</div>
                 <div class="card-subtitle">
                   普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
                 </div>
               </div>
-            </div>
+            </router-link>
             <div class="product-item">
               <div class="card">
                 <div class="card-image">

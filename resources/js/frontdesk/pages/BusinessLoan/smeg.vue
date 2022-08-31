@@ -230,7 +230,7 @@
       <div class="block-content">
         <form
           ref="contactForm"
-          @submit.prevent
+          @submit.prevent="doContact"
           class="row no-gutters justify-content-center"
         >
           <div class="col-md col-12">
@@ -269,7 +269,6 @@
                 </label>
               </div>
             </div>
-            、
             <div class="row no-gutters mb-3">
               <div class="form-item-text">*公司名稱：</div>
               <input
@@ -308,15 +307,15 @@
               <textarea
                 type="text"
                 name="reason"
-                style="min-height: 15vh"
+                style="min-height: 10vh"
                 class="form-item-input col"
-                maxlength="100"
+                maxlength="40"
                 required
               ></textarea>
             </div>
             <div class="row no-gutters">
               <div class="form-item-text d-md-block d-none"></div>
-              <button class="btn btn-block btn-form-submit col">
+              <button class="btn btn-block btn-form-submit col" type="submit">
                 立即諮詢
               </button>
             </div>
@@ -331,13 +330,13 @@
       </div>
     </section>
     <section class="question">
-      <h1 class="h1">申請普匯信保專案FAQ</h1>
+      <h1 class="h1">申請普匯中小企業融資專案FAQ</h1>
       <h2 class="h2">
         <div>您是否也有其他申請人常遇到的問題？</div>
         <div>您想知道的，這裡通通有！</div>
       </h2>
       <div class="question-rows">
-        <faq-row title="• 普匯信保融資專案貸款的申請資格？" bg-text="ISSUE 01">
+        <faq-row title="• 普匯中小企業融資專案貸款的申請資格？" bg-text="ISSUE 01">
           <div class="faq-content">
             <div>1. 具有合法公司登記或商業登記</div>
             <div>2. 非金融及保險業、宗教職業及類似組織、特殊娛樂業</div>
@@ -347,7 +346,7 @@
           </div>
         </faq-row>
         <faq-row
-          title="• 普匯信保融資專案貸款額度與借款期間？"
+          title="• 普匯中小企業融資專案貸款額度與借款期間？"
           bg-text="ISSUE 02"
         >
           <div class="faq-content">
@@ -372,7 +371,7 @@
         >
           <div class="faq-content">
             <div>
-              普匯信保專案貸款，全線上無人化系統審核，所有申請流程均透過一支手機完成
+              普匯中小企業融資專案貸款，全線上無人化系統審核，所有申請流程均透過一支手機完成
             </div>
             <div>最快不到2個工作日，即可核准</div>
             <div>銀行端簽約對保並撥款，資料齊備且送達最快3個工作日撥款</div>
@@ -395,6 +394,7 @@ import faqRow from '@/component/faqRow';
 import stepGroup from '@/component/index/stepGroup';
 import smegRequireData from '@/component/smegRequireData';
 import smegSuit from '@/component/smegSuit';
+import Axios from 'axios'
 
 export default {
   components: {
@@ -413,7 +413,7 @@ export default {
         {
           img: require('@/asset/images/bussinessLoan/smeg-feature-step-1.png'),
           title: '步驟一',
-          info: '<div>申請「信保專案融資」</div><div>完成法人註冊、負責人實名認證</div>'
+          info: '<div>申請「中小企業融資專案」</div><div>完成法人註冊、負責人實名認證</div>'
         },
         {
           img: require('@/asset/images/bussinessLoan/smeg-feature-step-2.png'),
@@ -431,6 +431,33 @@ export default {
           info: '<div>等待系統審核並媒合資金方(銀行)</div><div>銀行最終核准後、簽約對保、立即撥款</div>'
         }
       ]
+    }
+  },
+  methods: {
+    doContact() {
+      const data = new FormData(this.$refs.contactForm)
+      Axios({
+        url: '/api/v1/business-loan/contact',
+        method: 'POST',
+        data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        }
+      }).then(({ data }) => {
+        if (data.success) {
+          this.$refs.contactForm.reset()
+          alert(data.msg)
+        }
+      }).catch(({ response }) => {
+        const d = response.data.data
+        let errorMsg = ''
+        for (const item in d) {
+          errorMsg += d[item].toString() + '\n'
+
+        }
+        alert(errorMsg)
+      })
     }
   },
 }
@@ -494,14 +521,12 @@ export default {
   }
 
   input:checked + .work-input-outside .work-input-inside {
-    -webkit-animation: radio-select 0.1s linear;
     animation: radio-select 0.1s linear;
-    -webkit-transform: scale(1, 1);
     transform: scale(1, 1);
   }
   .no-transforms input:checked + .work-input-outside .work-input-inside {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
   }
 }
 @media screen and (max-width: 767px) {
@@ -645,7 +670,7 @@ $color__background--primary: #f3f9fc;
   height: 800px;
   position: relative;
   .block-content {
-    background: url('~images/bussinessLoan/smeg-bannner-bg.png');
+    background: url('~images/bussinessLoan/smeg-banner-bg.png');
     background-position: center;
     height: 100%;
     display: flex;
@@ -1137,7 +1162,7 @@ $color__background--primary: #f3f9fc;
     font-size: 14px;
   }
   .banner {
-    background: url('~images/bussinessLoan/smeg-bannner-bg-phone.png');
+    background: url('~images/bussinessLoan/smeg-banner-bg-phone.png');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
