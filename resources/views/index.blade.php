@@ -483,14 +483,13 @@
                                 <a href="/collegeLoan">學生貸款</a>
                                 <a href="/engineerLoan">資訊工程師專案</a>
                                 <a href="/workLoan">上班族貸款</a>
-
                             </div>
                         </div>
                         <div class="item">
                             <div class="header">企業融資</div>
                             <div class="list">
                                 <a href="/business-loan/smeg" class="text-white">中小企業融資(信保)</a>
-                                <div class="text-white">企業主速貸</a>
+                                <div class="text-white">企業主速貸</div>
                                 <div class="text-white">中小企業信貸</div>
                             </div>
                         </div>

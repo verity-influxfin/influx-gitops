@@ -8,7 +8,7 @@
             <a href="/borrowLink" target="_blank">
               <button class="btn btn-smeg-primary">立即申辦</button>
             </a>
-            <button class="btn btn-smeg-secondary">上傳資料(已申請)</button>
+            <div style="width:250px" class="d-sm-block d-none"></div>
           </div>
         </div>
         <div class="banner-img"></div>
