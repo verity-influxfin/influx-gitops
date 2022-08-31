@@ -2953,33 +2953,36 @@ class Product extends REST_Controller {
                     $last_target_data = ! empty($last_target['target_data']) ? json_decode($last_target['target_data'], TRUE) : [];
                     $target_data = json_decode($target->target_data ?? '', TRUE);
 
-                    // Get product certifications.
-                    $product_certifications = [];
-                    $product_info2 = $this->product_lib->get_exact_product($target->product_id, $target->sub_product_id);
-                    if (array_key_exists('certifications_stage', $product_info2)) {
-                        $certifications = [];
-
-                        // Merge certifications_stage.
-                        foreach ($product_info2['certifications_stage'] as $stage) {
-                            $certifications = array_merge($certifications, $stage);
-                        }
-
-                        // Substract option_certifications.
-                        $option_certifications = [];
-                        if (array_key_exists('option_certifications', $product_info2)) {
-                            $option_certifications = $product_info2['option_certifications'];
-                        }
-                        $certifications = array_values(array_diff($certifications, $option_certifications));
-
-                        // Cast elements to string.
-                        foreach ($certifications as $cert) {
-                            $product_certifications[] = (string)$cert;
-                        }
-                    }
-
                     if ( ! empty($last_target_data['verify_cetification_list']))
                     {
-                        $target_data['verify_cetification_list'] = json_encode(array_values(array_intersect($product_certifications, $certification_id)));
+                        // Get product certifications.
+                        $product_cert_ids = [];
+                        $product_info2 = $this->product_lib->get_exact_product($target->product_id, $target->sub_product_id);
+                        if (array_key_exists('certifications_stage', $product_info2)) {
+
+                            // Merge certifications_stage.
+                            foreach ($product_info2['certifications_stage'] as $stage) {
+                                $product_cert_ids = array_merge($product_cert_ids, $stage);
+                            }
+
+                            // Substract option_certifications.
+                            $option_certifications = [];
+                            if (array_key_exists('option_certifications', $product_info2)) {
+                                $option_certifications = $product_info2['option_certifications'];
+                            }
+                            $product_cert_ids = array_values(array_diff($product_cert_ids, $option_certifications));
+                        }
+
+                        $this->load->model('user/user_certification_model');
+                        $cert_ids = $this->user_certification_model->get_ids($certification_id, $target->user_id, $product_cert_ids);
+
+                        // Cast elements to string.
+                        $user_certification_ids = [];
+                        foreach ($cert_ids as $cert) {
+                            $user_certification_ids[] = (string) $cert;
+                        }
+
+                        $target_data['verify_cetification_list'] = json_encode($user_certification_ids);
 
                     }
                     if ( ! empty($last_target_data['certification_id']))
