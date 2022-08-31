@@ -2024,7 +2024,7 @@
 					getCenterTextCell(target.status.text, backgroundColor),
 					getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
 					getCenterTextCell(target.reason, backgroundColor),
-					getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button class="btn btn-info">詳情</button></a>', backgroundColor)
+					getCenterTextCell('<a href="/admin/target/detail?id=' + target.id + '" target="_blank"><button class="btn btn-info">詳情</button></a>', backgroundColor)
 				).appendTo("#targets");
 			}
 		}
