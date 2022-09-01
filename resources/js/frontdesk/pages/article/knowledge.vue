@@ -135,11 +135,6 @@
                     };
 
                     $('title').text(`${data.post_title} - inFlux普匯金融科技`);
-
-                    $('meta[name="description"]').attr(
-                        'content',
-                        data.post_content.substr(0, 150)
-                    );
                 }
             },
 

@@ -4,7 +4,7 @@
       <img
         src="@/asset/images/collegeLoan/college-cover.png"
         alt="普匯學生貸banner"
-        class="img-fluid d-sm-block d-none"
+        class="w-100 d-sm-block d-none"
       />
       <img
         src="@/asset/images/collegeLoan/college-cover-phone.png"

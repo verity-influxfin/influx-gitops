@@ -35,7 +35,7 @@ import obank from '../pages/obank';
 
 import index from "../pages/alesis-index";
 import borrow from '../pages/alesis-borrow';
-import invest from '../pages/alesis-invest';
+import invest from '../pages/investmentV2';
 import faq from '../pages/alesis-faq';
 import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
@@ -158,14 +158,6 @@ let routers = [
     {path:'/charitable',component:ntu},
     { path: '/charitable-status', component: charitableStatus},
     { path: '/search',name:'search', component: search },
-    { path: '/2022-campus-ambassador',name:'campus2022', component: campus2022 },
-    { path: '/2022-campus-ambassador/result', name: 'campus2022Result', component: campus2022Result },
-    {
-      path: '/2022-campus-ambassador', component: campus2022Apply, children: [
-        { path: 'group', name: 'campus2022Group', component: campus2022Group },
-        { path: 'personal',name:'campus2022', component: campus2022Personal },
-      ]
-    },
 ];
 
 export default routers;

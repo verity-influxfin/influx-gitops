@@ -5,6 +5,12 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <a class="swiper-slide" href="/workLoan" target="_blank">
+                <workloan-header />
+              </a>
+              <a class="swiper-slide" href="/collegeLoan" target="_blank">
+                <collegeloan-header />
+              </a>
               <a
                 class="swiper-slide"
                 href="https://www.influxfin.com/articlepage?q=news-8202"
@@ -12,41 +18,13 @@
               >
                 <div class="row no-gutters mt-4">
                   <div class="col-12">
-                    <img src="@/asset/images/index/header/header-csr-phone.png" class="w-100 img-fluid">
-                  </div>
-                </div>
-              </a>
-              <div class="swiper-slide">
-                <div class="row no-gutters campus-ambassador">
-                  <div class="col-auto">
-                    <div class="text-bg">
-                      <img
-                        src="@/asset/images/index/header/2022-campus-header-text-phone.png"
-                        alt="普匯5週年"
-                        style="width: 313px"
-                      />
-                    </div>
-                    <div class="links">
-                      <a href="/2022-campus-ambassador">
-                        <button class="btn btn-join">
-                          團體報名 <i class="fa fa-chevron-right"></i>
-                        </button>
-                      </a>
-                      <a href="/2022-campus-ambassador">
-                        <button class="btn btn-vote">
-                          個人報名 <i class="fa fa-chevron-right"></i>
-                        </button>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="col position-releative">
                     <img
-                      src="@/asset/images/index/header/2022-campus-man.png"
-                      class="img57"
+                      src="@/asset/images/index/header/header-csr-phone.png"
+                      class="w-100 img-fluid"
                     />
                   </div>
                 </div>
-              </div>
+              </a>
               <a
                 class="swiper-slide"
                 href="https://www.influxfin.com/articlepage?q=news-8200"
@@ -102,6 +80,12 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <workloan-header />
+              </div>
+              <div class="swiper-slide">
+                <collegeloan-header />
+              </div>
               <a
                 class="swiper-slide"
                 href="https://www.influxfin.com/articlepage?q=news-8202"
@@ -109,41 +93,13 @@
               >
                 <div class="row no-gutters">
                   <div class="col-12">
-                    <img src="@/asset/images/index/header/header-csr.png" class="w-100 img-fluid pb-5 mb-5">
-                  </div>
-                </div>
-              </a>
-              <div class="swiper-slide">
-                <div class="row no-gutters campus-ambassador">
-                  <div class="col-auto">
-                    <div class="text-bg">
-                      <img
-                        src="@/asset/images/index/header/2022-campus-header-text.png"
-                        alt="普匯2022校園大使"
-                        style="width: 682px"
-                      />
-                    </div>
-                    <div class="links">
-                      <a href="/2022-campus-ambassador">
-                        <button class="btn btn-join">
-                          團體報名 <i class="fa fa-chevron-right"></i>
-                        </button>
-                      </a>
-                      <a href="/2022-campus-ambassador">
-                        <button class="btn btn-vote">
-                          個人報名 <i class="fa fa-chevron-right"></i>
-                        </button>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="col position-releative">
                     <img
-                      src="@/asset/images/index/header/2022-campus-man.png"
-                      class="img57"
+                      src="@/asset/images/index/header/header-csr.png"
+                      class="w-100 img-fluid pb-5 mb-5"
                     />
                   </div>
                 </div>
-              </div>
+              </a>
               <a
                 class="swiper-slide"
                 href="https://www.influxfin.com/articlepage?q=news-8200"
@@ -1296,6 +1252,8 @@
 <script>
 import AlesisCounter from '../component/alesis/AlesisCounter'
 import float from '../component/floatComponent'
+import workloanHeader from '../component/index/header/workloanHeader.vue'
+import collegeloanHeader from '../component/index/header/collegeloanHeader.vue'
 import { alesisIndexCounter } from './api'
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
@@ -1306,7 +1264,9 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 export default {
   components: {
     float,
-    AlesisCounter
+    AlesisCounter,
+    workloanHeader,
+    collegeloanHeader
   },
   data: () => ({
     indexCounter: {}
@@ -1394,6 +1354,9 @@ export default {
     // banner
     new Swiper('.sw-headers', {
       loop: true,
+      autoplay: {
+        delay: 5000,
+      },
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev'
@@ -1450,60 +1413,10 @@ export default {
           font-size: 28px;
         }
       }
-      .campus-ambassador {
-        flex-wrap: nowrap;
-        .text-bg {
-          margin-top: -20px;
-          height: 325px;
-          width: 726px;
-        }
-        .links {
-          margin: 20px 0;
-          display: flex;
-          gap: 36px;
-          .btn-join {
-            border-radius: 12px;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            color: #fff;
-            background: #083a6e;
-            box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
-            width: 250px;
-            font-size: 28px;
-          }
-          .btn-vote {
-            border-radius: 12px;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            color: #fff;
-            background: #ffc535;
-            box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
-            width: 250px;
-            font-size: 28px;
-          }
-        }
-        .solgan {
-          font-style: normal;
-          font-weight: 700;
-          font-size: 24px;
-          letter-spacing: 0.04em;
-          color: #ffffff;
-        }
-        .img57 {
-          position: relative;
-          height: 550px;
-        }
-      }
       .speech {
         flex-wrap: nowrap;
         .text-bg {
-          height:245px;
+          height: 245px;
           width: 472px;
         }
         .solgan {
@@ -2491,38 +2404,6 @@ export default {
           color: #fff;
           &::after {
             font-size: 20px;
-          }
-        }
-        .campus-ambassador {
-          flex-wrap: wrap;
-          padding-top: 20px;
-          .text-bg {
-            height: 200px;
-            width: 315px;
-          }
-          .links {
-            margin: 25px 0;
-            gap: 15px;
-            flex-direction: column;
-            .btn-join {
-              gap: 10px;
-              width: 130px;
-              font-size: 14px;
-            }
-            .btn-vote {
-              gap: 10px;
-              width: 130px;
-              font-size: 14px;
-            }
-          }
-          .solgan {
-            font-size: 14px;
-          }
-          .img57 {
-            position: relative;
-            height: 200px;
-            top: -195px;
-            left: 140px;
           }
         }
         .speech {

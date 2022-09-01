@@ -14,6 +14,7 @@ composer.lock
 
 # build files
 /public/upload
+storybook-static
 public/images
 public/js/backend.js
 public/js/backend.js.LICENSE.txt

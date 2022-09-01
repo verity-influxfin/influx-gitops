@@ -9,7 +9,8 @@ module.exports = {
         "@storybook/addon-links",
         "@storybook/addon-essentials",
         "@storybook/addon-interactions",
-        "@storybook/addon-viewport"
+        "@storybook/addon-viewport",
+        "storybook-addon-designs"
     ],
     "framework": "@storybook/vue",
     webpackFinal: async (config, { configType }) => {
