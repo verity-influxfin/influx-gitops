@@ -77,7 +77,7 @@
         </div>
         <div class="content-row">
           <div class="content-row-title">近三年所得稅結算申報書(稅簽)</div>
-          <div class="content-row-info">請上傳近三年公司所得稅捷報申請書</div>
+          <div class="content-row-info">請上傳近三年公司所得稅結報申請書</div>
           <div class="content-row-img">
             <img src="@/asset/images/bussinessLoan/smeg-require-2-5.png" />
           </div>
@@ -173,7 +173,7 @@
             <div class="content-row swiper-slide">
               <div class="content-row-title">近三年所得稅結算申報書(稅簽)</div>
               <div class="content-row-info">
-                請上傳近三年公司所得稅捷報申請書
+                請上傳近三年公司所得稅結報申請書
               </div>
               <div class="content-row-img">
                 <img src="@/asset/images/bussinessLoan/smeg-require-2-5.png" />
