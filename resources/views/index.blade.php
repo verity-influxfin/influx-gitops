@@ -169,11 +169,13 @@
                                             <div class="function-list-items">
                                                 <div class="link-title">企業融資</div>
                                                 <div class="link-item">
-                                                    <a href="/business-loan/sme" class="link-text">企業主速貸</a>
+                                                    <a href="/business-loan/smeg" class="link-text">
+                                                        <div>信保專案(銀行合作)</div>
+                                                    </a>
                                                 </div>
                                                 <div class="link-item">
                                                     <div class="link-text">
-                                                        <div>信保專案(銀行合作)</div>
+                                                        <div>企業主速貸</div>
                                                         <div class="link-coming-soon">(coming soon)</div>
                                                     </div>
                                                 </div>
@@ -360,9 +362,9 @@
                             </div>
                             <a href="/business-loan">企業融資</a>
                         </div>
-                        <a href="/business-loan/sme" class="item">微企e秒貸</a>
-                        <div class="item -disabled">信保專案融資 (coming soon)</div>
-                        <div class="item -disabled">一般企業融資 (coming soon)</div>
+                        <a href="/business-loan/smeg" class="item">中小企業融資(信保)</a>
+                        <div class="item -disabled">企業主速貸 (coming soon)</div>
+                        <div class="item -disabled">中小企業信貸 (coming soon)</div>
                     </div>
                 </div>
                 <div class="item -dropdown">
@@ -481,15 +483,14 @@
                                 <a href="/collegeLoan">學生貸款</a>
                                 <a href="/engineerLoan">資訊工程師專案</a>
                                 <a href="/workLoan">上班族貸款</a>
-
                             </div>
                         </div>
                         <div class="item">
                             <div class="header">企業融資</div>
                             <div class="list">
-                                <a href="/business-loan">企業主速貸</a>
-                                <div class="text-white">信保專案(銀行)</div>
-                                <div class="text-white">企業貸款</div>
+                                <a href="/business-loan/smeg" class="text-white">中小企業融資(信保)</a>
+                                <div class="text-white">企業主速貸</div>
+                                <div class="text-white">中小企業信貸</div>
                             </div>
                         </div>
                         <div class="item">

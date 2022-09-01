@@ -37,7 +37,8 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  width: 330px;
+  width: 100%;
+  max-width: 330px;
   border: none;
   box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
   border-radius: 16px;

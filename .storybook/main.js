@@ -24,6 +24,10 @@ module.exports = {
             use: ['style-loader', 'css-loader', 'sass-loader'],
             include: path.resolve(__dirname, '../resources/js/frontdesk'),
         });
+        config.module.rules.push({
+            test: /\.(css|scss)$/,
+            use: ['style-loader', 'css-loader', 'sass-loader'],
+        });
         config.resolve.alias = {
             ...config.resolve.alias,
             '@': path.resolve(__dirname, '../resources/js/frontdesk'),
