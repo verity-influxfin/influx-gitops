@@ -1845,7 +1845,8 @@ class Product extends REST_Controller {
                 'certification'		    => $certification,
                 'amortization_schedule'	=> $amortization_schedule,
                 'biddingHistory' => $biddingHistory,
-                'certificate_status' => (int) $target->certificate_status
+                'certificate_status' => (int) $target->certificate_status,
+                'verify_status' => $this->chk_target_verifying($target->target_data ?? '') ? 1 : 0,
             ];
 
             in_array($target->product_id, $this->config->item('allow_changeRate_product')) && $target->status == 3 ? $data['isSupportRateAdjust'] = true : '';
@@ -3069,10 +3070,44 @@ class Product extends REST_Controller {
                 // 回寫當初給額度時，授審表封存的徵信項（更新 targets.target_data、credit_sheet.certification_list）
                 if ( ! empty($credit_sheet_info->certification_list))
                 {
-                    $target_data = json_decode($target->target_data ?? '', TRUE);
-                    $target_data['certification_id'] = $certification_id = json_decode($credit_sheet_info->certification_list, TRUE);
-                    $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
+                    $certification_id = json_decode($credit_sheet_info->certification_list, TRUE);
                     $this->credit_sheet_model->update_by(['target_id' => $target->id], ['certification_list' => json_encode($certification_id)]);
+
+                    // Set up verify_cetification_list
+
+                    // Get product certifications.
+                    $product_cert_ids = [];
+                    $product_info2 = $this->product_lib->get_exact_product($target->product_id, $target->sub_product_id);
+                    if (array_key_exists('certifications_stage', $product_info2)) {
+
+                        // Merge certifications_stage.
+                        foreach ($product_info2['certifications_stage'] as $stage) {
+                            $product_cert_ids = array_merge($product_cert_ids, $stage);
+                        }
+
+                        // Substract option_certifications.
+                        $option_certifications = [];
+                        if (array_key_exists('option_certifications', $product_info2)) {
+                            $option_certifications = $product_info2['option_certifications'];
+                        }
+                        $product_cert_ids = array_values(array_diff($product_cert_ids, $option_certifications));
+                    }
+
+                    $this->load->model('user/user_certification_model');
+                    $cert_ids = $this->user_certification_model->get_ids($certification_id, $target->user_id, $product_cert_ids);
+
+                    // Cast elements to string.
+                    $user_certification_ids = [];
+                    foreach ($cert_ids as $cert) {
+                        $user_certification_ids[] = (string) $cert;
+                    }
+
+                    $target_data = json_decode($target->target_data ?? '', TRUE);
+                    $target_data['verify_cetification_list'] = json_encode($user_certification_ids);
+
+
+                    $target_data['certification_id'] = $certification_id;
+                    $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
                 }
             }
 

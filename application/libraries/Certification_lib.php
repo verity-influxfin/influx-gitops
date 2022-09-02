@@ -616,6 +616,28 @@ class Certification_lib{
             'face' => [], // [0, 0],
             'face_flag' => [], // [FALSE, FALSE],
         ];
+        if (isset($ocr_result['faceComparison']['azure']['id_card_faces_compare']['score']) &&
+            isset($ocr_result['faceComparison']['azure']['id_card_faces_compare']['is_valid'])
+        )
+        {
+            $azure_compare['face'][] = $ocr_result['faceComparison']['azure']['id_card_faces_compare']['score'];
+            $azure_compare['face_flag'][] = $ocr_result['faceComparison']['azure']['id_card_faces_compare']['is_valid'];
+            if ($ocr_result['faceComparison']['azure']['id_card_faces_compare']['is_valid'] === FALSE)
+            {
+                $msg .= '[Azure]' . $ocr_result['faceComparison']['azure']['id_card_faces_compare']['msg'] . '<br/>';
+            }
+        }
+        if (isset($ocr_result['faceComparison']['azure']['id_card_vs_person_faces_compare']['score']) &&
+            isset($ocr_result['faceComparison']['azure']['id_card_vs_person_faces_compare']['is_valid'])
+        )
+        {
+            $azure_compare['face'][] = $ocr_result['faceComparison']['azure']['id_card_vs_person_faces_compare']['score'];
+            $azure_compare['face_flag'][] = $ocr_result['faceComparison']['azure']['id_card_vs_person_faces_compare']['is_valid'];
+            if ($ocr_result['faceComparison']['azure']['id_card_vs_person_faces_compare']['is_valid'] === FALSE)
+            {
+                $msg .= '[Azure]' . $ocr_result['faceComparison']['azure']['id_card_vs_person_faces_compare']['msg'] . '<br/>';
+            }
+        }
 
         // face8 人臉比對，以後等 OCR 做完再直接串
         $face8_compare = [
