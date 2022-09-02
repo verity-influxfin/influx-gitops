@@ -360,15 +360,31 @@ class Data_verify_lib{
 				$verifiedResult->setBanResubmit();
 			}
 
-			if($data['last_insurance_info']['endDate'] != "" ||
-				preg_match('/部分工時/', $data['last_insurance_info']['comment']) ||
-				preg_match('/不適用就業保險/', $data['last_insurance_info']['comment']) ||
-				preg_match('/F/', $data['last_insurance_info']['arrearage']) ||
-				preg_match('/D/', $data['last_insurance_info']['arrearage'])
-				) {
-				$verifiedResult->addMessage('註記有部分工時、不適用就業保險、F、D', 2, MessageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}
+            if ( ! empty($data['last_insurance_info']['endDate']))
+            {
+                $verifiedResult->addMessage('最近一筆投保紀錄已退保', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                $verifiedResult->setBanResubmit();
+            }
+            if (preg_match('/部分工時/', $data['last_insurance_info']['comment']))
+            {
+                $verifiedResult->addMessage('註記有「部分工時」', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                $verifiedResult->setBanResubmit();
+            }
+            if (preg_match('/不適用就業保險/', $data['last_insurance_info']['comment']))
+            {
+                $verifiedResult->addMessage('註記有「不適用就業保險」', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                $verifiedResult->setBanResubmit();
+            }
+            if (preg_match('/F/', $data['last_insurance_info']['arrearage']))
+            {
+                $verifiedResult->addMessage('註記有「F」', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                $verifiedResult->setBanResubmit();
+            }
+            if (preg_match('/D/', $data['last_insurance_info']['arrearage']))
+            {
+                $verifiedResult->addMessage('註記有「D」', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                $verifiedResult->setBanResubmit();
+            }
 
 			/* TODO: 更改為使用公司名稱進行勾稽 (商行號無法使用API查詢)
 			if(!empty($content) && isset($content['gcis_info']['Company_Status_Desc'])) {
