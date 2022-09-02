@@ -1069,7 +1069,7 @@ class Estatement_lib{
 	}
 
 	function script_create_estatement_content(){
-		$day 				= 1;  // Create estatement content on the first day of every month.
+		$day 				= 2;  // Create estatement content on the second day of every month.
 		$count				= 0;
 		$entering_date		= get_entering_date();
 		$date  				= date("Y-m-j",strtotime($entering_date));
