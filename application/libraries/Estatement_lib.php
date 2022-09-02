@@ -1075,8 +1075,10 @@ class Estatement_lib{
 		$date  				= date("Y-m-j",strtotime($entering_date));
 		$estatement_date 	= date("Y-m-").$day;
 		if($date === $estatement_date){
-			$sdate = date("Y-m-d",strtotime($entering_date.' -1 month'));
-			$edate = date("Y-m-d",strtotime($entering_date.' -1 day'));
+            $first_day = 1;
+			$sdate = date("Y-m-",strtotime($entering_date.' -1 month')).$first_day;
+            $next_month_sdate = date("Y-m-d",strtotime($sdate.' +1 month'));
+			$edate = date("Y-m-d",strtotime($next_month_sdate.' -1 day'));
 			$exist = $this->CI->user_estatement_model->get_by([
 				"sdate"	=> $sdate,
 				"edate"	=> $edate,
