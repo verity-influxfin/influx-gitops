@@ -2944,25 +2944,40 @@ class Product extends REST_Controller {
                     $certification_id = json_decode($credit_sheet_info->certification_list, TRUE);
                     $this->credit_sheet_model->update_by(['target_id' => $target->id], ['certification_list' => json_encode($certification_id)]);
 
-                    $last_target = $this->target_model->as_array()->order_by('created_at', 'DESC')->get_by([
-                        'id !=' => $target->id,
-                        'product_id' => $target->product_id,
-                        'user_id' => $target->user_id,
-                        'status NOT' => [TARGET_WAITING_APPROVE, TARGET_CANCEL, TARGET_FAIL]
-                    ]);
-                    $last_target_data = ! empty($last_target['target_data']) ? json_decode($last_target['target_data'], TRUE) : [];
+                    // Set up verify_cetification_list
+
+                    // Get product certifications.
+                    $product_cert_ids = [];
+                    $product_info2 = $this->product_lib->get_exact_product($target->product_id, $target->sub_product_id);
+                    if (array_key_exists('certifications_stage', $product_info2)) {
+
+                        // Merge certifications_stage.
+                        foreach ($product_info2['certifications_stage'] as $stage) {
+                            $product_cert_ids = array_merge($product_cert_ids, $stage);
+                        }
+
+                        // Substract option_certifications.
+                        $option_certifications = [];
+                        if (array_key_exists('option_certifications', $product_info2)) {
+                            $option_certifications = $product_info2['option_certifications'];
+                        }
+                        $product_cert_ids = array_values(array_diff($product_cert_ids, $option_certifications));
+                    }
+
+                    $this->load->model('user/user_certification_model');
+                    $cert_ids = $this->user_certification_model->get_ids($certification_id, $target->user_id, $product_cert_ids);
+
+                    // Cast elements to string.
+                    $user_certification_ids = [];
+                    foreach ($cert_ids as $cert) {
+                        $user_certification_ids[] = (string) $cert;
+                    }
+
                     $target_data = json_decode($target->target_data ?? '', TRUE);
-                    if ( ! empty($last_target_data['verify_cetification_list']))
-                    {
-                        $tmp = json_decode($last_target_data['verify_cetification_list'], TRUE);
-                        $target_data['verify_cetification_list'] = json_encode(array_intersect($tmp, $certification_id));
+                    $target_data['verify_cetification_list'] = json_encode($user_certification_ids);
 
-                    }
-                    if ( ! empty($last_target_data['certification_id']))
-                    {
-                        $target_data['certification_id'] = array_intersect($last_target_data['certification_id'], $certification_id);
 
-                    }
+                    $target_data['certification_id'] = $certification_id;
                     $this->target_model->update($insert, ['target_data' => json_encode($target_data)]);
                 }
             }
