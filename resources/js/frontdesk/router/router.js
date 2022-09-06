@@ -37,7 +37,7 @@ import index from "../pages/alesis-index";
 import borrow from '../pages/alesis-borrow';
 import invest from '../pages/investmentV2';
 import faq from '../pages/alesis-faq';
-import risk from '../pages/alesis-risk';
+import risk from '../pages/riskReport.vue';
 import projects from '../pages/alesis-projects';
 import workLoan from '../pages/workLoanV2';
 import collegeLoan from "../pages/collegeLoanV2";
