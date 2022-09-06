@@ -333,11 +333,10 @@ class Certification_lib{
 			$info = $this->CI->user_certification_model->get($id);
             if ($info && $info->status != CERTIFICATION_STATUS_FAILED)
             {
-                $info->content = json_decode($info->content, TRUE);
-                $info->content = is_array($info->content) ? $info->content : [];
+                $info->content = isJson($info->content) ? json_decode($info->content, TRUE) : [];
                 $info->remark = json_decode($info->remark, TRUE);
                 $info->remark = is_array($info->remark) ? $info->remark : [];
-				$info->remark['fail'] 	= $fail;
+                $info->remark['fail'] = $fail;
 				$certification 	= $this->certification[$info->certification_id];
 				$param = [
                     'status'    => 2,
