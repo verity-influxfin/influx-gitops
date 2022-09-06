@@ -69,7 +69,7 @@
           </div>
         </div>
         <div class="content-row">
-          <div class="content-row-title">近六個月往來存招封面及內頁</div>
+          <div class="content-row-title">近六個月往來存摺封面及內頁</div>
           <div class="content-row-info">請提供近期公司存摺往來資料</div>
           <div class="content-row-img">
             <img src="@/asset/images/bussinessLoan/smeg-require-2-4.png" />
@@ -164,7 +164,7 @@
               </div>
             </div>
             <div class="content-row swiper-slide">
-              <div class="content-row-title">近六個月往來存招封面及內頁</div>
+              <div class="content-row-title">近六個月往來存摺封面及內頁</div>
               <div class="content-row-info">請提供近期公司存摺往來資料</div>
               <div class="content-row-img">
                 <img src="@/asset/images/bussinessLoan/smeg-require-2-4.png" />
