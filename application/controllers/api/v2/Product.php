@@ -712,33 +712,19 @@ class Product extends REST_Controller {
         $amount = isset($input['amount']) ? $input['amount'] : 0;
         $user_id = $this->user_info->id;
 
-        $product_list = $this->config->item('product_list');
-        $sub_product_list = $this->config->item('sub_product_list');
-        $exp_product  = explode(':',$input['product_id']);
-        $product = isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
-        $product_id = $product['id'];
-        $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
-
-        // 確認黑名單結果是否禁止申貸
-        /*
-        $this->load->library('brookesia/black_list_lib');
-        $is_user_blocked = $this->black_list_lib->check_user($user_id, CHECK_APPLY_PRODUCT);
-
-        // 子系統若無回應不處理
-        if (isset($is_user_blocked['isUserBlocked']) && $is_user_blocked['isUserBlocked'])
+        $exp_product = explode(':', $input['product_id']);
+        if ( ! empty($exp_product[0]))
         {
-            $this->black_list_lib->add_block_log($is_user_blocked);
-            $this->response(
-                [
-                    'result'   => 'ERROR',
-                    'error'    => BLACK_LIST_APPLY_PRODUCT,
-                    'data'     => [
-                        'text' => $this->black_list_lib->get_black_list_text($user_id, $product_id, $sub_product_id)
-                    ]
-                ]
-            );
+            $product_id = $exp_product[0];
+            $sub_product_id = $exp_product[1] ?? 0;
+            $this->load->library('loanmanager/product_lib');
+            $product = $this->product_lib->get_product_info($product_id);
+            $sub_product_list = $this->product_lib->get_sub_product_list();
         }
-*/
+        else
+        {
+            $product = [];
+        }
 
         if ($product) {
 
@@ -3695,6 +3681,16 @@ class Product extends REST_Controller {
         $this->target_associate_model->insert($associate);
 
         return $insert;
+    }
+
+    private function LJ2P1($param, $product, $input)
+    {
+        return $this->J2($param, $product, $input);
+    }
+
+    private function LJ3P1($param, $product, $input)
+    {
+        return $this->J2($param, $product, $input);
     }
 
     private function associatesapply($param, $product, $input)

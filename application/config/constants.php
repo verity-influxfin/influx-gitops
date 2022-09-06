@@ -368,14 +368,22 @@ defined('FOREX_CAR_DEALER') or define('FOREX_CAR_DEALER', 2); //外匯車商
 defined('BORROWER') or define('BORROWER', '0');
 defined('INVESTOR') or define('INVESTOR', '1');
 
+// product['type'] : 類型
 defined('PRODUCT_TYPE_NORMAL') or define('PRODUCT_TYPE_NORMAL', 1);                 // 一般貸類型
 defined('PRODUCT_TYPE_ORDER') or define('PRODUCT_TYPE_ORDER', 2);                   // 消費貸類型
+
+// product['identity'] : 身份
+defined('PRODUCT_IDENTITY_STUDENT') or define('PRODUCT_IDENTITY_STUDENT', 1);         // 學生
+defined('PRODUCT_IDENTITY_WORKER') or define('PRODUCT_IDENTITY_WORKER', 2);           // 上班族
+defined('PRODUCT_IDENTITY_CORPORATION') or define('PRODUCT_IDENTITY_CORPORATION', 3); // 法人
+
+// product['id']
 defined('PRODUCT_ID_STUDENT') or define('PRODUCT_ID_STUDENT', 1);                   // 學生貸
 defined('PRODUCT_ID_STUDENT_ORDER') or define('PRODUCT_ID_STUDENT_ORDER', 2);       // 學生手機貸款
 defined('PRODUCT_ID_SALARY_MAN') or define('PRODUCT_ID_SALARY_MAN', 3);             // 上班族貸
 defined('PRODUCT_ID_SALARY_MAN_ORDER') or define('PRODUCT_ID_SALARY_MAN_ORDER', 4); // 上班族消費貸
-defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000); //外匯車商
-defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002); //普匯微企e秒貸(新光)
+defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000);  // 外匯車商
+defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002);      // 普匯信保專案融資
 
 defined('PRODUCT_FOR_JUDICIAL') or define('PRODUCT_FOR_JUDICIAL', 1000); //法人產品ID範圍
 defined('PRODUCT_TAB_INDIVIDUAL') or define('PRODUCT_TAB_INDIVIDUAL', 'individual'); // 個金產品類型名稱
@@ -386,6 +394,8 @@ defined('SUBPRODUCT_INTELLIGENT_STUDENT') or define('SUBPRODUCT_INTELLIGENT_STUD
 defined('SUB_PRODUCT_ID_SALARY_MAN_CAR') or define('SUB_PRODUCT_ID_SALARY_MAN_CAR', 7); // 上班族貸(購車)
 defined('SUB_PRODUCT_ID_SALARY_MAN_HOUSE') or define('SUB_PRODUCT_ID_SALARY_MAN_HOUSE', 8); // 上班族貸(購房)
 defined('SUB_PRODUCT_ID_SALARY_MAN_RENOVATION') or define('SUB_PRODUCT_ID_SALARY_MAN_RENOVATION', 9); // 上班族貸(裝修)
+defined('SUB_PRODUCT_ID_SK_MILLION') or define('SUB_PRODUCT_ID_SK_MILLION', 5002); // 普匯信保專案融資(微企貸)
+defined('SUB_PRODUCT_ID_CREDIT_INSURANCE') or define('SUB_PRODUCT_ID_CREDIT_INSURANCE', 5003); // 普匯信保專案融資(擴大信保)
 
 defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN'		, 1000); //最小投資額
 defined('TARGET_AMOUNT_MAX_COMPANY') or define('TARGET_AMOUNT_MAX_COMPANY', 500000); // 法人最大投資額
