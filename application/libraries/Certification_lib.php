@@ -3770,7 +3770,7 @@ class Certification_lib{
 
         }
 
-        return FALSE;
+        return TRUE;
     }
 }
 
