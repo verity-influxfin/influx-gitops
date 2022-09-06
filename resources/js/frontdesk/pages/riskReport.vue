@@ -11,8 +11,8 @@
       </div>
     </section>
     <section class="anniversary">
+      <h1 class="h1">累計至本月之平均年化報酬率</h1>
       <div class="block-content">
-        <h1 class="h1">累計至本月之平均年化報酬率</h1>
         <div class="value-group">
           <span class="value-1">12</span>
           <span class="value-2">.02％</span>
@@ -86,6 +86,17 @@
       <h1 class="h1">
         準時還款率 <span class="sm">(1~9級依會員信評等級)</span>
       </h1>
+      <div class="block-content">
+        <div class="risk-rank">
+          <img src="@/asset/images/risk/risk-rank-1.png" class="img-fluid risk-rank-img">
+        </div>
+        <div class="risk-rank">
+          <img src="@/asset/images/risk/risk-rank-2.png" class="img-fluid risk-rank-img">
+        </div>
+        <div class="risk-rank">
+          <img src="@/asset/images/risk/risk-rank-3.png" class="img-fluid risk-rank-img">
+        </div>
+      </div>
     </section>
     <section class="analysis">
       <h1 class="h1">重要指標分析</h1>
@@ -99,7 +110,7 @@
         <div class="block-text">
           本月上班族貸申請數，較去年同月 <span class="em">↑增長 3.5%</span>
         </div>
-        <div class="hint"></div>
+        <div class="hint">＊與去年同月份比較</div>
       </div>
     </section>
     <section class="functions">
@@ -110,7 +121,24 @@
             <!-- Slides -->
             <div class="swiper-slide">
               <a href="javascript:;">
-                <alesis-button class="month-btn">test</alesis-button>
+                <alesis-button class="month-btn">2022 5月</alesis-button>
+              </a>
+              <a href="javascript:;">
+                <alesis-button class="month-btn">2022 6月</alesis-button>
+              </a>
+              <a href="javascript:;">
+                <alesis-button class="month-btn">2022 7月</alesis-button>
+              </a>
+            </div>
+            <div class="swiper-slide">
+              <a href="javascript:;">
+                <alesis-button class="month-btn">2022 8月</alesis-button>
+              </a>
+              <a href="javascript:;">
+                <alesis-button class="month-btn">2022 9月</alesis-button>
+              </a>
+              <a href="javascript:;">
+                <alesis-button class="month-btn">2022 10月</alesis-button>
               </a>
             </div>
           </div>
@@ -227,6 +255,9 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     url('~images/risk/risk-anniversary-bg2.png');
   background-position: center center;
   background-repeat: no-repeat;
+  .block-content{
+    padding: 35px 15px 0;
+  }
   .h1 {
     font-style: normal;
     font-weight: 700;
@@ -240,15 +271,23 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     font-weight: 700;
     text-align: center;
     color: #0f3560;
+    width: 273px;
+    height: 287px;
+    padding-left: 29px;
+    background-image: url('~images/risk/risk-anniversary-value-bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto;
     .value-1 {
       font-size: 100px;
-      line-height: 100px;
+      line-height: 273px;
       margin: 0;
     }
     .value-2 {
       margin: 0;
       font-size: 40px;
-      line-height: 100px;
+      line-height: 273px;
     }
   }
 }
@@ -422,6 +461,20 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       line-height: 48px;
     }
   }
+  .block-content{
+    display: flex;
+    justify-content: space-evenly;
+    .risk-rank{
+      padding: 35px;
+      border-radius: 50%;
+      border: 20px solid $color--primary;
+      position: relative;
+      &-img{
+        position: relative;
+        right: 10px;
+      }
+    }
+  }
 }
 .analysis {
   padding: 43px 0;
@@ -447,6 +500,14 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       @extend .block-text;
       color: $color--primary;
     }
+  }
+  .hint {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 1.4;
+    text-align: center;
+    color: $color__text--secondary;
   }
 }
 .functions {
