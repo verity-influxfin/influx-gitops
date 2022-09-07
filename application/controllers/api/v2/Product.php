@@ -2910,7 +2910,7 @@ class Product extends REST_Controller {
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
-            'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
+            'checkOwner' => $sub_product['checkOwner'] ?? FALSE,
             'status' => $sub_product['status'],
             'allow_age_range' => $sub_product['allow_age_range'] ?? [20, 55],
             'apply_range_s' => $sub_product['apply_range_s'] ?? null,
