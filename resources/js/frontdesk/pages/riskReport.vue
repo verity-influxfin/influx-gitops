@@ -21,7 +21,7 @@
     </section>
     <section class="apply-cases">
       <div class="block-content">
-        <div>
+        <div class="d-sm-block d-flex justify-content-center align-baseline">
           <h1 class="h1">本月申貸案件數</h1>
           <div class="apply-case-value">
             <span>1,580</span>
@@ -29,7 +29,17 @@
           </div>
         </div>
         <div>
-          <h1 class="h1">學生貸申貸案件598件+上班族申貸案件數982件</h1>
+          <h1 class="h1 apply-case-info">
+            <div>
+              <div>學生貸申貸案件</div>
+              <div>598件</div>
+            </div>
+            <div>+</div>
+            <div>
+              <div>上班族申貸案件數</div>
+              <div>982件</div>
+            </div>
+          </h1>
           <div class="apply-case-bar-group">
             <div class="apply-case-bar-left" style="width: calc(38% + 100px)">
               <span class="apply-case-bar-text">38%</span>
@@ -43,19 +53,19 @@
     </section>
     <section class="success-cases">
       <div class="block-content">
-        <div>
+        <div class="success-case-item">
           <h1 class="h1">累計媒合成功件數</h1>
           <div class="success-case-value">
             <span class="em">1,580</span>
             <span class="h1">件</span>
           </div>
         </div>
-        <div>
+        <div class="success-case-item">
           <h1 class="h1">累積金額</h1>
           <div class="success-case-value">539,531,987</div>
           <div class="h1">元</div>
         </div>
-        <div>
+        <div class="success-case-item">
           <h1 class="h1">累積筆數</h1>
           <div class="success-case-value">95,701</div>
           <div class="h1">筆</div>
@@ -88,13 +98,22 @@
       </h1>
       <div class="block-content">
         <div class="risk-rank">
-          <img src="@/asset/images/risk/risk-rank-1.png" class="img-fluid risk-rank-img">
+          <img
+            src="@/asset/images/risk/risk-rank-1.png"
+            class="img-fluid risk-rank-img"
+          />
         </div>
         <div class="risk-rank">
-          <img src="@/asset/images/risk/risk-rank-2.png" class="img-fluid risk-rank-img">
+          <img
+            src="@/asset/images/risk/risk-rank-2.png"
+            class="img-fluid risk-rank-img"
+          />
         </div>
         <div class="risk-rank">
-          <img src="@/asset/images/risk/risk-rank-3.png" class="img-fluid risk-rank-img">
+          <img
+            src="@/asset/images/risk/risk-rank-3.png"
+            class="img-fluid risk-rank-img"
+          />
         </div>
       </div>
     </section>
@@ -185,6 +204,9 @@ $color--primary: #f2b162;
 $color__text--primary: #000000;
 $color__text--secondary: #6b6b6b70;
 $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
+.align-baseline{
+  align-items: baseline;
+}
 .block-content {
   width: 100%;
   max-width: 1400px;
@@ -255,7 +277,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     url('~images/risk/risk-anniversary-bg2.png');
   background-position: center center;
   background-repeat: no-repeat;
-  .block-content{
+  .block-content {
     padding: 35px 15px 0;
   }
   .h1 {
@@ -307,6 +329,11 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       line-height: 51px;
       text-align: center;
       color: #393939;
+    }
+    .apply-case-info {
+      display: flex;
+      gap: 25px;
+      justify-content: center;
     }
     .apply-case-value {
       text-align: center;
@@ -461,15 +488,15 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       line-height: 48px;
     }
   }
-  .block-content{
+  .block-content {
     display: flex;
     justify-content: space-evenly;
-    .risk-rank{
+    .risk-rank {
       padding: 35px;
       border-radius: 50%;
       border: 20px solid $color--primary;
       position: relative;
-      &-img{
+      &-img {
         position: relative;
         right: 10px;
       }
@@ -532,6 +559,264 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     box-shadow: 4px 4px 2px rgb(0 0 0 / 10%);
     font-size: 28px;
     color: #fff;
+  }
+}
+@media screen and (max-width: 767px) {
+  .banner {
+    background-image: url('~images/risk/risk-banner-phone.png');
+    background-position: bottom center;
+    height: 135vw;
+  }
+  .title {
+    background-image: url('~images/risk/risk-wave-phone.svg');
+    height: 240px;
+    .block-content {
+      flex-direction: column;
+      align-items: center;
+    }
+    .title-group {
+      position: relative;
+      .title-1 {
+        font-size: 24px;
+        line-height: 38px;
+        &::before {
+          content: '5';
+          font-size: 96px;
+        }
+      }
+      .title-2 {
+        bottom: 50px;
+        left: 62px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 1.4;
+        color: #393939;
+      }
+    }
+    .hint {
+      margin-top: 5px;
+      font-size: 16px;
+      line-height: 25px;
+    }
+  }
+  .anniversary {
+    padding: 5px;
+    background: url('~images/risk/risk-anniversary-bg-phone.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    .block-content {
+      padding: 15px 15px 0;
+    }
+    .h1 {
+      font-size: 20px;
+      line-height: 32px;
+    }
+    .value-group {
+      color: #0f3560;
+      width: 172px;
+      height: 182px;
+      padding-left: 29px;
+      background-image: url('~images/risk/risk-anniversary-value-bg-phone.png');
+      margin: 0 auto;
+      .value-1 {
+        font-size: 64px;
+        line-height: 182px;
+        margin: 0;
+      }
+      .value-2 {
+        margin: 0;
+        font-size: 20px;
+        line-height: 182px;
+      }
+    }
+  }
+  .apply-cases {
+    background-image: url('~images/risk/risk-wave-up-phone.svg');
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 80px 0 20px;
+    .block-content {
+      display: flex;
+      flex-direction: column;
+      padding: 40px 0;
+      .h1 {
+        font-size: 20px;
+        line-height: 36px;
+      }
+      .apply-case-info {
+        gap: 10px;
+      }
+      .apply-case-value {
+        font-size: 36px;
+        line-height: 36px;
+        .h1 {
+          line-height: 36px;
+        }
+      }
+      .apply-case-bar-group {
+        display: flex;
+        min-width: initial;
+        width: 100%;
+        margin-top: 20px;
+        .apply-case-bar-left,
+        .apply-case-bar-right {
+          border-radius: 35px;
+          height: 30px;
+        }
+        .apply-case-bar-text {
+          font-size: 24px;
+          line-height: 40px;
+          top: 30px;
+        }
+        .apply-case-bar-left {
+          right: -20px;
+        }
+      }
+    }
+  }
+  .success-cases {
+    background: $color__background--gradient;
+    padding: 30px 0;
+    .block-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .h1 {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 1.4;
+        text-align: center;
+        color: #393939;
+      }
+      .success-case-item{
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+        justify-content: center;
+      }
+      .success-case-value {
+        font-size: 20px;
+        line-height: 1.4;
+        .em {
+          color: $color--primary;
+          font-size: 36px;
+          line-height: 50px;
+        }
+        .h1 {
+          line-height: 50px;
+        }
+      }
+    }
+  }
+  .index-cases {
+    padding: 43px 0;
+    .block-content {
+      .h1 {
+        font-size: 20px;
+        line-height: 32px;
+        .em {
+          font-size: 32px;
+        }
+      }
+      .h2 {
+        font-size: 16px;
+        line-height: 25px;
+        .em {
+          font-size: 16px;
+          line-height: 25px;
+        }
+      }
+      .h3 {
+        display: block;
+        margin-top: 20px;
+        gap: 12px;
+        font-size: 20px;
+        line-height: 32px;
+        .em {
+          font-size: 32px;
+          line-height: 1;
+        }
+        .sm {
+          font-size: 15px;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+  .repay {
+    padding: 43px 0;
+    .h1 {
+      font-size: 24px;
+      line-height: 1.2;
+      margin-bottom: 25px;
+      .sm {
+        display: block;
+        color: $color__text--secondary;
+        font-size: 20px;
+        line-height: 1.2;
+      }
+    }
+    .block-content {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      .risk-rank {
+        width: fit-content;
+        padding: 35px;
+        border: 12px solid $color--primary;
+        position: relative;
+        transform: scale(0.8);
+        &-img {
+          position: relative;
+          right: 10px;
+        }
+      }
+    }
+  }
+  .analysis {
+    padding: 43px 0;
+    .h1 {
+      font-size: 20px;
+      line-height: 1.2;
+    }
+    .block-content {
+      margin-top: 30px;
+    }
+    .block-text {
+      font-size: 16px;
+      line-height: 1.5;
+      letter-spacing: -1px;
+      .em {
+        @extend .block-text;
+        color: $color--primary;
+      }
+    }
+  }
+  .functions {
+    padding: 60px 0;
+    .swiper {
+      max-width: 800px;
+    }
+    .swiper-slide {
+      gap: 30px;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .month-btn {
+      padding: 10px;
+      font-size: 20px;
+      width: 250px;
+    }
+    .btn-invest {
+      font-size: 20px;
+    }
   }
 }
 </style>
