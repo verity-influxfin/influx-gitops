@@ -2917,7 +2917,8 @@ class Product extends REST_Controller {
             'apply_range_e' => $sub_product['apply_range_e'] ?? null,
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,
             'available_company_categories' => $sub_product['available_company_categories'] ?? null,
-            'default_reason' => $sub_product['default_reason'] ?? ''
+            'default_reason' => $sub_product['default_reason'] ?? '',
+            'check_associates_certs' => isset($sub_product['check_associates_certs']) && $sub_product['check_associates_certs'] === TRUE ? TRUE : FALSE,
         );
     }
 

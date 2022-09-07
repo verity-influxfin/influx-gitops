@@ -1672,6 +1672,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_COMPANYEMAIL,
                     ]
                 ],
+                'check_associates_certs' => TRUE,
                 'instalment' => [12, 24, 36],
                 'repayment' => [1],
                 'targetData' => [],
@@ -1734,6 +1735,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_COMPANYEMAIL,
                     ]
                 ],
+                'check_associates_certs' => TRUE,
                 'instalment' => [12, 24, 36, 48, 60, 72],
                 'repayment' => [1],
                 'targetData' => [],
