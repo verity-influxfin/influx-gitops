@@ -63,12 +63,6 @@ class Cert_job extends Certification_base
     {
         $parsed_content = $this->content ?? [];
         $url = $this->content['pdf_file'] ?? '';
-
-        $parsed_content = array_merge(
-            $parsed_content,
-            $this->_get_ocr_marker_info(),
-            $this->_get_ocr_parser_info()
-        );
         $mime = get_mime_by_extension($url);
 
         $gcis_info = $this->_get_gcis_info($parsed_content);
@@ -83,6 +77,27 @@ class Cert_job extends Certification_base
         }
         else if (is_pdf($mime))
         {
+            if ( ! isset($parsed_content['pdf_fraud_detect']))
+            {
+                // Check if PDF edited.
+                $this->load->helper('user_certification');
+                $fraud_result = verify_fraud_pdf($url);
+                $cert_status = $fraud_result[0];
+                if ($cert_status != CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
+                {
+                    $parsed_content['pdf_fraud_detect'] = [];
+                    $parsed_content['pdf_fraud_detect']['pass'] = FALSE;
+                    $parsed_content['pdf_fraud_detect']['certification_status'] = $cert_status;
+                    $parsed_content['pdf_fraud_detect']['details'] = $fraud_result[1];
+                    return $parsed_content;
+                }
+            }
+            $parsed_content = array_merge(
+                $parsed_content,
+                $this->_get_ocr_marker_info(),
+                $this->_get_ocr_parser_info()
+            );
+
             if ( ! empty($parsed_content['ocr_parser']['content']))
             {
                 $response = $parsed_content['ocr_parser']['content'];

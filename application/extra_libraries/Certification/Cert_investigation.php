@@ -71,6 +71,21 @@ class Cert_investigation extends Certification_base
         }
         else if (is_pdf($mime))
         {
+            if ( ! isset($parsed_content['pdf_fraud_detect']))
+            {
+                // Check if PDF edited.
+                $this->load->helper('user_certification');
+                $fraud_result = verify_fraud_pdf($url);
+                $cert_status = $fraud_result[0];
+                if ($cert_status != CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
+                {
+                    $parsed_content['pdf_fraud_detect'] = [];
+                    $parsed_content['pdf_fraud_detect']['pass'] = FALSE;
+                    $parsed_content['pdf_fraud_detect']['certification_status'] = $cert_status;
+                    $parsed_content['pdf_fraud_detect']['details'] = $fraud_result[1];
+                    return $parsed_content;
+                }
+            }
             $parsed_content = array_merge(
                 $parsed_content,
                 $this->_get_ocr_parser_info()
@@ -147,6 +162,21 @@ class Cert_investigation extends Certification_base
     {
         if ($this->_chk_ocr_status($content) === FALSE)
         {
+            if (isset($content['pdf_fraud_detect']) && $content['pdf_fraud_detect']['pass'] === FALSE)
+            {
+                $fraud_detect_status = $content['pdf_fraud_detect']['certification_status'];
+                $details = json_encode($content['pdf_fraud_detect']['details']);
+                $this->result->setStatus($fraud_detect_status);
+                if ($fraud_detect_status == CERTIFICATION_STATUS_FAILED)
+                {
+                    $this->result->addMessage("聯徵PDF已被竄改過，細節：{$details}", CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                }
+                else // CERTIFICATION_STATUS_PENDING_TO_REVIEW
+                {
+                    $this->result->addMessage("聯徵PDF疑似被竄改過，需人工驗證，細節：{$details}", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                }
+                return FALSE;
+            }
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
             return FALSE;
         }
