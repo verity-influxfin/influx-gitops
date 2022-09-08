@@ -358,7 +358,7 @@ defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO'	, getenv(
 defined('URL_ADMIN')             	OR define('URL_ADMIN'				, '/admin/');
 defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN'		, getenv('ENV_COOKIES_LOGIN_ADMIN')); //Use in Admin Login Cookies
 defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE'			, 1800); //Use in Login Cookies
-
+defined('SYSTEM_ADMIN_ID') or define('SYSTEM_ADMIN_ID', 0);
 
 defined('MOBILE_PHONE_VENDOR') or define('MOBILE_PHONE_VENDOR', 0); //手機商
 defined('FOREX_CAR_DEALER') or define('FOREX_CAR_DEALER', 2); //外匯車商
