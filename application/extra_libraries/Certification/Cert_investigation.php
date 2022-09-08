@@ -84,6 +84,7 @@ class Cert_investigation extends Cert_pdf
                     $parsed_content['pdf_fraud_detect']['certification_status'] = $cert_status;
                     $parsed_content['pdf_fraud_detect']['details'] = $fraud_result[1];
                     $this->additional_data['pdf_fraud_reject'] = ($cert_status == CERTIFICATION_STATUS_FAILED);
+                    $this->additional_data['pdf_fraud_details'] = $fraud_result[1];
                     return $parsed_content;
                 }
             }

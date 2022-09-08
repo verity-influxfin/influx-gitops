@@ -65,7 +65,8 @@ function verify_fraud_pdf($pdf_url): array
             '修改時間' => $response_data['mod_datetime'],
             '修改與建立時間差(秒)' => $response_data['mod_delta_sec'],
             '是否用別的軟體編輯過' => ! $response_data['is_producer_valid'],
-            '說明' => '如用別的軟體編輯過 或 修改與建立時間差大於10秒 => 判定為被竄改過，故退件；如未用別的軟體編輯過，但修改與建立時間差介於3~10秒間 => 疑似被竄改過，故轉人工審核'
+            '轉退件標準' => '如用別的軟體編輯過 或 修改與建立時間差大於10秒 => 判定為被竄改過',
+            '轉人工審核標準' => '如未用別的軟體編輯過，但修改與建立時間差介於3~10秒間 => 疑似被竄改過'
         ];
         if ($response_data['is_producer_valid'])
         {
