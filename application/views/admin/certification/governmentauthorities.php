@@ -56,7 +56,7 @@
                                             <td><span>產業別</span></td>
                                             <td>
                                                 <select v-model="formData.businessTypeCode" class="table-input sk-input form-control">
-                                                    <option value="">請選擇</option>
+                                                    <option value=""></option>
                                                     <option value="1">1:製造業 (08~34)</option>
                                                     <option value="2">2:買賣業 (45~48)</option>
                                                     <option value="3">3:服務業 (49~56/58~63/69~76/77~82/86~88/90~93/94~96)</option>
@@ -67,7 +67,7 @@
                                             <td><span>產業週期</span></td>
                                             <td>
                                                 <select v-model="formData.businessCycleCode" class="table-input sk-input form-control">
-                                                    <option value="">請選擇</option>
+                                                    <option value=""></option>
                                                     <option value="A">A (01~03)</option>
                                                     <option value="B">B (05~06)</option>
                                                     <option value="C">C (08~34)</option>
@@ -112,7 +112,7 @@
                                             <td><span>組織類型</span></td>
                                             <td>
                                                 <select v-model="formData.organizationType" class="table-input sk-input form-control">
-                                                    <option value="">請選擇</option>
+                                                    <option value=""></option>
                                                     <option value="A">A:獨資</option>
                                                     <option value="B">B:合夥</option>
                                                     <option value="C">C:有限公司</option>
@@ -128,7 +128,7 @@
                                             <td><span>依法核准情形</span></td>
                                             <td>
                                                 <select v-model="formData.registerType" class="table-input sk-input form-control">
-                                                    <option value="">請選擇</option>
+                                                    <option value=""></option>
                                                     <option value="A">A:有公司登記與商業登記</option>
                                                     <option value="B">B:取得主管機關核發之營業證照</option>
                                                 </select>
@@ -138,7 +138,7 @@
                                             <td><span>是否公開發行</span></td>
                                             <td>
                                                 <select v-model="formData.isPublic" class="table-input sk-input form-control">
-                                                    <option value="">請選擇</option>
+                                                    <option value=""></option>
                                                     <option value="1">1:是</option>
                                                     <option value="0">0:否</option>
                                                 </select>
@@ -160,7 +160,7 @@
                                             <td><span>是否有法人投資</span></td>
                                             <td>
                                                 <select v-model="formData.hasJuridicalInvest" class="table-input sk-input form-control">
-                                                    <option value="">請選擇</option>
+                                                    <option value=""></option>
                                                     <option value="1">1:是</option>
                                                     <option value="0">0:否</option>
                                                 </select>
@@ -175,7 +175,7 @@
                                             <td><span>營業稅申報方式</span></td>
                                             <td>
                                                 <select v-model="formData.bizTaxFileWay" class="table-input sk-input form-control">
-                                                    <option value="">請選擇</option>
+                                                    <option value=""></option>
                                                     <option value="A">A:使用統一發票</option>
                                                     <option value="B">B:免用統一發票核定繳納營業稅</option>
                                                     <option value="C">C:未達課稅起徵點</option>
@@ -191,7 +191,7 @@
                                             <td><span>是否屬於製造業、營造業或礦業或土石採集業</span></td>
                                             <td>
                                                 <select v-model="formData.isManufacturing" class="table-input sk-input form-control">
-                                                    <option value="">請選擇</option>
+                                                    <option value=""></option>
                                                     <option value="1">1:是</option>
                                                     <option value="0">0:否</option>
                                                 </select>
@@ -222,7 +222,7 @@
                                         <td><span>產業別</span></td>
                                         <td>
                                             <select v-model="formData.businessTypeCode" class="table-input sk-input form-control">
-                                                <option value="">請選擇</option>
+                                                <option value=""></option>
                                                 <option value="1">1:製造業 (08~34)</option>
                                                 <option value="2">2:買賣業 (45~48)</option>
                                                 <option value="3">3:服務業 (49~56/58~63/69~76/77~82/86~88/90~93/94~96)</option>
@@ -233,7 +233,7 @@
                                         <td><span>產業週期</span></td>
                                         <td>
                                             <select v-model="formData.businessCycleCode" class="table-input sk-input form-control">
-                                                <option value="">請選擇</option>
+                                                <option value=""></option>
                                                 <option value="A">A (01~03)</option>
                                                 <option value="B">B (05~06)</option>
                                                 <option value="C">C (08~34)</option>
@@ -278,7 +278,7 @@
                                         <td><span>組織類型</span></td>
                                         <td>
                                             <select v-model="formData.organizationType" class="table-input sk-input form-control">
-                                                <option value="">請選擇</option>
+                                                <option value=""></option>
                                                 <option value="A">A:獨資</option>
                                                 <option value="B">B:合夥</option>
                                                 <option value="C">C:有限公司</option>
@@ -294,7 +294,7 @@
                                         <td><span>依法核准情形</span></td>
                                         <td>
                                             <select v-model="formData.registerType" class="table-input sk-input form-control">
-                                                <option value="">請選擇</option>
+                                                <option value=""></option>
                                                 <option value="A">A:有公司登記與商業登記</option>
                                                 <option value="B">B:取得主管機關核發之營業證照</option>
                                             </select>
@@ -304,7 +304,7 @@
                                         <td><span>是否公開發行</span></td>
                                         <td>
                                             <select v-model="formData.isPublic" class="table-input sk-input form-control">
-                                                <option value="">請選擇</option>
+                                                <option value=""></option>
                                                 <option value="1">1:是</option>
                                                 <option value="0">0:否</option>
                                             </select>
@@ -326,7 +326,7 @@
                                         <td><span>是否有法人投資</span></td>
                                         <td>
                                             <select v-model="formData.hasJuridicalInvest" class="table-input sk-input form-control">
-                                                <option value="">請選擇</option>
+                                                <option value=""></option>
                                                 <option value="1">1:是</option>
                                                 <option value="0">0:否</option>
                                             </select>
@@ -341,7 +341,7 @@
                                         <td><span>營業稅申報方式</span></td>
                                         <td>
                                             <select v-model="formData.bizTaxFileWay" class="table-input sk-input form-control">
-                                                <option value="">請選擇</option>
+                                                <option value=""></option>
                                                 <option value="A">A:使用統一發票</option>
                                                 <option value="B">B:免用統一發票核定繳納營業稅</option>
                                                 <option value="C">C:未達課稅起徵點</option>
@@ -357,7 +357,7 @@
                                         <td><span>是否屬於製造業、營造業或礦業或土石採集業</span></td>
                                         <td>
                                             <select v-model="formData.isManufacturing" class="table-input sk-input form-control">
-                                                <option value="">請選擇</option>
+                                                <option value=""></option>
                                                 <option value="1">1:是</option>
                                                 <option value="0">0:否</option>
                                             </select>
