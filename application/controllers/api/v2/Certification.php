@@ -4752,7 +4752,6 @@ class Certification extends REST_Controller {
                     $content[$field] = $input[$field];
                 }
             }
-            $content = $input;
 
             $param = [
                 'user_id' => $user_id,

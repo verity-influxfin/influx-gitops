@@ -59,24 +59,52 @@
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compContactName"></td>
                                     </tr>
                                     <tr>
+                                        <td><span>企業聯絡人電話</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactTel"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業聯絡人分機</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactExt"></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>聯絡人職稱</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compContact"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>聯絡電話</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactTel"></td>
+                                        <td><span>公司員工人數</span></td>
+                                        <td><input class="sk-input form-control" type="number" v-model.number="formData.employeeNum"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>Email</span></td>
+                                        <td><span>是否有海外投資</span></td>
+                                        <td><select v-model="formData.hasForeignInvestment" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>是否曾有信用瑕疵紀錄</span></td>
+                                        <td><select v-model="formData.hasCreditFlaws" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近一年平均員工人數是否高過200人</span></td>
+                                        <td><select v-model="formData.lastOneYearOver200employees" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業Email</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compEmail"></td>
                                     </tr>
                                     <tr>
                                         <td><span>傳真號碼</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compFax"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>聯絡人分機</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactExt"></td>
                                     </tr>
                                     <tr>
                                         <td><span>財務主管姓名</span></td>
@@ -109,10 +137,6 @@
                                     <tr>
                                         <td><span>公司股東人數</span></td>
                                         <td><input class="sk-input form-control" type="number" v-model="formData.stockholderNum"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>公司員工人數</span></td>
-                                        <td><input class="sk-input form-control" type="number" v-model.number="formData.employeeNum"></td>
                                     </tr>
                                     <tr>
                                         <td><span>屬於受嚴重特殊傳染性肺炎影響之企業</span></td>
@@ -149,14 +173,6 @@
                                     <tr>
                                         <td><span>預計公開發行年份</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.goPublicYear"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>是否有海外投資</span></td>
-                                        <td><select v-model="formData.hasForeignInvestment" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
                                     </tr>
                                     <tr>
                                         <td><span>企業專業證照/專利</span></td>
@@ -245,22 +261,6 @@
                                             </select></td>
                                     </tr>
                                     <tr>
-                                        <td><span>是否擁有信用瑕疵</span></td>
-                                        <td><select v-model="formData.hasCreditFlaws" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>近一年平均員工人數是否超過200人</span></td>
-                                        <td><select v-model="formData.lastOneYearOver200employees" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
                                         <td><span>關係企業(A)名稱</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAName"></td>
                                     </tr>
@@ -279,7 +279,7 @@
                                             </select></td>
                                     </tr>
                                     <tr>
-                                        <td><span>關係企業(A)與借戶之關係</span></td>
+                                        <td><span>關係企業(A)與申請人之關係</span></td>
                                         <td><select v-model="formData.relatedCompARelationship" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
                                                 <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
@@ -311,7 +311,7 @@
                                             </select></td>
                                     </tr>
                                     <tr>
-                                        <td><span>關係企業(B)與借戶之關係</span></td>
+                                        <td><span>關係企業(B)與申請人之關係</span></td>
                                         <td><select v-model="formData.relatedCompBRelationship" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
                                                 <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
@@ -343,7 +343,7 @@
                                             </select></td>
                                     </tr>
                                     <tr>
-                                        <td><span>關係企業(C)與借戶之關係</span></td>
+                                        <td><span>關係企業(C)與申請人之關係</span></td>
                                         <td><select v-model="formData.relatedCompCRelationship" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
                                                 <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
@@ -480,24 +480,52 @@
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compContactName"></td>
                                     </tr>
                                     <tr>
+                                        <td><span>企業聯絡人電話</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactTel"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業聯絡人分機</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactExt"></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>聯絡人職稱</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compContact"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>聯絡電話</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactTel"></td>
+                                        <td><span>公司員工人數</span></td>
+                                        <td><input class="sk-input form-control" type="number" v-model.number="formData.employeeNum"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>Email</span></td>
+                                        <td><span>是否有海外投資</span></td>
+                                        <td><select v-model="formData.hasForeignInvestment" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>是否曾有信用瑕疵紀錄</span></td>
+                                        <td><select v-model="formData.hasCreditFlaws" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>近一年平均員工人數是否高過200人</span></td>
+                                        <td><select v-model="formData.lastOneYearOver200employees" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>企業Email</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compEmail"></td>
                                     </tr>
                                     <tr>
                                         <td><span>傳真號碼</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compFax"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>聯絡人分機</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compContactExt"></td>
                                     </tr>
                                     <tr>
                                         <td><span>財務主管姓名</span></td>
@@ -530,10 +558,6 @@
                                     <tr>
                                         <td><span>公司股東人數</span></td>
                                         <td><input class="sk-input form-control" type="number" v-model="formData.stockholderNum"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>公司員工人數</span></td>
-                                        <td><input class="sk-input form-control" type="number" v-model.number="formData.employeeNum"></td>
                                     </tr>
                                     <tr>
                                         <td><span>屬於受嚴重特殊傳染性肺炎影響之企業</span></td>
@@ -570,14 +594,6 @@
                                     <tr>
                                         <td><span>預計公開發行年份</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.goPublicYear"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>是否有海外投資</span></td>
-                                        <td><select v-model="formData.hasForeignInvestment" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
                                     </tr>
                                     <tr>
                                         <td><span>企業專業證照/專利</span></td>
@@ -666,22 +682,6 @@
                                             </select></td>
                                     </tr>
                                     <tr>
-                                        <td><span>是否擁有信用瑕疵</span></td>
-                                        <td><select v-model="formData.hasCreditFlaws" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>近一年平均員工人數是否超過200人</span></td>
-                                        <td><select v-model="formData.lastOneYearOver200employees" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
                                         <td><span>關係企業(A)名稱</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.relatedCompAName"></td>
                                     </tr>
@@ -700,7 +700,7 @@
                                             </select></td>
                                     </tr>
                                     <tr>
-                                        <td><span>關係企業(A)與借戶之關係</span></td>
+                                        <td><span>關係企業(A)與申請人之關係</span></td>
                                         <td><select v-model="formData.relatedCompARelationship" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
                                                 <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
@@ -732,7 +732,7 @@
                                             </select></td>
                                     </tr>
                                     <tr>
-                                        <td><span>關係企業(B)與借戶之關係</span></td>
+                                        <td><span>關係企業(B)與申請人之關係</span></td>
                                         <td><select v-model="formData.relatedCompBRelationship" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
                                                 <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
@@ -764,7 +764,7 @@
                                             </select></td>
                                     </tr>
                                     <tr>
-                                        <td><span>關係企業(C)與借戶之關係</span></td>
+                                        <td><span>關係企業(C)與申請人之關係</span></td>
                                         <td><select v-model="formData.relatedCompCRelationship" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
                                                 <option :value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
