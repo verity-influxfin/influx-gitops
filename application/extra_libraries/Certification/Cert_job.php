@@ -12,7 +12,7 @@ use CertificationResult\MessageDisplay;
  * Class Investigation
  * @package Certification
  */
-class Cert_job extends Certification_base
+class Cert_job extends Cert_pdf
 {
     /**
      * @var int 該徵信項之代表編號
@@ -89,6 +89,7 @@ class Cert_job extends Certification_base
                     $parsed_content['pdf_fraud_detect']['pass'] = FALSE;
                     $parsed_content['pdf_fraud_detect']['certification_status'] = $cert_status;
                     $parsed_content['pdf_fraud_detect']['details'] = $fraud_result[1];
+                    $this->additional_data['pdf_fraud_reject'] = ($cert_status == CERTIFICATION_STATUS_FAILED);
                     return $parsed_content;
                 }
             }
