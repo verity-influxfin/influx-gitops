@@ -164,6 +164,10 @@ Vue.component('scraper-status', {
 					</thead>
 					<tbody></tbody>
 				</table>
+                <div v-if="judicial_yuan_fail" class="alert alert-danger mt-2" role="alert">
+                    <i class="fa fa-warning"></i>
+                    司法院爬蟲尚未執行
+                </div>
 			</div>
 		</div>
 	`,
@@ -198,6 +202,11 @@ Vue.component('scraper-status', {
 			}
 		});
 	},
+    data() {
+        return {
+            judicial_yuan_fail: false
+        }
+    },
 	methods: {
 		fetchStatus() {
 			user_id = $('#id-textbox').val();
@@ -246,7 +255,17 @@ Vue.component('scraper-status', {
 				biz_html,
 				business_registration_html
 			])
-			t2.draw()
+            t2.draw()
+            if (
+                statusResponse.judicial_yuan_status != 'finished' ||
+                statusResponse.judicial_yuan_status != 'failure' ||
+                statusResponse.judicial_yuan_status != 'requested' ||
+                statusResponse.judicial_yuan_status != 'started'
+            ) {
+                this.judicial_yuan_fail = true
+            } else {
+                this.judicial_yuan_fail = false
+            }
 		},
 		create_table_content(status, url) {
 			if (url == '#') {
