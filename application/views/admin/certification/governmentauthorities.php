@@ -56,6 +56,7 @@
                                             <td><span>產業別</span></td>
                                             <td>
                                                 <select v-model="formData.businessTypeCode" class="table-input sk-input form-control">
+                                                    <option value="">請選擇</option>
                                                     <option value="1">1:製造業 (08~34)</option>
                                                     <option value="2">2:買賣業 (45~48)</option>
                                                     <option value="3">3:服務業 (49~56/58~63/69~76/77~82/86~88/90~93/94~96)</option>
@@ -66,6 +67,7 @@
                                             <td><span>產業週期</span></td>
                                             <td>
                                                 <select v-model="formData.businessCycleCode" class="table-input sk-input form-control">
+                                                    <option value="">請選擇</option>
                                                     <option value="A">A (01~03)</option>
                                                     <option value="B">B (05~06)</option>
                                                     <option value="C">C (08~34)</option>
@@ -91,12 +93,16 @@
                                             <td><input class="sk-input form-control" type="text" v-model="formData.compName"></td>
                                         </tr>
                                         <tr>
+                                            <td><span>公司所在地</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compRegAddress"></td>
+                                        </tr>
+                                        <tr>
                                             <td><span>統一編號</span></td>
                                             <td><input class="sk-input form-control" type="text" v-model="formData.compId"></td>
                                         </tr>
                                         <tr>
                                             <td><span>戳章日期</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.stampDate"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compDate"></td>
                                         </tr>
                                         <tr>
                                             <td><span>負責人姓名</span></td>
@@ -106,6 +112,7 @@
                                             <td><span>組織類型</span></td>
                                             <td>
                                                 <select v-model="formData.organizationType" class="table-input sk-input form-control">
+                                                    <option value="">請選擇</option>
                                                     <option value="A">A:獨資</option>
                                                     <option value="B">B:合夥</option>
                                                     <option value="C">C:有限公司</option>
@@ -115,13 +122,13 @@
                                         </tr>
                                         <tr>
                                             <td><span>核准設立日期</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.compSetDate"
-                                                placeholder="格式:YYYMMDD"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.compSetDate"></td>
                                         </tr>
                                         <tr>
                                             <td><span>依法核准情形</span></td>
                                             <td>
                                                 <select v-model="formData.registerType" class="table-input sk-input form-control">
+                                                    <option value="">請選擇</option>
                                                     <option value="A">A:有公司登記與商業登記</option>
                                                     <option value="B">B:取得主管機關核發之營業證照</option>
                                                 </select>
@@ -131,6 +138,7 @@
                                             <td><span>是否公開發行</span></td>
                                             <td>
                                                 <select v-model="formData.isPublic" class="table-input sk-input form-control">
+                                                    <option value="">請選擇</option>
                                                     <option value="1">1:是</option>
                                                     <option value="0">0:否</option>
                                                 </select>
@@ -142,8 +150,7 @@
                                         </tr>
                                         <tr>
                                             <td><span>實收資本額最後變異日期</span></td>
-                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastPaidInCapitalDate"
-                                                placeholder="格式:YYYMMDD"></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.lastPaidInCapitalDate"></td>
                                         </tr>
                                         <tr>
                                             <td><span>營業登記地址</span></td>
@@ -153,6 +160,7 @@
                                             <td><span>是否有法人投資</span></td>
                                             <td>
                                                 <select v-model="formData.hasJuridicalInvest" class="table-input sk-input form-control">
+                                                    <option value="">請選擇</option>
                                                     <option value="1">1:是</option>
                                                     <option value="0">0:否</option>
                                                 </select>
@@ -167,6 +175,7 @@
                                             <td><span>營業稅申報方式</span></td>
                                             <td>
                                                 <select v-model="formData.bizTaxFileWay" class="table-input sk-input form-control">
+                                                    <option value="">請選擇</option>
                                                     <option value="A">A:使用統一發票</option>
                                                     <option value="B">B:免用統一發票核定繳納營業稅</option>
                                                     <option value="C">C:未達課稅起徵點</option>
@@ -182,11 +191,23 @@
                                             <td><span>是否屬於製造業、營造業或礦業或土石採集業</span></td>
                                             <td>
                                                 <select v-model="formData.isManufacturing" class="table-input sk-input form-control">
+                                                    <option value="">請選擇</option>
                                                     <option value="1">1:是</option>
                                                     <option value="0">0:否</option>
                                                 </select>
                                             </td>
                                         </tr>
+                                        <?php for ($i = ord('A'); $i <= ord('G'); $i++)
+                                        { ?>
+                                            <tr>
+                                                <td><span>董監事<?= chr($i); ?>姓名</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.director<?= chr($i); ?>Name"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>董監事<?= chr($i); ?>統編</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.director<?= chr($i); ?>Id"></td>
+                                            </tr>
+                                        <?php } ?>
                                         <tr>
                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
                                         </tr>
@@ -201,6 +222,7 @@
                                         <td><span>產業別</span></td>
                                         <td>
                                             <select v-model="formData.businessTypeCode" class="table-input sk-input form-control">
+                                                <option value="">請選擇</option>
                                                 <option value="1">1:製造業 (08~34)</option>
                                                 <option value="2">2:買賣業 (45~48)</option>
                                                 <option value="3">3:服務業 (49~56/58~63/69~76/77~82/86~88/90~93/94~96)</option>
@@ -211,6 +233,7 @@
                                         <td><span>產業週期</span></td>
                                         <td>
                                             <select v-model="formData.businessCycleCode" class="table-input sk-input form-control">
+                                                <option value="">請選擇</option>
                                                 <option value="A">A (01~03)</option>
                                                 <option value="B">B (05~06)</option>
                                                 <option value="C">C (08~34)</option>
@@ -236,12 +259,16 @@
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compName"></td>
                                     </tr>
                                     <tr>
+                                        <td><span>公司所在地</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compRegAddress"></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>統一編號</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.compId"></td>
                                     </tr>
                                     <tr>
                                         <td><span>戳章日期</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.stampDate"></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compDate"></td>
                                     </tr>
                                     <tr>
                                         <td><span>負責人姓名</span></td>
@@ -251,6 +278,7 @@
                                         <td><span>組織類型</span></td>
                                         <td>
                                             <select v-model="formData.organizationType" class="table-input sk-input form-control">
+                                                <option value="">請選擇</option>
                                                 <option value="A">A:獨資</option>
                                                 <option value="B">B:合夥</option>
                                                 <option value="C">C:有限公司</option>
@@ -260,13 +288,13 @@
                                     </tr>
                                     <tr>
                                         <td><span>核准設立日期</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.compSetDate"
-                                                   placeholder="格式:YYYMMDD"></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.compSetDate"></td>
                                     </tr>
                                     <tr>
                                         <td><span>依法核准情形</span></td>
                                         <td>
                                             <select v-model="formData.registerType" class="table-input sk-input form-control">
+                                                <option value="">請選擇</option>
                                                 <option value="A">A:有公司登記與商業登記</option>
                                                 <option value="B">B:取得主管機關核發之營業證照</option>
                                             </select>
@@ -276,6 +304,7 @@
                                         <td><span>是否公開發行</span></td>
                                         <td>
                                             <select v-model="formData.isPublic" class="table-input sk-input form-control">
+                                                <option value="">請選擇</option>
                                                 <option value="1">1:是</option>
                                                 <option value="0">0:否</option>
                                             </select>
@@ -287,8 +316,7 @@
                                     </tr>
                                     <tr>
                                         <td><span>實收資本額最後變異日期</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastPaidInCapitalDate"
-                                                   placeholder="格式:YYYMMDD"></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.lastPaidInCapitalDate"></td>
                                     </tr>
                                     <tr>
                                         <td><span>營業登記地址</span></td>
@@ -298,6 +326,7 @@
                                         <td><span>是否有法人投資</span></td>
                                         <td>
                                             <select v-model="formData.hasJuridicalInvest" class="table-input sk-input form-control">
+                                                <option value="">請選擇</option>
                                                 <option value="1">1:是</option>
                                                 <option value="0">0:否</option>
                                             </select>
@@ -312,6 +341,7 @@
                                         <td><span>營業稅申報方式</span></td>
                                         <td>
                                             <select v-model="formData.bizTaxFileWay" class="table-input sk-input form-control">
+                                                <option value="">請選擇</option>
                                                 <option value="A">A:使用統一發票</option>
                                                 <option value="B">B:免用統一發票核定繳納營業稅</option>
                                                 <option value="C">C:未達課稅起徵點</option>
@@ -327,11 +357,23 @@
                                         <td><span>是否屬於製造業、營造業或礦業或土石採集業</span></td>
                                         <td>
                                             <select v-model="formData.isManufacturing" class="table-input sk-input form-control">
+                                                <option value="">請選擇</option>
                                                 <option value="1">1:是</option>
                                                 <option value="0">0:否</option>
                                             </select>
                                         </td>
                                     </tr>
+                                    <?php for ($i = ord('A'); $i <= ord('G'); $i++)
+                                    { ?>
+                                        <tr>
+                                            <td><span>董監事<?= chr($i); ?>姓名</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.director<?= chr($i); ?>Name"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>董監事<?= chr($i); ?>統編</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.director<?= chr($i); ?>Id"></td>
+                                        </tr>
+                                    <?php } ?>
                                     <tr>
                                         <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
                                     </tr>
@@ -401,20 +443,20 @@
                                     <label>事業變更登記表</label><br>
                                     <div class="row" style="width: 100%">
                                         <div class="col-lg-3">
-                                            <? isset($content['governmentauthorities_image']) && !is_array($content['governmentauthorities_image']) ? $content['governmentauthorities_image'] = array($content['governmentauthorities_image']) : '';
+                                            <?php isset($content['governmentauthorities_image']) && !is_array($content['governmentauthorities_image']) ? $content['governmentauthorities_image'] = array($content['governmentauthorities_image']) : '';
                                             if(!empty($content['governmentauthorities_image'])){
                                                 foreach ($content['governmentauthorities_image'] as $key => $value) { ?>
-                                                    <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                        <img src="<?= $value ? $value : "" ?>" style='width:100%;'>
+                                                    <a href="<?= $value ?? "" ?>" data-fancybox="images">
+                                                        <img src="<?= $value ?: "" ?>" style='width:100%;'>
                                                     </a>
-                                                <? }
+                                                <?php }
                                             }?>
                                         </div>
                                         <div class="col-lg-9">
                                             <label>商業司資料</label>
                                             <table class="table table-striped table-bordered table-hover dataTable">
                                                 <tbody>
-                                                <?
+                                                <?php
                                                     foreach (($content['scraper']['DepartmentOfCommerce']['firstPageCompanyInfo'] ?? []) as $key => $value)
                                                     {
                                                         if(is_array($value))
@@ -423,7 +465,7 @@
                                                         <tr>
                                                             <td><?=$key?></td><td><?=$value?></td>
                                                         </tr>
-                                                <?
+                                                <?php
                                                     }
                                                 ?>
                                                 </tbody>
@@ -431,7 +473,7 @@
                                             <label class="mt-3">董監事持股狀況</label>
                                             <table class="table table-striped table-bordered table-hover dataTable">
                                                 <tbody>
-                                                <?
+                                                <?php
                                                 foreach (($content['scraper']['DepartmentOfCommerce']['firstPageDirectorInfo'] ?? []) as $key => $value)
                                                 {
                                                 ?>
@@ -444,13 +486,13 @@
                                                     <tr>
                                                         <td>持有股份數(股)</td><td><?=$value['持有股份數(股)']?></td>
                                                     </tr>
-                                                    <?
+                                                    <?php
                                                 }
                                                 ?>
                                                 </tbody>
                                             </table>
                                             <label class="mt-3">財政部登記資訊</label>
-                                            <? if(isset($content['scraper']['MinistryOfFinance'])) { ?>
+                                            <?php if(isset($content['scraper']['MinistryOfFinance'])) { ?>
                                             <table class="table table-striped table-bordered table-hover dataTable">
                                                 <tbody>
                                                     <tr><td>營業人統一編號</td><td><?=$content['scraper']['MinistryOfFinance']['businessId'] ?? ''?></td></tr>
@@ -464,7 +506,7 @@
                                                     <tr><td>是否使用發票</td><td><?=$content['scraper']['MinistryOfFinance']['useOfUniformInvoice'] ?? ''?></td></tr>
                                                 </tbody>
                                             </table>
-                                            <? } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -497,9 +539,12 @@
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
+                    businessTypeCode: '',
+                    businessCycleCode: '',
                     compName: '',
+                    compRegAddress: '',
                     compId: '',
-                    stampDate: '',
+                    compDate: '',
                     prName: '',
                     organizationType: '',
                     compSetDate: '',
@@ -513,8 +558,20 @@
                     bizTaxFileWay: '',
                     businessType: '',
                     isManufacturing: '',
-                    tab2Input: '',
-                    tab3Input: '',
+                    directorAName: '',
+                    directorAId: '',
+                    directorBName: '',
+                    directorBId: '',
+                    directorCName: '',
+                    directorCId: '',
+                    directorDName: '',
+                    directorDId: '',
+                    directorEName: '',
+                    directorEId: '',
+                    directorFName: '',
+                    directorFId: '',
+                    directorGName: '',
+                    directorGId: '',
                 }
             }
         },

@@ -5084,7 +5084,7 @@ define({
         {
             "type": "post",
             "url": "/V2/post/certification/governmentauthorities",
-            "title": "認證 事業變更登記表(法人)",
+            "title": "認證 設立(變更)事項登記表(法人)",
             "version": "0.2.0",
             "name": "PostCertificationGovernmentAuthorities",
             "group": "Certification",
@@ -5109,7 +5109,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "governmentauthorities_image",
-                            "description": "<p>事業變更登記表 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                            "description": "<p>設立(變更)事項登記表 ( 圖片IDs 以逗號隔開，最多15個)</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
@@ -5126,7 +5126,7 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "stampDate",
+                            "field": "compDate",
                             "description": "<p>戳章日期</p>"
                         }, {
                             "group": "Parameter",
@@ -5134,6 +5134,90 @@ define({
                             "optional": true,
                             "field": "prName",
                             "description": "<p>負責人姓名</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorAName",
+                            "description": "<p>董監事A姓名</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorAId",
+                            "description": "<p>董監事A統編</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorBName",
+                            "description": "<p>董監事B姓名</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorBId",
+                            "description": "<p>董監事B統編</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorCName",
+                            "description": "<p>董監事C姓名</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorCId",
+                            "description": "<p>董監事C統編</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorDName",
+                            "description": "<p>董監事D姓名</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorDId",
+                            "description": "<p>董監事D統編</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorEName",
+                            "description": "<p>董監事E姓名</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorEId",
+                            "description": "<p>董監事E統編</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorFName",
+                            "description": "<p>董監事F姓名</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorFId",
+                            "description": "<p>董監事F統編</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorGName",
+                            "description": "<p>董監事G姓名</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "directorGId",
+                            "description": "<p>董監事G統編</p>"
                         },
                     ]
                 }

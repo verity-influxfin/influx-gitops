@@ -1425,32 +1425,37 @@ class Certification extends MY_Admin_Controller {
 					$this->log_image_model->insertGroupById($image_id_array,['group_info'=>$group_id]);
 					$certification_content = json_decode($this->user_certification_model->get($post['user_certification_id'])->content,true);
                     // TODO: 暫時寫死
-                    if($post['certification_id'] == 12){
-                        $image_name = 'person_mq_image';
-                    }
-                    if($post['certification_id'] == 1003){
-                        $image_name = 'legal_person_mq_image';
-                    }
-                    if($post['certification_id'] == 9){
-                        $image_name = 'postal_image';
-                    }
-                    if($post['certification_id'] == CERTIFICATION_PROFILEJUDICIAL){
-                        $image_name = 'others_image';
-                    }
-                    if($post['certification_id'] == 501){
-                        $image_name = 'labor_image';
-                    }
-                    if ($post['certification_id'] == 500)
+                    switch ($post['certification_id'])
                     {
-                        $image_name = 'passbook_image';
-                    }
-                    if ($post['certification_id'] == 1004)
-                    {
-                        $image_name = 'passbook_image';
-                    }
-                    if ($post['certification_id'] == CERTIFICATION_BUSINESSTAX)
-                    {
-                        $image_name = $post['image_key'] ?? 'others_image';
+                        case CERTIFICATION_INVESTIGATION:
+                            $image_name = 'postal_image';
+                            break;
+                        case CERTIFICATION_INVESTIGATIONA11:
+                            $image_name = 'person_mq_image';
+                            break;
+                        case CERTIFICATION_BUSINESSTAX:
+                            $image_name = $post['image_key'] ?? 'others_image';
+                            break;
+                        case CERTIFICATION_SIMPLIFICATIONFINANCIAL:
+                            $image_name = 'passbook_image';
+                            break;
+                        case CERTIFICATION_SIMPLIFICATIONJOB:
+                            $image_name = 'labor_image';
+                            break;
+                        case CERTIFICATION_INVESTIGATIONJUDICIAL:
+                            $image_name = 'legal_person_mq_image';
+                            break;
+                        case CERTIFICATION_PASSBOOKCASHFLOW:
+                            $image_name = 'passbook_image';
+                            break;
+                        case CERTIFICATION_GOVERNMENTAUTHORITIES:
+                            $image_name = 'governmentauthorities_image';
+                            break;
+                        case CERTIFICATION_PROFILEJUDICIAL:
+                            $image_name = 'others_image';
+                            break;
+                        default:
+                            $image_name = 'backend_upload';
                     }
 
                     if(isset($certification_content[$image_name])){
