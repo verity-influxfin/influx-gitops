@@ -84,7 +84,7 @@ class Certification_factory
             return NULL;
         }
 
-        if ($certification['certification_id'] == CERTIFICATION_EMAIL)
+        if (in_array($certification['certification_id'], [CERTIFICATION_EMAIL, CERTIFICATION_COMPANYEMAIL]))
         { // 當徵信項為「常用電子信箱」時 result 預設為待驗證
             $certification_result = CertificationResultFactory::getInstance($certification['certification_id'], CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
         }
