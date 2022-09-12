@@ -287,6 +287,7 @@ class Cert_governmentauthorities extends Certification_base
     public function post_success($sys_check): bool
     {
         $this->CI->load->helper('user_certification');
+        $this->CI->load->library('scraper/judicial_yuan_lib');
         $domicile = get_domicile($this->content['compRegAddress']);
         if ($domicile != '')
         {
