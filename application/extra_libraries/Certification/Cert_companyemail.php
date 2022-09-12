@@ -110,6 +110,15 @@ class Cert_companyemail extends Certification_base
      */
     public function post_success($sys_check): bool
     {
+        $email = $this->content['email'] ?? '';
+        $data = [
+            'company_email' => $email,
+        ];
+        $rs = $this->CI->certification_lib->user_meta_progress($data, $this->certification);
+        if ($rs)
+        {
+            $this->CI->user_model->update($this->certification['user_id'], ['email' => $email]);
+        }
         return $this->CI->certification_lib->fail_other_cer($this->certification);
     }
 

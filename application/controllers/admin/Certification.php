@@ -225,7 +225,7 @@ class Certification extends MY_Admin_Controller {
                 }
                 elseif ($info->certification_id == CERTIFICATION_BUSINESSTAX)
                 {
-                    $years = ['lastOneYearInvoiceImage' => '近一年', 'lastTwoYearInvoiceImage' => '近二年', 'lastThreeYearInvoiceImage' => '近三年', 'lastFourYearInvoiceImage' => '近四年'];
+                    $years = ['LastOneYearInvoiceImage' => '近一年', 'LastTwoYearInvoiceImage' => '近二年', 'LastThreeYearInvoiceImage' => '近三年', 'LastFourYearInvoiceImage' => '近四年'];
                     $months = ['M1M2', 'M3M4', 'M5M6', 'M7M8', 'M9M10', 'M11M12'];
                     foreach ($years as $year_key => $year_val)
                     {
