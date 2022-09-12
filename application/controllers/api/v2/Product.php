@@ -4115,7 +4115,6 @@ class Product extends REST_Controller {
 
         $target = $this->target_model->get_by([
             'id' => $input['target_id'],
-            'user_id' => $this->user_info->id
         ]);
         if (empty($target))
         {
