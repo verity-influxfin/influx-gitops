@@ -132,7 +132,7 @@ class Sms_lib {
 		return $this->send('target_invitation', $userId, $phone, $content);
 	}
 
-	// 普匯微企e秒貸
+	// 普匯信保專案融資
 	public function notify_target_product_1002_associates($userId, $phone, $username, $subProduct, $character)
 	{
 		if (!$userId || !$phone || !$username) {

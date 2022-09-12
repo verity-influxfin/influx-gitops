@@ -2733,9 +2733,18 @@ class Product extends REST_Controller {
             $productName = "孵化基金";
         } elseif ($target->sub_product_id == 5) {
             $productName = "驗資基金";
-        } elseif ($target->product_id == 1002) {
-            // 普匯微企e秒貸
-            $productName = '普匯微企e秒貸';
+        }
+        elseif ($target->product_id == PRODUCT_SK_MILLION_SMEG)
+        {
+            switch ($target->sub_product_id)
+            {
+                case SUB_PRODUCT_ID_SK_MILLION:
+                    $productName = '普匯微企e秒貸';
+                    break;
+                default:
+                    $productName = '普匯信保專案融資';
+                    break;
+            }
         }
 
         $is = $character == 1 ? '借款立約人' : '保證人';

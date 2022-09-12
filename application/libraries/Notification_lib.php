@@ -878,7 +878,7 @@ econtent;
 
 	public function notify_target_product_1002_associates($mail, $username, $subProduct, $character){
 
-		$title = "【普匯信保專案融資】新增 「負責人配偶/保證人」";
+		$title = "【{$subProduct}】新增 「負責人配偶/保證人」";
 		$content = "「{$username}」公司已申請加入您作為「負責人配偶/保證人」
 請下載「普匯 influx」APP，並完成以下流程：
 1.註冊「一般使用者」並登入帳號
