@@ -256,14 +256,16 @@ Vue.component('scraper-status', {
                 business_registration_html
             ])
             t2.draw()
+            console.log(statusResponse.judicial_yuan_status)
             if (
-                statusResponse.judicial_yuan_status != 'finished' ||
-                statusResponse.judicial_yuan_status != 'failure' ||
-                statusResponse.judicial_yuan_status != 'requested' ||
+                statusResponse.judicial_yuan_status != 'finished' &&
+                statusResponse.judicial_yuan_status != 'failure' &&
+                statusResponse.judicial_yuan_status != 'requested' &&
                 statusResponse.judicial_yuan_status != 'started'
             ) {
                 this.judicial_yuan_fail = true
             } else {
+                console.log(statusResponse.judicial_yuan_status)
                 this.judicial_yuan_fail = false
             }
         },
