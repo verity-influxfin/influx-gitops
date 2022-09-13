@@ -2256,13 +2256,33 @@ class Target_lib
         return $stage_cer;
     }
 
-    public function get_associates($user_id){
+    /**
+     * @param $user_id : 使用者id
+     * @param array $status : 案件保證人狀態
+     * @return mixed
+     */
+    public function get_associates($user_id, array $status = [ASSOCIATES_STATUS_WAITTING_APPROVE, ASSOCIATES_STATUS_APPROVED])
+    {
         $this->CI->load->model('loan/target_associate_model');
         $params = [
             "user_id" => $user_id,
-            "status" => [0, 1],
+            "status" => $status,
         ];
         return $this->CI->target_associate_model->get_many_by($params);
+    }
+
+    /**
+     * 檢查是否為企金案件的保證人
+     * @param $user_id : 使用者id
+     * @return bool
+     */
+    public function is_associate($user_id): bool
+    {
+        return empty($this->get_associates($user_id, [
+            ASSOCIATES_STATUS_WAITTING_APPROVE,
+            ASSOCIATES_STATUS_APPROVED,
+            ASSOCIATES_STATUS_CERTIFICATION_CHECKED
+        ]));
     }
 
     public function get_associates_target_list($user_id, $target_id = false ,$self = false, $status = [TARGET_WAITING_APPROVE, TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_BANK_VERIFY, TARGET_BANK_GUARANTEE]){
@@ -2872,5 +2892,20 @@ class Target_lib
             default:
                 return '負責人配偶/保證人';
         }
+    }
+
+    /**
+     * 確認是否有待核可案件已一鍵送出
+     * @param $user_id
+     * @return bool
+     */
+    public function exist_approving_target_submitted($user_id): bool
+    {
+        $this->CI->load->model('loan/target_model');
+        return $this->CI->target_model->chk_exist_by_status([
+            'user_id' => $user_id,
+            'status' => TARGET_WAITING_APPROVE,
+            'certificate_status' => [TARGET_CERTIFICATE_SUBMITTED, TARGET_CERTIFICATE_RE_SUBMITTING]
+        ]);
     }
 }

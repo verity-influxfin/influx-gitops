@@ -182,11 +182,10 @@ class Product extends REST_Controller {
 
         if(!empty($cproduct_list)){
             $this->load->helper('target');
-            $this->load->helper('user_certification');
             $this->load->helper('product');
             if (isset($this->user_info->id))
             {
-                $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
+                $exist_target_submitted = $this->target_lib->exist_approving_target_submitted($this->user_info->id);
             }
             else
             {
@@ -247,7 +246,7 @@ class Product extends REST_Controller {
                 if (!empty($certification_list)) {
                     $this->load->library('loanmanager/product_lib');
                     foreach ($certification_list as $k => $v) {
-                        $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
+                        $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
                             USER_BORROWER,
                             is_judicial_product($value['id'])
                         );
@@ -371,7 +370,7 @@ class Product extends REST_Controller {
                                             if (!empty($certification_list)) {
                                                 $certification = [];
                                                 foreach ($certification_list as $k => $v) {
-                                                    $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
+                                                    $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
                                                         USER_BORROWER,
                                                         is_judicial_product($t3['id'])
                                                     );
@@ -1522,7 +1521,6 @@ class Product extends REST_Controller {
             }
             if(!empty($certification_list)){
                 $this->load->helper('target');
-                $this->load->helper('user_certification');
                 $this->load->helper('product');
                 $exist_target_submitted = chk_target_submitted($target->status, $target->certificate_status ?? 0);
 
@@ -1567,7 +1565,7 @@ class Product extends REST_Controller {
                     if (in_array($key, $product_certs) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL)
                     {
                         $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target);
-                        $truly_failed = certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
+                        $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
                             USER_BORROWER,
                             is_judicial_product($target->product_id)
                         );
