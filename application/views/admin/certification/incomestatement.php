@@ -520,7 +520,16 @@
                     lastOneYearVariableCost:'',
                     lastTwoYearVariableCost:'',
                     lastThreeYearVariableCost:'',
-                    tab3Input:''
+                    tab3Input:'',
+                    AnnualIncome1: '',
+                    AnnualIncome2: '',
+                    AnnualIncome3: '',
+                    AnnualIncomeYear1: '',
+                    AnnualIncomeYear2: '',
+                    AnnualIncomeYear3: '',
+                    IndustryCode1: '',
+                    IndustryCode2: '',
+                    IndustryCode3: '',
                 }
             }
         },
@@ -551,7 +560,6 @@
                     }
                 }).then(({ data }) => {
                     mergeDeep(this.formData, data.response)
-                    console.log(this.formData);
                 })
             }
         },
