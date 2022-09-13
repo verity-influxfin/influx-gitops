@@ -101,6 +101,9 @@ $config['permission'] = [
             'obligations_detail' => ['model' => 'Transfer', 'submodel' => 'obligations', 'action' => 'read'],
             'waiting_transfer_detail' => ['model' => 'Transfer', 'submodel' => 'waiting_transfer', 'action' => 'read'],
             'waiting_transfer_success_detail' => ['model' => 'Transfer', 'submodel' => 'waiting_transfer_success', 'action' => 'read'],
+            'meta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'get_meta_info' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
+            'save_meta_info' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
         ],
     ],
     'Transfer' => [
