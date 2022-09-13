@@ -2853,4 +2853,24 @@ class Target_lib
         }
         return $pay_off_date;
     }
+
+    /**
+     * @param int $character : 角色 (對應常數 ASSOCIATES_CHARACTER_*)
+     * @return string
+     */
+    public function get_product_1002_character_meaning(int $character): string
+    {
+        switch ($character)
+        {
+            case ASSOCIATES_CHARACTER_REAL_OWNER:
+                return '負責人實際負責人';
+            case ASSOCIATES_CHARACTER_SPOUSE:
+                return '配偶';
+            case ASSOCIATES_CHARACTER_GUARANTOR_A:
+            case ASSOCIATES_CHARACTER_GUARANTOR_B:
+                return '負責人保證人';
+            default:
+                return '負責人配偶/保證人';
+        }
+    }
 }

@@ -2754,9 +2754,9 @@ class Product extends REST_Controller {
             $this->sms_lib->notify_target_product_1002_associates(
                 $this->user_info->id,
                 $this->user_info->phone,
-                $this->user_info->name,
+                $naturalPerson->name,
                 $productName,
-                $is
+                $character
             );
         } else {
             $this->sms_lib->notify_target_associates(
@@ -2774,9 +2774,9 @@ class Product extends REST_Controller {
                 // 普匯微企e秒貸
                 $this->notification_lib->notify_target_product_1002_associates(
                     $input['mail'],
-                    $this->user_info->name,
+                    $naturalPerson->name,
                     $productName,
-                    $is
+                    $character
                 );
             }
             else{
