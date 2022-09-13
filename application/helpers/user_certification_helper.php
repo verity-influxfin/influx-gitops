@@ -10,3 +10,12 @@ function get_domicile($address)
     }
     return $domicile;
 }
+
+function is_judicial_certification(int $certification_id): bool
+{
+    if ($certification_id < CERTIFICATION_FOR_JUDICIAL)
+    {
+        return FALSE;
+    }
+    return TRUE;
+}

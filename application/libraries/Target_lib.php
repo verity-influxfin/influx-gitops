@@ -2237,7 +2237,8 @@ class Target_lib
             'status' => $sub_product['status'],
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,
             'available_company_categories' => $sub_product['available_company_categories'] ?? null,
-            'default_reason' => $sub_product['default_reason'] ?? ''
+            'default_reason' => $sub_product['default_reason'] ?? '',
+            'check_associates_certs' => $sub_product['check_associates_certs'] ?? FALSE
         );
     }
 
@@ -2451,7 +2452,6 @@ class Target_lib
                         'status' => intval($value->status),
                         'guarantor' => ($value->guarantor == 1),
                         'self' => $self,
-                        'certification' => $certification,
                         'relationship' => $value->relationship ?? NULL,
                         'email' => $email
                     ];

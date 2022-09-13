@@ -1508,20 +1508,23 @@ class Product extends REST_Controller {
                     ];
                 }
             }
-            $skip_certification_ids = [];
-            if ( ! empty($target))
+            if ($company_status)
             {
-                $this->load->model('loan/target_meta_model');
-                $target_meta = $this->target_meta_model->as_array()->get_by([
-                    'target_id' => $target->id,
-                    'meta_key' => 'skip_certification_ids'
-                ]);
-                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
-                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
+                $this->load->library('Judicialperson_lib');
+                $naturalPerson = $this->judicialperson_lib->getNaturalPerson($user_id);
+
+                $skip_certification_ids_judicial = $this->certification_lib->get_skip_certification_ids($target, $user_id);
+                $skip_certification_ids_natural = $this->certification_lib->get_skip_certification_ids($target, $naturalPerson->id);
             }
+            else
+            {
+                $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target, $user_id);
+            }
+
             if(!empty($certification_list)){
                 $this->load->helper('target');
                 $this->load->helper('product');
+                $this->load->helper('user_certification');
                 $exist_target_submitted = chk_target_submitted($target->status, $target->certificate_status ?? 0);
 
                 foreach($certification_list as $key => $value){
@@ -1564,11 +1567,22 @@ class Product extends REST_Controller {
 
                     if (in_array($key, $product_certs) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL)
                     {
-                        $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target);
                         $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
                             USER_BORROWER,
                             is_judicial_product($target->product_id)
                         );
+
+                        if ($company_status)
+                        {
+                            if (is_judicial_certification($value['id']))
+                            {
+                                $skip_certification_ids = $skip_certification_ids_judicial;
+                            }
+                            else
+                            {
+                                $skip_certification_ids = $skip_certification_ids_natural;
+                            }
+                        }
 
                         if (in_array($key, $skip_certification_ids))
                         {
@@ -4131,25 +4145,37 @@ class Product extends REST_Controller {
             $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '欲略過的徵信資料編號有誤']);
         }
 
-        $this->load->model('loan/target_meta_model');
-        $rs = $this->target_meta_model->get_by([
-            'target_id' => $target->id,
-            'meta_key' => 'skip_certification_ids'
-        ]);
-
-        if (isset($rs))
+        if ($product['check_associates_certs'] ?? FALSE)
         {
-            $is_succeed = $this->target_meta_model->update($rs->id, [
-                'meta_value' => json_encode($skip_cert_ids),
-            ]);
+            $this->load->helper('user_certification');
+            $skip_cert_ids_judicial = [];
+            $skip_cert_ids_natural = [];
+            foreach ($skip_cert_ids as $value)
+            {
+                if (is_judicial_certification($value))
+                {
+                    $skip_cert_ids_judicial[] = $value;
+                }
+                else
+                {
+                    $skip_cert_ids_natural[] = $value;
+                }
+            }
+
+            if ($this->user_info->id == $target->user_id)
+            {
+                $is_succeed_j = $this->update_skip_cert($target->id, $this->user_info->id, $skip_cert_ids_judicial);
+                $is_succeed_n = $this->update_skip_cert($target->id, $this->user_info->naturalPerson->id, $skip_cert_ids_natural);
+                $is_succeed = $is_succeed_j && $is_succeed_n;
+            }
+            else
+            {
+                $is_succeed = $this->update_skip_cert($target->id, $this->user_info->id, $skip_cert_ids_natural);
+            }
         }
         else
-        {
-            $is_succeed = $this->target_meta_model->insert([
-                'target_id' => $target->id,
-                'meta_key' => 'skip_certification_ids',
-                'meta_value' => json_encode($skip_cert_ids),
-            ]);
+        { // default
+            $is_succeed = $this->update_skip_cert($target->id, 0, $skip_cert_ids);
         }
 
         if ($is_succeed)
@@ -4160,5 +4186,42 @@ class Product extends REST_Controller {
         {
             $this->response(['result' => 'ERROR', 'error' => EXIT_DATABASE]);
         }
+    }
+
+    private function update_skip_cert($target_id, $user_id, $skip_cert_ids)
+    {
+        if (empty($skip_cert_ids))
+        {
+            return TRUE;
+        }
+
+        $param = [
+            'target_id' => $target_id,
+            'meta_key' => 'skip_certification_ids',
+            'user_id' => $user_id
+        ];
+
+        $this->load->model('loan/target_meta_model');
+        $rs = $this->target_meta_model->get_by($param);
+        if (isset($rs))
+        {
+            $tmp_meta_value = $rs->meta_value ?? '';
+            $tmp_meta_value = json_decode($tmp_meta_value, TRUE);
+            $skip_cert_ids = array_unique(array_merge($tmp_meta_value, $skip_cert_ids));
+            $is_succeed = $this->target_meta_model->update($rs->id, [
+                'meta_value' => json_encode($skip_cert_ids),
+            ]);
+        }
+        else
+        {
+            $is_succeed = $this->target_meta_model->insert([
+                'target_id' => $target_id,
+                'meta_key' => 'skip_certification_ids',
+                'meta_value' => json_encode($skip_cert_ids),
+                'user_id' => $user_id
+            ]);
+        }
+
+        return $is_succeed;
     }
 }

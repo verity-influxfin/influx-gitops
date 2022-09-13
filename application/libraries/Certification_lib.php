@@ -3701,7 +3701,7 @@ class Certification_lib{
         return $certs_content;
     }
 
-    public function get_skip_certification_ids($target)
+    public function get_skip_certification_ids($target, $user_id = 0)
     {
         $skip_certification_ids = [];
         if ( ! empty($target))
@@ -3709,7 +3709,8 @@ class Certification_lib{
             $this->CI->load->model('loan/target_meta_model');
             $target_meta = $this->CI->target_meta_model->as_array()->get_by([
                 'target_id' => $target->id,
-                'meta_key' => 'skip_certification_ids'
+                'meta_key' => 'skip_certification_ids',
+                'user_id' => $user_id
             ]);
             $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
             $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
