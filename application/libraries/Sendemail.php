@@ -168,7 +168,7 @@ class Sendemail
 	}
 
 
-	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail="",$investor_status="",$estatment_filename="estatement.pdf",$estatement_detail_filename="estatement_detail.pdf"){
+	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail="",$investor_status="",$estatment_filename="e-statement.pdf",$estatement_detail_filename="e-statement_detail.pdf"){
 		if($email){
 		    $mail_event = $this->CI->config->item('mail_event');
 		    $type = $investor_status==1?'i':'b';
