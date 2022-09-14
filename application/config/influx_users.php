@@ -22,8 +22,6 @@ $config['influx_user_list'] = [
         'user_id' => 53468],
     [ // Katia
         'user_id' => 56168],
-    [ // Wayne
-        'user_id' => 61858],
     [ // Joanne
         'user_id' => 70661],
     [ // Allan
@@ -32,18 +30,20 @@ $config['influx_user_list'] = [
         'user_id' => 76574],
     [ // 李奕伽
         'user_id' => 83929],
-    [ // 劉政國
-        'user_id' => 83529],
-    [ // 汪芸瑄
-        'user_id' => 83848],
     [ // 黃偉銘John
         'user_id' => 84644],
     [ // 許良
         'user_id' => 85279],
-    [ // Darren
-        'user_id' => 88272],
     [ // 子倩
         'user_id' => 90053],
-    [ // 寶儀
-        'user_id' => 43224],
+    [ // Wawa
+        'user_id' => 91424],
+    [ // Rebecca
+        'user_id' => 88429],
+    [ // 堅孟
+        'user_id' => 91434],
+    [ // Howard
+        'user_id' => 90323],
+    [ // James
+        'user_id' => 91755],
 ];

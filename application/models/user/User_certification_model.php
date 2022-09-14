@@ -274,4 +274,20 @@ class User_certification_model extends MY_Model
             ->get()
             ->result_array();
     }
+
+    public function get_ids($ids, $user_id, $certification_ids)
+    {
+        if (empty($certification_ids))
+        {
+            return [];
+        }
+        $result_arr = $this->db->select('id')
+            ->from('p2p_user.user_certification')
+            ->where('user_id', $user_id)
+            ->where_in('id', $ids)
+            ->where_in('certification_id', $certification_ids)
+            ->get()
+            ->result_array();
+        return array_column($result_arr, 'id');
+    }
 }
