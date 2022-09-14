@@ -71,22 +71,9 @@ class Cert_investigation extends Cert_pdf
         }
         else if (is_pdf($mime))
         {
-            if ( ! isset($parsed_content['pdf_fraud_detect']))
+            if ( ! $this->verify_fraud_pdf($parsed_content, $url))
             {
-                // Check if PDF edited.
-                $this->load->helper('user_certification');
-                $fraud_result = verify_fraud_pdf($url);
-                $cert_status = $fraud_result[0];
-                if ($cert_status != CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
-                {
-                    $parsed_content['pdf_fraud_detect'] = [];
-                    $parsed_content['pdf_fraud_detect']['pass'] = FALSE;
-                    $parsed_content['pdf_fraud_detect']['certification_status'] = $cert_status;
-                    $parsed_content['pdf_fraud_detect']['details'] = $fraud_result[1];
-                    $this->additional_data['pdf_fraud_reject'] = ($cert_status == CERTIFICATION_STATUS_FAILED);
-                    $this->additional_data['pdf_fraud_details'] = $fraud_result[1];
-                    return $parsed_content;
-                }
+                return $parsed_content;
             }
             $parsed_content = array_merge(
                 $parsed_content,
@@ -164,19 +151,7 @@ class Cert_investigation extends Cert_pdf
     {
         if ($this->_chk_ocr_status($content) === FALSE)
         {
-            if (isset($content['pdf_fraud_detect']) && $content['pdf_fraud_detect']['pass'] === FALSE)
-            {
-                $fraud_detect_status = $content['pdf_fraud_detect']['certification_status'];
-                $details = json_encode($content['pdf_fraud_detect']['details']);
-                $this->result->setStatus($fraud_detect_status);
-                if ($fraud_detect_status == CERTIFICATION_STATUS_FAILED)
-                {
-                    $this->result->addMessage("聯徵PDF已被竄改過，細節：{$details}", CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
-                }
-                else // CERTIFICATION_STATUS_PENDING_TO_REVIEW
-                {
-                    $this->result->addMessage("聯徵PDF疑似被竄改過，需人工驗證，細節：{$details}", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                }
+            if ( ! $this->check_pdf_fraud_result($content)) {
                 return FALSE;
             }
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
@@ -273,7 +248,11 @@ class Cert_investigation extends Cert_pdf
      * @return bool
      */
     public function pre_failure($sys_check): bool {
-        // 系統過的暫時全部轉人工
+        if (parent::pre_failure($sys_check))
+        {
+            return TRUE;
+        }
+        // 除了 PDF 防偽驗證，系統過的暫時全部轉人工
         if($sys_check == TRUE)
         {
             $this->set_review(TRUE);

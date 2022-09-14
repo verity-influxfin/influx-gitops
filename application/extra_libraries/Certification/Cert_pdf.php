@@ -1,6 +1,9 @@
 <?php
 
 namespace Certification;
+use CertificationResult\CertificationResult;
+use CertificationResult\MessageDisplay;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
@@ -36,7 +39,7 @@ abstract class Cert_pdf extends Certification_base
             'user_id' => $user_id,
         ]);
         foreach ($targets as $target) {
-            $this->CI->target_lib->reject($target, SYSTEM_ADMIN_ID, '偵測到徵信項PDF竄改，駁回案件');
+            $this->CI->target_lib->reject($target, SYSTEM_ADMIN_ID, CertificationResult::$FAILED_MESSAGE);
         }
 
         // Add this user into black list.
@@ -48,7 +51,7 @@ abstract class Cert_pdf extends Certification_base
         $result = curl_get($brookesia_url, [
             'userId' => $user_id,
             'updatedBy' => SYSTEM_ADMIN_ID,
-            'blockRemark' => json_encode($details),
+            'blockRemark' => json_encode($details, JSON_UNESCAPED_UNICODE),
             'blockTimeText' => '永久封鎖',
             'blockRule' => '授信政策',
             'blockRisk' => '拒絕',
@@ -60,5 +63,65 @@ abstract class Cert_pdf extends Certification_base
         }
 
         return TRUE;
+    }
+
+    /**
+     * @param $parsed_content
+     * @param $pdf_url
+     * @return bool TRUE if passed fraud detection, FALSE otherwise
+     */
+    protected function verify_fraud_pdf(&$parsed_content, $pdf_url): bool
+    {
+        if ( ! isset($parsed_content['pdf_fraud_detect']))
+        {
+            // Check if PDF edited.
+            $this->CI->load->helper('user_certification');
+            $fraud_result = verify_fraud_pdf($pdf_url);
+            $cert_status = $fraud_result[0];
+            if ($cert_status != CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
+            {
+                $parsed_content['pdf_fraud_detect'] = [];
+                $parsed_content['pdf_fraud_detect']['pass'] = FALSE;
+                $parsed_content['pdf_fraud_detect']['certification_status'] = $cert_status;
+                $parsed_content['pdf_fraud_detect']['details'] = $fraud_result[1];
+                $this->additional_data['pdf_fraud_reject'] = ($cert_status == CERTIFICATION_STATUS_FAILED);
+                $this->additional_data['pdf_fraud_details'] = $fraud_result[1];
+                return FALSE;
+            }
+        }
+        return TRUE;
+    }
+
+    /**
+     * @param $content
+     * @return bool TRUE if not fraud PDF, FALSE otherwise
+     */
+    protected function check_pdf_fraud_result($content): bool
+    {
+        if ( ! isset($content['pdf_fraud_detect']) || $content['pdf_fraud_detect']['pass'] !== FALSE)
+        {
+            return TRUE;
+        }
+        $fraud_detect_status = $content['pdf_fraud_detect']['certification_status'];
+        $details = json_encode($content['pdf_fraud_detect']['details'], JSON_UNESCAPED_UNICODE);
+        $this->result->setStatus($fraud_detect_status);
+        if ($fraud_detect_status == CERTIFICATION_STATUS_FAILED)
+        {
+            $this->result->addMessage("聯徵PDF已被竄改過，細節：{$details}", CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+        }
+        else // CERTIFICATION_STATUS_PENDING_TO_REVIEW
+        {
+            $this->result->addMessage("聯徵PDF疑似被竄改過，需人工驗證，細節：{$details}", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+        }
+        return FALSE;
+    }
+
+    /**
+     * @param $sys_check
+     * @return bool TRUE if no need to do further pre_failure action, FALSE otherwise.
+     */
+    public function pre_failure($sys_check): bool
+    {
+        return isset($this->additional_data['pdf_fraud_reject']) && $this->additional_data['pdf_fraud_reject'];
     }
 }
