@@ -150,7 +150,6 @@ class Cert_investigation extends Certification_base
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
             return FALSE;
         }
-        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
 
         if ($content['ocr_parser']['res'] === FALSE)
         {
