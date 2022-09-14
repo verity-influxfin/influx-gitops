@@ -70,6 +70,10 @@ class Cert_job extends Certification_base
             $this->_get_ocr_parser_info()
         );
         $mime = get_mime_by_extension($url);
+
+        $gcis_info = $this->_get_gcs_info($parsed_content);
+        $parsed_content['gcis_info'] = $gcis_info;
+
         if (is_image($mime) ||
             // 由圖片組成的 PDF 會將 is_valid_pdf 標記為 0, 需直接轉人工
             (isset($this->content['is_valid_pdf']) && $this->content['is_valid_pdf'] == 0))
@@ -83,13 +87,7 @@ class Cert_job extends Certification_base
             {
                 $response = $parsed_content['ocr_parser']['content'];
                 // 用統編檢查商業司
-                if (isset($parsed_content['tax_id']) && $parsed_content['tax_id'])
-                {
-                    $this->CI->load->library('gcis_lib');
-                    $gcis_res = $this->CI->gcis_lib->account_info($parsed_content['tax_id']);
-                    $parsed_content['gcis_info'] = $gcis_res;
-                    $response['gcis_info'] = $gcis_res;
-                }
+                $response['gcis_info'] = $gcis_info;
 
                 $this->CI->load->library('mapping/user/Certification_data');
                 $this->transform_data = $this->CI->certification_data->transformJobToResult($response);
@@ -372,10 +370,31 @@ class Cert_job extends Certification_base
      */
     private function _is_only_image_submitted(): bool
     {
-        if ($this->content['labor_type'] == 1)
+        if (isset($this->content['labor_type']) && $this->content['labor_type'] == 1)
         {
             return FALSE;
         }
         return TRUE;
+    }
+
+    /**
+     * 取得商業司資料
+     * @param $parsed_content
+     * @return mixed
+     */
+    private function _get_gcs_info($parsed_content)
+    {
+        if ( ! empty($parsed_content['gcis_info']))
+        {
+            return $parsed_content['gcis_info'];
+        }
+
+        if (empty($parsed_content['tax_id']))
+        {
+            return [];
+        }
+
+        $this->CI->load->library('gcis_lib');
+        return $this->CI->gcis_lib->account_info($parsed_content['tax_id']);
     }
 }
