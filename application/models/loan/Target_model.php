@@ -109,6 +109,14 @@ class Target_model extends MY_Model
         "updated_at"
     );
 
+    public $integer_fields = [
+        'product_id',
+        'amount',
+        'loan_amount',
+        'platform_fee',
+        'instalment',
+    ];
+
     public function __construct()
     {
         parent::__construct();

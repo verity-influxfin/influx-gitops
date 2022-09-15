@@ -567,6 +567,18 @@ class Subloan extends REST_Controller {
 			foreach($fields as $field){
 				$subloan_target[$field] = isset($new_target->$field)?$new_target->$field:'';
 			}
+
+            // 特定欄位需強制轉型
+            $integer_fields = $this->target_model->integer_fields;
+            foreach ($integer_fields as $field)
+            {
+                if ( ! isset($subloan_target[$field]))
+                {
+                    continue;
+                }
+                $subloan_target[$field] = (int)$subloan_target[$field];
+            }
+
 			$subloan_target['contract'] 				= $contract;
 			$subloan_target['amortization_schedule'] 	= $amortization_schedule;
 			$data['subloan_target']						= $subloan_target;

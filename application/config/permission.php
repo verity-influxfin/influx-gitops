@@ -101,6 +101,9 @@ $config['permission'] = [
             'obligations_detail' => ['model' => 'Transfer', 'submodel' => 'obligations', 'action' => 'read'],
             'waiting_transfer_detail' => ['model' => 'Transfer', 'submodel' => 'waiting_transfer', 'action' => 'read'],
             'waiting_transfer_success_detail' => ['model' => 'Transfer', 'submodel' => 'waiting_transfer_success', 'action' => 'read'],
+            'meta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'get_meta_info' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
+            'save_meta_info' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
         ],
     ],
     'Transfer' => [
@@ -265,6 +268,7 @@ $config['permission'] = [
             'job_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'joint_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'user_bankaccount_list' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
+            'save_company_cert' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
         ],
     ],
     'Scraper' => [
