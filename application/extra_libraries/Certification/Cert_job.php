@@ -71,7 +71,7 @@ class Cert_job extends Certification_base
         );
         $mime = get_mime_by_extension($url);
 
-        $gcis_info = $this->_get_gcs_info($parsed_content);
+        $gcis_info = $this->_get_gcis_info($parsed_content);
         $parsed_content['gcis_info'] = $gcis_info;
 
         if (is_image($mime) ||
@@ -382,7 +382,7 @@ class Cert_job extends Certification_base
      * @param $parsed_content
      * @return mixed
      */
-    private function _get_gcs_info($parsed_content)
+    private function _get_gcis_info($parsed_content)
     {
         if ( ! empty($parsed_content['gcis_info']))
         {
