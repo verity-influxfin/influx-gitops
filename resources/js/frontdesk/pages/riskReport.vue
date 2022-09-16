@@ -14,8 +14,10 @@
       <h1 class="h1">累計至本月之平均年化報酬率</h1>
       <div class="block-content">
         <div class="value-group">
-          <span class="value-1">12</span>
-          <span class="value-2">.02％</span>
+          <span class="value-1">{{ yearRateOfReturnRender.num }}</span>
+          <span class="value-2">
+            .{{ yearRateOfReturnRender.fractional }}％
+          </span>
         </div>
       </div>
     </section>
@@ -24,7 +26,7 @@
         <div class="d-sm-block d-flex justify-content-center align-baseline">
           <h1 class="h1">本月申貸案件數</h1>
           <div class="apply-case-value">
-            <span>1,580</span>
+            <span>{{ format(reportData.this_month_apply.all) }}</span>
             <span class="h1">件</span>
           </div>
         </div>
@@ -32,19 +34,27 @@
           <h1 class="h1 apply-case-info">
             <div>
               <div>學生貸申貸案件</div>
-              <div>598件</div>
+              <div>{{ format(reportData.this_month_apply.student) }}件</div>
             </div>
             <div>+</div>
             <div>
               <div>上班族申貸案件數</div>
-              <div>982件</div>
+              <div>{{ format(reportData.this_month_apply.work) }}件</div>
             </div>
           </h1>
           <div class="apply-case-bar-group">
-            <div class="apply-case-bar-left" style="width: calc(38% + 100px)">
+            <div
+              class="apply-case-bar-left"
+              :style="{
+                width: 'calc(' + monthApplyPercent.student + '% + 100px)',
+              }"
+            >
               <span class="apply-case-bar-text">38%</span>
             </div>
-            <div class="apply-case-bar-right" style="width: 62%">
+            <div
+              class="apply-case-bar-right"
+              :style="{ width: monthApplyPercent.work + '%' }"
+            >
               <span class="apply-case-bar-text">62%</span>
             </div>
           </div>
@@ -56,18 +66,22 @@
         <div class="success-case-item">
           <h1 class="h1">累計媒合成功件數</h1>
           <div class="success-case-value">
-            <span class="em">1,580</span>
+            <span class="em">{{ format(reportData.total_apply.success) }}</span>
             <span class="h1">件</span>
           </div>
         </div>
         <div class="success-case-item">
           <h1 class="h1">累積金額</h1>
-          <div class="success-case-value">539,531,987</div>
+          <div class="success-case-value">
+            {{ format(reportData.total_apply.money) }}
+          </div>
           <div class="h1">元</div>
         </div>
         <div class="success-case-item">
           <h1 class="h1">累積筆數</h1>
-          <div class="success-case-value">95,701</div>
+          <div class="success-case-value">
+            {{ format(reportData.total_apply.count) }}
+          </div>
           <div class="h1">筆</div>
         </div>
       </div>
@@ -75,19 +89,36 @@
     <section class="index-cases">
       <div class="block-content">
         <h1 class="h1">
-          累計效益與指標：平均每筆投資金額<span class="em">10,725</span>元
+          累計效益與指標：平均每筆投資金額
+          <span class="em">
+            {{ format(reportData.total_apply.avg_invest) }} </span
+          >元
         </h1>
         <h2 class="h2">
-          學生貸媒合成功均額: <span class="em">20,446</span>元/件均
-          上班族貸媒合成功均額: <span class="em">60,362</span>元/件均
+          學生貸媒合成功均額:
+          <span class="em">
+            {{ format(reportData.total_apply.avg_invest_student) }} </span
+          >元/件均 上班族貸媒合成功均額:
+          <span class="em">
+            {{ format(reportData.total_apply.avg_invest_work) }}
+          </span>
+          元/件均
         </h2>
         <h3 class="h3">
           <div>
-            逾期概況：已累計回收逾期金額 <span class="em">17,435,176 </span>元
+            逾期概況：已累計回收逾期金額
+            <span class="em">
+              {{ format(reportData.total_delay.return_money) }}
+            </span>
+            元
           </div>
           <div class="sm">
-            <div>當月逾期人數: 19 人</div>
-            <div>當月逾期筆數: 29 人</div>
+            <div>
+              當月逾期人數: {{ format(reportData.total_delay.users_count) }} 人
+            </div>
+            <div>
+              當月逾期筆數: {{ format(reportData.total_delay.loans_count) }} 筆
+            </div>
           </div>
         </h3>
       </div>
@@ -97,23 +128,32 @@
         準時還款率 <span class="sm">(1~9級依會員信評等級)</span>
       </h1>
       <div class="block-content">
-        <div class="risk-rank">
+        <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[0] + ')' }">
           <img
             src="@/asset/images/risk/risk-rank-1.png"
             class="img-fluid risk-rank-img"
           />
+          <div class="risk-rank-text">
+            {{ format(reportData.on_time.rate_level1) }}%
+          </div>
         </div>
-        <div class="risk-rank">
+        <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[1] + ')' }">
           <img
             src="@/asset/images/risk/risk-rank-2.png"
             class="img-fluid risk-rank-img"
           />
+          <div class="risk-rank-text">
+            {{ format(reportData.on_time.rate_level4) }}%
+          </div>
         </div>
-        <div class="risk-rank">
+        <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[2] + ')' }">
           <img
             src="@/asset/images/risk/risk-rank-3.png"
             class="img-fluid risk-rank-img"
           />
+          <div class="risk-rank-text">
+            {{ format(reportData.on_time.rate_level7) }}%
+          </div>
         </div>
       </div>
     </section>
@@ -121,13 +161,20 @@
       <h1 class="h1">重要指標分析</h1>
       <div class="block-content">
         <div class="block-text">
-          本月媒合金額，較去年同月<span class="em">↑增長 2.0%</span>
+          本月媒合金額，較去年同月<span class="em">
+            ↑增長 {{ formatPercent(reportData.growth.money) }}%
+          </span>
         </div>
         <div class="block-text">
-          本月學生貸申請數，較去年同月<span class="em">↑增長 2.0%</span>
+          本月學生貸申請數，較去年同月<span class="em">
+            ↑增長 {{ formatPercent(reportData.growth.student) }}%
+          </span>
         </div>
         <div class="block-text">
-          本月上班族貸申請數，較去年同月 <span class="em">↑增長 3.5%</span>
+          本月上班族貸申請數，較去年同月
+          <span class="em">
+            ↑增長 {{ formatPercent(reportData.growth.work) }}%
+          </span>
         </div>
         <div class="hint">＊與去年同月份比較</div>
       </div>
@@ -182,6 +229,7 @@ import "swiper/components/navigation/navigation.min.css"
 import SwiperCore, {
   Navigation
 } from 'swiper/core';
+import Axios from 'axios';
 export default {
   components: {
     AlesisButton,
@@ -195,6 +243,84 @@ export default {
         prevEl: '.swiper-button-prev',
       },
     });
+    this.getRisk()
+  },
+  data() {
+    return {
+      reportData: {
+        yearly_rate_of_return: 0,
+        this_month_apply: {
+          all: 0,
+          student: 0,
+          work: 0,
+        },
+        total_apply: {
+          success: 0,
+          money: 0,
+          count: 0,
+          avg_invest: 0,
+          avg_invest_student: 0,
+          avg_invest_work: 0,
+        },
+        total_delay: {
+          return_money: 0,
+          users_count: 0,
+          loans_count: 0,
+        },
+        on_time: {
+          rate_level1: 0,
+          rate_level4: 0,
+          rate_level7: 0,
+        },
+        growth: {
+          money: 0,
+          student: 0,
+          work: 0,
+        },
+      },
+    }
+  },
+  methods: {
+    getRisk(year = 2022, month = 9) {
+      Axios.get(`/api/v1/risk_report/${year}/${month}`).then(({ data }) => {
+        if (data.success) {
+          this.reportData = data.data
+        }
+      })
+    },
+    format(n = 0) {
+      return n.toLocaleString()
+    },
+    formatPercent(n, f = 1) {
+      return n.toFixed(f)
+    }
+  },
+  computed: {
+    yearRateOfReturnRender() {
+      const [num, fractional] = this.reportData.yearly_rate_of_return.toString(10).split('.')
+      return { num, fractional }
+    },
+    monthApplyPercent() {
+      const student = (this.reportData.this_month_apply.student / this.reportData.this_month_apply.all).toFixed(2) * 100
+      return {
+        student,
+        work: 100 - student
+      }
+    },
+    rankBg() {
+      return [
+        {
+          k: this.reportData.on_time.rate_level1,
+          v: require('@/asset/images/risk/risk-rank-p1.svg')
+        }, {
+          k: this.reportData.on_time.rate_level4,
+          v: require('@/asset/images/risk/risk-rank-p2.svg')
+        }, {
+          k: this.reportData.on_time.rate_level7,
+          v: require('@/asset/images/risk/risk-rank-p3.svg')
+        }
+      ].sort((a, b) => { b.k - a.k }).map(x => x.v)
+    }
   },
 }
 </script>
@@ -204,7 +330,7 @@ $color--primary: #f2b162;
 $color__text--primary: #000000;
 $color__text--secondary: #6b6b6b70;
 $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
-.align-baseline{
+.align-baseline {
   align-items: baseline;
 }
 .block-content {
@@ -473,7 +599,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
   }
 }
 .repay {
-  padding: 43px 0;
+  padding: 43px 0 60px;
   background-color: #f3f9fc;
   .h1 {
     font-style: normal;
@@ -492,13 +618,48 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     display: flex;
     justify-content: space-evenly;
     .risk-rank {
-      padding: 35px;
-      border-radius: 50%;
-      border: 20px solid $color--primary;
+      &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: var(--bg1);
+        background-size: cover;
+        background-position: center;
+        z-index: 1;
+      }
       position: relative;
+      padding: 60px;
+      z-index: 2;
       &-img {
         position: relative;
         right: 10px;
+      }
+      &-text {
+        position: absolute;
+        right: -120px;
+        bottom: 0;
+        font-weight: 700;
+        text-align: left;
+        font-size: 32px;
+        line-height: 115%;
+        color: $color__text--primary;
+        width: 115px;
+        &::before {
+          border-top: 2px solid $color__text--primary;
+          right: 120px;
+          top: 0px;
+          display: block;
+          position: absolute;
+          transform: rotate(35deg);
+          content: '';
+          width: 64px;
+          height: 2px;
+          z-index: 2;
+        }
       }
     }
   }
@@ -692,7 +853,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
         text-align: center;
         color: #393939;
       }
-      .success-case-item{
+      .success-case-item {
         display: flex;
         gap: 8px;
         align-items: baseline;
@@ -768,14 +929,28 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       justify-content: center;
       .risk-rank {
         width: fit-content;
-        padding: 35px;
-        border: 12px solid $color--primary;
+        padding: 55px;
         position: relative;
         transform: scale(0.8);
         &-img {
           position: relative;
           right: 10px;
         }
+         &-text {
+        position: absolute;
+        right: -55px;
+        bottom: 10px;
+        text-align: left;
+        font-size: 20px;
+        width: 75px;
+        &::before {
+          right: 80px;
+          top: 0px;
+          transform: rotate(35deg);
+          content: '';
+          width: 40px;
+        }
+      }
       }
     }
   }
