@@ -27,6 +27,10 @@ class Instagram_lib{
 			if(isset($data['access_token']) && $data['access_token']){
 				return $data['access_token'];
 			}
+            else
+            {
+                log_message('error', "Can't get access_token from IG with redirect_uri={$redirect_uri}, code={$code}");
+            }
 		}
 		return FALSE;
 	}
