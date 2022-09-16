@@ -416,6 +416,9 @@ Route::prefix('api/v1')->group(function() {
             Route::post('/group', 'CampusAmbassador2022Controller@sign_up_group');
         });
     });
+
+    // 風險報告書
+    Route::get('/risk_report/{year}/{month}', 'RiskReportController@get_info_by_month');
 });
 
 // 捐款動畫 SSE API
