@@ -1,224 +1,230 @@
 <template>
   <main class="risk-report">
     <section class="banner"></section>
-    <section class="title">
-      <div class="block-content">
-        <div class="title-group">
-          <div class="title-1">月 借貸媒合風險報告書</div>
-          <div class="title-2">May 2022</div>
-        </div>
-        <div class="hint">以下資料統計至2022年5月31日</div>
-      </div>
-    </section>
-    <section class="anniversary">
-      <h1 class="h1">累計至本月之平均年化報酬率</h1>
-      <div class="block-content">
-        <div class="value-group">
-          <span class="value-1">{{ yearRateOfReturnRender.num }}</span>
-          <span class="value-2">
-            .{{ yearRateOfReturnRender.fractional }}％
-          </span>
-        </div>
-      </div>
-    </section>
-    <section class="apply-cases">
-      <div class="block-content">
-        <div class="d-sm-block d-flex justify-content-center align-baseline">
-          <h1 class="h1">本月申貸案件數</h1>
-          <div class="apply-case-value">
-            <span>{{ format(reportData.this_month_apply.all) }}</span>
-            <span class="h1">件</span>
+    <template v-if="isLogin">
+      <section class="title">
+        <div class="block-content">
+          <div class="title-group">
+            <div class="title-1">月 借貸媒合風險報告書</div>
+            <div class="title-2">May 2022</div>
           </div>
+          <div class="hint">以下資料統計至2022年5月31日</div>
         </div>
-        <div>
-          <h1 class="h1 apply-case-info">
-            <div>
-              <div>學生貸申貸案件</div>
-              <div>{{ format(reportData.this_month_apply.student) }}件</div>
-            </div>
-            <div>+</div>
-            <div>
-              <div>上班族申貸案件數</div>
-              <div>{{ format(reportData.this_month_apply.work) }}件</div>
-            </div>
-          </h1>
-          <div class="apply-case-bar-group">
-            <div
-              class="apply-case-bar-left"
-              :style="{
-                width: 'calc(' + monthApplyPercent.student + '% + 100px)',
-              }"
-            >
-              <span class="apply-case-bar-text">38%</span>
-            </div>
-            <div
-              class="apply-case-bar-right"
-              :style="{ width: monthApplyPercent.work + '%' }"
-            >
-              <span class="apply-case-bar-text">62%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="success-cases">
-      <div class="block-content">
-        <div class="success-case-item">
-          <h1 class="h1">累計媒合成功件數</h1>
-          <div class="success-case-value">
-            <span class="em">{{ format(reportData.total_apply.success) }}</span>
-            <span class="h1">件</span>
-          </div>
-        </div>
-        <div class="success-case-item">
-          <h1 class="h1">累積金額</h1>
-          <div class="success-case-value">
-            {{ format(reportData.total_apply.money) }}
-          </div>
-          <div class="h1">元</div>
-        </div>
-        <div class="success-case-item">
-          <h1 class="h1">累積筆數</h1>
-          <div class="success-case-value">
-            {{ format(reportData.total_apply.count) }}
-          </div>
-          <div class="h1">筆</div>
-        </div>
-      </div>
-    </section>
-    <section class="index-cases">
-      <div class="block-content">
-        <h1 class="h1">
-          累計效益與指標：平均每筆投資金額
-          <span class="em">
-            {{ format(reportData.total_apply.avg_invest) }} </span
-          >元
-        </h1>
-        <h2 class="h2">
-          學生貸媒合成功均額:
-          <span class="em">
-            {{ format(reportData.total_apply.avg_invest_student) }} </span
-          >元/件均 上班族貸媒合成功均額:
-          <span class="em">
-            {{ format(reportData.total_apply.avg_invest_work) }}
-          </span>
-          元/件均
-        </h2>
-        <h3 class="h3">
-          <div>
-            逾期概況：已累計回收逾期金額
-            <span class="em">
-              {{ format(reportData.total_delay.return_money) }}
+      </section>
+      <section class="anniversary">
+        <h1 class="h1">累計至本月之平均年化報酬率</h1>
+        <div class="block-content">
+          <div class="value-group">
+            <span class="value-1">{{ yearRateOfReturnRender.num }}</span>
+            <span class="value-2">
+              .{{ yearRateOfReturnRender.fractional }}％
             </span>
-            元
           </div>
-          <div class="sm">
+        </div>
+      </section>
+      <section class="apply-cases">
+        <div class="block-content">
+          <div class="d-sm-block d-flex justify-content-center align-baseline">
+            <h1 class="h1">本月申貸案件數</h1>
+            <div class="apply-case-value">
+              <span>{{ format(reportData.this_month_apply.all) }}</span>
+              <span class="h1">件</span>
+            </div>
+          </div>
+          <div>
+            <h1 class="h1 apply-case-info">
+              <div>
+                <div>學生貸申貸案件</div>
+                <div>{{ format(reportData.this_month_apply.student) }}件</div>
+              </div>
+              <div>+</div>
+              <div>
+                <div>上班族申貸案件數</div>
+                <div>{{ format(reportData.this_month_apply.work) }}件</div>
+              </div>
+            </h1>
+            <div class="apply-case-bar-group">
+              <div
+                class="apply-case-bar-left"
+                :style="{
+                  width: 'calc(' + monthApplyPercent.student + '% + 100px)',
+                }"
+              >
+                <span class="apply-case-bar-text">38%</span>
+              </div>
+              <div
+                class="apply-case-bar-right"
+                :style="{ width: monthApplyPercent.work + '%' }"
+              >
+                <span class="apply-case-bar-text">62%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="success-cases">
+        <div class="block-content">
+          <div class="success-case-item">
+            <h1 class="h1">累計媒合成功件數</h1>
+            <div class="success-case-value">
+              <span class="em">{{
+                format(reportData.total_apply.success)
+              }}</span>
+              <span class="h1">件</span>
+            </div>
+          </div>
+          <div class="success-case-item">
+            <h1 class="h1">累積金額</h1>
+            <div class="success-case-value">
+              {{ format(reportData.total_apply.money) }}
+            </div>
+            <div class="h1">元</div>
+          </div>
+          <div class="success-case-item">
+            <h1 class="h1">累積筆數</h1>
+            <div class="success-case-value">
+              {{ format(reportData.total_apply.count) }}
+            </div>
+            <div class="h1">筆</div>
+          </div>
+        </div>
+      </section>
+      <section class="index-cases">
+        <div class="block-content">
+          <h1 class="h1">
+            累計效益與指標：平均每筆投資金額
+            <span class="em">
+              {{ format(reportData.total_apply.avg_invest) }} </span
+            >元
+          </h1>
+          <h2 class="h2">
+            學生貸媒合成功均額:
+            <span class="em">
+              {{ format(reportData.total_apply.avg_invest_student) }} </span
+            >元/件均 上班族貸媒合成功均額:
+            <span class="em">
+              {{ format(reportData.total_apply.avg_invest_work) }}
+            </span>
+            元/件均
+          </h2>
+          <h3 class="h3">
             <div>
-              當月逾期人數: {{ format(reportData.total_delay.users_count) }} 人
+              逾期概況：已累計回收逾期金額
+              <span class="em">
+                {{ format(reportData.total_delay.return_money) }}
+              </span>
+              元
             </div>
-            <div>
-              當月逾期筆數: {{ format(reportData.total_delay.loans_count) }} 筆
+            <div class="sm">
+              <div>
+                當月逾期人數:
+                {{ format(reportData.total_delay.users_count) }} 人
+              </div>
+              <div>
+                當月逾期筆數:
+                {{ format(reportData.total_delay.loans_count) }} 筆
+              </div>
             </div>
-          </div>
-        </h3>
-      </div>
-    </section>
-    <section class="repay">
-      <h1 class="h1">
-        準時還款率 <span class="sm">(1~9級依會員信評等級)</span>
-      </h1>
-      <div class="block-content">
-        <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[0] + ')' }">
-          <img
-            src="@/asset/images/risk/risk-rank-1.png"
-            class="img-fluid risk-rank-img"
-          />
-          <div class="risk-rank-text">
-            {{ format(reportData.on_time.rate_level1) }}%
-          </div>
+          </h3>
         </div>
-        <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[1] + ')' }">
-          <img
-            src="@/asset/images/risk/risk-rank-2.png"
-            class="img-fluid risk-rank-img"
-          />
-          <div class="risk-rank-text">
-            {{ format(reportData.on_time.rate_level4) }}%
-          </div>
-        </div>
-        <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[2] + ')' }">
-          <img
-            src="@/asset/images/risk/risk-rank-3.png"
-            class="img-fluid risk-rank-img"
-          />
-          <div class="risk-rank-text">
-            {{ format(reportData.on_time.rate_level7) }}%
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="analysis">
-      <h1 class="h1">重要指標分析</h1>
-      <div class="block-content">
-        <div class="block-text">
-          本月媒合金額，較去年同月<span class="em">
-            ↑增長 {{ formatPercent(reportData.growth.money) }}%
-          </span>
-        </div>
-        <div class="block-text">
-          本月學生貸申請數，較去年同月<span class="em">
-            ↑增長 {{ formatPercent(reportData.growth.student) }}%
-          </span>
-        </div>
-        <div class="block-text">
-          本月上班族貸申請數，較去年同月
-          <span class="em">
-            ↑增長 {{ formatPercent(reportData.growth.work) }}%
-          </span>
-        </div>
-        <div class="hint">＊與去年同月份比較</div>
-      </div>
-    </section>
-    <section class="functions">
-      <div class="block-content">
-        <div class="swiper">
-          <!-- Additional required wrapper -->
-          <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide">
-              <a href="javascript:;">
-                <alesis-button class="month-btn">2022 5月</alesis-button>
-              </a>
-              <a href="javascript:;">
-                <alesis-button class="month-btn">2022 6月</alesis-button>
-              </a>
-              <a href="javascript:;">
-                <alesis-button class="month-btn">2022 7月</alesis-button>
-              </a>
-            </div>
-            <div class="swiper-slide">
-              <a href="javascript:;">
-                <alesis-button class="month-btn">2022 8月</alesis-button>
-              </a>
-              <a href="javascript:;">
-                <alesis-button class="month-btn">2022 9月</alesis-button>
-              </a>
-              <a href="javascript:;">
-                <alesis-button class="month-btn">2022 10月</alesis-button>
-              </a>
+      </section>
+      <section class="repay">
+        <h1 class="h1">
+          準時還款率 <span class="sm">(1~9級依會員信評等級)</span>
+        </h1>
+        <div class="block-content">
+          <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[0] + ')' }">
+            <img
+              src="@/asset/images/risk/risk-rank-1.png"
+              class="img-fluid risk-rank-img"
+            />
+            <div class="risk-rank-text">
+              {{ format(reportData.on_time.rate_level1) }}%
             </div>
           </div>
-          <!-- If we need navigation buttons -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
+          <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[1] + ')' }">
+            <img
+              src="@/asset/images/risk/risk-rank-2.png"
+              class="img-fluid risk-rank-img"
+            />
+            <div class="risk-rank-text">
+              {{ format(reportData.on_time.rate_level4) }}%
+            </div>
+          </div>
+          <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[2] + ')' }">
+            <img
+              src="@/asset/images/risk/risk-rank-3.png"
+              class="img-fluid risk-rank-img"
+            />
+            <div class="risk-rank-text">
+              {{ format(reportData.on_time.rate_level7) }}%
+            </div>
+          </div>
         </div>
-        <div class="mt-5 d-flex justify-content-center">
-          <a href="/investLink" target="_blank">
-            <button class="btn btn-invest">立即投資</button>
-          </a>
+      </section>
+      <section class="analysis">
+        <h1 class="h1">重要指標分析</h1>
+        <div class="block-content">
+          <div class="block-text">
+            本月媒合金額，較去年同月<span class="em">
+              ↑增長 {{ formatPercent(reportData.growth.money) }}%
+            </span>
+          </div>
+          <div class="block-text">
+            本月學生貸申請數，較去年同月<span class="em">
+              ↑增長 {{ formatPercent(reportData.growth.student) }}%
+            </span>
+          </div>
+          <div class="block-text">
+            本月上班族貸申請數，較去年同月
+            <span class="em">
+              ↑增長 {{ formatPercent(reportData.growth.work) }}%
+            </span>
+          </div>
+          <div class="hint">＊與去年同月份比較</div>
         </div>
-      </div>
-    </section>
+      </section>
+      <section class="functions">
+        <div class="block-content">
+          <div class="swiper">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+              <!-- Slides -->
+              <div class="swiper-slide">
+                <a href="javascript:;">
+                  <alesis-button class="month-btn">2022 5月</alesis-button>
+                </a>
+                <a href="javascript:;">
+                  <alesis-button class="month-btn">2022 6月</alesis-button>
+                </a>
+                <a href="javascript:;">
+                  <alesis-button class="month-btn">2022 7月</alesis-button>
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="javascript:;">
+                  <alesis-button class="month-btn">2022 8月</alesis-button>
+                </a>
+                <a href="javascript:;">
+                  <alesis-button class="month-btn">2022 9月</alesis-button>
+                </a>
+                <a href="javascript:;">
+                  <alesis-button class="month-btn">2022 10月</alesis-button>
+                </a>
+              </div>
+            </div>
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+          <div class="mt-5 d-flex justify-content-center">
+            <a href="/investLink" target="_blank">
+              <button class="btn btn-invest">立即投資</button>
+            </a>
+          </div>
+        </div>
+      </section>
+    </template>
   </main>
 </template>
 
@@ -278,6 +284,16 @@ export default {
           work: 0,
         },
       },
+      isLogin: false
+    }
+  },
+  created() {
+    $("title").text(`風險報告書 - inFlux普匯金融科技`);
+    if (sessionStorage.length === 0 || sessionStorage.flag === 'logout') {
+      this.$store.commit('mutationLogin')
+      this.isLogin = false
+    } else {
+      this.checkCert()
     }
   },
   methods: {
@@ -293,6 +309,16 @@ export default {
     },
     formatPercent(n, f = 1) {
       return n.toFixed(f)
+    },
+    checkCert() {
+      axios.get('/chk/cert/identity').then(({ data }) => {
+        if (data.error && data.error == 2002) {
+          alert('需通過實名認證才可查看本頁面')
+          this.$router.back()
+        } else {
+          this.isLogin = true
+        }
+      })
     }
   },
   computed: {
@@ -936,21 +962,21 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
           position: relative;
           right: 10px;
         }
-         &-text {
-        position: absolute;
-        right: -55px;
-        bottom: 10px;
-        text-align: left;
-        font-size: 20px;
-        width: 75px;
-        &::before {
-          right: 80px;
-          top: 0px;
-          transform: rotate(35deg);
-          content: '';
-          width: 40px;
+        &-text {
+          position: absolute;
+          right: -55px;
+          bottom: 10px;
+          text-align: left;
+          font-size: 20px;
+          width: 75px;
+          &::before {
+            right: 80px;
+            top: 0px;
+            transform: rotate(35deg);
+            content: '';
+            width: 40px;
+          }
         }
-      }
       }
     }
   }
