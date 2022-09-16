@@ -938,7 +938,8 @@ class Product extends REST_Controller {
             $this->load->library('credit_lib');
             $chk_credit = $this->credit_lib->get_remain_amount($user_id, $product['id'], $sub_product_id);
 
-            if ($chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $input['instalment'] && $chk_credit['user_available_amount'] >= $product['loan_range_s'])
+            if ($param['product_id'] != PRODUCT_ID_SALARY_MAN && // todo: 暫時不開放上班族貸走「有額度自動過件上架」的通道
+                $chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $input['instalment'] && $chk_credit['user_available_amount'] >= $product['loan_range_s'])
             {
                 // 有效期內的核可額度(條件：同產品、同期間)
                 if ($chk_credit['remain_amount'] >= $input['amount'])
