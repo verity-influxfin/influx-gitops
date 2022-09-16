@@ -1754,6 +1754,13 @@ class Target_lib
                         $cer = [];
                         $matchBrookesia = false;        // 反詐欺狀態
                         $second_instance_check = false; // 進待二審
+
+                        // todo: 上班族貸目前一律轉二審
+                        if ($value->product_id == PRODUCT_ID_SALARY_MAN)
+                        {
+                            $second_instance_check = TRUE;
+                        }
+
                         foreach ($certifications as $key => $certification) {
                             if ($finish && in_array($certification['id'], $product_certification)) {
 
