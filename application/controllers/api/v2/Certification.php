@@ -182,6 +182,57 @@ class Certification extends REST_Controller {
 			$list = $new_list;
 		}
 
+        // 撈取負責人的個人徵信項內容
+        if ( $company == USER_IS_COMPANY && $target)
+        {
+            if (empty($natural_person->id))
+            {
+                $this->load->library('judicialperson_lib');
+                $natural_person = $this->judicialperson_lib->getNaturalPerson($user_id);
+            }
+
+            $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target, $natural_person->id);
+
+            $individual_certification_list = $this->certification_lib->get_status($natural_person->id, $investor, $company, TRUE, $target, FALSE, TRUE);
+            foreach($individual_certification_list as $key => $value){
+                if (in_array($key, [CERTIFICATION_IDENTITY, CERTIFICATION_EMAIL, CERTIFICATION_SIMPLIFICATIONFINANCIAL, CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2]))
+                {
+                    $exist_target_submitted = chk_target_submitted($target->status, $target->certificate_status ?? 0);
+                    $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
+                        USER_BORROWER,
+                        is_judicial_product($target->product_id)
+                    );
+
+                    if (in_array($key, $skip_certification_ids))
+                    {
+                        $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                    }
+                    else if ($truly_failed)
+                    {
+                        if (in_array($target->status, [TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_WAITING_BIDDING, TARGET_WAITING_LOAN]))
+                        {
+                            $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
+                        }
+                        else
+                        {
+                            $value['user_status'] = NULL;
+                            $value['certification_id'] = NULL;
+                        }
+                    }
+                    if (isset($value['content']))
+                    {
+                        unset($value['content']);
+                    }
+                    if (isset($value['remark']))
+                    {
+                        unset($value['remark']);
+                    }
+
+                    $list[$value['id']] = $value;
+                }
+            }
+        }
+
 		//讓代理人傳空值
         if($company==1&&$incharge==0&&$this->user_info->name!=null) {
             $list = array();
