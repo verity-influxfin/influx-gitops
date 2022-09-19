@@ -401,6 +401,16 @@ class Target_lib
                                     'status' => 0,
                                 ];
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
+
+                                // todo: 暫時將「學生貸」、「上班族貸」轉二審
+                                if ( ! $subloan_status &&
+                                    in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_STUDENT]) &&
+                                    $target->status == TARGET_WAITING_APPROVE &&
+                                    $target->sub_status == TARGET_SUBSTATUS_NORNAL)
+                                {
+                                    goto FORCE_SECOND_INSTANCE;
+                                }
+
                                 if (
                                     // 命中反詐欺或黑名單，一定要進待二審
                                     ! $matchBrookesia && (
@@ -443,6 +453,7 @@ class Target_lib
 
                                     $opinion = '一審通過';
                                 } else {
+                                    FORCE_SECOND_INSTANCE:
                                     $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
                                     $msg = false;
                                     $opinion = '需二審查核';
@@ -1753,12 +1764,6 @@ class Target_lib
                         $cer = [];
                         $matchBrookesia = false;        // 反詐欺狀態
                         $second_instance_check = false; // 進待二審
-
-                        // todo: 上班族貸目前一律轉二審
-                        if ($value->product_id == PRODUCT_ID_SALARY_MAN)
-                        {
-                            $second_instance_check = TRUE;
-                        }
 
                         foreach ($certifications as $key => $certification) {
                             if ($finish && in_array($certification['id'], $product_certification)) {
