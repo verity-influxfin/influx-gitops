@@ -4,7 +4,7 @@
     <section class="intro">
       <h1 class="h1">挑戰自我 超越自我</h1>
       <div class="block-content">
-        <div>
+        <div class="d-sm-block d-none">
           <div>
             歡迎一起加入年輕活潑的「<span class="em-1">普匯金融科技</span
             >」家族！
@@ -28,7 +28,31 @@
             共同邁向國際大舞台！
           </div>
         </div>
-        <div class="pl-5">
+        <div class="d-sm-none d-block mx-4">
+          <div>
+            歡迎一起加入年輕活潑的<br />
+            「<span class="em-1">普匯金融科技</span>」家族！
+          </div>
+          <div class="my-4">
+            加入<span class="em-1">普匯inFlux</span>，<br />
+            參與<span class="em-1">國際金融科技</span>盛會，<br />
+            共同創新<span class="em-2">金融產品</span>、<br />
+            <span class="em-2">開發AI自動化風控</span>、 <br />
+            <span class="em-2">導入區塊鏈</span>，<br />
+            推廣<span class="em-2">數位行銷</span>、<br />
+            善用<span class="em-2">社群社團經營</span>，<br />
+            享受<span class="em-2">自由創意</span>，<br />
+            創造<span class="em-2">社會價值</span>！<br />
+          </div>
+          <div>
+            <span class="em-1">普匯inFlux，</span><br />
+            邀請您和我們一起燃燒熱情、<br />
+            激發潛力、<br />
+            創造公益價值，共同成長、<br />
+            共同邁向國際大舞台！
+          </div>
+        </div>
+        <div class="pl-sm-5 pl-0">
           <img
             src="@/asset/images/recuirt/recruit-intro.png"
             class="img-fluid"
@@ -40,13 +64,13 @@
       <h1 class="h1">福利與好康</h1>
       <div class="block-content">
         <div class="row no-gutters">
-          <div class="col">
+          <div class="col-sm col-12">
             <img
               src="@/asset/images/recuirt/recruit-benefit.png"
               class="img-fluid"
             />
           </div>
-          <div class="col-6 p-3">
+          <div class="col-sm-6 col-12 p-sm-3 p-0 pt-4">
             <div class="benefit-list">•勞保、健保、勞退等基本規範</div>
             <div class="benefit-list">•舒適的工作環境</div>
             <div class="benefit-list">•完善業務獎金制度</div>
@@ -87,7 +111,13 @@
                 class="img-fluid"
               />
             </div>
-            <div class="benefit-item-text">每月補充零食櫃</div>
+            <div class="benefit-item-text">
+              <div class="d-md-block d-none">每月補充零食櫃</div>
+              <div class="d-md-none d-block">
+                <div>每月補充</div>
+                <div>零食櫃</div>
+              </div>
+            </div>
           </div>
           <div class="benefit-item">
             <div class="benefit-item-icon">
@@ -96,7 +126,13 @@
                 class="img-fluid"
               />
             </div>
-            <div class="benefit-item-text">每月部門聚餐額度</div>
+            <div class="benefit-item-text">
+              <div class="d-md-block d-none">每月部門聚餐額度</div>
+              <div class="d-md-none d-block">
+                <div>每月部門</div>
+                <div>聚餐額度</div>
+              </div>
+            </div>
           </div>
           <div class="benefit-item">
             <div class="benefit-item-icon">
@@ -114,7 +150,13 @@
                 class="img-fluid"
               />
             </div>
-            <div class="benefit-item-text">金融科技教育訓練</div>
+            <div class="benefit-item-text">
+              <div class="d-md-block d-none">金融科技教育訓練</div>
+              <div class="d-md-none d-block">
+                <div>金融科技</div>
+                <div>教育訓練</div>
+              </div>
+            </div>
           </div>
           <div class="benefit-item">
             <div class="benefit-item-icon">
@@ -123,7 +165,13 @@
                 class="img-fluid"
               />
             </div>
-            <div class="benefit-item-text">多家企業/銀行合作機會</div>
+            <div class="benefit-item-text">
+              <div class="d-md-block d-none">多家企業/銀行合作機會</div>
+              <div class="d-md-none d-block">
+                <div>多家企業</div>
+                <div>銀行合作機會</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -262,5 +310,66 @@ $color__background--primary: #f3f9fc;
   display: grid;
   place-items: center;
   padding: 100px;
+}
+@media screen and (max-width: 767px) {
+  .h1 {
+    font-size: 36px;
+    line-height: 1.4;
+  }
+  .block-content {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  .banner {
+    height: 140vw;
+    background-image: url('~images/recuirt/recuirt-banner-phone.png');
+  }
+  .intro {
+    margin: 24px 0;
+    font-size: 24px;
+    .block-content {
+      display: flex;
+      flex-direction: column-reverse;
+      margin-top: 25px;
+      gap: 25px;
+    }
+  }
+  .benefit {
+    padding: 26px 0;
+    .block-content {
+      margin-top: 27px;
+      padding-bottom: 50px;
+    }
+    .benefit-list {
+      margin-bottom: 6px;
+      font-size: 24px;
+    }
+    .benefit-group {
+      display: grid;
+      margin-top: 80px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+      .benefit-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &-icon {
+          width: 140px;
+          height: 140px;
+          padding: 20px;
+          margin-bottom: 16px;
+        }
+        &-text {
+          font-size: 24px;
+          text-align: center;
+        }
+      }
+    }
+  }
+  .link-section {
+    padding: 80px 0;
+  }
 }
 </style>
