@@ -951,8 +951,10 @@ class Product extends REST_Controller {
             $this->load->library('credit_lib');
             $chk_credit = $this->credit_lib->get_remain_amount($user_id, $product['id'], $sub_product_id);
 
-            if ($param['product_id'] != PRODUCT_ID_SALARY_MAN && // todo: 暫時不開放上班族貸走「有額度自動過件上架」的通道
-                $chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $input['instalment'] && $chk_credit['user_available_amount'] >= $product['loan_range_s'])
+            // todo: 原本只要還有核可額度，就可以直接過件，但現在要暫時將入口關掉
+            goto LOCK_END;
+
+            if ($chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $input['instalment'] && $chk_credit['user_available_amount'] >= $product['loan_range_s'])
             {
                 // 有效期內的核可額度(條件：同產品、同期間)
                 if ($chk_credit['remain_amount'] >= $input['amount'])
@@ -971,6 +973,8 @@ class Product extends REST_Controller {
                     $param['loan_amount'] = $product['loan_range_e'];
                 }
             }
+
+            LOCK_END:
 
             // 舊版一鍵送出流程殘留的狀態，在起案的時候應改回待驗證
             $this->load->model('user/user_certification_model');
