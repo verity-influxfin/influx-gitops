@@ -4,7 +4,7 @@
     <section class="intro">
       <h1 class="h1">挑戰自我 超越自我</h1>
       <div class="block-content">
-        <div class="d-sm-block d-none">
+        <div class="d-md-block d-none">
           <div>
             歡迎一起加入年輕活潑的「<span class="em-1">普匯金融科技</span
             >」家族！
@@ -28,7 +28,7 @@
             共同邁向國際大舞台！
           </div>
         </div>
-        <div class="d-sm-none d-block mx-4">
+        <div class="d-md-none d-block mx-4">
           <div>
             歡迎一起加入年輕活潑的<br />
             「<span class="em-1">普匯金融科技</span>」家族！
@@ -52,7 +52,7 @@
             共同邁向國際大舞台！
           </div>
         </div>
-        <div class="pl-sm-5 pl-0">
+        <div class="pl-md-5 pl-0">
           <img
             src="@/asset/images/recuirt/recruit-intro.png"
             class="img-fluid"
@@ -64,13 +64,13 @@
       <h1 class="h1">福利與好康</h1>
       <div class="block-content">
         <div class="row no-gutters">
-          <div class="col-sm col-12">
+          <div class="col-md col-12">
             <img
               src="@/asset/images/recuirt/recruit-benefit.png"
               class="img-fluid"
             />
           </div>
-          <div class="col-sm-6 col-12 p-sm-3 p-0 pt-4">
+          <div class="col-md-6 col-12 p-md-3 p-0 pt-4 benefit-list-group">
             <div class="benefit-list">•勞保、健保、勞退等基本規範</div>
             <div class="benefit-list">•舒適的工作環境</div>
             <div class="benefit-list">•完善業務獎金制度</div>
@@ -267,8 +267,10 @@ $color__background--primary: #f3f9fc;
     color: $color--primary;
   }
   .block-content {
-    margin-top: 35px;
-    padding-bottom: 35px;
+    padding: 35px 0;
+    background-image: url('~images/recuirt/recruit-benefit-bg.svg');
+    background-repeat: no-repeat;
+    background-position: right -15px top;
   }
   .benefit-list {
     margin-bottom: 22px;
@@ -339,8 +341,14 @@ $color__background--primary: #f3f9fc;
   .benefit {
     padding: 26px 0;
     .block-content {
-      margin-top: 27px;
-      padding-bottom: 50px;
+      background-image: none;
+      padding: 30px 15px 50px;
+    }
+    .benefit-list-group {
+      background-image: url('~images/recuirt/recruit-benefit-bg-phone.svg');
+      background-size: cover;
+      background-position: top center;
+      background-repeat: no-repeat;
     }
     .benefit-list {
       margin-bottom: 6px;
@@ -350,7 +358,7 @@ $color__background--primary: #f3f9fc;
       display: grid;
       margin-top: 80px;
       grid-template-columns: repeat(2, 1fr);
-      gap: 25px;
+      gap: 25px 0;
       .benefit-item {
         display: flex;
         flex-direction: column;
