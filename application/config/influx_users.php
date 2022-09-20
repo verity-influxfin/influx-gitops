@@ -46,4 +46,8 @@ $config['influx_user_list'] = [
         'user_id' => 90323],
     [ // James
         'user_id' => 91755],
+    [ // 曲素玉
+        'user_id' => 92479],
+    [ // 彭崇博
+        'user_id' => 92525],
 ];
