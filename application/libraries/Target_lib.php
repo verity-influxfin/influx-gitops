@@ -421,7 +421,11 @@ class Target_lib
                                         && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
                                         || $renew
                                         || $evaluation_status
-                                        || $creditSheet->hasCreditLine()
+                                        // ----(S)
+                                        // todo: 將「學生貸」、「上班族貸」轉二審，不應有額度就 approve
+                                        // || $creditSheet->hasCreditLine()
+                                        || ($creditSheet->hasCreditLine() && ! in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN]))
+                                        // ----(E)
                                     )
                                     || $subloan_status
                                 ) {
