@@ -20,26 +20,28 @@ class RiskReportController extends Controller
     {
         $this->year = $year;
         $this->month = $month;
-        $result = RiskReportInfo::select(['yearly_rate_of_return', 'this_month_apply', 'total_apply', 'delay_rate'])
+        $data = RiskReportInfo::select(['yearly_rate_of_return', 'this_month_apply', 'total_apply', 'delay_rate'])
             ->where('year', $this->year)
             ->where('month', $this->month)
             ->first();
 
-        if (empty($result)) {
+        if (empty($data)) {
             return $this->return_failed('尚未建立該月份指標');
         }
-        $result = $result->toArray();
+        $data = $data->toArray();
 
-        $result['this_month_apply'] = json_decode($result['this_month_apply'], true);
-        $result['total_apply'] = json_decode($result['total_apply'], true);
+        if (isset($data['this_month_apply']) || json_decode($data['this_month_apply'], true)) {
+            $result['this_month_apply'] = json_decode($data['this_month_apply'], true);
+            $result['growth'] = $this->get_growth_rate($result['this_month_apply']);
+        }
 
-        $delay_rate = json_decode($result['delay_rate'], true);
-        $result['on_time'] = $this->convert_delay_rate_to_on_time_rate($delay_rate);
-        $result['growth'] = $this->get_growth_rate($result['this_month_apply']);
+        if (isset($data['total_apply']) || json_decode($data['total_apply'], true)) {
+            $result['total_apply'] = json_decode($data['total_apply'], true);
+        }
 
-        unset($result['delay_rate']);
-        if (isset($result['this_month_apply']['amount'])) {
-            unset($result['this_month_apply']['amount']);
+        $delay_rate = json_decode($data['delay_rate'], true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $result['on_time'] = $this->convert_delay_rate_to_on_time_rate($delay_rate);
         }
 
         return $this->return_success($result);
@@ -57,9 +59,14 @@ class RiskReportController extends Controller
         $result = [];
 
         $compare_data = $this->get_compare_data();
-        !isset($compare_data['amount']) ?: $result['amount'] = round(($this_month_data['amount'] - $compare_data['amount']) / $compare_data['amount'] * 100);
-        !isset($compare_data['student']) ?: $result['student'] = round(($this_month_data['student'] - $compare_data['student']) / $compare_data['student'] * 100);
-        !isset($compare_data['work']) ?: $result['work'] = round(($this_month_data['work'] - $compare_data['work']) / $compare_data['work'] * 100);
+        empty($compare_data['amount']) || !isset($this_month_data['amount']) ?:
+            $result['amount'] = round(($this_month_data['amount'] - $compare_data['amount']) / $compare_data['amount'] * 100);
+
+        empty($compare_data['student']) || !isset($this_month_data['student']) ?:
+            $result['student'] = round(($this_month_data['student'] - $compare_data['student']) / $compare_data['student'] * 100);
+
+        empty($compare_data['work']) || !isset($this_month_data['work']) ?:
+            $result['work'] = round(($this_month_data['work'] - $compare_data['work']) / $compare_data['work'] * 100);
 
         return $result;
     }
@@ -88,12 +95,18 @@ class RiskReportController extends Controller
             ['start' => 7, 'end' => 10]
         ];
         foreach ($level_span as $level) {
-            $sum = 0;
+            unset($sum);
             for ($i = $level['start']; $i <= $level['end']; $i++) {
                 if (!isset($delay_rate['level' . $i])) {
                     continue;
                 }
+                if (!isset($sum)) {
+                    $sum = 0;
+                }
                 $sum += $delay_rate['level' . $i];
+            }
+            if (!isset($sum)) {
+                continue;
             }
             $result['level' . $level['start']] = round(100 - $sum / ($level['end'] - $level['start'] + 1), 2);
         }
