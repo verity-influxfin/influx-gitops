@@ -5,10 +5,14 @@
       <section class="title">
         <div class="block-content">
           <div class="title-group">
-            <div class="title-1">月 借貸媒合風險報告書</div>
-            <div class="title-2">May 2022</div>
+            <div class="title-1" :data-m="renderDate.m">
+              月 借貸媒合風險報告書
+            </div>
+            <div class="title-2">
+              {{ renderDate.mtext + ' ' + renderDate.y }}
+            </div>
           </div>
-          <div class="hint">以下資料統計至2022年5月31日</div>
+          <div class="hint">以下資料統計至{{ renderDate.ctext }}</div>
         </div>
       </section>
       <section class="anniversary">
@@ -190,26 +194,20 @@
             <!-- Additional required wrapper -->
             <div class="swiper-wrapper">
               <!-- Slides -->
-              <div class="swiper-slide">
-                <a href="javascript:;">
-                  <alesis-button class="month-btn">2022 5月</alesis-button>
-                </a>
-                <a href="javascript:;">
-                  <alesis-button class="month-btn">2022 6月</alesis-button>
-                </a>
-                <a href="javascript:;">
-                  <alesis-button class="month-btn">2022 7月</alesis-button>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="javascript:;">
-                  <alesis-button class="month-btn">2022 8月</alesis-button>
-                </a>
-                <a href="javascript:;">
-                  <alesis-button class="month-btn">2022 9月</alesis-button>
-                </a>
-                <a href="javascript:;">
-                  <alesis-button class="month-btn">2022 10月</alesis-button>
+              <div
+                class="swiper-slide"
+                v-for="(item, index) in renderList"
+                :key="index"
+              >
+                <a
+                  href="javascript:;"
+                  v-for="x in item"
+                  :key="x.month"
+                  @click="getRisk(x.year, x.month)"
+                >
+                  <alesis-button class="month-btn">
+                    {{ x.year }} {{ x.month }}月
+                  </alesis-button>
                 </a>
               </div>
             </div>
@@ -249,7 +247,6 @@ export default {
         prevEl: '.swiper-button-prev',
       },
     });
-    this.getRisk()
   },
   data() {
     return {
@@ -284,7 +281,9 @@ export default {
           work: 0,
         },
       },
-      isLogin: false
+      reportList: [],
+      isLogin: false,
+      currentDate: {}
     }
   },
   created() {
@@ -293,7 +292,12 @@ export default {
       this.$store.commit('mutationLogin')
       this.isLogin = false
     } else {
-      this.checkCert()
+      const cert = this.checkCert()
+      if (cert) {
+        this.getList().then(({ year, month }) => {
+          this.getRisk(year, month)
+        })
+      }
     }
   },
   methods: {
@@ -301,6 +305,20 @@ export default {
       Axios.get(`/api/v1/risk_report/${year}/${month}`).then(({ data }) => {
         if (data.success) {
           this.reportData = data.data
+          this.currentDate = new Date(year, month, 0)
+          if (document.querySelector('.risk-report')) {
+            document.querySelector('.risk-report').scrollIntoView({ behavior: 'smooth' })
+          }
+        }
+      })
+    },
+    getList() {
+      return Axios.get(`/api/v1/risk_report_list`).then(({ data }) => {
+        if (data.success) {
+          this.reportList = data.data
+          // return first element
+          console.log(data.data[0])
+          return data.data[0]
         }
       })
     },
@@ -311,12 +329,14 @@ export default {
       return n.toFixed(f)
     },
     checkCert() {
-      axios.get('/chk/cert/identity').then(({ data }) => {
+      return Axios.get('/chk/cert/identity').then(({ data }) => {
         if (data.error && data.error == 2002) {
           alert('需通過實名認證才可查看本頁面')
           this.$router.back()
+          return false
         } else {
           this.isLogin = true
+          return true
         }
       })
     }
@@ -346,6 +366,32 @@ export default {
           v: require('@/asset/images/risk/risk-rank-p3.svg')
         }
       ].sort((a, b) => { b.k - a.k }).map(x => x.v)
+    },
+    renderList() {
+      const { reportList } = this
+      reportList.reverse()
+      const ans = []
+      for (let index = 0; index < reportList.length; index += 3) {
+        ans.push(reportList.slice(index, index + 3))
+      }
+      return ans
+    },
+    renderDate() {
+      const { currentDate } = this
+      if (currentDate instanceof Date) {
+        return {
+          y: currentDate.getFullYear(),
+          m: currentDate.getMonth() + 1,
+          mtext: currentDate.toLocaleString('en-US', { month: 'long' }),
+          ctext: `${currentDate.getFullYear()}年${currentDate.getMonth() + 1}月${currentDate.getDate()}日`
+        }
+      }
+      return {
+        y: '',
+        m: '',
+        mtext: '',
+        ctext: ``
+      }
     }
   },
 }
@@ -394,7 +440,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       line-height: 70px;
       color: #083a6e;
       &::before {
-        content: '5';
+        content: attr(data-m);
         font-style: normal;
         font-weight: 900;
         font-size: 128px;
@@ -406,7 +452,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     .title-2 {
       position: absolute;
       bottom: 86px;
-      left: 80px;
+      right: 215px;
       font-style: normal;
       font-weight: 700;
       font-size: 36px;
