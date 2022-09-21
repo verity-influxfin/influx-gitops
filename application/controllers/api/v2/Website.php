@@ -1126,4 +1126,51 @@ class Website extends REST_Controller {
     {
         return 'http://' . getenv('PANDORA_IP') . ':' . getenv('PANDORA_PORT');
     }
+
+    /**
+     * 取得每個月的風險報告書數據
+     * @return void
+     */
+    public function each_month_risk_report_get()
+    {
+        $year = $this->input->get('year');
+        $month = $this->input->get('month');
+
+        if (empty($year) || empty($month))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $this->load->library('risk_report_lib');
+        $info_by_month = $this->risk_report_lib->get_info_by_month($year, $month);
+        $info_from_beginning = $this->risk_report_lib->get_info_from_beginning($year, $month);
+        $delayed_info = $this->risk_report_lib->get_delay_rate_by_level($year, $month);
+
+        $data = $this->risk_report_lib->get_initial_data();
+        $data['year'] = $year;
+        $data['month'] = $month;
+        ! isset($info_from_beginning['yearly_rate_of_return']) ?: $data['yearly_rate_of_return'] = (int) $info_from_beginning['yearly_rate_of_return'];
+
+        ! isset($info_by_month['apply_loans_count']) ?: $data['this_month_apply']['all'] = (int) $info_by_month['apply_loans_count'];
+        ! isset($info_by_month['apply_loans_amount']) ?: $data['this_month_apply']['amount'] = (int) $info_by_month['apply_loans_amount'];
+        ! isset($info_by_month['apply_student_loans_count']) ?: $data['this_month_apply']['student'] = (int) $info_by_month['apply_student_loans_count'];
+        ! isset($info_by_month['apply_work_loans_count']) ?: $data['this_month_apply']['work'] = (int) $info_by_month['apply_work_loans_count'];
+        ! isset($info_by_month['delay_users_count']) ?: $data['this_month_apply']['delay_users_count'] = (int) $info_by_month['delay_users_count'];
+        ! isset($info_by_month['delay_loans_count']) ?: $data['this_month_apply']['delay_loans_count'] = (int) $info_by_month['delay_loans_count'];
+
+        ! isset($info_from_beginning['total_apply_success']) ?: $data['total_apply']['success'] = (int) $info_from_beginning['total_apply_success'];
+        ! isset($info_from_beginning['total_apply_amount']) ?: $data['total_apply']['amount'] = (int) $info_from_beginning['total_apply_amount'];
+        ! isset($info_from_beginning['total_apply_count']) ?: $data['total_apply']['count'] = (int) $info_from_beginning['total_apply_count'];
+        ! isset($info_from_beginning['avg_invest']) ?: $data['total_apply']['avg_invest'] = round($info_from_beginning['avg_invest'], 2);
+        ! isset($info_from_beginning['avg_invest_student']) ?: $data['total_apply']['avg_invest_student'] = round($info_from_beginning['avg_invest_student'], 2);
+        ! isset($info_from_beginning['avg_invest_work']) ?: $data['total_apply']['avg_invest_work'] = round($info_from_beginning['avg_invest_work'], 2);
+        ! isset($info_from_beginning['delay_return_amount']) ?: $data['total_apply']['delay_return_amount'] = (int) $info_from_beginning['delay_return_amount'];
+
+        foreach ($delayed_info as $value)
+        {
+            $data['delay_rate']['level' . $value['level']] = round($value['rate'], 2);
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => $data]);
+    }
 }

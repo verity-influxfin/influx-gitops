@@ -421,4 +421,279 @@ class Transaction_model extends MY_Model
         }
         return $this->db->get()->result_array();
     }
+
+    /**
+     * 取得每個月的風險指標
+     * @param $year : 年份
+     * @param $month : 月份
+     * @return array
+     *
+     * delay_users_count 當月逾期人數
+     * delay_loans_count 當月逾期筆數
+     * apply_loans_count 當月申貸案件
+     * apply_loans_amount 當月申貸金額
+     * apply_student_loans_count 當月學生貸申貸案件
+     * apply_work_loans_count 當月上班族貸申貸案件
+     */
+    public function get_risk_report_info_by_month($year, $month)
+    {
+        $date = new DateTime();
+        $date->setDate($year, $month, 1);
+        $start = date('Y-m-d 00:00:00', $date->getTimestamp());
+        $end = date('Y-m-t 23:59:59', $date->getTimestamp());
+
+        if (empty($start) || empty($end))
+        {
+            return [];
+        }
+
+        $sql = '    
+        SELECT (`r1`.`delay_users_count` - `r4`.`debt_settlement_users_count`) AS `delay_users_count`,
+               (`r2`.`delay_loans_count` - `r4`.`debt_settlement_loans_count`) AS `delay_loans_count`,
+               `r5`.*, `r6`.*, `r7`.*
+          FROM (SELECT COUNT(1) AS delay_users_count
+                  FROM (SELECT DISTINCT `user_from`
+                          FROM `p2p_transaction`.`transactions`
+                         WHERE `source` = ' . SOURCE_AR_DELAYINTEREST . '
+                           AND `status` IN (' . TRANSACTION_STATUS_TO_BE_PAID . ', ' . TRANSACTION_STATUS_PAID_OFF . ') 
+                           AND DATE_FORMAT(`limit_date`, "%Y-%m-%d %H:%i:%s") BETWEEN "' . $start . '" AND "' . $end . '") AS `tra`) AS `r1`,
+               (SELECT COUNT(1) AS delay_loans_count
+                  FROM (SELECT DISTINCT `target_id`
+                          FROM `p2p_transaction`.`transactions`
+                         WHERE `source` = ' . SOURCE_AR_DELAYINTEREST . '
+                           AND `status` IN (' . TRANSACTION_STATUS_TO_BE_PAID . ', ' . TRANSACTION_STATUS_PAID_OFF . ')
+                           AND DATE_FORMAT(`limit_date`, "%Y-%m-%d %H:%i:%s") BETWEEN "' . $start . '" AND "' . $end . '") AS `tra`) AS `r2`,
+               (SELECT COUNT(DISTINCT (`targets`.`user_id`)) AS debt_settlement_users_count, COUNT(DISTINCT (`targets`.`id`)) AS debt_settlement_loans_count
+                  FROM (SELECT DISTINCT `target_id`, `limit_date`
+                          FROM `p2p_transaction`.`transactions`
+                         WHERE `source` = ' . SOURCE_AR_DELAYINTEREST . '
+                           AND `status` IN (' . TRANSACTION_STATUS_TO_BE_PAID . ', ' . TRANSACTION_STATUS_PAID_OFF . ')
+                           AND DATE_FORMAT(`limit_date`, "%Y-%m-%d %H:%i:%s") BETWEEN "' . $start . '" AND "' . $end . '") AS `tra`
+                  JOIN (SELECT * FROM `p2p_loan`.`targets` WHERE `delay` = 0) AS `targets` ON `tra`.`target_id` = `targets`.`id`) AS `r4`,
+               (SELECT COUNT(1) AS apply_loans_count, SUM(loan_amount) AS apply_loans_amount FROM `p2p_loan`.`targets`
+                 WHERE DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "' . $start . '" AND "' . $end . '") AS r5,
+               (SELECT COUNT(1) AS apply_student_loans_count FROM `p2p_loan`.`targets`
+                 WHERE `product_id` = ' . PRODUCT_ID_STUDENT . '
+                   AND DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "' . $start . '" AND "' . $end . '") AS r6,
+               (SELECT COUNT(1) AS apply_work_loans_count FROM `p2p_loan`.`targets`
+                 WHERE `product_id` = ' . PRODUCT_ID_SALARY_MAN . '
+                   AND DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "' . $start . '" AND "' . $end . '") AS r7';
+
+        return $this->db->query($sql)->first_row('array');
+    }
+
+    /**
+     * 取得開台至今的風險指標
+     * @param $year : 年份
+     * @param $month : 月份
+     * @return array
+     *
+     * total_apply_success 累計媒合成功件數
+     * total_apply_count 累積筆數
+     * total_apply_amount 累積金額
+     * avg_invest_student 學生貸媒合成功均額
+     * avg_invest_work 上班族貸媒合成功均額
+     * avg_invest 平均每筆投資金額
+     * delayed_return_amount 已累計回收逾期金額
+     * yearly_rate_of_return 平均年化報酬率(%)
+     */
+    public function get_risk_report_info_from_beginning($year, $month)
+    {
+        $date = new DateTime();
+        $date->setDate($year, $month, 1);
+        $end = date('Y-m-t 23:59:59', $date->getTimestamp());
+
+        if (empty($end))
+        {
+            return [];
+        }
+
+        $sql = '
+        SELECT `r1`.*, `r2`.*, `r4`.*, `r5`.*, `r6`.*, `r7`.*,
+               `r7`.`total_apply_amount` / `total_invest_number`.`count` AS `avg_invest`,
+               `total_interest_rate`.`interest_rate` / `total_invest_number`.`count` AS `yearly_rate_of_return`
+          FROM (SELECT COUNT(1) AS `total_apply_success`
+                  FROM `p2p_loan`.`targets`
+                 WHERE DATE_FORMAT(`loan_date`, "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                   AND `status` IN (' . TARGET_REPAYMENTING . ', ' . TARGET_REPAYMENTED . ')
+               ) AS `r1`,
+               (SELECT ((((`r1`.`c` + (`r2`.`c` * 2)) + `r3`.`c`) + `r4`.`c`) + (`r5`.`c` * 2)) AS `total_apply_count`
+                  FROM (SELECT COUNT(1) AS c FROM `p2p_loan`.`investments`
+                         WHERE `status` = ' . INVESTMENT_STATUS_REPAYING . '
+                           AND DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r1`,
+                       (SELECT COUNT(1) AS `c` FROM `p2p_loan`.`investments`
+                         WHERE `status` = ' . INVESTMENT_STATUS_PAID_OFF . '
+                           AND DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r2`,
+                       (SELECT COUNT(1) AS `c` FROM `p2p_loan`.`transfers`
+                         WHERE `status` = ' . TRANSFER_STATUS_FINISHED . '
+                           AND transfer_date BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r3`,
+                       (SELECT COUNT(1) AS c FROM p2p_loan.targets
+                         WHERE `status` = ' . TARGET_REPAYMENTING . '
+                           AND DATE_FORMAT(loan_date, "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r4`,
+                       (SELECT COUNT(1) AS c FROM p2p_loan.targets
+                         WHERE `status` = ' . TARGET_REPAYMENTED . '
+                           AND DATE_FORMAT(`loan_date`, "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r5`
+               ) AS `r2`,
+               (SELECT `student`.`total_amount` / `student`.`total_count` AS `avg_invest_student`
+                  FROM (SELECT SUM(`loan_amount`) AS `total_amount`, COUNT(1) AS `total_count`
+                          FROM `p2p_loan`.`targets`
+                         WHERE DATE_FORMAT(`loan_date`, "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                           AND `product_id` IN (' . PRODUCT_ID_STUDENT . ', ' . PRODUCT_ID_STUDENT_ORDER . ')
+                           AND `status` IN (' . TARGET_REPAYMENTING . ', ' . TARGET_REPAYMENTED . ')
+                       ) AS `student`
+               ) AS `r4`,
+               (SELECT `worker`.`total_amount` / `worker`.`total_count` AS `avg_invest_work`
+                  FROM (SELECT SUM(`loan_amount`) AS `total_amount`, COUNT(1) AS `total_count`
+                          FROM `p2p_loan`.`targets`
+                         WHERE DATE_FORMAT(`loan_date`, "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                           AND `product_id` IN (' . PRODUCT_ID_SALARY_MAN . ', ' . PRODUCT_ID_SALARY_MAN_ORDER . ')
+                           AND `status` IN (' . TARGET_REPAYMENTING . ', ' . TARGET_REPAYMENTED . ')
+                       ) worker
+               ) AS `r5`,
+               (SELECT SUM(`tra`.`amount`) AS delay_return_amount
+                  FROM `p2p_transaction`.`transactions` AS `tra`
+                  JOIN (SELECT DISTINCT `target_id`, `created_at` FROM `p2p_transaction`.`transactions`
+                         WHERE `source` = ' . SOURCE_AR_DELAYINTEREST . '
+                           AND `status` IN (' . TRANSACTION_STATUS_TO_BE_PAID . ', ' . TRANSACTION_STATUS_PAID_OFF . ')
+                           AND DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                         GROUP BY `target_id`
+                       ) AS `r` ON `tra`.`target_id` = `r`.`target_id`
+                 WHERE `source` IN (' . SOURCE_PRINCIPAL . ', ' . SOURCE_INTEREST . ', ' . SOURCE_DAMAGE . ', ' . SOURCE_DELAYINTEREST . ')
+                   AND `status` = ' . TRANSACTION_STATUS_PAID_OFF . '
+                   AND `tra`.`entering_date` BETWEEN DATE_FORMAT(FROM_UNIXTIME(`r`.`created_at`), "%Y-%m-%d") AND "' . $end . '"
+               ) AS `r6`,
+               (SELECT (`r1`.`c` + `r2`.`c` + `r3`.`c`) AS `total_apply_amount`
+                  FROM (SELECT SUM(`loan_amount`) AS `c` FROM `p2p_loan`.`investments` WHERE `status` = ' . INVESTMENT_STATUS_REPAYING . '
+                           AND DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r1`,
+                       (SELECT SUM(`loan_amount`) AS `c` FROM `p2p_loan`.`investments` WHERE `status` = ' . INVESTMENT_STATUS_PAID_OFF . '
+                           AND DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r2`,
+                       (SELECT SUM(`amount`) AS `c` FROM `p2p_loan`.`transfers` WHERE `status` = ' . TRANSFER_STATUS_FINISHED . '
+                           AND `transfer_date` BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r3`
+               ) AS `r7`,
+               (SELECT (`r1`.`c` + `r2`.`c` + `r3`.`c`) AS `count`
+                  FROM (SELECT COUNT(1) AS `c` FROM `p2p_loan`.`investments`
+                         WHERE `status` = ' . INVESTMENT_STATUS_REPAYING . '
+                           AND DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r1`,
+                       (SELECT COUNT(1) AS `c` FROM `p2p_loan`.`investments`
+                         WHERE `status` = ' . INVESTMENT_STATUS_PAID_OFF . '
+                           AND DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r2`,
+                       (SELECT COUNT(1) AS `c` FROM `p2p_loan`.`transfers`
+                         WHERE `status` = ' . TRANSFER_STATUS_FINISHED . '
+                           AND `transfer_date` BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r3`
+               ) AS `total_invest_number`,
+               (SELECT (`r1`.`interest_rate` + `r2`.`interest_rate` + `r3`.`interest_rate`) AS `interest_rate`
+                  FROM (SELECT SUM(`t`.`interest_rate`) AS `interest_rate`
+                          FROM `p2p_loan`.`investments` `i`
+                          JOIN `p2p_loan`.`targets` `t` ON `i`.`target_id` = `t`.`id`
+                         WHERE `i`.`status` = ' . INVESTMENT_STATUS_REPAYING . '
+                           AND DATE_FORMAT(FROM_UNIXTIME(`i`.`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r1`,
+                       (SELECT SUM(`t`.`interest_rate`) AS `interest_rate`
+                          FROM `p2p_loan`.`investments` `i`
+                          JOIN `p2p_loan`.`targets` `t` ON `i`.`target_id` = `t`.`id`
+                         WHERE `i`.`status` = ' . INVESTMENT_STATUS_PAID_OFF . '
+                           AND DATE_FORMAT(FROM_UNIXTIME(`i`.`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r2`,
+                       (SELECT SUM(`t`.`interest_rate`) AS `interest_rate`
+                          FROM `p2p_loan`.`transfers` `tf`
+                          JOIN `p2p_loan`.`targets` `t` ON `tf`.`target_id` = `t`.`id`
+                         WHERE `tf`.`status` = ' . TRANSFER_STATUS_FINISHED . '
+                           AND `tf`.`transfer_date` BETWEEN "2000-01-01 00:00:00" AND "' . $end . '"
+                       ) `r3`
+               ) AS `total_interest_rate`;';
+
+        return $this->db->query($sql)->first_row('array');
+    }
+
+    /**
+     * 取得各信評等級的逾期率
+     * @return array
+     *
+     * level 信評等級
+     * rate 逾期率(%)
+     */
+    public function get_delay_rate_by_level($year, $month)
+    {
+        $date = new DateTime();
+        $date->setDate($year, $month, 1);
+        $end = date('Y-m-t 23:59:59', $date->getTimestamp());
+
+        if (empty($end))
+        {
+            return [];
+        }
+
+        $sql = '
+        SELECT `r`.`level`, (SUM(`r`.`amount`) / `loan`.`total_amount`) AS `rate`
+        FROM (SELECT `max_credit_result`.`max_credit_time`, `tttt`.*
+                FROM (SELECT `ttt`.`target_id`, MAX(`credit_time`) AS `max_credit_time`
+                        FROM
+                        (SELECT `c`.`level`, `c`.`created_at` AS `credit_time`, `trr`.`user_id`, `trr`.`target_id`, `trr`.`amount`, `trr`.`created_at`
+                           FROM `p2p_loan`.`credits` `c`
+                           JOIN (SELECT `t`.`user_id`, `t`.`product_id`, `tr`.*
+                                   FROM `p2p_loan`.`targets` `t`
+                                   JOIN (SELECT `tc`.`id`, `tc`.`created_at`, `r`.*
+                                           FROM `p2p_log`.`targets_change_log` `tc`
+                                           JOIN (SELECT `tra`.`target_id`, SUM(`tra`.`amount`) AS `amount`
+                                                   FROM `p2p_transaction`.`transactions` AS `tra`
+                                                   JOIN (SELECT `target_id`, `limit_date` FROM `p2p_transaction`.`transactions`
+                                                          WHERE `source` = ' . SOURCE_AR_DELAYINTEREST . '
+                                                            AND `status` IN (' . TRANSACTION_STATUS_TO_BE_PAID . ', ' . TRANSACTION_STATUS_PAID_OFF . ')
+                                                          GROUP BY `target_id`) AS `r_tra` ON `tra`.`target_id` = `r_tra`.`target_id`
+                                                  WHERE `source` = ' . SOURCE_AR_PRINCIPAL . ' AND `status` IN (' . TRANSACTION_STATUS_TO_BE_PAID . ', ' . TRANSACTION_STATUS_PAID_OFF . ')
+                                                    AND `tra`.`limit_date` >= `r_tra`.`limit_date`
+                                                  GROUP BY `target_id`) AS `r` ON `tc`.`target_id` = `r`.`target_id`
+                                          WHERE `tc`.`status` = 1
+                                          GROUP BY `r`.`target_id`
+                                         HAVING MAX(`tc`.`created_at`) = `tc`.`created_at`) AS `tr` ON `t`.`id` = `tr`.`target_id`
+                                ) AS `trr` ON `c`.`user_id` = `trr`.`user_id` AND `c`.`product_id` = `trr`.`product_id`
+                          WHERE `c`.`created_at` <= `trr`.`created_at`) AS `ttt`
+                          GROUP BY `target_id`
+                     ) AS `max_credit_result`
+                JOIN (SELECT `ttt`.*
+                        FROM (SELECT `c`.`level`, `c`.`created_at` AS `credit_time`, `trr`.`user_id`, `trr`.`target_id`, `trr`.`amount`, `trr`.`created_at`
+                                FROM `p2p_loan`.`credits` `c`
+                                JOIN (SELECT `t`.`user_id`, `t`.`product_id`, `tr`.*
+                                        FROM `p2p_loan`.`targets` `t`
+                                        JOIN (SELECT `tc`.`id`, `tc`.`created_at`, `r`.*
+                                                FROM `p2p_log`.`targets_change_log` `tc`
+                                                JOIN (SELECT `tra`.`target_id`, SUM(`tra`.`amount`) AS `amount`
+                                                        FROM `p2p_transaction`.`transactions` AS `tra`
+                                                        JOIN (SELECT `target_id`, `limit_date`
+                                                                FROM `p2p_transaction`.`transactions`
+                                                               WHERE `source` = ' . SOURCE_AR_DELAYINTEREST . '
+                                                                 AND `status` IN (' . TRANSACTION_STATUS_TO_BE_PAID . ', ' . TRANSACTION_STATUS_PAID_OFF . ')
+                                                                 AND `entering_date` <= "' . $end . '"
+                                                               GROUP BY `target_id`) AS `r_tra` ON `tra`.`target_id` = `r_tra`.`target_id`
+                                                       WHERE `source` = ' . SOURCE_AR_PRINCIPAL . '
+                                                         AND `status` IN (' . TRANSACTION_STATUS_TO_BE_PAID . ', ' . TRANSACTION_STATUS_PAID_OFF . ')
+                                                         AND `tra`.`limit_date` >= `r_tra`.`limit_date`
+                                                       GROUP BY `target_id`) AS `r` ON `tc`.`target_id` = `r`.`target_id`
+                                               WHERE `tc`.`status` = 1
+                                               GROUP BY `r`.`target_id`
+                                              HAVING MAX(`tc`.`created_at`) = `tc`.`created_at`) AS `tr` ON `t`.`id` = `tr`.`target_id`
+                                     ) AS `trr` ON `c`.`user_id` = `trr`.`user_id` AND `c`.`product_id` = `trr`.`product_id`
+                               WHERE `c`.`created_at` <= `trr`.`created_at`) AS `ttt`
+                     ) AS `tttt` ON `max_credit_result`.`target_id` = `tttt`.`target_id`
+               WHERE `max_credit_result`.`max_credit_time` = `tttt`.`credit_time`
+             ) AS `r`,
+             (SELECT SUM(`loan_amount`) AS `total_amount`
+                FROM `p2p_loan`.`targets` 
+               WHERE `status` IN (' . TARGET_REPAYMENTING . ', ' . TARGET_REPAYMENTED . ')
+             ) AS `loan`
+       GROUP BY `r`.`level`;';
+
+        return $this->db->query($sql)->result_array();
+    }
 }
