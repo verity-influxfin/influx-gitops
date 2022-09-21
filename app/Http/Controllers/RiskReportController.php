@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RiskReportInfo;
+
 class RiskReportController extends Controller
 {
     public function get_info_by_month($year, $month)
@@ -37,6 +39,13 @@ class RiskReportController extends Controller
                 'work' => 3.50,
             ],
         ];
+        return $this->return_success($result);
+    }
+
+    public function get_list()
+    {
+        $result = RiskReportInfo::get(['year', 'month'])->sortByDesc('year')->sortByDesc('month')->toArray();
+        $result = array_values($result);
         return $this->return_success($result);
     }
 }
