@@ -419,7 +419,7 @@ Route::prefix('api/v1')->group(function() {
 
     // 風險報告書
     Route::get('/risk_report/{year}/{month}', 'RiskReportController@get_info_by_month');
-    Route::get('/risk_report_list', 'RiskReportController@get_list');
+    Route::get('/risk_report_list', 'RiskReportController@get_list')->middleware('cert.chk:identity');
 });
 
 // 捐款動畫 SSE API
