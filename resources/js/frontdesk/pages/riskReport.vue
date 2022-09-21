@@ -80,7 +80,7 @@
           <div class="success-case-item">
             <h1 class="h1">累積金額</h1>
             <div class="success-case-value">
-              {{ format(reportData.total_apply.money) }}
+              {{ format(reportData.total_apply.amount) }}
             </div>
             <div class="h1">元</div>
           </div>
@@ -115,18 +115,18 @@
             <div>
               逾期概況：已累計回收逾期金額
               <span class="em">
-                {{ format(reportData.total_delay.return_money) }}
+                {{ format(reportData.total_apply.delay_return_amount) }}
               </span>
               元
             </div>
             <div class="sm">
               <div>
                 當月逾期人數:
-                {{ format(reportData.total_delay.users_count) }} 人
+                {{ format(reportData.this_month_apply.delay_users_count) }} 人
               </div>
               <div>
                 當月逾期筆數:
-                {{ format(reportData.total_delay.loans_count) }} 筆
+                {{ format(reportData.this_month_apply.delay_loans_count) }} 筆
               </div>
             </div>
           </h3>
@@ -171,7 +171,7 @@
         <div class="block-content">
           <div class="block-text">
             本月媒合金額，較去年同月<span class="em">
-              ↑增長 {{ formatPercent(reportData.growth.money) }}%
+              ↑增長 {{ formatPercent(reportData.growth.amount) }}%
             </span>
           </div>
           <div class="block-text">
@@ -256,19 +256,17 @@ export default {
           all: 0,
           student: 0,
           work: 0,
+          delay_loans_count: 0,
+          delay_users_count: 0,
         },
         total_apply: {
           success: 0,
-          money: 0,
+          amount: 0,
           count: 0,
           avg_invest: 0,
           avg_invest_student: 0,
           avg_invest_work: 0,
-        },
-        total_delay: {
-          return_money: 0,
-          users_count: 0,
-          loans_count: 0,
+          delay_return_amount: 0,
         },
         on_time: {
           rate_level1: 0,
@@ -276,7 +274,7 @@ export default {
           rate_level7: 0,
         },
         growth: {
-          money: 0,
+          amount: 0,
           student: 0,
           work: 0,
         },

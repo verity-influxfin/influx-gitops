@@ -97,6 +97,7 @@ class GetRiskReport extends Command
         $result = [];
 
         !isset($detail['all']) ?: $result['all'] = (int)$detail['all'];
+        !isset($detail['amount']) ?: $result['amount'] = (int)$detail['amount'];
         !isset($detail['student']) ?: $result['student'] = (int)$detail['student'];
         !isset($detail['work']) ?: $result['work'] = (int)$detail['work'];
         !isset($detail['delay_users_count']) ?: $result['delay_users_count'] = (int)$detail['delay_users_count'];
@@ -111,12 +112,12 @@ class GetRiskReport extends Command
         $result = [];
 
         !isset($detail['success']) ?: $result['success'] = (int)$detail['success'];
-        !isset($detail['money']) ?: $result['money'] = (int)$detail['money'];
+        !isset($detail['amount']) ?: $result['amount'] = (int)$detail['amount'];
         !isset($detail['count']) ?: $result['count'] = (int)$detail['count'];
         !isset($detail['avg_invest']) ?: $result['avg_invest'] = $this->get_double_number($detail['avg_invest']);
         !isset($detail['avg_invest_student']) ?: $result['avg_invest_student'] = $this->get_double_number($detail['avg_invest_student']);
         !isset($detail['avg_invest_work']) ?: $result['avg_invest_work'] = $this->get_double_number($detail['avg_invest_work']);
-        !isset($detail['delay_return_money']) ?: $result['delay_return_money'] = (int)$detail['delay_return_money'];
+        !isset($detail['delay_return_amount']) ?: $result['delay_return_amount'] = (int)$detail['delay_return_amount'];
 
         return $result;
     }
