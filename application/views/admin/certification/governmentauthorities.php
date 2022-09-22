@@ -483,10 +483,27 @@
                                                     <tr>
                                                         <td>職稱</td><td><?=$value['職稱']?></td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>持有股份數(股)</td><td><?=$value['持有股份數(股)']?></td>
-                                                    </tr>
+													<?php
+													if (isset($value['持有股份數(股)']))
+													{
+													?>
+                                                        <tr>
+                                                            <td>持有股份數(股)</td><td><?=$value['持有股份數(股)']?></td>
+                                                        </tr>
+													<?php
+													}
+													?>
+													<?php
+													if (isset($value['出資額(元)']))
+													{
+													?>
+														<tr>
+															<td>出資額(元)</td><td><?=$value['出資額(元)']?></td>
+														</tr>
                                                     <?php
+													}
+													?>
+                                                <?php
                                                 }
                                                 ?>
                                                 </tbody>
