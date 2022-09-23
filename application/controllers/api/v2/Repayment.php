@@ -194,6 +194,7 @@ class Repayment extends REST_Controller {
             $delay_targets = $this->target_model->as_array()->order_by('delay_days', 'desc')->get_many_by([
                 'id' => $all_targets_id,
                 'delay' => 1,
+                'delay_days >' => GRACE_PERIOD, // 寬限期內的案件不算逾期
                 'status' => TARGET_REPAYMENTING
             ]);
             $delay_targets_id = array_column($delay_targets, 'id');
@@ -202,7 +203,7 @@ class Repayment extends REST_Controller {
             // 正常案件
             $normal_targets = $this->target_model->as_array()->order_by('loan_date', 'asc')->get_many_by([
                 'id' => $all_targets_id,
-                'delay' => 0,
+                'id NOT' => $delay_targets_id,
                 'status' => TARGET_REPAYMENTING
             ]);
             $normal_targets_id = array_column($normal_targets, 'id');
