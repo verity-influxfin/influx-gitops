@@ -126,6 +126,8 @@ class Certification_factory
                 return new Cert_social_intelligent($certification, $certification_result);
             case CERTIFICATION_COMPANYEMAIL: // 公司電子信箱
                 return new Cert_companyemail($certification, $certification_result);
+            case CERTIFICATION_JUDICIALGUARANTEE: // 公司授權核實
+                return new Cert_judicialguarantee($certification, $certification_result);
             default:
                 log_msg('error', "欲建立未支援的認證徵信項目 (認證編號:{$certification['certification_id']}) ");
                 return NULL;
