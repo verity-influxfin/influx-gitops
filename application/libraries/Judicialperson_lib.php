@@ -126,20 +126,11 @@ class Judicialperson_lib{
 
 	// 法人人臉辨識排程
 	function script_check_judicial_person_face($info){
-        if (is_array($info))
-        {
-            $info = json_decode(json_encode($info));
-        }
 		$this->CI->load->model('user/judicial_person_model');
         $judicial_person_info = $this->CI->judicial_person_model->get_by([
             'company_user_id' => $info->user_id,
             'status' => 0,
         ]);
-
-        if (empty($judicial_person_info))
-        {
-            return [];
-        }
 
         $image_info = isset($judicial_person_info->sign_video) && json_decode($judicial_person_info->sign_video,true) ? json_decode($judicial_person_info->sign_video,true) : [];
         $governmentauthorities_image = isset($image_info['image_url']) ? $image_info['image_url'] : '';

@@ -306,25 +306,13 @@ class Certification_lib{
         {
 			$certification 	= $this->certification[$info->certification_id];
 			$method			= $certification['alias'].'_verify';
-
-            $cert = Certification_factory::get_instance_by_model_resource($info);
-            if (isset($cert))
-            { // 新的認證項驗證架構，非所有認證項都有實例化
-                return $cert->verify();
-            }
-            else
-            { // 舊的認證項驗證架構
-                if (method_exists($this, $method))
-                {
-                    $rs = $this->$method($info);
-                }
-                else
-                {
-                    $rs = $this->CI->user_certification_model->update($info->id, array(
-                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
-                    ));
-                }
-            }
+			if(method_exists($this, $method)){
+				$rs = $this->$method($info);
+			}else{
+				$rs = $this->CI->user_certification_model->update($info->id,array(
+                    'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+				));
+			}
 			return $rs;
 		}
 		return false;
