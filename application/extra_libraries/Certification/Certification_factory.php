@@ -124,6 +124,8 @@ class Certification_factory
                 return new Cert_criminalrecord($certification, $certification_result);
             case CERTIFICATION_SOCIAL_INTELLIGENT: // (名校貸)社交帳號
                 return new Cert_social_intelligent($certification, $certification_result);
+            case CERTIFICATION_GOVERNMENTAUTHORITIES: // 公司變更事項登記表
+                return new Cert_governmentauthorities($certification, $certification_result);
             case CERTIFICATION_COMPANYEMAIL: // 公司電子信箱
                 return new Cert_companyemail($certification, $certification_result);
             case CERTIFICATION_JUDICIALGUARANTEE: // 公司授權核實
