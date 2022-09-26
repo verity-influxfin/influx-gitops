@@ -153,7 +153,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         }
 
         $content = $this->data_mapping($res['data']);
-        return $this->return_success($content, $content['msg'], 200);
+        return $this->return_success($content, '', 200);
     }
 
     /**
