@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // 取得顯示在首頁的三數據
         $schedule->command('accumulatedData:get')->hourly();
+        $schedule->command('sitemap:Generate')->daily();
     }
 
     /**
