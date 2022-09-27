@@ -49,8 +49,7 @@ class RiskReportController extends Controller
 
     public function get_list()
     {
-        $result = RiskReportInfo::get(['year', 'month'])->sortByDesc('year')->sortByDesc('month')->toArray();
-        $result = array_values($result);
+        $result = RiskReportInfo::orderBy('year', 'desc')->orderBy('month', 'desc')->get(['year', 'month']);
         return $this->return_success($result);
     }
 
