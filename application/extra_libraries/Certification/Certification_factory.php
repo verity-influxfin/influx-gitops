@@ -84,7 +84,7 @@ class Certification_factory
             return NULL;
         }
 
-        if (in_array($certification['certification_id'], [CERTIFICATION_EMAIL, CERTIFICATION_COMPANYEMAIL]))
+        if ($certification['certification_id'] == CERTIFICATION_EMAIL)
         { // 當徵信項為「常用電子信箱」時 result 預設為待驗證
             $certification_result = CertificationResultFactory::getInstance($certification['certification_id'], CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
         }
@@ -124,12 +124,6 @@ class Certification_factory
                 return new Cert_criminalrecord($certification, $certification_result);
             case CERTIFICATION_SOCIAL_INTELLIGENT: // (名校貸)社交帳號
                 return new Cert_social_intelligent($certification, $certification_result);
-            case CERTIFICATION_GOVERNMENTAUTHORITIES: // 公司變更事項登記表
-                return new Cert_governmentauthorities($certification, $certification_result);
-            case CERTIFICATION_COMPANYEMAIL: // 公司電子信箱
-                return new Cert_companyemail($certification, $certification_result);
-            case CERTIFICATION_JUDICIALGUARANTEE: // 公司授權核實
-                return new Cert_judicialguarantee($certification, $certification_result);
             default:
                 log_msg('error', "欲建立未支援的認證徵信項目 (認證編號:{$certification['certification_id']}) ");
                 return NULL;

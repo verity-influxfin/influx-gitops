@@ -36,7 +36,7 @@ class Scraper extends MY_Admin_Controller
 
     private function _get_new_domicile($domicile)
     {
-        preg_match('/([\x{4e00}-\x{9fa5}]+)(縣|市)/u', str_replace('台', '臺', $domicile), $matches);
+        preg_match('/([\x{4e00}-\x{9fa5}]{2})(縣|市)/u', str_replace('台', '臺', $domicile), $matches);
         if ( ! empty($matches))
         {
             $domicile = $matches[1];

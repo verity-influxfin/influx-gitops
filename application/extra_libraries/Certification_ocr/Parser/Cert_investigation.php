@@ -41,7 +41,6 @@ class Cert_investigation extends Ocr_parser_base
         }
         return [
             'is_valid' => isset($task_res_data['is_valid_bool']) && $task_res_data['is_valid_bool'] === TRUE,
-            'msg' => $task_res_data['is_valid_msg'],
             'applierInfo' => [
                 'basicInfo' => [
                     'personId' => $task_res_data['person_basic_info_table']['person_id'] ?? '',
