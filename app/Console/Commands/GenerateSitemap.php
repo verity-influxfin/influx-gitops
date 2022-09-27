@@ -57,7 +57,7 @@ class GenerateSitemap extends Command
             $content .= '  <lastmod>' . $date . '</lastmod>'.PHP_EOL;
             $content .= '  <changefreq>weekly</changefreq>'.PHP_EOL;
             $content .= '  <priority>0.6</priority>'.PHP_EOL;
-            $content .= '<url>'.PHP_EOL;
+            $content .= '</url>'.PHP_EOL;
             fwrite($file, $content);
         }
         // for knowledge article
@@ -68,7 +68,7 @@ class GenerateSitemap extends Command
             $content .= '  <lastmod>' . $date . '</lastmod>'.PHP_EOL;
             $content .= '  <changefreq>weekly</changefreq>'.PHP_EOL;
             $content .= '  <priority>0.6</priority>'.PHP_EOL;
-            $content .= '<url>'.PHP_EOL;
+            $content .= '</url>'.PHP_EOL;
             fwrite($file, $content);
         }
         // close file
