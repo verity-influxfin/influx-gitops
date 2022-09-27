@@ -180,7 +180,7 @@ class Cert_identity extends Certification_base
         // 取得地址
         $info = $this->CI->user_model->get($this->certification['user_id']);
         $address = isset($info->address) ? $info->address : '';
-        preg_match('/([\x{4e00}-\x{9fa5}]+)(縣|市)/u', str_replace('台', '臺', $address), $matches);
+        preg_match('/([\x{4e00}-\x{9fa5}]{2})(縣|市)/u', str_replace('台', '臺', $address), $matches);
         $domicile = ! empty($matches) ? $matches[1] : '';
 
         foreach ($names as $name)
