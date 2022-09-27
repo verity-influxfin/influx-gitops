@@ -65,7 +65,7 @@ class Judicial_yuan_lib
         }
         $query = urlencode($query);
 
-        if($address)
+        if( ! $address)
         {
             $url = $this->scraper_url . '/status?query=' . $query;
         }
@@ -93,7 +93,7 @@ class Judicial_yuan_lib
         }
         $query = urlencode($query);
 
-        if($address)
+        if( ! $address)
         {
             $url = $this->scraper_url . '/count?query=' . $query;
         }
@@ -122,7 +122,7 @@ class Judicial_yuan_lib
         $query = urlencode($query);
         $case = urlencode($case);
 
-        if($address)
+        if( ! $address)
         {
             $url = $this->scraper_url . '/case?query=' . $query . '&case=' . $case;
         }
@@ -150,7 +150,7 @@ class Judicial_yuan_lib
         }
         $query = urlencode($query);
 
-        if($address)
+        if( ! $address)
         {
             $url = $this->scraper_url . '/result?query=' . $query;
         }
