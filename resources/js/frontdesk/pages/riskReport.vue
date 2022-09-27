@@ -5,12 +5,11 @@
       <section class="title">
         <div class="block-content">
           <div class="title-group">
-            <div class="title-1" :data-m="renderDate.m">
-              月 借貸媒合風險報告書
-            </div>
+            <div class="title-m">{{ renderDate.m }}</div>
             <div class="title-2">
               {{ renderDate.mtext + ' ' + renderDate.y }}
             </div>
+            <div class="title-1">月 借貸媒合風險報告書</div>
           </div>
           <div class="hint">以下資料統計至{{ renderDate.ctext }}</div>
         </div>
@@ -20,9 +19,10 @@
         <div class="block-content">
           <div class="value-group">
             <span class="value-1">{{ yearRateOfReturnRender.num }}</span>
-            <span class="value-2">
+            <span class="value-2" v-if="yearRateOfReturnRender.fractional">
               .{{ yearRateOfReturnRender.fractional }}％
             </span>
+            <span class="value-2">％</span>
           </div>
         </div>
       </section>
@@ -47,21 +47,29 @@
                 <div>{{ format(reportData.this_month_apply.work) }}件</div>
               </div>
             </h1>
-            <div class="apply-case-bar-group">
+            <div class="apply-case-bar-group" v-if="monthApplyPercent">
               <div
                 class="apply-case-bar-left"
                 :style="{
                   width: 'calc(' + monthApplyPercent.student + '% + 100px)',
                 }"
               >
-                <span class="apply-case-bar-text">38%</span>
+                <span class="apply-case-bar-text">
+                  {{ format(monthApplyPercent.student) }}%
+                </span>
               </div>
               <div
                 class="apply-case-bar-right"
                 :style="{ width: monthApplyPercent.work + '%' }"
               >
-                <span class="apply-case-bar-text">62%</span>
+                <span class="apply-case-bar-text">
+                  {{ format(monthApplyPercent.work) }}%
+                </span>
               </div>
+            </div>
+            <div class="apply-case-bar-group" v-else>
+              <div class="apply-case-bar-left col-6"></div>
+              <div class="apply-case-bar-right col-6"></div>
             </div>
           </div>
         </div>
@@ -240,13 +248,6 @@ export default {
   },
   mounted() {
     SwiperCore.use([Navigation]);
-    // 初始化這個案例分享容器幻燈片。
-    new Swiper('.swiper', {
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    });
   },
   data() {
     return {
@@ -315,15 +316,20 @@ export default {
         if (data.success) {
           this.reportList = data.data
           // return first element
-          console.log(data.data[0])
           return data.data[0]
         }
       })
     },
-    format(n = 0) {
+    format(n) {
+      if (!Boolean(n)) {
+        return '__'
+      }
       return n.toLocaleString()
     },
     formatPercent(n, f = 1) {
+      if (!Boolean(n)) {
+        return '__'
+      }
       return n.toFixed(f)
     },
     checkCert() {
@@ -346,6 +352,9 @@ export default {
     },
     monthApplyPercent() {
       const student = (this.reportData.this_month_apply.student / this.reportData.this_month_apply.all).toFixed(2) * 100
+      if (isNaN(student)) {
+        return false
+      }
       return {
         student,
         work: 100 - student
@@ -392,6 +401,18 @@ export default {
       }
     }
   },
+  watch: {
+    renderList() {
+      this.$nextTick().then(() => {
+        new Swiper('.swiper', {
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        })
+      })
+    }
+  },
 }
 </script>
 
@@ -431,31 +452,34 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
   }
   .title-group {
     position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr 1fr;
+    .title-m {
+      font-style: normal;
+      font-weight: 900;
+      font-size: 128px;
+      line-height: 1.4;
+      margin-right: 5px;
+      color: $color__text--primary;
+      grid-area: 1 / 1 / 3 / 2;
+      align-self: center;
+    }
     .title-1 {
       font-style: normal;
       font-weight: 700;
       font-size: 48px;
       line-height: 70px;
       color: #083a6e;
-      &::before {
-        content: attr(data-m);
-        font-style: normal;
-        font-weight: 900;
-        font-size: 128px;
-        line-height: 1.4;
-        margin-right: 5px;
-        color: $color__text--primary;
-      }
     }
     .title-2 {
-      position: absolute;
-      bottom: 86px;
-      right: 215px;
       font-style: normal;
       font-weight: 700;
       font-size: 36px;
       line-height: 1.4;
       color: #393939;
+      padding-left: 12px;
+      align-self: end;
     }
   }
   .hint {
@@ -807,22 +831,20 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     }
     .title-group {
       position: relative;
+      .title-m {
+        font-size: 96px;
+      }
       .title-1 {
         font-size: 24px;
         line-height: 38px;
-        &::before {
-          content: '5';
-          font-size: 96px;
-        }
       }
       .title-2 {
-        bottom: 50px;
-        left: 62px;
         font-style: normal;
         font-weight: 700;
-        font-size: 20px;
+        font-size: 24px;
         line-height: 1.4;
         color: #393939;
+        padding-left: 5px;
       }
     }
     .hint {
