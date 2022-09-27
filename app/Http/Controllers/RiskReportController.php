@@ -29,7 +29,7 @@ class RiskReportController extends Controller
             return $this->return_failed('尚未建立該月份指標');
         }
         $data = $data->toArray();
-
+        $result = ['yearly_rate_of_return' => $data['yearly_rate_of_return'] ?? 0];
         if (isset($data['this_month_apply']) || json_decode($data['this_month_apply'], true)) {
             $result['this_month_apply'] = json_decode($data['this_month_apply'], true);
             $result['growth'] = $this->get_growth_rate($result['this_month_apply']);
