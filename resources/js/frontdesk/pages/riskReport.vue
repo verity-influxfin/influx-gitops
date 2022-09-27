@@ -151,7 +151,7 @@
               class="img-fluid risk-rank-img"
             />
             <div class="risk-rank-text">
-              {{ format(reportData.on_time.rate_level1) }}%
+              {{ format(reportData.on_time.level1) }}%
             </div>
           </div>
           <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[1] + ')' }">
@@ -160,7 +160,7 @@
               class="img-fluid risk-rank-img"
             />
             <div class="risk-rank-text">
-              {{ format(reportData.on_time.rate_level4) }}%
+              {{ format(reportData.on_time.level4) }}%
             </div>
           </div>
           <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[2] + ')' }">
@@ -169,7 +169,7 @@
               class="img-fluid risk-rank-img"
             />
             <div class="risk-rank-text">
-              {{ format(reportData.on_time.rate_level7) }}%
+              {{ format(reportData.on_time.level7) }}%
             </div>
           </div>
         </div>
@@ -270,9 +270,9 @@ export default {
           delay_return_amount: 0,
         },
         on_time: {
-          rate_level1: 0,
-          rate_level4: 0,
-          rate_level7: 0,
+          level1: 0,
+          level4: 0,
+          level7: 0,
         },
         growth: {
           amount: 0,
@@ -363,20 +363,20 @@ export default {
     rankBg() {
       return [
         {
-          k: this.reportData.on_time.rate_level1,
+          k: this.reportData.on_time.level1,
           v: require('@/asset/images/risk/risk-rank-p1.svg')
         }, {
-          k: this.reportData.on_time.rate_level4,
+          k: this.reportData.on_time.level4,
           v: require('@/asset/images/risk/risk-rank-p2.svg')
         }, {
-          k: this.reportData.on_time.rate_level7,
+          k: this.reportData.on_time.level7,
           v: require('@/asset/images/risk/risk-rank-p3.svg')
         }
       ].sort((a, b) => { b.k - a.k }).map(x => x.v)
     },
     renderList() {
       const { reportList } = this
-      reportList.reverse()
+      // reportList.reverse()
       const ans = []
       for (let index = 0; index < reportList.length; index += 3) {
         ans.push(reportList.slice(index, index + 3))
