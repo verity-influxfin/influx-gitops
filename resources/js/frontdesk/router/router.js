@@ -152,7 +152,6 @@ let routers = [
     { path: '/companycooperation', component: companyCooperation },
     { path: '/feedback', component: feedback },
     { path: '/event', component: event },
-    { path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
     {path:'/charitable',component:ntu},
