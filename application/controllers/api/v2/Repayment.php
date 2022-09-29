@@ -175,7 +175,7 @@ class Repayment extends REST_Controller {
 			'liquidated_damages' => 0,
 		];
 
-		$transaction 			= $this->transaction_model->order_by('limit_date','asc')->get_many_by([
+        $transaction = $this->transaction_model->order_by('limit_date','desc')->get_many_by([
 			'user_from'	=> $user_id,
 			'status'	=> 1,
 			'source' 	=> [
@@ -187,8 +187,36 @@ class Repayment extends REST_Controller {
 		]);
 
 		if($transaction){
-			$first 					= current($transaction);
-			$next_repayment['date'] = $first->limit_date;
+            // 全部案件
+            $all_targets = array_column($transaction, 'limit_date', 'target_id');
+            $all_targets_id = array_keys($all_targets);
+            // 逾期案件
+            $delay_targets = $this->target_model->as_array()->order_by('delay_days', 'desc')->get_many_by([
+                'id' => $all_targets_id,
+                'delay' => 1,
+                'delay_days >' => GRACE_PERIOD, // 寬限期內的案件不算逾期
+                'status' => TARGET_REPAYMENTING
+            ]);
+            $delay_targets_id = array_column($delay_targets, 'id');
+            $first_delay_repayment_date = $all_targets[current($delay_targets_id)] ?? '';
+            $delay_repayment_amount = 0;
+            // 正常案件
+            if ( ! empty($delay_targets_id))
+            {
+                $normal_targets = $this->target_model->as_array()->order_by('loan_date', 'asc')->get_many_by([
+                    'id' => $all_targets_id,
+                    'id NOT' => $delay_targets_id,
+                    'status' => TARGET_REPAYMENTING
+                ]);
+                $normal_targets_id = array_column($normal_targets, 'id');
+            }
+            else
+            {
+                $normal_targets_id = [];
+            }
+            $first_normal_repayment_date = $all_targets[current($normal_targets_id)] ?? '';
+            $normal_repayment_amount = 0;
+
 			foreach($transaction as $key => $value){
 				switch($value->source){
 					case SOURCE_AR_PRINCIPAL:
@@ -207,10 +235,18 @@ class Repayment extends REST_Controller {
 						break;
 				}
 
-				if($value->limit_date == $next_repayment['date']){
-					$next_repayment['amount'] += $value->amount;
-				}
-			}
+                if (in_array($value->target_id, $delay_targets_id))
+                {
+                    $delay_repayment_amount += $value->amount;
+                }
+
+                if (in_array($value->target_id, $normal_targets_id) && $value->limit_date <= $first_normal_repayment_date)
+                {
+                    $normal_repayment_amount += $value->amount;
+                }
+            }
+            $next_repayment['amount'] = $delay_repayment_amount + $normal_repayment_amount;
+            $next_repayment['date'] = ! empty($first_normal_repayment_date) ? $first_normal_repayment_date : $first_delay_repayment_date;
 		}
 
         $virtualAcount = $this->virtual_account_model->get_by([
