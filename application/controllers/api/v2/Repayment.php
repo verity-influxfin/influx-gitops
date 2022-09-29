@@ -201,19 +201,16 @@ class Repayment extends REST_Controller {
             $first_delay_repayment_date = $all_targets[current($delay_targets_id)] ?? '';
             $delay_repayment_amount = 0;
             // 正常案件
+            $normal_targets_param = [
+                'id' => $all_targets_id,
+                'status' => TARGET_REPAYMENTING
+            ];
             if ( ! empty($delay_targets_id))
             {
-                $normal_targets = $this->target_model->as_array()->order_by('loan_date', 'asc')->get_many_by([
-                    'id' => $all_targets_id,
-                    'id NOT' => $delay_targets_id,
-                    'status' => TARGET_REPAYMENTING
-                ]);
-                $normal_targets_id = array_column($normal_targets, 'id');
+                $normal_targets_param['id NOT'] = $delay_targets_id;
             }
-            else
-            {
-                $normal_targets_id = [];
-            }
+            $normal_targets = $this->target_model->as_array()->order_by('loan_date', 'asc')->get_many_by($normal_targets_param);
+            $normal_targets_id = array_column($normal_targets, 'id');
             $first_normal_repayment_date = $all_targets[current($normal_targets_id)] ?? '';
             $normal_repayment_amount = 0;
 
