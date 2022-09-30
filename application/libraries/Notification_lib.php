@@ -539,7 +539,7 @@ $name 您好，
 (使用者編號 $user_id ，借款案號 $target_no )，
 債權已轉讓與新債權人(使用者編號 $new_user_id )，
 您的計息方式仍按原有約定辦理，僅此通知。";
-            $type = 'b03';
+            $type = 'b08';
 		}
 
 		$param = array(

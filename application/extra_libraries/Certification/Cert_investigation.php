@@ -151,15 +151,16 @@ class Cert_investigation extends Certification_base
             return FALSE;
         }
 
+        $details = $content['ocr_parser']['msg'];
         if ($content['ocr_parser']['res'] === FALSE)
         {
-            $this->result->addMessage('聯徵PDF解析失敗，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage("聯徵PDF解析失敗，需人工驗證，細節：{$details}", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
 
         if($this->_chk_data_complete($content) === FALSE)
         {
-            $this->result->addMessage('聯徵PDF辨識結果有誤，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage("聯徵PDF辨識結果有誤，需人工驗證，細節：{$details}", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
 
@@ -289,6 +290,7 @@ class Cert_investigation extends Certification_base
         {
             $cert_ocr_parser = Ocr_parser_factory::get_instance($this->certification);
             $ocr_parser_result = $cert_ocr_parser->get_result();
+            $result['ocr_parser']['msg'] = $ocr_parser_result['msg'];
             if ($ocr_parser_result['success'] === TRUE)
             {
                 if ($ocr_parser_result['code'] == 201 || $ocr_parser_result['code'] == 202)
@@ -301,7 +303,6 @@ class Cert_investigation extends Certification_base
             else
             {
                 $result['ocr_parser']['res'] = FALSE;
-                $result['ocr_parser']['msg'] = $ocr_parser_result['msg'];
             }
         }
         return $result;

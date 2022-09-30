@@ -36,7 +36,7 @@ class Scraper extends MY_Admin_Controller
 
     private function _get_new_domicile($domicile)
     {
-        preg_match('/([\x{4e00}-\x{9fa5}]+)(縣|市)/u', str_replace('台', '臺', $domicile), $matches);
+        preg_match('/([\x{4e00}-\x{9fa5}]{2})(縣|市)/u', str_replace('台', '臺', $domicile), $matches);
         if ( ! empty($matches))
         {
             $domicile = $matches[1];
@@ -356,7 +356,9 @@ class Scraper extends MY_Admin_Controller
 			echo json_encode(['message' => 'parameter not correct']);
 		}
         $name = $input['name'];
-        $judicial_yuan_status = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name);      
+        $address = $input['address'] ?? '';
+        $address_keyword = $this->_get_new_domicile($address);
+        $judicial_yuan_status = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name, $address_keyword);
         if (isset($judicial_yuan_status['response']['status']) && ! empty($judicial_yuan_status['response']['status']))
         {
             $response['judicial_yuan_status'] = $judicial_yuan_status['response']['status'];

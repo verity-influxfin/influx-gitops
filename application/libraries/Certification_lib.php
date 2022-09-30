@@ -309,20 +309,24 @@ class Certification_lib{
 			$certification 	= $this->certification[$info->certification_id];
 			$method			= $certification['alias'].'_verify';
 
-            // 新的徵信審核方式
             $cert = Certification_factory::get_instance_by_model_resource($info);
-            if ( ! empty($cert))
-            {
+            if (isset($cert))
+            { // 新的認證項驗證架構，非所有認證項都有實例化
                 return $cert->verify();
             }
-            // 舊的徵信審核方式
-			if(method_exists($this, $method)){
-				$rs = $this->$method($info);
-			}else{
-				$rs = $this->CI->user_certification_model->update($info->id,array(
-                    'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
-				));
-			}
+            else
+            { // 舊的認證項驗證架構
+                if (method_exists($this, $method))
+                {
+                    $rs = $this->$method($info);
+                }
+                else
+                {
+                    $rs = $this->CI->user_certification_model->update($info->id, array(
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                    ));
+                }
+            }
 			return $rs;
 		}
 		return false;
@@ -1232,7 +1236,6 @@ class Certification_lib{
 		return false;
 	}
 
-
 	public function employeeinsurancelist_verify($info = array(), $url=null){
 		// $user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
 		// if($user_certification==false || $user_certification->status!=1){
@@ -1340,6 +1343,26 @@ class Certification_lib{
 		}
 		return false;
 	}
+
+    public function judicialguarantee_verify($info = array(), $url=null){
+        if($info && $info->certification_id == CERTIFICATION_JUDICIALGUARANTEE && $info->status == 0){
+            $info->content = isset($info->content) ? json_decode($info->content,true) : [];
+            $this->CI->load->library('Judicialperson_lib');
+            $res = $this->CI->judicialperson_lib->script_check_judicial_person_face($info);
+            if($res){
+                $info->content['judicialPersonId'] = $res['judicialPersonId'];
+                $info->content['compareResult'] = $res['compareResult'];
+                $this->CI->user_certification_model->update($info->id, array(
+                    'status' => $res['status'],
+                    'sys_check' => 1,
+                    'content' => json_encode($info->content),
+                ));
+            }
+
+            return true;
+        }
+        return false;
+    }
 
     public function profilejudicial_verify($info = array(), $url=null){
         if($info && $info->certification_id == CERTIFICATION_PROFILEJUDICIAL && $info->status == 0){
@@ -1757,7 +1780,7 @@ class Certification_lib{
 
             // 取得地址
             $address = isset($user->address) ? $user->address : '';
-            preg_match('/([\x{4e00}-\x{9fa5}]+)(縣|市)/u', str_replace('台', '臺', $address), $matches);
+            preg_match('/([\x{4e00}-\x{9fa5}]{2})(縣|市)/u', str_replace('台', '臺', $address), $matches);
             $domicile = ! empty($matches) ? $matches[1] : '';
 
             foreach ($names as $name)

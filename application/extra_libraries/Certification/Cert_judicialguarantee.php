@@ -1,6 +1,8 @@
 <?php
 
 namespace Certification;
+use CertificationResult\CertificationResult;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
@@ -10,6 +12,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Cert_judicialguarantee extends Certification_base
 {
+    public function __construct($certification, CertificationResult $result)
+    {
+        parent::__construct($certification, $result);
+        $this->CI->load->library('judicialperson_lib');
+    }
+
     /**
      * @var int 該徵信項之代表編號
      */
@@ -18,7 +26,7 @@ class Cert_judicialguarantee extends Certification_base
     /**
      * @var array 所需依賴徵信項之編號
      */
-    protected $dependency_cert_id = [];
+    protected $dependency_cert_id = [CERTIFICATION_GOVERNMENTAUTHORITIES];
 
     /**
      * @var array 依賴該徵信項相關之徵信項編號
@@ -46,6 +54,14 @@ class Cert_judicialguarantee extends Certification_base
      */
     public function parse()
     {
+        $res = $this->CI->judicialperson_lib->script_check_judicial_person_face($this->certification);
+        if ( ! empty($res))
+        {
+            $this->content['judicialPersonId'] = $res['judicialPersonId'];
+            $this->content['compareResult'] = $res['compareResult'];
+            $this->result->setStatus($res['status']);
+        }
+
         return $this->content;
     }
 
@@ -75,14 +91,6 @@ class Cert_judicialguarantee extends Certification_base
      */
     public function verify_data($content): bool
     {
-        $this->CI->load->library('judicialperson_lib');
-        $res = $this->CI->judicialperson_lib->script_check_judicial_person_face($this->certification);
-        if ($res)
-        {
-            $this->additional_data['judicialPersonId'] = $res['judicialPersonId'];
-            $this->additional_data['compareResult'] = $res['compareResult'];
-            $this->result->setStatus($res['status']);
-        }
         return TRUE;
     }
 
@@ -108,7 +116,7 @@ class Cert_judicialguarantee extends Certification_base
         $expire_time->modify("+ {$this->valid_month} month");
         $this->expired_timestamp = $expire_time->getTimestamp();
 
-        return TRUE;
+        return $this->CI->judicialperson_lib->succeed_in_company_guaranty($this->certification['user_id']);
     }
 
     /**

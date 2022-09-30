@@ -234,9 +234,11 @@
                 })
             },
             getStatus() {
+                const address = this.info.name == this.chooseTab ? this.info.address : null
                 return axios.get('/admin/scraper/judicial_yuan_status', {
                     params: {
                         name: this.chooseTab,
+                        address
                     }
                 }).then(({ data }) => {
                     this.status = data.judicial_yuan_status
