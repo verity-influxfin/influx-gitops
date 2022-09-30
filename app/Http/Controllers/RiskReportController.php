@@ -32,7 +32,8 @@ class RiskReportController extends Controller
         $result = ['yearly_rate_of_return' => $data['yearly_rate_of_return'] ?? 0];
         if (isset($data['this_month_apply']) || json_decode($data['this_month_apply'], true)) {
             $result['this_month_apply'] = json_decode($data['this_month_apply'], true);
-            $result['growth'] = $this->get_growth_rate($result['this_month_apply']);
+            // todo: 「同期比較的數值」老闆說不需要呈現，沒加分效果
+            // $result['growth'] = $this->get_growth_rate($result['this_month_apply']);
         }
 
         if (isset($data['total_apply']) || json_decode($data['total_apply'], true)) {
