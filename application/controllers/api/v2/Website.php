@@ -1151,10 +1151,10 @@ class Website extends REST_Controller {
         $data['month'] = $month;
         ! isset($info_from_beginning['yearly_rate_of_return']) ?: $data['yearly_rate_of_return'] = (int) $info_from_beginning['yearly_rate_of_return'];
 
-        ! isset($info_by_month['apply_loans_count']) ?: $data['this_month_apply']['all'] = (int) $info_by_month['apply_loans_count'];
         ! isset($info_by_month['apply_loans_amount']) ?: $data['this_month_apply']['amount'] = (int) $info_by_month['apply_loans_amount'];
         ! isset($info_by_month['apply_student_loans_count']) ?: $data['this_month_apply']['student'] = (int) $info_by_month['apply_student_loans_count'];
         ! isset($info_by_month['apply_work_loans_count']) ?: $data['this_month_apply']['work'] = (int) $info_by_month['apply_work_loans_count'];
+        $data['this_month_apply']['all'] = ($data['this_month_apply']['student'] ?? 0) + ($data['this_month_apply']['work'] ?? 0);
         ! isset($info_by_month['delay_users_count']) ?: $data['this_month_apply']['delay_users_count'] = (int) $info_by_month['delay_users_count'];
         ! isset($info_by_month['delay_loans_count']) ?: $data['this_month_apply']['delay_loans_count'] = (int) $info_by_month['delay_loans_count'];
 

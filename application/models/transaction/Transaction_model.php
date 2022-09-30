@@ -430,7 +430,6 @@ class Transaction_model extends MY_Model
      *
      * delay_users_count 當月逾期人數
      * delay_loans_count 當月逾期筆數
-     * apply_loans_count 當月申貸案件
      * apply_loans_amount 當月申貸金額
      * apply_student_loans_count 當月學生貸申貸案件
      * apply_work_loans_count 當月上班族貸申貸案件
@@ -470,7 +469,7 @@ class Transaction_model extends MY_Model
                            AND `status` IN (' . TRANSACTION_STATUS_TO_BE_PAID . ', ' . TRANSACTION_STATUS_PAID_OFF . ')
                            AND DATE_FORMAT(`limit_date`, "%Y-%m-%d %H:%i:%s") BETWEEN "' . $start . '" AND "' . $end . '") AS `tra`
                   JOIN (SELECT * FROM `p2p_loan`.`targets` WHERE `delay` = 0) AS `targets` ON `tra`.`target_id` = `targets`.`id`) AS `r4`,
-               (SELECT COUNT(1) AS apply_loans_count, SUM(loan_amount) AS apply_loans_amount FROM `p2p_loan`.`targets`
+               (SELECT SUM(loan_amount) AS apply_loans_amount FROM `p2p_loan`.`targets`
                  WHERE DATE_FORMAT(FROM_UNIXTIME(`created_at`), "%Y-%m-%d %H:%i:%s") BETWEEN "' . $start . '" AND "' . $end . '") AS r5,
                (SELECT COUNT(1) AS apply_student_loans_count FROM `p2p_loan`.`targets`
                  WHERE `product_id` = ' . PRODUCT_ID_STUDENT . '
