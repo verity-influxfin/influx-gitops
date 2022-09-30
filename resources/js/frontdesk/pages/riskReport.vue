@@ -110,14 +110,20 @@
             >元
           </h1>
           <h2 class="h2">
-            學生貸媒合成功均額:
-            <span class="em">
-              {{ format(reportData.total_apply.avg_invest_student) }} </span
-            >元/件均 上班族貸媒合成功均額:
-            <span class="em">
-              {{ format(reportData.total_apply.avg_invest_work) }}
-            </span>
-            元/件均
+            <div>
+              學生貸媒合成功均額：
+              <span class="em">
+                {{ format(reportData.total_apply.avg_invest_student) }}
+              </span>
+              元/件均
+            </div>
+            <div class="mt-2">
+              上班族貸媒合成功均額：
+              <span class="em">
+                {{ format(reportData.total_apply.avg_invest_work) }}
+              </span>
+              元/件均
+            </div>
           </h2>
           <h3 class="h3">
             <div>
@@ -172,28 +178,6 @@
               {{ format(reportData.on_time.level7) }}%
             </div>
           </div>
-        </div>
-      </section>
-      <section class="analysis">
-        <h1 class="h1">重要指標分析</h1>
-        <div class="block-content">
-          <div class="block-text">
-            本月媒合金額，較去年同月<span class="em">
-              ↑增長 {{ formatPercent(reportData.growth.amount) }}%
-            </span>
-          </div>
-          <div class="block-text">
-            本月學生貸申請數，較去年同月<span class="em">
-              ↑增長 {{ formatPercent(reportData.growth.student) }}%
-            </span>
-          </div>
-          <div class="block-text">
-            本月上班族貸申請數，較去年同月
-            <span class="em">
-              ↑增長 {{ formatPercent(reportData.growth.work) }}%
-            </span>
-          </div>
-          <div class="hint">＊與去年同月份比較</div>
         </div>
       </section>
       <section class="functions">
@@ -758,40 +742,6 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     }
   }
 }
-.analysis {
-  padding: 43px 0;
-  .h1 {
-    font-style: normal;
-    font-weight: 700;
-    font-size: 48px;
-    line-height: 1.4;
-    text-align: center;
-    color: $color__text--primary;
-  }
-  .block-content {
-    margin-top: 50px;
-  }
-  .block-text {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 1.8;
-    text-align: center;
-    color: $color__text--primary;
-    .em {
-      @extend .block-text;
-      color: $color--primary;
-    }
-  }
-  .hint {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 1.4;
-    text-align: center;
-    color: $color__text--secondary;
-  }
-}
 .functions {
   padding: 100px 0;
   .swiper {
@@ -1043,25 +993,6 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
             width: 40px;
           }
         }
-      }
-    }
-  }
-  .analysis {
-    padding: 43px 0;
-    .h1 {
-      font-size: 20px;
-      line-height: 1.2;
-    }
-    .block-content {
-      margin-top: 30px;
-    }
-    .block-text {
-      font-size: 16px;
-      line-height: 1.5;
-      letter-spacing: -1px;
-      .em {
-        @extend .block-text;
-        color: $color--primary;
       }
     }
   }
