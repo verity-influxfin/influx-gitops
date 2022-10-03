@@ -416,7 +416,7 @@ $config['permission'] = [
             'promote_list' => ['model' => 'Sales', 'submodel' => 'promote_list', 'action' => 'read'],
             'promote_reward_list' => ['model' => 'Sales', 'submodel' => 'promote_reward_list', 'action' => 'read'],
             'qrcode_projects' => ['model' => 'Sales', 'submodel' => 'qrcode_projects', 'action' => 'read'],
-            'promote_contract_submit' => ['model' => 'Sales', 'submodel' => 'qrcode_contracts', 'action' => 'update'],
+            'promote_contract_submit' => ['model' => 'Sales', 'submodel' => 'qrcode_projects', 'action' => 'update'],
             'promote_contract_approve' => ['model' => 'Sales', 'submodel' => 'qrcode_contracts', 'action' => 'update'],
             'promote_contract_withdraw' => ['model' => 'Sales', 'submodel' => 'qrcode_contracts', 'action' => 'update'],
             'promote_contract_reject' => ['model' => 'Sales', 'submodel' => 'qrcode_contracts', 'action' => 'update'],
