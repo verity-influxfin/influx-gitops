@@ -35,6 +35,11 @@ class Cert_incomestatement extends Certification_base
     protected $valid_month = 6;
 
     /**
+     * @var array 驗證後的額外資料
+     */
+    private $additional_data = [];
+
+    /**
      * 所有項目是否已提交
      * @override
      * @return bool
@@ -88,11 +93,8 @@ class Cert_incomestatement extends Certification_base
          * 但為了可以跑 OCR 辨識，改成新增時 status=0
          * 辨識完成改回 status=1
          */
-        return TRUE;
 
         $data = [];
-        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
-
         if ( ! empty($this->content['result']))
         {
             foreach ($this->content['result'] as $k => $v)
@@ -294,5 +296,30 @@ class Cert_incomestatement extends Certification_base
             $this->result->setStatus(CERTIFICATION_STATUS_SUCCEED);
         }
         return TRUE;
+    }
+
+    /**
+     * 驗證結束後處理函數
+     * @return bool
+     */
+    public function post_verify(): bool
+    {
+        if (empty($this->additional_data))
+        {
+            return TRUE;
+        }
+
+        $certification_info = $this->CI->user_certification_model->get($this->certification['id']);
+        $content = json_decode($certification_info->content ?? [], TRUE);
+        $result = $this->CI->user_certification_model->update($this->certification['id'], [
+            'content' => json_encode(array_replace_recursive($content, $this->additional_data), JSON_INVALID_UTF8_IGNORE)
+        ]);
+
+        if ($result)
+        {
+            return TRUE;
+        }
+
+        return FALSE;
     }
 }

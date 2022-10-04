@@ -54,15 +54,15 @@
                                         <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年度營業額</span></td>
+                                        <td><span>（01）近一年度營業額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearRevenue"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年度營業額</span></td>
+                                        <td><span>（01）近二年度營業額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearRevenue"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年度營業額</span></td>
+                                        <td><span>（01）近三年度營業額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearRevenue"></td>
                                     </tr>
                                     <tr>
@@ -83,32 +83,32 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年銷貨成本</span></td>
+                                        <td><span>（05）近一年銷貨成本</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearCostOfGoodsSold">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年銷貨成本</span></td>
+                                        <td><span>（05）近二年銷貨成本</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearCostOfGoodsSold">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年銷貨成本</span></td>
+                                        <td><span>（05）近三年銷貨成本</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearCostOfGoodsSold">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年毛利率</span></td>
+                                        <td><span>（07）近一年毛利率（%）</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearGrossMargin">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年毛利率</span></td>
+                                        <td><span>（07）近二年毛利率（%）</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearGrossMargin">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年毛利率</span></td>
+                                        <td><span>（07）近三年毛利率（%）</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearGrossMargin">
                                         </td>
                                     </tr>
@@ -173,32 +173,32 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年營業收入分類標準</span></td>
+                                        <td><span>（90）近一年營業收入分類標準代號</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode1">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年營業收入分類標準</span></td>
+                                        <td><span>（90）近二年營業收入分類標準代號</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode2">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年營業收入分類標準</span></td>
+                                        <td><span>（90）近三年營業收入分類標準代號</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode3">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年營業收入淨額</span></td>
+                                        <td><span>（89）近一年營業收入淨額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome1">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年營業收入淨額</span></td>
+                                        <td><span>（89）近二年營業收入淨額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome2">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年營業收入淨額</span></td>
+                                        <td><span>（89）近三年營業收入淨額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome3">
                                         </td>
                                     </tr>
@@ -213,15 +213,15 @@
                                         <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年度營業額</span></td>
+                                        <td><span>（01）近一年度營業額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearRevenue"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年度營業額</span></td>
+                                        <td><span>（01）近二年度營業額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearRevenue"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年度營業額</span></td>
+                                        <td><span>（01）近三年度營業額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearRevenue"></td>
                                     </tr>
                                     <tr>
@@ -242,32 +242,32 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年銷貨成本</span></td>
+                                        <td><span>（05）近一年銷貨成本</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearCostOfGoodsSold">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年銷貨成本</span></td>
+                                        <td><span>（05）近二年銷貨成本</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearCostOfGoodsSold">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年銷貨成本</span></td>
+                                        <td><span>（05）近三年銷貨成本</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearCostOfGoodsSold">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年毛利率</span></td>
+                                        <td><span>（07）近一年毛利率（%）</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastOneYearGrossMargin">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年毛利率</span></td>
+                                        <td><span>（07）近二年毛利率（%）</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastTwoYearGrossMargin">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年毛利率</span></td>
+                                        <td><span>（07）近三年毛利率（%）</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.lastThreeYearGrossMargin">
                                         </td>
                                     </tr>
@@ -332,32 +332,32 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年營業收入分類標準</span></td>
+                                        <td><span>（90）近一年營業收入分類標準代號</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode1">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年營業收入分類標準</span></td>
+                                        <td><span>（90）近二年營業收入分類標準代號</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode2">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年營業收入分類標準</span></td>
+                                        <td><span>（90）近三年營業收入分類標準代號</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.IndustryCode3">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近一年營業收入淨額</span></td>
+                                        <td><span>（89）近一年營業收入淨額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome1">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近二年營業收入淨額</span></td>
+                                        <td><span>（89）近二年營業收入淨額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome2">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>近三年營業收入淨額</span></td>
+                                        <td><span>（89）近三年營業收入淨額</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.AnnualIncome3">
                                         </td>
                                     </tr>

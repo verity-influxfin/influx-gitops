@@ -1588,8 +1588,15 @@ class Certification extends MY_Admin_Controller {
                     }
                     $response_data = $replace_content;
                     break;
-                case CERTIFICATION_BUSINESSTAX: // 近三年401/403/405表
                 case CERTIFICATION_INCOMESTATEMENT: // 近三年所得稅結算申報書
+                    if (empty($content['ocr_parser']['content']))
+                    {
+                        break;
+                    }
+                    $ocr_parser_content = call_user_func_array('array_merge', $content['ocr_parser']['content']);
+                    $content = array_replace($ocr_parser_content, $content);
+                    break;
+                case CERTIFICATION_BUSINESSTAX: // 近三年401/403/405表
                 case CERTIFICATION_GOVERNMENTAUTHORITIES: // 設立(變更)事項登記表
                     if (empty($content['ocr_parser']['content']))
                     {

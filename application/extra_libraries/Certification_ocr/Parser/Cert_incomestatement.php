@@ -54,12 +54,16 @@ class Cert_incomestatement extends Ocr_parser_base
                 continue;
             }
             $year = array_search($matches[1], [1 => 'a', 2 => 'two', 3 => 'three'], TRUE);
+            $last_year_label = [1 => 'One', 2 => 'Two', 3 => 'Three'];
             $result[] = [
                 'img_url' => $value['img_url'] ?? '',
                 "CompName{$year}" => $value['company_name'] ?? '', // 近一年損益表營利事業名稱
                 "CompId{$year}" => $value['company_tax_id_no'] ?? '', // 近一年損益表營利事業統一編號
                 "IndustryCode{$year}" => $value['89'], // 近一年損益表營業收入分類標準代號
                 "AnnualIncome{$year}" => empty($value['90']) ? '' : (int) str_replace(',', '', $value['90']), // 近一年損益表營業收入淨額
+                "last{$last_year_label[$year]}YearRevenue" => empty($value['01'][0]) ? '' : (int) str_replace(',', '', $value['01'][0]), // 近一年度營業額
+                "last{$last_year_label[$year]}YearCostOfGoodsSold" => empty($value['05'][0]) ? '' : (int) str_replace(',', '', $value['05'][0]), // 近一年銷貨成本
+                "last{$last_year_label[$year]}YearGrossMargin" => empty($value['07'][0]) ? '' : (double) str_replace([',', '%'], '', $value['07'][0]), // 近一年毛利率
             ];
         }
         return $result;
