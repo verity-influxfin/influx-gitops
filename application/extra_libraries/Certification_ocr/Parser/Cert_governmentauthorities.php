@@ -43,7 +43,11 @@ class Cert_governmentauthorities extends Ocr_parser_base
         return [
             'compName' => $task_res_data['company_name'] ?? '',
             'compId' => $task_res_data['company_tax_id_no'] ?? '',
-            'compDate' => $task_res_data['company_articles_date'] ?? '',
+            'compDate' => empty($task_res_data['company_articles_date']) ? '' : preg_replace(
+                ['/年/', '/月/', '/日/'],
+                ['.', '.', ''],
+                $task_res_data['company_articles_date']
+            ),
             'prName' => $task_res_data['manager_name'] ?? '',
         ];
     }
@@ -55,7 +59,7 @@ class Cert_governmentauthorities extends Ocr_parser_base
     public function get_request_body(): array
     {
         $get_image = $this->get_image_list();
-        if ($get_image['success'])
+        if ($get_image['success'] === FALSE)
         {
             return $this->return_failure($get_image['msg']);
         }

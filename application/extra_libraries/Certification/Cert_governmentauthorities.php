@@ -35,6 +35,11 @@ class Cert_governmentauthorities extends Certification_base
     protected $valid_month = 6;
 
     /**
+     * @var array 驗證後的額外資料
+     */
+    private $additional_data = [];
+
+    /**
      * 所有項目是否已提交
      * @override
      * @return bool
@@ -50,9 +55,7 @@ class Cert_governmentauthorities extends Certification_base
      */
     public function parse()
     {
-        $content = array_merge($this->content, $this->_get_ocr_info());
-
-        return $content;
+        return array_merge($this->content, $this->_get_ocr_info());
     }
 
     /**
@@ -369,7 +372,11 @@ class Cert_governmentauthorities extends Certification_base
         return $result;
     }
 
-    // OCR 辨識後的檢查
+    /**
+     * OCR 辨識後的檢查
+     * @param $content
+     * @return bool
+     */
     private function _chk_ocr_status($content): bool
     {
         if ( ! isset($content['ocr_parser']['res']))
@@ -382,5 +389,26 @@ class Cert_governmentauthorities extends Certification_base
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
         }
         return TRUE;
+    }
+
+    public function post_verify(): bool
+    {
+        if (empty($this->additional_data))
+        {
+            return TRUE;
+        }
+
+        $certification_info = $this->CI->user_certification_model->get($this->certification['id']);
+        $content = json_decode($certification_info->content ?? [], TRUE);
+        $result = $this->CI->user_certification_model->update($this->certification['id'], [
+            'content' => json_encode(array_replace_recursive($content, $this->additional_data), JSON_INVALID_UTF8_IGNORE)
+        ]);
+
+        if ($result)
+        {
+            return TRUE;
+        }
+
+        return FALSE;
     }
 }
