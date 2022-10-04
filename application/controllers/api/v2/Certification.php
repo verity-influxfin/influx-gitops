@@ -3098,7 +3098,7 @@ class Certification extends REST_Controller {
             {
                 if (empty($input[$amount]))
                 {
-                    $content[$amount] = 0;
+                    $content[$amount] = '';
                     continue;
                 }
                 $content[$amount] = (int) $input[$amount];

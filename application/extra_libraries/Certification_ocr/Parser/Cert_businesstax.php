@@ -48,7 +48,7 @@ class Cert_businesstax extends Ocr_parser_base
             {
                 continue;
             }
-            preg_match('/(last(One|Two|Three|Four)YearInvoice)Image(M\dM\d)/', $image_key, $matches);
+            preg_match('/(Last(One|Two|Three|Four)YearInvoice)Image(M\d{1,2}M\d{1,2})/', $image_key, $matches);
             if (empty($matches))
             {
                 continue;
@@ -57,8 +57,8 @@ class Cert_businesstax extends Ocr_parser_base
             $month = $matches[3];
             $result[] = [
                 'img_url' => $value['img_url'] ?? '',
-                "businessTaxLast{$year}Year" => $value['yyy'] ?? '',
-                "last{$year}YearInvoiceAmount{$month}" => empty($value['21']) || empty($value['22'])
+                "businessTaxLast{$year}Year" => $value['yyy'] ?? '', // 申報營業稅年份
+                "Last{$year}YearInvoiceAmount{$month}" => empty($value['21']) || empty($value['22']) // 申報營業稅 {$month} 月開立發票金額
                     ? ''
                     : (int) str_replace(',', '', $value['21']) + (int) str_replace(',', '', $value['22']),
             ];
