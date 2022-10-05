@@ -305,6 +305,8 @@ $config['permission'] = [
             'judicial_yuan_status' => ['model' => 'Scraper', 'submodel' => 'index', 'action' => 'read'],
             'judicial_yuan_count' => ['model' => 'Scraper', 'submodel' => 'index', 'action' => 'read'],
             'google_status' => ['model' => 'Scraper', 'submodel' => 'index', 'action' => 'read'],
+            'id_card_api_result' => ['model' => 'Scraper', 'submodel' => 'index', 'action' => 'read'],
+            'id_card_api' => ['model' => 'Scraper', 'submodel' => 'index', 'action' => 'update'],
         ],
     ],
     'Partner' => [

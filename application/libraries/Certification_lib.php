@@ -720,6 +720,7 @@ class Certification_lib{
      */
     public function verify_id_card_info($user_certification_id, array &$identity_content, &$error_message, $ocr_info=[]): array
     {
+        $re_verify = ! $ocr_info;
         $risVerified = false;
         $risVerificationFailed = true;
         if ( ! isset($identity_content['id_number']) || ! isset($identity_content['name']) || ! isset($identity_content['birthday']))
@@ -758,6 +759,19 @@ class Certification_lib{
         }
         $requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
         $result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId, $resultUserId);
+
+        $current_time = (new DateTime())->format('Y-m-d H:i:s.u');
+        if ($re_verify && isset($identity_content['id_card_api']))
+        {
+            // Put current data into history log.
+            if ( ! isset($identity_content['id_card_api_history']))
+            {
+                // The value will be associative array with key: replaced time, value: copy of the current $identity_content['id_card_api'].
+                $identity_content['id_card_api_history'] = [];
+            }
+            $identity_content['id_card_api_history'][$current_time] = $identity_content['id_card_api'];
+        }
+
         if ( ! $result)
         {
             $identity_content['id_card_api'] = 'no response';
@@ -773,6 +787,7 @@ class Certification_lib{
             'checkIdCardApplyFormat' => '',
         ];
 
+        $msg_prefix = $re_verify ? "[{$current_time} 重新執行爬蟲]" : '';
         if ($result['status'] != 200)
         {
             $identity_content['id_card_api'] = [
@@ -780,7 +795,7 @@ class Certification_lib{
                 'error' => $result['response']['response']['checkIdCardApplyFormat']
             ];
             $param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
-            $error_message .= "[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
+            $error_message .= "{$msg_prefix}[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
         }
         else
         {
@@ -796,7 +811,7 @@ class Certification_lib{
                 } else {
                     if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] != 1)
                     {
-                        $error_message .= "[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
+                        $error_message .= "{$msg_prefix}[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
                     }
                     $risVerificationFailed = FALSE;
                 }
