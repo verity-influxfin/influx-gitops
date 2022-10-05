@@ -209,6 +209,13 @@ abstract class Certification_base implements Certification_definition
             if ( ! empty($msg))
             {
                 $this->remark['success'] = $msg;
+            }
+            if (isset($this->remark['fail']))
+            { // 清空失敗原因
+                $this->remark['fail'] = '';
+            }
+            if ( ! empty($this->remark))
+            {
                 $param['remark'] = json_encode($this->remark);
             }
             $rs = $this->CI->user_certification_model->update($this->certification['id'], $param);
