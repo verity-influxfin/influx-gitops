@@ -15,6 +15,7 @@ class User
 		this.setFacebook(user)
 		this.setMarriage(user)
 		this.setPromoteCode(user)
+        this.setIdentityMarriage(user)
 	}
 
 	setIdCard(user) {
@@ -68,6 +69,10 @@ class User
 		this.promoteCode = user.promote_code
 	}
 
+    setIdentityMarriage(user) {
+        this.identity_married = user.identity_married;
+    }
+
 	getFbProfilePicture() {
 		if (!this.facebook) return;
 		return 'https://graph.facebook.com/' + this.facebook.id + '/picture?type=large';
@@ -77,7 +82,8 @@ class User
 		return new DateTime(this.registeredAt).values();
 	}
 
-	isMarried() {
-		return this.marriage && this.marriage.name;
+    // 實名認證是否為已婚
+	isIdentityMarried() {
+		return this.identity_married;
 	}
 }

@@ -4,6 +4,7 @@ class User_output
 {
     protected $users;
     protected $user;
+    protected $has_spouse;
 
     public function __construct($params)
     {
@@ -15,6 +16,10 @@ class User_output
             $this->users = $params["data"];
         } else {
             $this->user = $params["data"];
+        }
+        if (isset($params['has_spouse']))
+        {
+            $this->has_spouse = $params['has_spouse'];
         }
     }
 
@@ -88,6 +93,9 @@ class User_output
                         'name' => $user->profile->emergency_name,
                         'phone' => $user->profile->emergency_phone,
                     ];
+                }
+                if (isset($this->has_spouse)) {
+                    $output["identity_married"] = $this->has_spouse;
                 }
             }
 		}

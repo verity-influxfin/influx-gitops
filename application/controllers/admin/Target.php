@@ -819,6 +819,26 @@ class Target extends MY_Admin_Controller {
                     $userMeta[] = $graduateDate;
                 }
 
+                // Spouse info
+                $identity_cert = $this->user_certification_model->get_by([
+                    'user_id' => $userId,
+                    'certification_id' => CERTIFICATION_IDENTITY,
+                    'status' => CERTIFICATION_STATUS_SUCCEED,
+                    'investor' => USER_BORROWER
+                ]);
+                if ($identity_cert)
+                {
+                    $identity_content = json_decode($identity_cert->content, TRUE);
+                    if (isset($identity_content['hasSpouse']) && $identity_content['hasSpouse'])
+                    {
+                        $has_spouse = TRUE;
+                    }
+                    elseif (isset($identity_content['SpouseName']) && $identity_content['SpouseName'])
+                    {
+                        $has_spouse = TRUE;
+                    }
+                }
+
                 $this->load->library('mapping/user/usermeta', ["data" => $userMeta]);
 
                 $instagramCertificationDetail = $this->user_certification_model->get_by([
@@ -850,7 +870,7 @@ class Target extends MY_Admin_Controller {
                 $user->judicial_id = $judicial_person?$judicial_person->id:false;
             }
 
-			$this->load->library('output/user/user_output', ["data" => $user]);
+			$this->load->library('output/user/user_output', ["data" => $user, 'has_spouse' => $has_spouse ?? FALSE]);
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 			$this->load->library('certification_lib');
 
