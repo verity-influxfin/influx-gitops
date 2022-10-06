@@ -1814,7 +1814,7 @@
 			$(".natual #id-card").text(user.idCard.id);
 			$(".natual #id-card-issued-at").text(user.idCard.issuedAt);
 
-			$("#marriage").text(user.isMarried() ? "已婚" : "");
+			$("#marriage").text(user.isIdentityMarried() ? "已婚" : "");
 
 			$("#school").text(user.school.name);
 			$("#school-system").text(user.school.system + " / " + user.school.department);
