@@ -290,4 +290,24 @@ class CompanyCreditSheet extends CreditSheetBase {
     public function hasCreditLine() : bool {
         return FALSE;
     }
+
+    /**
+     * 失效授審表
+     * @return bool
+     */
+    public function cancel(): bool
+    {
+        if ( ! empty($this->creditRecord))
+        {
+            $this->CI->credit_model->update_by(
+                ['id' => $this->creditRecord->id],
+                ['status' => 0]
+            );
+        }
+        return $this->CI->credit_sheet_model->update_by(['id' => $this->creditSheetRecord->id],
+            [
+                'status' =>  self::STATUS_CANCELED
+            ]
+        );
+    }
 }

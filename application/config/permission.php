@@ -232,6 +232,7 @@ $config['permission'] = [
             'get_data' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
             'approve' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'waiting_bidding_report' => ['model' => 'Target', 'submodel' => 'waiting_bidding', 'action' => 'read'],
+            'get_structural_data' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'read'],
         ],
     ],
     'Certification' => [

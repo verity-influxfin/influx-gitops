@@ -26,7 +26,7 @@ class Credit_asset extends Credit_base
                 case $this->CI->target_meta_model::GUARANTOR_JOB_LECTURER:
                     $this->set_score(10, '公家機關、大專院校講師等級以上');
                     break;
-                case $this->CI->target_meta_model::GUARANTOR_JOB_professional:
+                case $this->CI->target_meta_model::GUARANTOR_JOB_PROFESSIONAL:
                     $this->set_score(7, '專業人士（醫師、會計師、律師、白領主管）');
                     break;
                 case $this->CI->target_meta_model::GUARANTOR_JOB_HUGE_COMPANY_EMPLOYEE:
