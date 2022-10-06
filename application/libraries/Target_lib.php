@@ -1830,7 +1830,15 @@ class Target_lib
                             $this->CI->load->library('loanmanager/product_lib');
                             if ($this->CI->product_lib->need_chk_allow_age($value->product_id) === TRUE)
                             {
-                                $user_info = $this->CI->user_model->get($value->user_id);
+                                if ($company)
+                                { // 若為法人戶，改取負責人的生日來計算
+                                    $this->CI->load->library('judicialperson_lib');
+                                    $user_info = $this->CI->judicialperson_lib->getNaturalPerson($value->user_id);
+                                }
+                                else
+                                {
+                                    $user_info = $this->CI->user_model->get($value->user_id);
+                                }
                                 $age = get_age($user_info->birthday);
                                 if ($this->CI->product_lib->is_age_available($age, $value->product_id, $value->sub_product_id) === FALSE)
                                 {
