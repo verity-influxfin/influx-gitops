@@ -13,11 +13,16 @@
     }
 
     $(document).off("change", "select#fail").on("change", "select#fail", function () {
-        if ($(this).find(':selected') === 'other') {
+        if ($(this).find(':selected').val() === 'other') {
             $('input#fail').css('display', 'block').attr('disabled', false);
         } else {
             $('input#fail').css('display', 'none').attr('disabled', true);
         }
+    });
+
+    $(document).ready(function () {
+        check_fail();
+        $('select#fail').trigger('change');
     });
 </script>
 <div id="page-wrapper">
@@ -894,8 +899,9 @@
                             </form>
                             <div class="form-group">
                                 <label>備註</label>
-                                <?php
+                                <?php $fail = '';
                                 if ( ! empty($remark['fail'])) {
+                                    $fail = $remark['fail'];
                                     echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark['fail'] . '</p>';
                                 }
                                 ?>
@@ -918,14 +924,22 @@
                                         <label>失敗原因</label>
                                         <select id="fail" name="fail" class="form-control">
                                             <option value="" disabled selected>選擇回覆內容</option>
-                                            <?php foreach ($certifications_msg[$data->certification_id] as $key => $value) { ?>
+                                            <?php $fail_other = TRUE;
+                                            foreach ($certifications_msg[$data->certification_id] as $key => $value)
+                                            {
+                                                $this_option_selected = FALSE;
+                                                if ($fail == $value)
+                                                {
+                                                    $fail_other = FALSE;
+                                                    $this_option_selected = TRUE;
+                                                } ?>
                                                 <option
-                                                    <?= $data->status == $value ? "selected" : "" ?>><?= $value ?></option>
+                                                    <?= $this_option_selected ? "selected" : "" ?>><?= $value ?></option>
                                             <?php } ?>
-                                            <option value="other">其它</option>
+                                            <option value="other" <?= $fail_other ? 'selected' : ''; ?>>其它</option>
                                         </select>
                                         <input type="text" class="form-control" id="fail" name="fail"
-                                               value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : ""; ?>"
+                                               value="<?= $fail; ?>"
                                                style="background-color:white!important;display:none" disabled="false">
                                     </div>
                                     <button type="submit" class="btn btn-primary">送出</button>
@@ -936,6 +950,7 @@
                             <h1>圖片/文件</h1>
                             <fieldset disabled>
                                 <div class="form-group">
+                                    <label>公司資料表</label><br>
                                     <?php if ( ! empty($content['others_image']))
                                     {
                                         if ( ! is_array($content['others_image']))
