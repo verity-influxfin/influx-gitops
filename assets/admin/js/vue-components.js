@@ -238,7 +238,7 @@ Vue.component('scraper-status', {
         create_table(user_id, statusResponse) {
             const t2 = $('#scraper-status-table').DataTable()
             const judicial_yuan_html = this.create_table_content(statusResponse.judicial_yuan_status, '/admin/Scraper?view=judicial_yuan_verdict&user_id=' + user_id);
-            const household_registration_html = this.create_table_content(statusResponse.household_registration_status, '#');
+            const household_registration_html = this.create_table_content(statusResponse.household_registration_status, '/admin/Scraper?view=household_registration&user_id=' + user_id);
             const sip_html = this.create_table_content(statusResponse.sip_status, '/admin/Scraper?view=sip&user_id=' + user_id);
             const biz_html = this.create_table_content(statusResponse.biz_status, '/admin/Scraper?view=biz&user_id=' + user_id);
             const business_registration_html = this.create_table_content(statusResponse.business_registration_status, '/admin/Scraper?view=business_registration&user_id=' + user_id);
