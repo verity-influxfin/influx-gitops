@@ -454,7 +454,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       text-align: center;
       color: #393939;
     }
-    .success-case-item{
+    .success-case-item {
       z-index: 4;
     }
     .success-case-value {
@@ -709,6 +709,13 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
   .success-cases {
     background: $color__background--gradient;
     padding: 30px 0;
+    .block-content::before {
+      content: '';
+      top: 0;
+      width: 210%;
+      transform: scale(0.6);
+      background-position: left 0 bottom 0, right 0 bottom 0;
+    }
   }
   .index-cases {
     padding: 43px 0;
