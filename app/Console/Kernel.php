@@ -26,9 +26,12 @@ class Kernel extends ConsoleKernel
     {
         // 取得顯示在首頁的三數據
         $schedule->command('accumulatedData:get')->hourly();
-
+        
         // 取得前一個月的風險報告各項指標
         $schedule->command('riskReport:get')->monthly();
+        
+        // 每日產生sitemap
+        $schedule->command('sitemap:Generate')->daily();
     }
 
     /**

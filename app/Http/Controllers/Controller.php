@@ -653,7 +653,7 @@ class Controller extends BaseController
         $input = $request->all();
 
         @list($type, $params) = explode('-', $input['filter']);
-        $result = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where('id', '=', $params)->orderBy('id', 'desc')->first();
+        $result = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where([['id', '=', $params], ['isActive', '=', 'on']])->orderBy('id', 'desc')->first();
 
         return response()->json($result, 200);
     }

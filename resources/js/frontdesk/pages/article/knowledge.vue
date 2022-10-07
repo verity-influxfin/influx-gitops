@@ -123,8 +123,7 @@
                 });
 
                 FB.XFBML.parse();
-
-                if (res.data) {
+                if (res.data && Object.keys(res.data).length > 0) {
                     let data = res.data;
 
                     this.article = {
@@ -135,6 +134,8 @@
                     };
 
                     $('title').text(`${data.post_title} - inFlux普匯金融科技`);
+                }else{
+                  this.$router.replace('/index')
                 }
             },
 
