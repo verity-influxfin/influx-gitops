@@ -424,6 +424,11 @@ class Certification_data
 	 *  [totalMonthlyPayment] => 總共月繳
 	 *  [creditCardHasDelay] => 信用卡是否有延遲繳款紀錄
 	 *  [creditCardHasBadDebt] => 信用卡是否有逾期、催收、呆帳紀錄
+     *  [totalAppropriationAmount] => 總撥款金額
+     *  [totalRepaymentAmount] => 總還款金額
+     *  [newBalanceShortAssure] => 短期擔保放款餘額(新算法)
+     *  [newBalanceMidAssure] => 中期擔保放款餘額(新算法)
+     *  [newBalanceLongAssure] => 長期擔保放款餘額(新算法)
 	 * )
 	 */
 	// to do : 先以普匯微企e秒貸為主
@@ -493,6 +498,11 @@ class Certification_data
 			'A11TaxId' => '',
 			'creditCardHasDelay' => '無',
 			'creditCardHasBadDebt' => '無',
+            'totalAppropriationAmount' => 0,
+            'totalRepaymentAmount' => 0,
+            'newBalanceShortAssure' => 0,
+            'newBalanceMidAssure' => 0,
+            'newBalanceLongAssure' => 0,
 		];
 
 		if($data){
@@ -572,16 +582,19 @@ class Certification_data
 							$res['totalAmountShortAssure'] += $value['totalAmount'];
 							$res['totalAmountShortAssureCount'] += 1;
 							$res['balanceShortAssure'] += $value['noDelayAmount'] + $value['delayAmount'];
+                            $res['newBalanceShortAssure'] += $value['noDelayAmount'] + $value['delayAmount'];
 						}
 						if($value['accountDescription']=='中期擔保放款'){
 							$res['totalAmountMidAssure'] += $value['totalAmount'];
 							$res['totalAmountMidAssureCount'] += 1;
 							$res['balanceMidAssure'] += $value['noDelayAmount'] + $value['delayAmount'];
+                            $res['newBalanceMidAssure'] += $value['noDelayAmount'] + $value['delayAmount'];
 						}
 						if($value['accountDescription']=='長期擔保放款'){
 							$res['totalAmountLongAssure'] += $value['totalAmount'];
 							$res['totalAmountLongAssureCount'] += 1;
 							$res['balanceLongAssure'] += $value['noDelayAmount'] + $value['delayAmount'];
+                            $res['newBalanceLongAssure'] += $value['noDelayAmount'] + $value['delayAmount'];
 						}
 						if($value['accountDescription']=='助學貸款'){
 							$res['totalAmountStudentLoans'] += $value['totalAmount'];
@@ -609,6 +622,9 @@ class Certification_data
 					// 有還款沒有撥款: 只單純抵銷借款金額，並不能當作借款筆數
 					// 沒還款有撥款: 新的借款，需要增加貸款金額及貸款筆數
 					if(is_numeric($value['appropriationAmount']) && is_numeric($value['repaymentAmount'])){
+                        $res['totalAppropriationAmount'] += $value['appropriationAmount'];
+                        $res['totalRepaymentAmount'] += $value['repaymentAmount'];
+
 						if($value['accountDescription']=='短期擔保放款'||$value['accountDescription']=='其他短期擔保放款'){
 							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
 								$res['totalAmountShortAssureCount'] += 1;
@@ -617,6 +633,7 @@ class Certification_data
 							}else{
 								$res['balanceShortAssure'] -= $value['repaymentAmount'];
 							}
+                            $res['newBalanceShortAssure'] += ($value['appropriationAmount'] - $value['repaymentAmount']);
 						}
 						if($value['accountDescription']=='中期擔保放款'){
 							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
@@ -626,6 +643,7 @@ class Certification_data
 							}else{
 								$res['balanceMidAssure'] -= $value['repaymentAmount'];
 							}
+                            $res['newBalanceMidAssure'] += ($value['appropriationAmount'] - $value['repaymentAmount']);
 						}
 						if($value['accountDescription']=='長期擔保放款'){
 							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
@@ -635,6 +653,7 @@ class Certification_data
 							}else{
 								$res['balanceMidAssure'] -= $value['repaymentAmount'];
 							}
+                            $res['newBalanceLongAssure'] += ($value['appropriationAmount'] - $value['repaymentAmount']);
 						}
 					}
 				}
@@ -1107,6 +1126,7 @@ class Certification_data
      *     'creditCardMonthlyPayment' => 0,             // 信用卡月繳 = 信用卡帳款總餘額 * ...
      *     'totalMonthlyPayment' => 0,                  // 總共月繳
      *     'liabilitiesWithoutAssureTotalAmount' => '', // 借款總餘額
+     *     'totalEffectiveDebt' => 0                    // 信用借款+信用卡+現金卡總餘額
      * ]
      */
     public function transform_joint_credit_to_repayment_capacity(array $investigation_content)
@@ -1131,13 +1151,26 @@ class Certification_data
             $data['totalAmountStudentLoansCount'] ?? 0
         );
         $student_loans_count = $data['totalAmountStudentLoansCount'] ?? 0;
-        $credit_card = $data['totalAmountCreditCard'] ?? 0;
+
+        // 信用卡帳款總餘額
+        $credit_card_total_amount = $data['creditCard_totalAmount'] ?? '0';
+        $credit_card = intval(preg_replace('/\,/','',$credit_card_total_amount));
+
         $credit_card_monthly_payment = $this->CI->certification_lib->get_credit_card_monthly_payment($credit_card);
         $total_monthly_payment = $long_assure_monthly_payment + $mid_assure_monthly_payment + $long_monthly_payment + $mid_monthly_payment + $short_monthly_payment + $student_loans_monthly_payment + $credit_card_monthly_payment;
-        $balance_short_assure = $data['balanceShortAssure'] ?? 0;
-        $balance_mid_assure = $data['balanceMidAssure'] ?? 0;
-        $balance_long_assure = $data['balanceLongAssure'] ?? 0;
-        $liabilities_without_assure_total_amount = ($balance_short_assure + $balance_mid_assure + $balance_long_assure) * 1000;
+
+        // 至查詢日止借款總餘額
+        $total_appropriation_amount = $data['totalAppropriationAmount'] ?? 0;
+        $total_repayment_amount = $data['totalRepaymentAmount'] ?? 0;
+        $balance_quota = $data['balanceQuota'] ?? 0;
+        $liabilities_without_assure_total_amount = $balance_quota + $total_appropriation_amount - $total_repayment_amount;
+
+        // 信用借款+信用卡+現金卡總餘額
+        $balance_short_assure = $data['newBalanceShortAssure'] ?? 0;
+        $balance_mid_assure = $data['newBalanceMidAssure'] ?? 0;
+        $balance_long_assure = $data['newBalanceLongAssure'] ?? 0;
+        $balance_assure = $balance_short_assure + $balance_mid_assure + $balance_long_assure;
+        $total_effective_debt = $liabilities_without_assure_total_amount - $balance_assure + $credit_card / 1000;
 
         return [
             'printDatetime' => $print_date_time,
@@ -1159,6 +1192,7 @@ class Certification_data
             'creditCardMonthlyPayment' => $credit_card_monthly_payment,
             'totalMonthlyPayment' => $total_monthly_payment,
             'liabilitiesWithoutAssureTotalAmount' => $liabilities_without_assure_total_amount,
+            'totalEffectiveDebt' => $total_effective_debt * 1000  // 單位：「千元」->「元」
         ];
     }
 }
