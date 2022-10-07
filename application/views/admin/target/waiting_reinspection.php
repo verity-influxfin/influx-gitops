@@ -336,11 +336,11 @@
                 url: "/admin/target/skbank_text_send" + "?target_id=" + caseId + "&bank=1",
                 success: function (response) {
                     if(response.status.code == 200){
-                        $('#skbankCompId').text(response.response.CompId);
+                        $('#skbankCompId').text(response.response.compId);
                         $.ajax({
                            type: "POST",
                            data: JSON.stringify(response.response),
-                           url: '/api/kgibank/v1/LoanRequest/apply_text',
+                           url: '/api/skbank/v1/LoanRequest/apply_text',
                            dataType: "json",
                            success: function (response) {
                                let skbank_response = response.success ? '成功' : '失敗';
@@ -835,7 +835,7 @@
 
         $("#credit-evaluation").submit(function(e) {
             e.preventDefault();
-            console.log('tt');
+
             $('#credit-evaluation button').attr('disabled',true);
             if (relatedUserAjaxLock || targetInfoAjaxLock) {
                 alert("請等待資料載入完成後，再行試算。");
@@ -847,7 +847,7 @@
             var url = form.attr('action');
             var points = form.find('input[name="score"]').val();
             var remark = form.find('input[name="description"]').val();
-            console.log('url',url + "?id=" + caseId + "&points=" + points);
+
             $.ajax({
                 type: "GET",
                 url: url + "?id=" + caseId + "&points=" + points,

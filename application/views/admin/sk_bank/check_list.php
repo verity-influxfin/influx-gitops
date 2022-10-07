@@ -3518,7 +3518,7 @@
                             <tr>
                                 <td class="white-border">
                                     <center>
-                                        <input id="text_list" type="button" class="sendBtn" value="儲存資料">
+                                        <input id="text_list" type="button" class="sendBtn" value="儲存資料" disabled>
                                     </center>
                                 </td>
                             </tr>
@@ -6060,7 +6060,7 @@
                             <tr>
                                 <td class="white-border">
                                     <center>
-                                        <input id="text_list" type="button" class="sendBtn" value="儲存資料">
+                                        <input id="text_list" type="button" class="sendBtn" value="儲存資料" disabled>
                                     </center>
                                 </td>
                             </tr>
@@ -6235,9 +6235,9 @@
         'A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'B02', 'B03', 'B08', 'B09', 'B10', 'B11', 'B13', 'B14', 'B15', 'B16',
     ];
     // 送出時為數字欄位
-    let is_int_array = ['CompCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'IsPrMarried', 'IsBizRegAddrSelfOwn', 'IsBizAddrEqToBizRegAddr', 'IsRealBizAddrSelfOwn', 'OthRealPrSHRatio',
-        'HasJuridicalInvest', 'IsManufacturing', 'lastOneYearRevenue', 'DailyWorkingCapital', 'OperatingCycle', 'LiabilitiesAmount', 'EquityAmount', 'IsCovidAffected', 'EmployeeNum', 'HasForeignInvestment', 'HasRelatedCompany', 'BusinessTaxLastOneYear', 'BusinessTaxLastTwoYear', 'BusinessTaxLastThreeYear',
-        'LastOneYearInvoiceAmountM1M2', 'LastOneYearInvoiceAmountM3M4'];
+    let is_int_array = ['compCapital', 'annualIncome1', 'annualIncome2', 'annualIncome3', 'numOfInsured1', 'numOfInsured2', 'numOfInsured3', 'numOfInsured4', 'numOfInsured5', 'numOfInsured6', 'numOfInsured7', 'numOfInsured8', 'numOfInsured9', 'numOfInsured10', 'numOfInsured11', 'numOfInsured12', 'MidTermLnBal', 'shortTermLnBal', 'compCreditScore', 'prLaborInsSalary', 'spouseLaborInsSalary', 'guOneLaborInsSalary', 'guTwoLaborInsSalary', 'prCreditScore', 'prBal_CashCard', 'prBal_CreditCard', 'prBal_ShortTermLn', 'prBal_MidTermLn', 'prBal_LongTermLn', 'prBal_ShortTermGuar', 'prBal_MidTermLnGuar', 'prBal_LongTermLnGuar', 'spouseCreditScore', 'spouseBal_CashCard', 'spouseBal_CreditCard', 'spouseBal_ShortTermLn', 'spouseBal_MidTermLn', 'spouseBal_LongTermLn', 'spouseBal_ShortTermGuar', 'spouseBal_MidTermLnGuar', 'spouseBal_LongTermLnGuar', 'guOneCreditScore', 'guOneBal_CashCard', 'guOneBal_CreditCard', 'guOneBal_ShortTermLn', 'guOneBal_MidTermLn', 'guOneBal_LongTermLn', 'guOneBal_ShortTermGuar', 'guOneBal_MidTermLnGuar', 'guOneBal_LongTermLnGuar', 'guTwoCreditScore', 'guTwoBal_CashCard', 'guTwoBal_CreditCard', 'guTwoBal_ShortTermLn', 'guTwoBal_MidTermLn', 'guTwoBal_LongTermLn', 'guTwoBal_ShortTermGuar', 'guTwoBal_MidTermLnGuar', 'guTwoBal_LongTermLnGuar', 'isPrMarried', 'isBizRegAddrSelfOwn', 'isBizAddrEqToBizRegAddr', 'isRealBizAddrSelfOwn', 'othRealPrSHRatio',
+        'hasJuridicalInvest', 'isManufacturing', 'lastOneYearRevenue', 'dailyWorkingCapital', 'operatingCycle', 'liabilitiesAmount', 'equityAmount', 'isCovidAffected', 'employeeNum', 'hasForeignInvestment', 'hasRelatedCompany', 'businessTaxLastOneYear', 'businessTaxLastTwoYear', 'businessTaxLastThreeYear',
+        'lastOneYearInvoiceAmountM1M2', 'lastOneYearInvoiceAmountM3M4'];
     function edit_click(id_content) {
         $(`[name=${id_content}]`).each((i, e) => { $(e).prop('disabled', function (i, v) { return !v; }) })
     }
@@ -6345,7 +6345,7 @@
         $.ajax({
             type: "POST",
             url: `/admin/bankdata/saveCheckListData?msg_no=${msg_no}&data_type=${data_type}&bank=${bank}`,
-            data: request_data,
+            data: data,
             dataType: "json",
             success: function (response) {
                 return response;
@@ -6382,8 +6382,8 @@
                     }
                     request_data = {
                         'MsgNo': msg_no,
-                        'CompId': `${all_data.CompId}`,
-                        'PrincipalId': `${all_data.PrincipalId}`,
+                        'CompId': `${all_data.compId}`,
+                        'PrincipalId': `${all_data.principalId}`,
                     }
                     delete all_data.CompId;
                     delete all_data.PrincipalId;
@@ -6391,8 +6391,6 @@
                     request_data = JSON.stringify(request_data);
 
                     save_response = saveCheckListData(msg_no, 'text', request_data, bank_num);
-
-                    console.log(save_response);
                     // $.ajax({
                     //     type: "POST",
                     //     data: request_data,
@@ -6422,7 +6420,7 @@
                 image_list_data = [];
                 case_no = $('#case_no').val();
                 data_count = Object.keys(all_data).length;
-                let compId_imput = $('#CompId_content').val();
+                let compId_imput = $('#compId_content').val();
 
                 if (case_no) {
                     Object.keys(all_data).forEach((key) => {
@@ -6492,12 +6490,13 @@
                     alert('can\'t not get response');
                     return;
                 }
-                console.log(data);
+
                 if (data.status.code != '200') {
                     alert(data.response); return;
                 }
                 if (data.status.code == '200' && data.response) {
                     fillReport(data.response);
+                    $(`div[data-bankid=${bank}] .sendBtn`).prop('disabled', false);
                 }
             });
         }
