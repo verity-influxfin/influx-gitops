@@ -15,7 +15,7 @@
         </div>
       </section>
       <section class="anniversary">
-        <h1 class="h1">累計至本月之平均年化報酬率</h1>
+        <h1 class="h1">平均年化報酬率</h1>
         <div class="block-content">
           <div class="value-group">
             <span class="value-1">{{ yearRateOfReturnRender.num }}</span>
@@ -28,48 +28,20 @@
       </section>
       <section class="apply-cases">
         <div class="block-content">
-          <div class="d-sm-block d-flex justify-content-center align-baseline">
-            <h1 class="h1">本月申貸案件數</h1>
-            <div class="apply-case-value">
-              <span>{{ format(reportData.this_month_apply.all) }}</span>
-              <span class="h1">件</span>
+          <div class="success-case-item">
+            <h1 class="h1">累放金額</h1>
+            <div class="success-case-value">
+              <span class="em">{{
+                format(reportData.total_apply.amount)
+              }}</span>
+              <span class="h1">元</span>
             </div>
           </div>
-          <div>
-            <h1 class="h1 apply-case-info">
-              <div>
-                <div>學生貸申貸案件</div>
-                <div>{{ format(reportData.this_month_apply.student) }}件</div>
-              </div>
-              <div>+</div>
-              <div>
-                <div>上班族申貸案件數</div>
-                <div>{{ format(reportData.this_month_apply.work) }}件</div>
-              </div>
-            </h1>
-            <div class="apply-case-bar-group" v-if="monthApplyPercent">
-              <div
-                class="apply-case-bar-left"
-                :style="{
-                  width: 'calc(' + monthApplyPercent.student + '% + 100px)',
-                }"
-              >
-                <span class="apply-case-bar-text">
-                  {{ format(monthApplyPercent.student) }}%
-                </span>
-              </div>
-              <div
-                class="apply-case-bar-right"
-                :style="{ width: monthApplyPercent.work + '%' }"
-              >
-                <span class="apply-case-bar-text">
-                  {{ format(monthApplyPercent.work) }}%
-                </span>
-              </div>
-            </div>
-            <div class="apply-case-bar-group" v-else>
-              <div class="apply-case-bar-left col-6"></div>
-              <div class="apply-case-bar-right col-6"></div>
+          <div class="success-case-item">
+            <h1 class="h1">累放筆數</h1>
+            <div class="success-case-value">
+              <span class="em">{{ format(reportData.total_apply.count) }}</span>
+              <span class="h1">筆</span>
             </div>
           </div>
         </div>
@@ -77,73 +49,31 @@
       <section class="success-cases">
         <div class="block-content">
           <div class="success-case-item">
-            <h1 class="h1">累計媒合成功件數</h1>
+            <h1 class="h1">平均每筆借款金額</h1>
             <div class="success-case-value">
               <span class="em">{{
-                format(reportData.total_apply.success)
+                format(reportData.total_apply.avg_invest)
               }}</span>
-              <span class="h1">件</span>
+              <span class="h1">元</span>
             </div>
-          </div>
-          <div class="success-case-item">
-            <h1 class="h1">累積金額</h1>
-            <div class="success-case-value">
-              {{ format(reportData.total_apply.amount) }}
-            </div>
-            <div class="h1">元</div>
-          </div>
-          <div class="success-case-item">
-            <h1 class="h1">累積筆數</h1>
-            <div class="success-case-value">
-              {{ format(reportData.total_apply.count) }}
-            </div>
-            <div class="h1">筆</div>
           </div>
         </div>
       </section>
       <section class="index-cases">
         <div class="block-content">
-          <h1 class="h1">
-            累計效益與指標：平均每筆投資金額
-            <span class="em">
-              {{ format(reportData.total_apply.avg_invest) }} </span
-            >元
-          </h1>
-          <h2 class="h2">
-            學生貸媒合成功均額:
-            <span class="em">
-              {{ format(reportData.total_apply.avg_invest_student) }} </span
-            >元/件均 上班族貸媒合成功均額:
-            <span class="em">
-              {{ format(reportData.total_apply.avg_invest_work) }}
-            </span>
-            元/件均
-          </h2>
-          <h3 class="h3">
-            <div>
-              逾期概況：已累計回收逾期金額
-              <span class="em">
-                {{ format(reportData.total_apply.delay_return_amount) }}
-              </span>
-              元
+          <div class="success-case-item">
+            <h1 class="h1">累計回收逾期金額</h1>
+            <div class="success-case-value">
+              <span class="em">{{
+                format(reportData.total_apply.delay_return_amount)
+              }}</span>
+              <span class="h1">元</span>
             </div>
-            <div class="sm">
-              <div>
-                當月逾期人數:
-                {{ format(reportData.this_month_apply.delay_users_count) }} 人
-              </div>
-              <div>
-                當月逾期筆數:
-                {{ format(reportData.this_month_apply.delay_loans_count) }} 筆
-              </div>
-            </div>
-          </h3>
+          </div>
         </div>
       </section>
       <section class="repay">
-        <h1 class="h1">
-          準時還款率 <span class="sm">(1~9級依會員信評等級)</span>
-        </h1>
+        <h1 class="h1">各信評等級回款率</h1>
         <div class="block-content">
           <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[0] + ')' }">
             <img
@@ -172,28 +102,6 @@
               {{ format(reportData.on_time.level7) }}%
             </div>
           </div>
-        </div>
-      </section>
-      <section class="analysis">
-        <h1 class="h1">重要指標分析</h1>
-        <div class="block-content">
-          <div class="block-text">
-            本月媒合金額，較去年同月<span class="em">
-              ↑增長 {{ formatPercent(reportData.growth.amount) }}%
-            </span>
-          </div>
-          <div class="block-text">
-            本月學生貸申請數，較去年同月<span class="em">
-              ↑增長 {{ formatPercent(reportData.growth.student) }}%
-            </span>
-          </div>
-          <div class="block-text">
-            本月上班族貸申請數，較去年同月
-            <span class="em">
-              ↑增長 {{ formatPercent(reportData.growth.work) }}%
-            </span>
-          </div>
-          <div class="hint">＊與去年同月份比較</div>
         </div>
       </section>
       <section class="functions">
@@ -493,8 +401,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
 .anniversary {
   padding: 5px;
   min-height: 300px;
-  background: url('~images/risk/risk-anniversary-bg1.png'),
-    url('~images/risk/risk-anniversary-bg2.png');
+  background: url('~images/risk/risk-anniversary-bg1.png');
   background-position: center center;
   background-repeat: no-repeat;
   .block-content {
@@ -533,80 +440,12 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     }
   }
 }
-.apply-cases {
-  background-image: url('~images/risk/risk-wave-up.svg');
-  background-position: top center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding: 162px 0 105px;
+.apply-cases,
+.success-cases,
+.index-cases {
   .block-content {
     display: grid;
-    grid-template-columns: 4fr 7fr;
-    .h1 {
-      font-style: normal;
-      font-weight: 700;
-      font-size: 32px;
-      line-height: 51px;
-      text-align: center;
-      color: #393939;
-    }
-    .apply-case-info {
-      display: flex;
-      gap: 25px;
-      justify-content: center;
-    }
-    .apply-case-value {
-      text-align: center;
-      font-style: normal;
-      font-weight: 700;
-      font-size: 96px;
-      line-height: 110px;
-      letter-spacing: -0.2px;
-      color: $color--primary;
-      .h1 {
-        line-height: 110px;
-      }
-    }
-    .apply-case-bar-group {
-      display: flex;
-      min-width: 720px;
-      margin-top: 20px;
-      .apply-case-bar-left,
-      .apply-case-bar-right {
-        border-radius: 35px;
-        height: 50px;
-        position: relative;
-        display: flex;
-        justify-content: center;
-      }
-      .apply-case-bar-text {
-        color: $color__text--secondary;
-        font-size: 40px;
-        line-height: 50px;
-        text-align: center;
-        position: relative;
-        top: 50px;
-      }
-      .apply-case-bar-left {
-        background-color: $color--primary;
-        z-index: 3;
-        right: -40px;
-      }
-      .apply-case-bar-right {
-        position: relative;
-        background-color: #083a6e;
-        z-index: 2;
-      }
-    }
-  }
-}
-.success-cases {
-  background: $color__background--gradient;
-  padding: 100px 0 85px;
-  .block-content {
-    display: grid;
-    grid-template-columns: 4fr 3fr 3fr;
-    gap: 30px;
+    place-items: center;
     .h1 {
       font-style: normal;
       font-weight: 700;
@@ -614,83 +453,59 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       line-height: 1.4;
       text-align: center;
       color: #393939;
+    }
+    .success-case-item {
+      z-index: 4;
     }
     .success-case-value {
       text-align: center;
       font-style: normal;
       font-weight: 700;
-      font-size: 48px;
+      font-size: 36px;
       line-height: 1.4;
       letter-spacing: -0.2px;
       color: $color__text--secondary;
       .em {
         color: $color--primary;
-        font-size: 96px;
-        line-height: 110px;
+        font-size: 72px;
+        line-height: 104px;
       }
       .h1 {
-        line-height: 110px;
+        line-height: 104px;
       }
     }
   }
 }
-.index-cases {
-  padding: 43px 0;
+.apply-cases {
+  background-image: url('~images/risk/risk-wave-up.svg');
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 120px 0 55px;
   .block-content {
-    .h1 {
-      font-style: normal;
-      font-weight: 700;
-      font-size: 40px;
-      line-height: 64px;
-      color: $color__text--primary;
-      text-align: center;
-      .em {
-        color: $color--primary;
-        font-size: 64px;
-        line-height: 1;
-      }
-    }
-    .h2 {
-      margin-top: 10px;
-      font-style: normal;
-      font-weight: 700;
-      font-size: 36px;
-      line-height: 50px;
-      color: $color__text--secondary;
-      text-align: center;
-      .em {
-        color: $color--primary;
-        font-size: 40px;
-        line-height: 50px;
-      }
-    }
-    .h3 {
-      display: flex;
-      margin-top: 57px;
-      gap: 57px;
-      align-items: center;
-      justify-content: center;
-      font-style: normal;
-      font-weight: 700;
-      font-size: 40px;
-      line-height: 50px;
-      color: #083a6e;
-      text-align: center;
-      .em {
-        color: $color--primary;
-        font-size: 40px;
-        line-height: 50px;
-      }
-      .sm {
-        color: $color--primary;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 24px;
-        line-height: 27px;
-        color: #393939;
-      }
-    }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
+}
+.success-cases {
+  background: $color__background--gradient;
+  padding: 48px 0;
+  position: relative;
+  .block-content::before {
+    content: '';
+    width: 100%;
+    top: 140px;
+    height: 320px;
+    position: absolute;
+    background-image: url('~images/risk/risk-value-bg-1.svg'),
+      url('~images/risk/risk-value-bg-2.svg');
+    background-position: left 10% top 50px, right 10% top 0;
+    background-repeat: no-repeat;
+    z-index: 1;
+  }
+}
+.index-cases {
+  padding: 48px 0;
 }
 .repay {
   padding: 43px 0 60px;
@@ -698,7 +513,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
   .h1 {
     font-style: normal;
     font-weight: 700;
-    font-size: 40px;
+    font-size: 32px;
     line-height: 48px;
     color: #393939;
     text-align: center;
@@ -711,6 +526,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
   .block-content {
     display: flex;
     justify-content: space-evenly;
+    margin-top: 48px;
     .risk-rank {
       &::before {
         content: '';
@@ -756,40 +572,6 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
         }
       }
     }
-  }
-}
-.analysis {
-  padding: 43px 0;
-  .h1 {
-    font-style: normal;
-    font-weight: 700;
-    font-size: 48px;
-    line-height: 1.4;
-    text-align: center;
-    color: $color__text--primary;
-  }
-  .block-content {
-    margin-top: 50px;
-  }
-  .block-text {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 1.8;
-    text-align: center;
-    color: $color__text--primary;
-    .em {
-      @extend .block-text;
-      color: $color--primary;
-    }
-  }
-  .hint {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 1.4;
-    text-align: center;
-    color: $color__text--secondary;
   }
 }
 .functions {
@@ -885,71 +667,19 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       }
     }
   }
-  .apply-cases {
-    background-image: url('~images/risk/risk-wave-up-phone.svg');
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding: 80px 0 20px;
+  .apply-cases,
+  .success-cases,
+  .index-cases {
     .block-content {
-      display: flex;
-      flex-direction: column;
-      padding: 40px 0;
-      .h1 {
-        font-size: 20px;
-        line-height: 36px;
-      }
-      .apply-case-info {
-        gap: 10px;
-      }
-      .apply-case-value {
-        font-size: 36px;
-        line-height: 36px;
-        .h1 {
-          line-height: 36px;
-        }
-      }
-      .apply-case-bar-group {
-        display: flex;
-        min-width: initial;
-        width: 100%;
-        margin-top: 20px;
-        .apply-case-bar-left,
-        .apply-case-bar-right {
-          border-radius: 35px;
-          height: 30px;
-        }
-        .apply-case-bar-text {
-          font-size: 24px;
-          line-height: 40px;
-          top: 30px;
-        }
-        .apply-case-bar-left {
-          right: -20px;
-        }
-      }
-    }
-  }
-  .success-cases {
-    background: $color__background--gradient;
-    padding: 30px 0;
-    .block-content {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      display: grid;
+      place-items: center;
       .h1 {
         font-style: normal;
         font-weight: 700;
-        font-size: 18px;
+        font-size: 20px;
         line-height: 1.4;
         text-align: center;
         color: #393939;
-      }
-      .success-case-item {
-        display: flex;
-        gap: 8px;
-        align-items: baseline;
-        justify-content: center;
       }
       .success-case-value {
         font-size: 20px;
@@ -965,47 +695,36 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       }
     }
   }
+  .apply-cases {
+    background-image: url('~images/risk/risk-wave-up-phone.svg');
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 80px 0 20px;
+    .block-content {
+      gap: 20px;
+      grid-template-columns: 1fr;
+    }
+  }
+  .success-cases {
+    background: $color__background--gradient;
+    padding: 30px 0;
+    .block-content::before {
+      content: '';
+      top: 0;
+      width: 210%;
+      transform: scale(0.6);
+      background-position: left 0 bottom 0, right 0 bottom 0;
+    }
+  }
   .index-cases {
     padding: 43px 0;
-    .block-content {
-      .h1 {
-        font-size: 20px;
-        line-height: 32px;
-        .em {
-          font-size: 32px;
-        }
-      }
-      .h2 {
-        font-size: 16px;
-        line-height: 25px;
-        .em {
-          font-size: 16px;
-          line-height: 25px;
-        }
-      }
-      .h3 {
-        display: block;
-        margin-top: 20px;
-        gap: 12px;
-        font-size: 20px;
-        line-height: 32px;
-        .em {
-          font-size: 32px;
-          line-height: 1;
-        }
-        .sm {
-          font-size: 15px;
-          line-height: 1.4;
-        }
-      }
-    }
   }
   .repay {
     padding: 43px 0;
     .h1 {
       font-size: 24px;
       line-height: 1.2;
-      margin-bottom: 25px;
       .sm {
         display: block;
         color: $color__text--secondary;
@@ -1019,6 +738,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       align-items: center;
       flex-direction: column;
       justify-content: center;
+      margin-top: 20px;
       .risk-rank {
         width: fit-content;
         padding: 55px;
@@ -1046,25 +766,6 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       }
     }
   }
-  .analysis {
-    padding: 43px 0;
-    .h1 {
-      font-size: 20px;
-      line-height: 1.2;
-    }
-    .block-content {
-      margin-top: 30px;
-    }
-    .block-text {
-      font-size: 16px;
-      line-height: 1.5;
-      letter-spacing: -1px;
-      .em {
-        @extend .block-text;
-        color: $color--primary;
-      }
-    }
-  }
   .functions {
     padding: 60px 0;
     .swiper {
@@ -1082,7 +783,7 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
       width: 250px;
     }
     .btn-invest {
-      font-size: 20px;
+      font-size: 40px;
     }
   }
 }
