@@ -284,6 +284,7 @@ export default {
         })
         .then((res) => {
           this.isRegisterSuccess = true;
+          this.gtag_report_conversion()
         })
         .catch((error) => {
           let errorsData = error.response.data;
@@ -309,6 +310,18 @@ export default {
         location.reload();
       }
     },
+    gtag_report_conversion(url) {
+      var callback = function () {
+          if (typeof(url) != 'undefined') {
+            window.location = url
+          }
+      };
+      gtag('event', 'conversion', {
+          'send_to': 'AW-692812197/vIb2COOs1uADEKXzrcoC',
+          'event_callback': callback
+      });
+      return false
+    }
   },
 };
 </script>

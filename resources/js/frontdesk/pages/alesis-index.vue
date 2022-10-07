@@ -50,27 +50,6 @@
                   </div>
                 </div>
               </a>
-              <div class="swiper-slide">
-                <div class="row no-gutters general">
-                  <div class="col-auto">
-                    <div class="text-bg">
-                      <img
-                        src="@/asset/images/index/header/general.png"
-                        alt="普匯influx"
-                        style="width: 215px"
-                      />
-                    </div>
-                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
-                  </div>
-                  <div class="col position-releative">
-                    <img
-                      src="@/asset/images/index/header/general-man-phone.png"
-                      style="width: 206.56px"
-                      class="man"
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
             <!-- If we need navigation buttons -->
             <div class="swiper-button-prev"></div>
@@ -124,25 +103,6 @@
                   </div>
                 </div>
               </a>
-              <div class="swiper-slide">
-                <div class="row no-gutters general">
-                  <div class="col-auto">
-                    <div class="text-bg">
-                      <img
-                        src="@/asset/images/index/header/general.png"
-                        alt="普匯influx"
-                      />
-                    </div>
-                    <div class="solgan">提供公開 透明 安全的金融科技服務</div>
-                  </div>
-                  <div class="col position-releative">
-                    <img
-                      src="@/asset/images/index/header/general-man.png"
-                      class="man"
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
             <!-- If we need navigation buttons -->
             <div class="swiper-button-prev"></div>
@@ -1458,8 +1418,8 @@ export default {
     }
     .intro-products {
       position: relative;
-      top: -300px;
-      margin-bottom: -300px;
+      top: -190px;
+      margin-bottom: -190px;
       .group {
         &.group-web {
           display: grid;
@@ -2446,7 +2406,7 @@ export default {
       .intro-products {
         margin-top: -10px;
         padding-bottom: 45px;
-        top: -275px;
+        top: -260px;
         margin-bottom: -300px;
         .group {
           &.group-web {

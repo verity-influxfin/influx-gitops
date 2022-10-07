@@ -13,7 +13,7 @@ import privacyTerms from '../pages/privacyTerms';
 import loanerTerms from '../pages/loanerTerms';
 import lenderTerms from '../pages/lenderTerms';
 import transferTerms from '../pages/transferTerms';
-import recruiting from '../pages/recruiting';
+import recruiting from '../pages/recruitingv2';
 import campusPartner from '../pages/campusPartner';
 import clubCooperation from '../pages/clubCooperation';
 import firmCooperation from '../pages/firmCooperation';
@@ -152,7 +152,6 @@ let routers = [
     { path: '/companycooperation', component: companyCooperation },
     { path: '/feedback', component: feedback },
     { path: '/event', component: event },
-    { path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
     {path:'/charitable',component:ntu},
