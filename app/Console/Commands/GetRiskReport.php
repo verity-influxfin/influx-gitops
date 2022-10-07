@@ -13,7 +13,7 @@ class GetRiskReport extends Command
      *
      * @var string
      */
-    protected $signature = 'riskReport:get';
+    protected $signature = 'riskReport:get {year?} {month?}';
 
     /**
      * The console command description.
@@ -39,11 +39,19 @@ class GetRiskReport extends Command
      */
     public function handle()
     {
-        $now = (new \DateTime())->setTimezone(new \DateTimeZone('+8'));
-        $date_interval = new \DateInterval('P1M');
-        $last_month = $now->sub($date_interval)->getTimestamp();
-        $year = date('Y', $last_month);
-        $month = date('m', $last_month);
+        $input_year = $this->argument('year');
+        $input_month = $this->argument('month');
+
+        if (!empty($input_year) && !empty($input_month)) {
+            $year = $input_year;
+            $month = $input_month;
+        } else {
+            $now = (new \DateTime())->setTimezone(new \DateTimeZone('+8'));
+            $date_interval = new \DateInterval('P1M');
+            $last_month = $now->sub($date_interval)->getTimestamp();
+            $year = date('Y', $last_month);
+            $month = date('m', $last_month);
+        }
 
         // 取得主站「風險指標」數據
         $exist = RiskReportInfo::where('year', date('Y', $last_month))
