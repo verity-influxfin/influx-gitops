@@ -54,8 +54,8 @@ class GetRiskReport extends Command
         }
 
         // 取得主站「風險指標」數據
-        $exist = RiskReportInfo::where('year', date('Y', $last_month))
-            ->where('month', date('m', $last_month))
+        $exist = RiskReportInfo::where('year', $year)
+            ->where('month', $month)
             ->exists();
 
         if ($exist === FALSE) {
