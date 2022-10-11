@@ -128,6 +128,8 @@ class Certification_factory
                 return new Cert_simplificationfinancial($certification, $certification_result);
             case CERTIFICATION_SIMPLIFICATIONJOB: // 工作資料
                 return new Cert_simplificationjob($certification, $certification_result);
+            case CERTIFICATION_PASSBOOKCASHFLOW_2: // (自然人)近六個月往來存摺封面及內頁
+                return new Cert_passbookcashflow_2($certification, $certification_result);
             case CERTIFICATION_BUSINESSTAX: // 近三年401/403/405表
                 return new Cert_businesstax($certification, $certification_result);
             case CERTIFICATION_BALANCESHEET: // 資產負債表
