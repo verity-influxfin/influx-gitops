@@ -241,7 +241,7 @@
 	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 	crossorigin="anonymous"></script>
 <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
-<script src="https://unpkg.com/axios@1.0.0/dist/axios.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.js"></script>
 <script>
 	const { reactive, ref, onMounted, onUnmounted, computed, watch } = Vue;
