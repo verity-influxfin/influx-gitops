@@ -574,6 +574,39 @@ $config['permission'] = [
             'index' => ['model' => 'companyList', 'submodel' => 'index', 'action' => 'read']
         ],
     ],
+    'Erp' => [
+      'name' => 'ERP 帳務',
+      'menu' => [
+          'etpr' => ['name' => '本攤表'],
+          'journal' => ['name' => '日記簿'],
+          'soci' => ['name' => '損益表'],
+          'sofp' => ['name' => '資產負債表'],
+          'ledger' => ['name' => '分類帳'],
+          'target_porting' => ['name' => '借款案帳務轉移'],
+          'open_booking' => ['name' => '投資人開帳作業']
+      ],
+      'permission' => [
+          'etpr' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'journal' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'soci' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
+          'sofp' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
+          'ledger' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
+          'open_booking' => ['model' => 'Erp', 'submodel' => 'open_booking', 'action' => 'read'],
+          'get_etpr_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'etpr_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'sofp_spreadsheet' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
+          'get_soci_data' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
+          'get_journal_data' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'journal_spreadsheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'get_ledger_data' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
+          'ledger_spreadsheet' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
+          'get_targets' => ['model' => 'Erp', 'submodel' => 'target_porting', 'action' => 'read'],
+          'get_investments' => ['model' => 'Erp', 'submodel' => 'target_porting', 'action' => 'read'],
+          'target_testfy' => ['model' => 'Erp', 'submodel' => 'target_porting', 'action' => 'read'],
+          'get_open_booking_data' => ['model' => 'Erp', 'submodel' => 'open_booking', 'action' => 'read'],
+          'open_booking_process' => ['model' => 'Erp', 'submodel' => 'open_booking', 'action' => 'read']
+      ],
+    ],
     'Certificationreport' => [
         'permission' => [
             'index' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'read'],
