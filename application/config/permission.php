@@ -592,6 +592,7 @@ $config['permission'] = [
           'sofp' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
           'ledger' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
           'open_booking' => ['model' => 'Erp', 'submodel' => 'open_booking', 'action' => 'read'],
+          'target_porting' => ['model' => 'Erp', 'submodel' => 'target_porting', 'action' => 'read'],
           'get_etpr_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'etpr_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'sofp_spreadsheet' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
