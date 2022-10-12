@@ -1,11 +1,14 @@
 <?php require(APPPATH . '/libraries/MY_Admin_Controller.php');
 
+use GuzzleHttp\Client;
+
 /**
  * ERP 帳務 Controller
  */
 class ERP extends MY_Admin_Controller
 {
     public $host;
+    private $client;
 
     public function __construct()
     {
@@ -15,6 +18,11 @@ class ERP extends MY_Admin_Controller
         // 載入 ERP library
         $this->load->library('sisyphus/erp_lib', [
             'host' => getenv('ENV_ERP_HOST')
+        ]);
+
+        $this->client = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST'),
+            'timeout' => 60,
         ]);
     }
      
@@ -35,6 +43,76 @@ class ERP extends MY_Admin_Controller
             ->_display();
         exit;
     }
+
+    /**
+     * 債權明細表
+     * 
+     * @created_at                   2022-10-12
+     * @created_by                   Allan
+     */
+    public function assets_sheet(){
+        $this->load->view(
+            'admin/erp/assets_sheet',
+            $data = [
+                'menu'      => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts'   => [
+                    '/assets/admin/js/erp/assets_sheet.js'
+                ]
+            ]
+        );
+    }
+
+    /**
+     * 債權明細表 資料
+     * 
+     * @created_at                   2022-10-12
+     * @created_by                   Allan
+     */
+    public function get_assets_sheet_data(){
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+        $user_id_int = $this->input->get('user_id_int');
+
+        $data = $this->client->request('GET', 'assets_sheet', [
+            'query' => [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'user_id_int' => $user_id_int,
+            ]
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+
+    /**
+     * 債權明細表 excel
+     * 
+     * @created_at                   2022-10-12
+     * @created_by                   Allan
+     */
+    public function assets_sheet_spreadsheet(){
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+        $user_id_int = $this->input->get('user_id_int');
+        // get file from guzzle assets_sheet/excel
+        $res = $this->client->request('GET', 'assets_sheet/excel', [
+            'query' => [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'user_id_int' => $user_id_int,
+            ]
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        echo $data;
+        die();
+    }
+    
 
     /**
      * 借款案帳務轉移  UI

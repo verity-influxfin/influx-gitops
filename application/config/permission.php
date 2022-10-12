@@ -577,6 +577,7 @@ $config['permission'] = [
     'Erp' => [
       'name' => 'ERP 帳務',
       'menu' => [
+          'assets_sheet' => ['name' => '債權明細表'],
           'etpr' => ['name' => '本攤表'],
           'journal' => ['name' => '日記簿'],
           'soci' => ['name' => '損益表'],
@@ -586,6 +587,7 @@ $config['permission'] = [
           'open_booking' => ['name' => '投資人開帳作業']
       ],
       'permission' => [
+          'assets_sheet' => ['model' => 'Erp', 'submodel' => 'assets_sheet', 'action' => 'read'],
           'etpr' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'journal' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'soci' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
@@ -593,6 +595,8 @@ $config['permission'] = [
           'ledger' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
           'open_booking' => ['model' => 'Erp', 'submodel' => 'open_booking', 'action' => 'read'],
           'target_porting' => ['model' => 'Erp', 'submodel' => 'target_porting', 'action' => 'read'],
+          'get_assets_sheet_data' => ['model' => 'Erp', 'submodel' => 'assets_sheet', 'action' => 'read'],
+          'assets_sheet_spreadsheet' => ['model' => 'Erp', 'submodel' => 'assets_sheet', 'action' => 'read'],
           'get_etpr_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'etpr_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'sofp_spreadsheet' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
