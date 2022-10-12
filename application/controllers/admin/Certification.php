@@ -1648,6 +1648,12 @@ class Certification extends MY_Admin_Controller {
             $new_data_content['liabilitiesWithoutAssureTotalAmount'] = (float) str_replace(',', '', $post_data['liabilitiesWithoutAssureTotalAmount']);
         }
 
+        // 信用借款+信用卡+現金卡總餘額
+        if ( ! empty($post_data['totalEffectiveDebt']))
+        {
+            $new_data_content['totalEffectiveDebt'] = (float) str_replace(',', '', $post_data['totalEffectiveDebt']);
+        }
+
         // 總共月繳
         $new_data_content['totalMonthlyPayment'] =
             $new_data_content['longAssureMonthlyPayment'] +
