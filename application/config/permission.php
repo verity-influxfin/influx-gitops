@@ -579,8 +579,8 @@ $config['permission'] = [
       'menu' => [
           'assets_sheet' => ['name' => '債權明細表'],
           'etpr' => ['name' => '本攤表'],
-          'journal' => ['name' => '日記簿'],
           'soci' => ['name' => '損益表'],
+          'journal' => ['name' => '日記簿'],
           'sofp' => ['name' => '資產負債表'],
           'ledger' => ['name' => '分類帳'],
           'target_porting' => ['name' => '借款案帳務轉移'],
@@ -601,6 +601,7 @@ $config['permission'] = [
           'etpr_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'sofp_spreadsheet' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
           'get_soci_data' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
+          'soci_spreadsheet' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
           'get_journal_data' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'journal_spreadsheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'get_ledger_data' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],

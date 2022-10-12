@@ -12,23 +12,23 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <form class="form-inline" ref="search-form">
+                    <form class="form-inline" ref="search-form" @submit.prevent="doSearch">
                         <div class="form-group">
                             <label class="sr-only" for="start_date">開始日期</label>
-                            <input type="text" class="form-control" v-model="searchform.start_date" id="start_date" name="start_date" placeholder="開始日期">
+                            <input type="text" class="form-control" v-model="searchform.start_date" id="start_date" name="start_date" placeholder="開始日期" require>
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="end_date">結束日期</label>
-                            <input type="text" class="form-control" v-model="searchform.end_date" id="end_date" name="end_date" placeholder="結束日期">
+                            <input type="text" class="form-control" v-model="searchform.end_date" id="end_date" name="end_date" placeholder="結束日期" require>
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="investor_id">投資人 ID</label>
-                            <input type="text" class="form-control" v-model="searchform.user_id" id="investor_id" name="investor_id" placeholder="投資人 ID">
+                            <input type="text" class="form-control" v-model="searchform.user_id_int" id="investor_id" name="investor_id" placeholder="投資人 ID" require>
                         </div>
-                        <button type="button" @click="search" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i> 搜尋
                         </button>
-                        <button class="btn btn-excel pull-right" type="button" v-on:click="spreadsheet_export" :disabled="is_waiting_response" v-if="table_data.length > 0">
+                        <button class="btn btn-primary pull-right" type="button" @click="downloadExcel" :disabled="is_waiting_response" v-if="table_has_data">
                             <i class="fa fa-file-excel-o"></i> 檔案下載
                         </button>
                     </form>
@@ -53,33 +53,49 @@
                                             <tr class="active">
                                                 <th colspan="3">收益</th>
                                             </tr>
-                                            <tr v-for="item in table_data.revenues.items">
-                                                <td style="padding-left: 1em;">{{item.title}}</td>
-                                                <td class="text-right">{{item.amount | amount}}</td>
-                                                <td class="text-right"></td>
-                                            </tr>
+                                            <!-- 第一行 -->
+                                            <template v-for="item in table_data.revenues.subjectGroup_list">
+                                                <tr>
+                                                    <td style="padding-left: 1em;">{{ getListTitle(item) }}</td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right">{{ amount(item.subtotal) }}</td>
+                                                </tr>
+                                                <tr v-for="row in item.subject_list">
+                                                    <td style="padding-left: 2em;">{{ row.name }}</td>
+                                                    <td class="text-right">{{ amount(row.amount) }}</td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </template>
                                             <tr>
                                                 <td colspan="2"><strong>收益合計</strong></td>
-                                                <td class="text-right"><strong>{{table_data.revenues.amount | amount}}</strong></td>
+                                                <td class="text-right"><strong>{{ amount(table_data.revenues.subtotal) }}</strong></td>
                                             </tr>
                                         </template>
                                         <template v-if="has_expense">
                                             <tr class="active">
                                                 <th colspan="3">費損</th>
                                             </tr>
-                                            <tr v-for="item in table_data.expense.items">
-                                                <td style="padding-left: 1em;">{{item.title}}</td>
-                                                <td class="text-right">{{item.amount | amount}}</td>
-                                                <td class="text-right"></td>
-                                            </tr>
+                                            <!-- 第一行 -->
+                                            <template v-for="item in table_data.expenses.subjectGroup_list">
+                                                <tr>
+                                                    <td style="padding-left: 1em;">{{ getListTitle(item) }}</td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right">{{ amount(item.subtotal) }}</td>
+                                                </tr>
+                                                <tr v-for="row in item.subject_list">
+                                                    <td style="padding-left: 2em;">{{ row.name }}</td>
+                                                    <td class="text-right">{{ amount(row.amount) }}</td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </template>
                                             <tr>
                                                 <td colspan="2"><strong>費損合計</strong></td>
-                                                <td class="text-right"><strong>{{table_data.expense.amount | amount}}</strong></td>
+                                                <td class="text-right"><strong>{{ amount(table_data.expenses.subtotal) }}</strong></td>
                                             </tr>
                                         </template>
                                         <tr class="active">
                                             <td colspan="2"><strong>損益總額</strong></td>
-                                            <td class="text-right"><strong>{{table_data.total_amount | amount}}</strong></td>
+                                            <td class="text-right"><strong>{{ amount(table_data.total) }}</strong></td>
                                         </tr>
                                     </template>
                                 </tbody>

@@ -8,7 +8,8 @@ use GuzzleHttp\Client;
 class ERP extends MY_Admin_Controller
 {
     public $host;
-    private $client;
+    private $erp_client_1;
+    private $erp_client_2;
 
     public function __construct()
     {
@@ -20,8 +21,13 @@ class ERP extends MY_Admin_Controller
             'host' => getenv('ENV_ERP_HOST')
         ]);
 
-        $this->client = new Client([
-            'base_uri' => getenv('ENV_ERP_HOST'),
+        $this->erp_client_1 = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST_1'),
+            'timeout' => 60,
+        ]);
+
+        $this->erp_client_2 = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST_2'),
             'timeout' => 60,
         ]);
     }
@@ -74,7 +80,7 @@ class ERP extends MY_Admin_Controller
         $end_date = $this->input->get('end_date');
         $user_id_int = $this->input->get('user_id_int');
 
-        $data = $this->client->request('GET', 'assets_sheet', [
+        $data = $this->erp_client_1->request('GET', 'assets_sheet', [
             'query' => [
                 'start_date' => $start_date,
                 'end_date' => $end_date,
@@ -96,7 +102,7 @@ class ERP extends MY_Admin_Controller
         $end_date = $this->input->get('end_date');
         $user_id_int = $this->input->get('user_id_int');
         // get file from guzzle assets_sheet/excel
-        $res = $this->client->request('GET', 'assets_sheet/excel', [
+        $res = $this->erp_client_1->request('GET', 'assets_sheet/excel', [
             'query' => [
                 'start_date' => $start_date,
                 'end_date' => $end_date,
@@ -170,7 +176,7 @@ class ERP extends MY_Admin_Controller
         $end_date = $this->input->get('end_date');
         $investor_id_int = $this->input->get('investor_id_int');
 
-        $data = $this->client->request('GET', 'replayment_schedule', [
+        $data = $this->erp_client_1->request('GET', 'replayment_schedule', [
             'query' => [
                 'start_date' => $start_date,
                 'end_date' => $end_date,
@@ -388,39 +394,48 @@ class ERP extends MY_Admin_Controller
      * 
      * @created_at            2022-02-14
      * @created_at            Jack
+     * @updated_at            2021-10-12
+     * @updated_by            Allan
      */
     public function get_soci_data()
     {
 
-        try
-        {
-            // 取得 request data
-            $data = base64_decode($this->input->get_post('data'));
-            $data = json_decode(urldecode($data), TRUE);
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+        $user_id_int = $this->input->get('user_id_int');
 
-            $start_date = $data['start_date'] ?? null;
-            $end_date   = $data['end_date'] ?? null;
-            $user_id    = $data['user_id'] ?? null;
-            $role       = $data['role'] ?? 'investor';
-        }
-        catch (Exception $e)
-        {
-            $this->_output_json([
-                'success' => FALSE,
-                'message' => $e->message
-            ]);
-        }
-
-        // 呼叫 ERP API 取得結果
-        $this->_output_json([
-            'success' => TRUE,
-            'data'    => $this->erp_lib->get_report('soci', [
+        $data = $this->erp_client_2->request('GET', 'soci', [
+            'query' => [
                 'start_date' => $start_date,
-                'end_date'   => $end_date,
-                'user_id'    => (int) $user_id,
-                'role'       => $role,
-            ])
+                'end_date' => $end_date,
+                'user_id_int' => $user_id_int,
+            ]
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+    
+    public function soci_spreadsheet()
+    {
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+        $user_id_int = $this->input->get('user_id_int');
+
+        $res = $this->erp_client_2->request('GET', 'soci/excel', [
+            'query' => [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'user_id_int' => $user_id_int,
+            ]
         ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        echo $data;
+        die();
     }
 
     public function journal()
