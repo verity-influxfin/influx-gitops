@@ -114,12 +114,12 @@ else
                                         </li>
                                         <li>
                                             <div class="form-control-static">
-                                                <span>借款總餘額：</span>
+                                                <span>至查詢日止借款總餘額：</span>
                                                 <input type="text"
                                                        id="liabilitiesWithoutAssureTotalAmount"
                                                        name="liabilitiesWithoutAssureTotalAmount"
                                                        class="formData"
-                                                       value="<?= $content['liabilitiesWithoutAssureTotalAmount'] ?? 0; ?>" <?= $disabled ?>> 元
+                                                       value="<?= $content['liabilitiesWithoutAssureTotalAmount'] ?? 0; ?>" <?= $disabled ?>> 千元
                                             </div>
                                         </li>
                                         <li>
@@ -130,6 +130,16 @@ else
                                                        name="creditCard"
                                                        class="formData"
                                                        value="<?= $content['creditCard'] ?? 0 ?>" <?= $disabled ?>> 元
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="form-control-static">
+                                                <span>信用借款+信用卡+現金卡總餘額：</span>
+                                                <input type="text"
+                                                       id="totalEffectiveDebt"
+                                                       name="totalEffectiveDebt"
+                                                       class="formData"
+                                                       value="<?= $content['totalEffectiveDebt'] ?? 0 ?>" <?= $disabled ?>> 元
                                             </div>
                                         </li>
                                     </ol>
@@ -299,7 +309,7 @@ else
                     }
 
                     result += Math.round(
-                        input_value / (student_loans_count * 12)
+                        input_value / (student_loans_count * 12) * 100
                     );
                     break;
             }
