@@ -703,81 +703,126 @@ class Certification_lib{
         ];
 
         // 僅保留 勾稽戶役政 API
-		$risVerified = false;
-		$risVerificationFailed = true;
-		if (isset($content['id_number']) && isset($content['name']) && isset($content['birthday'])) {
-			$this->CI->load->model('log/log_integration_model');
-			$logRs = $this->CI->log_integration_model->order_by('id', 'DESC')->limit(1)->get_all();
-			if(!empty($logRs)) {
-				$logRs = $logRs[0];
-				$resultUserId = substr($logRs->api_user_id, 0, -3) .
-					str_pad(strval((intval(substr($logRs->api_user_id, -3)) + 1) % 1000), 3, 0, STR_PAD_LEFT);
-			}else
-				$resultUserId = 'realname_001';
-
-			$this->CI->load->library('id_card_lib');
-			$requestPersonId = isset($content['id_number']) ? $content['id_number'] : '';
-			preg_match('/(初|補|換)發$/', $content['id_card_place'], $requestApplyCode);
-			if(empty($requestApplyCode))
-				preg_match('/(初|補|換)發$/', $ocr['issueType'], $requestApplyCode);
-			$requestApplyCode = isset($requestApplyCode[0]) ? $requestApplyCode[0] : '';
-			$reqestApplyYyymmdd = $content['id_card_date'];
-			preg_match('/(*UTF8)((\W{1}|新北)市|\W{1}縣)|(連江|金門)/', $ocr['id_card_place'], $requestIssueSiteId);
-			if(empty($requestIssueSiteId))
-				preg_match('/(*UTF8)(([^\(\)]{1,2}|新北)市|[^\(\)]{1,2}縣)|(連江|金門)/', $content['id_card_place'], $requestIssueSiteId);
-			$requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
-			$result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId, $resultUserId);
-			if ($result) {
-				$param = [
-					'user_certification_id' => $info->id,
-					'api_user_id' => $resultUserId,
-					'httpCode' => $result['status'],
-					'rdCode' => '',
-					'rdMessage' => '',
-					'checkIdCardApply' => 0,
-					'checkIdCardApplyFormat' => '',
-					];
-
-				if($result['status'] != 200) {
-					$content['id_card_api'] = [
-						'status' => $result['status'],
-						'error' => $result['response']['response']['checkIdCardApplyFormat']
-					];
-					$param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
-					$msg .= "[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
-				}else {
-					$param['rdCode'] = $result['response']['response']['rowData']['rdCode'];
-					$param['rdMessage'] = $result['response']['response']['rowData']['rdMessage'];
-					if (isset($result['response']['response']['rowData']['responseData']['checkIdCardApply'])) {
-						$param['checkIdCardApply'] = $result['response']['response']['rowData']['responseData']['checkIdCardApply'];
-						$param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
-
-						$risVerified = true;
-						if (in_array($result['response']['response']['rowData']['responseData']['checkIdCardApply'], [2,3,4])) {
-							$risVerificationFailed = true;
-						} else {
-							if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] != 1)
-								$msg .= "[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
-							$risVerificationFailed = false;
-						}
-					}
-
-					$content['id_card_api'] = $result['response'];
-				}
-				$this->CI->log_integration_model->insert($param);
-			} else {
-				$content['id_card_api'] = 'no response';
-			}
-		}
+        $verify_result = $this->verify_id_card_info($info->id, $content, $msg, $ocr);
 
         $remark['error'] = $msg;
         $remark['OCR']   = $ocr;
         $return_data['remark'] = $remark;
         $return_data['content'] = $content;
-        $return_data['risVerified'] = $risVerified;
-        $return_data['risVerificationFailed'] = $risVerificationFailed;
+        $return_data['risVerified'] = $verify_result[0];
+        $return_data['risVerificationFailed'] = $verify_result[1];
         return $return_data;
 	}
+
+    /**
+     * Use 戶役政 API to verify ID card info.
+     * @param $user_certification_id : id of user_certification with certification_id == CERTIFICATION_IDENTITY
+     * @param $identity_content : array version of the corresponding user_certification.content
+     * @return [$risVerified, $risVerificationFailed] : [TRUE, TRUE] means [呼叫戶役政 API 成功, 身分證資料有誤]
+     */
+    public function verify_id_card_info($user_certification_id, array &$identity_content, &$error_message, $ocr_info=[]): array
+    {
+        $re_verify = ! $ocr_info;
+        $risVerified = false;
+        $risVerificationFailed = true;
+        if ( ! isset($identity_content['id_number']) || ! isset($identity_content['name']) || ! isset($identity_content['birthday']))
+        {
+            return [$risVerified, $risVerificationFailed];
+        }
+        $this->CI->load->model('log/log_integration_model');
+        $logRs = $this->CI->log_integration_model->order_by('id', 'DESC')->limit(1)->get_all();
+        if(!empty($logRs)) {
+            $logRs = $logRs[0];
+            $resultUserId = substr($logRs->api_user_id, 0, -3) .
+                str_pad(strval((intval(substr($logRs->api_user_id, -3)) + 1) % 1000), 3, 0, STR_PAD_LEFT);
+        }else
+            $resultUserId = 'realname_001';
+
+        $this->CI->load->library('id_card_lib');
+        $requestPersonId = isset($identity_content['id_number']) ? $identity_content['id_number'] : '';
+        preg_match('/(初|補|換)發$/', $identity_content['id_card_place'], $requestApplyCode);
+        if ($ocr_info && empty($requestApplyCode))
+        {
+            preg_match('/(初|補|換)發$/', $ocr_info['issueType'], $requestApplyCode);
+        }
+        else if (empty($requestApplyCode))
+        {
+            return [$risVerified, $risVerificationFailed];
+        }
+        $requestApplyCode = isset($requestApplyCode[0]) ? $requestApplyCode[0] : '';
+        $reqestApplyYyymmdd = $identity_content['id_card_date'];
+        if ($ocr_info)
+        {
+            preg_match('/(*UTF8)((\W{1}|新北)市|\W{1}縣)|(連江|金門)/', $ocr_info['id_card_place'], $requestIssueSiteId);
+        }
+        if (empty($requestIssueSiteId))
+        {
+            preg_match('/(*UTF8)(([^\(\)]{1,2}|新北)市|[^\(\)]{1,2}縣)|(連江|金門)/', $identity_content['id_card_place'], $requestIssueSiteId);
+        }
+        $requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
+        $result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId, $resultUserId);
+
+        $current_time = (new DateTime())->format('Y-m-d H:i:s.u');
+        if ($re_verify && isset($identity_content['id_card_api']))
+        {
+            // Put current data into history log.
+            if ( ! isset($identity_content['id_card_api_history']))
+            {
+                // The value will be associative array with key: replaced time, value: copy of the current $identity_content['id_card_api'].
+                $identity_content['id_card_api_history'] = [];
+            }
+            $identity_content['id_card_api_history'][$current_time] = $identity_content['id_card_api'];
+        }
+
+        if ( ! $result)
+        {
+            $identity_content['id_card_api'] = 'no response';
+            return [$risVerified, $risVerificationFailed];
+        }
+        $param = [
+            'user_certification_id' => $user_certification_id,
+            'api_user_id' => $resultUserId,
+            'httpCode' => $result['status'],
+            'rdCode' => '',
+            'rdMessage' => '',
+            'checkIdCardApply' => 0,
+            'checkIdCardApplyFormat' => '',
+        ];
+
+        $msg_prefix = $re_verify ? "[{$current_time} 重新執行爬蟲]" : '';
+        if ($result['status'] != 200)
+        {
+            $identity_content['id_card_api'] = [
+                'status' => $result['status'],
+                'error' => $result['response']['response']['checkIdCardApplyFormat']
+            ];
+            $param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
+            $error_message .= "{$msg_prefix}[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
+        }
+        else
+        {
+            $param['rdCode'] = $result['response']['response']['rowData']['rdCode'];
+            $param['rdMessage'] = $result['response']['response']['rowData']['rdMessage'];
+            if (isset($result['response']['response']['rowData']['responseData']['checkIdCardApply'])) {
+                $param['checkIdCardApply'] = $result['response']['response']['rowData']['responseData']['checkIdCardApply'];
+                $param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
+
+                $risVerified = TRUE;
+                if (in_array($result['response']['response']['rowData']['responseData']['checkIdCardApply'], [2,3,4])) {
+                    $risVerificationFailed = TRUE;
+                } else {
+                    if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] != 1)
+                    {
+                        $error_message .= "{$msg_prefix}[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
+                    }
+                    $risVerificationFailed = FALSE;
+                }
+            }
+            $identity_content['id_card_api'] = $result['response'];
+        }
+        $this->CI->log_integration_model->insert($param);
+        return [$risVerified, $risVerificationFailed];
+    }
 
     // 實名認證
     public function identity_verify($info = [])

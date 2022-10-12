@@ -307,22 +307,28 @@
                                         echo '<p style="color:red;" class="form-control-static">錯誤：<br />'.$remark["error"].'</p>';
                                     }
 
-                                    echo '<p class="form-control-static">Azure 面孔比對結果：';
-                                    echo '<br />持證自拍照：' . $remark['person_count'] . ' 人臉';
-                                    echo '<br />身分證正面照：' . $remark['front_count'] . ' 人臉';
-                                    if(isset($remark["face"]) && count($remark["face"]) >= 2) {
-                                        echo '<br />「身分證正面照」與「持證自拍者」相似度：' . $remark["face"][0];
-                                        echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . $remark["face"][1];
-                                        echo '</p>';
+                                    if (isset($remark['person_count']) && isset($remark['front_count']))
+                                    {
+                                        echo '<p class="form-control-static">Azure 面孔比對結果：';
+                                        echo '<br />持證自拍照：' . $remark['person_count'] . ' 人臉';
+                                        echo '<br />身分證正面照：' . $remark['front_count'] . ' 人臉';
+                                        if(isset($remark["face"]) && count($remark["face"]) >= 2) {
+                                            echo '<br />「身分證正面照」與「持證自拍者」相似度：' . $remark["face"][1];
+                                            echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . $remark["face"][0];
+                                            echo '</p>';
+                                        }
                                     }
 
-                                    echo '<p class="form-control-static">Face++ 面孔比對結果：';
-                                    echo '<br />持證自拍照：' . $remark['face_count']['person_count'] . ' 人臉';
-                                    echo '<br />身分證正面照：' . $remark['face_count']['front_count'] . ' 人臉';
-                                    if(isset($remark["faceplus"]) && count($remark["faceplus"])>0){
-                                        echo '<br />「身分證正面照」與「持證自拍者」相似度：' . $remark["faceplus"][0];
-                                        echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . $remark["faceplus"][1];
-                                        echo '</p>';
+                                    if (isset($remark['face_count']))
+                                    {
+                                        echo '<p class="form-control-static">Face++ 面孔比對結果：';
+                                        echo '<br />持證自拍照：' . $remark['face_count']['person_count'] . ' 人臉';
+                                        echo '<br />身分證正面照：' . $remark['face_count']['front_count'] . ' 人臉';
+                                        if(isset($remark["faceplus"]) && count($remark["faceplus"])>0){
+                                            echo '<br />「身分證正面照」與「持證自拍者」相似度：' . $remark["faceplus"][0];
+                                            echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . $remark["faceplus"][1];
+                                            echo '</p>';
+                                        }
                                     }
 
                                     if(isset($remark["face8"])){

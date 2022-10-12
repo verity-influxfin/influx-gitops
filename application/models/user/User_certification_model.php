@@ -173,6 +173,7 @@ class User_certification_model extends MY_Model
             ->where('user_id', $userId)
             ->where('content !=', '')
             ->where('status', 1)
+            ->where('investor', USER_BORROWER)
             ->where('certification_id', 1)
             ->limit($limit, $offset)
             ->get();

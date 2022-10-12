@@ -81,6 +81,10 @@ class Scraper extends MY_Admin_Controller
                 $hr_status = $hr_result['response']['rowData']['responseData']['checkIdCardApply'];
                 $response['household_registration_status'] = $hr_status == 1 ? 'finished' : 'failure';
             }
+            else
+            {
+                $response['household_registration_status'] = 'failure';
+            }
         }
 
         // verdict_status
@@ -182,6 +186,69 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
+    /**
+     * id_card_api: 內政部戶政司身分證查驗API
+     */
+    public function id_card_api_result()
+    {
+        $input = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+        $this->load->model('user/user_certification_model');
+
+        if (empty($input) || !is_array($input)) {
+            $this->json_output->setStatusCode(405)->setResponse(['message' => 'data type not correct'])->send();
+        }
+
+        if (empty($input['user_id'])) {
+            $this->json_output->setStatusCode(405)->setResponse(['message' => 'parameter not correct'])->send();
+        }
+
+        $result = '尚未執行';  // Default value
+        $hrCer = $this->user_certification_model->get_household_info($input['user_id']);
+        if ( ! empty($hrCer) && isset($hrCer[0]->id_card_api))
+        {
+            $hr_result = json_decode($hrCer[0]->id_card_api, TRUE);
+            $result = $hr_result['response']['checkIdCardApplyFormat'] ?? $hr_result['error'] ?? '';
+        }
+
+        $this->json_output->setStatusCode(200)->setResponse(['result' => $result])->send();
+    }
+
+    public function id_card_api()
+    {
+        $this->load->library('output/json_output');
+        $this->load->model('user/user_certification_model');
+        $this->load->library('certification_lib');
+        $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
+        $cert = $this->user_certification_model->get_certification([
+            'user_id' => $input['user_id'],
+            'certification_id' => CERTIFICATION_IDENTITY,
+            'status' => CERTIFICATION_STATUS_SUCCEED,
+            'investor' => USER_BORROWER
+        ]);
+        if ( ! $cert)
+        {
+            $this->json_output->setStatusCode(CUSTOM_HTTP_ERROR_CODE)->setResponse(
+                ['message' => '尚未通過實名認證']
+            )->send();
+        }
+        $identity_content = json_decode($cert['content'], TRUE);
+        $remark = json_decode($cert['remark'], TRUE);
+        $err_msg = $remark['error'] ?? '';
+        $this->certification_lib->verify_id_card_info($cert['id'], $identity_content, $err_msg);
+
+        // Update user_certification.
+        $to_update = ['content' => json_encode($identity_content, JSON_INVALID_UTF8_IGNORE)];
+        if ($err_msg)
+        {
+            $remark['error'] = $err_msg;
+            $to_update['remark'] = json_encode($remark, JSON_INVALID_UTF8_IGNORE);
+        }
+        $this->user_certification_model->update($cert['id'], $to_update);
+
+        $this->json_output->setStatusCode(200)->send();
+    }
+
     public function identity_info()
     {
         $input = $this->input->get(NULL, TRUE);
@@ -207,16 +274,19 @@ class Scraper extends MY_Admin_Controller
         }
 
         # ig 帳號
-        $social_content = $this->user_certification_model->get_content($input['user_id'], CERTIFICATION_SOCIAL);
-        
-        if ( ! isset($social_content[0]->content))
+        if ( ! isset($input['omit_ig']))
         {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'content not found'])->send();
-        }
-        $content = json_decode($social_content[0]->content, TRUE);
-        if (! isset($content['instagram']['username']))
-        {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'name or ig username not found'])->send();
+            $social_content = $this->user_certification_model->get_content($input['user_id'], CERTIFICATION_SOCIAL);
+
+            if ( ! isset($social_content[0]->content))
+            {
+                $this->json_output->setStatusCode(405)->setResponse(['message' => 'content not found'])->send();
+            }
+            $content = json_decode($social_content[0]->content, TRUE);
+            if (! isset($content['instagram']['username']))
+            {
+                $this->json_output->setStatusCode(405)->setResponse(['message' => 'name or ig username not found'])->send();
+            }
         }
 
         $response = [
