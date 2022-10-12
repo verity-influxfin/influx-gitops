@@ -195,59 +195,25 @@ class ERP extends MY_Admin_Controller
      */
     public function etpr_spreadsheet()
     {
-        if ($data = $this->input->post('data'))
-        {
-            $data = json_decode(urldecode(base64_decode($data)), TRUE);
-            $sheet = utility('spreadsheet')->from_template('erp_etpr');
-            $sheet->sheet('正常案')->from_array(array_map(function($item) {
-                return [
-
-                    // 日期
-                    $item['date'],
-
-                    // 當期本金
-                    $item['principal'],
-
-                    // 當期利息
-                    $item['interest_amount'],
-
-                    // 本息合計
-                    $item['pit'],
-
-                    // 本金餘額
-                    $item['principal_balance'],
-
-                    // 違約金
-                    $item['penalty'],
-
-                    // 延滯息
-                    $item['demurrage'],
-
-                    // 當期償還本金
-                    $item['repayment_principal'],
-
-                    // 當期償還利息
-                    $item['repayment_interest_amount'],
-
-                    // 當期償還本息
-                    $item['repayment_pit'],
-
-                    // 當期償還延滯息
-                    $item['repayment_demurrage'],
-
-                    // 回款手續費
-                    $item['payback_fee'],
-
-                    // 補貼
-                    $item['subsidy'],
-
-                    // 投資回款淨額
-                    $item['repayment_net_amount']
-                ];
-            }, $data), 'A2');
-            $sheet->output('ETPR_' . date('His'));
-        }
-        exit;
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+        $investor_id_int = $this->input->get('investor_id_int');
+        // get file from guzzle replayment_schedule/excel
+        $res = $this->erp_client_1->request('GET', 'replayment_schedule/excel', [
+            'query' => [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'investor_id_int' => $investor_id_int,
+            ]
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        echo $data;
+        die();
     }
 
     /**

@@ -32,11 +32,24 @@ var app = new Vue({
                 this.is_waiting_response = false
             })
         },
+        downloadExcel() { 
+            $("#fileDownloadIframe").remove();
+            let url = '/admin/erp/etpr_spreadsheet?'
+            // build params form searchform
+            let params = []
+            for (var key in this.searchform) {
+                params.push(key + '=' + this.searchform[key])
+            }
+            url += params.join('&')
+            $("body").append(
+              `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
+            );
+        },
         format(value) {
             if (value.toString().includes('-')) { 
                 return value
             }
             return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
-        },
+        }
     }
 })

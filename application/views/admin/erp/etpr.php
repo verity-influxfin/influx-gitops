@@ -30,9 +30,9 @@
                                 <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
                                     <i class="fa fa-search"></i> 搜尋
                                 </button>
-                                <!-- <button class="btn btn-excel pull-right" type="button" v-on:click="spreadsheet_export" :disabled="is_waiting_response" v-if="data?.length > 0">
+                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadExcel" v-if="tableData.length > 0">
                                     <i class="fa fa-file-excel-o"></i> 檔案下載
-                                </button> -->
+                                </button>
                             </div>
                         </div>
                     </form>
