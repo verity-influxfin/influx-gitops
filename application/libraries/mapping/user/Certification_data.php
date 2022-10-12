@@ -1191,7 +1191,7 @@ class Certification_data
             'creditCard' => $credit_card,
             'creditCardMonthlyPayment' => $credit_card_monthly_payment,
             'totalMonthlyPayment' => $total_monthly_payment,
-            'liabilitiesWithoutAssureTotalAmount' => $liabilities_without_assure_total_amount,
+            'liabilitiesWithoutAssureTotalAmount' => $liabilities_without_assure_total_amount * 1000,  // 單位：「千元」->「元」
             'totalEffectiveDebt' => $total_effective_debt * 1000  // 單位：「千元」->「元」
         ];
     }
