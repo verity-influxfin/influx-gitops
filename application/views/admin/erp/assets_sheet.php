@@ -30,7 +30,7 @@
                                 <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
                                     <i class="fa fa-search"></i> 搜尋
                                 </button>
-                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadExcel">
+                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadExcel" v-show="assets_sheet.length > 0">
                                     <i class="fa fa-file-excel-o"></i> 檔案下載
                                 </button>
                             </div>
@@ -87,7 +87,7 @@
                                             <td>{{ item.case_status }}</td>
                                             <td>{{ item.target_id }}</td>
                                             <td>{{ item.investment_user_id }}</td>
-                                            <td></td>
+                                            <td>{{item.investment_source_str}}</td>
                                             <td>{{ amount(item.investment_loan_amount) }}</td>
                                             <td>{{ item.investment_status }}</td>
                                             <td>{{ item.delay_days }}</td>
