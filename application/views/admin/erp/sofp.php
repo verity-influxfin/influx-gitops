@@ -12,19 +12,23 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
-                    <form class="form-inline" ref="search-form">
+                    <form class="form-inline" ref="search-form" @submit.prevent="doSearch">
                         <div class="form-group">
                             <label class="sr-only" for="date">日期</label>
-                            <input type="text" class="form-control" v-model="searchform.date" id="date" name="date" placeholder="日期">
+                            <input type="text" class="form-control" v-model="searchform.start_date" id="start_date" name="date" placeholder="日期">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="end_date">結束日期</label>
+                            <input type="text" class="form-control" id="end_date" name="end_date" v-model="searchform.end_date" placeholder="結束日期" required>
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="investor_id">投資人 ID</label>
-                            <input type="text" class="form-control" v-model="searchform.user_id" id="investor_id" name="investor_id" placeholder="投資人 ID">
+                            <input type="text" class="form-control" v-model="searchform.user_id_int" id="investor_id" name="investor_id" placeholder="投資人 ID">
                         </div>
-                        <button type="button" @click="search" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i> 搜尋
                         </button>
-                        <button class="btn btn-excel pull-right" type="button" v-on:click="spreadsheet_export" :disabled="is_waiting_response" v-if="table_data.length > 0">
+                        <button class="btn btn-primary pull-right" type="button" @click="downloadExcel" :disabled="is_waiting_response" v-if="table_has_data">
                             <i class="fa fa-file-excel-o"></i> 檔案下載
                         </button>
                     </form>
@@ -32,90 +36,93 @@
                 <div class="panel-body">
                     <div class="panel-body">
                         <div class="table-responsive">
-                            <table class="table" v-for="p in table_data">
+                            <table class="table table-bordered">
                                 <thead>
                                     <tr class="info">
-                                        <th colspan="4">
-                                            <h4><strong>{{p.year - 1911}} 年度</strong></h4>
-                                        </th>
+                                        <th width="70%">項目</th>
+                                        <th width="15%" class="text-right">小計</th>
+                                        <th width="15%" class="text-right">合計</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td style="padding:0;">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>項目</th>
-                                                        <th>金額</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr class="active" v-if="p.content.assets.items.length > 0">
-                                                        <th colspan="2">資產</th>
-                                                    </tr>
-                                                    <tr v-for="item in p.content.assets.items">
-                                                        <td>{{item.index + "\t" + item.title}}</td>
-                                                        <td>{{item.amount | sofp_amount}}</td>
-                                                    </tr>
-                                                    <tr v-for="i in count_blank(p.content, 'left')">
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr class="active">
-                                                        <th>
-                                                            資產總計
-                                                        </th>
-                                                        <th>
-                                                            {{p.content.assets.amount | sofp_amount}}
-                                                        </th>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                        </td>
-                                        <td style="padding:0;">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>項目</th>
-                                                        <th>金額</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr class="active" v-if="p.content.liabilities.items.length > 0">
-                                                        <th colspan="2">負債</th>
-                                                    </tr>
-                                                    <tr v-for="item in p.content.liabilities.items">
-                                                        <td>{{item.index + "\t" + item.title}}</td>
-                                                        <td>{{item.amount | sofp_amount}}</td>
-                                                    </tr>
-                                                    <tr class="active" v-if="p.content.equity.items.length > 0">
-                                                        <th colspan="2">股東權益</th>
-                                                    </tr>
-                                                    <tr v-for="item in p.content.equity.items">
-                                                        <td>{{item.index + "\t" + item.title}}</td>
-                                                        <td>{{item.amount | sofp_amount}}</td>
-                                                    </tr>
-                                                    <tr v-for="i in count_blank(p.content, 'right')">
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr class="active">
-                                                        <th>
-                                                            負債及股東權益總計
-                                                        </th>
-                                                        <th>
-                                                            {{p.content.liabilities.amount + p.content.equity.amount | sofp_amount }}
-                                                        </th>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                        </td>
+                                    <tr v-if="! table_has_data">
+                                        <td colspan="3" class="text-center">沒有資料</td>
                                     </tr>
+                                    <template v-else>
+                                        <template v-if="has_assets">
+                                            <tr class="active">
+                                                <th colspan="3">【資產】</th>
+                                            </tr>
+                                            <!-- 第一行 -->
+                                            <template v-for="item in table_data.assets.subjectGroup_list">
+                                                <tr>
+                                                    <td style="padding-left: 1em;">{{ getListTitle(item) }}</td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right">{{ amount(item.subtotal) }}</td>
+                                                </tr>
+                                                <tr v-for="row in item.subject_list">
+                                                    <td style="padding-left: 2em;">{{ row.name }}</td>
+                                                    <td class="text-right">{{ amount(row.amount) }}</td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </template>
+                                            <tr>
+                                                <td colspan="2"><strong>小計</strong></td>
+                                                <td class="text-right"><strong>{{ amount(table_data.assets.subtotal)
+                                                        }}</strong></td>
+                                            </tr>
+                                        </template>
+                                        <tr class="active">
+                                            <th colspan="3">【權益】</th>
+                                        </tr>
+                                        <template v-if="has_equity">
+                                            <!-- 第一行 -->
+                                            <template v-for="item in table_data.equity.subjectGroup_list">
+                                                <tr>
+                                                    <td style="padding-left: 1em;">{{ getListTitle(item) }}</td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right">{{ amount(item.subtotal) }}</td>
+                                                </tr>
+                                                <tr v-for="row in item.subject_list">
+                                                    <td style="padding-left: 2em;">{{ row.name }}</td>
+                                                    <td class="text-right">{{ amount(row.amount) }}</td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </template>
+                                            <tr>
+                                                <td colspan="2"><strong>小計</strong></td>
+                                                <td class="text-right"><strong>{{ amount(table_data.equity.subtotal)
+                                                        }}</strong></td>
+                                            </tr>
+                                        </template>
+
+                                        <tr class="active">
+                                            <th colspan="3">【負債】</th>
+                                        </tr>
+                                        <template v-if="has_liabilities">
+                                            <!-- 第一行 -->
+                                            <template v-for="item in table_data.liabilities.subjectGroup_list">
+                                                <tr>
+                                                    <td style="padding-left: 1em;">{{ getListTitle(item) }}</td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right">{{ amount(item.subtotal) }}</td>
+                                                </tr>
+                                                <tr v-for="row in item.subject_list">
+                                                    <td style="padding-left: 2em;">{{ row.name }}</td>
+                                                    <td class="text-right">{{ amount(row.amount) }}</td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </template>
+                                            <tr>
+                                                <td colspan="2"><strong>小計</strong></td>
+                                                <td class="text-right">
+                                                    <strong>
+                                                        {{ amount(table_data.liabilities.subtotal)}}
+                                                    </strong>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </template>
                                 </tbody>
                             </table>
                         </div>
@@ -126,8 +133,8 @@
     </div>
 </div>
 <style type="text/css">
-tr {
-    height: 3.7rem;
-}
+    tr {
+        height: 3.7rem;
+    }
 </style>
 <?php $this->load->view('admin/_footer'); ?>

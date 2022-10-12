@@ -1,94 +1,82 @@
 var app = new Vue({
-  el: '#page-wrapper',
-  data: {
-    searchform: {
-        date: moment().format('YYYY-MM-DD'),
-        user_id: '',
-        role: 'investor',
+    el: '#page-wrapper',
+    data: {
+        searchform: {
+            start_date: moment().subtract(2, 'months').format('YYYY-MM-DD'),
+            end_date: moment().format('YYYY-MM-DD'),
+            user_id_int: '',
+        },
+        table_data: {
+            start_date: '',
+            end_date: '',
+            assets: {
+                subtotal: 0,
+                subjectGroup_list: [],
+            },
+            equity: {
+                subtotal: 0,
+                subjectGroup_list: [],
+            },
+            liabilities: {
+                subtotal: 0,
+                subjectGroup_list: [],
+            },
+            user_id_int: 0,
+        },
+        is_waiting_response: false,
     },
-    table_data: [],
-    is_waiting_response: false,
-    form_error: {
-        search: {
-            date    : false,
-            user_id : false,
-            role    : false,
-        }
-    }
-  },
-  watch:{
-    'searchform.date': function(value) {
-        this.form_error.search.date = value == '';
+    mounted() {
+        var self = this;
+        $('#start_date').datepicker({
+            'format': 'yyyy-mm-dd',
+        }).on('change', function () { self.searchform.date = this.value });
+        $('#end_date').datepicker({
+            'format': 'yyyy-mm-dd',
+        }).on('change', function () { self.searchform.end_date = this.value });
     },
-  },
-  filters: {
-      sofp_amount: function (value) {
-        if (value < 0)
-        {
-            value = Math.abs(value);
-            return '(' + value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ')';
+    computed: {
+        table_has_data: function () {
+            return this.has_assets || this.has_equity || this.has_liabilities
+        },
+        has_assets: function () {
+            return this.table_data.assets.subjectGroup_list.length > 0
+        },
+        has_equity: function () {
+            return this.table_data.equity.subjectGroup_list.length > 0
+        },
+        has_liabilities: function () {
+            return this.table_data.liabilities.subjectGroup_list.length > 0
         }
-        return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-      }
-  },
-  mounted() {
-    var self = this;
-    $('#date').datepicker({
-        'format': 'yyyy-mm-dd',
-    }).on('change', function() { self.searchform.date = this.value});
-  },
-  methods: {
-    spreadsheet_export: function () {
-        if (this.table_data.length > 0) {
-            var formdata = new FormData();
-            formdata.append('data', btoa(encodeURIComponent(JSON.stringify(this.table_data))));
+    },
+    methods: {
+        getListTitle(obj) {
+            return obj.subject_list[0].name.split(' - ')[0]
+        },
+        amount: function (value) {
+            return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+        },
+        doSearch() {
             this.is_waiting_response = true
-            axios({
-                method: 'post',
-                url: '/admin/Erp/sofp_spreadsheet',
-                data: formdata,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                responseType: 'blob'
-            }).then((response) => {
-                let blob = new Blob([response.data], { type: 'application/vnd.ms-excel' })
-                let link = document.createElement('a')
-                link.href = window.URL.createObjectURL(blob)
-                link.download = `資產負債表.xlsx`
-                link.click()
+            // axios get get_assets_sofp_data
+            axios.get('/admin/erp/get_sofp_data', {
+                params: this.searchform
+            }).then(({ data }) => { 
+                this.table_data = data
                 this.is_waiting_response = false
             })
-        }
-    },
-    search: function () {
-        axios.get(
-            '/admin/Erp/get_sofp_data?data=' + encodeURIComponent(btoa(encodeURIComponent(JSON.stringify(this.searchform))))
-        ).then((resp) => {
-            this.table_data = resp.data.data.pages
-        })
-    },
-    count_blank: function(content, side) {
-        asset_count = content.assets.items.length > 0 ? content.assets.items.length + 1 : 0;
-        liabilities_count = content.liabilities.items.length > 0 ? content.liabilities.items.length + 1 : 0;
-        equity_count = content.equity.items.length > 0 ? content.equity.items.length + 1 : 0;
-
-        max_count = liabilities_count + equity_count;
-
-        if (max_count < asset_count) {
-            max_count = asset_count;
-        }
-
-        if (max_count > 0)
-        {
-            max_count += 1;
-        }
-
-        if (side == 'left') {
-            return max_count - asset_count;
-        } else {
-            return max_count - (liabilities_count + equity_count);
-        }
+        },
+        downloadExcel() { 
+            $("#fileDownloadIframe").remove();
+            let url = '/admin/erp/sofp_spreadsheet?'
+            // build params form searchform
+            let params = []
+            for (var key in this.searchform) {
+                params.push(key + '=' + this.searchform[key])
+            }
+            url += params.join('&')
+            $("body").append(
+              `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
+            );
+        },
     }
-  }
 })

@@ -246,34 +246,19 @@ class ERP extends MY_Admin_Controller
      */
     public function get_sofp_data()
     {
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+        $user_id_int = $this->input->get('user_id_int');
 
-        try
-        {
-            // 取得 request data
-            $data = base64_decode($this->input->get_post('data'));
-            $data = json_decode(urldecode($data), TRUE);
-
-            $date    = $data['date'] ?? null;
-            $user_id = $data['user_id'] ?? null;
-            $role    = $data['role'] ?? 'investor';
-        }
-        catch (Exception $e)
-        {
-            $this->_output_json([
-                'success' => FALSE,
-                'message' => $e->message
-            ]);
-        }
-
-        // 呼叫 ERP API 取得結果
-        $this->_output_json([
-            'success' => TRUE,
-            'data'    => $this->erp_lib->get_report('sofp', [
-                'date'    => $date,
-                'user_id' => (int) $user_id,
-                'role'    => $role,
-            ])
-        ]);
+        $data = $this->erp_client_2->request('GET', 'sofp', [
+            'query' => [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'user_id_int' => $user_id_int,
+            ]
+        ])->getBody()->getContents();
+        echo $data;
+        die();
     }
 
     /**
@@ -284,55 +269,25 @@ class ERP extends MY_Admin_Controller
      */
     public function sofp_spreadsheet()
     {
-        if ($data = $this->input->post('data'))
-        {
-            $data = json_decode(urldecode(base64_decode($data)), TRUE);
-            $sheet = utility('spreadsheet')->from_template('erp_sofp');
-
-            foreach ($data as $index => $page)
-            {
-                $sheet_name = 'page_' . ($index + 1);
-
-                // 處理分頁
-                if ($index == 0 && count($data) > 1)
-                {
-                    for ($i=2;$i<=count($data);$i++)
-                    {
-                        $sheet->sheet($sheet_name, 'page_' . $i);
-                    }
-                }
-
-                $sheet->sheet($sheet_name)->cell($year_title = sprintf('%s 年度', $page['year'] - 1911), 'A1');
-
-                // 資產
-                $sheet->sheet($sheet_name)->from_array(array_map(function($item) {
-                    return [
-                        $item['index'] . ' ' . $item['title'],
-                        $item['amount'],
-                    ];
-                }, $page['content']['assets']['items']), 'A4');
-
-                // 負債及股東權益
-                $sheet->sheet($sheet_name)->from_array(array_map(function($item) {
-                            return [
-                                $item['index'] . ' ' . $item['title'],
-                                $item['amount'],
-                            ];
-                        },
-                        array_merge(
-                            $page['content']['liabilities']['items'],
-                            $page['content']['equity']['items']
-                        )
-                    ),
-                    'D4'
-                );
-
-                $sheet->sheet($sheet_name)->set_sheet_name($year_title);
-            }
-
-            $sheet->output('SoFP_' . date('His'));
-        }
-        exit;
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+        $user_id_int = $this->input->get('user_id_int');
+        // get file from guzzle sofp/excel
+        $res = $this->erp_client_2->request('GET', 'sofp/excel', [
+            'query' => [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'user_id_int' => $user_id_int,
+            ]
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        echo $data;
+        die();
     }
 
     /**
