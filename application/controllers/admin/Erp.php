@@ -161,52 +161,24 @@ class ERP extends MY_Admin_Controller
      * 
      * @created_at            2021-08-03
      * @created_at            Frankie
-     * @updated_at            2021-09-16
-     * @updated_by            Jack
+     * @updated_at            2021-10-12
+     * @updated_by            Allan
      */
     public function get_etpr_data()
     {
-        $this->load->model('loan/investment_model');
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+        $investor_id_int = $this->input->get('investor_id_int');
 
-        try
-        {
-            // 取得 request data
-            $data = base64_decode($this->input->get_post('data'));
-            $data = json_decode(urldecode($data), TRUE);
-
-            $start_date  = $data['start_date'] ?? null;
-            $end_date    = $data['end_date'] ?? null;
-            $investor_id = empty($data['investor_id']) ? null : (int) $data['investor_id'];
-            $contracts   = $data['contracts'] ?? null;
-            $type        = $data['type'] ?? 'normal';
-        }
-        catch (Exception $e)
-        {
-            $this->_output_json([
-                'success' => FALSE,
-                'message' => $e->message
-            ]);
-        }
-
-        // 取得投資人期間內所有案件
-        $contract_list = $this->investment_model->get_investor_targets($start_date, $end_date, $investor_id);
-
-        // 呼叫 ERP API 取得結果
-        $etpr_data = $this->erp_lib->get_p2ploan('etpr', [
-            'start_date'  => $start_date,
-            'end_date'    => $end_date,
-            'type'        => $type,
-            'investor_id' => $investor_id,
-            'contracts'   => $contracts ?: $contract_list,
-        ]);
-
-        $this->_output_json([
-            'success' => TRUE,
-            'data'    => [
-                'etpr'      => $etpr_data,
-                'contracts' => $contract_list
+        $data = $this->client->request('GET', 'replayment_schedule', [
+            'query' => [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'investor_id_int' => $investor_id_int,
             ]
-        ]);
+        ])->getBody()->getContents();
+        echo $data;
+        die();
     }
 
     /**
