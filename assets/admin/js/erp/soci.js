@@ -2,7 +2,7 @@ var app = new Vue({
     el: '#page-wrapper',
     data: {
         searchform: {
-            start_date: moment().format('YYYY-01-01'),
+            start_date: '',
             end_date: moment().format('YYYY-MM-DD'),
             user_id_int: '',
         },
@@ -44,14 +44,17 @@ var app = new Vue({
     },
     methods: {
         getListTitle(obj) {
-          return obj.subject_list[0].name.split(' - ')[0]
+            return obj.subject_list[0].name.split(' - ')[0]
         },
         doSearch() {
             this.is_waiting_response = true
+            const { start_date, end_date, user_id_int } = this.searchform
+            const string = Object.entries({ start_date, end_date, user_id_int })
+                .filter(([key, value]) => value !== '')
+                .map(([key, value]) => `${key}=${value}`)
+                .join('&')
             // axios get get_assets_sheet_data
-            axios.get('/admin/erp/get_soci_data', {
-                params: this.searchform
-            }).then(({ data }) => { 
+            axios.get('/admin/erp/get_soci_data?' + string).then(({ data }) => {
                 this.table_data = data
             }).catch((error) => {
                 alert('子系統錯誤或無回應: ' + error)
@@ -59,7 +62,7 @@ var app = new Vue({
                 this.is_waiting_response = false
             })
         },
-        downloadExcel() { 
+        downloadExcel() {
             $("#fileDownloadIframe").remove();
             let url = '/admin/erp/soci_spreadsheet?'
             // build params form searchform
@@ -69,7 +72,7 @@ var app = new Vue({
             }
             url += params.join('&')
             $("body").append(
-              `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
+                `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
             );
         },
         amount: function (value) {

@@ -2,7 +2,7 @@ var app = new Vue({
     el: '#page-wrapper',
     data: {
         searchform: {
-            start_date: moment().subtract(2, 'months').format('YYYY-MM-10'),
+            start_date: '',
             end_date: moment().format('YYYY-MM-10'),
             user_id_int: '',
         },
@@ -24,10 +24,14 @@ var app = new Vue({
     methods: {
         doSearch() {
             this.is_waiting_response = true
+            const { start_date, end_date, user_id_int } = this.searchform
+            const string = Object.entries({ start_date, end_date, user_id_int })
+                .filter(([key, value]) => value !== '')
+                .map(([key, value]) => `${key}=${value}`)
+                .join('&')
             // axios get get_assets_sheet_data
-            axios.get('/admin/erp/get_assets_sheet_data', {
-                params: this.searchform
-            }).then(({ data }) => {
+            axios.get('/admin/erp/get_assets_sheet_data?' + string)
+            .then(({ data }) => {
                 this.assets_sheet = data
             }).catch((error) => {
                 alert('子系統錯誤或無回應:' + error)
@@ -35,7 +39,7 @@ var app = new Vue({
                 this.is_waiting_response = false
             })
         },
-        downloadExcel() { 
+        downloadExcel() {
             $("#fileDownloadIframe").remove();
             let url = '/admin/erp/assets_sheet_spreadsheet?'
             // build params form searchform
@@ -45,14 +49,14 @@ var app = new Vue({
             }
             url += params.join('&')
             $("body").append(
-              `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
+                `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
             );
         },
         amount: function (value) {
             return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
         },
         formatTime(value) {
-            return moment(value).format('YYYY-MM-DD HH:mm:ss') 
+            return moment(value).format('YYYY-MM-DD HH:mm:ss')
         }
     }
 })

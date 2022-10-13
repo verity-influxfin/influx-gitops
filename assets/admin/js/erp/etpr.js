@@ -2,7 +2,7 @@ var app = new Vue({
     el: '#page-wrapper',
     data: {
         searchform: {
-            start_date: moment().subtract(2, 'months').format('YYYY-MM-10'),
+            start_date: '',
             end_date: moment().format('YYYY-MM-10'),
             investor_id_int: '',
         },
@@ -23,10 +23,13 @@ var app = new Vue({
     methods: {
         doSearch() {
             this.is_waiting_response = true
+            const { start_date, end_date, investor_id_int } = this.searchform
+            const string = Object.entries({ start_date, end_date, investor_id_int })
+                .filter(([key, value]) => value !== '')
+                .map(([key, value]) => `${key}=${value}`)
+                .join('&')
             // axios get replayment_schedule
-            axios.get('/admin/erp/get_etpr_data', {
-                params: this.searchform
-            }).then(({ data }) => {
+            axios.get('/admin/erp/get_etpr_data?' + string).then(({ data }) => {
                 this.tableData = data.table_str_mat
                 this.column = data.column_name_list
             }).catch((error) => {
@@ -35,7 +38,7 @@ var app = new Vue({
                 this.is_waiting_response = false
             })
         },
-        downloadExcel() { 
+        downloadExcel() {
             $("#fileDownloadIframe").remove();
             let url = '/admin/erp/etpr_spreadsheet?'
             // build params form searchform
@@ -45,11 +48,11 @@ var app = new Vue({
             }
             url += params.join('&')
             $("body").append(
-              `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
+                `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
             );
         },
         format(value) {
-            if (value.toString().includes('-')) { 
+            if (value.toString().includes('-')) {
                 return value
             }
             return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')

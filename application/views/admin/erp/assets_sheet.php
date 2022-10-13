@@ -17,11 +17,11 @@
                             <div class="col-xs-12">
                                 <div class="form-group">
                                     <label class="sr-only" for="start_date">開始日期</label>
-                                    <input type="text" class="form-control" id="start_date" name="start_date" v-model="searchform.start_date" placeholder="開始日期" required>
+                                    <input type="text" class="form-control" id="start_date" name="start_date" v-model="searchform.start_date" placeholder="開始日期">
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="end_date">結束日期</label>
-                                    <input type="text" class="form-control" id="end_date" name="end_date" v-model="searchform.end_date" placeholder="結束日期" required>
+                                    <input type="text" class="form-control" id="end_date" name="end_date" v-model="searchform.end_date" placeholder="結束日期">
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="investor_id">投資人 ID</label>

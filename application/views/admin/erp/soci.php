@@ -15,15 +15,15 @@
                     <form class="form-inline" ref="search-form" @submit.prevent="doSearch">
                         <div class="form-group">
                             <label class="sr-only" for="start_date">開始日期</label>
-                            <input type="text" class="form-control" v-model="searchform.start_date" id="start_date" name="start_date" placeholder="開始日期" require>
+                            <input type="text" class="form-control" v-model="searchform.start_date" id="start_date" name="start_date" placeholder="開始日期">
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="end_date">結束日期</label>
-                            <input type="text" class="form-control" v-model="searchform.end_date" id="end_date" name="end_date" placeholder="結束日期" require>
+                            <input type="text" class="form-control" v-model="searchform.end_date" id="end_date" name="end_date" placeholder="結束日期">
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="investor_id">投資人 ID</label>
-                            <input type="text" class="form-control" v-model="searchform.user_id_int" id="investor_id" name="investor_id" placeholder="投資人 ID" require>
+                            <input type="text" class="form-control" v-model="searchform.user_id_int" id="investor_id" name="investor_id" placeholder="投資人 ID" required>
                         </div>
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i> 搜尋

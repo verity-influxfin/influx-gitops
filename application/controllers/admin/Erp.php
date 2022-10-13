@@ -76,16 +76,9 @@ class ERP extends MY_Admin_Controller
      * @created_by                   Allan
      */
     public function get_assets_sheet_data(){
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
-        $user_id_int = $this->input->get('user_id_int');
 
         $data = $this->erp_client_1->request('GET', 'assets_sheet', [
-            'query' => [
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'user_id_int' => $user_id_int,
-            ]
+            'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
         die();
@@ -98,16 +91,9 @@ class ERP extends MY_Admin_Controller
      * @created_by                   Allan
      */
     public function assets_sheet_spreadsheet(){
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
-        $user_id_int = $this->input->get('user_id_int');
         // get file from guzzle assets_sheet/excel
         $res = $this->erp_client_1->request('GET', 'assets_sheet/excel', [
-            'query' => [
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'user_id_int' => $user_id_int,
-            ]
+            'query' => $this->input->get()
         ]);
         $des = $res->getHeader('content-disposition')[0];
         $data = $res->getBody()->getContents();
@@ -172,16 +158,8 @@ class ERP extends MY_Admin_Controller
      */
     public function get_etpr_data()
     {
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
-        $investor_id_int = $this->input->get('investor_id_int');
-
         $data = $this->erp_client_1->request('GET', 'replayment_schedule', [
-            'query' => [
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'investor_id_int' => $investor_id_int,
-            ]
+            'query' => $this->input->get() 
         ])->getBody()->getContents();
         echo $data;
         die();
@@ -195,16 +173,9 @@ class ERP extends MY_Admin_Controller
      */
     public function etpr_spreadsheet()
     {
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
-        $investor_id_int = $this->input->get('investor_id_int');
         // get file from guzzle replayment_schedule/excel
         $res = $this->erp_client_1->request('GET', 'replayment_schedule/excel', [
-            'query' => [
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'investor_id_int' => $investor_id_int,
-            ]
+            'query' => $this->input->get()
         ]);
         $des = $res->getHeader('content-disposition')[0];
         $data = $res->getBody()->getContents();
@@ -246,16 +217,8 @@ class ERP extends MY_Admin_Controller
      */
     public function get_sofp_data()
     {
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
-        $user_id_int = $this->input->get('user_id_int');
-
         $data = $this->erp_client_2->request('GET', 'sofp', [
-            'query' => [
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'user_id_int' => $user_id_int,
-            ]
+            'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
         die();
@@ -269,16 +232,8 @@ class ERP extends MY_Admin_Controller
      */
     public function sofp_spreadsheet()
     {
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
-        $user_id_int = $this->input->get('user_id_int');
-        // get file from guzzle sofp/excel
         $res = $this->erp_client_2->request('GET', 'sofp/excel', [
-            'query' => [
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'user_id_int' => $user_id_int,
-            ]
+            'query' => $this->input->get()
         ]);
         $des = $res->getHeader('content-disposition')[0];
         $data = $res->getBody()->getContents();
@@ -320,17 +275,8 @@ class ERP extends MY_Admin_Controller
      */
     public function get_soci_data()
     {
-
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
-        $user_id_int = $this->input->get('user_id_int');
-
         $data = $this->erp_client_2->request('GET', 'soci', [
-            'query' => [
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'user_id_int' => $user_id_int,
-            ]
+            'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
         die();
@@ -338,16 +284,8 @@ class ERP extends MY_Admin_Controller
     
     public function soci_spreadsheet()
     {
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
-        $user_id_int = $this->input->get('user_id_int');
-
         $res = $this->erp_client_2->request('GET', 'soci/excel', [
-            'query' => [
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'user_id_int' => $user_id_int,
-            ]
+            'query' => $this->input->get()
         ]);
         $des = $res->getHeader('content-disposition')[0];
         $data = $res->getBody()->getContents();
@@ -383,16 +321,8 @@ class ERP extends MY_Admin_Controller
      */
     public function get_journal_data()
     {
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
-        $user_id_int = $this->input->get('user_id_int');
-
         $data = $this->erp_client_2->request('GET', 'entry', [
-            'query' => [
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'user_id_int' => $user_id_int,
-            ]
+            'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
         die();
