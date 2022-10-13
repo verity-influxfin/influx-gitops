@@ -3,7 +3,7 @@ var app = new Vue({
     data: {
         searchform: {
             start_date: '',
-            end_date: moment().format('YYYY-MM-10'),
+            end_date: moment().format('YYYY-MM-DD'),
             user_id_int: '',
         },
         is_waiting_response: false,
