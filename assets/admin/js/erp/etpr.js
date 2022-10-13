@@ -29,6 +29,9 @@ var app = new Vue({
             }).then(({ data }) => {
                 this.tableData = data.table_str_mat
                 this.column = data.column_name_list
+            }).catch((error) => {
+                alert('子系統錯誤或無回應: ' + error)
+            }).finally(() => {
                 this.is_waiting_response = false
             })
         },

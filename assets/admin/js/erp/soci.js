@@ -53,6 +53,9 @@ var app = new Vue({
                 params: this.searchform
             }).then(({ data }) => { 
                 this.table_data = data
+            }).catch((error) => {
+                alert('子系統錯誤或無回應: ' + error)
+            }).finally(() => {
                 this.is_waiting_response = false
             })
         },

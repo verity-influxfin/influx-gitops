@@ -27,8 +27,11 @@ var app = new Vue({
             // axios get get_assets_sheet_data
             axios.get('/admin/erp/get_assets_sheet_data', {
                 params: this.searchform
-            }).then(({ data }) => { 
+            }).then(({ data }) => {
                 this.assets_sheet = data
+            }).catch((error) => {
+                alert('子系統錯誤或無回應:' + error)
+            }).finally(() => {
                 this.is_waiting_response = false
             })
         },
