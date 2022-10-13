@@ -41,7 +41,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <div class="form-group">
                                 <label>會員 ID</label>
                                 <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->user_id) ?>">
@@ -248,7 +248,7 @@
                                             </tr>
                                             <tr>
                                                 <td><span>保證人任職公司</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.guCompany"></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.guOneCompany"></td>
                                             </tr>
                                             <tr>
                                                 <td><span>保證人從事本行業年度-起始</span></td>
@@ -471,7 +471,7 @@
                                             </tr>
                                             <tr>
                                                 <td><span>保證人任職公司</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.guCompany"></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.guOneCompany"></td>
                                             </tr>
                                             <tr>
                                                 <td><span>保證人從事本行業年度-起始</span></td>
@@ -551,6 +551,31 @@
                                 </fieldset>
                             </form>
                         </div>
+                        <div class="col-lg-6">
+                            <h1>圖片</h1>
+                            <fieldset>
+                                <div class="form-group">
+                                    <label>個人基本資料</label><br>
+                                    <?php
+                                    if ( ! empty($content['profile_image']))
+                                    {
+                                        foreach ($content['profile_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style="width:30%;max-width:400px">
+                                            </a>
+                                        <?php }
+                                    } ?>
+                                </div>
+                            </fieldset>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page']; ?>
+                                </div>
+                            <?php } ?>
+                        </div>
                     </div>
                     <!-- /.row (nested) -->
                 </div>
@@ -591,7 +616,7 @@
                     hasGuarantor: '',
                     isPrSpouseGu: '',
                     guOneRelWithPr: '',
-                    guCompany: '',
+                    guOneCompany: '',
                     guOneStartYear: '',
                     guOneEndYear: '',
                     guOneSHRatio: '',

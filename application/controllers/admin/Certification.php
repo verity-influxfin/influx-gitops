@@ -260,7 +260,10 @@ class Certification extends MY_Admin_Controller {
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 
-                if(in_array($info->certification_id,['1003','9','12','501','1018', '500', '1004', CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_JUDICIALGUARANTEE, CERTIFICATION_INCOMESTATEMENT])) {
+                $cert_can_upload_image = ['1003','9','12','501','1018', '500', '1004', CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_JUDICIALGUARANTEE, CERTIFICATION_INCOMESTATEMENT,
+                    CERTIFICATION_PROFILE];
+                if (in_array($info->certification_id, $cert_can_upload_image))
+                {
                     // 上傳檔案功能
                     if ($this->_can_upload_pic_by_status($info->status))
                     {
@@ -1432,6 +1435,9 @@ class Certification extends MY_Admin_Controller {
                             break;
                         case CERTIFICATION_INVESTIGATIONA11:
                             $image_name = 'person_mq_image';
+                            break;
+                        case CERTIFICATION_PROFILE:
+                            $image_name = 'profile_image';
                             break;
                         case CERTIFICATION_BUSINESSTAX:
                             $image_name = $post['image_key'] ?? 'others_image';

@@ -32,7 +32,7 @@ class Adapter_kgi_bank extends Adapter_base
         'prEduLevel' => 'prEduLevel', 'prMobileNo' => 'prMobileNo', 'prEmail' => 'prEmail', 'spouseName' => 'spouseName', 'spouseId' => 'spouseId', 'isPrRegister' => 'isPrRegister',
         'othRealPrRelWithPr' => 'prRelationship', 'othRealPrName' => 'othRealPrName', 'othRealPrId' => 'othRealPrId', 'othRealPrBirth' => 'othRealPrBirth', 'othRealPrStartYear' => 'othRealPrStartYear',
         'othRealPrTitle' => 'othRealPrTitle', 'othRealPrSHRatio' => 'othRealPrSHRatio', 'hasGuarantor' => 'hasGuarantor', 'isPrSpouseGu' => 'isPrSpouseGu', 'guOneName' => 'guarantorName',
-        'guOneId' => 'guarantorId', 'guOneRelWithPr' => 'guOneRelWithPr', 'guOneCompany' => 'guCompany', 'jcCompDebtLog' => 'jcCompDebtLog', 'compJCICQueryDate' => 'jcCompDataDate',
+        'guOneId' => 'guarantorId', 'guOneRelWithPr' => 'guOneRelWithPr', 'guOneCompany' => 'guOneCompany', 'jcCompDebtLog' => 'jcCompDebtLog', 'compJCICQueryDate' => 'jcCompDataDate',
         'compJCICDataDate' => 'jcCompJ02YM', 'compCreditScore' => 'jcCompCreditScore', 'jcCompCreditAmount' => 'jcCompCreditAmount', 'jcCompBankDealingNum' => 'jcCompBankDealingNum',
         'prDebtLog' => 'prDebtLog', 'prJ02YM' => 'prJ02YM', 'prCreditScore' => 'prCreditPoint', 'prCreditTotalAmount' => 'prCreditTotalAmount', 'prCashCardQty' => 'prCashCardQty',
         'prCashCardAvailLimit' => 'prCashCardAvailLimit', 'prBal_CashCard' => 'prCashCardTotalBalance', 'prHasWeekMonthDelay' => 'prHasWeekMonthDelay', 'prCreditCardQty' => 'prCreditCardQty',
