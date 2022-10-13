@@ -485,6 +485,11 @@
                                     } ?>
                                 </div>
                             </fieldset>
+                            <?php if (isset($ocr['upload_page'])) { ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page'] ?>
+                                </div>
+                            <?php } ?>
                         </div>
                       </div>
                       <!-- admin form end -->
