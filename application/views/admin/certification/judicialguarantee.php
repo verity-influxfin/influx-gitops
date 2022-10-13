@@ -83,7 +83,7 @@
                         </div>
                         <div class="col-lg-6">
                             <h1>圖片/文件</h1>
-                            <fieldset disabled>
+                            <fieldset>
                             <div class="form-group">
                                 <fieldset disabled>
                                     <div class="form-group">
@@ -98,6 +98,13 @@
                                         }?>
                                     </div>
                                 </fieldset>
+                                <?php if ( ! empty($ocr['upload_page']))
+                                {
+                                    ?>
+                                    <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                        <?= $ocr['upload_page']; ?>
+                                    </div>
+                                <?php } ?>
                             </div>
                             </fieldset>
                         </div>

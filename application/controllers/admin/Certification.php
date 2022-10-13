@@ -260,7 +260,7 @@ class Certification extends MY_Admin_Controller {
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 
-                if(in_array($info->certification_id,['1003','9','12','501','1018', '500', '1004', CERTIFICATION_GOVERNMENTAUTHORITIES])) {
+                if(in_array($info->certification_id,['1003','9','12','501','1018', '500', '1004', CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_JUDICIALGUARANTEE])) {
                     // 上傳檔案功能
                     if ($this->_can_upload_pic_by_status($info->status))
                     {
@@ -1454,6 +1454,9 @@ class Certification extends MY_Admin_Controller {
                         case CERTIFICATION_PROFILEJUDICIAL:
                             $image_name = 'others_image';
                             break;
+                        case CERTIFICATION_JUDICIALGUARANTEE:
+                            $image_name = 'image_url';
+                            break;
                         default:
                             $image_name = 'backend_upload';
                     }
@@ -1462,7 +1465,9 @@ class Certification extends MY_Admin_Controller {
                         if(is_array($certification_content[$image_name])){
                             $certification_content[$image_name] = array_merge($certification_content[$image_name],$media);
                         }else{
-                            $certification_content[$image_name] = $media;
+                            $certification_content[$image_name] = array_merge([
+                                $certification_content[$image_name]
+                            ], $media);
                         }
                     }else{
                         $certification_content[$image_name] = [];
@@ -1473,20 +1478,7 @@ class Certification extends MY_Admin_Controller {
 					$res = $this->user_certification_model->update($post['user_certification_id'], [
 						'content' => json_encode($certification_content)
 					]);
-					// 觸發上傳檔案 ocr
-					// $this->load->library('ocr/report_scan_lib');
-					// to do : 可能會有聯徵之外的檔案從後台上傳並觸發
-					// if($post['user_id']){
-					// 	if($post['certification_id'] == 1003){
-					// 		$ocr_type = 'company';
-					// 	}else{
-					// 		$ocr_type = 'person';
-					// 	}
-					// 	// print_r($media);exit;
-					// 	$this->load->model('log/log_image_model');
-				    //     $imageLogs = $this->log_image_model->getUrlByGroupID($group_id);
-					// 	$this->report_scan_lib->requestForScan('credit_investigation', $imageLogs, $post['user_id'], $ocr_type);
-					// }
+
                     if ($res) {
                         $this->json_output->setStatusCode(200)->setResponse(['message'=>'檔案上傳成功'])->send();
                     }else {
