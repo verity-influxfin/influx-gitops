@@ -28,7 +28,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i> 搜尋
                         </button>
-                        <button class="btn btn-primary pull-right" type="button" @click="downloadExcel" :disabled="is_waiting_response" v-if="table_has_data">
+                        <button class="btn btn-primary pull-right" type="button" @click="downloadExcel" :disabled="is_waiting_response">
                             <i class="fa fa-file-excel-o"></i> 檔案下載
                         </button>
                     </form>

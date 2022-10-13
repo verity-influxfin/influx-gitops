@@ -30,7 +30,7 @@
                                 <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
                                     <i class="fa fa-search"></i> 搜尋
                                 </button>
-                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadExcel" v-show="assets_sheet.length > 0">
+                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadExcel">
                                     <i class="fa fa-file-excel-o"></i> 檔案下載
                                 </button>
                             </div>
