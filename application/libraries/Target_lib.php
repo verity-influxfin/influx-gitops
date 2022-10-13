@@ -1715,6 +1715,7 @@ class Target_lib
                     foreach ($targets as $target_id => $value) {
                     	if(!array_key_exists($value->product_id, $product_list))
                     		continue;
+
                         $failedCertificationList = [];
                         $pendingCertificationCount = 0;
                         $stage_cer = 0;
@@ -1761,8 +1762,8 @@ class Target_lib
                         }
 
                         $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
-                        $company = $value->product_id >= 1000 ? 1 : 0;
 
+                        $company = $value->product_id >= 1000 ? 1 : 0;
                         $certifications = $this->CI->certification_lib->get_status($value->user_id, BORROWER, $company, false, $value, FALSE, TRUE);
 
                         $finish_stage_cer = [];
@@ -1949,6 +1950,10 @@ class Target_lib
 
                                     $this->CI->target_model->update($value->id, $param);
                                 }else{
+                                    if ( ! $company && $value->certificate_status != TARGET_CERTIFICATE_SUBMITTED)
+                                    {
+                                        continue;
+                                    }
                                     $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia, $second_instance_check);
                                 }
                             }
