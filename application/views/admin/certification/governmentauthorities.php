@@ -59,7 +59,7 @@
                                             <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                         </tr>
                                         <tr>
-                                            <td><span>產業別</span></td>
+                                            <td><span>營業種類</span></td>
                                             <td>
                                                 <select v-model="formData.businessTypeCode" class="table-input sk-input form-control">
                                                     <option value=""></option>
@@ -70,7 +70,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><span>產業週期</span></td>
+                                            <td><span>公司行業別(主計處)</span></td>
                                             <td>
                                                 <select v-model="formData.businessCycleCode" class="table-input sk-input form-control">
                                                     <option value=""></option>
@@ -225,7 +225,7 @@
                                         <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span>產業別</span></td>
+                                        <td><span>營業種類</span></td>
                                         <td>
                                             <select v-model="formData.businessTypeCode" class="table-input sk-input form-control">
                                                 <option value=""></option>
@@ -236,7 +236,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span>產業週期</span></td>
+                                        <td><span>公司行業別(主計處)</span></td>
                                         <td>
                                             <select v-model="formData.businessCycleCode" class="table-input sk-input form-control">
                                                 <option value=""></option>

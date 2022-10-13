@@ -68,13 +68,13 @@
                                                         </tr>
                                                         <tr>
                                                             <td><span>負責人-被保險人勞保異動查詢日期</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.prLaborQryDate"
+                                                            <td><input class="sk-input form-control" type="text" v-model="formData.LaborQryDate"
                                                                     placeholder="格式:YYYYMMDD">
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td><span>負責人-被保險人勞保異動查詢-最近期投保薪資</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.prLaborInsSalary"></td>
+                                                            <td><input class="sk-input form-control" type="text" v-model="formData.LaborInsSalary"></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
@@ -162,13 +162,13 @@
                                                         </tr>
                                                         <tr>
                                                             <td><span>負責人-被保險人勞保異動查詢日期</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.prLaborQryDate"
+                                                            <td><input class="sk-input form-control" type="text" v-model="formData.LaborQryDate"
                                                                     placeholder="格式:YYYYMMDD">
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td><span>負責人-被保險人勞保異動查詢-最近期投保薪資</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.prLaborInsSalary"></td>
+                                                            <td><input class="sk-input form-control" type="text" v-model="formData.LaborInsSalary"></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
@@ -318,8 +318,8 @@
                 tab: 'tab-skbank',
                 pageId: '',
                 formData: {
-                    prLaborQryDate: '',
-                    prLaborInsSalary: '',
+                    LaborQryDate: '',
+                    LaborInsSalary: '',
                     spouseLaborQryDate: '',
                     spouseLaborInsSalary: '',
                     guLaborQryDate: '',
