@@ -226,7 +226,17 @@ class Certification extends MY_Admin_Controller {
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 
-                if(in_array($info->certification_id,['1003','9','12','501','1018', '500', '1004'])) {
+                $cert_can_upload_image = ['1003','9','12','501','1018', '500', '1004',
+                    CERTIFICATION_BALANCESHEET,
+                    CERTIFICATION_GOVERNMENTAUTHORITIES,
+                    CERTIFICATION_JUDICIALGUARANTEE,
+                    CERTIFICATION_INCOMESTATEMENT,
+                    CERTIFICATION_PROFILE,
+                    CERTIFICATION_PASSBOOKCASHFLOW_2,
+                    CERTIFICATION_EMPLOYEEINSURANCELIST
+                ];
+                if (in_array($info->certification_id, $cert_can_upload_image))
+                {
                     // 上傳檔案功能
                     if($info->status == 0 || $info->status == 3){
                         $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*,.heic,.heif','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
@@ -1349,28 +1359,13 @@ class Certification extends MY_Admin_Controller {
 					$this->log_image_model->insertGroupById($image_id_array,['group_info'=>$group_id]);
 					$certification_content = json_decode($this->user_certification_model->get($post['user_certification_id'])->content,true);
                     // TODO: 暫時寫死
-                    if($post['certification_id'] == 12){
-                        $image_name = 'person_mq_image';
-                    }
-                    if($post['certification_id'] == 1003){
-                        $image_name = 'legal_person_mq_image';
-                    }
-                    if($post['certification_id'] == 9){
-                        $image_name = 'postal_image';
-                    }
-                    if($post['certification_id'] == 1018){
-                        $image_name = 'RealLandOwnership';
-                    }
-                    if($post['certification_id'] == 501){
-                        $image_name = 'labor_image';
-                    }
-                    if ($post['certification_id'] == 500)
+                    if (isset($post['certification_id']))
                     {
-                        $image_name = 'passbook_image';
+                        $image_name = $this->_get_image_name_by_cert_id($post['certification_id']);
                     }
-                    if ($post['certification_id'] == 1004)
+                    else
                     {
-                        $image_name = 'passbook_image';
+                        $image_name = '';
                     }
 
                     if(isset($certification_content[$image_name])){
@@ -1413,6 +1408,41 @@ class Certification extends MY_Admin_Controller {
             $this->json_output->setStatusCode(204)->setErrorCode('檔案上傳失敗，缺少參數，請洽工程師')->send();
 		}
 	}
+
+    private function _get_image_name_by_cert_id($cert_id)
+    {
+        switch ($cert_id)
+        {
+            case CERTIFICATION_INVESTIGATION: // 聯合徵信報告
+                return 'postal_image';
+            case CERTIFICATION_INVESTIGATIONA11: // 聯合徵信報告+A11
+                return 'person_mq_image';
+            case CERTIFICATION_SIMPLIFICATIONFINANCIAL: // 財務收支
+                return 'passbook_image';
+            case CERTIFICATION_SIMPLIFICATIONJOB: // 工作資料
+                return 'labor_image';
+            case CERTIFICATION_PASSBOOKCASHFLOW_2: // (自然人)近六個月往來存摺封面及內頁
+                return 'passbook_image';
+            case CERTIFICATION_BALANCESHEET: // 資產負債表
+                return 'balance_sheet_image';
+            case CERTIFICATION_INCOMESTATEMENT: // 近三年所得稅結算申報書(稅簽)
+                return 'income_statement_image';
+            case CERTIFICATION_INVESTIGATIONJUDICIAL: // 公司聯合徵信
+                return 'legal_person_mq_image';
+            case CERTIFICATION_PASSBOOKCASHFLOW: // 近6個月封面及內頁公司存摺
+                return 'passbook_image';
+            case CERTIFICATION_GOVERNMENTAUTHORITIES: // 變卡正本拍攝(全頁)
+                return 'governmentauthorities_image';
+            case CERTIFICATION_EMPLOYEEINSURANCELIST: // 員工投保人數資料
+                return 'employeeinsurancelist_image';
+            case CERTIFICATION_PROFILEJUDICIAL: // 公司資料表
+                return 'other_image';
+            case CERTIFICATION_JUDICIALGUARANTEE: // 公司授權核實
+                return 'image_url';
+            default:
+                return 'backend_upload';
+        }
+    }
 
     // 加入是否有配偶
     public function hasSpouse(){

@@ -160,11 +160,13 @@
                                     }?>
                                 </div>
                             </fieldset>
-                            <? if( ($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12) && isset($ocr['upload_page']) ){ ?>
-							<div class="form-group" style="background:#f5f5f5;border-style:double;">
-							  <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
-							</div>
-							<? } ?>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page']; ?>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->
