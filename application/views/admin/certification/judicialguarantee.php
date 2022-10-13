@@ -32,21 +32,6 @@
                                 </a>
                             </div>
                             <div class="form-group">
-                                <fieldset disabled>
-                                    <div class="form-group">
-                                        <label>對保照片</label><br>
-                                        <? isset($content['image_url']) && !is_array($content['image_url']) ? $content['image_url'] = array($content['image_url']) : '';
-                                        if(!empty($content['image_url'])){
-                                            foreach ($content['image_url'] as $key => $value) { ?>
-                                                <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                    <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                                </a>
-                                            <? }
-                                        }?>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div class="form-group">
                                 <label>備註</label>
                                 <?
                                     if($remark){
@@ -83,6 +68,33 @@
                                     <button type="submit" class="btn btn-primary">送出</button>
                                 </fieldset>
                             </form>
+                        </div>
+                        <div class="col-lg-6">
+                            <h1>圖片/文件</h1>
+                            <fieldset>
+                                <div class="form-group">
+                                    <fieldset disabled>
+                                        <div class="form-group">
+                                            <label>公司授權核實</label><br>
+                                            <? isset($content['image_url']) && !is_array($content['image_url']) ? $content['image_url'] = array($content['image_url']) : '';
+                                            if(!empty($content['image_url'])){
+                                                foreach ($content['image_url'] as $key => $value) { ?>
+                                                    <a href="<?= $value ?>" data-fancybox="images">
+                                                        <img src="<?= $value ?>" style='width:30%;max-width:400px'>
+                                                    </a>
+                                                <? }
+                                            }?>
+                                        </div>
+                                    </fieldset>
+                                    <?php if ( ! empty($ocr['upload_page']))
+                                    {
+                                        ?>
+                                        <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                            <?= $ocr['upload_page']; ?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

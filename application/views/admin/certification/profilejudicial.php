@@ -277,6 +277,7 @@
                                                 </a><br>
                                             <? }
                                         }?>
+                                    <hr/>
                                     <label>建物所有權狀</label><br>
                                     <? isset($content['BizHouseOwnership']) && !is_array($content['BizHouseOwnership']) ? $content['BizHouseOwnership'] = array($content['BizHouseOwnership']) : '';
                                     if(!empty($content['BizHouseOwnership'])){
@@ -286,6 +287,7 @@
                                             </a><br>
                                         <?}
                                     }?>
+                                    <hr/>
                                     <label>實際土地所有權狀</label><br>
                                     <? isset($content['RealLandOwnership']) && !is_array($content['RealLandOwnership']) ? $content['RealLandOwnership'] = array($content['RealLandOwnership']) : '';
                                     if(!empty($content['RealLandOwnership'])){
@@ -295,6 +297,7 @@
                                             </a><br>
                                         <? }
                                     }?>
+                                    <hr/>
                                     <label>實際建物所有權狀</label><br>
                                     <? isset($content['RealHouseOwnership']) && !is_array($content['RealHouseOwnership']) ? $content['RealHouseOwnership'] = array($content['RealHouseOwnership']) : '';
                                     if(!empty($content['RealHouseOwnership'])){
@@ -304,13 +307,28 @@
                                             </a><br>
                                         <? }
                                     }?>
+                                    <hr/>
+                                    <label>其它</label><br>
+                                    <?php
+                                    if ( ! empty($content['other_image']) && is_array($content['other_image']))
+                                    {
+                                        foreach ($content['other_image'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>"
+                                                     style='width:30%;max-width:400px'>
+                                            </a><br>
+                                        <?php }
+                                    } ?>
                                 </div>
                             </fieldset>
-                            <? if( $data->certification_id == 1018 && isset($ocr['upload_page']) ){ ?>
-                            <div class="form-group" style="background:#f5f5f5;border-style:double;">
-                              <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
-                            </div>
-                            <? } ?>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page']; ?>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->
