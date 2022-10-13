@@ -383,36 +383,19 @@ class ERP extends MY_Admin_Controller
      */
     public function get_journal_data()
     {
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+        $user_id_int = $this->input->get('user_id_int');
 
-        try
-        {
-            // 取得 request data
-            $data = base64_decode($this->input->get_post('data'));
-            $data = json_decode(urldecode($data), TRUE);
-
-            $year    = $data['year'] ?? null;
-            $month   = $data['month'] ?? null;
-            $user_id = $data['user_id'] ?? null;
-            $role    = $data['role'] ?? 'investor';
-        }
-        catch (Exception $e)
-        {
-            $this->_output_json([
-                'success' => FALSE,
-                'message' => $e->message
-            ]);
-        }
-
-        // 呼叫 ERP API 取得結果
-        $this->_output_json([
-            'success' => TRUE,
-            'data'    => $this->erp_lib->get_report('journal', [
-                'year'    => (int) $year,
-                'month'   => (int) $month,
-                'user_id' => (int) $user_id,
-                'role'    => $role,
-            ])
-        ]);
+        $data = $this->erp_client_2->request('GET', 'entry', [
+            'query' => [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'user_id_int' => $user_id_int,
+            ]
+        ])->getBody()->getContents();
+        echo $data;
+        die();
     }
 
     /**

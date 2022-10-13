@@ -581,12 +581,12 @@ $config['permission'] = [
           'etpr' => ['name' => '本攤表'],
           'soci' => ['name' => '損益表'],
           'sofp' => ['name' => '資產負債表'],
-          /*
           'journal' => ['name' => '日記簿'],
+           /*
           'ledger' => ['name' => '分類帳'],
           'target_porting' => ['name' => '借款案帳務轉移'],
           'open_booking' => ['name' => '投資人開帳作業']
-          */
+           */
       ],
       'permission' => [
           'assets_sheet' => ['model' => 'Erp', 'submodel' => 'assets_sheet', 'action' => 'read'],
@@ -601,16 +601,16 @@ $config['permission'] = [
           'sofp' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
           'get_sofp_data' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
           'sofp_spreadsheet' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
-          /*
           'journal' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'get_journal_data' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'journal_spreadsheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+           /*
           'ledger' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
           'get_ledger_data' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
           'ledger_spreadsheet' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
           'open_booking' => ['model' => 'Erp', 'submodel' => 'open_booking', 'action' => 'read'],
           'target_porting' => ['model' => 'Erp', 'submodel' => 'target_porting', 'action' => 'read'],
-          */
+           */
       ],
     ],
     'Certificationreport' => [
