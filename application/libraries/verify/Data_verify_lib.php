@@ -297,13 +297,13 @@ class Data_verify_lib{
             }
         }
 
-        if (isset($data['liabilitiesWithoutAssureTotalAmount']) &&
+        if (isset($data['totalEffectiveDebt']) &&
             isset($data['total_repayment']) &&
-            is_numeric($data['liabilitiesWithoutAssureTotalAmount']) &&
-            ($data['liabilitiesWithoutAssureTotalAmount'] / 1000) >= $data['total_repayment'])
+            is_numeric($data['totalEffectiveDebt']) &&
+            ($data['totalEffectiveDebt'] / 1000) >= $data['total_repayment'])
         {
             $verifiedResult->addMessage(
-                '待人工驗證：借款總餘額 >= 投保薪資22倍',
+                '待人工驗證：信用借款+信用卡+現金卡總餘額 >= 投保薪資22倍',
                 CERTIFICATION_STATUS_PENDING_TO_REVIEW,
                 MessageDisplay::Backend
             );

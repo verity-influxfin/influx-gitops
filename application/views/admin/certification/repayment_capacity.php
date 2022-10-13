@@ -9,6 +9,7 @@ else
     $disabled = '';
     $btn_hidden = '';
 }
+$new_calculate_algo = isset($content['totalEffectiveDebt']);  // 還款力相關欄位是否使用新算法
 ?>
 <style>
     .form-control-static {
@@ -114,7 +115,20 @@ else
                                         </li>
                                         <li>
                                             <div class="form-control-static">
+                                                <?php
+                                                if ($new_calculate_algo)
+                                                {
+                                                ?>
+                                                <span>至查詢日止借款總餘額：</span>
+                                                <?php
+                                                }
+                                                else
+                                                {
+                                                ?>
                                                 <span>借款總餘額：</span>
+                                                <?php
+                                                }
+                                                ?>
                                                 <input type="text"
                                                        id="liabilitiesWithoutAssureTotalAmount"
                                                        name="liabilitiesWithoutAssureTotalAmount"
@@ -132,6 +146,23 @@ else
                                                        value="<?= $content['creditCard'] ?? 0 ?>" <?= $disabled ?>> 元
                                             </div>
                                         </li>
+                                        <?php
+                                        if ($new_calculate_algo)
+                                        {
+                                        ?>
+                                        <li>
+                                            <div class="form-control-static">
+                                                <span>信用借款+信用卡+現金卡總餘額：</span>
+                                                <input type="text"
+                                                       id="totalEffectiveDebt"
+                                                       name="totalEffectiveDebt"
+                                                       class="formData"
+                                                       value="<?= $content['totalEffectiveDebt'] ?>" <?= $disabled ?>> 元
+                                            </div>
+                                        </li>
+                                        <?php
+                                        }
+                                        ?>
                                     </ol>
                                 </div>
                                 <hr/>
@@ -299,7 +330,7 @@ else
                     }
 
                     result += Math.round(
-                        input_value / (student_loans_count * 12)
+                        input_value / (student_loans_count * 12) * 100
                     );
                     break;
             }
