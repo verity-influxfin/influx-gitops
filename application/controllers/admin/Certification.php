@@ -261,7 +261,9 @@ class Certification extends MY_Admin_Controller {
                 }
 
                 $cert_can_upload_image = ['1003','9','12','501','1018', '500', '1004', CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_JUDICIALGUARANTEE, CERTIFICATION_INCOMESTATEMENT,
-                    CERTIFICATION_PROFILE];
+                    CERTIFICATION_PROFILE,
+                    CERTIFICATION_PASSBOOKCASHFLOW_2
+                    ];
                 if (in_array($info->certification_id, $cert_can_upload_image))
                 {
                     // 上傳檔案功能
@@ -1447,6 +1449,9 @@ class Certification extends MY_Admin_Controller {
                             break;
                         case CERTIFICATION_SIMPLIFICATIONJOB:
                             $image_name = 'labor_image';
+                            break;
+                        case CERTIFICATION_PASSBOOKCASHFLOW_2:
+                            $image_name = 'passbook_image';
                             break;
                         case CERTIFICATION_INVESTIGATIONJUDICIAL:
                             $image_name = 'legal_person_mq_image';
