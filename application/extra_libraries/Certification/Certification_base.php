@@ -268,6 +268,9 @@ abstract class Certification_base implements Certification_definition
                 // 退待簽約案件及信評分數
                 $this->failed_target_credit();
 
+                // 退與此徵信項有關的二審案件
+                $this->failed_second_instance_target();
+
                 // 驗證推薦碼失敗
                 $this->CI->load->library('certification_lib');
                 $this->CI->certification_lib->verify_promote_code((object) $this->certification, TRUE);
@@ -535,6 +538,41 @@ abstract class Certification_base implements Certification_definition
                     ['status' => 0]
                 );
             }
+        }
+    }
+
+    /**
+     * 當徵信項失敗時，將有參照此徵信項的二審案件退回前一狀態
+     * @return void
+     */
+    public function failed_second_instance_target()
+    {
+        // 取得該使用者的所有二審案件
+        $second_instance_targets = $this->CI->target_model->get_second_instance_targets_by_user($this->certification['user_id']);
+        if (empty($second_instance_targets))
+        {
+            return;
+        }
+
+        foreach ($second_instance_targets as $target)
+        {
+            if (empty($target['id']) || empty($target['target_data']))
+            {
+                continue;
+            }
+
+            // 案件參照的徵信項
+            $target_data = json_decode($target['target_data'], TRUE);
+            if ( empty($target_data['certification_id']) || ! in_array($this->certification['id'], $target_data['certification_id']))
+            {
+                continue;
+            }
+
+            $this->CI->target_model->update_by([
+                'id' => $target['id'],
+                'status' => TARGET_WAITING_APPROVE,
+                'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE
+            ], ['sub_status' => TARGET_SUBSTATUS_NORNAL]);
         }
     }
 
