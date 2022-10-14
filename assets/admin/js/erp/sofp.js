@@ -75,11 +75,11 @@ var app = new Vue({
             $("#fileDownloadIframe").remove();
             let url = '/admin/erp/sofp_spreadsheet?'
             // build params form searchform
-            let params = []
-            for (var key in this.searchform) {
-                params.push(key + '=' + this.searchform[key])
-            }
-            url += params.join('&')
+            const { start_date, end_date, user_id_int } = this.searchform
+            url += Object.entries({ start_date, end_date, user_id_int })
+                .filter(([key, value]) => value !== '')
+                .map(([key, value]) => `${key}=${value}`)
+                .join('&')
             $("body").append(
                 `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
             );
