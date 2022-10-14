@@ -23,12 +23,12 @@ class ERP extends MY_Admin_Controller
 
         $this->erp_client_1 = new Client([
             'base_uri' => getenv('ENV_ERP_HOST_1'),
-            'timeout' => 60,
+            'timeout' => 300,
         ]);
 
         $this->erp_client_2 = new Client([
             'base_uri' => getenv('ENV_ERP_HOST_2'),
-            'timeout' => 60,
+            'timeout' => 300,
         ]);
     }
      

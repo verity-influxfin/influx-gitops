@@ -23,13 +23,19 @@ var app = new Vue({
     },
     methods: {
         doSearch() {
-            this.is_waiting_response = true
             const { start_date, end_date, user_id_int } = this.searchform
+            // show confirm
+            if (user_id_int == '') {
+                if (!confirm('即將輸出全平台資料，等候時間較長，請勿關閉頁面，確認是否執行？')) {
+                    return
+                }
+            }
             const string = Object.entries({ start_date, end_date, user_id_int })
                 .filter(([key, value]) => value !== '')
                 .map(([key, value]) => `${key}=${value}`)
                 .join('&')
             // axios get get_assets_sheet_data
+            this.is_waiting_response = true
             axios.get('/admin/erp/get_assets_sheet_data?' + string)
             .then(({ data }) => {
                 this.assets_sheet = data
@@ -44,6 +50,12 @@ var app = new Vue({
             let url = '/admin/erp/assets_sheet_spreadsheet?'
             // build params form searchform
             const { start_date, end_date, user_id_int } = this.searchform
+            // show confirm
+            if (user_id_int == '') {
+                if (!confirm('即將輸出全平台資料，等候時間較長，請勿關閉頁面，確認是否執行？')) {
+                    return
+                }
+            }
             url += Object.entries({ start_date, end_date, user_id_int })
                 .filter(([key, value]) => value !== '')
                 .map(([key, value]) => `${key}=${value}`)
