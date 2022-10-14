@@ -265,8 +265,8 @@
                             </form>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片</h1>
-                            <fieldset disabled>
+                            <h1>圖片/文件</h1>
+                            <fieldset>
                                 <div class="form-group">
                                     <label>土地所有權狀</label><br>
                                     <? isset($content['BizLandOwnership']) && !is_array($content['BizLandOwnership']) ? $content['BizLandOwnership'] = array($content['BizLandOwnership']) : '';
@@ -317,7 +317,20 @@
                                             <a href="<?= $value ?>" data-fancybox="images">
                                                 <img src="<?= $value ?>"
                                                      style='width:30%;max-width:400px'>
-                                            </a><br>
+                                            </a>
+                                        <?php }
+                                    } ?>
+                                    <hr/>
+                                    <label></label><br>
+                                    <?php
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
+                                            </a>
                                         <?php }
                                     } ?>
                                 </div>

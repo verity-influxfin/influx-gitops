@@ -73,7 +73,7 @@
                             <h1>圖片/文件</h1>
                             <fieldset>
                                 <div class="form-group">
-                                    <fieldset disabled>
+                                    <fieldset>
                                         <div class="form-group">
                                             <label>公司授權核實</label><br>
                                             <? isset($content['image_url']) && !is_array($content['image_url']) ? $content['image_url'] = array($content['image_url']) : '';
@@ -84,6 +84,19 @@
                                                     </a>
                                                 <? }
                                             }?>
+                                            <hr/>
+                                            <label>其它</label><br>
+                                            <?php
+                                            if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                            {
+                                                $index = 0;
+                                                foreach ($content['pdf'] as $value)
+                                                { ?>
+                                                    <a href="<?= $value ?>" class="btn btn-info">
+                                                        檔案<?= ++$index; ?>
+                                                    </a>
+                                                <?php }
+                                            } ?>
                                         </div>
                                     </fieldset>
                                     <?php if ( ! empty($ocr['upload_page']))
