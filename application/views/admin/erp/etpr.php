@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="investor_id">投資人 ID</label>
-                                    <input type="text" class="form-control" id="investor_id" name="investor_id" v-model="searchform.investor_id_int" placeholder="投資人 ID" required>
+                                    <input type="text" class="form-control" id="investor_id" name="investor_id" v-model="searchform.investor_id_int" placeholder="投資人 ID">
                                 </div>
                                 <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
                                     <i class="fa fa-search"></i> 搜尋
