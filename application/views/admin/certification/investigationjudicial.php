@@ -138,8 +138,8 @@
                             </form>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片</h1>
-                            <fieldset disabled>
+                            <h1>圖片/文件</h1>
+                            <fieldset >
                                 <div class="form-group">
                                     <label>法人聯徵資料</label><br>
                                     <? isset($content['legal_person_mq_image']) && !is_array($content['legal_person_mq_image']) ? $content['legal_person_mq_image'] = array($content['legal_person_mq_image']) : [];
@@ -158,6 +158,19 @@
                                             </a>
                                         <? }
                                     }?>
+                                    <hr/>
+                                    <label>其它</label><br>
+                                    <?php
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
+                                            </a>
+                                        <?php }
+                                    } ?>
                                 </div>
                             </fieldset>
                             <?php if ( ! empty($ocr['upload_page']))
