@@ -269,7 +269,7 @@ abstract class Certification_base implements Certification_definition
                 $this->failed_target_credit();
 
                 // 退與此徵信項有關的二審案件
-                $this->failed_second_instance_target();
+                $this->reset_second_instance_target();
 
                 // 驗證推薦碼失敗
                 $this->CI->load->library('certification_lib');
@@ -545,7 +545,7 @@ abstract class Certification_base implements Certification_definition
      * 當徵信項失敗時，將有參照此徵信項的二審案件退回前一狀態
      * @return void
      */
-    public function failed_second_instance_target()
+    public function reset_second_instance_target()
     {
         // 取得該使用者的所有二審案件
         $second_instance_targets = $this->CI->target_model->get_second_instance_targets_by_user($this->certification['user_id']);
