@@ -309,8 +309,7 @@
                             </form>
                             <div class="form-group">
                                 <label>備註</label>
-                                <?php
-                                $fail = '';
+                                <?php $fail = '';
                                 if ( ! empty($remark["fail"]))
                                 {
                                     $fail = $remark['fail'];
@@ -344,8 +343,7 @@
                                         <label>失敗原因</label>
                                         <select id="fail" name="fail" class="form-control">
                                             <option value="" disabled selected>選擇回覆內容</option>
-                                            <?php
-                                            $fail_other = TRUE;
+                                            <?php $fail_other = TRUE;
                                             foreach ($certifications_msg[$data->certification_id] as $key => $value)
                                             {
                                                 $this_option_selected = FALSE;
@@ -446,6 +444,13 @@
                                         } ?>
                                     </div>
                                 </fieldset>
+                                <?php if ( ! empty($ocr['upload_page']))
+                                {
+                                    ?>
+                                    <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                        <?= $ocr['upload_page']; ?>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>

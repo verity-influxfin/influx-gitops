@@ -102,24 +102,17 @@
                         </div>
                         <div class="col-lg-6">
                             <h1>圖片/文件</h1>
-                            <fieldset disabled>
+                            <fieldset >
                                 <div class="form-group">
                                     <label>金流證明</label><br>
-                                    <?php
-                                    if ( ! empty($content['passbook_image']))
-                                    {
-                                        $content['passbook_image'] = ! is_array($content['passbook_image']) ? array($content['passbook_image']) : $content['passbook_image'];
-                                        foreach ($content['passbook_image'] as $key => $value)
-                                        {
-                                            if (empty($value)) continue; ?>
-                                            <a href="<?= $value ?>" data-fancybox="images">
-                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
-                                            </a>
-                                        <?php }
-                                    } ?>
-                                </div>
-                                <div class='form-group'>
-                                    <label>其他</label><br>
+                                    <? isset($content['passbook_image']) && !is_array($content['passbook_image']) ? $content['passbook_image'] = array($content['passbook_image']) : '';
+                                    foreach ($content['passbook_image'] as $key => $value) { ?>
+                                        <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                            <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                        </a>
+                                    <? } ?>
+                                    <hr/>
+                                    <label>其它</label><br>
                                     <?php
                                     if ( ! empty($content['file_list']['image']))
                                     { // 擴大信保【後】的Web上傳圖片
@@ -144,13 +137,26 @@
                                         <?php }
                                         echo '<hr/>';
                                     } ?>
+                                    <?php
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
+                                            </a>
+                                        <?php }
+                                    } ?>
                                 </div>
                             </fieldset>
-                            <? if($data->certification_id == 1004 && isset($ocr['upload_page']) ){ ?>
-							<div class="form-group" style="background:#f5f5f5;border-style:double;">
-							  <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
-							</div>
-							<? } ?>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page']; ?>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

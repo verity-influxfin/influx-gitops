@@ -394,8 +394,7 @@
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
-                                <?php
-                                $fail = '';
+                                <?php $fail = '';
                                 if ( ! empty($remark["fail"]))
                                 {
                                     $fail = $remark['fail'];
@@ -428,8 +427,7 @@
                                         <label>失敗原因</label>
                                         <select id="fail" name="fail" class="form-control">
                                             <option value="" disabled selected>選擇回覆內容</option>
-                                            <?php
-                                            $fail_other = TRUE;
+                                            <?php $fail_other = TRUE;
                                             foreach ($certifications_msg[$data->certification_id] as $key => $value)
                                             {
                                                 $this_option_selected = FALSE;
@@ -452,8 +450,8 @@
                             </form>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片</h1>
-                            <fieldset disabled>
+                            <h1>圖片/文件</h1>
+                            <fieldset>
                                 <div class="form-group">
                                     <label>設立(變更)事項登記表</label><br>
                                     <div class="row" style="width: 100%">
@@ -466,6 +464,19 @@
                                                     </a>
                                                 <?php }
                                             }?>
+                                            <hr/>
+                                            <label>其它</label><br>
+                                            <?php
+                                            if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                            {
+                                                $index = 0;
+                                                foreach ($content['pdf'] as $value)
+                                                { ?>
+                                                    <a href="<?= $value ?>" class="btn btn-info">
+                                                        檔案<?= ++$index; ?>
+                                                    </a>
+                                                <?php }
+                                            } ?>
                                         </div>
                                         <div class="col-lg-9">
                                             <label>商業司資料</label>

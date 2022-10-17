@@ -1036,4 +1036,22 @@ class Target_model extends MY_Model
         return $rs->get()->result_array();
     }
 
+    /**
+     * 依使用者 id 取得二審案件資料
+     * @param $user_id : 使用者id
+     * @return mixed
+     */
+    public function get_second_instance_targets_by_user($user_id)
+    {
+        return $this->db
+            ->select(['id', 'target_data'])
+            ->from('p2p_loan.targets')
+            ->where('user_id', $user_id)
+            ->where('status', TARGET_WAITING_APPROVE)
+            ->where('sub_status', TARGET_SUBSTATUS_SECOND_INSTANCE)
+            ->where('product_id <', PRODUCT_FOR_JUDICIAL)
+            ->where('script_status', 0)
+            ->get()
+            ->result_array();
+    }
 }

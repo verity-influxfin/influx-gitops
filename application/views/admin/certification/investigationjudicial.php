@@ -15,7 +15,7 @@
     }
 
     $(document).off("change", "select#fail").on("change", "select#fail", function () {
-        if ($(this).find(':selected') === 'other') {
+        if ($(this).find(':selected').val() === 'other') {
             $('input#fail').css('display', 'block').attr('disabled', false);
         } else {
             $('input#fail').css('display', 'none').attr('disabled', true);
@@ -204,7 +204,7 @@
                         </div>
                         <div class="col-lg-6">
                             <h1>圖片/文件</h1>
-                            <fieldset disabled>
+                            <fieldset>
                                 <div class="form-group">
                                     <? isset($content['legal_person_mq_image']) && !is_array($content['legal_person_mq_image']) ? $content['legal_person_mq_image'] = array($content['legal_person_mq_image']) : [];
                                     if(!empty($content['legal_person_mq_image'])){
@@ -274,13 +274,28 @@
                                         <?php }
                                         echo '<hr/>';
                                     } ?>
+                                    <hr/>
+                                    <label>其它</label><br>
+                                    <?php
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
+                                            </a>
+                                        <?php }
+                                    } ?>
                                 </div>
                             </fieldset>
-                            <? if( ($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12) && isset($ocr['upload_page']) ){ ?>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
                                 <div class="form-group" style="background:#f5f5f5;border-style:double;">
-                                    <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
+                                    <?= $ocr['upload_page']; ?>
                                 </div>
-                            <? } ?>
+                            <?php } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

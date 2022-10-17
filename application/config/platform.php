@@ -1560,6 +1560,12 @@ $config['sub_product_list'] = [
                 'interest_rate_s' => 5.5,
                 'interest_rate_e' => 16,
                 'charge_platform' => 4,
+                'available_company_categories' => [
+                    COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
+                    COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
+                    COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
+                    COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
+                ],
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
                     CERTIFICATION_IDENTITY,

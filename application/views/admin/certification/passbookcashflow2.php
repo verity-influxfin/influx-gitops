@@ -67,7 +67,7 @@
                                         <select id="status" name="status" class="form-control" onchange="check_fail();">
                                             <? foreach ($status_list as $key => $value) { ?>
                                                 <option value="<?= $key ?>"
-                                                        <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
+                                                    <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
                                             <? } ?>
                                         </select>
                                         <input type="hidden" name="id"
@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-lg-6">
                             <h1>圖片/文件</h1>
-                            <fieldset disabled>
+                            <fieldset>
                                 <div class="form-group">
                                     <label>金流證明</label><br>
                                     <?php
@@ -143,6 +143,18 @@
                                             </a>
                                         <?php }
                                         echo '<hr/>';
+                                    } ?>
+                                    <label></label><br>
+                                    <?php
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
+                                            </a>
+                                        <?php }
                                     } ?>
                                 </div>
                             </fieldset>

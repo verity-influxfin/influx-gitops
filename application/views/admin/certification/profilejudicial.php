@@ -948,27 +948,80 @@
                         </div>
                         <div class="col-lg-6">
                             <h1>圖片/文件</h1>
-                            <fieldset disabled>
+                            <fieldset>
                                 <div class="form-group">
-                                    <label>公司資料表</label><br>
-                                    <?php if ( ! empty($content['others_image']))
+                                    <label>土地所有權狀</label><br>
+                                    <? isset($content['BizLandOwnership']) && !is_array($content['BizLandOwnership']) ? $content['BizLandOwnership'] = array($content['BizLandOwnership']) : '';
+                                        if(!empty($content['BizLandOwnership'])){
+                                            foreach ($content['BizLandOwnership'] as $key => $value) { ?>
+                                                <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                    <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                                </a><br>
+                                            <? }
+                                        }?>
+                                    <hr/>
+                                    <label>建物所有權狀</label><br>
+                                    <? isset($content['BizHouseOwnership']) && !is_array($content['BizHouseOwnership']) ? $content['BizHouseOwnership'] = array($content['BizHouseOwnership']) : '';
+                                    if(!empty($content['BizHouseOwnership'])){
+                                        foreach ($content['BizHouseOwnership'] as $key => $value) { ?>
+                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                            </a><br>
+                                        <?}
+                                    }?>
+                                    <hr/>
+                                    <label>實際土地所有權狀</label><br>
+                                    <? isset($content['RealLandOwnership']) && !is_array($content['RealLandOwnership']) ? $content['RealLandOwnership'] = array($content['RealLandOwnership']) : '';
+                                    if(!empty($content['RealLandOwnership'])){
+                                        foreach ($content['RealLandOwnership'] as $key => $value) { ?>
+                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                            </a><br>
+                                        <? }
+                                    }?>
+                                    <hr/>
+                                    <label>實際建物所有權狀</label><br>
+                                    <? isset($content['RealHouseOwnership']) && !is_array($content['RealHouseOwnership']) ? $content['RealHouseOwnership'] = array($content['RealHouseOwnership']) : '';
+                                    if(!empty($content['RealHouseOwnership'])){
+                                        foreach ($content['RealHouseOwnership'] as $key => $value) { ?>
+                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                            </a><br>
+                                        <? }
+                                    }?>
+                                    <hr/>
+                                    <label>其它</label><br>
+                                    <?php
+                                    if ( ! empty($content['other_image']) && is_array($content['other_image']))
                                     {
-                                        if ( ! is_array($content['others_image']))
-                                        {
-                                            $content['others_image'] = array($content['others_image']);
-                                        }
-                                        foreach ($content['others_image'] as $key => $value)
+                                        foreach ($content['other_image'] as $value)
                                         { ?>
-                                            <a href="<?= $value ?? '' ?>" data-fancybox="images">
-                                                <img alt="" src="<?= $value ?: '' ?>" style="width:30%; max-width:400px;">
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>"
+                                                     style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                    } ?>
+                                    <hr/>
+                                    <label></label><br>
+                                    <?php
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
                                             </a>
                                         <?php }
                                     } ?>
                                 </div>
                             </fieldset>
-                            <?php if ($data->certification_id == CERTIFICATION_PROFILEJUDICIAL && isset($ocr['upload_page'])) { ?>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
                                 <div class="form-group" style="background:#f5f5f5;border-style:double;">
-                                    <?= $ocr['upload_page'] ?>
+                                    <?= $ocr['upload_page']; ?>
                                 </div>
                             <?php } ?>
                         </div>

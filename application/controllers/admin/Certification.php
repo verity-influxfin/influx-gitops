@@ -152,8 +152,7 @@ class Certification extends MY_Admin_Controller {
                     $page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
                     $page_data['content']['sipUniversity'] = isset($sipURL) ? $sipUniversity : "";
 
-				}
-                elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
+				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 					$content = json_decode($info->content);
 					$page_data['report_page'] = '';
 
@@ -238,7 +237,7 @@ class Certification extends MY_Admin_Controller {
                         {
                             $page_data['images'][$year_key]['url'][$months[$i]] = $certification_content[$year_key . $months[$i]] ?? '';
                         }
-                        if ($this->_can_upload_pic_by_status($info->status))
+                        if ($this->_can_upload_by_cert_status($info->status))
                         {
                             $page_data['images'][$year_key]['upload'] = $this->_upload_page($info, ['image_key' => $year_key . 'Others']);
                         }
@@ -260,16 +259,31 @@ class Certification extends MY_Admin_Controller {
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 
-                $cert_can_upload_image = ['1003','9','12','501','1018', '500', '1004', CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_JUDICIALGUARANTEE, CERTIFICATION_INCOMESTATEMENT,
+                $cert_can_upload_image = ['1003','9','12','501','1018', '500', '1004',
+                    CERTIFICATION_BALANCESHEET,
+                    CERTIFICATION_GOVERNMENTAUTHORITIES,
+                    CERTIFICATION_JUDICIALGUARANTEE,
+                    CERTIFICATION_INCOMESTATEMENT,
                     CERTIFICATION_PROFILE,
-                    CERTIFICATION_PASSBOOKCASHFLOW_2
-                    ];
+                    CERTIFICATION_PASSBOOKCASHFLOW_2,
+                    CERTIFICATION_EMPLOYEEINSURANCELIST,
+                    CERTIFICATION_BUSINESSTAX
+                ];
+                $cert_can_upload_pdf = [CERTIFICATION_BUSINESSTAX, CERTIFICATION_BALANCESHEET, CERTIFICATION_INCOMESTATEMENT, CERTIFICATION_INVESTIGATIONJUDICIAL, CERTIFICATION_PASSBOOKCASHFLOW, CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_EMPLOYEEINSURANCELIST, CERTIFICATION_PROFILEJUDICIAL, CERTIFICATION_JUDICIALGUARANTEE,
+                    CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2];
                 if (in_array($info->certification_id, $cert_can_upload_image))
                 {
                     // 上傳檔案功能
-                    if ($this->_can_upload_pic_by_status($info->status))
+                    if ($this->_can_upload_by_cert_status($info->status))
                     {
-                        $page_data['ocr']['upload_page'] = $this->_upload_page($info);
+                        if (in_array($info->certification_id, $cert_can_upload_pdf))
+                        {
+                            $page_data['ocr']['upload_page'] = $this->_upload_page($info, [], ['.pdf']);
+                        }
+                        else
+                        {
+                            $page_data['ocr']['upload_page'] = $this->_upload_page($info);
+                        }
                     }
                     $return_config = [
                         '1003' => [
@@ -630,17 +644,29 @@ class Certification extends MY_Admin_Controller {
 		}
 	}
 
+    private function _get_default_upload_file_type()
+    {
+        return 'image/*,.heic,.heif';
+    }
+
     /**
      * 上傳檔案功能
      * @param $certification_info : 使用者徵信項(Table user_certification)
      * @param array $extra_info
+     * @param array $additional_file_type
      * @return mixed
      */
-    private function _upload_page($certification_info, array $extra_info = [])
+    private function _upload_page($certification_info, array $extra_info = [], array $additional_file_type = [])
     {
+        $file_type = $this->_get_default_upload_file_type();
+        if ( ! empty($additional_file_type))
+        {
+            $file_type .= ',' . implode(',', $additional_file_type);
+        }
+
         return $this->load->view('admin/certification/component/media_upload', ['data' => [
             'upload_location' => 'Certification/media_upload',
-            'file_type' => 'image/*,.heic,.heif',
+            'file_type' => $file_type,
             'is_multiple' => 1,
             'extra_info' => array_merge([
                 'user_certification_id' => $certification_info->id,
@@ -655,7 +681,7 @@ class Certification extends MY_Admin_Controller {
      * @param int $cert_status : 徵信項狀態 (user_certification.status)
      * @return bool
      */
-    private function _can_upload_pic_by_status(int $cert_status): bool
+    private function _can_upload_by_cert_status(int $cert_status): bool
     {
         if ($cert_status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE ||
             $cert_status == CERTIFICATION_STATUS_PENDING_TO_REVIEW ||
@@ -1402,7 +1428,7 @@ class Certification extends MY_Admin_Controller {
 			$this->load->library('S3_upload');
 			$file_array = [];
 			$media_check = true;
-            $media = [];
+            $media = ['image' => [], 'pdf' => []];
 			if(!empty($_FILES['file_upload_tmp'])){
 				foreach($_FILES['file_upload_tmp'] as $k=>$v){
 					foreach($v as $k1=>$v1){
@@ -1410,83 +1436,77 @@ class Certification extends MY_Admin_Controller {
 					}
 				}
 				foreach ($file_array as $field) {
-					$file['image'] = $field;
-					$image 	= $this->s3_upload->image($file,'image',$post['user_id'],"certification/{$post['user_certification_id']}");
-					if($image){
-						$media[]	= $image;
-					}else{
-						$media_check = false;
-					}
+                    $file = [];
+                    if (is_pdf($field['type']))
+                    {
+                        $file['pdf'] = $field;
+                        $pdf = $this->s3_upload->pdf(
+                            file_get_contents($field['tmp_name']),
+                            'pdf' . $post['user_id'] . round(microtime(TRUE) * 1000) . rand(1, 99) . '.pdf',
+                            $post['user_id'],
+                            "certification/{$post['user_certification_id']}"
+                        );
+                        if ($pdf === FALSE)
+                        {
+                            $media_check = FALSE;
+                            continue;
+                        }
+                        $media['pdf'][] = $pdf;
+                    }
+                    else
+                    {
+                        $file['image'] = $field;
+                        $image = $this->s3_upload->image($file, 'image', $post['user_id'], "certification/{$post['user_certification_id']}");
+                        if ($image === FALSE)
+                        {
+                            $media_check = FALSE;
+                            continue;
+                        }
+                        $media['image'][] = $image;
+                    }
 				}
 				if ($media_check === false) {
                     $this->json_output->setStatusCode(204)->setErrorCode('檔案上傳失敗，請洽工程師')->send();
 				} else {
 					$group_id = time();
 					$this->load->model('log/log_image_model');
-					$image_id = $this->log_image_model->getIDByUrl($media);
+                    $image_id_array = [];
+					$image_id = $this->log_image_model->getIDByUrl(call_user_func_array('array_merge', $media));
 					foreach($image_id as $v){
 						$image_id_array[] = $v->id;
 					}
 					$this->log_image_model->insertGroupById($image_id_array,['group_info'=>$group_id]);
 					$certification_content = json_decode($this->user_certification_model->get($post['user_certification_id'])->content,true);
                     // TODO: 暫時寫死
-                    switch ($post['certification_id'])
+                    if (isset($post['certification_id']))
                     {
-                        case CERTIFICATION_INVESTIGATION:
-                            $image_name = 'postal_image';
-                            break;
-                        case CERTIFICATION_INVESTIGATIONA11:
-                            $image_name = 'person_mq_image';
-                            break;
-                        case CERTIFICATION_PROFILE:
-                            $image_name = 'profile_image';
-                            break;
-                        case CERTIFICATION_BUSINESSTAX:
-                            $image_name = $post['image_key'] ?? 'others_image';
-                            break;
-                        case CERTIFICATION_SIMPLIFICATIONFINANCIAL:
-                            $image_name = 'passbook_image';
-                            break;
-                        case CERTIFICATION_SIMPLIFICATIONJOB:
-                            $image_name = 'labor_image';
-                            break;
-                        case CERTIFICATION_PASSBOOKCASHFLOW_2:
-                            $image_name = 'passbook_image';
-                            break;
-                        case CERTIFICATION_INVESTIGATIONJUDICIAL:
-                            $image_name = 'legal_person_mq_image';
-                            break;
-                        case CERTIFICATION_PASSBOOKCASHFLOW:
-                            $image_name = 'passbook_image';
-                            break;
-                        case CERTIFICATION_GOVERNMENTAUTHORITIES:
-                            $image_name = 'governmentauthorities_image';
-                            break;
-                        case CERTIFICATION_PROFILEJUDICIAL:
-                            $image_name = 'others_image';
-                            break;
-                        case CERTIFICATION_JUDICIALGUARANTEE:
-                            $image_name = 'image_url';
-                            break;
-                        case CERTIFICATION_INCOMESTATEMENT:
-                            $image_name = 'income_statement_image';
-                            break;
-                        default:
-                            $image_name = 'backend_upload';
+                        $image_name = $this->_get_image_name_by_cert_id($post['certification_id']);
+                    }
+                    else
+                    {
+                        $image_name = '';
                     }
 
                     if(isset($certification_content[$image_name])){
                         if(is_array($certification_content[$image_name])){
-                            $certification_content[$image_name] = array_merge($certification_content[$image_name],$media);
+                            $certification_content[$image_name] = array_merge($certification_content[$image_name], $media['image']);
                         }else{
-                            $certification_content[$image_name] = array_merge([
-                                $certification_content[$image_name]
-                            ], $media);
+                            $certification_content[$image_name] = array_merge([$certification_content[$image_name]], $media['image']);
                         }
                     }else{
                         $certification_content[$image_name] = [];
-                        $certification_content[$image_name] = array_merge($certification_content[$image_name],$media);
+                        $certification_content[$image_name] = array_merge($certification_content[$image_name], $media['image']);
                     }
+
+                    if (isset($certification_content['pdf']))
+                    {
+                        $certification_content['pdf'] = array_merge($certification_content['pdf'], $media['pdf']);
+                    }
+                    else
+                    {
+                        $certification_content['pdf'] = $media['pdf'];
+                    }
+
 					$certification_content['group_id'] = $group_id;
 
 					$res = $this->user_certification_model->update($post['user_certification_id'], [
@@ -1504,6 +1524,43 @@ class Certification extends MY_Admin_Controller {
             $this->json_output->setStatusCode(204)->setErrorCode('檔案上傳失敗，缺少參數，請洽工程師')->send();
 		}
 	}
+
+    private function _get_image_name_by_cert_id($cert_id)
+    {
+        switch ($cert_id)
+        {
+            case CERTIFICATION_INVESTIGATION: // 聯合徵信報告
+                return 'postal_image';
+            case CERTIFICATION_INVESTIGATIONA11: // 聯合徵信報告+A11
+                return 'person_mq_image';
+            case CERTIFICATION_SIMPLIFICATIONFINANCIAL: // 財務收支
+                return 'passbook_image';
+            case CERTIFICATION_SIMPLIFICATIONJOB: // 工作資料
+                return 'labor_image';
+            case CERTIFICATION_PASSBOOKCASHFLOW_2: // (自然人)近六個月往來存摺封面及內頁
+                return 'passbook_image';
+            case CERTIFICATION_BUSINESSTAX:
+                return 'business_tax_image';
+            case CERTIFICATION_BALANCESHEET: // 資產負債表
+                return 'balance_sheet_image';
+            case CERTIFICATION_INCOMESTATEMENT: // 近三年所得稅結算申報書(稅簽)
+                return 'income_statement_image';
+            case CERTIFICATION_INVESTIGATIONJUDICIAL: // 公司聯合徵信
+                return 'legal_person_mq_image';
+            case CERTIFICATION_PASSBOOKCASHFLOW: // 近6個月封面及內頁公司存摺
+                return 'passbook_image';
+            case CERTIFICATION_GOVERNMENTAUTHORITIES: // 變卡正本拍攝(全頁)
+                return 'governmentauthorities_image';
+            case CERTIFICATION_EMPLOYEEINSURANCELIST: // 員工投保人數資料
+                return 'employeeinsurancelist_image';
+            case CERTIFICATION_PROFILEJUDICIAL: // 公司資料表
+                return 'other_image';
+            case CERTIFICATION_JUDICIALGUARANTEE: // 公司授權核實
+                return 'image_url';
+            default:
+                return 'backend_upload';
+        }
+    }
 
     // 加入是否有配偶
     public function hasSpouse(){
