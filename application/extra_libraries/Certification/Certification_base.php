@@ -567,12 +567,13 @@ abstract class Certification_base implements Certification_definition
             {
                 continue;
             }
-
+            $param = ['sub_status' => TARGET_SUBSTATUS_NORNAL];
             $this->CI->target_model->update_by([
                 'id' => $target['id'],
                 'status' => TARGET_WAITING_APPROVE,
                 'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE
-            ], ['sub_status' => TARGET_SUBSTATUS_NORNAL]);
+            ], $param);
+            $this->CI->target_lib->insert_change_log($target['id'], $param);
         }
     }
 
