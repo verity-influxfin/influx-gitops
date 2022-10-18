@@ -821,14 +821,9 @@ $config['product_list'] = [
         ],
         // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
-            CERTIFICATION_JUDICIALGUARANTEE,
-            CERTIFICATION_SIMPLIFICATIONJOB,
-            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
         ],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
-            CERTIFICATION_SIMPLIFICATIONJOB,
-            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
         ],
         'certifications_stage' => [
             [
