@@ -3198,16 +3198,13 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['return_type'];
-            foreach ($fields as $field) {
-                if (! isset($input[$field])) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }else{
-                    $content[$field] = $input[$field];
-                }
+            if (empty($input['receipt_jcic_image']) && empty($input['receipt_postal_image']))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
             }
+            $content = $input;
 
-            $file_fields = ['legal_person_mq_image','postal_image'];
+            $file_fields = ['receipt_jcic_image','receipt_postal_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 if(isset($input[$field])){
