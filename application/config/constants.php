@@ -146,6 +146,7 @@ defined('CONNECTION_ERROR')                OR define('CONNECTION_ERROR'         
 defined('CHARITY_INVALID_AMOUNT')       OR define('CHARITY_INVALID_AMOUNT'      , 318); //無效的慈善捐款金額
 defined('CHARITY_ILLEGAL_AMOUNT')       OR define('CHARITY_ILLEGAL_AMOUNT'      , 321); // 因AMC防制法規定：捐款金額超過500,000元請洽客服。
 defined('CHARITY_RECORD_NOT_FOUND')     OR define('CHARITY_RECORD_NOT_FOUND'    , 322); // 捐款紀錄不存在
+defined('USER_TAX_ID_PHONE_UNMATCHED')  OR define('USER_TAX_ID_PHONE_UNMATCHED' , 323); // (法人忘記密碼)統編與電話不同
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
