@@ -1767,6 +1767,7 @@ class Target_lib
 
                         $finish_stage_cer = [];
                         $cer = [];
+                        $cer_success_id = []; // 存已成功的徵信項 certification_id
                         $matchBrookesia = false;        // 反詐欺狀態
                         $second_instance_check = false; // 進待二審
 
@@ -1797,13 +1798,17 @@ class Target_lib
                                         $second_instance_check = true;
                                     }
                                 }
-                                $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
+                                if ($certification['user_status'] == CERTIFICATION_STATUS_SUCCEED)
+                                {
+                                    $cer[] = $certification['certification_id'];
+                                    $cer_success_id[] = $certification['id'];
+                                }
                             }
                         }
 
                         // 檢查系統自動過件，必要的徵信項
                         $required_certification = array_diff($product_certification, $product['backend_option_certifications']);
-                        if (count($cer) != count($required_certification))
+                        if ( ! empty(array_diff($required_certification, $cer_success_id)))
                         {
                             $finish = FALSE;
                         }
