@@ -45,13 +45,20 @@ abstract class Cert_pdf extends Certification_base
         // Add this user into black list.
         $brookesia_url = "http://" . getenv('GRACULA_IP') . ":9453/brookesia/api/v1.0/blockUser/add";
         $details = $this->additional_data['pdf_fraud_details'];
-        $desc = $details['轉退件標準'];
-        unset($details['轉退件標準']);
-        unset($details['轉人工審核標準']);
+        $desc = $details['desc'];
+        unset($details['desc']);
+        if ($details)
+        {
+            $remark = json_encode($details, JSON_UNESCAPED_UNICODE);
+        }
+        else
+        {
+            $remark = '';
+        }
         $result = curl_get($brookesia_url, [
             'userId' => $user_id,
             'updatedBy' => SYSTEM_ADMIN_ID,
-            'blockRemark' => json_encode($details, JSON_UNESCAPED_UNICODE),
+            'blockRemark' => $remark,
             'blockTimeText' => '永久封鎖',
             'blockRule' => '授信政策',
             'blockRisk' => '拒絕',
@@ -104,14 +111,16 @@ abstract class Cert_pdf extends Certification_base
         }
         $fraud_detect_status = $content['pdf_fraud_detect']['certification_status'];
         $details = json_encode($content['pdf_fraud_detect']['details'], JSON_UNESCAPED_UNICODE);
+        $desc = $details['desc'];
+        unset($details['desc']);
         $this->result->setStatus($fraud_detect_status);
         if ($fraud_detect_status == CERTIFICATION_STATUS_FAILED)
         {
-            $this->result->addMessage("聯徵PDF已被竄改過，細節：{$details}", CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+            $this->result->addMessage("聯徵PDF已被竄改過：{$desc}。細節：\n{$details}", CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
         }
         else // CERTIFICATION_STATUS_PENDING_TO_REVIEW
         {
-            $this->result->addMessage("聯徵PDF疑似被竄改過，需人工驗證，細節：{$details}", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage("聯徵PDF疑似被竄改過，需人工驗證：{$desc}。細節：\n{$details}", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
         }
         return FALSE;
     }

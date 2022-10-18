@@ -60,29 +60,36 @@ function verify_fraud_pdf($pdf_url): array
                 'body' => json_encode(['pdf_url' => $pdf_url])
             ]);
         $response_data = json_decode($request->getBody()->getContents(), TRUE);
-        $details = [
-            '建立時間' => $response_data['creation_datetime'],
-            '修改時間' => $response_data['mod_datetime'],
-            '修改與建立時間差(秒)' => $response_data['mod_delta_sec'],
-            '是否用別的軟體編輯過' => ! $response_data['is_producer_valid'],
-            '轉退件標準' => '如用別的軟體編輯過 或 修改與建立時間差大於10秒 => 判定為被竄改過',
-            '轉人工審核標準' => '如未用別的軟體編輯過，但修改與建立時間差介於3~10秒間 => 疑似被竄改過'
-        ];
         if ($response_data['is_producer_valid'])
         {
             $delta_sec = $response_data['mod_delta_sec'];
             if ($delta_sec > 10)
             {
                 $cert_status = CERTIFICATION_STATUS_FAILED;
+                $details = [
+                    '建立時間' => $response_data['creation_datetime'],
+                    '修改時間' => $response_data['mod_datetime'],
+                    '修改與建立時間差(秒)' => $response_data['mod_delta_sec'],
+                    'desc' => 'pdf修改與建立時間差大於10秒'
+                ];
             }
             elseif ($delta_sec >= 3) // $delta_sec < 3: pass, not fraud PDF
             {
                 $cert_status = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
+                $details = [
+                    '建立時間' => $response_data['creation_datetime'],
+                    '修改時間' => $response_data['mod_datetime'],
+                    '修改與建立時間差(秒)' => $response_data['mod_delta_sec'],
+                    'desc' => 'pdf修改與建立時間差介於3~10秒間'
+                ];
             }
         }
         else
         {
             $cert_status = CERTIFICATION_STATUS_FAILED;
+            $details = [
+                'desc' => 'pdf用別的軟體編輯過'
+            ];
         }
     }
     catch (BadResponseException $e)
