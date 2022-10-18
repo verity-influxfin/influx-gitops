@@ -1469,7 +1469,7 @@ class Certification extends MY_Admin_Controller {
             case CERTIFICATION_INCOMESTATEMENT: // 近三年所得稅結算申報書(稅簽)
                 return 'income_statement_image';
             case CERTIFICATION_INVESTIGATIONJUDICIAL: // 公司聯合徵信
-                return 'legal_person_mq_image';
+                return 'other_image';
             case CERTIFICATION_PASSBOOKCASHFLOW: // 近6個月封面及內頁公司存摺
                 return 'passbook_image';
             case CERTIFICATION_GOVERNMENTAUTHORITIES: // 變卡正本拍攝(全頁)
