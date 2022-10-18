@@ -1800,6 +1800,14 @@ class Target_lib
                                 $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
                             }
                         }
+
+                        // 檢查系統自動過件，必要的徵信項
+                        $required_certification = array_diff($product_certification, $product['backend_option_certifications']);
+                        if (count($cer) != count($required_certification))
+                        {
+                            $finish = FALSE;
+                        }
+
                         // 法人產品自然人認證徵信完成判斷
                         // TODO: 認證徵信個金企金待系統整合
                         if ($finish && in_array($value->product_id, [PRODUCT_SK_MILLION_SMEG]))
