@@ -1597,7 +1597,7 @@ class Product extends REST_Controller {
                                 $content_array_data = [];
                             }
                         }
-                        $option_cert_ids = $product['backend_option_certifications'] ?? [];
+                        $option_cert_ids = $product['option_certifications'] ?? [];
                         $value['optional'] = in_array($value['id'], $option_cert_ids); // 是否選填 (true/false)
                         $value['type'] = 'certification';
                         $value['completeness'] = ceil($value['user_status'] == 1?$completeness_level:0);
