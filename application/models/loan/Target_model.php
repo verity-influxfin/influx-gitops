@@ -681,14 +681,16 @@ class Target_model extends MY_Model
 
     /** 依targets.status取得不重複的使用者ID
      * @param array $status
+     * @param int $company_Status : 是否為法人 (p2p_user.users.company_status)
      * @return mixed
      */
-    public function get_distinct_user_by_status(array $status)
+    public function get_distinct_user_by_status(array $status, int $company_Status = 0)
     {
         $this->db
-            ->select('DISTINCT(user_id) AS user_id')
+            ->select('DISTINCT(targets.user_id) AS user_id')
             ->from('p2p_loan.targets')
-            ->where_in('status', $status);
+            ->join('p2p_user.users', 'users.id=targets.user_id AND users.company_status=' . $company_Status)
+            ->where_in('targets.status', $status);
 
         return $this->db->get()->result_array();
     }
