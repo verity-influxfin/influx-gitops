@@ -110,17 +110,25 @@ abstract class Cert_pdf extends Certification_base
             return TRUE;
         }
         $fraud_detect_status = $content['pdf_fraud_detect']['certification_status'];
-        $details = json_encode($content['pdf_fraud_detect']['details'], JSON_UNESCAPED_UNICODE);
+        $details = $content['pdf_fraud_detect']['details'];
         $desc = $details['desc'];
         unset($details['desc']);
+        if ($details)
+        {
+            $details = "細節：\n".json_encode($details, JSON_UNESCAPED_UNICODE);
+        }
+        else
+        {
+            $details = '';
+        }
         $this->result->setStatus($fraud_detect_status);
         if ($fraud_detect_status == CERTIFICATION_STATUS_FAILED)
         {
-            $this->result->addMessage("聯徵PDF已被竄改過：{$desc}。細節：\n{$details}", CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+            $this->result->addMessage("聯徵PDF已被竄改過：{$desc}。{$details}", CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
         }
         else // CERTIFICATION_STATUS_PENDING_TO_REVIEW
         {
-            $this->result->addMessage("聯徵PDF疑似被竄改過，需人工驗證：{$desc}。細節：\n{$details}", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage("聯徵PDF疑似被竄改過，需人工驗證：{$desc}。{$details}", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
         }
         return FALSE;
     }
