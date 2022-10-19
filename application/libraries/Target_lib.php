@@ -2302,7 +2302,7 @@ class Target_lib
         }
     }
 
-    public function insert_change_log($target_id, $update_param, $user_id = 0, $admin_id = 0)
+    public function insert_change_log($target_id, $update_param, $user_id = 0, $admin_id = SYSTEM_ADMIN_ID)
     {
         if ($target_id) {
             $this->CI->load->model('log/Log_targetschange_model');
@@ -2870,5 +2870,33 @@ class Target_lib
         }
 
         return $target_meta;
+    }
+
+    /**
+     * @param $target
+     * @param $admin_id
+     * @param $remark
+     * @return bool TRUE if successfully rejected, FALSE if doing nothing
+     */
+    public function reject($target, $admin_id, string $remark = ''): bool
+    {
+        if ( ! $target || ! in_array($target->status,array(
+                TARGET_WAITING_APPROVE,
+                TARGET_WAITING_SIGNING,
+                TARGET_WAITING_VERIFY,
+                TARGET_ORDER_WAITING_VERIFY,
+                TARGET_ORDER_WAITING_SHIP,
+                TARGET_BANK_FAIL
+            )))
+        {
+            return FALSE;
+        }
+        if($target->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+            $this->CI->load->library('Subloan_lib');
+            $this->CI->subloan_lib->subloan_verify_failed($target,$admin_id,$remark);
+        }else{
+            $this->target_verify_failed($target,$admin_id,$remark);
+        }
+        return TRUE;
     }
 }
