@@ -206,6 +206,7 @@
                             <h1>圖片/文件</h1>
                             <fieldset>
                                 <div class="form-group">
+                                    <label>法人聯徵資料</label><br>
                                     <? isset($content['legal_person_mq_image']) && !is_array($content['legal_person_mq_image']) ? $content['legal_person_mq_image'] = array($content['legal_person_mq_image']) : [];
                                     if(!empty($content['legal_person_mq_image'])){
                                         foreach ($content['legal_person_mq_image'] as $key => $value) { ?>
@@ -222,61 +223,41 @@
                                             </a>
                                         <? }
                                     }?>
-                                </div>
-                                <div class="form-group">
+                                    <hr/>
+                                    <label>收執聯資料</label><br>
                                     <?php
-                                    $content['receipt_postal_image'] = isset($content['receipt_postal_image'])
-                                        ? ! is_array($content['receipt_postal_image'])
-                                            ? [$content['receipt_postal_image']]
-                                            : $content['receipt_postal_image']
-                                        : [];
-                                    $content['receipt_jcic_image'] = isset($content['receipt_jcic_image'])
-                                        ? ! is_array($content['receipt_jcic_image'])
-                                            ? [$content['receipt_jcic_image']]
-                                            : $content['receipt_jcic_image']
-                                        : [];
-                                    $receipt_image = array_merge($content['receipt_postal_image'], $content['receipt_jcic_image']);
-                                    foreach ($receipt_image as $key => $value)
-                                    { ?>
-                                        <a href="<?= $value; ?>" data-fancybox="images">
-                                            <img src="<?= $value; ?>" alt="" style='width:30%;max-width:400px'>
-                                        </a>
-                                    <?php } ?>
-                                </div>
-                                <div class="form-group">
-                                    <?php
-                                    if ( ! empty($content['file_list']['image']))
-                                    {
-                                        foreach ($content['file_list']['image'] as $key => $value)
-                                        {
-                                            if (empty($value['url']))
-                                            {
-                                                continue;
-                                            } ?>
-                                            <a href="<?= $value['url'] ?>" data-fancybox="images">
-                                                <img src="<?= $value['url'] ?>"
-                                                     style='width:30%;max-width:400px'>
+                                    if ( ! empty($content['receipt_postal_image']) && is_array($content['receipt_postal_image']))
+                                    { // 郵局申請
+                                        foreach ($content['receipt_postal_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
                                             </a>
                                         <?php }
-                                        echo '<hr/>';
                                     }
-                                    if ( ! empty($content['file_list']['file']))
-                                    {
-                                        foreach ($content['file_list']['file'] as $key => $value)
-                                        {
-                                            if (empty($value['url']))
-                                            {
-                                                continue;
-                                            } ?>
-                                            <a href="<?= $value['url'] ?>">
-                                                <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
+                                    if ( ! empty($content['receipt_jcic_image']) && is_array($content['receipt_jcic_image']))
+                                    { // 聯徵中心申請
+                                        foreach ($content['receipt_jcic_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
                                             </a>
                                         <?php }
-                                        echo '<hr/>';
                                     } ?>
                                     <hr/>
                                     <label>其它</label><br>
                                     <?php
+                                    if ( ! empty($content['other_image']) && is_array($content['other_image']))
+                                    {
+                                        foreach ($content['other_image'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>"
+                                                     style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                        echo "<br/>";
+                                    }
                                     if ( ! empty($content['pdf']) && is_array($content['pdf']))
                                     {
                                         $index = 0;

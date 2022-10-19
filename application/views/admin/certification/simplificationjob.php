@@ -282,15 +282,31 @@
                                     </form>
                                 </div>
                                 <div class="col-lg-6">
-                                    <h1>圖片</h1>
-                                    <fieldset disabled>
-                                        <? if (isset($content['labor_image'])) {
-                                            echo '<h4>【勞保異動明細】</h4><div class="form-group"><label for="disabledSelect">勞保異動明細</label><br>';
-                                            foreach($content['labor_image'] as $key => $value){
-                                                echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
-                                            }
-                                            echo '</div><br /><br /><br />';
-                                        }?>
+                                    <h1>圖片/文件</h1>
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label for="disabledSelect">勞保異動明細</label><br>
+                                            <?php if (isset($content['labor_image']))
+                                            {
+                                                foreach ($content['labor_image'] as $key => $value)
+                                                {
+                                                    echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:30%;max-width:400px"></a>';
+                                                }
+                                            } ?>
+                                            <hr/>
+                                            <label>其它</label><br>
+                                            <?php
+                                            if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                            {
+                                                $index = 0;
+                                                foreach ($content['pdf'] as $value)
+                                                { ?>
+                                                    <a href="<?= $value ?>" class="btn btn-info">
+                                                        檔案<?= ++$index; ?>
+                                                    </a>
+                                                <?php }
+                                            } ?>
+                                        </div>
                                     </fieldset>
                                     <? if( $data->certification_id == 501 && isset($ocr['upload_page']) ){ ?>
                                     <div class="form-group" style="background:#f5f5f5;border-style:double;">

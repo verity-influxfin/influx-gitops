@@ -438,29 +438,23 @@
                         </div>
                         <div class="col-lg-6">
                             <h1>圖片/文件</h1>
-                            <fieldset disabled>
+                            <fieldset>
                                 <div class="form-group">
+                                    <label>損益表/資產負債表</label><br>
                                     <?php if ( ! empty($content['income_statement_image']))
                                     {
-                                        echo '<label>損益表/資產負債表</label><br>';
                                         $content['income_statement_image'] = ! is_array($content['income_statement_image']) ? array($content['income_statement_image']) : $content['income_statement_image'];
                                         foreach ($content['income_statement_image'] as $key => $value)
-                                        {
-                                            if (empty($value)) continue; ?>
+                                        { ?>
                                             <a href="<?= $value ?>" data-fancybox="images">
                                                 <img src="<?= $value ?>" style='width:30%;max-width:400px'>
                                             </a>
                                         <?php }
-                                        echo '<hr/>';
                                     }
                                     if ( ! empty($content['file_list']['image']))
                                     {
                                         foreach ($content['file_list']['image'] as $key => $value)
-                                        {
-                                            if (empty($value['url']))
-                                            {
-                                                continue;
-                                            } ?>
+                                        { ?>
                                             <a href="<?= $value['url'] ?>" data-fancybox="images">
                                                 <img src="<?= $value['url'] ?>"
                                                      style='width:30%;max-width:400px'>
@@ -471,17 +465,25 @@
                                     if ( ! empty($content['file_list']['file']))
                                     {
                                         foreach ($content['file_list']['file'] as $key => $value)
-                                        {
-                                            if (empty($value['url']))
-                                            {
-                                                continue;
-                                            } ?>
+                                        { ?>
                                             <a href="<?= $value['url'] ?>">
                                                 <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
                                             </a>
                                             <?php
                                         }
-                                        echo '<hr/>';
+                                    } ?>
+                                    <hr/>
+                                    <label>其它</label><br>
+                                    <?php
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
+                                            </a>
+                                        <?php }
                                     } ?>
                                 </div>
                             </fieldset>

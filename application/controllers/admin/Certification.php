@@ -270,7 +270,7 @@ class Certification extends MY_Admin_Controller {
                     CERTIFICATION_BUSINESSTAX
                 ];
                 $cert_can_upload_pdf = [CERTIFICATION_BUSINESSTAX, CERTIFICATION_BALANCESHEET, CERTIFICATION_INCOMESTATEMENT, CERTIFICATION_INVESTIGATIONJUDICIAL, CERTIFICATION_PASSBOOKCASHFLOW, CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_EMPLOYEEINSURANCELIST, CERTIFICATION_PROFILEJUDICIAL, CERTIFICATION_JUDICIALGUARANTEE,
-                    CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2];
+                    CERTIFICATION_SIMPLIFICATIONFINANCIAL, CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2];
                 if (in_array($info->certification_id, $cert_can_upload_image))
                 {
                     // 上傳檔案功能
@@ -1480,7 +1480,14 @@ class Certification extends MY_Admin_Controller {
                     // TODO: 暫時寫死
                     if (isset($post['certification_id']))
                     {
-                        $image_name = $this->_get_image_name_by_cert_id($post['certification_id']);
+                        if ($post['certification_id'] == CERTIFICATION_BUSINESSTAX)
+                        {
+                            $image_name = $post['image_key'] ?? 'others_image';
+                        }
+                        else
+                        {
+                            $image_name = $this->_get_image_name_by_cert_id($post['certification_id']);
+                        }
                     }
                     else
                     {
@@ -1540,13 +1547,13 @@ class Certification extends MY_Admin_Controller {
             case CERTIFICATION_PASSBOOKCASHFLOW_2: // (自然人)近六個月往來存摺封面及內頁
                 return 'passbook_image';
             case CERTIFICATION_BUSINESSTAX:
-                return 'business_tax_image';
+                return 'other_image';
             case CERTIFICATION_BALANCESHEET: // 資產負債表
                 return 'balance_sheet_image';
             case CERTIFICATION_INCOMESTATEMENT: // 近三年所得稅結算申報書(稅簽)
                 return 'income_statement_image';
             case CERTIFICATION_INVESTIGATIONJUDICIAL: // 公司聯合徵信
-                return 'legal_person_mq_image';
+                return 'other_image';
             case CERTIFICATION_PASSBOOKCASHFLOW: // 近6個月封面及內頁公司存摺
                 return 'passbook_image';
             case CERTIFICATION_GOVERNMENTAUTHORITIES: // 變卡正本拍攝(全頁)

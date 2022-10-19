@@ -997,13 +997,11 @@
                                         foreach ($content['other_image'] as $value)
                                         { ?>
                                             <a href="<?= $value ?>" data-fancybox="images">
-                                                <img src="<?= $value ?>"
-                                                     style='width:30%;max-width:400px'>
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
                                             </a>
                                         <?php }
                                     } ?>
-                                    <hr/>
-                                    <label></label><br>
+                                    <br/>
                                     <?php
                                     if ( ! empty($content['pdf']) && is_array($content['pdf']))
                                     {

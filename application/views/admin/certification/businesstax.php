@@ -370,9 +370,20 @@
                                 <h1>圖片/文件</h1>
                                 <fieldset>
                                     <div class="form-group">
+                                        <label>近三年401/403/405表格照</label><br>
+                                        <?php
+                                        if (isset($content['business_tax_image']))
+                                        {
+                                            foreach ($content['business_tax_image'] as $key => $value)
+                                            { ?>
+                                                <a href="<?= $value ?>" data-fancybox="images">
+                                                    <img src="<?= $value ?>" style='width:30%;max-width:400px'>
+                                                </a>
+                                            <?php }
+                                        } ?>
                                         <?php
                                         if (isset($images))
-                                        { // 擴大信保【後】的APP上傳圖片，分成近1/2/3/4年
+                                        { // APP上傳圖片，分成近1/2/3/4年
                                             foreach ($images as $key => $value)
                                             {
                                                 $this_block_html = '';
@@ -401,46 +412,20 @@
                                                     $this_block_html .= '<div class="form-group" style="background:#f5f5f5;border-style:double;">' . $value['upload'] . '</div>';
                                                 }
                                                 echo "<div>{$this_block_html}</div>";
-                                                echo '<hr/>';
                                             }
-                                        }
-                                        if (isset($content['business_tax_image']))
-                                        { // 擴大信保【前】的APP上傳圖片
-                                            $content['business_tax_image'] = ! is_array($content['business_tax_image'])
-                                                ? array($content['business_tax_image'])
-                                                : $content['business_tax_image'];
-                                            foreach ($content['business_tax_image'] as $key => $value)
-                                            {
-                                                if (empty($value)) continue; ?>
-                                                <a href="<?= $value ?>" data-fancybox="images">
-                                                    <img src="<?= $value ?>"
-                                                         style='width:30%;max-width:400px'>
+                                        } ?>
+                                        <hr/>
+                                        <label>其它</label><br>
+                                        <?php
+                                        if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                        {
+                                            $index = 0;
+                                            foreach ($content['pdf'] as $value)
+                                            { ?>
+                                                <a href="<?= $value ?>" class="btn btn-info">
+                                                    檔案<?= ++$index; ?>
                                                 </a>
                                             <?php }
-                                            echo '<hr/>';
-                                        }
-                                        if ( ! empty($content['file_list']['image']))
-                                        { // 擴大信保【後】的Web上傳圖片
-                                            foreach ($content['file_list']['image'] as $key => $value)
-                                            {
-                                                if (empty($value['url'])) continue; ?>
-                                                <a href="<?= $value['url'] ?>" data-fancybox="images">
-                                                    <img src="<?= $value['url'] ?>"
-                                                         style='width:30%;max-width:400px'>
-                                                </a>
-                                            <?php }
-                                            echo '<hr/>';
-                                        }
-                                        if ( ! empty($content['file_list']['file']))
-                                        { // 擴大信保【後】的Web上傳PDF
-                                            foreach ($content['file_list']['file'] as $key => $value)
-                                            {
-                                                if (empty($value['url'])) continue; ?>
-                                                <a href="<?= $value['url'] ?>">
-                                                    <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
-                                                </a>
-                                            <?php }
-                                            echo '<hr/>';
                                         } ?>
                                     </div>
                                 </fieldset>

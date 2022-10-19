@@ -9,16 +9,16 @@
         }
     }
     ?>
-    <div type="submit" id="mediaUploadBtn" class="btn btn-primary" onclick="submitMedia()">上傳檔案</div>
+    <div type="submit" id="mediaUploadBtn" class="btn btn-primary" onclick="submitMedia($(this))" disabled>上傳檔案</div>
 </div>
 <script src="https://unpkg.com/heic2any"></script>
 <script>
     let imageFormData = [];
-    let allFileCount = 0;
 
     function mediaUploadOnChange(event) {
-        $(`#mediaUploadBtn`).text(`資料處理中`);
-        $(`#mediaUploadBtn`).attr("disabled", "disabled");
+        let $submit_btn = $(event.path[1]).children("#mediaUploadBtn");
+        $submit_btn.text(`資料處理中`);
+        $submit_btn.attr("disabled", "disabled");
         let allFileCount = Object.keys(event.target.files).length;
         let mediaData = [];
         Object.keys(event.target.files).forEach(async function (key) {
@@ -35,8 +35,8 @@
             if (allFileCount == Object.keys(mediaData).length) {
                 imageFormData = mediaData
                 Object.setPrototypeOf(imageFormData, Object.getPrototypeOf(event.target));
-                $(`#mediaUploadBtn`).text(`上傳檔案`);
-                $(`#mediaUploadBtn`).removeAttr(`disabled`);
+                $submit_btn.text(`上傳檔案`);
+                $submit_btn.removeAttr(`disabled`);
 
             }
         });
@@ -45,13 +45,13 @@
     // 上傳檔案
     function submitMedia(selector) {
         if (Object.keys(imageFormData).length != 0) {
-            let formData = new FormData();
+            var formData = new FormData();
 
             // 上傳檔案需要的參數
-            let extraInfoItem = document.querySelectorAll(".extra_info");
-            for (let i = 0; i < extraInfoItem.length; i++) {
-                formData.append(extraInfoItem[i].name, $(`[name="${extraInfoItem[i].name}"]`).val());
-            }
+            let extraInfoItem = selector.parent("#media-form").find(".extra_info");
+            $.each(extraInfoItem, function(index, item){
+                formData.append($(item).attr('name'), $(item).val());
+            });
 
             // 上傳的檔案
             Object.keys(imageFormData).forEach(function (key) {
@@ -59,13 +59,13 @@
             });
             $.ajax({
                 type: "POST",
-                url: `<?= admin_url( isset($data['upload_location']) ? $data['upload_location'] : '' ) ?>`,
+                url: `<?= admin_url($data['upload_location'] ?? '') ?>`,
                 data:formData,
                 processData: false,
                 contentType : false,
                 beforeSend: function (XMLHttpRequest){
-                    $(`#mediaUploadBtn`).text(`檔案上傳中...`);
-                    $(`#mediaUploadBtn`).attr("disabled", "disabled");
+                    selector.text(`檔案上傳中...`);
+                    selector.attr("disabled", "disabled");
                 },
                 success: function (response) {
                     if (response.status.code == 200) {

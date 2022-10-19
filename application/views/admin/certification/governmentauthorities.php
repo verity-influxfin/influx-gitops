@@ -453,9 +453,9 @@
                             <h1>圖片/文件</h1>
                             <fieldset>
                                 <div class="form-group">
-                                    <label>設立(變更)事項登記表</label><br>
                                     <div class="row" style="width: 100%">
                                         <div class="col-lg-3">
+                                            <label>設立(變更)事項登記表</label><br>
                                             <?php isset($content['governmentauthorities_image']) && !is_array($content['governmentauthorities_image']) ? $content['governmentauthorities_image'] = array($content['governmentauthorities_image']) : '';
                                             if(!empty($content['governmentauthorities_image'])){
                                                 foreach ($content['governmentauthorities_image'] as $key => $value) { ?>
@@ -472,7 +472,7 @@
                                                 $index = 0;
                                                 foreach ($content['pdf'] as $value)
                                                 { ?>
-                                                    <a href="<?= $value ?>" class="btn btn-info">
+                                                    <a href="<?= $value ?>" class="btn btn-info" style="margin: 1px 1px 1px 1px">
                                                         檔案<?= ++$index; ?>
                                                     </a>
                                                 <?php }
