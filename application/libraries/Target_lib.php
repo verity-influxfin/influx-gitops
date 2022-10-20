@@ -1716,8 +1716,10 @@ class Target_lib
                 foreach ($list as $product_id => $targets) {
                     foreach ($targets as $target_id => $value) {
                     	if(!array_key_exists($value->product_id, $product_list))
+                        {
                             $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
-                    		continue;
+                            continue;
+                        }
 
                         $failedCertificationList = [];
                         $pendingCertificationCount = 0;
