@@ -159,7 +159,10 @@
               <div>無</div>
               <div>還款到帳收取1%</div>
             </td>
-            <td class="td">無</td>
+            <td class="td">
+              <div>售出債權</div>
+              <div>收取0.5%手續費</div>
+            </td>
             <td class="td">無</td>
           </tr>
           <tr class="tr">
