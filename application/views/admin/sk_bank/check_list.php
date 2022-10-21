@@ -3277,7 +3277,7 @@
 			  <tbody>
 				  <tr>
 	                <th class="th bold-bottom-border bold-right-border" style="width: 7%;">附件類別</th>
-	                <th class="field_name th bold-bottom-border bold-right-border">圖片</th>
+	                <th class="field_name th bold-bottom-border bold-right-border">圖片/文件</th>
 	              </tr>
 				  <tr>
 					  <td class="title input-center bold-bottom-border bold-right-border">A01:公司變更事項登記卡及工商登記查詢</td>
@@ -3391,12 +3391,21 @@
           }
 	  	}
 		if(rawData_array.includes($(`#${key}`).attr('id'))){
-			Object.keys(data[key]).forEach(function(key1) {
-				var a_tag = `<a href="${data[key][key1]}" data-fancybox="images">
-					<img id="${key}_${key1}"  src="${data[key][key1]}" style='width:30%;max-width:400px'>
-				</a>`;
-				$(`#${key}`).append(a_tag);
-			})
+            $.each(data[key], function (doc_type, doc_list) {
+                let a_tag = '';
+                if (doc_type === 'image') {
+                    $.each(doc_list, function (index, doc) {
+                        a_tag += `<a href="${doc}" data-fancybox="images">
+                        	<img id="${key}_${index}"  src="${doc}" style='width:30%;max-width:400px'>
+                        </a>`;
+                    })
+                } else if (doc_type === 'pdf') {
+                    $.each(doc_list, function (index, doc) {
+                        a_tag += `<span style="margin: 0 2px 0 2px"><a href="${doc}">檔案${index + 1}</a></span>`;
+                    })
+                }
+                $(`#${key}`).append(a_tag + '<br/>');
+            });
 		}
 	    if(! select_array.includes($(`#${key}`).attr('id')) && ! rawData_array.includes($(`#${key}`).attr('id'))){
           $(`#${key}`).val(data[key]);
