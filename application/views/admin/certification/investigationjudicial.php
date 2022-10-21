@@ -159,8 +159,39 @@
                                         <? }
                                     }?>
                                     <hr/>
+                                    <label>收執聯資料</label><br>
+                                    <?php
+                                    if ( ! empty($content['receipt_postal_image']) && is_array($content['receipt_postal_image']))
+                                    { // 郵局申請
+                                        foreach ($content['receipt_postal_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                    }
+                                    if ( ! empty($content['receipt_jcic_image']) && is_array($content['receipt_jcic_image']))
+                                    { // 聯徵中心申請
+                                        foreach ($content['receipt_jcic_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                    } ?>
+                                    <hr/>
                                     <label>其它</label><br>
                                     <?php
+                                    if ( ! empty($content['other_image']) && is_array($content['other_image']))
+                                    {
+                                        foreach ($content['other_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                        echo "<br/>";
+                                    }
                                     if ( ! empty($content['pdf']) && is_array($content['pdf']))
                                     {
                                         $index = 0;
