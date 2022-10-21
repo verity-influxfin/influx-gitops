@@ -353,7 +353,7 @@
             $("#skbank_img_send_btn").text("資料處理中");
             $.ajax({
                 type: "GET",
-                url: "/admin/target/skbank_image_get" + "?target_id=" + caseId,
+                url: "/admin/target/skbank_file_get" + "?target_id=" + caseId,
                 success: function (response) {
                   if(response.status.code == 200){
                       let case_no = $('#skbankCaseNo').text();

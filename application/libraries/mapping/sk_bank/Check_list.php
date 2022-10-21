@@ -259,67 +259,99 @@ class Check_list
 	// 附件檢核表圖片資料
 	public function get_raw_data($target_info=[]){
 		$response = [
-			'A01' => [],
-			'A02' => [],
-			'A03' => [],
-			'A04' => [],
-			'A05' => [],
-			'A06' => [],
-			'A07' => [],
-			'A08' => [],
+            'A01' => ['image' => [], 'pdf' => []],
+			'A02' => ['image' => [], 'pdf' => []],
+			'A03' => ['image' => [], 'pdf' => []],
+			'A04' => ['image' => [], 'pdf' => []],
+			'A05' => ['image' => [], 'pdf' => []],
+			'A06' => ['image' => [], 'pdf' => []],
+			'A07' => ['image' => [], 'pdf' => []],
+			'A08' => ['image' => [], 'pdf' => []],
 		];
 
 		$mapping_config = [
 			// 變卡
 			CERTIFICATION_GOVERNMENTAUTHORITIES => [
 				'location' => 'A01',
-				'raw_data_name' => ['governmentauthorities_image'],
+				'raw_data_name' => [
+                    'image' => ['governmentauthorities_image'],
+                    'pdf' => ['pdf']
+                ]
 			],
 			// 實名
 			CERTIFICATION_IDENTITY => [
 				'location' => 'A02',
-				'raw_data_name' => ['front_image','back_image','healthcard_image']
+				'raw_data_name' => [
+                    'image' => ['front_image','back_image','healthcard_image'],
+                ]
 			],
             // 公司資料表
 			CERTIFICATION_PROFILEJUDICIAL => [
 				'location' => 'A03',
-				'raw_data_name' => ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03', 'other_image']
+				'raw_data_name' => [
+                    'image' => ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03', 'other_image'],
+                    'pdf' => ['pdf']
+                ]
 			],
 			// 自然人連徵
 			CERTIFICATION_INVESTIGATIONA11 => [
 				'location' => 'A06',
-				'raw_data_name' =>['person_mq_image']
+				'raw_data_name' =>[
+                    'image' => ['person_mq_image'],
+                    'pdf' => ['pdf']
+                ]
 			],
 			// 損益表
 			CERTIFICATION_INCOMESTATEMENT => [
 				'location' => 'A04',
-				'raw_data_name' => ['income_statement_image']
+				'raw_data_name' => [
+                    'image' => ['income_statement_image'],
+                    'pdf' => ['pdf']
+                ]
 			],
 			// 法人連徵
 			CERTIFICATION_INVESTIGATIONJUDICIAL => [
 				'location' => 'A06',
-                'raw_data_name' => ['receipt_postal_image', 'receipt_jcic_image', 'legal_person_mq_image']
+                'raw_data_name' => [
+                    'image' => ['receipt_postal_image', 'receipt_jcic_image', 'legal_person_mq_image'],
+                    'pdf' => ['pdf']
+                ]
 			],
 			// 月末投保人數
 			CERTIFICATION_EMPLOYEEINSURANCELIST => [
 				'location' => 'A05',
-				'raw_data_name' => ['employeeinsurancelist_image']
+				'raw_data_name' => [
+                    'image' => ['employeeinsurancelist_image'],
+                    'pdf' => ['pdf']
+                ]
 			],
 			CERTIFICATION_SIMPLIFICATIONJOB => [
 				'location' => 'A07',
-				'raw_data_name' => ['labor_image']
+                'raw_data_name' => [
+                    'image' => ['labor_image'],
+                    'pdf' => ['pdf']
+                ]
 			],
 			CERTIFICATION_SIMPLIFICATIONFINANCIAL => [
 				'location' => 'A08',
-				'raw_data_name' => ['passbook_image']
+                'raw_data_name' => [
+                    'image' => ['passbook_image'],
+                    'pdf' => ['pdf']
+                ]
 			],
 			CERTIFICATION_PASSBOOKCASHFLOW => [
 				'location' => 'A08',
-				'raw_data_name' => ['passbook_image']
+				'raw_data_name' => [
+                    'image' => ['passbook_image'],
+                    'pdf' => ['pdf']
+                ]
 			],
             CERTIFICATION_PASSBOOKCASHFLOW_2 => [
                 'location' => 'A08',
-                'raw_data_name' => ['passbook_image']
+                'raw_data_name' => [
+                    'image' => ['passbook_image'],
+                    'pdf' => ['pdf']
+                ]
             ]
 		];
 
@@ -345,14 +377,22 @@ class Check_list
             foreach($certification_info as $info_value){
                 $content = json_decode($info_value->content,true);
                 if(isset($mapping_config[$info_value->certification_id]) && is_array($content)){
-                    // 找認證資料內有無相關圖片連結名稱
-                    foreach($mapping_config[$info_value->certification_id]['raw_data_name'] as $name){
-                        if(isset($content[$name])){
-                            $response_location = $mapping_config[$info_value->certification_id]['location'];
-                            if(is_array($content[$name])){
-                                $response[$response_location] = array_merge($response[$response_location],$content[$name]);
-                            }else{
-                                $response[$response_location][] = $content[$name];
+                    // 找認證資料內有無相關圖片/文件連結名稱
+                    foreach ($mapping_config[$info_value->certification_id]['raw_data_name'] as $doc_type => $doc_name)
+                    {
+                        foreach ($doc_name as $name)
+                        {
+                            if (isset($content[$name]))
+                            {
+                                $response_location = $mapping_config[$info_value->certification_id]['location'];
+                                if (is_array($content[$name]))
+                                {
+                                    $response[$response_location][$doc_type] = array_merge($response[$response_location][$doc_type], $content[$name]);
+                                }
+                                else
+                                {
+                                    $response[$response_location][$doc_type][] = $content[$name];
+                                }
                             }
                         }
                     }
