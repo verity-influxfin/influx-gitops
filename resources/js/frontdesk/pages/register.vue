@@ -213,7 +213,16 @@ export default {
     $("title").text(`註冊帳號 - inFlux普匯金融科技`);
   },
   mounted () {
-    this.$nextTick(() => { });
+    this.$nextTick(() => {
+      // get params from url param p
+      const urlParams = new URLSearchParams(window.location.search);
+      const p = urlParams.get('p') ?? localStorage.getItem('promoteCode');
+      if (p) {
+        this.promoteCode = p
+        // write to local storage
+        localStorage.setItem('promoteCode', p)
+      }
+     });
   },
   watch: {
     phone (newdata) {
