@@ -2,7 +2,7 @@ var app = new Vue({
     el: '#page-wrapper',
     data: {
         searchform: {
-            start_date: '',
+            start_date: moment().subtract(1,'days').format('YYYY-MM-DD'),
             end_date: moment().format('YYYY-MM-DD'),
             user_id_int: '',
         },
