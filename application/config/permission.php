@@ -96,7 +96,7 @@ $config['permission'] = [
             'waiting_reinspection' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'update'],
             'skbank_text_get' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'update'],
             'skbank_text_send' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'update'],
-            'skbank_image_get' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'update'],
+            'skbank_file_get' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'update'],
             'transfer_detail' => ['model' => 'Transfer', 'submodel' => 'index', 'action' => 'read'],
             'obligations_detail' => ['model' => 'Transfer', 'submodel' => 'obligations', 'action' => 'read'],
             'waiting_transfer_detail' => ['model' => 'Transfer', 'submodel' => 'waiting_transfer', 'action' => 'read'],

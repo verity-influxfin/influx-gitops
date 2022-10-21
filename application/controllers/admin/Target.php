@@ -2273,7 +2273,7 @@ class Target extends MY_Admin_Controller {
     }
 
     // 新光取得圖片
-    public function skbank_image_get(){
+    public function skbank_file_get(){
         $get = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
         $response = [];
@@ -2283,13 +2283,19 @@ class Target extends MY_Admin_Controller {
             $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
         }
         $this->load->library('mapping/sk_bank/check_list');
-        $image_url = $this->check_list->get_raw_data($target_info);
+        $raw_data = $this->check_list->get_raw_data($target_info);
 
         $this->load->library('S3_lib');
-        foreach($image_url as $image_type => $images){
-            $response[$image_type] = [];
-            if (!empty($image_url[$image_type])) {
-                $response[$image_type] = $this->s3_lib->imagesToPdf($images,$target_info->user_id,$image_type,'skbank_raw_data');
+        foreach ($raw_data as $location => $docs)
+        {
+            $response[$location] = [];
+            if ( ! empty($docs['image']))
+            {
+                $response[$location] = $this->s3_lib->imagesToPdf($docs['image'], $target_info->user_id, $location, 'skbank_raw_data');
+            }
+            if ( ! empty($docs['pdf']))
+            {
+                $response[$location] = array_merge($response[$location], $docs['pdf']);
             }
         }
 
