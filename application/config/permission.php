@@ -582,10 +582,10 @@ $config['permission'] = [
           'soci' => ['name' => '損益表'],
           'sofp' => ['name' => '資產負債表'],
           'journal' => ['name' => '日記簿'],
+          'balance_sheet' => ['name' => '開帳表']
            /*
           'ledger' => ['name' => '分類帳'],
           'target_porting' => ['name' => '借款案帳務轉移'],
-          'open_booking' => ['name' => '投資人開帳作業']
            */
       ],
       'permission' => [
@@ -604,11 +604,13 @@ $config['permission'] = [
           'journal' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'get_journal_data' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'journal_spreadsheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'balance_sheet' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
+          'get_balance_sheet_dict' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
+          'get_balance_sheet_diff' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
            /*
           'ledger' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
           'get_ledger_data' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
           'ledger_spreadsheet' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
-          'open_booking' => ['model' => 'Erp', 'submodel' => 'open_booking', 'action' => 'read'],
           'target_porting' => ['model' => 'Erp', 'submodel' => 'target_porting', 'action' => 'read'],
            */
       ],

@@ -378,6 +378,50 @@ class ERP extends MY_Admin_Controller
         exit;
     }
 
+    public function balance_sheet()
+    {
+        $this->load->view(
+            'admin/erp/balance_sheet',
+            $data = [
+                'menu'      => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts'   => [
+                    '/assets/admin/js/erp/balance_sheet.js'
+                ]
+            ]
+        );
+    }
+
+    /**
+     * 取得開帳表字典 API 資料
+     * 
+     * @created_at            2022-10-21
+     * @created_at            Allan
+     */
+    public function get_balance_sheet_dict()
+    {
+        $data = $this->erp_client_1->request('GET', 'balance_sheet/dict', [
+            'query' => $this->input->get()
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+
+     /**
+     * 取得開帳表差異 API 資料
+     * 
+     * @created_at            2022-10-21
+     * @created_at            Allan
+     */
+    public function get_balance_sheet_diff()
+    {
+        $data = $this->erp_client_1->request('GET', 'balance_sheet/diff', [
+            'query' => $this->input->get()
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+
     /**
      * 分類帳 UI
      * 
