@@ -271,52 +271,56 @@ class Check_list
 
 		$mapping_config = [
 			// 變卡
-			'1007' => [
+			CERTIFICATION_GOVERNMENTAUTHORITIES => [
 				'location' => 'A01',
 				'raw_data_name' => ['governmentauthorities_image'],
 			],
 			// 實名
-			'1' => [
+			CERTIFICATION_IDENTITY => [
 				'location' => 'A02',
 				'raw_data_name' => ['front_image','back_image','healthcard_image']
 			],
             // 公司資料表
-			'1018' => [
+			CERTIFICATION_PROFILEJUDICIAL => [
 				'location' => 'A03',
-				'raw_data_name' => ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03']
+				'raw_data_name' => ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03', 'other_image']
 			],
 			// 自然人連徵
-			'12' => [
+			CERTIFICATION_INVESTIGATIONA11 => [
 				'location' => 'A06',
 				'raw_data_name' =>['person_mq_image']
 			],
 			// 損益表
-			'1002' => [
+			CERTIFICATION_INCOMESTATEMENT => [
 				'location' => 'A04',
 				'raw_data_name' => ['income_statement_image']
 			],
 			// 法人連徵
-			'1003' => [
+			CERTIFICATION_INVESTIGATIONJUDICIAL => [
 				'location' => 'A06',
-				'raw_data_name' => ['legal_person_mq_image','postal_image']
+                'raw_data_name' => ['receipt_postal_image', 'receipt_jcic_image', 'legal_person_mq_image']
 			],
 			// 月末投保人數
-			'1017' => [
+			CERTIFICATION_EMPLOYEEINSURANCELIST => [
 				'location' => 'A05',
 				'raw_data_name' => ['employeeinsurancelist_image']
 			],
-			'501' => [
+			CERTIFICATION_SIMPLIFICATIONJOB => [
 				'location' => 'A07',
 				'raw_data_name' => ['labor_image']
 			],
-			'500' => [
+			CERTIFICATION_SIMPLIFICATIONFINANCIAL => [
 				'location' => 'A08',
 				'raw_data_name' => ['passbook_image']
 			],
-			'1004' => [
+			CERTIFICATION_PASSBOOKCASHFLOW => [
 				'location' => 'A08',
 				'raw_data_name' => ['passbook_image']
-			]
+			],
+            CERTIFICATION_PASSBOOKCASHFLOW_2 => [
+                'location' => 'A08',
+                'raw_data_name' => ['passbook_image']
+            ]
 		];
 
         $user_list = [];
