@@ -100,6 +100,32 @@
                         $('.sword').css('display','block');
                     }
                 });
+
+                function setDisabled(e){
+                    $(e).attr("disabled",true);
+                    $(e).text("已送出");
+                }
+
+                $(document).off("click",".manual_handling").on("click",".manual_handling",  function(){
+                    setDisabled(this);
+                    let target_id = $(this).data('target_id');
+
+                    Pace.track(() => {
+                        $.ajax({
+                            type: 'POST',
+                            url: "<?=admin_url('target/waiting_reinspection')?>",
+                            data: {target_id: target_id, manual_handling: 1},
+                            async: true,
+                            success: (rsp) => {
+                                console.log(rsp['response']);
+                                alert(rsp['response']['msg']);
+                            },
+                            error: function (xhr, textStatus, thrownError) {
+                                alert(textStatus);
+                            }
+                        });
+                    });
+                });
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -369,25 +395,6 @@
                                                                     default:
                                                                         break;
                                                                 }
-                                                            }elseif($svalue['id'] == CERTIFICATION_JUDICIALGUARANTEE){
-                                                                // $judicialUrl = isset($value->certification[$svalue['id']]['judicialPersonId'])?$value->certification[$svalue['id']]['judicialPersonId']:'';
-                                                                // switch($value->certification[$svalue['id']]["user_status"]){
-                                                                //     case '0':
-                                                                //         echo '待驗證<span class="sword" style="display:none">可驗證</span>';
-                                                                //         break;
-                                                                //     case '1':
-                                                                //         echo '<a target="_blank" href="'.admin_url('judicialperson/edit?id='.$judicialUrl).'" ><button type="button" class="btn btn-'.$status.''.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
-                                                                //         break;
-                                                                //     case '2':
-                                                                //         echo '<a target="_blank" href="'.admin_url('judicialperson/edit?id='.$judicialUrl).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
-                                                                //         break;
-                                                                //     case '3':
-                                                                //         echo '<a target="_blank" href="'.admin_url('judicialperson/edit?id='.$judicialUrl).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
-                                                                //         break;
-                                                                //     default:
-                                                                //         break;
-                                                                // }
-
                                                             }else{
                                                                 switch($value->certification[$svalue['id']]["user_status"]){
                                                                     case '0':
@@ -421,7 +428,7 @@
                                                 if(isset($input['investor']) && $input['investor'] == 0){
                                                     if($isExternalCoop) {
                                                         if (!isset($input['target_id'])) {
-                                                            echo '<td><button id="manual_handling" class="btn btn-primary btn-warning" onclick=""'.($value->status == TARGET_WAITING_VERIFY && $value->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE || $value->status == TARGET_BANK_FAIL ?'':' disabled').'>轉人工</button></td>';
+                                                            echo '<td><button class="btn btn-primary btn-warning manual_handling" onclick=""' .(in_array($value->status, [TARGET_BANK_LOAN, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED]) ?'disabled':' '). ' data-target_id='.$value->id.'>轉人工</button></td>';
                                                         }else{
                                                             echo '<td><button class="btn btn-primary btn-info" onclick="" >圖片資料</button></td>';
                                                         }
