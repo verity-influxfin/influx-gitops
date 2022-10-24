@@ -1,6 +1,8 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+
+use Certification\Cert_identity;
 use CreditSheet\CreditSheetFactory;
 
 class Target_lib
@@ -1714,7 +1716,11 @@ class Target_lib
                 foreach ($list as $product_id => $targets) {
                     foreach ($targets as $target_id => $value) {
                     	if(!array_key_exists($value->product_id, $product_list))
-                    		continue;
+                        {
+                            $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+                            continue;
+                        }
+
                         $failedCertificationList = [];
                         $pendingCertificationCount = 0;
                         $stage_cer = 0;
@@ -1761,12 +1767,13 @@ class Target_lib
                         }
 
                         $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
-                        $company = $value->product_id >= 1000 ? 1 : 0;
 
+                        $company = $value->product_id >= 1000 ? 1 : 0;
                         $certifications = $this->CI->certification_lib->get_status($value->user_id, BORROWER, $company, false, $value, FALSE, TRUE);
 
                         $finish_stage_cer = [];
                         $cer = [];
+                        $cer_success_id = []; // 存已成功的徵信項 certification_id
                         $matchBrookesia = false;        // 反詐欺狀態
                         $second_instance_check = false; // 進待二審
 
@@ -1797,9 +1804,21 @@ class Target_lib
                                         $second_instance_check = true;
                                     }
                                 }
-                                $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
+                                if ($certification['user_status'] == CERTIFICATION_STATUS_SUCCEED)
+                                {
+                                    $cer[] = $certification['certification_id'];
+                                    $cer_success_id[] = $certification['id'];
+                                }
                             }
                         }
+
+                        // 檢查系統自動過件，必要的徵信項
+                        $required_certification = array_diff($product_certification, $product['backend_option_certifications']);
+                        if ( ! empty(array_diff($required_certification, $cer_success_id)))
+                        {
+                            $finish = FALSE;
+                        }
+
                         // 法人產品自然人認證徵信完成判斷
                         // TODO: 認證徵信個金企金待系統整合
                         if ($finish && in_array($value->product_id, [PRODUCT_SK_MILLION_SMEG]))
@@ -1872,6 +1891,88 @@ class Target_lib
                         }
 
                         if ($finish) {
+                            // Re-check ID card info in case user's ID card changed.
+                            $check_id_card = FALSE;
+                            if ($value->certificate_status == TARGET_CERTIFICATE_SUBMITTED)
+                            {
+                                $this->CI->load->model('user/user_certification_model');
+                                $identity_cert = $this->CI->user_certification_model->get_by([
+                                    'investor' => BORROWER,
+                                    'status' => CERTIFICATION_STATUS_SUCCEED,
+                                    'user_id' => $value->user_id,
+                                    'certification_id' => CERTIFICATION_IDENTITY
+                                ]);
+                                if ($identity_cert)
+                                {
+                                    // Avoid checking for the same target too many times.
+                                    $this->CI->load->model('log/log_integration_model');
+                                    $api_verify_log = $this->CI->log_integration_model->order_by('created_at', 'DESC')->get_by([
+                                        'user_certification_id' => $identity_cert->id
+                                    ]);
+                                    if ( ! empty($api_verify_log))
+                                    {
+                                        $current_time = date('Y-m-d H:i:s');
+                                        $one_day_ago = date("Y-m-d H:i:s", strtotime($current_time.' -1 day'));
+                                        if ($api_verify_log->created_at < $one_day_ago)
+                                        {
+                                            $check_id_card = TRUE;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $check_id_card = TRUE;
+                                    }
+
+                                    if ($check_id_card)
+                                    {
+                                        $identity_content = json_decode($identity_cert->content, TRUE);
+                                        $remark = json_decode($identity_cert->remark, TRUE);
+                                        $err_msg = $remark['error'] ?? '';
+                                        $result = $this->CI->certification_lib->verify_id_card_info(
+                                            $identity_cert->id, $identity_content, $err_msg, $remark['OCR'] ?? []
+                                        );
+
+                                        // Update user_certification.
+                                        $to_update = ['content' => json_encode($identity_content, JSON_INVALID_UTF8_IGNORE)];
+                                        if ($err_msg)
+                                        {
+                                            $remark['error'] = $err_msg;
+                                            $to_update['remark'] = json_encode($remark, JSON_INVALID_UTF8_IGNORE);
+                                        }
+                                        $this->CI->user_certification_model->update($identity_cert->id, $to_update);
+
+                                        if ($result[0] && $result[1])  // Existed id card info is wrong.
+                                        {
+                                            $this->CI->load->model('log/log_usercertification_model');
+                                            $this->CI->log_usercertification_model->insert([
+                                                'user_certification_id'	=> $identity_cert->id,
+                                                'status'				=> CERTIFICATION_STATUS_FAILED,
+                                                'change_admin'			=> SYSTEM_ADMIN_ID,
+                                            ]);
+                                            $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+                                            if (isset($cert_helper))
+                                            {
+                                                $rs = $cert_helper->set_failure(TRUE, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                            }
+                                            else
+                                            {
+                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                            }
+                                            if ($rs === TRUE)
+                                            {
+                                                $this->CI->user_certification_model->update($identity_cert->id, [
+                                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT
+                                                ]);
+                                            }
+                                            else
+                                            {
+                                                log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             // 判斷是否符合產品申貸年齡限制
                             $this->CI->load->library('loanmanager/product_lib');
                             if ($this->CI->product_lib->need_chk_allow_age($value->product_id) === TRUE)
@@ -1957,6 +2058,11 @@ class Target_lib
 
                                     $this->CI->target_model->update($value->id, $param);
                                 }else{
+                                    if ( ! $company && $value->certificate_status != TARGET_CERTIFICATE_SUBMITTED)
+                                    {
+                                        $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+                                        continue;
+                                    }
                                     $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia, $second_instance_check);
                                 }
                             }

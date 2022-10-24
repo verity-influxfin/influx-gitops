@@ -235,7 +235,7 @@ class Scraper extends MY_Admin_Controller
         $identity_content = json_decode($cert['content'], TRUE);
         $remark = json_decode($cert['remark'], TRUE);
         $err_msg = $remark['error'] ?? '';
-        $this->certification_lib->verify_id_card_info($cert['id'], $identity_content, $err_msg);
+        $this->certification_lib->verify_id_card_info($cert['id'], $identity_content, $err_msg, $remark['OCR'] ?? []);
 
         // Update user_certification.
         $to_update = ['content' => json_encode($identity_content, JSON_INVALID_UTF8_IGNORE)];

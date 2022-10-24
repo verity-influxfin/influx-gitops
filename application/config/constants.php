@@ -263,6 +263,9 @@ defined('CERTIFICATION_SUBSTATUS_REVIEW_FAILED') OR define('CERTIFICATION_SUBSTA
 // 資料非近一個月申請
 defined('CERTIFICATION_SUBSTATUS_NOT_ONE_MONTH') OR define('CERTIFICATION_SUBSTATUS_NOT_ONE_MONTH', 4);
 
+// 已送出審核
+defined('CERTIFICATION_CERTIFICATE_STATUS_SENT') OR define('CERTIFICATION_CERTIFICATE_STATUS_SENT', 1);
+
 // HTTP status code for custom error
 defined('CUSTOM_HTTP_ERROR_CODE') 	OR define('CUSTOM_HTTP_ERROR_CODE'	, 587);
 
@@ -312,6 +315,8 @@ defined('TARGET_SUBSTATUS_WAITING_ASSOCIATES') OR define('TARGET_SUBSTATUS_WAITI
 defined('TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL') OR define('TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL', 12);//案件轉內部核可
 defined('TARGET_SUBSTATUS_LAW_DEBT_COLLECTION') OR define('TARGET_SUBSTATUS_LAW_DEBT_COLLECTION', 13);//
 
+defined('TARGET_SCRIPT_STATUS_NOT_IN_USE') or define('TARGET_SCRIPT_STATUS_NOT_IN_USE', 0);  // Not in use by any script(跑批)
+
 // Target certificate_status
 defined('TARGET_CERTIFICATE_DEFAULT') OR define('TARGET_CERTIFICATE_DEFAULT', 0); // 預設，尚未一鍵送出
 defined('TARGET_CERTIFICATE_SUBMITTED') OR define('TARGET_CERTIFICATE_SUBMITTED', 1); // 已一鍵送出，信用評估中
@@ -358,7 +363,7 @@ defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO'	, getenv(
 defined('URL_ADMIN')             	OR define('URL_ADMIN'				, '/admin/');
 defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN'		, getenv('ENV_COOKIES_LOGIN_ADMIN')); //Use in Admin Login Cookies
 defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE'			, 1800); //Use in Login Cookies
-
+defined('SYSTEM_ADMIN_ID') or define('SYSTEM_ADMIN_ID', 0);
 
 defined('MOBILE_PHONE_VENDOR') or define('MOBILE_PHONE_VENDOR', 0); //手機商
 defined('FOREX_CAR_DEALER') or define('FOREX_CAR_DEALER', 2); //外匯車商
@@ -770,5 +775,4 @@ defined('COMPANY_CATEGORY_NAME_LISTED') or define('COMPANY_CATEGORY_NAME_LISTED'
 
 // mata name
 defined('TARGET_META_COMPANY_CATEGORY_NUMBER') or define('TARGET_META_COMPANY_CATEGORY_NUMBER', 'company_category_number'); // 就職公司代號 meta name
-
 
