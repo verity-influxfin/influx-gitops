@@ -1813,7 +1813,7 @@ class Target_lib
                         }
 
                         // 檢查系統自動過件，必要的徵信項
-                        $required_certification = array_diff($product_certification, $product['backend_option_certifications']);
+                        $required_certification = array_diff($product_certification, $product['option_certifications']);
                         if ( ! empty(array_diff($required_certification, $cer_success_id)))
                         {
                             $finish = FALSE;
