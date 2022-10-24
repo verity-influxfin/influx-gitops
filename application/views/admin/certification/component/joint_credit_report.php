@@ -75,16 +75,13 @@
 	<tr>
 	  <td>借款餘額</td>
 	  <td>
-		<p>借款餘額額度總額：<?= isset($data['balanceQuota']) ? (strpos($data['balanceQuota'], ',') === false ? number_format($data['balanceQuota']*1000) : $data['balanceQuota'] . '(千元)') : '-'; ?></p>
 		<p>助學貸款借款金額：<?= isset($data['balanceStudentLoans']) ? (strpos($data['balanceStudentLoans'], ',') === false ? number_format($data['balanceStudentLoans']*1000) : $data['balanceStudentLoans'] . '(千元)') : '-'; ?></p>
 		<p>短期借款金額：<?= isset($data['balanceShort']) ? (strpos($data['balanceShort'], ',') === false ? number_format($data['balanceShort']*1000) : $data['balanceShort'] . '(千元)') : '-'; ?></p>
 		<p>中期借款金額：<?= isset($data['balanceMid']) ? (strpos($data['balanceMid'], ',') === false ? number_format($data['balanceMid']*1000) : $data['balanceMid'] . '(千元)') : '-'; ?></p>
 		<p>長期借款金額：<?= isset($data['balanceLong']) ? (strpos($data['balanceLong'], ',') === false ? number_format($data['balanceLong']*1000) : $data['balanceLong'] . '(千元)') : '-'; ?></p>
-		<p>短期擔保借款金額：<?= isset($data['balanceShortAssure']) ? (strpos($data['balanceShortAssure'], ',') === false ? number_format($data['balanceShortAssure']*1000) : $data['balanceShortAssure'] . '(千元)') : '-'; ?></p>
-		<p>中期擔保借款金額：<?= isset($data['balanceMidAssure']) ? (strpos($data['balanceMidAssure'], ',') === false ? number_format($data['balanceMidAssure']*1000) : $data['balanceMidAssure'] . '(千元)') : '-'; ?></p>
-		<p>長期擔保借款金額：<?= isset($data['balanceLongAssure']) ? (strpos($data['balanceLongAssure'], ',') === false ? number_format($data['balanceLongAssure']*1000) : $data['balanceLongAssure'] . '(千元)') : '-'; ?></p>
-		<p>信用卡借款餘額：<?= isset($data['balanceCreditCard']) ? (strpos($data['balanceCreditCard'], ',') === false ? number_format($data['balanceCreditCard']*1000) : $data['balanceCreditCard'] . '(千元)') : '-'; ?></p>
-		<p>現金卡借款餘額：<?= isset($data['balanceCash']) ? (strpos($data['balanceCash'], ',') === false ? number_format($data['balanceCash']*1000) : $data['balanceCash'] . '(千元)') : '-'; ?></p>
+		<p>短期擔保借款金額：<?= isset($data['newBalanceShortAssure']) ? (strpos($data['newBalanceShortAssure'], ',') === false ? number_format($data['newBalanceShortAssure']*1000) : $data['newBalanceShortAssure'] . '(千元)') : '-'; ?></p>
+		<p>中期擔保借款金額：<?= isset($data['newBalanceMidAssure']) ? (strpos($data['newBalanceMidAssure'], ',') === false ? number_format($data['newBalanceMidAssure']*1000) : $data['newBalanceMidAssure'] . '(千元)') : '-'; ?></p>
+		<p>長期擔保借款金額：<?= isset($data['newBalanceLongAssure']) ? (strpos($data['newBalanceLongAssure'], ',') === false ? number_format($data['newBalanceLongAssure']*1000) : $data['newBalanceLongAssure'] . '(千元)') : '-'; ?></p>
 	  </td>
 	</tr>
 	<tr>
