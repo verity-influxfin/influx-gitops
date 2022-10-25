@@ -2008,6 +2008,18 @@ class Product extends REST_Controller {
                     'launch_times' => $launch_times,
                 ];
                 $this->target_lib->target_verify_success($target, 0, $params, $user_id);
+
+                // Notify rate increased by app.
+                $user_ids_to_exclude = [];
+                $this->load->library('notification_lib');
+                foreach ($investments as $investment)
+                {
+                    $user_ids_to_exclude[] = $investment->user_id;
+                }
+                $this->notification_lib->notify_rate_increased(
+                    $this->user_model->get_ids($user_ids_to_exclude), $target->interest_rate, $new_rate
+                );
+
                 $this->response(array('result' => 'SUCCESS'));
             }
             $this->target_model->update($target->id, ['script_status' => 0]);

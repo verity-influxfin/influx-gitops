@@ -228,7 +228,7 @@ class Scraper extends MY_Admin_Controller
         ]);
         if ( ! $cert)
         {
-            $this->json_output->setStatusCode(CUSTOM_HTTP_ERROR_CODE)->setResponse(
+            $this->json_output->setStatusCode(HTTP_STATUS_CUSTOM_ERROR)->setResponse(
                 ['message' => '尚未通過實名認證']
             )->send();
         }

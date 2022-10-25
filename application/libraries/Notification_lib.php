@@ -1053,6 +1053,54 @@ econtent;
 	   }
 	}
 
+    /**
+     * Notify users interest rate increase.
+     * @param $user_ids
+     * @param $old_rate
+     * @param $new_rate
+     * @return void
+     */
+    public function notify_rate_increased($user_ids, $old_rate, $new_rate)
+    {
+        $this->CI->load->model('log/Log_userlogin_model');
+        $devices = $this->CI->Log_userlogin_model->get_filtered_deviceid(
+            ['user_ids' => $user_ids, 'android' => TRUE, 'ios' => TRUE], NotificationTargetCategory::Investment
+        );
+        $result = $this->send_notification([
+            'user_id' => SYSTEM_ADMIN_ID,
+            'sender_name' => "利率提升系統提醒",
+            'target_category' => $this->CI->config->item('notification')['target_category_name'][NotificationTargetCategory::Investment],
+            'target_platform' => 'android/ios',
+            'tokens' => $devices,
+            "notification"=> [
+                "title" => "優質案件利率提升",
+                "body" => "優質案件上架，借款人主動提升利率 {$old_rate}% → {$new_rate}%，趕快開啟[普匯投資]搶標！",
+            ],
+            "data" => [],
+            "send_at" => (new DateTime())->format('Y-m-d H:i'),
+            "apns" => [
+                "payload" => [
+                    "category" => "NEW_MESSAGE_CATEGORY"
+                ]
+            ],
+            "status" => NotificationStatus::Accepted,
+            "type" => NotificationType::RoutineReminder,
+            "dry_run" => 0
+        ]);
+        if ($result['code'] == HTTP_STATUS_OK || $result['code'] == HTTP_STATUS_CREATED)
+        {
+            $sent_count = count($devices ,COUNT_RECURSIVE) - count($devices) - array_sum(array_map('count',$devices ));
+            if ($sent_count == 0)
+                log_message('error', 'No devices to notify rate-increased.');
+            else
+                log_message('info', "[Push Notification Reserved] {$sent_count} devices will receive rate-increased notification.");
+        }
+        else
+        {
+            log_message('error', "Failed to send rate-increased notifications: [{$result['code']}] {$result['msg']}");
+        }
+    }
+
     public function cancel_subloan_bidding($target) {
         $title = "【產品轉換下架通知】產品轉換金額不符";
         $content = "親愛的用戶，
