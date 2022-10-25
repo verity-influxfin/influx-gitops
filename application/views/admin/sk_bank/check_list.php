@@ -249,6 +249,7 @@
               <!-- <input id="BusinessType_content" type="text" class="table-input" disabled>  -->
               <td colspan="3">
                 <select name="business_type" class="table-input" id="BusinessType_content" disabled>
+                  <option value=""></option>
                   <option value="A">A:製造</option>
                   <option value="B">B:買賣</option>
                   <option value="C">C:其他</option>
@@ -622,7 +623,7 @@
             </tr>
             <tr>
               <td class="bold-right-border">營業登記地址</td>
-              <td colspan="3"><select name="is_biz_reg_addr_self_own" class="table-input" id="IsBizRegAddrSelfOwn_content" disabled>
+              <td colspan="3"><select name="real_biz_reg_address_owner" class="table-input" id="realBizRegAddressOwner_content" disabled>
                   <option value="" selected></option>
                   <option value="1">1:自有</option>
                   <option value="0">0:非自有</option>
@@ -632,7 +633,7 @@
               <td>
                 <center>
                   <input  class="input-width" type="button"
-                  onclick="edit_click(IsBizRegAddrSelfOwn_content)" value="Edit" >
+                  onclick="edit_click(realBizRegAddressOwner_content)" value="Edit" >
                 </center>
               </td>
             </tr>
@@ -826,7 +827,7 @@
             </tr>
             <tr>
               <td class="bold-right-border">實際營業地址</td>
-              <td colspan="3"><select name="is_real_biz_addr_self_own" class="table-input" id="IsRealBizAddrSelfOwn_content" disabled>
+              <td colspan="3"><select name="real_biz_address_owner" class="table-input" id="realBizAddressOwner_content" disabled>
                   <option value="" selected></option>
                   <option value="1">1:自有</option>
                   <option value="0">0:非自有</option>
@@ -836,7 +837,7 @@
               <td>
                 <center>
                   <input  class="input-width" type="button"
-                  onclick="edit_click(IsRealBizAddrSelfOwn_content)" value="Edit" >
+                  onclick="edit_click(realBizAddressOwner_content)" value="Edit" >
                 </center>
               </td>
             </tr>
@@ -1128,12 +1129,12 @@
             </tr>
 			<tr>
               <td class="bold-right-border">員工人數</td>
-              <td colspan="3"><input id="EmployeeNum_content" type="text" class="table-input" disabled>
+              <td colspan="3"><input id="employeeNum_content" type="text" class="table-input" disabled>
               </td>
               <td>
                 <center>
                   <input class="input-width" type="button"
-                  onclick="edit_click(EmployeeNum_content)" value="Edit" >
+                  onclick="edit_click(employeeNum_content)" value="Edit" >
                 </center>
                 </td>
             </tr>
@@ -1586,19 +1587,19 @@
             </tr>
             <tr>
               <td class="bold-right-border">負責人從事本行業年度</td>
-              <td colspan="3"><input id="PrStartYear_content" type="text" class="table-input" disabled>
+              <td colspan="3"><input id="prStartYear_content" type="text" class="table-input" disabled>
               </td>
 
               <td>
                 <center>
                   <input  class="input-width" type="button"
-                  onclick="edit_click(PrStartYear_content)" value="Edit" >
+                  onclick="edit_click(prStartYear_content)" value="Edit" >
                 </center>
                 </td>
             </tr>
             <tr>
               <td class="bold-right-border">負責人學歷</td>
-              <td colspan="3"><select name="pr_edu_level" class="table-input" id="PrEduLevel_content" disabled>
+              <td colspan="3"><select name="pr_edu_level" class="table-input" id="prEduLevel_content" disabled>
                   <option value="" selected></option>
                   <option value="A">A:國小</option>
                   <option value="B">B:國中</option>
@@ -1614,7 +1615,7 @@
               <td>
                 <center>
                   <input  class="input-width" type="button"
-                  onclick="edit_click(PrEduLevel_content)" value="Edit" >
+                  onclick="edit_click(prEduLevel_content)" value="Edit" >
                 </center>
               </td>
             </tr>
@@ -3356,14 +3357,14 @@
   let image_list_data = [];
   // 下拉選單列表
   let select_array = ['CompType_content','BusinessType_content','CompDuType_content','BizRegAddrOwner_content','IsBizAddrEqToBizRegAddr_content','BizTaxFileWay_content',
-  'IsPrMarried_content','IsPrSpouseGu_content','RealPr_content','IsBizRegAddrSelfOwn_content','IsRealBizAddrSelfOwn_content','RealBizAddrOwner_content','OthRealPrRelWithPr_content',
-  'GuOneRelWithPr_content','GuOneCompany_content','GuTwoRelWithPr_content','GuTwoCompany_content','PrEduLevel_content','CompMajorOwnership_content','CompMajorSetting_content'];
+  'IsPrMarried_content','IsPrSpouseGu_content','RealPr_content','realBizRegAddressOwner_content','realBizAddressOwner_content','RealBizAddrOwner_content','OthRealPrRelWithPr_content',
+  'GuOneRelWithPr_content','GuOneCompany_content','GuTwoRelWithPr_content','GuTwoCompany_content','prEduLevel_content','CompMajorOwnership_content','CompMajorSetting_content'];
   // 原始檔案圖片-附件資料表
   let rawData_array = [
 	  'A01','A02','A03','A04','A05','A06','A07','A08'
   ];
   // 送出時為數字欄位
-  let is_int_array = ['CompCapital','AnnualIncome1','AnnualIncome2','AnnualIncome3','NumOfInsured1','NumOfInsured2','NumOfInsured3','NumOfInsured4','NumOfInsured5','NumOfInsured6','NumOfInsured7','NumOfInsured8','NumOfInsured9','NumOfInsured10','NumOfInsured11','NumOfInsured12','MidTermLnBal','ShortTermLnBal','CompCreditScore','PrLaborInsSalary','SpouseLaborInsSalary','GuOneLaborInsSalary','GuTwoLaborInsSalary','PrCreditScore','PrBal_CashCard','PrBal_CreditCard','PrBal_ShortTermLn','PrBal_MidTermLn','PrBal_LongTermLn','PrBal_ShortTermGuar','PrBal_MidTermLnGuar','PrBal_LongTermLnGuar','SpouseCreditScore','SpouseBal_CashCard','SpouseBal_CreditCard','SpouseBal_ShortTermLn','SpouseBal_MidTermLn','SpouseBal_LongTermLn','SpouseBal_ShortTermGuar','SpouseBal_MidTermLnGuar','SpouseBal_LongTermLnGuar','GuOneCreditScore','GuOneBal_CashCard','GuOneBal_CreditCard','GuOneBal_ShortTermLn','GuOneBal_MidTermLn','GuOneBal_LongTermLn','GuOneBal_ShortTermGuar','GuOneBal_MidTermLnGuar','GuOneBal_LongTermLnGuar','GuTwoCreditScore','GuTwoBal_CashCard','GuTwoBal_CreditCard','GuTwoBal_ShortTermLn','GuTwoBal_MidTermLn','GuTwoBal_LongTermLn','GuTwoBal_ShortTermGuar','GuTwoBal_MidTermLnGuar','GuTwoBal_LongTermLnGuar','IsPrMarried','IsBizRegAddrSelfOwn','IsBizAddrEqToBizRegAddr','IsRealBizAddrSelfOwn','OthRealPrSHRatio'];
+  let is_int_array = ['CompCapital','AnnualIncome1','AnnualIncome2','AnnualIncome3','NumOfInsured1','NumOfInsured2','NumOfInsured3','NumOfInsured4','NumOfInsured5','NumOfInsured6','NumOfInsured7','NumOfInsured8','NumOfInsured9','NumOfInsured10','NumOfInsured11','NumOfInsured12','MidTermLnBal','ShortTermLnBal','CompCreditScore','PrLaborInsSalary','SpouseLaborInsSalary','GuOneLaborInsSalary','GuTwoLaborInsSalary','PrCreditScore','PrBal_CashCard','PrBal_CreditCard','PrBal_ShortTermLn','PrBal_MidTermLn','PrBal_LongTermLn','PrBal_ShortTermGuar','PrBal_MidTermLnGuar','PrBal_LongTermLnGuar','SpouseCreditScore','SpouseBal_CashCard','SpouseBal_CreditCard','SpouseBal_ShortTermLn','SpouseBal_MidTermLn','SpouseBal_LongTermLn','SpouseBal_ShortTermGuar','SpouseBal_MidTermLnGuar','SpouseBal_LongTermLnGuar','GuOneCreditScore','GuOneBal_CashCard','GuOneBal_CreditCard','GuOneBal_ShortTermLn','GuOneBal_MidTermLn','GuOneBal_LongTermLn','GuOneBal_ShortTermGuar','GuOneBal_MidTermLnGuar','GuOneBal_LongTermLnGuar','GuTwoCreditScore','GuTwoBal_CashCard','GuTwoBal_CreditCard','GuTwoBal_ShortTermLn','GuTwoBal_MidTermLn','GuTwoBal_LongTermLn','GuTwoBal_ShortTermGuar','GuTwoBal_MidTermLnGuar','GuTwoBal_LongTermLnGuar','IsPrMarried','realBizRegAddressOwner','IsBizAddrEqToBizRegAddr','realBizAddressOwner','OthRealPrSHRatio'];
   function edit_click(id_content,id_verified,id_reason){
     $(id_content).prop('disabled', function(i, v) {
        let s = !v;
