@@ -600,29 +600,20 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		$remark = $get['remark'] ?? '';
 		if($id){
-			$info = $this->target_model->get($id);
-			if($info && in_array($info->status,array(
-			        TARGET_WAITING_APPROVE,
-                    TARGET_WAITING_SIGNING,
-                    TARGET_WAITING_VERIFY,
-                    TARGET_ORDER_WAITING_VERIFY,
-                    TARGET_ORDER_WAITING_SHIP,
-                    TARGET_BANK_FAIL,
-                ))){
-				if($info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
-					$this->load->library('subloan_lib');
-					$this->subloan_lib->subloan_verify_failed($info,$this->login_info->id,$remark);
-				}else{
-					$this->target_lib->target_verify_failed($info,$this->login_info->id,$remark);
-				}
-				echo '更新成功';die();
-			}else{
-				echo '更新失敗';die();
-			}
-		}else{
-			echo '查無此ID';die();
-		}
-	}
+			$target = $this->target_model->get($id);
+            if ($this->target_lib->reject($target,$this->login_info->id,$remark))
+            {
+                echo '更新成功';
+            }
+            else
+            {
+                echo '更新失敗';
+            }
+        }else{
+			echo '查無此ID';
+        }
+        die();
+    }
 
     function order_fail(){
         $get 	= $this->input->get(NULL, TRUE);
