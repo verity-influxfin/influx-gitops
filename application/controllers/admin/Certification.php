@@ -1571,6 +1571,10 @@ class Certification extends MY_Admin_Controller {
         if(isset($content['skbank_form']) && !empty($content['skbank_form'])){
             $response_data = $content['skbank_form'];
         }
+        else
+        {
+            $response_data = $content;
+        }
         $this->json_output->setStatusCode(200)->setResponse($response_data)->send();
     }
 
