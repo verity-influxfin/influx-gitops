@@ -164,6 +164,15 @@ class Bankdata extends MY_Admin_Controller
                                     $data = array_reduce($data, 'array_merge', array());
                                     $response = array_merge($response,$data);
                                 }
+                                elseif (is_array($content) && ! empty($content))
+                                {
+                                    $data = array_map(function ($key, $values) {
+                                        $key = $key . '_content';
+                                        return [$key => $values];
+                                    }, array_keys($content), $content);
+                                    $data = array_reduce($data, 'array_merge', array());
+                                    $response = array_merge($response, $data);
+                                }
                             }
                         }
                     }
