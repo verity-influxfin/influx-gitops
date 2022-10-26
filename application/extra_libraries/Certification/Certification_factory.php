@@ -116,6 +116,8 @@ class Certification_factory
                 return new Cert_job($certification, $certification_result);
             case CERTIFICATION_PROFILE: // 個人基本資料
                 return new Cert_profile($certification, $certification_result);
+            case CERTIFICATION_INVESTIGATIONA11: // 聯合徵信報告+A11
+                return new Cert_investigationA11($certification, $certification_result);
             case CERTIFICATION_FINANCIALWORKER: // 財務訊息資訊
                 return new Cert_financialworker($certification, $certification_result);
             case CERTIFICATION_REPAYMENT_CAPACITY: // 還款力計算
