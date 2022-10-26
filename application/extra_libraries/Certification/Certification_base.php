@@ -164,8 +164,8 @@ abstract class Certification_base implements Certification_definition
 
         $status = $this->result->getStatus();
         $this->CI->user_certification_model->update($this->certification['id'], [
-            'content' => json_encode($parsed_content, JSON_INVALID_UTF8_IGNORE),
-            'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
+            'content' => json_encode($parsed_content, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE),
+            'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE),
         ]);
 
         switch ($status)
