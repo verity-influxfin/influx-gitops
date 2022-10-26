@@ -237,6 +237,7 @@ class Bankdata extends MY_Admin_Controller
         if($mapping_info){
             $mapping_info = $this->LoanTargetMappingMsgNo_model->update($mapping_info->id,['content'=>$request_data]);
         }
-        // print_r($input);exit;
+        echo json_encode($mapping_info);
+        die();
     }
 }

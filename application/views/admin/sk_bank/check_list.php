@@ -3489,10 +3489,15 @@
           data: request_data,
           dataType: "json",
           success: function (response) {
+              alert('儲存成功')
               return response;
           },
           error: function(error) {
-              alert(error);
+              alert(error.responseText);
+          },
+          complete: function () {
+              $("#text_list").val("儲存資料");
+              $(".sendBtn").prop("disabled", false);
           }
       });
   }
@@ -3530,9 +3535,8 @@
               request_data.Data = all_data;
               request_data = JSON.stringify(request_data);
 
-              save_response = saveCheckListData(msg_no,'text',request_data);
+              saveCheckListData(msg_no,'text',request_data);
 
-              console.log(save_response);
               // $.ajax({
               //     type: "POST",
               //     data: request_data,
@@ -3548,8 +3552,8 @@
               //     }
               // });
 
-              $("#text_list").val("儲存資料");
-              $(".sendBtn").prop("disabled", false);
+              // $("#text_list").val("儲存資料");
+              // $(".sendBtn").prop("disabled", false);
           });
       }
       if(send_type =='image_list'){
