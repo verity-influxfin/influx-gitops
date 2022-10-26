@@ -426,9 +426,9 @@ class Certification_data
 	 *  [creditCardHasBadDebt] => 信用卡是否有逾期、催收、呆帳紀錄
      *  [totalAppropriationAmount] => 總撥款金額
      *  [totalRepaymentAmount] => 總還款金額
-     *  [newBalanceShortAssure] => 短期擔保放款餘額(新算法)
-     *  [newBalanceMidAssure] => 中期擔保放款餘額(新算法)
-     *  [newBalanceLongAssure] => 長期擔保放款餘額(新算法)
+     *  [newBalanceShortAssure] => 短期擔保放款餘額(含延伸表格)
+     *  [newBalanceMidAssure] => 中期擔保放款餘額(含延伸表格)
+     *  [newBalanceLongAssure] => 長期擔保放款餘額(含延伸表格)
 	 * )
 	 */
 	// to do : 先以普匯微企e秒貸為主
@@ -625,6 +625,15 @@ class Certification_data
                         $res['totalAppropriationAmount'] += $value['appropriationAmount'];
                         $res['totalRepaymentAmount'] += $value['repaymentAmount'];
 
+                        if($value['accountDescription']=='短期放款'||$value['accountDescription']=='其他短期放款'){
+                            $res['balanceShort'] += $value['appropriationAmount'] - $value['repaymentAmount'];
+                        }
+                        if($value['accountDescription']=='中期放款'){
+                            $res['balanceMid'] += $value['appropriationAmount'] - $value['repaymentAmount'];
+                        }
+                        if($value['accountDescription']=='長期放款'){
+                            $res['balanceLong'] += $value['appropriationAmount'] - $value['repaymentAmount'];
+                        }
 						if($value['accountDescription']=='短期擔保放款'||$value['accountDescription']=='其他短期擔保放款'){
 							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
 								$res['totalAmountShortAssureCount'] += 1;
@@ -633,7 +642,7 @@ class Certification_data
 							}else{
 								$res['balanceShortAssure'] -= $value['repaymentAmount'];
 							}
-                            $res['newBalanceShortAssure'] += ($value['appropriationAmount'] - $value['repaymentAmount']);
+                            $res['newBalanceShortAssure'] += $value['appropriationAmount'] - $value['repaymentAmount'];
 						}
 						if($value['accountDescription']=='中期擔保放款'){
 							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
@@ -643,7 +652,7 @@ class Certification_data
 							}else{
 								$res['balanceMidAssure'] -= $value['repaymentAmount'];
 							}
-                            $res['newBalanceMidAssure'] += ($value['appropriationAmount'] - $value['repaymentAmount']);
+                            $res['newBalanceMidAssure'] += $value['appropriationAmount'] - $value['repaymentAmount'];
 						}
 						if($value['accountDescription']=='長期擔保放款'){
 							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
@@ -653,8 +662,11 @@ class Certification_data
 							}else{
 								$res['balanceMidAssure'] -= $value['repaymentAmount'];
 							}
-                            $res['newBalanceLongAssure'] += ($value['appropriationAmount'] - $value['repaymentAmount']);
+                            $res['newBalanceLongAssure'] += $value['appropriationAmount'] - $value['repaymentAmount'];
 						}
+                        if($value['accountDescription']=='助學貸款'){
+                            $res['balanceStudentLoans'] += $value['appropriationAmount'] - $value['repaymentAmount'];
+                        }
 					}
 				}
 

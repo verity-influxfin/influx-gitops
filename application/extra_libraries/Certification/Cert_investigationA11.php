@@ -4,16 +4,16 @@ namespace Certification;
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * 近12個月員工投保人數資料
- * Class Employeeinsurancelist
+ * 聯合徵信報告+A11
+ * Class InvestigationA11
  * @package Certification
  */
-class Cert_employeeinsurancelist extends Certification_base
+class Cert_investigationA11 extends Certification_base
 {
     /**
      * @var int 該徵信項之代表編號
      */
-    protected $certification_id = CERTIFICATION_EMPLOYEEINSURANCELIST;
+    protected $certification_id = CERTIFICATION_INVESTIGATIONA11;
 
     /**
      * @var array 所需依賴徵信項之編號

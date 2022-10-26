@@ -600,29 +600,20 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		$remark = $get['remark'] ?? '';
 		if($id){
-			$info = $this->target_model->get($id);
-			if($info && in_array($info->status,array(
-			        TARGET_WAITING_APPROVE,
-                    TARGET_WAITING_SIGNING,
-                    TARGET_WAITING_VERIFY,
-                    TARGET_ORDER_WAITING_VERIFY,
-                    TARGET_ORDER_WAITING_SHIP,
-                    TARGET_BANK_FAIL,
-                ))){
-				if($info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
-					$this->load->library('subloan_lib');
-					$this->subloan_lib->subloan_verify_failed($info,$this->login_info->id,$remark);
-				}else{
-					$this->target_lib->target_verify_failed($info,$this->login_info->id,$remark);
-				}
-				echo '更新成功';die();
-			}else{
-				echo '更新失敗';die();
-			}
-		}else{
-			echo '查無此ID';die();
-		}
-	}
+			$target = $this->target_model->get($id);
+            if ($this->target_lib->reject($target,$this->login_info->id,$remark))
+            {
+                echo '更新成功';
+            }
+            else
+            {
+                echo '更新失敗';
+            }
+        }else{
+			echo '查無此ID';
+        }
+        die();
+    }
 
     function order_fail(){
         $get 	= $this->input->get(NULL, TRUE);
@@ -2447,7 +2438,7 @@ class Target extends MY_Admin_Controller {
     }
 
     // 新光取得圖片
-    public function skbank_image_get(){
+    public function skbank_file_get(){
         $get = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
         $response = [];
@@ -2457,13 +2448,19 @@ class Target extends MY_Admin_Controller {
             $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
         }
         $this->load->library('mapping/sk_bank/check_list');
-        $image_url = $this->check_list->get_raw_data($target_info, $get['bank'] ?? MAPPING_MSG_NO_BANK_NUM_SKBANK, $get_api_attach_no = TRUE);
+        $raw_data = $this->check_list->get_raw_data($target_info, $get['bank'] ?? MAPPING_MSG_NO_BANK_NUM_SKBANK, $get_api_attach_no = TRUE);
 
         $this->load->library('S3_lib');
-        foreach($image_url as $image_type => $images){
-            $response[$image_type] = [];
-            if (!empty($image_url[$image_type])) {
-                $response[$image_type] = $this->s3_lib->imagesToPdf($images,$target_info->user_id,$image_type,'skbank_raw_data');
+        foreach ($raw_data as $location => $docs)
+        {
+            $response[$location] = [];
+            if ( ! empty($docs['image']))
+            {
+                $response[$location] = $this->s3_lib->imagesToPdf($docs['image'], $target_info->user_id, $location, 'skbank_raw_data');
+            }
+            if ( ! empty($docs['pdf']))
+            {
+                $response[$location] = array_merge($response[$location], $docs['pdf']);
             }
         }
 

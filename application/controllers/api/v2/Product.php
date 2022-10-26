@@ -1607,7 +1607,8 @@ class Product extends REST_Controller {
                                 $content_array_data = [];
                             }
                         }
-                        $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
+                        $option_cert_ids = $product['option_certifications'] ?? [];
+                        $value['optional'] = in_array($value['id'], $option_cert_ids); // 是否選填 (true/false)
                         $value['type'] = 'certification';
                         $value['completeness'] = ceil($value['user_status'] == 1?$completeness_level:0);
 						$value['certification_content'] = $content_array_data;

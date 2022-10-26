@@ -469,9 +469,8 @@
                                             <a href="<?= $value['url'] ?>">
                                                 <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
                                             </a>
-                                            <?php
-                                        }
-                                    } ?>
+                                        <? }
+                                    }?>
                                     <hr/>
                                     <label>其它</label><br>
                                     <?php

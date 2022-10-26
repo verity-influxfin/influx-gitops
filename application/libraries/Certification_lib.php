@@ -722,7 +722,6 @@ class Certification_lib{
      */
     public function verify_id_card_info($user_certification_id, array &$identity_content, &$error_message, $ocr_info=[]): array
     {
-        $re_verify = ! $ocr_info;
         $risVerified = false;
         $risVerificationFailed = true;
         if ( ! isset($identity_content['id_number']) || ! isset($identity_content['name']) || ! isset($identity_content['birthday']))
@@ -763,7 +762,8 @@ class Certification_lib{
         $result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId, $resultUserId);
 
         $current_time = (new DateTime())->format('Y-m-d H:i:s.u');
-        if ($re_verify && isset($identity_content['id_card_api']))
+        $re_verify = isset($identity_content['id_card_api']);
+        if ($re_verify)
         {
             // Put current data into history log.
             if ( ! isset($identity_content['id_card_api_history']))

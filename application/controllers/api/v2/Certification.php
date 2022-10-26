@@ -4864,8 +4864,7 @@ class Certification extends REST_Controller {
         ];
     }
 
-    private function was_verify($certification_id = 0, $need_output = TRUE)
-    {
+    private function was_verify($certification_id = 0){
         if(isset($this->user_info->naturalPerson) && $certification_id < 1000) {
             $this->user_info->id = $this->user_info->naturalPerson->id;
         }

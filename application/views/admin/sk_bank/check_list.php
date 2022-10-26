@@ -258,23 +258,24 @@
                                         </select>
                                     </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compDuType_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業種類</td>
-                                    <!-- <input id="businessType_content" type="text" class="table-input" disabled>  -->
-                                    <td colspan="3">
-                                        <select name="businessType_content" class="table-input" disabled>
-                                            <option value="A">A:製造</option>
-                                            <option value="B">B:買賣</option>
-                                            <option value="C">C:其他</option>
-                                        </select>
-                                    </td>
+              <td>
+                <center>
+                  <input class="input-width" type="button"
+                  onclick="edit_click(CompDuType_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">營業種類</td>
+              <!-- <input id="BusinessType_content" type="text" class="table-input" disabled>  -->
+              <td colspan="3">
+                <select name="business_type" class="table-input" id="BusinessType_content" disabled>
+                  <option value=""></option>
+                  <option value="A">A:製造</option>
+                  <option value="B">B:買賣</option>
+                  <option value="C">C:其他</option>
+                </select>
+              </td>
 
                                     <td>
                                         <center>
@@ -665,39 +666,38 @@
                                             disabled>
                                     </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compTelExt_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址</td>
-                                    <td colspan="3"><select name="isBizRegAddrSelfOwn_content" class="table-input"
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:自有</option>
-                                            <option value="0">0:非自有</option>
-                                        </select>
-                                    </td>
+              <td>
+                <center>
+                  <input class="input-width" type="button"
+                  onclick="edit_click(CompTelExt_content)" value="Edit" >
+                </center>
+              </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">營業登記地址</td>
+              <td colspan="3"><select name="real_biz_reg_address_owner" class="table-input" id="realBizRegAddressOwner_content" disabled>
+                  <option value="" selected></option>
+                  <option value="1">1:自有</option>
+                  <option value="0">0:非自有</option>
+                </select>
+              </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isBizRegAddrSelfOwn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_自有</td>
-                                    <td colspan="3"><select name="bizRegAddrOwner_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:企業</option>
-                                            <option value="B">B:負責人</option>
-                                            <option value="C">C:負責人配偶</option>
-                                        </select>
-                                    </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(realBizRegAddressOwner_content)" value="Edit" >
+                </center>
+              </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">營業登記地址_自有</td>
+              <td colspan="3"><select name="biz_reg_addr_owner" class="table-input" id="BizRegAddrOwner_content" disabled>
+                  <option value="" selected></option>
+                  <option value="A">A:企業</option>
+                  <option value="B">B:負責人</option>
+                  <option value="C">C:負責人配偶</option>
+                </select>
+              </td>
 
                                     <td>
                                         <center>
@@ -884,40 +884,38 @@
                                             class="table-input" disabled>
                                     </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('realBizAddrOtherMemo_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址</td>
-                                    <td colspan="3"><select name="isRealBizAddrSelfOwn_content" class="table-input"
-                                            id="" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:自有</option>
-                                            <option value="0">0:非自有</option>
-                                        </select>
-                                    </td>
+              <td>
+                <center>
+                  <input class="input-width" type="button"
+                  onclick="edit_click(RealBizAddrOtherMemo_content)" value="Edit" >
+                </center>
+              </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">實際營業地址</td>
+              <td colspan="3"><select name="real_biz_address_owner" class="table-input" id="realBizAddressOwner_content" disabled>
+                  <option value="" selected></option>
+                  <option value="1">1:自有</option>
+                  <option value="0">0:非自有</option>
+                </select>
+              </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isRealBizAddrSelfOwn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_自有</td>
-                                    <td colspan="3"><select name="realBizAddrOwner_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:企業</option>
-                                            <option value="B">B:負責人</option>
-                                            <option value="C">C:負責人配偶</option>
-                                        </select>
-                                    </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(realBizAddressOwner_content)" value="Edit" >
+                </center>
+              </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">實際營業地址_自有</td>
+              <td colspan="3"><select name="real_biz_addr_owner" class="table-input" id="RealBizAddrOwner_content" disabled>
+                  <option value="" selected></option>
+                  <option value="A">A:企業</option>
+                  <option value="B">B:負責人</option>
+                  <option value="C">C:負責人配偶</option>
+                </select>
+              </td>
 
                                     <td>
                                         <center>
@@ -1197,57 +1195,51 @@
                                             disabled>
                                     </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('directorGName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司董監事 G 統編</td>
-                                    <td colspan="3"><input name="directorGId_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('directorGId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">員工人數</td>
-                                    <td colspan="3"><input name="employeeNum_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('employeeNum_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">股東人數</td>
-                                    <td colspan="3"><input name="shareholderNum_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('shareholderNum_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="24">
-                                        D-身份證
-                                    </td>
-                                    <td class="bold-right-border">負責人姓名</td>
-                                    <td colspan="3"><input name="prName_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
+              <td>
+                <center>
+                  <input class="input-width" type="button"
+                  onclick="edit_click(DirectorGName_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">公司董監事 G 統編</td>
+              <td colspan="3"><input id="DirectorGId_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input class="input-width" type="button"
+                  onclick="edit_click(DirectorGId_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+			<tr>
+              <td class="bold-right-border">員工人數</td>
+              <td colspan="3"><input id="employeeNum_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input class="input-width" type="button"
+                  onclick="edit_click(employeeNum_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+			<tr>
+              <td class="bold-right-border">股東人數</td>
+              <td colspan="3"><input id="ShareholderNum_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input class="input-width" type="button"
+                  onclick="edit_click(ShareholderNum_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="title input-center bold-bottom-border bold-right-border" rowspan="24">D-身份證</td>
+              <td class="bold-right-border">負責人姓名</td>
+              <td colspan="3"><input id="PrName_content" type="text" class="table-input" disabled>
+              </td>
 
                                     <td>
                                         <center>
@@ -1706,64 +1698,61 @@
                                         </select>
                                     </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('realPr_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人從事本行業年度</td>
-                                    <td colspan="3"><input name="prStartYear_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(RealPr_content)" value="Edit" >
+                </center>
+              </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">負責人從事本行業年度</td>
+              <td colspan="3"><input id="prStartYear_content" type="text" class="table-input" disabled>
+              </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prStartYear_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人學歷</td>
-                                    <td colspan="3"><select name="prEduLevel_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:國小</option>
-                                            <option value="B">B:國中</option>
-                                            <option value="C">C:高中職</option>
-                                            <option value="D">D:專科</option>
-                                            <option value="E">E:大學</option>
-                                            <option value="F">F:碩士</option>
-                                            <option value="G">G:博士</option>
-                                            <option value="H">H:無</option>
-                                        </select>
-                                    </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(prStartYear_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">負責人學歷</td>
+              <td colspan="3"><select name="pr_edu_level" class="table-input" id="prEduLevel_content" disabled>
+                  <option value="" selected></option>
+                  <option value="A">A:國小</option>
+                  <option value="B">B:國中</option>
+                  <option value="C">C:高中職</option>
+                  <option value="D">D:專科</option>
+                  <option value="E">E:大學</option>
+                  <option value="F">F:碩士</option>
+                  <option value="G">G:博士</option>
+                  <option value="H">H:無</option>
+                </select>
+              </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prEduLevel_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</td>
-                                    <td colspan="3"><select name="othRealPrRelWithPr_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:配偶</option>
-                                            <option value="B">B:血親</option>
-                                            <option value="C">C:姻親</option>
-                                            <option value="D">D:股東</option>
-                                            <option value="E">E:朋友</option>
-                                            <option value="F">F:本人</option>
-                                            <option value="G">G:其他</option>
-                                            <option value="H">H:與經營有關之借戶職員</option>
-                                        </select>
-                                    </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(prEduLevel_content)" value="Edit" >
+                </center>
+              </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</td>
+              <td colspan="3"><select name="oth_real_pr_rel_with_pr" class="table-input" id="OthRealPrRelWithPr_content" disabled>
+                  <option value="" selected></option>
+                  <option value="A">A:配偶</option>
+                  <option value="B">B:血親</option>
+                  <option value="C">C:姻親</option>
+                  <option value="D">D:股東</option>
+                  <option value="E">E:朋友</option>
+                  <option value="F">F:本人</option>
+                  <option value="G">G:其他</option>
+                  <option value="H">H:與經營有關之借戶職員</option>
+                </select>
+              </td>
 
                                     <td>
                                         <center>
@@ -2949,3329 +2938,683 @@
                                             class="table-input" disabled>
                                     </td>
 
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseJCICDataDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶銀行借款餘額(現金卡)</td>
-                                    <td colspan="3">
-                                        <input name="spouseBal_CashCard_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBal_CashCard_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶銀行借款餘額(信用卡)</td>
-                                    <td colspan="3">
-                                        <input name="spouseBal_CreditCard_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBal_CreditCard_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶銀行借款餘額(短放)</td>
-                                    <td colspan="3">
-                                        <input name="spouseBal_ShortTermLn_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBal_ShortTermLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶銀行借款餘額(中放)</td>
-                                    <td colspan="3">
-                                        <input name="spouseBal_MidTermLn_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBal_MidTermLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶銀行借款餘額(長放)</td>
-                                    <td colspan="3">
-                                        <input name="spouseBal_LongTermLn_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBal_LongTermLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶銀行借款餘額(短擔)</td>
-                                    <td colspan="3">
-                                        <input name="spouseBal_ShortTermGuar_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBal_ShortTermGuar_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶銀行借款餘額(中擔)</td>
-                                    <td colspan="3">
-                                        <input name="spouseBal_MidTermLnGuar_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBal_MidTermLnGuar_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶銀行借款餘額(長擔)</td>
-                                    <td colspan="3">
-                                        <input name="spouseBal_LongTermLnGuar_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBal_LongTermLnGuar_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>甲保證人聯徵查詢日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="guOneJCICQueryDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneJCICQueryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人聯徵信用評分</td>
-                                    <td colspan="3">
-                                        <input name="guOneCreditScore_content" type="text" class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneCreditScore_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>甲保證人聯徵J01資料年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="guOneJCICDataDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneJCICDataDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人銀行借款餘額(現金卡)</td>
-                                    <td colspan="3">
-                                        <input name="guOneBal_CashCard_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneBal_CashCard_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人銀行借款餘額(信用卡)</td>
-                                    <td colspan="3">
-                                        <input name="guOneBal_CreditCard_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneBal_CreditCard_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人銀行借款餘額(短放)</td>
-                                    <td colspan="3">
-                                        <input name="guOneBal_ShortTermLn_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneBal_ShortTermLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人銀行借款餘額(中放)</td>
-                                    <td colspan="3">
-                                        <input name="guOneBal_MidTermLn_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneBal_MidTermLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人銀行借款餘額(長放)</td>
-                                    <td colspan="3">
-                                        <input name="guOneBal_LongTermLn_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneBal_LongTermLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人銀行借款餘額(短擔)</td>
-                                    <td colspan="3">
-                                        <input name="guOneBal_ShortTermGuar_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneBal_ShortTermGuar_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人銀行借款餘額(中擔)</td>
-                                    <td colspan="3">
-                                        <input name="guOneBal_MidTermLnGuar_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneBal_MidTermLnGuar_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人銀行借款餘額(長擔)</td>
-                                    <td colspan="3">
-                                        <input name="guOneBal_LongTermLnGuar_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneBal_LongTermLnGuar_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>乙保證人聯徵查詢日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="guTwoJCICQueryDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoJCICQueryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人聯徵信用評分</td>
-                                    <td colspan="3">
-                                        <input name="guTwoCreditScore_content" type="text" class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoCreditScore_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>乙保證人聯徵J01資料年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="guTwoJCICDataDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoJCICDataDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人銀行借款餘額(現金卡)</td>
-                                    <td colspan="3">
-                                        <input name="guTwoBal_CashCard_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoBal_CashCard_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人銀行借款餘額(信用卡)</td>
-                                    <td colspan="3">
-                                        <input name="guTwoBal_CreditCard_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoBal_CreditCard_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人銀行借款餘額(短放)</td>
-                                    <td colspan="3">
-                                        <input name="guTwoBal_ShortTermLn_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoBal_ShortTermLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人銀行借款餘額(中放)</td>
-                                    <td colspan="3">
-                                        <input name="guTwoBal_MidTermLn_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoBal_MidTermLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人銀行借款餘額(長放)</td>
-                                    <td colspan="3">
-                                        <input name="guTwoBal_LongTermLn_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoBal_LongTermLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人銀行借款餘額(短擔)</td>
-                                    <td colspan="3">
-                                        <input name="guTwoBal_ShortTermGuar_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoBal_ShortTermGuar_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人銀行借款餘額(中擔)</td>
-                                    <td colspan="3">
-                                        <input name="guTwoBal_MidTermLnGuar_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoBal_MidTermLnGuar_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人銀行借款餘額(長擔)</td>
-                                    <td colspan="3">
-                                        <input name="guTwoBal_LongTermLnGuar_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoBal_LongTermLnGuar_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人擔任其他企業負責人之企業統編</td>
-                                    <td colspan="3">
-                                        <input name="prBeingOthCompPrId_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prBeingOthCompPrId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶擔任其他企業負責人之企業統編</td>
-                                    <td colspan="3">
-                                        <input name="spouseBeingOthCompPrId_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBeingOthCompPrId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="8">
-                                        I-勞保異動明細
-                                    </td>
-                                    <td class="bold-right-border">
-                                        <div>負責人-被保險人勞保異動查詢日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="prLaborQryDate_content" type="text" class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prLaborQryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人-被保險人勞保異動查詢-最近期投保薪資</td>
-                                    <td colspan="3">
-                                        <input name="prLaborInsSalary_content" type="text" class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prLaborInsSalary_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>配偶-被保險人勞保異動查詢日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="spouseLaborQryDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseLaborQryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶-被保險人勞保異動查詢-最近期投保薪資</td>
-                                    <td colspan="3">
-                                        <input name="spouseLaborInsSalary_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseLaborInsSalary_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>甲保證人-被保險人勞保異動查詢日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="guOneLaborQryDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneLaborQryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">甲保證人-被保險人勞保異動查詢-最近期投保薪資</td>
-                                    <td colspan="3">
-                                        <input name="guOneLaborInsSalary_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneLaborInsSalary_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>乙保證人-被保險人勞保異動查詢日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="guTwoLaborQryDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoLaborQryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">乙保證人-被保險人勞保異動查詢-最近期投保薪資</td>
-                                    <td colspan="3">
-                                        <input name="guTwoLaborInsSalary_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guTwoLaborInsSalary_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border">J-其他</td>
-                                    <td class="bold-right-border">其他備註</td>
-                                    <td colspan="3">
-                                        <input name="otherMemo_content" type="text" class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('otherMemo_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="input-width">
-                            <tr>
-                                <td class="white-border">
-                                    <center>
-                                        <input id="text_list" type="button" class="sendBtn" value="儲存資料" disabled>
-                                    </center>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="page">
-                <div class="subpage api_file_page">
-                    <h1 style="text-align: center;">附件檢核表</h1>
-                    <table class="table table-bordered border-dark">
-                        <tbody>
-                            <tr>
-                                <th class="th bold-bottom-border bold-right-border" style="width: 8%;">附件類別</th>
-                                <th class="field_name th bold-bottom-border bold-right-border">圖片</th>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A01:公司變更事項登記卡及工商登記查詢
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A01">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">
-                                    A02:負責人及保證人身分證影本及第二證件、戶役政查詢
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A02">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">
-                                    A03:營業據點建物登記謄本(公司或負責人或保證人自有才須提供)</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A03">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A04:近三年公司所得稅申報書</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A04">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A05:近12月勞保局投保資料</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A05">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">
-                                    A06:公司、負責人、配偶及保證人的聯徵資料
-                                    J01、J02、J10、J20、A13、A11</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A06">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">
-                                    A07:負責人及保證人之被保險人勞保異動查詢
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A07">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">
-                                    A08:公司、負責人及保證人近六個月存摺餘額明細及存摺封面</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A08">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseJCICDataDate_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶銀行借款餘額(現金卡)</td>
+              <td colspan="3">
+                <input id="SpouseBal_CashCard_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseBal_CashCard_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶銀行借款餘額(信用卡)</td>
+              <td colspan="3">
+                <input id="SpouseBal_CreditCard_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseBal_CreditCard_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶銀行借款餘額(短放)</td>
+              <td colspan="3">
+                <input id="SpouseBal_ShortTermLn_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseBal_ShortTermLn_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶銀行借款餘額(中放)</td>
+              <td colspan="3">
+                <input id="SpouseBal_MidTermLn_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseBal_MidTermLn_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶銀行借款餘額(長放)</td>
+              <td colspan="3">
+                <input id="SpouseBal_LongTermLn_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseBal_LongTermLn_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶銀行借款餘額(短擔)</td>
+              <td colspan="3">
+                <input id="SpouseBal_ShortTermGuar_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseBal_ShortTermGuar_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶銀行借款餘額(中擔)</td>
+              <td colspan="3">
+                <input id="SpouseBal_MidTermLnGuar_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseBal_MidTermLnGuar_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶銀行借款餘額(長擔)</td>
+              <td colspan="3">
+                <input id="SpouseBal_LongTermLnGuar_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseBal_LongTermLnGuar_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">
+                  <div>甲保證人聯徵查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
+              <td colspan="3">
+                <input id="GuOneJCICQueryDate_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneJCICQueryDate_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人聯徵信用評分</td>
+              <td colspan="3">
+                <input id="GuOneCreditScore_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneCreditScore_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+			<tr>
+              <td class="bold-right-border">
+                  <div>甲保證人聯徵J01資料年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
+              <td colspan="3">
+                <input id="GuOneJCICDataDate_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneJCICDataDate_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人銀行借款餘額(現金卡)</td>
+              <td colspan="3">
+                <input id="GuOneBal_CashCard_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneBal_CashCard_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人銀行借款餘額(信用卡)</td>
+              <td colspan="3">
+                <input id="GuOneBal_CreditCard_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneBal_CreditCard_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人銀行借款餘額(短放)</td>
+              <td colspan="3">
+                <input id="GuOneBal_ShortTermLn_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneBal_ShortTermLn_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人銀行借款餘額(中放)</td>
+              <td colspan="3">
+                <input id="GuOneBal_MidTermLn_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneBal_MidTermLn_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人銀行借款餘額(長放)</td>
+              <td colspan="3">
+                <input id="GuOneBal_LongTermLn_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneBal_LongTermLn_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人銀行借款餘額(短擔)</td>
+              <td colspan="3">
+                <input id="GuOneBal_ShortTermGuar_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneBal_ShortTermGuar_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人銀行借款餘額(中擔)</td>
+              <td colspan="3">
+                <input id="GuOneBal_MidTermLnGuar_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneBal_MidTermLnGuar_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人銀行借款餘額(長擔)</td>
+              <td colspan="3">
+                <input id="GuOneBal_LongTermLnGuar_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneBal_LongTermLnGuar_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">
+                  <div>乙保證人聯徵查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
+              <td colspan="3">
+                <input id="GuTwoJCICQueryDate_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoJCICQueryDate_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人聯徵信用評分</td>
+              <td colspan="3">
+                <input id="GuTwoCreditScore_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoCreditScore_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+			<tr>
+              <td class="bold-right-border">
+                  <div>乙保證人聯徵J01資料年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
+              <td colspan="3">
+                <input id="GuTwoJCICDataDate_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoJCICDataDate_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人銀行借款餘額(現金卡)</td>
+              <td colspan="3">
+                <input id="GuTwoBal_CashCard_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoBal_CashCard_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人銀行借款餘額(信用卡)</td>
+              <td colspan="3">
+                <input id="GuTwoBal_CreditCard_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoBal_CreditCard_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人銀行借款餘額(短放)</td>
+              <td colspan="3">
+                <input id="GuTwoBal_ShortTermLn_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoBal_ShortTermLn_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人銀行借款餘額(中放)</td>
+              <td colspan="3">
+                <input id="GuTwoBal_MidTermLn_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoBal_MidTermLn_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人銀行借款餘額(長放)</td>
+              <td colspan="3">
+                <input id="GuTwoBal_LongTermLn_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoBal_LongTermLn_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人銀行借款餘額(短擔)</td>
+              <td colspan="3">
+                <input id="GuTwoBal_ShortTermGuar_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoBal_ShortTermGuar_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人銀行借款餘額(中擔)</td>
+              <td colspan="3">
+                <input id="GuTwoBal_MidTermLnGuar_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoBal_MidTermLnGuar_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人銀行借款餘額(長擔)</td>
+              <td colspan="3">
+                <input id="GuTwoBal_LongTermLnGuar_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoBal_LongTermLnGuar_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">負責人擔任其他企業負責人之企業統編</td>
+              <td colspan="3">
+                <input id="PrBeingOthCompPrId_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(PrBeingOthCompPrId_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶擔任其他企業負責人之企業統編</td>
+              <td colspan="3">
+                <input id="SpouseBeingOthCompPrId_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseBeingOthCompPrId_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="title input-center bold-bottom-border bold-right-border" rowspan="8">I-勞保異動明細</td>
+              <td class="bold-right-border">
+                  <div>負責人-被保險人勞保異動查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
+              <td colspan="3">
+                <input id="PrLaborQryDate_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(PrLaborQryDate_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">負責人-被保險人勞保異動查詢-最近期投保薪資</td>
+              <td colspan="3">
+                <input id="PrLaborInsSalary_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(PrLaborInsSalary_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">
+                  <div>配偶-被保險人勞保異動查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
+              <td colspan="3">
+                <input id="SpouseLaborQryDate_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseLaborQryDate_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">配偶-被保險人勞保異動查詢-最近期投保薪資</td>
+              <td colspan="3">
+                <input id="SpouseLaborInsSalary_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(SpouseLaborInsSalary_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">
+                  <div>甲保證人-被保險人勞保異動查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
+              <td colspan="3">
+                <input id="GuOneLaborQryDate_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneLaborQryDate_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">甲保證人-被保險人勞保異動查詢-最近期投保薪資</td>
+              <td colspan="3">
+                <input id="GuOneLaborInsSalary_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuOneLaborInsSalary_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">
+                  <div>乙保證人-被保險人勞保異動查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
+              <td colspan="3">
+                <input id="GuTwoLaborQryDate_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoLaborQryDate_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="bold-right-border">乙保證人-被保險人勞保異動查詢-最近期投保薪資</td>
+              <td colspan="3">
+                <input id="GuTwoLaborInsSalary_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(GuTwoLaborInsSalary_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+            <tr>
+              <td class="title input-center bold-bottom-border bold-right-border" >J-其他</td>
+              <td class="bold-right-border">其他備註</td>
+              <td colspan="3">
+                <input id="OtherMemo_content" type="text" class="table-input" disabled>
+              </td>
+              <td>
+                <center>
+                  <input  class="input-width" type="button"
+                  onclick="edit_click(OtherMemo_content)" value="Edit" >
+                </center>
+                </td>
+            </tr>
+          </tbody>
+          </table>
+          <table class="input-width">
+            <tr>
+              <td class="white-border">
+                <center>
+                  <input id="text_list"  type="button" class = "sendBtn" value="儲存資料">
+                </center>
+              </td>
+            </tr>
+          </table>
         </div>
-        <div id="page-tab-kgibank" class="nav-page" data-bankid="2">
-            <div class="page">
-                <div class="subpage api_data_page">
-                    <h3 style="text-align: center;">百萬信保檢核表</h3>
-                    <div>
-                        <table class="table table-bordered border-dark">
-                            <tbody>
-                                <tr>
-                                    <th class="source th bold-bottom-border bold-right-border">資料來源</th>
-                                    <th class="field_name th bold-bottom-border bold-right-border">欄位名稱</th>
-                                    <th colspan="3" class="content th bold-bottom-border">內容</th>
-                                    <th class="edit th bold-bottom-border">人工檢驗</th>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="14">
-                                        工商登記<br>
-                                        (經濟部API)<br>
-                                        (主計處)
-                                    </td>
-                                    <td class="bold-right-border">公司統一編號</td>
-                                    <td colspan="3"><input name="compId_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司戶名</td>
-                                    <td colspan="3"><input name="compName_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">組織類型</td>
-
-                                    <td colspan="3">
-                                        <select name="compType2_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:獨資</option>
-                                            <option value="B">B:合夥</option>
-                                            <option value="C">C:有限公司</option>
-                                            <option value="D">D:股份有限公司</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compType2_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司核准設立日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3"><input name="compSetDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compSetDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">依法核准情形</td>
-
-                                    <td colspan="3">
-                                        <select name="registerType_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:有公司登記與商業登記</option>
-                                            <option value="B">B:取得主管機關核發之營業證照</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('registerType_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">是否公開發行</td>
-
-                                    <td colspan="3">
-                                        <select name="isPublic_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isPublic_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司實收資本額</td>
-                                    <td colspan="3"><input name="compCapital_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compCapital_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司最後核准變更實收資本額日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3"><input name="lastPaidInCapitalDate_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastPaidInCapitalDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址</td>
-                                    <td colspan="3"><input name="bizRegAddress_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('bizRegAddress_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">是否有法人投資</td>
-
-                                    <td colspan="3">
-                                        <select name="hasJuridicalInvest_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('hasJuridicalInvest_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">法人投資佔總股份(%)</td>
-                                    <td colspan="3"><input name="juridicalInvestRate_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('juridicalInvestRate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業稅申報方式</td>
-                                    <td colspan="3"><select name="bizTaxFileWay_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:使用統一發票</option>
-                                            <option value="B">B:免用統一發票核定繳納營業稅</option>
-                                            <option value="C">C:未達課稅起徵點</option>
-                                            <option value="D">D:免徵營業稅或執行業務</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('bizTaxFileWay_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業種類標準代碼</td>
-                                    <td colspan="3"><input name="businessType2_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('businessType2_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">是否屬於製造業、營造業或礦業或土石採集業</td>
-
-                                    <td colspan="3">
-                                        <select name="isManufacturing_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isManufacturing_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="5">
-                                        近三年稅簽
-                                    </td>
-
-                                    <td class="bold-right-border">前一年度營業額</td>
-                                    <td colspan="3"><input name="lastOneYearRevenue_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastOneYearRevenue_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">每日營運資金需求量</td>
-                                    <td colspan="3"><input name="dailyWorkingCapital_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('dailyWorkingCapital_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">淨營業週期</td>
-                                    <td colspan="3"><input name="operatingCycle_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('operatingCycle_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負債總額</td>
-                                    <td colspan="3"><input name="liabilitiesAmount_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('liabilitiesAmount_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">權益總額</td>
-                                    <td colspan="3"><input name="equityAmount_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('equityAmount_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="33">
-                                        企業資料表
-                                    </td>
-
-                                    <td class="bold-right-border">公司產業別</td>
-                                    <!-- <input id="compDuType_content" type="text" class="table-input" disabled> -->
-                                    <td colspan="3">
-                                        <select name="compDuType_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="01">01:水泥</option>
-                                            <option value="02">02:食品</option>
-                                            <option value="03">03:塑膠</option>
-                                            <option value="06">06:電器</option>
-                                            <option value="07">07:化學</option>
-                                            <option value="08">08:玻璃(陶瓷)</option>
-                                            <option value="09">09:通訊</option>
-                                            <option value="10">10:鋼鐵</option>
-                                            <option value="11">11:橡膠</option>
-                                            <option value="12">12:汽車</option>
-                                            <option value="13">13:服務業</option>
-                                            <option value="14">14:飯店百貨</option>
-                                            <option value="17">17:DRAM 製造</option>
-                                            <option value="18">18:DRAM 模組</option>
-                                            <option value="19">19:IC 設計</option>
-                                            <option value="20">20:晶圓代工</option>
-                                            <option value="21">21:IC 封測</option>
-                                            <option value="22">22:TFT-LCD</option>
-                                            <option value="23">23:主機板</option>
-                                            <option value="24">24:光碟片</option>
-                                            <option value="25">25:光碟機</option>
-                                            <option value="26">26:網路通訊</option>
-                                            <option value="27">27:連接器</option>
-                                            <option value="28">28:伺服器</option>
-                                            <option value="29">29:軟體業</option>
-                                            <option value="30">30:掃描器</option>
-                                            <option value="31">31:印表機</option>
-                                            <option value="32">32:機殼業</option>
-                                            <option value="33">33:手機業</option>
-                                            <option value="34">34:電腦組裝</option>
-                                            <option value="35">35:電腦週邊</option>
-                                            <option value="36">36:筆記型電腦</option>
-                                            <option value="37">37:顯示(監視)器</option>
-                                            <option value="38">38:印刷電路板</option>
-                                            <option value="39">39:被動元件</option>
-                                            <option value="40">40:數位相機</option>
-                                            <option value="41">41:電源供應器</option>
-                                            <option value="42">42:LED</option>
-                                            <option value="43">43:工業電腦</option>
-                                            <option value="44">44:IC 通路</option>
-                                            <option value="45">45:資訊(3C)通路</option>
-                                            <option value="46">46:安全監控</option>
-                                            <option value="47">47:FLASH(模組)</option>
-                                            <option value="48">48:觸控面板</option>
-                                            <option value="49">49:散熱模組</option>
-                                            <option value="50">50:背光模組</option>
-                                            <option value="51">51:電池模組</option>
-                                            <option value="52">52:農業</option>
-                                            <option value="53">53:林業</option>
-                                            <option value="54">54:漁業</option>
-                                            <option value="55">55:畜牧業</option>
-                                            <option value="56">56:大宗物資業</option>
-                                            <option value="57">57:人造纖維業</option>
-                                            <option value="58">58:紡紗業</option>
-                                            <option value="59">59:織布業</option>
-                                            <option value="60">60:成衣業</option>
-                                            <option value="61">61:皮革皮毛業</option>
-                                            <option value="62">62:染整業</option>
-                                            <option value="63">63:電線電纜業</option>
-                                            <option value="64">64:機電機械業</option>
-                                            <option value="65">65:工具機</option>
-                                            <option value="66">66:非鐵金屬業</option>
-                                            <option value="67">67:海運</option>
-                                            <option value="68">68:空運</option>
-                                            <option value="69">69:陸運</option>
-                                            <option value="70">70:倉儲物流業</option>
-                                            <option value="71">71:建設(開發)</option>
-                                            <option value="72">72:營造(工程)</option>
-                                            <option value="73">73:建材業</option>
-                                            <option value="74">74:金控(銀行)</option>
-                                            <option value="75">75:保險</option>
-                                            <option value="76">76:證券</option>
-                                            <option value="77">77:投資公司</option>
-                                            <option value="78">78:其他金融業</option>
-                                            <option value="79">79:太陽能</option>
-                                            <option value="80">80:自行車</option>
-                                            <option value="81">81:生技醫療</option>
-                                            <option value="82">82:鐘錶眼鏡業</option>
-                                            <option value="83">83:影音通路</option>
-                                            <option value="84">84:電信業</option>
-                                            <option value="85">85:印刷業</option>
-                                            <option value="86">86:出版業</option>
-                                            <option value="87">87:製鞋業</option>
-                                            <option value="88">88:油電燃氣業</option>
-                                            <option value="89">89:有線電視</option>
-                                            <option value="90">90:機車業</option>
-                                            <option value="91">91:運動用品業</option>
-                                            <option value="92">92:餐飲業</option>
-                                            <option value="93">93:觀光旅遊業</option>
-                                            <option value="94">94:資源回收業</option>
-                                            <option value="95">95:量販、超市、便利商店</option>
-                                            <option value="96">96:輪胎業</option>
-                                            <option value="97">97:休閒娛樂</option>
-                                            <option value="98">98:家具業</option>
-                                            <option value="99">99:其他</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compDuType_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">受嚴重特殊傳染性肺炎影響之企業</td>
-                                    <td colspan="3">
-                                        <select name="isCovidAffected_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isCovidAffected_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址是否自有</td>
-                                    <td colspan="3"><select name="isBizRegAddrSelfOwn_content" class="table-input"
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:自有</option>
-                                            <option value="0">0:非自有</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isBizRegAddrSelfOwn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址自有-所有權</td>
-                                    <td colspan="3"><select name="bizRegAddrOwner_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:企業</option>
-                                            <option value="B">B:負責人</option>
-                                            <option value="C">C:負責人配偶</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('bizRegAddrOwner_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_是OR否 同營業登記地址</td>
-                                    <td colspan="3"><select name="isBizAddrEqToBizRegAddr_content" class="table-input"
-                                            id="" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:同營業登記地址</option>
-                                            <option value="0">0:不同於營業登記地址</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isBizAddrEqToBizRegAddr_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址</td>
-                                    <td colspan="3"><input id="realBizAddress_content"
-                                            name="realBizAddrCityName_content" type="text" class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('realBizAddrCityName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址是否自有</td>
-                                    <td colspan="3"><select name="isRealBizAddrSelfOwn_content" class="table-input"
-                                            id="" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:自有</option>
-                                            <option value="0">0:非自有</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isRealBizAddrSelfOwn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址自有-所有權</td>
-                                    <td colspan="3"><select name="realBizAddrOwner_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:企業</option>
-                                            <option value="B">B:負責人</option>
-                                            <option value="C">C:負責人配偶</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('realBizAddrOwner_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">企業聯絡人電話-區碼</td>
-                                    <td colspan="3"><input name="compTelAreaCode_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compTelAreaCode_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">企業聯絡人電話-電話號碼</td>
-                                    <td colspan="3"><input name="compTelNo_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compTelNo_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">企業聯絡人電話-分機碼</td>
-                                    <td colspan="3"><input name="compTelExt_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compTelExt_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">企業聯絡人姓名</td>
-                                    <td colspan="3"><input name="compContactName_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compContactName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">企業聯絡人職稱</td>
-                                    <td colspan="3"><input name="compContact_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compContact_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">企業財務主管姓名</td>
-                                    <td colspan="3"><input name="financialOfficerName_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('financialOfficerName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">企業財務主管分機</td>
-                                    <td colspan="3"><input name="financialOfficerExt_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('financialOfficerExt_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">企業Email</td>
-                                    <td colspan="3"><input name="compEmail_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compEmail_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">目前員工人數</td>
-                                    <td colspan="3"><input name="employeeNum_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('employeeNum_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">是否有海外投資</td>
-                                    <td colspan="3"><select name="hasForeignInvestment_content" class="table-input"
-                                            id="" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('hasForeignInvestment_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">是否有關係企業</td>
-                                    <td colspan="3"><select name="hasRelatedCompany_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('hasRelatedCompany_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">是否擁有信用瑕疵</td>
-                                    <td colspan="3"><select name="hasCreditFlaws_content" class="table-input" id=""
-                                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('hasCreditFlaws_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近一年平均員工人數是否超過200人</td>
-                                    <td colspan="3"><select name="lastOneYearOver200employees_content" class="table-input" id=""
-                                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('lastOneYearOver200employees_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(A)統一編號</td>
-                                    <td colspan="3"><input name="relatedCompAGuiNumber_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompAGuiNumber_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(A)名稱</td>
-                                    <td colspan="3"><input name="relatedCompAName_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompAName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(A)組織型態</td>
-
-                                    <td colspan="3">
-                                        <select name="relatedCompAType_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:獨資</option>
-                                            <option value="B">B:合夥</option>
-                                            <option value="C">C:有限公司</option>
-                                            <option value="D">D:股份有限公司</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompAType_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(A)與借戶之關係</td>
-                                    <td colspan="3"><input name="relatedCompARelationship_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompARelationship_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(B)統一編號</td>
-                                    <td colspan="3"><input name="relatedCompBGuiNumber_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompBGuiNumber_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(B)名稱</td>
-                                    <td colspan="3"><input name="relatedCompBName_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompBName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(B)組織型態</td>
-
-                                    <td colspan="3">
-                                        <select name="relatedCompBType_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:獨資</option>
-                                            <option value="B">B:合夥</option>
-                                            <option value="C">C:有限公司</option>
-                                            <option value="D">D:股份有限公司</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompBType_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(B)與借戶之關係</td>
-                                    <td colspan="3"><input name="relatedCompBRelationship_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompBRelationship_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(C)統一編號</td>
-                                    <td colspan="3"><input name="relatedCompCGuiNumber_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompCGuiNumber_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(C)名稱</td>
-                                    <td colspan="3"><input name="relatedCompCName_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompCName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(C)組織型態</td>
-
-                                    <td colspan="3">
-                                        <select name="relatedCompCType_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:獨資</option>
-                                            <option value="B">B:合夥</option>
-                                            <option value="C">C:有限公司</option>
-                                            <option value="D">D:股份有限公司</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompCType_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">關係企業(C)與借戶之關係</td>
-                                    <td colspan="3"><input name="relatedCompCRelationship_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('relatedCompCRelationship_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="21">
-                                        近三年401/403/405
-                                    </td>
-
-                                    <td class="bold-right-border">
-                                        <div>近一年申報營業稅年份</div>
-                                        <div style="color:red;">格式:YYYY</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="businessTaxLastOneYear_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('businessTaxLastOneYear_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>近二年申報營業稅年份</div>
-                                        <div style="color:red;">格式:YYYY</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="businessTaxLastTwoYear_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('businessTaxLastTwoYear_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>近三年申報營業稅年份</div>
-                                        <div style="color:red;">格式:YYYY</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="businessTaxLastThreeYear_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('businessTaxLastThreeYear_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近一年申報營業稅01~02月開立發票金額</td>
-                                    <td colspan="3"><input name="lastOneYearInvoiceAmountM1M2_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastOneYearInvoiceAmountM1M2_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近一年申報營業稅03~04月開立發票金額</td>
-                                    <td colspan="3"><input name="lastOneYearInvoiceAmountM3M4_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastOneYearInvoiceAmountM3M4_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近一年申報營業稅05~06月開立發票金額</td>
-                                    <td colspan="3"><input name="lastOneYearInvoiceAmountM5M6_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastOneYearInvoiceAmountM5M6_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近一年申報營業稅07~08月開立發票金額</td>
-                                    <td colspan="3"><input name="lastOneYearInvoiceAmountM7M8_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastOneYearInvoiceAmountM7M8_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近一年申報營業稅09~10月開立發票金額</td>
-                                    <td colspan="3"><input name="lastOneYearInvoiceAmountM9M10_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastOneYearInvoiceAmountM9M10_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近一年申報營業稅11~12月開立發票金額</td>
-                                    <td colspan="3"><input name="lastOneYearInvoiceAmountM11M12_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastOneYearInvoiceAmountM11M12_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近二年申報營業稅01~02月開立發票金額</td>
-                                    <td colspan="3"><input name="lastTwoYearInvoiceAmountM1M2_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastTwoYearInvoiceAmountM1M2_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近二年申報營業稅03~04月開立發票金額</td>
-                                    <td colspan="3"><input name="lastTwoYearInvoiceAmountM3M4_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastTwoYearInvoiceAmountM3M4_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近二年申報營業稅05~06月開立發票金額</td>
-                                    <td colspan="3"><input name="lastTwoYearInvoiceAmountM5M6_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastTwoYearInvoiceAmountM5M6_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近二年申報營業稅07~08月開立發票金額</td>
-                                    <td colspan="3"><input name="lastTwoYearInvoiceAmountM7M8_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastTwoYearInvoiceAmountM7M8_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近二年申報營業稅09~10月開立發票金額</td>
-                                    <td colspan="3"><input name="lastTwoYearInvoiceAmountM9M10_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastTwoYearInvoiceAmountM9M10_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近二年申報營業稅11~12月開立發票金額</td>
-                                    <td colspan="3"><input name="lastTwoYearInvoiceAmountM11M12_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastTwoYearInvoiceAmountM11M12_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近三年申報營業稅01~02月開立發票金額</td>
-                                    <td colspan="3"><input name="lastThreeYearInvoiceAmountM1M2_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastThreeYearInvoiceAmountM1M2_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近三年申報營業稅03~04月開立發票金額</td>
-                                    <td colspan="3"><input name="lastThreeYearInvoiceAmountM3M4_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastThreeYearInvoiceAmountM3M4_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近三年申報營業稅05~06月開立發票金額</td>
-                                    <td colspan="3"><input name="lastThreeYearInvoiceAmountM5M6_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastThreeYearInvoiceAmountM5M6_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近三年申報營業稅07~08月開立發票金額</td>
-                                    <td colspan="3"><input name="lastThreeYearInvoiceAmountM7M8_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastThreeYearInvoiceAmountM7M8_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近三年申報營業稅09~10月開立發票金額</td>
-                                    <td colspan="3"><input name="lastThreeYearInvoiceAmountM9M10_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastThreeYearInvoiceAmountM9M10_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">近三年申報營業稅11~12月開立發票金額</td>
-                                    <td colspan="3"><input name="lastThreeYearInvoiceAmountM11M12_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('lastThreeYearInvoiceAmountM11M12_content')"
-                                                value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="4">
-                                        負責人身分證
-                                    </td>
-                                    <td class="bold-right-border">負責人姓名</td>
-                                    <td colspan="3"><input name="prName_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人身分證字號</td>
-                                    <td colspan="3"><input name="principalId_content" type="text" class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('principalId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人配偶_有 OR 無</td>
-                                    <td colspan="3"><select name="isPrMarried_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:有</option>
-                                            <option value="0">0:無</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isPrMarried_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>負責人出生日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3"><input name="prBirth_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prBirth_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="5">
-                                        負責人基本資料
-                                    </td>
-
-                                    <td class="bold-right-border">
-                                        <div>負責人擔任本企業負責人年度</div>
-                                        <div style="color:red;">格式:YYYY</div>
-                                    </td>
-                                    <td colspan="3"><input name="prInChargeYear_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prInChargeYear_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>負責人從事本行業年度</div>
-                                        <div style="color:red;">格式:YYYY</div>
-                                    </td>
-                                    <td colspan="3"><input name="prStartYear_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prStartYear_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人學歷</td>
-                                    <td colspan="3"><select name="prEduLevel_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:國小</option>
-                                            <option value="B">B:國中</option>
-                                            <option value="C">C:高中職</option>
-                                            <option value="D">D:專科</option>
-                                            <option value="E">E:大學</option>
-                                            <option value="F">F:碩士</option>
-                                            <option value="G">G:博士</option>
-                                            <option value="H">H:無</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prEduLevel_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人行動電話</td>
-                                    <td colspan="3"><input name="prMobileNo_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prMobileNo_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人Email</td>
-                                    <td colspan="3"><input name="prEmail_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prEmail_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="2">
-                                        負責人配偶身分證
-                                    </td>
-
-                                    <td class="bold-right-border">負責人配偶姓名</td>
-                                    <td colspan="3"><input name="spouseName_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人配偶身分證字號</td>
-                                    <td colspan="3"><input name="spouseId_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="8">
-                                        <div>其他實際負責人</div>
-                                        <div>身分證、基本資料</div>
-                                    </td>
-
-                                    <td class="bold-right-border">實際負責人是否等於登記負責人</td>
-
-                                    <td colspan="3">
-                                        <select name="isPrRegister_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isPrRegister_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">其他實際負責人_與借戶負責人之關係</td>
-                                    <td colspan="3"><select name="othRealPrRelWithPr_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:配偶</option>
-                                            <option value="B">B:血親</option>
-                                            <option value="C">C:姻親</option>
-                                            <option value="D">D:股東</option>
-                                            <option value="E">E:朋友</option>
-                                            <option value="F">F:本人</option>
-                                            <option value="G">G:其他</option>
-                                            <option value="H">H:與經營有關之借戶職員</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('othRealPrRelWithPr_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">其他實際負責人_姓名</td>
-                                    <td colspan="3"><input name="othRealPrName_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('othRealPrName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">其他實際負責人_身分證字號</td>
-                                    <td colspan="3"><input name="othRealPrId_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('othRealPrId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">其他實際負責人_出生日期</td>
-                                    <td colspan="3"><input name="othRealPrBirth_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('othRealPrBirth_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">其他實際負責人_從事本行業年度</td>
-                                    <td colspan="3"><input name="othRealPrStartYear_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('othRealPrStartYear_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">其他實際負責人_擔任本公司職務</td>
-                                    <td colspan="3"><input name="othRealPrTitle_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('othRealPrTitle_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">其他實際負責人_持股比率%</td>
-                                    <td colspan="3"><input name="othRealPrSHRatio_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('othRealPrSHRatio_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="6">
-                                        <div>保證人</div>
-                                        <div>身分證、基本資料</div>
-                                    </td>
-
-                                    <td class="bold-right-border">是否有徵提保證人</td>
-
-                                    <td colspan="3">
-                                        <select name="hasGuarantor_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('hasGuarantor_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶是否擔任本案保證人</td>
-                                    <td colspan="3"><select name="isPrSpouseGu_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('isPrSpouseGu_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">保證人_姓名</td>
-                                    <td colspan="3"><input name="guOneName_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">保證人_身分證字號</td>
-                                    <td colspan="3"><input name="guOneId_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">保證人_與借戶負責人之關係</td>
-                                    <td colspan="3"><select name="guOneRelWithPr_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:配偶</option>
-                                            <option value="B">B:血親</option>
-                                            <option value="C">C:姻親</option>
-                                            <option value="D">D:股東</option>
-                                            <option value="E">E:朋友</option>
-                                            <option value="G">G:其他</option>
-                                            <option value="H">H:與經營有關之借戶職員</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneRelWithPr_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">保證人_任職公司</td>
-                                    <td colspan="3"><select name="guOneCompany_content" class="table-input" id=""
-                                            disabled>
-                                            <option value="" selected></option>
-                                            <option value="A">A:公家機關</option>
-                                            <option value="B">B:上市櫃公司</option>
-                                            <option value="C">C:專業人士</option>
-                                            <option value="D">D:借戶</option>
-                                            <option value="E">E:其他民營企業</option>
-                                            <option value="F">F:無</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneCompany_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="6">
-                                        公司聯徵報告</td>
-
-                                    <td class="bold-right-border">票債信情形是否異常</td>
-
-                                    <td colspan="3">
-                                        <select name="jcCompDebtLog_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('jcCompDebtLog_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>聯徵中心資料日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3"><input name="compJCICQueryDate_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compJCICQueryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>聯徵J02資料年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="compJCICDataDate_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compJCICDataDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">企業信用評分</td>
-                                    <td colspan="3"><input name="compCreditScore_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('compCreditScore_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">授信總餘額</td>
-                                    <td colspan="3"><input name="jcCompCreditAmount_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('jcCompCreditAmount_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">往來銀行家數</td>
-                                    <td colspan="3"><input name="jcCompBankDealingNum_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('jcCompBankDealingNum_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="13">
-                                        負責人聯徵報告</td>
-
-                                    <td class="bold-right-border">票債信情形是否異常</td>
-
-                                    <td colspan="3">
-                                        <select name="prDebtLog_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prDebtLog_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>聯徵J02資料年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="prJ02YM_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prJ02YM_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">聯徵信用評分</td>
-                                    <td colspan="3"><input name="prCreditScore_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prCreditScore_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">授信總餘額</td>
-                                    <td colspan="3"><input name="prCreditTotalAmount_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prCreditTotalAmount_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">現金卡張數</td>
-                                    <td colspan="3"><input name="prCashCardQty_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prCashCardQty_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">現金卡可動用額度</td>
-                                    <td colspan="3"><input name="prCashCardAvailLimit_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prCashCardAvailLimit_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">現金卡餘額合計</td>
-                                    <td colspan="3"><input name="prBal_CashCard_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prBal_CashCard_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">最近一週或一個月還款有無延遲紀錄</td>
-                                    <td colspan="3">
-                                        <select name="prHasWeekMonthDelay_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prHasWeekMonthDelay_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">信用卡張數</td>
-                                    <td colspan="3"><input name="prCreditCardQty_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prCreditCardQty_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">信用卡可動用額度</td>
-                                    <td colspan="3"><input name="prCreditCardAvailAmount_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prCreditCardAvailAmount_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">信用卡餘額合計</td>
-                                    <td colspan="3"><input name="prBal_CreditCard_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prBal_CreditCard_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">最近三個月內還款有無延遲紀錄</td>
-                                    <td colspan="3">
-                                        <select name="prHasLastThreeMonthDelay_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prHasLastThreeMonthDelay_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人擔任其他企業負責人之企業統編</td>
-                                    <td colspan="3">
-                                        <input name="prBeingOthCompPrId_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prBeingOthCompPrId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="4">
-                                        負責人配偶聯徵報告</td>
-
-                                    <td class="bold-right-border">票債信情形是否異常</td>
-
-                                    <td colspan="3">
-                                        <select name="spouseDebtLog_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseDebtLog_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>聯徵J02資料年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="spouseJ02YM_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseJ02YM_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">聯徵信用評分</td>
-                                    <td colspan="3">
-                                        <input name="spouseCreditScore_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseCreditScore_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人配偶擔任其他企業負責人之企業統編</td>
-                                    <td colspan="3">
-                                        <input name="spouseBeingOthCompPrId_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseBeingOthCompPrId_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="3">
-                                        保證人聯徵報告</td>
-
-                                    <td class="bold-right-border">票債信情形是否異常</td>
-
-                                    <td colspan="3">
-                                        <select name="guarantorDebtLog_content" class="table-input" disabled>
-                                            <option value="" selected></option>
-                                            <option value="1">1:是</option>
-                                            <option value="0">0:否</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guarantorDebtLog_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>聯徵J02資料年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="guarantorJ02YM_content" type="text" class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guarantorJ02YM_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">聯徵信用評分</td>
-                                    <td colspan="3">
-                                        <input name="guOneCreditScore_content" type="text" class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneCreditScore_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="24">
-                                        勞保局投保人數
-                                    </td>
-                                    <td class="bold-right-border">
-                                        <div>公司近01個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM1_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM1_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近01個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured1_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured1_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近02個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM2_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM2_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近02個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured2_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured2_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近03個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM3_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM3_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近03個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured3_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured3_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近04個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM4_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM4_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近04個月投保人數-人數
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsured4_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured4_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近05個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM5_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM5_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近05個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured5_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured5_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近06個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM6_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM6_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近06個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured6_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured6_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近07個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM7_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM7_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近07個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured7_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured7_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近08個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM8_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM8_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近08個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured8_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured8_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近09個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM9_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM9_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近09個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured9_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured9_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近10個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM10_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM10_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近10個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured10_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured10_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近11個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM11_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM11_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近11個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured11_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured11_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>公司近12個月投保人數-年月</div>
-                                        <div style="color:red;">格式:YYYYMM</div>
-                                    </td>
-                                    <td colspan="3"><input name="numOfInsuredYM12_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsuredYM12_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">公司近12個月投保人數-人數</td>
-                                    <td colspan="3"><input name="numOfInsured12_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('numOfInsured12_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-
-
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="6">
-                                        勞保異動明細
-                                    </td>
-                                    <td class="bold-right-border">
-                                        <div>負責人-被保險人勞保異動查詢日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="prLaborQryDate_content" type="text" class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prLaborQryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">負責人-被保險人勞保異動查詢-最近期投保薪資-人數</td>
-                                    <td colspan="3"><input name="prLaborInsSalary_content" type="text"
-                                            class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('prLaborInsSalary_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>配偶-被保險人勞保異動查詢日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="spouseLaborQryDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseLaborQryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">配偶-被保險人勞保異動查詢-最近期投保薪資</td>
-                                    <td colspan="3">
-                                        <input name="spouseLaborInsSalary_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('spouseLaborInsSalary_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">
-                                        <div>保證人-被保險人勞保異動查詢日期</div>
-                                        <div style="color:red;">格式:YYYYMMDD</div>
-                                    </td>
-                                    <td colspan="3">
-                                        <input name="guOneLaborQryDate_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneLaborQryDate_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">保證人-被保險人勞保異動查詢-最近期投保薪資</td>
-                                    <td colspan="3">
-                                        <input name="guOneLaborInsSalary_content" type="text" class="table-input"
-                                            disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('guOneLaborInsSalary_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border">J-其他</td>
-                                    <td class="bold-right-border">其他備註</td>
-                                    <td colspan="3">
-                                        <input name="otherMemo_content" type="text" class="table-input" disabled>
-                                    </td>
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                onclick="edit_click('otherMemo_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="input-width">
-                            <tr>
-                                <td class="white-border">
-                                    <center>
-                                        <input id="text_list" type="button" class="sendBtn" value="儲存資料" disabled>
-                                    </center>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="page">
-                <div class="subpage api_file_page">
-                    <h1 style="text-align: center;">附件檢核表</h1>
-                    <table class="table table-bordered border-dark">
-                        <tbody>
-                            <tr>
-                                <th class="th bold-bottom-border bold-right-border" style="width: 8%;">附件類別</th>
-                                <th class="field_name th bold-bottom-border bold-right-border">圖片</th>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A01:公司變更事項登記卡及工商登記查詢
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A01">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">
-                                    A02:負責人身分證 + 健保卡
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B02">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">
-                                    A03:負責人配偶身分證 + 健保卡</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B03">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A04:保證人身分證 + 健保卡
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B04">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A05:營業據點建物登記謄本
-                                    (公司或負責人或保證人自有)</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A03">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A06:近三年稅捐機關納稅證明(税簽)
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A04">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A07:近12個月員工投保單位人數資料
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A05">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A08:公司聯徵資料</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B08">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A09:負責人聯徵資料</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B09">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A10:負責人配偶聯徵資料</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B10">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A11:保證人聯徵資料</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B11">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">
-                                    A12:負責人及保證人之被保險人勞保異動查詢</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="A07">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A13:公司近六個月往來存摺影本+內頁
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B13">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A14:負責人近六個月往來存摺影本+內頁
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B14">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A15:保證人近六個月往來存摺影本+內頁
-                                </td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B15">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title input-center bold-bottom-border bold-right-border">A16:近三年 401/403/405
-                                    表</td>
-                                <td class="bold-right-border ">
-                                    <fieldset disabled name="B16">
-                                    </fieldset>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-<script>
-    // let hasClick=false;
-    let urlString;
-    let url;
-    let target_id;
-    let table_type;
-    let data_type;
-    let msg_no;
-    let msg_data;
-    let all_data = {};
-    let IDs = [];
-    let key = '';
-    let value = '';
-    let image_list_data = [];
-    // 下拉選單列表
-    let select_array = ['compType_content', 'businessType_content', 'compDuType_content', 'bizRegAddrOwner_content', 'isBizAddrEqToBizRegAddr_content', 'bizTaxFileWay_content',
-        'isPrMarried_content', 'isPrSpouseGu_content', 'realPr_content', 'isBizRegAddrSelfOwn_content', 'isRealBizAddrSelfOwn_content', 'realBizAddrOwner_content', 'othRealPrRelWithPr_content',
-        'guOneRelWithPr_content', 'guOneCompany_content', 'guTwoRelWithPr_content', 'guTwoCompany_content', 'prEduLevel_content', 'compMajorOwnership_content', 'compMajorSetting_content',
-        'compType2_content', 'registerType_content', 'isPublic_content', 'hasJuridicalInvest_content', 'isManufacturing_content', 'isCovidAffected_content', 'hasForeignInvestment_content', 'hasRelatedCompany_content',
-        'relatedCompAType_content', 'relatedCompBType_content', 'relatedCompCType_content', 'isPrRegister_content', 'othRealPrRelWithPr_content', 'hasGuarantor_content', 'isPrSpouseGu_content',
-        'jcCompDebtLog_content', 'prDebtLog_content', 'prHasWeekMonthDelay_content', 'prHasLastThreeMonthDelay_content', 'spouseDebtLog_content', 'guarantorDebtLog_content'];
-    // 原始檔案圖片-附件資料表
-    let rawData_array = [
-        'A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'B02', 'B03', 'B08', 'B09', 'B10', 'B11', 'B13', 'B14', 'B15', 'B16',
-    ];
-    // 送出時為數字欄位
-    let is_int_array = ['compCapital', 'annualIncome1', 'annualIncome2', 'annualIncome3', 'numOfInsured1', 'numOfInsured2', 'numOfInsured3', 'numOfInsured4', 'numOfInsured5', 'numOfInsured6', 'numOfInsured7', 'numOfInsured8', 'numOfInsured9', 'numOfInsured10', 'numOfInsured11', 'numOfInsured12', 'MidTermLnBal', 'shortTermLnBal', 'compCreditScore', 'prLaborInsSalary', 'spouseLaborInsSalary', 'guOneLaborInsSalary', 'guTwoLaborInsSalary', 'prCreditScore', 'prBal_CashCard', 'prBal_CreditCard', 'prBal_ShortTermLn', 'prBal_MidTermLn', 'prBal_LongTermLn', 'prBal_ShortTermGuar', 'prBal_MidTermLnGuar', 'prBal_LongTermLnGuar', 'spouseCreditScore', 'spouseBal_CashCard', 'spouseBal_CreditCard', 'spouseBal_ShortTermLn', 'spouseBal_MidTermLn', 'spouseBal_LongTermLn', 'spouseBal_ShortTermGuar', 'spouseBal_MidTermLnGuar', 'spouseBal_LongTermLnGuar', 'guOneCreditScore', 'guOneBal_CashCard', 'guOneBal_CreditCard', 'guOneBal_ShortTermLn', 'guOneBal_MidTermLn', 'guOneBal_LongTermLn', 'guOneBal_ShortTermGuar', 'guOneBal_MidTermLnGuar', 'guOneBal_LongTermLnGuar', 'guTwoCreditScore', 'guTwoBal_CashCard', 'guTwoBal_CreditCard', 'guTwoBal_ShortTermLn', 'guTwoBal_MidTermLn', 'guTwoBal_LongTermLn', 'guTwoBal_ShortTermGuar', 'guTwoBal_MidTermLnGuar', 'guTwoBal_LongTermLnGuar', 'isPrMarried', 'isBizRegAddrSelfOwn', 'isBizAddrEqToBizRegAddr', 'isRealBizAddrSelfOwn', 'othRealPrSHRatio',
-        'hasJuridicalInvest', 'isManufacturing', 'lastOneYearRevenue', 'dailyWorkingCapital', 'operatingCycle', 'liabilitiesAmount', 'equityAmount', 'isCovidAffected', 'employeeNum', 'hasForeignInvestment', 'hasRelatedCompany', 'businessTaxLastOneYear', 'businessTaxLastTwoYear', 'businessTaxLastThreeYear',
-        'lastOneYearInvoiceAmountM1M2', 'lastOneYearInvoiceAmountM3M4'];
-    function edit_click(id_content) {
-        $(`[name=${id_content}]`).each((i, e) => { $(e).prop('disabled', function (i, v) { return !v; }) })
+      </div>
+	</div>
+	<div class="page">
+		<div class="subpage api_file_page">
+  		  <h1 style="text-align: center;">附件檢核表</h1>
+		  <table class="table" border="2">
+			  <tbody>
+				  <tr>
+	                <th class="th bold-bottom-border bold-right-border" style="width: 7%;">附件類別</th>
+	                <th class="field_name th bold-bottom-border bold-right-border">圖片/文件</th>
+	              </tr>
+				  <tr>
+					  <td class="title input-center bold-bottom-border bold-right-border">A01:公司變更事項登記卡及工商登記查詢</td>
+					  <td class="bold-right-border ">
+						  <fieldset disabled id="A01">
+						  </fieldset>
+					  </td>
+				  </tr>
+				  <tr>
+					  <td class="title input-center bold-bottom-border bold-right-border">A02:負責人及保證人身分證影本及第二證件、戶役政查詢</td>
+					  <td class="bold-right-border ">
+						  <fieldset disabled id="A02">
+						  </fieldset>
+					  </td>
+				  </tr>
+				  <tr>
+					  <td class="title input-center bold-bottom-border bold-right-border">A03:營業據點建物登記謄本(公司或負責人或保證人自有才須提供)</td>
+					  <td class="bold-right-border ">
+						  <fieldset disabled id="A03">
+						  </fieldset>
+					  </td>
+				  </tr>
+				  <tr>
+					  <td class="title input-center bold-bottom-border bold-right-border">A04:近三年公司所得稅申報書</td>
+					  <td class="bold-right-border ">
+						  <fieldset disabled id="A04">
+						  </fieldset>
+					  </td>
+				  </tr>
+				  <tr>
+					  <td class="title input-center bold-bottom-border bold-right-border">A05:近12月勞保局投保資料</td>
+					  <td class="bold-right-border ">
+						  <fieldset disabled id="A05">
+						  </fieldset>
+					  </td>
+				  </tr>
+				  <tr>
+					  <td class="title input-center bold-bottom-border bold-right-border">A06:公司、負責人、配偶及保證人的聯徵資料 J01、J02、J10、J20、A13、A11</td>
+					  <td class="bold-right-border ">
+						  <fieldset disabled id="A06">
+						  </fieldset>
+					  </td>
+				  </tr>
+				  <tr>
+					  <td class="title input-center bold-bottom-border bold-right-border">A07:負責人及保證人之被保險人勞保異動查詢</td>
+					  <td class="bold-right-border ">
+						  <fieldset disabled id="A07">
+						  </fieldset>
+					  </td>
+				  </tr>
+				  <tr>
+					  <td class="title input-center bold-bottom-border bold-right-border">A08:公司、負責人及保證人近六個月存摺餘額明細及存摺封面</td>
+					  <td class="bold-right-border ">
+						  <fieldset disabled id="A08">
+						  </fieldset>
+					  </td>
+				  </tr>
+			  </tbody>
+		  </table>
+  	  </div>
+	</div>
+  </body>
+  <script>
+  // let hasClick=false;
+  let urlString;
+  let url;
+  let target_id;
+  let table_type;
+  let data_type;
+  let msg_no;
+  let msg_data;
+  let all_data ={};
+  let IDs = [];
+  let key = '';
+  let value = '';
+  let image_list_data = [];
+  // 下拉選單列表
+  let select_array = ['CompType_content','BusinessType_content','CompDuType_content','BizRegAddrOwner_content','IsBizAddrEqToBizRegAddr_content','BizTaxFileWay_content',
+  'IsPrMarried_content','IsPrSpouseGu_content','RealPr_content','realBizRegAddressOwner_content','realBizAddressOwner_content','RealBizAddrOwner_content','OthRealPrRelWithPr_content',
+  'GuOneRelWithPr_content','GuOneCompany_content','GuTwoRelWithPr_content','GuTwoCompany_content','prEduLevel_content','CompMajorOwnership_content','CompMajorSetting_content'];
+  // 原始檔案圖片-附件資料表
+  let rawData_array = [
+	  'A01','A02','A03','A04','A05','A06','A07','A08'
+  ];
+  // 送出時為數字欄位
+  let is_int_array = ['CompCapital','AnnualIncome1','AnnualIncome2','AnnualIncome3','NumOfInsured1','NumOfInsured2','NumOfInsured3','NumOfInsured4','NumOfInsured5','NumOfInsured6','NumOfInsured7','NumOfInsured8','NumOfInsured9','NumOfInsured10','NumOfInsured11','NumOfInsured12','MidTermLnBal','ShortTermLnBal','CompCreditScore','PrLaborInsSalary','SpouseLaborInsSalary','GuOneLaborInsSalary','GuTwoLaborInsSalary','PrCreditScore','PrBal_CashCard','PrBal_CreditCard','PrBal_ShortTermLn','PrBal_MidTermLn','PrBal_LongTermLn','PrBal_ShortTermGuar','PrBal_MidTermLnGuar','PrBal_LongTermLnGuar','SpouseCreditScore','SpouseBal_CashCard','SpouseBal_CreditCard','SpouseBal_ShortTermLn','SpouseBal_MidTermLn','SpouseBal_LongTermLn','SpouseBal_ShortTermGuar','SpouseBal_MidTermLnGuar','SpouseBal_LongTermLnGuar','GuOneCreditScore','GuOneBal_CashCard','GuOneBal_CreditCard','GuOneBal_ShortTermLn','GuOneBal_MidTermLn','GuOneBal_LongTermLn','GuOneBal_ShortTermGuar','GuOneBal_MidTermLnGuar','GuOneBal_LongTermLnGuar','GuTwoCreditScore','GuTwoBal_CashCard','GuTwoBal_CreditCard','GuTwoBal_ShortTermLn','GuTwoBal_MidTermLn','GuTwoBal_LongTermLn','GuTwoBal_ShortTermGuar','GuTwoBal_MidTermLnGuar','GuTwoBal_LongTermLnGuar','IsPrMarried','realBizRegAddressOwner','IsBizAddrEqToBizRegAddr','realBizAddressOwner','OthRealPrSHRatio'];
+  function edit_click(id_content,id_verified,id_reason){
+    $(id_content).prop('disabled', function(i, v) {
+       let s = !v;
+      if( select_array.includes($(id_content).attr('id'))){
+      if(!s){
+        $(id_content)[0].selectize.enable();
+      }else{
+        $(id_content)[0].selectize.disable();
+      }
     }
 
-    function changeTab(tab) {
-        $(`#nav-tab-skbank`).removeClass('active')
-        $(`#nav-tab-kgibank`).removeClass('active')
-        $(`#nav-${tab}`).toggleClass('active')
-        $('.nav-page').each((i, e) => {
-            $(e).hide()
-        })
-        $(`#page-${tab}`).show()
-    }
-
-    function fillReport(data) {
-        Object.keys(data).forEach(function (key) {
-            if ($(`[name=${key}]`).length) {
-                if (rawData_array.includes($(`[name=${key}]`).attr('name'))) {
-                    Object.keys(data[key]).forEach(function (key1) {
-                        var a_tag = `<a href="${data[key][key1]}" data-fancybox="images">
-                                <img id="${key}_${key1}"  src="${data[key][key1]}" style='width:30%;max-width:400px'>
-                            </a>`;
-                        console.log($("#"+key+"_"+key1).length );
-                        if($("#"+key+"_"+key1).length === 0) {
-                            $(`[name=${key}]`).each((i, e) => $(e).append(a_tag))
-                        }
+  function fillReport(data){
+    Object.keys(data).forEach(function(key) {
+      if($(`#${key}`).length){
+        if(select_array.includes($(`#${key}`).attr('id'))){
+          var $select = $(`#${key}`).selectize();
+          var selectize = $select[0].selectize;
+          if(data[key] !== ''){
+            selectize.setValue(selectize.search(data[key]).items[0].id);
+          }
+	  	}
+		if(rawData_array.includes($(`#${key}`).attr('id'))){
+            $.each(data[key], function (doc_type, doc_list) {
+                let a_tag = '';
+                if (doc_type === 'image') {
+                    $.each(doc_list, function (index, doc) {
+                        a_tag += `<a href="${doc}" data-fancybox="images">
+                        	<img id="${key}_${index}"  src="${doc}" style='width:30%;max-width:400px'>
+                        </a>`;
+                    })
+                } else if (doc_type === 'pdf') {
+                    $.each(doc_list, function (index, doc) {
+                        a_tag += `<span style="margin: 0 2px 0 2px"><a href="${doc}">檔案${index + 1}</a></span>`;
                     })
                 }
-                if (!rawData_array.includes($(`[name=${key}]`).attr('name'))) {
-                    $(`[name=${key}]`).val(data[key]);
-                }
-            }
-        })
-    }
+                $(`#${key}`).append(a_tag + '<br/>');
+            });
+		}
+	    if(! select_array.includes($(`#${key}`).attr('id')) && ! rawData_array.includes($(`#${key}`).attr('id'))){
+          $(`#${key}`).val(data[key]);
+        }
+      }
+    })
+  }
 
     // 取得送件檢核表資料
     function fetchReport(target_id, table_type, bank, result) {

@@ -7111,157 +7111,146 @@ define({
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "compContactName",
-                            "description": "聯絡人姓名"
-                        }, {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "compContact",
-                            "description": "聯絡人職稱"
+                            "description": "<p>企業聯絡人姓名</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "compContactTel",
-                            "description": "聯絡人電話"
+                            "description": "<p>企業聯絡人電話</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "compContactExt",
-                            "description": "聯絡人分機"
-                        }, {
-                            "group": "Parameter",
-                            "type": "string",
-                            "optional": true,
-                            "field": "compEmail",
-                            "description": "Email"
+                            "description": "<p>企業聯絡人分機</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "compFax",
-                            "description": "傳真號碼"
-                        }, {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
                             "field": "compEmail",
-                            "description": "Email"
+                            "description": "<p>企業Email</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "financialOfficerName",
-                            "description": "財務主管姓名"
+                            "description": "<p>企業財務主管姓名</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "financialOfficerExt",
-                            "description": "財務主管分機"
+                            "description": "<p>企業財務主管分機</p>"
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "employeeNum",
-                            "description": "企業員工人數"
+                            "description": "<p>目前員工人數</p>"
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "hasForeignInvestment",
-                            "description": "是否有海外投資<br/>1:是 0:否",
-                            "allowedValues": [1, 0]
+                            "description": "<p>是否有海外投資 1:是 0:否</p>",
+                            "allowedValues": ["0", "1"],
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "isCovidAffected",
-                            "description": "屬於受嚴重特殊傳染性肺炎影響之企業<br/>1:是 0:否",
-                            "allowedValues": [1, 0]
+                            "description": "<p>受嚴重特殊傳染性肺炎影響之企業 1:是 0:否</p>",
+                            "allowedValues": ["0", "1"],
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
-                            "field": "getRelief",
-                            "description": "支票存款戶經票據交換所註記為 ⌜紓困⌟<br/>1:是 0:否",
-                            "allowedValues": [1, 0]
+                            "optional": true,
+                            "field": "hasCreditFlaws",
+                            "description": "<p>是否曾有信用瑕疵紀錄 1:是 0:否</p>",
+                            "allowedValues": ["0", "1"],
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
+                            "field": "lastOneYearOver200employees",
+                            "description": "<p>近一年平均員工人數是否高過200人 1:是 0:否</p>",
+                            "allowedValues": ["0", "1"],
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
                             "field": "isBizAddrEqToBizRegAddr",
-                            "description": "實際營業地址是否等於營業登記地址<br/>1:是 0:否",
-                            "allowedValues": [1, 0]
+                            "description": "<p>實際營業地址是否等於營業登記地址 1:是 0:否</p>",
+                            "allowedValues": ["0", "1"],
                         }, {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "realBizAddress",
-                            "description": "實際營業地址"
+                            "description": "<p>實際營業地址</p>"
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "realBizRegAddressOwner",
-                            "description": "營業登記地址是否自有<br/>1:是 0:否",
-                            "allowedValues": [1, 0]
+                            "description": "<p>營業登記地址是否為「自有」 1:是 0:否</p>",
+                            "allowedValues": ["0", "1"],
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "bizRegAddrOwner",
-                            "description": "營業登記地址所有權<br/>A:負責人 B:負責人配偶 C:企業",
-                            "allowedValues": ['A', 'B', 'C']
+                            "description": "<p>營業登記地址所有權 A:負責人 B:負責人配偶 C:企業</p>",
+                            "allowedValues": ["A", "B", "C"],
                         }, {
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
                             "field": "realBizAddressOwner",
-                            "description": "實際營業地址是否自有<br/>1:是 0:否",
-                            "allowedValues": [1, 0]
+                            "description": "<p>實際登記地址是否「自有」 1:是 0:否</p>",
+                            "allowedValues": ["0", "1"],
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "realBizAddrOwner",
-                            "description": "實際營業地址所有權<br/>A:負責人 B:負責人配偶 C:企業",
-                            "allowedValues": ['A', 'B', 'C']
+                            "description": "<p>營業登記地址所有權 A:負責人 B:負責人配偶 C:企業</p>",
+                            "allowedValues": ["A", "B", "C"],
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "hasRelatedCompany",
-                            "description": "是否有關係企業<br/>1:是 0:否",
-                            "allowedValues": [1, 0]
+                            "description": "<p>是否有關係企業 1:是 0:否</p>",
+                            "allowedValues": ["0", "1"],
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompAName",
-                            "description": "關係企業(A)名稱"
-                        }, {
+                            "description": "<p>關係企業(A)名稱</p>"
+                        },  {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompAGuiNumber",
-                            "description": "關係企業(A)統一編號"
+                            "description": "<p>關係企業(A)統一編號</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompAType",
-                            "description": "關係企業(A)組織型態<br/>A:獨資 B:合夥 C:有限公司 D:股份有限公司",
-                            "allowedValues": ['A', 'B', 'C', 'D']
+                            "description": "<p>關係企業(A)組織型態<br/>A:獨資 B:合夥 C:有限公司 D:股份有限公司</p>",
+                            "allowedValues": ["A", "B", "C", "D"],
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompARelationship",
-                            "description": "關係企業(A)與借戶之關係<br/>" +
+                            "description": "<p>關係企業(A)與申請人之關係<br/>" +
                                 "A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)<br/>" +
                                 "B:相同股東出資額均>=40%<br/>" +
                                 "C:轉投資之投資額>=40%<br/>" +
@@ -7269,73 +7258,83 @@ define({
                                 "E:營業場所有租賃關係<br/>" +
                                 "F:相同總經理<br/>" +
                                 "G:相同財務主管<br/>" +
-                                "H:其他",
-                            "allowedValues": ['A', 'B', 'C', 'D']
+                                "H:其他</p>",
+                            "allowedValues": ["A", "B", "C", "D", "E", "F", "G", "H"],
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompBName",
-                            "description": "關係企業(B)名稱"
-                        }, {
+                            "description": "<p>關係企業(B)名稱</p>"
+                        },  {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompBGuiNumber",
-                            "description": "關係企業(B)統一編號"
+                            "description": "<p>關係企業(B)統一編號</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompBType",
-                            "description": "關係企業(B)組織型態<br/>A:獨資 B:合夥 C:有限公司 D:股份有限公司",
-                            "allowedValues": ['A', 'B', 'C', 'D']
+                            "description": "<p>關係企業(B)組織型態<br/>A:獨資 B:合夥 C:有限公司 D:股份有限公司</p>",
+                            "allowedValues": ["A", "B", "C", "D"],
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompBRelationship",
-                            "description": "關係企業(B)與借戶之關係"
+                            "description": "<p>關係企業(B)與申請人之關係<br/>" +
+                                "A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)<br/>" +
+                                "B:相同股東出資額均>=40%<br/>" +
+                                "C:轉投資之投資額>=40%<br/>" +
+                                "D:營業場所相同<br/>" +
+                                "E:營業場所有租賃關係<br/>" +
+                                "F:相同總經理<br/>" +
+                                "G:相同財務主管<br/>" +
+                                "H:其他</p>",
+                            "allowedValues": ["A", "B", "C", "D", "E", "F", "G", "H"],
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompCName",
-                            "description": "關係企業(C)名稱"
-                        }, {
+                            "description": "<p>關係企業(C)名稱</p>"
+                        },  {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompCGuiNumber",
-                            "description": "關係企業(C)統一編號"
+                            "description": "<p>關係企業(C)統一編號</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompCType",
-                            "description": "關係企業(C)組織型態<br/>A:獨資 B:合夥 C:有限公司 D:股份有限公司",
-                            "allowedValues": ['A', 'B', 'C', 'D']
+                            "description": "<p>關係企業(C)組織型態<br/>A:獨資 B:合夥 C:有限公司 D:股份有限公司</p>",
+                            "allowedValues": ["A", "B", "C", "D"],
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "relatedCompCRelationship",
-                            "description": "關係企業(C)與借戶之關係"
+                            "description": "<p>關係企業(C)與申請人之關係<br/>" +
+                                "A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)<br/>" +
+                                "B:相同股東出資額均>=40%<br/>" +
+                                "C:轉投資之投資額>=40%<br/>" +
+                                "D:營業場所相同<br/>" +
+                                "E:營業場所有租賃關係<br/>" +
+                                "F:相同總經理<br/>" +
+                                "G:相同財務主管<br/>" +
+                                "H:其他</p>",
+                            "allowedValues": ["A", "B", "C", "D", "E", "F", "G", "H"],
                         }, {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
-                            "field": "hasCreditFlaws",
-                            "description": "是否擁有信用瑕疵<br/>1:是 0:否",
-                            "allowedValues": [1, 0]
-                        }, {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": false,
-                            "field": "lastOneYearOver200employees",
-                            "description": "近一年平均員工人數是否超過200人<br/>1:是 0:否",
-                            "allowedValues": [1, 0]
-                        },
+                            "optional": true,
+                            "field": "save",
+                            "description": "<p>儲存不送出</p>"
+                        }
                     ]
                 }
             },
