@@ -988,6 +988,20 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('output/json_output');
 
 			$where = ["status" => TARGET_WAITING_APPROVE, "sub_status" => TARGET_SUBSTATUS_SECOND_INSTANCE];
+
+            $this->load->library('target_lib');
+            $tab = $this->input->get('tab', TRUE) ?? '';
+            $filter_product_ids = $this->target_lib->get_product_id_by_tab($tab);
+            if ( ! empty($filter_product_ids))
+            {
+                $where['product_id'] = $filter_product_ids;
+            }
+
+            if($tab == PRODUCT_TAB_ENTERPRISE)
+            {
+                $where['status'] = TARGET_WAITING_VERIFY;
+            }
+
 			$targets = $this->target_model->get_many_by($where);
 			if (!$targets) {
 				$this->json_output->setStatusCode(204)->send();
