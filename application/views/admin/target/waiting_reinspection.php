@@ -790,13 +790,24 @@
                     <? } ?>
                     <div class="targetAction">
                         <? if($active){ ?>
-                        <button id="manual_handling" class="btn btn-primary btn-warning" onclick="">轉人工</button>
-                        <button id="closeWindow" class="btn btn-primary btn-danger" onclick="">關閉視窗</button>
+                        <div class="mb-2">
+                            <button id="manual_handling" class="btn btn-primary btn-warning" onclick="">轉人工</button>
+                            <button id="closeWindow" class="btn btn-primary btn-danger" onclick="">關閉視窗</button>
+                        </div>
                         <? } ?>
                         <? if($targetInfo->product_id == 1002){ ?>
-                            <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">收件檢核表送出</button>
-                            <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">圖片送出</button>
-                            <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">通過</button>
+                            <div>
+                                <div>
+                                    <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">新光 收件檢核表送出</button>
+                                    <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">新光 圖片送出</button>
+                                    <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">新光 通過</button>
+                                </div>
+                                <div class="mt-2">
+                                    <button id="kgibank_text_send_btn" class="btn btn-primary btn-info" onclick="">凱基 收件檢核表送出</button>
+                                    <button id="kgibank_img_send_btn" class="btn btn-primary btn-info" onclick="">凱基 圖片送出</button>
+                                    <button id="kgibank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">凱基 通過</button>
+                                </div>
+                            </div>
                         <? } ?>
                     </div>
                 </div>
