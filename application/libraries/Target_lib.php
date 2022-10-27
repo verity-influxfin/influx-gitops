@@ -2011,6 +2011,8 @@ class Target_lib
                                     }
 
                                     $this->CI->target_model->update($value->id, $param);
+                                    $creditSheet = CreditSheetFactory::getInstance($value->id);
+                                    $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
                                 }else{
                                     if ( ! $company && $value->certificate_status != TARGET_CERTIFICATE_SUBMITTED)
                                     {
