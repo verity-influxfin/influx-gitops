@@ -56,6 +56,8 @@ class BorrowReportController extends AdminController
         $grid->column('email', __('Email'));
         // $grid->column('job', __('Job'));
         $grid->disableCreateButton();
+        $grid->disableRowSelector();
+        $grid->disableActions();
 
         return $grid;
     }

@@ -33,6 +33,8 @@ class WorkLoanShareController extends AdminController
         $grid->column('created_at', __('Created at'));
 
         $grid->disableCreateButton();
+        $grid->disableRowSelector();
+        $grid->disableActions();
 
         return $grid;
     }
