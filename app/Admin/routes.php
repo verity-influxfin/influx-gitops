@@ -23,4 +23,8 @@ Route::group([
     $router->resource('partner', PartnerController::class);
     $router->resource('event_users', EventUsersController::class);
     $router->resource('campaign2022_add', Campaign2022Controller::class);
+    $router->resource('workloan_contact', WorkLoanContactController::class);
+    $router->resource('workloan_share', WorkLoanShareController::class);
+    $router->resource('businessloan_contact', BusinessLoanContactController::class);
+    $router->resource('borrow_report', BorrowReportController::class);
 });
