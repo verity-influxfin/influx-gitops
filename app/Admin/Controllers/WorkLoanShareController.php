@@ -25,6 +25,7 @@ class WorkLoanShareController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new WorkLoanShare());
+        $grid->model()->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'));
         $grid->column('user_id', __('User id'));

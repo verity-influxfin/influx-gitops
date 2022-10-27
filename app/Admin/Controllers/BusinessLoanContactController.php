@@ -25,6 +25,7 @@ class BusinessLoanContactController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new BusinessLoanContact());
+        $grid->model()->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));

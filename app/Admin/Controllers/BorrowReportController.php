@@ -25,6 +25,7 @@ class BorrowReportController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new BorrowReport());
+        $grid->model()->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'));
         $grid->column('identity',__('身份'))->using(['1' => '學生', '2' => '上班族']);
