@@ -680,8 +680,9 @@ class Target extends REST_Controller {
                         } elseif ($value == 3){
                             $description = '已驗證個人金融帳號';
                         } elseif ($value == 4){
-                            $ig = isset($contents->instagram) ? $contents->instagram : $contents->info;
-                            $description .= 'FB：已綁定<br>Instagram' . '<br>貼文：' . (isset($ig->counts) ? $ig->counts->media : '') . '<br>追蹤者：' . (isset($ig->counts) ? $ig->counts->followed_by : '') . '<br>追蹤中：' . (isset($ig->counts) ? $ig->counts->follows : '') ;
+                            $ig = $contents->instagram ?? NULL;
+                            $ig_info = $ig->info ?? NULL;
+                            $description .= 'FB：已綁定<br>Instagram' . '<br>貼文：' . ($ig_info->allPostCount ?? '') . '<br>追蹤者：' . ($ig_info->allFollowerCount ?? '') . '<br>追蹤中：' . ($ig_info->allFollowingCount ?? '') ;
                         } elseif ($value == 5){
                             $description = '已輸入父母作為緊急聯絡人';
                         } elseif ($value == 6){
