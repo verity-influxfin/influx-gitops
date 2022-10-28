@@ -68,7 +68,7 @@
                                         <tr class="active">
                                             <th colspan="99">
                                                 {{item.date}} - {{eventCode(item.event_code)}} <br>
-                                                 債權人ID {{item.investment_id_int}}
+                                                 債權 ID {{item.investment_id_int}}
                                             </th>
                                         </tr>
                                         <template v-for="row in item.rsRow_list">
