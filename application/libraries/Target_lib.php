@@ -2518,6 +2518,7 @@ class Target_lib
                 foreach ($get_associates_list as $key => $value) {
                     $self = $self_user_id == $value->user_id;
                     $certification = $self ? $self_certification : [];
+                    $certification_id_list = array_column($certification, 'certification_id');
                     $user_id = $self ? $self_user_id : '';
                     $temp['character'] == '' && $self ? $temp['character'] = $value->character : '' ;
                     if(is_null($value->user_id)){
@@ -2533,9 +2534,12 @@ class Target_lib
                         $phone = $user_info->phone;
                         $certification_list = $this->CI->certification_lib->get_status($value->user_id, $this->CI->user_info->investor, $this->CI->user_info->company);
                         foreach ($certification_list as $ckey => $cvalue) {
-                            if (in_array($ckey, $product['certifications']) && $ckey <= 1000) {
+                            if (in_array($ckey, $product['certifications']) && $ckey <= 1000 &&
+                                ! in_array($cvalue['certification_id'], $certification_id_list))
+                            {
                                 $cvalue['optional'] = false;
                                 $certification[] = $cvalue;
+                                $certification_id_list[] = $cvalue['certification_id'];
                             }
                         }
                     }
