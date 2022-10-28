@@ -697,8 +697,17 @@ class Target extends REST_Controller {
                         } elseif ($value == 9){
                             if(isset($contents->result)){
                                 $info = reset($contents->result);
+
+                                // 負債比
+                                $repayment_cert = $cur_cer[CERTIFICATION_REPAYMENT_CAPACITY] ?? NULL;
+                                $debt_ratio = NULL;
+                                if ($repayment_cert)
+                                {
+                                    $debt_ratio = json_decode($repayment_cert->content ?? '[]', TRUE)['debt_to_equity_ratio'] ?? NULL;
+                                }
+                                
                                 if(isset($info)) {
-                                    $description = "負債比：" . (isset($info->debt_to_equity_ratio) ? $info->debt_to_equity_ratio . "%" : '') .
+                                    $description = "負債比：" . ($debt_ratio ? $debt_ratio . "%" : '') .
                                         "<br>延遲繳款紀錄：" . ($info->creditCardHasDelay ?? '') .
                                         "<br>信用卡使用率：" . (isset($info->creditCardUseRate) ? $info->creditCardUseRate . "%" : '') .
                                         "<br>預借現金：" . ($info->cashAdvanced ?? '');
