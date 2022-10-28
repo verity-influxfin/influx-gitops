@@ -63,7 +63,7 @@
 	}
 
 
-	function curl_get($url,$data = array(),$header = array(),$timeout=null) {
+	function curl_get($url,$data = array(),$header = array(),$timeout=null, $get_info = FALSE) {
 		$curl = curl_init($url);
 		if (ENVIRONMENT == "production") {
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
@@ -84,7 +84,23 @@
 			curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
 		}
 
+        if ($get_info === TRUE)
+        {
+            curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+        }
+
 		$rs = curl_exec($curl);
+
+        if ($get_info === TRUE)
+        {
+            $rs_decode = json_decode($rs, TRUE);
+            if (json_last_error() === JSON_ERROR_NONE)
+            {
+                $rs_decode['curl_getinfo'] = curl_getinfo($curl);
+                $rs = json_encode($rs_decode);
+            }
+        }
+
 		curl_close($curl);
 		return $rs;
 	}
