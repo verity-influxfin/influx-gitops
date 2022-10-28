@@ -2520,7 +2520,6 @@ class Target_lib
                     $certification = $self ? $self_certification : [];
                     $user_id = $self ? $self_user_id : '';
                     $temp['character'] == '' && $self ? $temp['character'] = $value->character : '' ;
-                    $product_certs = $this->CI->product_lib->get_product_certs_by_product($product, [$value->character]);
                     if(is_null($value->user_id)){
                         $content = json_decode($value->content);
                         $name = $content->name;
@@ -2534,7 +2533,7 @@ class Target_lib
                         $phone = $user_info->phone;
                         $certification_list = $this->CI->certification_lib->get_status($value->user_id, $this->CI->user_info->investor, $this->CI->user_info->company);
                         foreach ($certification_list as $ckey => $cvalue) {
-                            if (in_array($ckey, $product_certs) && $ckey <= 1000) {
+                            if (in_array($ckey, $product['certifications']) && $ckey <= 1000) {
                                 $cvalue['optional'] = false;
                                 $certification[] = $cvalue;
                             }
@@ -2563,16 +2562,6 @@ class Target_lib
                             $temp['addspouse'] = false;
                         }
                     }
-                    $associate_content = json_decode($value->content, TRUE);
-                    if (json_last_error() !== JSON_ERROR_NONE)
-                    {
-                        $email = NULL;
-                    }
-                    else
-                    {
-                        $email = ! empty($associate_content['mail']) ? $associate_content['mail'] : NULL;
-                    }
-
                     $data = [
                         'user_id' => $user_id,
                         'name' => $name,
@@ -2582,8 +2571,7 @@ class Target_lib
                         'status' => intval($value->status),
                         'guarantor' => ($value->guarantor == 1),
                         'self' => $self,
-                        'relationship' => $value->relationship ?? NULL,
-                        'email' => $email
+                        'certification' => $certification,
                     ];
                     $guarantor_type = [
                        2 => 'A',
