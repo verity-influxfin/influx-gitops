@@ -149,6 +149,28 @@ class ERP extends MY_Admin_Controller
     }
 
     /**
+     * 本攤表 Excel 下載
+     * 
+     * @created_at      2021-07-30
+     * @created_by      Jack
+     */
+    public function etpr_spreadsheet()
+    {
+        // get file from guzzle replayment_schedule/excel
+        $res = $this->erp_client_1->request('GET', '/v1/replayment_schedule/excel', [
+            'query' => $this->input->get()
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        echo $data;
+        die();
+    }
+
+    /**
      * 取得本攤表 API 資料
      * 
      * @created_at            2021-08-03
@@ -158,7 +180,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_etpr_data()
     {
-        $data = $this->erp_client_1->request('GET', 'replayment_schedule', [
+        $data = $this->erp_client_1->request('GET', '/v1/replayment_schedule', [
             'query' => $this->input->get() 
         ])->getBody()->getContents();
         echo $data;
@@ -166,23 +188,36 @@ class ERP extends MY_Admin_Controller
     }
 
     /**
-     * 本攤表 Excel 下載
+     * 本攤表v2 UI
      * 
-     * @created_at      2021-07-30
-     * @created_by      Jack
+     * @created_at      2022-10-27
+     * @created_by      Allan
      */
-    public function etpr_spreadsheet()
+    public function replayment()
     {
-        // get file from guzzle replayment_schedule/excel
-        $res = $this->erp_client_1->request('GET', 'replayment_schedule/excel', [
-            'query' => $this->input->get()
-        ]);
-        $des = $res->getHeader('content-disposition')[0];
-        $data = $res->getBody()->getContents();
-        // create download file by data
-        header('content-type: application/octet-stream');
-        header('content-disposition:' . $des);
-        header('content-length: ' . strlen($data));
+        $this->load->view(
+            'admin/erp/replayment',
+            $data = [
+                'menu'      => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts'   => [
+                    '/assets/admin/js/erp/replayment.js'
+                ]
+            ]
+        );
+    }
+
+    /**
+     * 取得本攤表v2 API 資料
+     * 
+     * @created_at            2021-10-27
+     * @created_at            Allan
+     */
+    public function get_replayment_data()
+    {
+        $data = $this->erp_client_1->request('GET', '/v2/replayment_schedule_list', [
+            'query' => $this->input->get() 
+        ])->getBody()->getContents();
         echo $data;
         die();
     }

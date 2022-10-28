@@ -579,6 +579,7 @@ $config['permission'] = [
       'menu' => [
           'assets_sheet' => ['name' => '債權明細表'],
           'etpr' => ['name' => '本攤表'],
+          'replayment' => ['name' => '本攤表v2'],
           'soci' => ['name' => '損益表'],
           'sofp' => ['name' => '資產負債表'],
           'journal' => ['name' => '日記簿'],
@@ -595,6 +596,8 @@ $config['permission'] = [
           'etpr' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'get_etpr_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'etpr_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'replayment' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'get_replayment_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'soci' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
           'get_soci_data' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
           'soci_spreadsheet' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
