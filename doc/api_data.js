@@ -4169,14 +4169,14 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "receipt_postal_image",
-                            "description": "<p>郵局申請的收執聯  ( 圖片IDs，以逗號隔開，最多15張 )，<br/>與 receipt_jcic_image 擇一填寫</p>"
+                            "field": "postal_image",
+                            "description": "<p>郵局申請的收執聯  ( 圖片IDs，以逗號隔開，最多15張 )，<br/>與 legal_person_mq_image 擇一填寫</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "receipt_jcic_image",
-                            "description": "<p>聯徵中心臨櫃申請的收執聯  ( 圖片IDs，以逗號隔開，最多15張 )，<br/>與 receipt_postal_image 擇一填寫</p>"
+                            "field": "legal_person_mq_image",
+                            "description": "<p>聯徵中心臨櫃申請的收執聯  ( 圖片IDs，以逗號隔開，最多15張 )，<br/>與 postal_image 擇一填寫</p>"
                         }
                     ]
                 }
