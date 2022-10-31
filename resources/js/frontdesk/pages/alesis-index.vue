@@ -5,6 +5,9 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <fund-header />
+              </div>
               <a class="swiper-slide" href="/workLoan" target="_blank">
                 <workloan-header />
               </a>
@@ -59,6 +62,9 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <fund-header />
+              </div>
               <div class="swiper-slide">
                 <workloan-header />
               </div>
@@ -1214,6 +1220,7 @@ import AlesisCounter from '../component/alesis/AlesisCounter'
 import float from '../component/floatComponent'
 import workloanHeader from '../component/index/header/workloanHeader.vue'
 import collegeloanHeader from '../component/index/header/collegeloanHeader.vue'
+import fundHeader from '../component/index/header/fundHeader'
 import { alesisIndexCounter } from './api'
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
@@ -1226,7 +1233,8 @@ export default {
     float,
     AlesisCounter,
     workloanHeader,
-    collegeloanHeader
+    collegeloanHeader,
+    fundHeader
   },
   data: () => ({
     indexCounter: {}
