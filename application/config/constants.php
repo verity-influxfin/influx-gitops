@@ -122,6 +122,7 @@ defined('NOT_INCORPORATION') or define('NOT_INCORPORATION', 223); //公司不是
 defined('NO_RESPONSIBLE_USER_BIND') or define('NO_RESPONSIBLE_USER_BIND', 224); //法人帳號沒有綁定自然人帳號
 defined('NO_RESPONSIBLE_IDENTITY') or define('NO_RESPONSIBLE_IDENTITY', 225); // 法人沒有通過負責人實名 by news
 defined('PROMOTE_CODE_NOT_EXIST') or define('PROMOTE_CODE_NOT_EXIST', 226); // 該推薦碼不存在
+defined('GO_GET_EMAIL_VERIFICATION') or define('GO_GET_EMAIL_VERIFICATION', 227); // 請至信箱收信驗證
 
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301);

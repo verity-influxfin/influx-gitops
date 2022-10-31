@@ -330,6 +330,7 @@ class User extends REST_Controller {
                     $result['error'] = NOT_IN_CHARGE;
                     goto END;
                 }
+                $company_info = $this->gcis_lib->get_company_president_info($input['tax_id']);
             }
             catch (Exception $e)
             {
@@ -416,6 +417,7 @@ class User extends REST_Controller {
                     // 啟用法人
                     'company_status' => 1,
                     'auth_otp' => $opt_token,
+                    'name' => $company_info['company_name'] ?? '',
                 ];
                 $new_id = $this->user_model->insert($new_company_user_param);
 

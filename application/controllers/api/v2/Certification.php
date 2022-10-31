@@ -2886,7 +2886,7 @@ class Certification extends REST_Controller {
                 }
                 elseif($input['labor_type']==1){
 					$content['labor_type']=$input['labor_type'];
-                    $this->mail_check($user_id,$investor);
+                    $this->mail_check($user_id, $investor, TRUE);
                     $send_mail =true;
                 }
             }
@@ -4764,11 +4764,17 @@ class Certification extends REST_Controller {
             $time = time();
             $content	= [];
 
-            $cer_exists = $this->user_certification_model->get_by([
+            $last_cert = $this->user_certification_model->order_by('created_at', 'DESC')->get_by([
                 'user_id' => $user_id,
                 'certification_id' => $certification_id,
-                'status' => 4,
             ]);
+            if ( ! empty($last_cert))
+            {
+                if ($last_cert->status == CERTIFICATION_STATUS_NOT_COMPLETED)
+                {
+                    $cer_exists = $last_cert;
+                }
+            }
             if (isset($input['save']) && $input['save']) {
                 $param = [
                     'user_id' => $user_id,
@@ -4778,22 +4784,26 @@ class Certification extends REST_Controller {
                     'status' => 4,
                 ];
 
-                if ($cer_exists) {
+                if ( ! empty($cer_exists)) {
                     $input = (object)array_merge((array)json_decode($cer_exists->content), (array)$input);
                     $rs = $this->user_certification_model->update($cer_exists->id, [
                         'content' => json_encode($input),
                     ]);
                 } else {
-                    $rs = $this->user_certification_model->insert($param);
+                    if ( ! empty($last_cert))
+                    {
+                        $rs = $this->user_certification_model->update($last_cert->id, [
+                            'content' => json_encode($input)
+                        ]);
+                    }
+                    else
+                    {
+                        $rs = $this->user_certification_model->insert($param);
+                    }
                 }
                 if ($rs) {
                     $this->response(['result' => 'SUCCESS','msg' => 'SAVED']);
                 }
-            }
-
-            //是否驗證過
-            if(!$cer_exists || $cer_exists->status != 4){
-                $this->was_verify($certification_id);
             }
 
             // 選填欄位
@@ -4810,11 +4820,20 @@ class Certification extends REST_Controller {
                 'investor' => $investor,
                 'content' => json_encode($content),
             ];
-            if ($cer_exists) {
+            if ( ! empty($cer_exists)) {
                 $param['status'] = 0;
                 $rs = $this->user_certification_model->update($cer_exists->id, $param);
             }else{
-                $rs = $this->user_certification_model->insert($param);
+                if ( ! empty($last_cert))
+                {
+                    $rs = $this->user_certification_model->update($last_cert->id, [
+                        'content' => json_encode($input)
+                    ]);
+                }
+                else
+                {
+                    $rs = $this->user_certification_model->insert($param);
+                }
             }
             if ($rs) {
                 $this->response(['result' => 'SUCCESS']);
@@ -4864,11 +4883,11 @@ class Certification extends REST_Controller {
         ];
     }
 
-    private function was_verify($certification_id = 0){
+    private function was_verify($certification_id = 0, $need_output = TRUE){
         if(isset($this->user_info->naturalPerson) && $certification_id < 1000) {
             $this->user_info->id = $this->user_info->naturalPerson->id;
         }
-        $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor);
+        $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor, TRUE);
         $exist_target_submitted = $this->target_lib->exist_approving_target_submitted($this->user_info->id);
         $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $user_certification->id ?? 0, $this->user_info->investor,
             (int) $this->user_info->company_status === 1
@@ -4884,11 +4903,22 @@ class Certification extends REST_Controller {
         return FALSE;
     }
 
-
-	private function mail_check($user_id,$investor){
+    private function mail_check($user_id, $investor, $chk_if_verified = FALSE)
+    {
         $user_certification	= $this->certification_lib->get_certification_info($user_id,6,$investor);
-        if(!$user_certification||$user_certification->status!=1){
+        if(!$user_certification){
             $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
+        }
+        elseif ($user_certification->status != CERTIFICATION_STATUS_SUCCEED)
+        {
+            if ($chk_if_verified !== TRUE)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => NOT_VERIFIED_EMAIL));
+            }
+            else
+            { // 請至信箱收信驗證
+                $this->response(array('result' => 'ERROR', 'error' => GO_GET_EMAIL_VERIFICATION));
+            }
         }
 	}
 

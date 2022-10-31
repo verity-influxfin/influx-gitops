@@ -234,4 +234,33 @@ class Gcis_lib
         }
     }
 
+    /**
+     * 取得法人基本資料 (會同時檢查公司與商行的資料)
+     * @param $account_no
+     * @return array|string[]
+     */
+    public function get_company_president_info($account_no)
+    {
+        $result = [
+            'company_name' => '', // 公司名稱
+        ];
+
+        // 公司資料
+        $company_info = $this->account_info($account_no);
+        if ( ! empty($company_info))
+        {
+            empty($company_info['Company_Name']) ?: $result['company_name'] = $company_info['Company_Name'];
+            goto END;
+        }
+
+        // 商行資料
+        $president_info = $this->account_info_businesss($account_no);
+        if ( ! empty($president_info))
+        {
+            empty($president_info['Business_Name']) ?: $result['company_name'] = $president_info['Business_Name'];
+        }
+
+        END:
+        return $result;
+    }
 }

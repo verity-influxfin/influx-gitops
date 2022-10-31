@@ -2563,14 +2563,22 @@ class Target_lib
                             $temp['addspouse'] = false;
                         }
                     }
-                    $associate_content = json_decode($value->content, TRUE);
-                    if (json_last_error() !== JSON_ERROR_NONE)
+                    if (isset($user_info))
                     {
-                        $email = NULL;
+                        $this->CI->load->helper('user_meta_helper');
+                        $email = get_email_to($user_info, BORROWER);
                     }
-                    else
+                    if (empty($email))
                     {
-                        $email = ! empty($associate_content['mail']) ? $associate_content['mail'] : NULL;
+                        $associate_content = json_decode($value->content, TRUE);
+                        if (json_last_error() !== JSON_ERROR_NONE)
+                        {
+                            $email = NULL;
+                        }
+                        else
+                        {
+                            $email = ! empty($associate_content['mail']) ? $associate_content['mail'] : NULL;
+                        }
                     }
 
                     $data = [
