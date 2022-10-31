@@ -1,0 +1,54 @@
+<template>
+  <div>
+    <!-- phone -->
+    <div class="d-sm-none d-flex no-gutters flex-wrap mt-4">
+      <div class="col-12">
+        <img
+          src="@/asset/images/index/header/fund-header-phone.png"
+          class="d-block mx-auto"
+        />
+      </div>
+    </div>
+    <!-- web -->
+    <div class="d-sm-flex d-none no-gutters justify-content-lg-between">
+      <div class="col-12">
+        <img
+          src="@/asset/images/index/header/fund-header.png"
+          class="w-100"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.text-bg {
+  height: 325px;
+  padding-top: 50px;
+}
+.btn-join {
+  border-radius: 12px;
+  padding: 10px;
+  color: #fff;
+  background: #083a6e;
+  box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  font-size: 28px;
+}
+.people-bg {
+  top: -35px;
+  position: relative;
+  padding-right: 75px;
+}
+@media screen and (max-width: 576px) {
+  .text-bg {
+    padding-top: 25px;
+    height: 100px;
+  }
+  .people-bg {
+    padding-right: 0;
+    display: block;
+    margin: 65px auto 0;
+  }
+}
+</style>
