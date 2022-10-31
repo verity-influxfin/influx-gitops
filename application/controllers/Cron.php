@@ -389,7 +389,7 @@ class Cron extends CI_Controller
 						'delay_days > ' => 0,
 					]);
 					if(!isset($delay_target)) {
-						$this->certification_lib->set_failed($info->id, '親愛的會員您好，為確保資料真實性，請至我的>資料中心>實名認證，更新您的訊息，謝謝。', true);
+						$this->certification_lib->set_failed($info->id, '親愛的會員您好，為確保資料真實性，請您提重新提供實名認證資料，更新您的訊息，謝謝。', true);
 						$this->notification_lib->temp_realname_failed($info->user_id);
 						$failedCnt++;
 					}

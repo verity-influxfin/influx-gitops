@@ -31,7 +31,7 @@ class Notification_lib{
 
 	public function recheck_certification($user_id,$investor,$fail=""){
 		$title = "【普匯系統通知】";
-		$content = "親愛的會員您好，為確保資料真實性，請至我的>資料中心>實名認證，更新您的訊息，謝謝。";
+		$content = "親愛的會員您好，為確保資料真實性，請您提重新提供實名認證資料，更新您的訊息，謝謝。";
 		$type = 'b03';
 
 		$param = array(
