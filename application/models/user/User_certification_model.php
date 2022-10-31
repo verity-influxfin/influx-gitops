@@ -158,6 +158,7 @@ class User_certification_model extends MY_Model
             ->where('remark !=', '')
             ->where('status', 1)
             ->where('certification_id', 1)
+            ->order_by('created_at', 'DESC')
             ->limit($limit, $offset)
             ->get();
 
@@ -174,6 +175,7 @@ class User_certification_model extends MY_Model
             ->where('status', 1)
             ->where('investor', USER_BORROWER)
             ->where('certification_id', 1)
+            ->order_by('created_at', 'DESC')
             ->limit($limit, $offset)
             ->get();
 
