@@ -973,7 +973,7 @@ END:
             { // 統編不存在，APP提示「前往註冊」
                 $this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
             }
-            if ($user_info['phone'] != $input['phone'])
+            if ($user_info->phone != $input['phone'])
             { // 統編存在但與儲存的電話不同，APP提示「重新輸入」
                 $this->response(array('result' => 'ERROR','error' => USER_TAX_ID_PHONE_UNMATCHED ));
             }
