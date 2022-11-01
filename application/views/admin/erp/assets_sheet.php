@@ -57,7 +57,7 @@
                                         <th>放款日期</th>
                                         <th>案件狀態</th>
                                         <th>債權案號</th>
-                                        <th>債權人 ID</th>
+                                        <th>債權 ID</th>
                                         <th>債權來源</th>
                                         <th>放款金額</th>
                                         <th>債權狀態</th>
@@ -85,7 +85,7 @@
                                             <td>{{ item.interest_method }}</td>
                                             <td>{{ item.loan_date }}</td>
                                             <td>{{ item.case_status }}</td>
-                                            <td>{{ item.target_id }}</td>
+                                            <td>{{ item.investment_id }}</td>
                                             <td>{{ item.investment_user_id }}</td>
                                             <td>{{item.investment_source_str}}</td>
                                             <td>{{ amount(item.investment_loan_amount) }}</td>

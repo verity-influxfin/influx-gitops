@@ -16,8 +16,8 @@
                         <div class="row alert alert-info m-3">
                             <div class="col-lg-12">
                                 <div>
-                                    投資人 ID ,債權人 ID 串列 擇一輸入，若兩者皆輸入，則以投資人ID為主<br />
-                                    債權人 ID 串列以 ',' 分隔，如: 3,4,5
+                                    投資人 ID ,債權 ID 串列 擇一輸入，若兩者皆輸入，則以投資人ID為主<br />
+                                    債權 ID 串列以 ',' 分隔，如: 3,4,5
                                 </div>
                             </div>
                         </div>
@@ -36,8 +36,8 @@
                                     <input type="text" class="form-control" id="investor_id" name="investor_id" v-model="searchform.user_id_int" placeholder="投資人 ID">
                                 </div>
                                 <div class="form-group w-25">
-                                    <label class="sr-only" for="investor_id">債權人 ID 串列</label>
-                                    <input type="text" class="form-control" id="investment_id_int_list_str" name="investment_id_int_list_str" v-model="searchform.investment_id_int_list_str" placeholder="債權人 ID 串列">
+                                    <label class="sr-only" for="investor_id">債權 ID 串列</label>
+                                    <input type="text" class="form-control" id="investment_id_int_list_str" name="investment_id_int_list_str" v-model="searchform.investment_id_int_list_str" placeholder="債權 ID 串列">
                                 </div>
                                 <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
                                     <i class="fa fa-search"></i> 搜尋
