@@ -444,7 +444,7 @@
         function getMappingMsgNo(target_id,action,data_type,result){
       	  $.ajax({
                 type: "GET",
-                url: `/admin/bankdata/waiting_reinspection/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
+                url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
                 success: function (response) {
                     response = response.response;
                     result(response);
