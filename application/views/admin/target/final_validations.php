@@ -1472,22 +1472,26 @@
 			$(`#1_score`).attr({
 				"max": case_aprove_item.creditLineInfo.scoringMax,
 				"min": case_aprove_item.creditLineInfo.scoringMin,
-				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax}){value=${case_aprove_item.creditLineInfo.scoringMax}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 			$(`#2_score`).attr({
 				"max": case_aprove_item.creditLineInfo.scoringMax,
 				"min": case_aprove_item.creditLineInfo.scoringMin,
-				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax}){value=${case_aprove_item.creditLineInfo.scoringMax}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 			$(`#3_score`).attr({
 				"max": case_aprove_item.creditLineInfo.scoringMax,
 				"min": case_aprove_item.creditLineInfo.scoringMin,
-				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax}){value=${case_aprove_item.creditLineInfo.scoringMax}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 			$(`#4_score`).attr({
 				"max": case_aprove_item.creditLineInfo.scoringMax,
 				"min": case_aprove_item.creditLineInfo.scoringMin,
-				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax}){value=${case_aprove_item.creditLineInfo.scoringMax}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 		}
 
