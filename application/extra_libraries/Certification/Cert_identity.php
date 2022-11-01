@@ -90,7 +90,7 @@ class Cert_identity extends Certification_base
             {
                 $this->remark['failed_type_list'] = [REALNAME_IMAGE_TYPE_FRONT, REALNAME_IMAGE_TYPE_BACK, REALNAME_IMAGE_TYPE_PERSON];
                 $this->result->addMessage(
-                    '親愛的會員您好，為確保資料真實性，請至我的>資料中心>實名認證，更新您的訊息，謝謝。',
+                    '親愛的會員您好，為確保資料真實性，請您提重新提供實名認證資料，更新您的訊息，謝謝。',
                     CERTIFICATION_STATUS_FAILED,
                     MessageDisplay::Client
                 );

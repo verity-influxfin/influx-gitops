@@ -1385,7 +1385,6 @@
                                     <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">新光 收件檢核表送出</button>
                                     <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">新光 圖片送出</button>
                                     <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">新光 通過</button>
-
                                 </div>
                                 <div class="mt-2">
                                     <button id="kgibank_text_send_btn" class="btn btn-primary btn-info" onclick="">凱基 收件檢核表送出</button>

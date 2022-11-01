@@ -63,11 +63,14 @@ class Cert_job extends Cert_pdf
     {
         $parsed_content = $this->content ?? [];
         $url = $this->content['pdf_file'] ?? '';
+        $parsed_content = array_merge(
+            $parsed_content,
+            $this->_get_ocr_marker_info(),
+            $this->_get_ocr_parser_info()
+        );
         $mime = get_mime_by_extension($url);
-
         $gcis_info = $this->_get_gcis_info($parsed_content);
         $parsed_content['gcis_info'] = $gcis_info;
-
         if (is_image($mime) ||
             // 由圖片組成的 PDF 會將 is_valid_pdf 標記為 0, 需直接轉人工
             (isset($this->content['is_valid_pdf']) && $this->content['is_valid_pdf'] == 0))
@@ -81,12 +84,6 @@ class Cert_job extends Cert_pdf
             {
                 return $parsed_content;
             }
-            $parsed_content = array_merge(
-                $parsed_content,
-                $this->_get_ocr_marker_info(),
-                $this->_get_ocr_parser_info()
-            );
-
             if ( ! empty($parsed_content['ocr_parser']['content']))
             {
                 $response = $parsed_content['ocr_parser']['content'];

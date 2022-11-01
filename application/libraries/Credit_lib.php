@@ -163,6 +163,7 @@ class Credit_lib{
         $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_' . $product_id];
 
 	    if($stage_cer == 0) {
+            NORMAL_CREDIT:
             $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
             $user_info = $this->CI->user_model->get($user_id);
             $this->CI->load->model('user/user_certification_model');
@@ -308,12 +309,15 @@ class Credit_lib{
             }
 
             $param['points'] = intval($total);
-
+            goto SKIP_STAGE_CREDIT;
         }
         if(in_array($stage_cer,[1,2])){
+            // todo: 暫時繞過階段上架的評分方式
+            goto NORMAL_CREDIT;
             $param['points'] = $total = 100;
         }
 
+        SKIP_STAGE_CREDIT:
         if($mix_credit){
             return $param['points'];
         }
@@ -498,11 +502,13 @@ class Credit_lib{
 
         if ($stage_cer)
         {
+            goto SKIP_STAGE_CREDIT;
             $tmp_msg = '--- 原始風控計算: ' . $total;
             $total = min($total, $this->credit['credit_level_3'][10]['end']);
             $this->scoreHistory[] = "{$tmp_msg}; 因階段上架調整為: {$total} ---";
         }
 
+        SKIP_STAGE_CREDIT:
         $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
         $is_top_enterprise = 0;
         if ($approvalExtra) {

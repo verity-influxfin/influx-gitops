@@ -377,7 +377,7 @@ END:
 
             $skbankRequestUrl = $this->skbankRequestUrl;
             $postJsonData = json_encode($encryptedRequest);
-            $sendResult = curl_get($skbankRequestUrl, $postJsonData, $headers);
+            $sendResult = curl_get($skbankRequestUrl, $postJsonData, $headers, NULL, TRUE);
             $responseResult = json_decode($sendResult, true);
 
             // log request
@@ -386,6 +386,11 @@ END:
                 'encrypted'     => $encryptedRequest,
                 'output_header' => $headers
             ];
+
+            if ( ! empty($responseResult['curl_getinfo']))
+            {
+                $requestContent['curl_getinfo'] = $responseResult['curl_getinfo'];
+            }
 
             $responseContent = json_decode($sendResult);
 
