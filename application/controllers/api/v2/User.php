@@ -1057,6 +1057,30 @@ END:
 		$data['incharge'] 				= intval($this->user_info->incharge);
 		$data['agent'] 					= intval($this->user_info->agent);
 		$data['expiry_time'] 			= intval($this->user_info->expiry_time);
+        $data['has_spouse'] = FALSE;
+
+        $this->load->model('user/user_certification_model');
+        if (isset($this->user_info->company) && $this->user_info->company != 0)
+        {
+            $this->load->library('judicialperson_lib');
+            $natural_person = $this->judicialperson_lib->getNaturalPerson($this->user_info->id);
+            $identity_cert = $this->user_certification_model->get_content($natural_person->id, CERTIFICATION_IDENTITY);
+        }
+        else
+        {
+            $identity_cert = $this->user_certification_model->get_content($user_id, CERTIFICATION_IDENTITY);
+        }
+
+        if ( ! empty($identity_cert))
+        {
+            $identity_cert = current($identity_cert);
+            $identity_cert_content = json_decode($identity_cert->content ?? '', TRUE);
+            if (json_last_error() === JSON_ERROR_NONE)
+            {
+                $data['has_spouse'] = (bool) ($identity_cert_content['hasSpouse'] ?? FALSE);
+            }
+        }
+
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 
