@@ -881,15 +881,9 @@ END:
 		}
 
         // 自然人或法人判斷
-        if (isset($input['tax_id'])) {
-            // 法人
-            $user_info = $this->user_model->get_by([
-                'id_number' => $input['tax_id'],
-                'phone' => $input['phone'],
-                'company_status' => 1
-            ]);
-        } else {
-            // 自然人
+        if ( ! empty($input['phone']))
+        {
+            // 不管是法人或是自然人帳號，統一只驗證自然人的手機號碼是否存在即可
             $user_info = $this->user_model->get_by([
                 'phone' => $input['phone'],
                 'company_status' => 0
