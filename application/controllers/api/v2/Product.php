@@ -1993,9 +1993,11 @@ class Product extends REST_Controller {
                     'status' => [0, 1]
                 ]);
 				$this->load->library('Sendemail');
+                $notification_subject = "【投資標的】您的投資利率已提高";
                 foreach ($investments as $inv_key => $inv_val) {
                     $this->target_lib->cancel_investment($target, $inv_val, $user_id);
-					$this->sendemail->change_interest_rate($inv_val, $target->interest_rate, $new_rate);
+                    $rate_increased_notification = $this->rate_increased_notification_content($inv_val->created_at, $target->interest_rate, $new_rate);
+					$this->sendemail->change_interest_rate($inv_val, $target->interest_rate, $new_rate, $notification_subject, $rate_increased_notification);
                 }
                 $target->status = 2;
                 $this->load->library('Contract_lib');
@@ -2015,6 +2017,10 @@ class Product extends REST_Controller {
                 foreach ($investments as $investment)
                 {
                     $user_ids_to_exclude[] = $investment->user_id;
+                    $rate_increased_notification = $this->rate_increased_notification_content($investment->created_at, $target->interest_rate, $new_rate);
+                    $this->notification_lib->notify_rate_increased(
+                        [$investment->user_id], $target->interest_rate, $new_rate, $notification_subject, $rate_increased_notification
+                    );
                 }
                 $this->notification_lib->notify_rate_increased(
                     $this->user_model->get_ids($user_ids_to_exclude), $target->interest_rate, $new_rate
@@ -3018,6 +3024,16 @@ class Product extends REST_Controller {
         } else {
             $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
         }
+    }
+
+    private function rate_increased_notification_content($invest_time, $old_rate, $new_rate): string
+    {
+        return "親愛的投資人請注意：
+			您的投資標的有一項重大變更！
+			您於" .  date("m月d日", $invest_time) . "投資債權，剛剛自主提升利率由
+			".$old_rate."%-->".$new_rate."%
+			同樣的項目，更高的潛在收益！
+			請登錄普匯APP 下標搶佔先手";
     }
 
     // 消費貸款申請

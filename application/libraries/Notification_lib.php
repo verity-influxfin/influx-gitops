@@ -1060,7 +1060,7 @@ econtent;
      * @param $new_rate
      * @return void
      */
-    public function notify_rate_increased($user_ids, $old_rate, $new_rate)
+    public function notify_rate_increased($user_ids, $old_rate, $new_rate, $title=NULL, $content=NULL)
     {
         $this->CI->load->model('log/Log_userlogin_model');
         $devices = $this->CI->Log_userlogin_model->get_filtered_deviceid(
@@ -1073,8 +1073,8 @@ econtent;
             'target_platform' => 'android/ios',
             'tokens' => $devices,
             "notification"=> [
-                "title" => "優質案件利率提升",
-                "body" => "優質案件上架，借款人主動提升利率 {$old_rate}% → {$new_rate}%，趕快開啟[普匯投資]搶標！",
+                "title" => $title ?? "優質案件利率提升",
+                "body" => $content ?? "優質案件上架，借款人主動提升利率 {$old_rate}% → {$new_rate}%，趕快開啟[普匯投資]搶標！",
             ],
             "data" => [],
             "send_at" => (new DateTime())->format('Y-m-d H:i'),
