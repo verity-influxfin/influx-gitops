@@ -5,6 +5,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Payment_lib{
     private $charity_virtual_account = [];
 
+    // Key: bank code, value: bank account
+    private $REMIT_SOURCE_WHITE_LIST = [
+        '050' => '02612692915'
+    ];
+
 	public function __construct()
     {
         $this->CI = &get_instance();
@@ -219,6 +224,12 @@ class Payment_lib{
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				} else {
+                    if (isset($this->REMIT_SOURCE_WHITE_LIST[$bank_code]) && $this->REMIT_SOURCE_WHITE_LIST[$bank_code] == $bank_account)
+                    {
+                        $this->CI->transaction_lib->recharge($value->id);
+                        return true;
+                    }
+
                     $isTaishinVirtualCode = substr($value->virtual_account, 0, 5) == TAISHIN_VIRTUAL_CODE ? true : false;
 					if (!investor_virtual_account($value->virtual_account) || $isTaishinVirtualCode) {
 						$this->CI->transaction_lib->recharge($value->id);
