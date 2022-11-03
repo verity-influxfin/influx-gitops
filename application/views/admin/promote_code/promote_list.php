@@ -16,7 +16,7 @@
                 }
             </style>
 			<script type="text/javascript">
-                const url = new URL(location.href);
+                const url2 = new URL(location.href);
 
                 function showChang(){
                     var tsearch 			= $('#tsearch').val();
@@ -44,8 +44,8 @@
                         edate: $('#edate').val(),
                         export: 1
                     };
-                    url.search = new URLSearchParams(searchParams);
-                    top.location = url.href;
+                    url2.search = new URLSearchParams(searchParams);
+                    top.location = url2.href;
                 }
 			</script>
             <!-- /.row -->
