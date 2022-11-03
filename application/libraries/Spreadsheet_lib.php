@@ -16,7 +16,13 @@ use PhpOffice\PhpSpreadsheet\Style\Color;
 
 class Spreadsheet_lib
 {
-	/**
+    public $row_index;
+    public function __construct()
+    {
+        $this->row_index = 1;
+    }
+
+    /**
 	 * 標題列
 	 * $title_rows = [
 	 *     'target_no' => [         //對應的資料列值
@@ -25,7 +31,13 @@ class Spreadsheet_lib
 	 *         'alignment' => [
 	 *             'h' => 'center', //水平對齊: center=置中, right=置右, left=置左
 	 *             'v' => 'top'     //垂直對齊: center=置中, top=置頂, bottom=置底
-	 *         ]
+	 *         ],
+     *         'rowspan' => 2, // 合併儲存格: 行數
+     *         'colspan' => 5, // 合併儲存格: 欄數
+     *         'merge' => [    // 合併儲存格的下方子欄位
+     *             'sub_col1' => ['name' => '子欄位名稱1', 'width' => 5, ''],
+     *             'sub_col2' => ['name' => '子欄位名稱2', 'width' => 5, ''],
+     *         ]
 	 *     ],
 	 * ]
 	 *
@@ -33,6 +45,7 @@ class Spreadsheet_lib
 	 * $data_rows = [
 	 *     ['target_no' => 'STN2021091300001', 'user_id' => '47174'],
 	 *     ['target_no' => 'STS2019061700001', 'user_id' => '487']
+	 *     ['target_no' => 'STS2019061700001', 'user_id' => ['value' => '123456', 'rowspan' => 2]]
 	 * ]
 	 */
 	function load($title_rows, $data_rows)
@@ -45,8 +58,8 @@ class Spreadsheet_lib
 		$style->getAlignment()->setWrapText(true);
 		$style->getAlignment()->setVertical(Alignment::VERTICAL_TOP);
 
-		$this->draw_title($sheet, $title_rows);
-		$this->draw_data($sheet, $title_rows, $data_rows);
+        $this->draw_title($sheet, $title_rows, $this->row_index);
+        $this->draw_data($sheet, $title_rows, $data_rows, $this->row_index);
 
         return $spreadsheet;
 	}
@@ -70,16 +83,17 @@ class Spreadsheet_lib
         $writer->save('php://output');
     }
 
-	/**
-	 * 畫標題
-	 * @param $sheet
-	 * @param $title_rows : 標題列
-	 * @param int $row_index : 從第n列開始畫
-	 * @return mixed
-	 */
-	function draw_title(&$sheet, $title_rows, $row_index = 1)
+    /**
+     * 畫標題
+     * @param $sheet
+     * @param $title_rows : 標題列
+     * @param int $row_index : 從第n列開始畫
+     * @param int $column_counter
+     * @return void
+     */
+	function draw_title(&$sheet, $title_rows, int $row_index, int $column_counter = 0)
 	{
-		$column_counter = 0;
+        $max_row_index = $row_index;
 		foreach ($title_rows as $value) {
 			$column_index = $this->ASCII_chr($column_counter);
 
@@ -97,8 +111,34 @@ class Spreadsheet_lib
 			$alignment->setVertical(Alignment::VERTICAL_CENTER);
 			$alignment->setWrapText(false);
 
+            // rowspan
+            $row_span = 1;
+            if ( ! empty($value['rowspan']))
+            {
+                $row_span = $value['rowspan'];
+                $merge_end_row_index = $row_index + $row_span - 1;
+                if ($merge_end_row_index > $max_row_index)
+                {
+                    $max_row_index = $merge_end_row_index;
+                }
+                $sheet->mergeCells("{$column_index}{$row_index}:{$column_index}{$merge_end_row_index}");
+            }
+
+            // colspan
+            if ( ! empty($value['colspan']))
+            {
+                if ( ! empty($value['merge']))
+                {
+                    $this->draw_title($sheet, $value['merge'], ($row_index + $row_span), $column_counter);
+                }
+                $column_counter = $column_counter + $value['colspan'] - 1;
+                $merge_end_column_index = $this->ASCII_chr($column_counter);
+                $sheet->mergeCells("{$column_index}{$row_index}:{$merge_end_column_index}{$row_index}");
+            }
+
 			$column_counter++;
 		}
+        $this->row_index = $max_row_index + 1;
 	}
 
 	/**
@@ -109,64 +149,103 @@ class Spreadsheet_lib
 	 * @param int $row_index : 從第n列開始畫
 	 * @return mixed
 	 */
-	function draw_data(&$sheet, $title_rows, $data_rows, $row_index = 2)
+	function draw_data(&$sheet, $title_rows, $data_rows, int $row_index = 2)
 	{
 		foreach ($data_rows as $this_data_row) {
 			$column_counter = 0;
-			foreach ($title_rows as $key => $value) {
-				$column_index = $this->ASCII_chr($column_counter);
-
-				$data_value = '';
-				if (isset($this_data_row[$key])) {
-					$data_value = $this_data_row[$key];
-				}
-
-                $data_type = $value['datatype']
-                    ?? is_numeric($data_value)
-                        ? DataType::TYPE_NUMERIC
-                        : DataType::TYPE_STRING;
-				$sheet->setCellValueExplicit($column_index . ($row_index), $data_value, $data_type);
-
-				if (isset($value['alignment'])) {
-					$alignment = $sheet->getStyle($column_index . $row_index)->getAlignment();
-
-					//水平對齊
-					if (isset($value['alignment']['h'])) {
-						switch ($value['alignment']['h']) {
-							case 'center':
-								$alignment->setHorizontal(Alignment::HORIZONTAL_CENTER);
-								break;
-							case 'right':
-								$alignment->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-								break;
-							case 'left':
-								$alignment->setHorizontal(Alignment::HORIZONTAL_LEFT);
-								break;
-						}
-					}
-
-					//垂直對齊
-					if (isset($value['alignment']['v'])) {
-						switch ($value['alignment']['v']) {
-							case 'center':
-								$alignment->setVertical(Alignment::VERTICAL_CENTER);
-								break;
-							case 'top':
-								$alignment->setVertical(Alignment::VERTICAL_TOP);
-								break;
-							case 'bottom':
-								$alignment->setVertical(Alignment::VERTICAL_BOTTOM);
-								break;
-						}
-					}
-				}
-
-				$column_counter++;
-			}
-
-			$row_index++;
+            foreach ($title_rows as $this_title_key => $this_title_row)
+            {
+                $this->draw_each_data_row(
+                    $sheet,
+                    [$this_title_key => $this_title_row],
+                    $this_data_row,
+                    $row_index,
+                    $column_counter
+                );
+            }
+            $row_index++;
 		}
 	}
+
+    /**
+     * @return void
+     */
+    public function draw_each_data_row(&$sheet, $this_title_row, $this_data_row, int &$row_index, int &$column_counter = 0)
+    {
+        $key = array_key_first($this_title_row);
+        $this_title_row = current($this_title_row);
+
+        $column_index = $this->ASCII_chr($column_counter);
+        if ( ! empty($this_title_row['merge']))
+        {
+            foreach ($this_title_row['merge'] as $sub_title_key => $sub_title_row)
+            {
+                $this->draw_each_data_row($sheet, [$sub_title_key => $sub_title_row], $this_data_row, $row_index, $column_counter);
+            }
+            return;
+        }
+        $data_value = '';
+        if (isset($this_data_row[$key]))
+        {
+            if(is_array($this_data_row[$key]) && isset($this_data_row[$key]['value']))
+            {
+                $data_value = $this_data_row[$key]['value'];
+                if ( ! empty($this_data_row[$key]['rowspan']))
+                {
+                    $merge_end_row_index = $row_index + $this_data_row[$key]['rowspan'] - 1;
+                    $sheet->mergeCells("{$column_index}{$row_index}:{$column_index}{$merge_end_row_index}");
+                }
+            }
+            else
+            {
+                $data_value = $this_data_row[$key];
+            }
+        }
+
+        $data_type = $this_title_row['datatype'] ?? (is_numeric($data_value) ? DataType::TYPE_NUMERIC : DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit($column_index . $row_index, $data_value, $data_type);
+
+        if (isset($this_title_row['alignment']))
+        {
+            $alignment = $sheet->getStyle($column_index . $row_index)->getAlignment();
+
+            //水平對齊
+            if (isset($this_title_row['alignment']['h']))
+            {
+                switch ($this_title_row['alignment']['h'])
+                {
+                    case 'center':
+                        $alignment->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                        break;
+                    case 'right':
+                        $alignment->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+                        break;
+                    case 'left':
+                        $alignment->setHorizontal(Alignment::HORIZONTAL_LEFT);
+                        break;
+                }
+            }
+
+            //垂直對齊
+            if (isset($this_title_row['alignment']['v']))
+            {
+                switch ($this_title_row['alignment']['v'])
+                {
+                    case 'center':
+                        $alignment->setVertical(Alignment::VERTICAL_CENTER);
+                        break;
+                    case 'top':
+                        $alignment->setVertical(Alignment::VERTICAL_TOP);
+                        break;
+                    case 'bottom':
+                        $alignment->setVertical(Alignment::VERTICAL_BOTTOM);
+                        break;
+                }
+            }
+        }
+
+        $column_counter++;
+    }
 
 	/**
 	 * 數字轉換成英文
