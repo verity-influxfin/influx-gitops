@@ -8,7 +8,9 @@ var app = new Vue({
             investment_id_int_list_str: ''
         },
         is_waiting_response: false,
-        replayment_list: []
+        replayment_list: [],
+        replayment_list_latest: [],
+        tab:'tab1'
     },
     computed: {
     },
@@ -34,6 +36,23 @@ var app = new Vue({
             axios.get('/admin/erp/get_replayment_data?' + string)
                 .then(({ data }) => {
                     this.replayment_list = data
+                }).catch((error) => {
+                    alert('子系統錯誤或無回應:' + error)
+                }).finally(() => {
+                    this.is_waiting_response = false
+                })
+        },
+        doSearchLatest() {
+            const { start_date, end_date, user_id_int, investment_id_int_list_str } = this.searchform
+            const string = Object.entries({ start_date, end_date, user_id_int, investment_id_int_list_str })
+                .filter(([key, value]) => value !== '')
+                .map(([key, value]) => `${key}=${value}`)
+                .join('&')
+            // axios get get_replayment_data
+            this.is_waiting_response = true
+            axios.get('/admin/erp/get_replayment_data_latest?' + string)
+                .then(({ data }) => {
+                    this.replayment_list_latest = data
                 }).catch((error) => {
                     alert('子系統錯誤或無回應:' + error)
                 }).finally(() => {

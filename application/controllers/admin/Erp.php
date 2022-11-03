@@ -223,6 +223,21 @@ class ERP extends MY_Admin_Controller
     }
 
     /**
+     * 取得本攤表v2 API 資料
+     * 
+     * @created_at            2021-11-03
+     * @created_at            Allan
+     */
+    public function get_replayment_data_latest()
+    {
+        $data = $this->erp_client_1->request('GET', '/v2/replayment_schedule_list/latest', [
+            'query' => $this->input->get() 
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+
+    /**
      * 資產負債表 UI
      * 
      * @created_at      2021-07-30
