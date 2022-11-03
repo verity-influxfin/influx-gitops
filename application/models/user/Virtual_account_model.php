@@ -2,27 +2,27 @@
 
 class Virtual_account_model extends MY_Model
 {
-	public $_table = 'virtual_account';
-	public $before_create = array( 'before_data_c' );
+    public $_table = 'virtual_account';
+    public $before_create = array( 'before_data_c' );
 //	public $before_update = array( 'before_data_u' );
-	public $investor_list  	= array(
-		0 =>	"借款端",
-		1 =>	"出借端",
-	);
-	
-	public $status_list  	= array(
-		0 =>	"凍結中",
-		1 =>	"正常",
-		2 =>	"使用中",
-	);
-	
-	public function __construct()
-	{
-		parent::__construct();
-		$this->_database = $this->load->database('default',TRUE);
- 	}
-	
-	protected function before_data_c($data)
+    public $investor_list  	= array(
+        0 =>	"借款端",
+        1 =>	"出借端",
+    );
+
+    public $status_list  	= array(
+        0 =>	"凍結中",
+        1 =>	"正常",
+        2 =>	"使用中",
+    );
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_database = $this->load->database('default',TRUE);
+    }
+
+    protected function before_data_c($data)
     {
         $data['created_at'] = time();
         $data['created_ip'] = get_ip();
@@ -132,5 +132,25 @@ class Virtual_account_model extends MY_Model
             ->get()
             ->first_row('array');
         return $result['virtual_account'] ?? 0;
+    }
+
+    /**
+     * Get the latest available investor virtual account.
+     * @param int $user_id
+     * @return string NULL if there is no matching data
+     */
+    public function get_valid_investor_account(int $user_id): string
+    {
+        $result = $this->db
+            ->select('va.virtual_account')
+            ->from('virtual_account va')
+            ->where('va.investor', INVESTOR)
+            ->where('va.user_id', $user_id)
+            ->where('va.status', VIRTUAL_ACCOUNT_STATUS_AVAILABLE)
+            ->order_by('va.created_at', 'DESC')
+            ->get()
+            ->first_row('array');
+
+        return $result['virtual_account'];
     }
 }
