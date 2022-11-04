@@ -117,17 +117,26 @@ class Log_userlogin_model extends MY_Model
 
 		// 如果要指定某些使用者時則不套用其他過濾條件
 		if(!empty($filterRole['user_ids'])) {
-			$userData = explode(",", $filterRole['user_ids']);
-
-			foreach($userData as $users) {
-				$userRange = explode("-", $users);
-				if(isset($userRange) && is_array($userRange) && count($userRange) == 2) {
-					$this->_database->or_where('(id >=', $userRange[0], FALSE);
-					$this->_database->where('id <=', $userRange[1].")", FALSE);
-				}else if(is_numeric($users)) {
-					$this->_database->or_where('id = ', $users);
-				}
-			}
+            if (is_string($filterRole['user_ids']))
+            {
+                $userData = explode(",", $filterRole['user_ids']);
+                foreach($userData as $users) {
+                    $userRange = explode("-", $users);
+                    if(isset($userRange) && is_array($userRange) && count($userRange) == 2) {
+                        $this->_database->or_where('(id >=', $userRange[0], FALSE);
+                        $this->_database->where('id <=', $userRange[1].")", FALSE);
+                    }else if(is_numeric($users)) {
+                        $this->_database->or_where('id = ', $users);
+                    }
+                }
+            }
+            else  // Should be an array.
+            {
+                foreach ($filterRole['user_ids'] as $user_id)
+                {
+                    $this->_database->or_where('id = ', $user_id);
+                }
+            }
 		}else {
 			// 過濾指定年齡
 			if (!empty($filterRole['age_range_start']) && !empty($filterRole['age_range_end'])) {

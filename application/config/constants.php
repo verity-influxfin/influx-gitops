@@ -268,8 +268,16 @@ defined('CERTIFICATION_SUBSTATUS_NOT_ONE_MONTH') OR define('CERTIFICATION_SUBSTA
 // 已送出審核
 defined('CERTIFICATION_CERTIFICATE_STATUS_SENT') OR define('CERTIFICATION_CERTIFICATE_STATUS_SENT', 1);
 
-// HTTP status code for custom error
-defined('CUSTOM_HTTP_ERROR_CODE') 	OR define('CUSTOM_HTTP_ERROR_CODE'	, 587);
+
+// HTTP status code
+
+// Success
+defined('HTTP_STATUS_OK') 	OR define('HTTP_STATUS_OK'	, 200);
+// Created
+defined('HTTP_STATUS_CREATED') 	OR define('HTTP_STATUS_CREATED'	, 201);
+// For custom error
+defined('HTTP_STATUS_CUSTOM_ERROR') 	OR define('HTTP_STATUS_CUSTOM_ERROR'	, 587);
+
 
 // 通知類型
 defined('NOTIFICATION_TYPE_NONE') OR define('NOTIFICATION_TYPE_NONE', 0);

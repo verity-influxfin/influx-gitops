@@ -113,6 +113,16 @@ class User_model extends MY_Model
         return $query->result();
     }
 
+    public function get_ids($exclude_ids)
+    {
+        $result_arr = $this->db->select('id')
+            ->from('p2p_user.users')
+            ->where_not_in('id', $exclude_ids)
+            ->get()
+            ->result_array();
+        return array_column($result_arr, 'id');
+    }
+
     public function getDelayedTargetByInvestor($user_id) {
         $this->db->select('*')
             ->from("`p2p_loan`.`investments`")
