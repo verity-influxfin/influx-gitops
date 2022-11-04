@@ -137,9 +137,9 @@ class Virtual_account_model extends MY_Model
     /**
      * Get the latest available investor virtual account.
      * @param int $user_id
-     * @return string NULL if there is no matching data
+     * @return mixed: NULL if there is no matching data
      */
-    public function get_valid_investor_account(int $user_id): string
+    public function get_valid_investor_account(int $user_id)
     {
         $result = $this->db
             ->select('va.virtual_account')
