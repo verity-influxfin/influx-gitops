@@ -2017,7 +2017,9 @@ class Product extends REST_Controller {
                 foreach ($investments as $investment)
                 {
                     $user_ids_to_exclude[] = $investment->user_id;
-                    $rate_increased_notification = $this->rate_increased_notification_content($investment->created_at, $target->interest_rate, $new_rate);
+                    $rate_increased_notification = $this->rate_increased_notification_content(
+                        $investment->created_at, $target->interest_rate, $new_rate, TRUE
+                    );
                     $this->notification_lib->notify_rate_increased(
                         [$investment->user_id], $target->interest_rate, $new_rate, $notification_subject, $rate_increased_notification
                     );
@@ -3026,14 +3028,22 @@ class Product extends REST_Controller {
         }
     }
 
-    private function rate_increased_notification_content($invest_time, $old_rate, $new_rate): string
+    private function rate_increased_notification_content($invest_time, $old_rate, $new_rate, $for_app_notification=FALSE): string
     {
-        return "親愛的投資人請注意：
+        $old_rate = rtrim(strval($old_rate), '0');
+        $old_rate = rtrim($old_rate, '.');
+        $message = "親愛的投資人請注意：
 			您的投資標的有一項重大變更！
-			您於" .  date("m月d日", $invest_time) . "投資債權，剛剛自主提升利率由
-			".$old_rate."%-->".$new_rate."%
+			您於" .  date("m月d日", $invest_time) . "投資的債權，剛剛自主提升利率由
+			".$old_rate."% → ".$new_rate."%。
 			同樣的項目，更高的潛在收益！
 			請登錄普匯APP 下標搶佔先手";
+        if ($for_app_notification)
+        {
+            $message = preg_replace('/\s/', '', $message);
+            $message = preg_replace('/親愛的投資人請注意：/', '', $message);
+        }
+        return $message;
     }
 
     // 消費貸款申請
