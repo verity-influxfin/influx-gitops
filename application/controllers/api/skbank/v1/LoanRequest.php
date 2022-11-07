@@ -1,4 +1,7 @@
 <?php
+
+use Adapter\Adapter_factory;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(APPPATH.'/libraries/REST_Controller.php');
 
@@ -306,6 +309,22 @@ END:
                 $checkResult = $this->checkDataFormat($value[0], $value[1], $value[2], $value[3]);
                 if (!$checkResult['result']) {
                     $result['error'] = $checkResult['errorMsg'];
+                    goto END;
+                }
+            }
+
+            // 丟到 adapter 去轉換成銀行要的 key-value
+            $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+            $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no' => $inputArr['MsgNo'], 'type' => 'text']);
+            if($mapping_info)
+            {
+                $adapter = Adapter_factory::getInstance($mapping_info->bank);
+                $inputArr = $adapter->convert_text($inputArr);
+                $requestContent = ['converted_data' => $inputArr['Data']];
+                $chk_required_column = $adapter->check_required_column($inputArr);
+                if ( ! isset($chk_required_column['success']) || $chk_required_column['success'] !== TRUE)
+                {
+                    $result['error'] = $chk_required_column['error'];
                     goto END;
                 }
             }
