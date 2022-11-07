@@ -139,8 +139,8 @@
                                                 <tr><td><span>配偶連絡行動電話</span></td><td><input class="sk-input" type="text" name="SpouseMobileNo"></td></tr>
                                                 <tr><td><span>配偶是否擔任本案保證人</span></td><td>
                                                     <select name="IsPrSpouseGu" class="table-input sk-input">
-                                                        <option value="A">1:是</option>
-                                                        <option value="B">2:否</option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select>
                                                 </td></tr>
                                                 <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
@@ -295,8 +295,6 @@ $(document).ready(function() {
         success: function (response) {
             if(response.status.code == 200 && response.response != ''){
                 Object.keys(response.response).forEach(function(key) {
-                    console.log(key);
-                    console.log(response.response[key]);
                     if($(`[name='${key}']`).length){
                         if($(`[name='${key}']`).is("input")){
                             $(`[name='${key}']`).val(response.response[key]);
@@ -307,8 +305,6 @@ $(document).ready(function() {
                         }
                     }
                 })
-            }else{
-                console.log(response);
             }
         },
         error: function(error) {

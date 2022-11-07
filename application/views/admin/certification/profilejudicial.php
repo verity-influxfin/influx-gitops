@@ -82,41 +82,41 @@
                                             <tr>
                                                 <td><span>是否有海外投資</span></td>
                                                 <td><select name="hasForeignInvestment" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'1'">1:是</option>
-                                                        <option value="'0'">0:否</option>
+                                                        <option value=""></option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>受嚴重特殊傳染性肺炎影響之企業</span></td>
                                                 <td><select name="isCovidAffected" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'1'">1:是</option>
-                                                        <option value="'0'">0:否</option>
+                                                        <option value=""></option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>是否曾有信用瑕疵紀錄</span></td>
                                                 <td><select name="hasCreditFlaws" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'1'">1:是</option>
-                                                        <option value="'0'">0:否</option>
+                                                        <option value=""></option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>近一年平均員工人數是否高過200人</span></td>
                                                 <td><select name="lastOneYearOver200employees" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'1'">1:是</option>
-                                                        <option value="'0'">0:否</option>
+                                                        <option value=""></option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>實際營業地址是否等於營業登記地址</span></td>
                                                 <td><select name="isBizAddrEqToBizRegAddr" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'1'">1:是</option>
-                                                        <option value="'0'">0:否</option>
+                                                        <option value=""></option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
@@ -124,45 +124,93 @@
                                                 <td><input class="sk-input form-control" type="text" name="realBizAddress"></td>
                                             </tr>
                                             <tr>
+                                                <td><span>實際營業地址_選擇縣市</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrCityName"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_選擇鄉鎮市區</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrAreaName"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_路街名稱(不含路、街)</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrRoadName"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_路 OR 街</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrRoadType"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_段</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrSec"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_巷</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrLn"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_弄</span></td>`
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrAly"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_號(不含之號)</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrNo"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_之號</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrNoExt"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_樓(不含之樓、室)</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrFloor"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_之樓</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrFloorExt"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>實際營業地址_室</span></td>
+                                                <td><input class="sk-input form-control" type="text" name="RealBizAddrRoom"></td>
+                                            </tr>
+                                            <tr>
                                                 <td><span>營業登記地址是否為「自有」</span></td>
                                                 <td><select name="realBizRegAddressOwner" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'1'">1:是</option>
-                                                        <option value="'0'">0:否</option>
+                                                        <option value=""></option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>營業登記地址所有權</span></td>
                                                 <td><select name="bizRegAddrOwner" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'A'">A:負責人</option>
-                                                        <option value="'B'">B:負責人配偶</option>
-                                                        <option value="'C'">C:企業</option>
+                                                        <option value=""></option>
+                                                        <option value="A">A:負責人</option>
+                                                        <option value="B">B:負責人配偶</option>
+                                                        <option value="C">C:企業</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>實際登記地址是否「自有」</span></td>
                                                 <td><select name="realBizAddressOwner" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'1'">1:是</option>
-                                                        <option value="'0'">0:否</option>
+                                                        <option value=""></option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>實際登記地址所有權</span></td>
                                                 <td><select name="realBizAddrOwner" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'A'">A:負責人</option>
-                                                        <option value="'B'">B:負責人配偶</option>
-                                                        <option value="'C'">C:企業</option>
+                                                        <option value=""></option>
+                                                        <option value="A">A:負責人</option>
+                                                        <option value="B">B:負責人配偶</option>
+                                                        <option value="C">C:企業</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>是否有關係企業</span></td>
                                                 <td><select name="hasRelatedCompany" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'1'">1:是</option>
-                                                        <option value="'0'">0:否</option>
+                                                        <option value=""></option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
@@ -176,25 +224,25 @@
                                             <tr>
                                                 <td><span>關係企業(A)組織型態</span></td>
                                                 <td><select name="relatedCompAType" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'A'">A:獨資</option>
-                                                        <option value="'B'">B:合夥</option>
-                                                        <option value="'C'">C:有限公司</option>
-                                                        <option value="'D'">D:股份有限公司</option>
+                                                        <option value=""></option>
+                                                        <option value="A">A:獨資</option>
+                                                        <option value="B">B:合夥</option>
+                                                        <option value="C">C:有限公司</option>
+                                                        <option value="D">D:股份有限公司</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>關係企業(A)與申請人之關係</span></td>
                                                 <td><select name="relatedCompARelationship" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
-                                                        <option value="'B'">B:相同股東出資額均>=40%</option>
-                                                        <option value="'C'">C:轉投資之投資額>=40%</option>
-                                                        <option value="'D'">D:營業場所相同</option>
-                                                        <option value="'E'">E:營業場所有租賃關係</option>
-                                                        <option value="'F'">F:相同總經理</option>
-                                                        <option value="'G'">G:相同財務主管</option>
-                                                        <option value="'H'">H:其他</option>
+                                                        <option value=""></option>
+                                                        <option value="A">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
+                                                        <option value="B">B:相同股東出資額均>=40%</option>
+                                                        <option value="C">C:轉投資之投資額>=40%</option>
+                                                        <option value="D">D:營業場所相同</option>
+                                                        <option value="E">E:營業場所有租賃關係</option>
+                                                        <option value="F">F:相同總經理</option>
+                                                        <option value="G">G:相同財務主管</option>
+                                                        <option value="H">H:其他</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
@@ -208,25 +256,25 @@
                                             <tr>
                                                 <td><span>關係企業(B)組織型態</span></td>
                                                 <td><select name="relatedCompBType" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'A'">A:獨資</option>
-                                                        <option value="'B'">B:合夥</option>
-                                                        <option value="'C'">C:有限公司</option>
-                                                        <option value="'D'">D:股份有限公司</option>
+                                                        <option value=""></option>
+                                                        <option value="A">A:獨資</option>
+                                                        <option value="B">B:合夥</option>
+                                                        <option value="C">C:有限公司</option>
+                                                        <option value="D">D:股份有限公司</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>關係企業(B)與申請人之關係</span></td>
                                                 <td><select name="relatedCompBRelationship" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
-                                                        <option value="'B'">B:相同股東出資額均>=40%</option>
-                                                        <option value="'C'">C:轉投資之投資額>=40%</option>
-                                                        <option value="'D'">D:營業場所相同</option>
-                                                        <option value="'E'">E:營業場所有租賃關係</option>
-                                                        <option value="'F'">F:相同總經理</option>
-                                                        <option value="'G'">G:相同財務主管</option>
-                                                        <option value="'H'">H:其他</option>
+                                                        <option value=""></option>
+                                                        <option value="A">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
+                                                        <option value="B">B:相同股東出資額均>=40%</option>
+                                                        <option value="C">C:轉投資之投資額>=40%</option>
+                                                        <option value="D">D:營業場所相同</option>
+                                                        <option value="E">E:營業場所有租賃關係</option>
+                                                        <option value="F">F:相同總經理</option>
+                                                        <option value="G">G:相同財務主管</option>
+                                                        <option value="H">H:其他</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
@@ -240,25 +288,25 @@
                                             <tr>
                                                 <td><span>關係企業(C)組織型態</span></td>
                                                 <td><select name="relatedCompCType" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'A'">A:獨資</option>
-                                                        <option value="'B'">B:合夥</option>
-                                                        <option value="'C'">C:有限公司</option>
-                                                        <option value="'D'">D:股份有限公司</option>
+                                                        <option value=""></option>
+                                                        <option value="A">A:獨資</option>
+                                                        <option value="B">B:合夥</option>
+                                                        <option value="C">C:有限公司</option>
+                                                        <option value="D">D:股份有限公司</option>
                                                     </select></td>
                                             </tr>
                                             <tr>
                                                 <td><span>關係企業(C)與申請人之關係</span></td>
                                                 <td><select name="relatedCompCRelationship" class="table-input sk-input form-control">
-                                                        <option value="''"></option>
-                                                        <option value="'A'">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
-                                                        <option value="'B'">B:相同股東出資額均>=40%</option>
-                                                        <option value="'C'">C:轉投資之投資額>=40%</option>
-                                                        <option value="'D'">D:營業場所相同</option>
-                                                        <option value="'E'">E:營業場所有租賃關係</option>
-                                                        <option value="'F'">F:相同總經理</option>
-                                                        <option value="'G'">G:相同財務主管</option>
-                                                        <option value="'H'">H:其他</option>
+                                                        <option value=""></option>
+                                                        <option value="A">A:有下列關係之一(相同負責人、負責人互為配偶、負責人互為二親等內血親)</option>
+                                                        <option value="B">B:相同股東出資額均>=40%</option>
+                                                        <option value="C">C:轉投資之投資額>=40%</option>
+                                                        <option value="D">D:營業場所相同</option>
+                                                        <option value="E">E:營業場所有租賃關係</option>
+                                                        <option value="F">F:相同總經理</option>
+                                                        <option value="G">G:相同財務主管</option>
+                                                        <option value="H">H:其他</option>
                                                     </select></td>
                                             </tr>
                                             <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
