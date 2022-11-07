@@ -705,6 +705,9 @@ class Certification_lib{
         // 僅保留 勾稽戶役政 API
         $verify_result = $this->verify_id_card_info($info->id, $content, $msg, $ocr);
 
+        // 確認有無配偶
+        $content['hasSpouse'] = ! empty($ocr['spouse']);
+
         $remark['error'] = $msg;
         $remark['OCR']   = $ocr;
         $return_data['remark'] = $remark;

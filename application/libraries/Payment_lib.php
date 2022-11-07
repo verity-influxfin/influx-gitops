@@ -5,16 +5,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Payment_lib{
     private $charity_virtual_account = [];
 
+    // Associative array, key: payment_model.bank_acc, value: payment_model.virtual_account
+    private $remit_whitelist = [];  // Will be set up in constructor
+
 	public function __construct()
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/payment_model');
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->library('Transaction_lib');
-
         $this->CI->load->model('user/charity_institution_model');
+        $this->CI->load->model('user/virtual_account_model');
+
         $charity_institution_info = $this->CI->charity_institution_model->get_many_by(['status' => 1]);
         $this->charity_virtual_account = array_column($charity_institution_info, 'virtual_account', 'id');
+        $this->remit_whitelist['0500000002612692915'] = $this->CI->virtual_account_model->get_valid_investor_account(LEASING_USERID);
     }
 	public function script_get_taishin_info($data){
 		$insert_param = array();
@@ -219,6 +224,12 @@ class Payment_lib{
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				} else {
+                    if (isset($this->remit_whitelist[$value->bank_acc]) && $this->remit_whitelist[$value->bank_acc] == $value->virtual_account)
+                    {
+                        $this->CI->transaction_lib->recharge($value->id);
+                        return TRUE;
+                    }
+
                     $isTaishinVirtualCode = substr($value->virtual_account, 0, 5) == TAISHIN_VIRTUAL_CODE ? true : false;
 					if (!investor_virtual_account($value->virtual_account) || $isTaishinVirtualCode) {
 						$this->CI->transaction_lib->recharge($value->id);

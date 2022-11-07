@@ -314,4 +314,11 @@ class Cert_identity extends Certification_base
     {
         return FALSE;
     }
+
+    public function is_submit_to_review(): bool
+    {
+        // 實名認證不管案件「送出狀態(user_certification.certificate_status)」為何，永遠視為「已送件」
+        // 意即，此徵信項不受「一件送出」邏輯影響，失敗及失敗、成功即成功...
+        return TRUE;
+    }
 }

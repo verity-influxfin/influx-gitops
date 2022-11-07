@@ -3,7 +3,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
-
 class Bankdata extends MY_Admin_Controller
 {
 
@@ -97,10 +96,9 @@ class Bankdata extends MY_Admin_Controller
 				}
 
                 // 新光收件檢核表儲存資料
-                // TODO: 應該要儲存一個總集合的表格，再分別存 mapping msg_no
                 $this->load->model('skbank/LoanTargetMappingMsgNo_model');
                 $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
-    			$skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$target_id,'type'=>'text','content !='=>'','bank'=>$bank]);
+                $skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id' => $target_id, 'type' => 'text', 'content !=' => '', 'bank' => $bank]);
 
                 if($skbank_save_info){
                     if(isset($skbank_save_info->content)){
@@ -165,7 +163,7 @@ class Bankdata extends MY_Admin_Controller
                                         return [$key=>$values];
                                     }, array_keys($content), $content);
                                     $data = array_reduce($data, 'array_merge', array());
-                                    $response = array_merge($response,$data);
+                                    $response = array_merge($response, $data);
                                 }
                             }
                         }
@@ -189,7 +187,8 @@ class Bankdata extends MY_Admin_Controller
 	 * @param  string $data_type      [送出資料類型]
 	 * @return array $msg_no          [新光交易編號]
 	 */
-	public function getMappingMsgNo($target_id='', $bank_num=MAPPING_MSG_NO_BANK_NUM_SKBANK){
+    public function getMappingMsgNo($target_id = '', $bank_num = MAPPING_MSG_NO_BANK_NUM_SKBANK)
+    {
         $input = $this->input->get(NULL, TRUE);
         $target_id = $input['target_id'] ?? $target_id;
         $action_user = $this->login_info->id ?? '';
@@ -199,7 +198,6 @@ class Bankdata extends MY_Admin_Controller
         {
             $bank_num = $input['bank'];
         }
-
 
 		$this->load->library('mapping/sk_bank/msgno');
 		$response = $this->msgno->getSKBankInfoByTargetId($target_id, $data_type, $bank_num);
@@ -232,15 +230,13 @@ class Bankdata extends MY_Admin_Controller
         // $request_data = $this->input->post(NULL, TRUE);
         $request_data = $this->input->raw_input_stream;
         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
-        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by([
-            'msg_no' => $input['msg_no'], 'type' => $input['data_type']]);
+        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no'=>$input['msg_no'],'type'=>$input['data_type']]);
 
-        if($mapping_info) {
-            $this->LoanTargetMappingMsgNo_model->update($mapping_info->id,['content'=>$request_data]);
+        if ($mapping_info)
+        {
+            $this->LoanTargetMappingMsgNo_model->update($mapping_info->id, ['content' => $request_data]);
         }
 
-        //print_r(json_encode(['result'=>'success']));exit;
-        // print_r($input);exit;
         $this->load->library('output/json_output');
         $this->json_output->setStatusCode(200)->setResponse(['result'=>'success'])->send();
 

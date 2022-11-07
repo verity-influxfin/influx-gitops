@@ -35,7 +35,8 @@ class Msgno
 	 * )
 	 */
 	// to do : 待擴充圖片附件檢核表撈取
-	public function getSKBankInfoByTargetId($target_id = '', $type = 'text', $bank = MAPPING_MSG_NO_BANK_NUM_SKBANK){
+    public function getSKBankInfoByTargetId($target_id = '', $type = 'text', $bank = MAPPING_MSG_NO_BANK_NUM_SKBANK)
+    {
 		$response = [
 			'status' => [
 				'code' => '403',
@@ -51,7 +52,7 @@ class Msgno
 			// 查詢關聯表是否有該案件號對應之新光交易序號
 			// to do : 待加入附件檢核表資訊
 			$this->CI->load->model('skbank/LoanTargetMappingMsgNo_model');
-			$mapping_info = $this->CI->LoanTargetMappingMsgNo_model->order_by('id','desc')->get_by(['target_id'=>$target_id, 'type'=> $type, 'bank' => $bank]);
+            $mapping_info = $this->CI->LoanTargetMappingMsgNo_model->order_by('id','desc')->get_by(['target_id'=>$target_id, 'type'=> $type, 'bank' => $bank]);
 			if($mapping_info){
 				$msg_no = $mapping_info->msg_no ?? '';
 				$action_user = $mapping_info->action_user_id ?? '';

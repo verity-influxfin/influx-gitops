@@ -2,8 +2,9 @@
 namespace Adapter;
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use Adapter\Adapter_base;
-
+/**
+ * [凱基] 送件檢核表 key-value 轉換
+ */
 class Adapter_kgi_bank extends Adapter_base
 {
     public static $mapping_table = [
@@ -112,4 +113,13 @@ class Adapter_kgi_bank extends Adapter_base
         return $result;
     }
 
+    /**
+     * 檢查必填欄位
+     * @param array $data
+     * @return array
+     */
+    public function check_required_column(array $data): array
+    {
+        return ['success' => TRUE];
+    }
 }

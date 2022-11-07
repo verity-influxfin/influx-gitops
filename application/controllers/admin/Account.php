@@ -378,7 +378,7 @@ class Account extends MY_Admin_Controller {
 					if($user_to_info){
 						foreach($user_to_info as $k =>$v){
 							$sub_list[] = array(
-								"user_to"				=> $user_name[$v['user_to']],
+								"user_to"				=> $user_name[$v['user_to']] ?? '',
 								"v_bank_account_to"		=> $v['v_bank_account_to'],
 								"v_amount_to"			=> $v['principal'] + $v['interest'] + $v['allowance'] - $v['platform_fee'],
 								"principal"				=> $v['principal'],
@@ -715,13 +715,150 @@ class Account extends MY_Admin_Controller {
 			$pdf->AddPage('L', 'A3');
 			$pdf->writeHTML($html, 1, 0, true, true, '');
 			$files = $pdf->Output("daily report_".date("Y-m-d").'.pdf',"D");
-		}else{
+		}
+        elseif($display === 'excel')
+        { // 匯出Excel
+            $this->load->library('Spreadsheet_lib');
+            $spreadsheet = $this->_draw_daily_report_excel($list, $page_data);
+
+            $start_date = '';
+            $end_date = '';
+            if ( ! empty($sdate) && ($start_timestamp = strtotime($sdate)) !== FALSE)
+            {
+                $start_date = date("Ymd", $start_timestamp);
+            }
+            if ( ! empty($edate) && ($end_timestamp = strtotime($edate)) !== FALSE)
+            {
+                $end_date = date("Ymd", $end_timestamp);
+            }
+            else if ( ! isset($start_timestamp) || $start_timestamp === FALSE)
+            {
+                $end_date = date("Ymd");
+            }
+
+            $this->spreadsheet_lib->download("虛擬帳戶交易明細({$start_date}-{$end_date}).xlsx", $spreadsheet);
+        }
+        else{
 			$this->load->view('admin/_header');
 			$this->load->view('admin/_title',$this->menu);
 			$this->load->view('admin/account_daily_report',$page_data);
 			$this->load->view('admin/_footer');
 		}
 	}
+
+    /**
+     * 匯出「虛擬帳戶交易明細表」-excel格式
+     * @param $list
+     * @param $page_data
+     * @return mixed
+     */
+    private function _draw_daily_report_excel($list, $page_data)
+    {
+        $title_rows = [
+            'entering_date' => ['name' => '交易日期', 'width' => 12, 'rowspan' => 2, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'target_no' => ['name' => '案件號碼', 'width' => 22, 'rowspan' => 2, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'source_type' => ['name' => '交易種類', 'width' => 16, 'rowspan' => 2, 'alignment' => ['h' => 'center', 'v' => 'center']],
+            'withdraw' => ['name' => '提出', 'colspan' => 5, 'merge' => [
+                'user_from' => ['name' => '戶名', 'width' => 15, 'alignment' => ['h' => 'center', 'v' => 'center']],
+                'v_bank_account_from' => ['name' => '虛擬帳號', 'width' => 15, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING, 'alignment' => ['h' => 'center', 'v' => 'center']],
+                'v_amount_from' => ['name' => '金額', 'width' => 12, 'alignment' => ['h' => 'right', 'v' => 'center']],
+                'bank_account_from' => ['name' => '銀行帳戶', 'width' => 20, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING, 'alignment' => ['h' => 'center', 'v' => 'center']],
+                'amount_from' => ['name' => '金額', 'width' => 12, 'alignment' => ['h' => 'right', 'v' => 'center']],
+            ]],
+            'deposit' => ['name' => '存入', 'colspan' => 5, 'merge' => [
+                'user_to' => ['name' => '戶名', 'width' => 15, 'alignment' => ['h' => 'center', 'v' => 'center']],
+                'v_bank_account_to' => ['name' => '虛擬帳號', 'width' => 15, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING, 'alignment' => ['h' => 'center', 'v' => 'center']],
+                'v_amount_to' => ['name' => '金額', 'width' => 12, 'alignment' => ['h' => 'right', 'v' => 'center']],
+                'bank_account_to' => ['name' => '銀行帳戶', 'width' => 20, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING, 'alignment' => ['h' => 'center', 'v' => 'center']],
+                'amount_to' => ['name' => '金額', 'width' => 12, 'alignment' => ['h' => 'right', 'v' => 'center']],
+            ]],
+            'principal' => ['name' => '本金金額', 'width' => 12, 'rowspan' => 2, 'alignment' => ['h' => 'right', 'v' => 'center']],
+            'interest' => ['name' => '利息金額', 'width' => 12, 'rowspan' => 2, 'alignment' => ['h' => 'right', 'v' => 'center']],
+            'platform_fee' => ['name' => '平台服務費', 'width' => 12, 'rowspan' => 2, 'alignment' => ['h' => 'right', 'v' => 'center']],
+            'damages' => ['name' => '違約金', 'width' => 12, 'rowspan' => 2, 'alignment' => ['h' => 'right', 'v' => 'center']],
+            'allowance' => ['name' => '提還補貼金', 'width' => 12, 'rowspan' => 2, 'alignment' => ['h' => 'right', 'v' => 'center']],
+            'delay_interest' => ['name' => '延滯息', 'width' => 12, 'rowspan' => 2, 'alignment' => ['h' => 'right', 'v' => 'center']],
+            'else' => ['name' => '債權差額', 'width' => 12, 'rowspan' => 2, 'alignment' => ['h' => 'right', 'v' => 'center']],
+        ];
+        $sum = [
+            'entering_date' => '合計',
+            'v_amount_from' => 0,
+            'amount_from' => 0,
+            'v_amount_to' => 0,
+            'amount_to' => 0,
+            'principal' => 0,
+            'interest' => 0,
+            'platform_fee' => 0,
+            'damages' => 0,
+            'allowance' => 0,
+            'delay_interest' => 0,
+            'else' => 0,
+        ];
+        $data_rows_index = 0;
+        foreach ($list as $value)
+        {
+            $data_rows[$data_rows_index] = [
+                'entering_date' => $value['entering_date'] ?? '',
+                'target_no' => $value['target_no'] ?? '',
+                'source_type' => $page_data['transaction_type_name'][$value['source_type'] ?? ''] ?? '',
+                'user_from' => $value['user_from'] ?? '',
+                'v_bank_account_from' => $value['v_bank_account_from'] ?? '',
+                'v_amount_from' => ! empty($value['v_amount_from']) && is_numeric($value['v_amount_from']) ? (int) $value['v_amount_from'] : '',
+                'bank_account_from' => $value['bank_account_from'] ?? '',
+                'amount_from' => ! empty($value['amount_from']) && is_numeric($value['amount_from']) ? (int) $value['amount_from'] : '',
+                'user_to' => $value['user_to'] ?? '',
+                'v_bank_account_to' => $value['v_bank_account_to'] ?? '',
+                'v_amount_to' => ! empty($value['v_amount_to']) && is_numeric($value['v_amount_to']) ? (int) $value['v_amount_to'] : '',
+                'bank_account_to' => $value['bank_account_to'] ?? '',
+                'amount_to' => ! empty($value['amount_to']) && is_numeric($value['amount_to']) ? (int) $value['amount_to'] : '',
+                'principal' => ! empty($value['principal']) && is_numeric($value['principal']) ? (int) $value['principal'] : '',
+                'interest' => ! empty($value['interest']) && is_numeric($value['interest']) ? (int) $value['interest'] : '',
+                'platform_fee' => ! empty($value['platform_fee']) && is_numeric($value['platform_fee']) ? (int) $value['platform_fee'] : '',
+                'damages' => ! empty($value['damages']) && is_numeric($value['damages']) ? (int) $value['damages'] : '',
+                'allowance' => ! empty($value['allowance']) && is_numeric($value['allowance']) ? (int) $value['allowance'] : '',
+                'delay_interest' => ! empty($value['delay_interest']) && is_numeric($value['delay_interest']) ? (int) $value['delay_interest'] : '',
+                'else' => ! empty($value['else']) && is_numeric($value['else']) ? (int) $value['else'] : '',
+            ];
+
+            $sum = $this->_daily_report_sum_amount_extracted($data_rows[$data_rows_index], $sum);
+
+            if ( ! empty($value['sub_list']))
+            {
+                $sub_list_count = count($value['sub_list']) + 1;
+                $data_rows[$data_rows_index]['entering_date'] = ['value' => $data_rows[$data_rows_index]['entering_date'], 'rowspan' => $sub_list_count];
+                $data_rows[$data_rows_index]['target_no'] = ['value' => $data_rows[$data_rows_index]['target_no'], 'rowspan' => $sub_list_count];
+                $data_rows[$data_rows_index]['source_type'] = ['value' => $data_rows[$data_rows_index]['source_type'], 'rowspan' => $sub_list_count];
+                foreach ($value['sub_list'] as $sub_list_value)
+                {
+                    $data_rows_index++;
+                    $data_rows[$data_rows_index] = [
+                        'user_from' => $sub_list_value['user_from'] ?? '',
+                        'v_bank_account_from' => $sub_list_value['v_bank_account_from'] ?? '',
+                        'v_amount_from' => ! empty($sub_list_value['v_amount_from']) && is_numeric($sub_list_value['v_amount_from']) ? (int) $sub_list_value['v_amount_from'] : '',
+                        'bank_account_from' => $sub_list_value['bank_account_from'] ?? '',
+                        'amount_from' => ! empty($sub_list_value['amount_from']) && is_numeric($sub_list_value['amount_from']) ? (int) $sub_list_value['amount_from'] : '',
+                        'user_to' => $sub_list_value['user_to'] ?? '',
+                        'v_bank_account_to' => $sub_list_value['v_bank_account_to'] ?? '',
+                        'v_amount_to' => ! empty($sub_list_value['v_amount_to']) && is_numeric($sub_list_value['v_amount_to']) ? (int) $sub_list_value['v_amount_to'] : '',
+                        'bank_account_to' => $sub_list_value['bank_account_to'] ?? '',
+                        'amount_to' => ! empty($sub_list_value['amount_to']) && is_numeric($sub_list_value['amount_to']) ? (int) $sub_list_value['amount_to'] : '',
+                        'principal' => ! empty($sub_list_value['principal']) && is_numeric($sub_list_value['principal']) ? (int) $sub_list_value['principal'] : '',
+                        'interest' => ! empty($sub_list_value['interest']) && is_numeric($sub_list_value['interest']) ? (int) $sub_list_value['interest'] : '',
+                        'platform_fee' => ! empty($sub_list_value['platform_fee']) && is_numeric($sub_list_value['platform_fee']) ? (int) $sub_list_value['platform_fee'] : '',
+                        'damages' => ! empty($sub_list_value['damages']) && is_numeric($sub_list_value['damages']) ? (int) $sub_list_value['damages'] : '',
+                        'allowance' => ! empty($sub_list_value['allowance']) && is_numeric($sub_list_value['allowance']) ? (int) $sub_list_value['allowance'] : '',
+                        'delay_interest' => ! empty($sub_list_value['delay_interest']) && is_numeric($sub_list_value['delay_interest']) ? (int) $sub_list_value['delay_interest'] : '',
+                        'else' => ! empty($sub_list_value['else']) && is_numeric($sub_list_value['else']) ? (int) $sub_list_value['else'] : '',
+                    ];
+
+                    $sum = $this->_daily_report_sum_amount_extracted($data_rows[$data_rows_index], $sum);
+                }
+            }
+            $data_rows_index++;
+        }
+        $data_rows[] = $sum;
+        return $this->spreadsheet_lib->load($title_rows, $data_rows);
+    }
 
 	function passbook_report(){
 		$get 		= $this->input->get(NULL, TRUE);
@@ -829,5 +966,26 @@ TEMP;
         $get = $this->input->get(NULL, TRUE);
         $this->load->library('Estatement_lib');
         $this->estatement_lib->get_estatement_investor($get['user_id'],$get['sdate'],$get['edate'],true);
+    }
+
+    /**
+     * @param $data_rows
+     * @param array $sum
+     * @return array
+     */
+    private function _daily_report_sum_amount_extracted($data_rows, array $sum): array
+    {
+        $sum['v_amount_from'] += (int) $data_rows['v_amount_from'];
+        $sum['amount_from'] += (int) $data_rows['amount_from'];
+        $sum['v_amount_to'] += (int) $data_rows['v_amount_to'];
+        $sum['amount_to'] += (int) $data_rows['amount_to'];
+        $sum['principal'] += (int) $data_rows['principal'];
+        $sum['interest'] += (int) $data_rows['interest'];
+        $sum['platform_fee'] += (int) $data_rows['platform_fee'];
+        $sum['damages'] += (int) $data_rows['damages'];
+        $sum['allowance'] += (int) $data_rows['allowance'];
+        $sum['delay_interest'] += (int) $data_rows['delay_interest'];
+        $sum['else'] += (int) $data_rows['else'];
+        return $sum;
     }
 }

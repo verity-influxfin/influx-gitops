@@ -18,7 +18,7 @@ class Certification extends REST_Controller {
         $this->load->library('target_lib');
         $method 				= $this->router->fetch_method();
 		$this->certification 	= $this->config->item('certifications');
-        $nonAuthMethods 		= ['verifyemail','cerjudicial'];
+        $nonAuthMethods 		= ['verifyemail','cerjudicial','ig_auth'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -4842,6 +4842,29 @@ class Certification extends REST_Controller {
             }
         }
         $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+    }
+
+    /**
+     * For Instagram to call and pass Authorization Code to us.
+     * @return void
+     */
+    public function ig_auth_get()
+    {
+        $query_params = $this->input->get(NULL, TRUE);
+        if (!isset($query_params['code']) || !$query_params['code']) {
+            $this->response(['result' => 'ERROR', 'error' => CERTIFICATION_NO_IG_AUTH_CODE]);
+        }
+        $this->load->helper('url');
+        $this->load->library('instagram_lib');
+        $code = $query_params['code'];
+        $redirect_uri = base_url($this->uri->uri_string());
+        $access_token = $this->instagram_lib->get_access_token($code, $redirect_uri);
+        if ($access_token === FALSE) {
+            $this->response(['result' => 'ERROR', 'error' => CERTIFICATION_NO_IG_ACCESS_TOKEN]);
+        }
+        // Deep link to jump back to app and pass $access_token in
+        $to_uri = "https://dev-app-borrow.influxfin.com/?ofl=https://play.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.influxfin.borrow&link=https://dev-app-borrow.influxfin.com%3Fig_token%3D{$access_token}&apn=com.influxfin.borrow&isi=1463581445&ibi=com.influxfin.borrow&utm_source=partner&utm_medium=promoter&utm_campaign=webbanner&ct=webbanner&pt=119664586&mt=8";
+        redirect($to_uri, 'refresh');
     }
 
     private function _get_profilejudicial_field(): array
