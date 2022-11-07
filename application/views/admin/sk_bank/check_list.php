@@ -1153,14 +1153,14 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="bold-right-border">股東人數</td>
+                            <td class="bold-right-border">股東人數<span style="color: red;">*</span></td>
                             <td colspan="3">
-                                <input id="ShareholderNum_content" name="ShareholderNum_content" type="text" class="table-input" disabled>
+                                <input id="shareholderNum_content" name="shareholderNum_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(ShareholderNum_content)" value="Edit">
+                                           onclick="edit_click(shareholderNum_content)" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3311,11 +3311,14 @@
                 <table class="table" border="2">
                     <tbody>
                     <tr>
-                        <th class="th bold-bottom-border bold-right-border" style="width: 7%;">附件類別</th>
+                        <th class="th bold-bottom-border bold-right-border" style="width: 7%;">附件類別<br/>
+                            <span style="color: red; font-size: 5px;">( * 為必填欄位 )</span>
+                        </th>
                         <th class="field_name th bold-bottom-border bold-right-border">圖片/文件</th>
                     </tr>
                     <tr>
-                        <td class="title input-center bold-bottom-border bold-right-border">A01:公司變更事項登記卡及工商登記查詢
+                        <td class="title input-center bold-bottom-border bold-right-border">
+                            A01:公司變更事項登記卡及工商登記查詢<span style="color: red;">*</span>
                         </td>
                         <td class="bold-right-border ">
                             <fieldset disabled id="A01">
@@ -3324,7 +3327,7 @@
                     </tr>
                     <tr>
                         <td class="title input-center bold-bottom-border bold-right-border">
-                            A02:負責人及保證人身分證影本及第二證件、戶役政查詢
+                            A02:負責人及保證人身分證影本及第二證件、戶役政查詢<span style="color: red;">*</span>
                         </td>
                         <td class="bold-right-border ">
                             <fieldset disabled id="A02">
@@ -3348,15 +3351,17 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="title input-center bold-bottom-border bold-right-border">A05:近12月勞保局投保資料</td>
+                        <td class="title input-center bold-bottom-border bold-right-border">
+                            A05:近12月勞保局投保資料<span style="color: red;">*</span>
+                        </td>
                         <td class="bold-right-border ">
                             <fieldset disabled id="A05">
                             </fieldset>
                         </td>
                     </tr>
                     <tr>
-                        <td class="title input-center bold-bottom-border bold-right-border">A06:公司、負責人、配偶及保證人的聯徵資料
-                            J01、J02、J10、J20、A13、A11
+                        <td class="title input-center bold-bottom-border bold-right-border">
+                            A06:公司、負責人、配偶及保證人的聯徵資料 J01、J02、J10、J20、A13、A11<span style="color: red;">*</span>
                         </td>
                         <td class="bold-right-border ">
                             <fieldset disabled id="A06">
@@ -3364,7 +3369,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="title input-center bold-bottom-border bold-right-border">A07:負責人及保證人之被保險人勞保異動查詢
+                        <td class="title input-center bold-bottom-border bold-right-border">
+                            A07:負責人及保證人之被保險人勞保異動查詢
                         </td>
                         <td class="bold-right-border ">
                             <fieldset disabled id="A07">
@@ -3373,7 +3379,7 @@
                     </tr>
                     <tr>
                         <td class="title input-center bold-bottom-border bold-right-border">
-                            A08:公司、負責人及保證人近六個月存摺餘額明細及存摺封面
+                            A08:公司、負責人及保證人近六個月存摺餘額明細及存摺封面<span style="color: red;">*</span>
                         </td>
                         <td class="bold-right-border ">
                             <fieldset disabled id="A08">
@@ -3410,7 +3416,7 @@
     ];
     // 送出時為數字欄位
     let is_int_array = ['CompCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'OthRealPrSHRatio',
-        'employeeNum', 'ShareholderNum'];
+        'employeeNum', 'shareholderNum'];
 
     const SKBANK_ID = 1; // 新光銀行
     const BANK_LIST = [SKBANK_ID];

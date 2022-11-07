@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Adapter_sk_bank extends Adapter_base
 {
-    public static $mapping_table = ['compContactTel' =>'CompTelNo', 'compContactExt' => 'CompTelExt', 'realBizRegAddressOwner' => 'IsBizRegAddrSelfOwn', 'bizRegAddrOwner' => 'BizRegAddrOwner', 'isBizAddrEqToBizRegAddr' => 'IsBizAddrEqToBizRegAddr', 'realBizAddressOwner' => 'IsRealBizAddrSelfOwn', 'realBizAddrOwner' => 'RealBizAddrOwner', 'employeeNum' => 'EmployeeNum'];
+    public static $mapping_table = ['compContactTel' =>'CompTelNo', 'compContactExt' => 'CompTelExt', 'realBizRegAddressOwner' => 'IsBizRegAddrSelfOwn', 'bizRegAddrOwner' => 'BizRegAddrOwner', 'isBizAddrEqToBizRegAddr' => 'IsBizAddrEqToBizRegAddr', 'realBizAddressOwner' => 'IsRealBizAddrSelfOwn', 'realBizAddrOwner' => 'RealBizAddrOwner', 'employeeNum' => 'EmployeeNum', 'shareholderNum' => 'ShareholderNum'];
 
     public static $required_attach_table = [
         'A01' => 'A01', // 公司變更事項登記卡及工商登記查詢

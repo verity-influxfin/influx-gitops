@@ -80,6 +80,10 @@
                                                 <td><input class="sk-input form-control" type="number" name="employeeNum"></td>
                                             </tr>
                                             <tr>
+                                                <td><span>股東人數</span></td>
+                                                <td><input class="sk-input form-control" type="number" name="shareholderNum"></td>
+                                            </tr>
+                                            <tr>
                                                 <td><span>是否有海外投資</span></td>
                                                 <td><select name="hasForeignInvestment" class="table-input sk-input form-control">
                                                         <option value=""></option>
@@ -148,7 +152,7 @@
                                                 <td><input class="sk-input form-control" type="text" name="RealBizAddrLn"></td>
                                             </tr>
                                             <tr>
-                                                <td><span>實際營業地址_弄</span></td>`
+                                                <td><span>實際營業地址_弄</span></td>
                                                 <td><input class="sk-input form-control" type="text" name="RealBizAddrAly"></td>
                                             </tr>
                                             <tr>
