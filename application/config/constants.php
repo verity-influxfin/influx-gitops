@@ -788,3 +788,12 @@ defined('COMPANY_CATEGORY_NAME_LISTED') or define('COMPANY_CATEGORY_NAME_LISTED'
 // mata name
 defined('TARGET_META_COMPANY_CATEGORY_NUMBER') or define('TARGET_META_COMPANY_CATEGORY_NUMBER', 'company_category_number'); // 就職公司代號 meta name
 
+// target loan mapping msg_no bank
+defined('MAPPING_MSG_NO_NO_BANK') or define('MAPPING_MSG_NO_NO_BANK', 0);
+defined('MAPPING_MSG_NO_BANK_NUM_SKBANK') or define('MAPPING_MSG_NO_BANK_NUM_SKBANK', 1);
+defined('MAPPING_MSG_NO_BANK_NUM_KGIBANK') or define('MAPPING_MSG_NO_BANK_NUM_KGIBANK', 2);
+
+// 企業營業登記項目「前兩碼」識別之產業別
+defined('INDUSTRY_CODE_MANUFACTURING') or define('INDUSTRY_CODE_MANUFACTURING', 1);
+defined('INDUSTRY_CODE_MERCHANDISING_SECTOR') or define('INDUSTRY_CODE_MERCHANDISING_SECTOR', 2);
+defined('INDUSTRY_CODE_SERVICE') or define('INDUSTRY_CODE_SERVICE', 3);
