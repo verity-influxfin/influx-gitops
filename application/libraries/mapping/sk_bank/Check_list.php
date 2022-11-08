@@ -508,7 +508,7 @@ class Check_list
                 [
                     'location' => 'A05',
                     'raw_data_name' => [
-                        'image' => ['employeeinsurancelist_image'],
+                        'image' => ['employeeinsurancelist_image', 'affidavit_image'],
                         'pdf' => ['pdf']
                     ]
                 ]
