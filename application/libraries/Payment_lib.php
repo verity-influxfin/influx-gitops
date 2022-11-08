@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Payment_lib{
     private $charity_virtual_account = [];
 
-    // Associative array, key: payment_model.bank_acc, value: payment_model.virtual_account
+    // Associative array, key: payment_model.bank_id + payment_model.acc_name, value: payment_model.virtual_account
     private $remit_whitelist = [];  // Will be set up in constructor
 
 	public function __construct()
@@ -19,7 +19,7 @@ class Payment_lib{
 
         $charity_institution_info = $this->CI->charity_institution_model->get_many_by(['status' => 1]);
         $this->charity_virtual_account = array_column($charity_institution_info, 'virtual_account', 'id');
-        $this->remit_whitelist['0500000002612692915'] = $this->CI->virtual_account_model->get_valid_investor_account(LEASING_USERID);
+        $this->remit_whitelist['0500407普匯租賃股份有限公司'] = $this->CI->virtual_account_model->get_valid_investor_account(LEASING_USERID);
     }
 	public function script_get_taishin_info($data){
 		$insert_param = array();
@@ -196,6 +196,7 @@ class Payment_lib{
 		if (!empty($value->virtual_account)) {
 			$bank_code 		= $bank_account = "";
 			$bank 			= bankaccount_substr($value->bank_acc);
+            $raw_bank_id = $value->bank_id;
 			$value->bank_id = substr($value->bank_id, 0, 3);
 
 			if ($bank['bank_code'] == $value->bank_id) {
@@ -224,7 +225,8 @@ class Payment_lib{
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				} else {
-                    if (isset($this->remit_whitelist[$value->bank_acc]) && $this->remit_whitelist[$value->bank_acc] == $value->virtual_account)
+                    $key = $raw_bank_id . $value->acc_name;
+                    if ( ! empty($raw_bank_id) && ! empty($value->acc_name) && isset($this->remit_whitelist[$key]) && $this->remit_whitelist[$key] == $value->virtual_account)
                     {
                         $this->CI->transaction_lib->recharge($value->id);
                         return TRUE;
