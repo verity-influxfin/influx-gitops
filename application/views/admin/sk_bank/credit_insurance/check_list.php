@@ -3691,7 +3691,6 @@
         $('.sendBtn').click(function () {
             $(".sendBtn").prop("disabled", true);
             let bank = $(this).parents('.nav-page').data('bankid');
-
             save(this.id);
         });
 

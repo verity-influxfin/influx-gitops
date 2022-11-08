@@ -224,21 +224,52 @@
                                         <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddress"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>營業登記地址是否自有</span></td>
-                                        <td><select v-model="formData.realBizRegAddressOwner" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
+                                        <td><span>實際營業地址_縣市</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressCity"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>營業登記地址所有權</span></td>
-                                        <td><select v-model="formData.bizRegAddrOwner" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'A'">A:負責人</option>
-                                                <option :value="'B'">B:負責人配偶</option>
-                                                <option :value="'C'">C:企業</option>
-                                            </select></td>
+                                        <td><span>實際營業地址_鄉鎮市區</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressArea"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_路街名稱(不含路、街)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressRoad"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_路 OR 街</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressRoadType"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_段</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressSec"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_巷</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressLn"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_弄</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressAly"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_號(不含之號)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressNo"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_之號</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressNoExt"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_樓(不含之樓、室)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressFloor"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_之樓</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressFloorExt"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_室</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressRoom"></td>
                                     </tr>
                                     <tr>
                                         <td><span>實際營業地址是否自有</span></td>
@@ -251,6 +282,23 @@
                                     <tr>
                                         <td><span>實際營業地址所有權</span></td>
                                         <td><select v-model="formData.realBizAddrOwner" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'A'">A:負責人</option>
+                                                <option :value="'B'">B:負責人配偶</option>
+                                                <option :value="'C'">C:企業</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址是否自有</span></td>
+                                        <td><select v-model="formData.realBizRegAddressOwner" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址所有權</span></td>
+                                        <td><select v-model="formData.bizRegAddrOwner" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
                                                 <option :value="'A'">A:負責人</option>
                                                 <option :value="'B'">B:負責人配偶</option>
@@ -645,21 +693,52 @@
                                         <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddress"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>營業登記地址是否自有</span></td>
-                                        <td><select v-model="formData.realBizRegAddressOwner" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'1'">1:是</option>
-                                                <option :value="'0'">0:否</option>
-                                            </select></td>
+                                        <td><span>實際營業地址_縣市</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressCity"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>營業登記地址所有權</span></td>
-                                        <td><select v-model="formData.bizRegAddrOwner" class="table-input sk-input form-control">
-                                                <option :value="''"></option>
-                                                <option :value="'A'">A:負責人</option>
-                                                <option :value="'B'">B:負責人配偶</option>
-                                                <option :value="'C'">C:企業</option>
-                                            </select></td>
+                                        <td><span>實際營業地址_鄉鎮市區</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressArea"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_路街名稱(不含路、街)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressRoad"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_路 OR 街</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressRoadType"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_段</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressSec"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_巷</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressLn"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_弄</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressAly"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_號(不含之號)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressNo"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_之號</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressNoExt"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_樓(不含之樓、室)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressFloor"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_之樓</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressFloorExt"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>實際營業地址_室</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.realBizAddressRoom"></td>
                                     </tr>
                                     <tr>
                                         <td><span>實際營業地址是否自有</span></td>
@@ -672,6 +751,23 @@
                                     <tr>
                                         <td><span>實際營業地址所有權</span></td>
                                         <td><select v-model="formData.realBizAddrOwner" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'A'">A:負責人</option>
+                                                <option :value="'B'">B:負責人配偶</option>
+                                                <option :value="'C'">C:企業</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址是否自有</span></td>
+                                        <td><select v-model="formData.realBizRegAddressOwner" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址所有權</span></td>
+                                        <td><select v-model="formData.bizRegAddrOwner" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
                                                 <option :value="'A'">A:負責人</option>
                                                 <option :value="'B'">B:負責人配偶</option>

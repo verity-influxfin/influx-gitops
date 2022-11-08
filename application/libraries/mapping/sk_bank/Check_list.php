@@ -262,7 +262,11 @@ class Check_list
     {
 	    $data = $this->_get_raw_data($target_info);
 
-        $adapter = Adapter_factory::getInstance($bank);
+        $adapter = Adapter_factory::getInstance($bank, $target_info->id);
+        if ( ! isset($adapter))
+        {
+            return [];
+        }
         return $adapter->convert_attach($data, $get_api_attach_no);
     }
 

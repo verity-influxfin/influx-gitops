@@ -336,7 +336,7 @@
                 url: "/admin/target/skbank_text_send" + "?target_id=" + caseId + "&bank=1",
                 success: function (response) {
                     if(response.status.code == 200){
-                        $('#skbankCompId').text(response.response.compId);
+                        $('#skbankCompId').text(response.response.CompId);
                         $.ajax({
                            type: "POST",
                            data: JSON.stringify(response.response),

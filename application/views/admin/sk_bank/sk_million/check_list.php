@@ -13,7 +13,7 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
     <script data-pace-options='{ "ajax": true }' src="/assets/admin/scripts/pace.js"></script>
-    <title>檢核表</title>
+    <title>信保專案融資檢核表</title>
     <style>
         .pointer {
             cursor: pointer;
@@ -51,7 +51,7 @@
     <div id="page-tab-skbank" class="nav-page" data-bankid="1">
         <div class="page">
             <div class="subpage api_data_page">
-                <h3 style="text-align: center;">檢核表</h3>
+                <h3 style="text-align: center;">信保專案融資檢核表</h3>
                 <div>
                     <table class="table table-bordered border-dark">
                         <tbody>
@@ -79,12 +79,12 @@
                         <tr>
                             <td class="bold-right-border">公司戶名<span style="color: red;">*</span></td>
                             <td colspan="3">
-                                <input id="CompName_content" name="CompName_content" type="text" class="table-input" disabled>
+                                <input id="compName_content" name="compName_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('CompName_content')" value="Edit">
+                                           onclick="edit_click('compName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -94,36 +94,36 @@
                                 <div style="color:red;">格式:YYYYMMDD</div>
                             </td>
                             <td colspan="3">
-                                <input id="CompSetDate_content" name="CompSetDate_content" type="text" class="table-input" disabled>
+                                <input id="compSetDate_content" name="compSetDate_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('CompSetDate_content')" value="Edit">
+                                           onclick="edit_click('compSetDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司實收資本額<span style="color: red;">*</span></td>
                             <td colspan="3">
-                                <input id="CompCapital_content" name="CompCapital_content" type="text" class="table-input" disabled>
+                                <input id="compCapital_content" name="compCapital_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('CompCapital_content')" value="Edit">
+                                           onclick="edit_click('compCapital_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司行業別(主計處)<span style="color: red;">*</span></td>
                             <td colspan="3">
-                                <input id="CompIdustry_content" name="CompIdustry_content" type="text" class="table-input" disabled>
+                                <input id="businessCycleCode_content" name="businessCycleCode_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('CompIdustry_content')" value="Edit">
+                                           onclick="edit_click('businessCycleCode_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -255,17 +255,17 @@
                         <tr>
                             <td class="bold-right-border">營業種類</td>
                             <td colspan="3">
-                                <select name="BusinessType_content" class="table-input" id="BusinessType_content" disabled>
+                                <select name="businessTypeCode_content" class="table-input" id="businessTypeCode_content" disabled>
                                     <option value=""></option>
-                                    <option value="A">A:製造</option>
-                                    <option value="B">B:買賣</option>
-                                    <option value="C">C:其他</option>
+                                    <option value="1">1:製造業</option>
+                                    <option value="2">2:買賣業</option>
+                                    <option value="3">3:其他</option>
                                 </select>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BusinessType_content')" value="Edit">
+                                           onclick="edit_click('businessTypeCode_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -389,144 +389,144 @@
                         <tr>
                             <td class="bold-right-border">營業登記地址_選擇縣市</td>
                             <td colspan="3">
-                                <input id="BizRegAddrCityName_content" name="BizRegAddrCityName_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressCity_content" name="bizRegAddressCity_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrCityName_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressCity_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_選擇鄉鎮市區</td>
                             <td colspan="3">
-                                <input id="BizRegAddrAreaName_content" name="BizRegAddrAreaName_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressArea_content" name="bizRegAddressArea_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrAreaName_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressArea_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_路街名稱(不含路、街)</td>
                             <td colspan="3">
-                                <input id="BizRegAddrRoadName_content" name="BizRegAddrRoadName_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressRoad_content" name="bizRegAddressRoad_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrRoadName_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressRoad_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_路 OR 街</td>
                             <td colspan="3">
-                                <input id="BizRegAddrRoadType_content" name="BizRegAddrRoadType_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressRoadType_content" name="bizRegAddressRoadType_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrRoadType_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressRoadType_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_段</td>
                             <td colspan="3">
-                                <input id="BizRegAddrSec_content" name="BizRegAddrSec_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressSec_content" name="bizRegAddressSec_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrSec_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressSec_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_巷</td>
                             <td colspan="3">
-                                <input id="BizRegAddrLn_content" name="BizRegAddrLn_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressLn_content" name="bizRegAddressLn_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrLn_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_弄</td>
                             <td colspan="3">
-                                <input id="BizRegAddrAly_content" name="BizRegAddrAly_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressAly_content" name="bizRegAddressAly_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrAly_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressAly_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_號(不含之號)</td>
                             <td colspan="3">
-                                <input id="BizRegAddrNo_content" name="BizRegAddrNo_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressNo_content" name="bizRegAddressNo_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrNo_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_之號</td>
                             <td colspan="3">
-                                <input id="BizRegAddrNoExt_content" name="BizRegAddrNoExt_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressNoExt_content" name="bizRegAddressNoExt_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrNoExt_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressNoExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_樓(不含之樓、室)</td>
                             <td colspan="3">
-                                <input id="BizRegAddrFloor_content" name="BizRegAddrFloor_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressFloor_content" name="bizRegAddressFloor_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrFloor_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressFloor_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_之樓</td>
                             <td colspan="3">
-                                <input id="BizRegAddrFloorExt_content" name="BizRegAddrFloorExt_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressFloorExt_content" name="bizRegAddressFloorExt_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrFloorExt_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressFloorExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">營業登記地址_室</td>
                             <td colspan="3">
-                                <input id="BizRegAddrRoom_content" name="BizRegAddrRoom_content" type="text" class="table-input" disabled>
+                                <input id="bizRegAddressRoom_content" name="bizRegAddressRoom_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('BizRegAddrRoom_content')" value="Edit">
+                                           onclick="edit_click('bizRegAddressRoom_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -548,12 +548,12 @@
                                 <div style="color:red;">格式:YYYYMMDD</div>
                             </td>
                             <td colspan="3">
-                                <input id="LastPaidInCapitalDate_content" name="LastPaidInCapitalDate_content" type="text" class="table-input" disabled>
+                                <input id="lastPaidInCapitalDate_content" name="lastPaidInCapitalDate_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('LastPaidInCapitalDate_content')" value="Edit">
+                                           onclick="edit_click('lastPaidInCapitalDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -684,144 +684,144 @@
                         <tr>
                             <td class="bold-right-border">實際營業地址_選擇縣市</td>
                             <td colspan="3">
-                                <input id="RealBizAddrCityName_content" name="RealBizAddrCityName_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressCity_content" name="realBizAddressCity_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrCityName_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressCity_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_選擇鄉鎮市區</td>
                             <td colspan="3">
-                                <input id="RealBizAddrAreaName_content" name="RealBizAddrAreaName_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressArea_content" name="realBizAddressArea_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrAreaName_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressArea_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_路街名稱(不含路、街)</td>
                             <td colspan="3">
-                                <input id="RealBizAddrRoadName_content" name="RealBizAddrRoadName_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressRoad_content" name="realBizAddressRoad_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrRoadName_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressRoad_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_路 OR 街</td>
                             <td colspan="3">
-                                <input id="RealBizAddrRoadType_content" name="RealBizAddrRoadType_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressRoadType_content" name="realBizAddressRoadType_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrRoadType_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressRoadType_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_段</td>
                             <td colspan="3">
-                                <input id="RealBizAddrSec_content" name="RealBizAddrSec_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressSec_content" name="realBizAddressSec_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrSec_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressSec_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_巷</td>
                             <td colspan="3">
-                                <input id="RealBizAddrLn_content" name="RealBizAddrLn_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressLn_content" name="realBizAddressLn_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrLn_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_弄</td>
                             <td colspan="3">
-                                <input id="RealBizAddrAly_content" name="RealBizAddrAly_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressAly_content" name="realBizAddressAly_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrAly_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressAly_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_號(不含之號)</td>
                             <td colspan="3">
-                                <input id="RealBizAddrNo_content" name="RealBizAddrNo_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressNo_content" name="realBizAddressNo_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrNo_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_之號</td>
                             <td colspan="3">
-                                <input id="RealBizAddrNoExt_content" name="RealBizAddrNoExt_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressNoExt_content" name="realBizAddressNoExt_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrNoExt_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressNoExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_樓(不含之樓、室)</td>
                             <td colspan="3">
-                                <input id="RealBizAddrFloor_content" name="RealBizAddrFloor_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressFloor_content" name="realBizAddressFloor_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrFloor_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressFloor_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_之樓</td>
                             <td colspan="3">
-                                <input id="RealBizAddrFloorExt_content" name="RealBizAddrFloorExt_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressFloorExt_content" name="realBizAddressFloorExt_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrFloorExt_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressFloorExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">實際營業地址_室</td>
                             <td colspan="3">
-                                <input id="RealBizAddrRoom_content" name="RealBizAddrRoom_content" type="text" class="table-input" disabled>
+                                <input id="realBizAddressRoom_content" name="realBizAddressRoom_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('RealBizAddrRoom_content')" value="Edit">
+                                           onclick="edit_click('realBizAddressRoom_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -975,168 +975,168 @@
                         <tr>
                             <td class="bold-right-border">公司董監事 A 姓名</td>
                             <td colspan="3">
-                                <input id="DirectorAName_content" name="DirectorAName_content" type="text" class="table-input" disabled>
+                                <input id="directorAName_content" name="directorAName_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorAName_content')" value="Edit">
+                                           onclick="edit_click('directorAName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 A 統編</td>
                             <td colspan="3">
-                                <input id="DirectorAId_content" name="DirectorAId_content" type="text" class="table-input" disabled>
+                                <input id="directorAId_content" name="directorAId_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorAId_content')" value="Edit">
+                                           onclick="edit_click('directorAId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 B 姓名</td>
                             <td colspan="3">
-                                <input id="DirectorBName_content" name="DirectorBName_content" type="text" class="table-input" disabled>
+                                <input id="directorBName_content" name="directorBName_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorBName_content')" value="Edit">
+                                           onclick="edit_click('directorBName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 B 統編</td>
                             <td colspan="3">
-                                <input id="DirectorBId_content" name="DirectorBId_content" type="text" class="table-input" disabled>
+                                <input id="directorBId_content" name="directorBId_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorBId_content')" value="Edit">
+                                           onclick="edit_click('directorBId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 C 姓名</td>
                             <td colspan="3">
-                                <input id="DirectorCName_content" name="DirectorCName_content" type="text" class="table-input" disabled>
+                                <input id="directorCName_content" name="directorCName_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorCName_content')" value="Edit">
+                                           onclick="edit_click('directorCName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 C 統編</td>
                             <td colspan="3">
-                                <input id="DirectorCId_content" name="DirectorCId_content" type="text" class="table-input" disabled>
+                                <input id="directorCId_content" name="directorCId_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorCId_content')" value="Edit">
+                                           onclick="edit_click('directorCId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 D 姓名</td>
                             <td colspan="3">
-                                <input id="DirectorDName_content" name="DirectorDName_content" type="text" class="table-input" disabled>
+                                <input id="directorDName_content" name="directorDName_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorDName_content')" value="Edit">
+                                           onclick="edit_click('directorDName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 D 統編</td>
                             <td colspan="3">
-                                <input id="DirectorDId_content" name="DirectorDId_content" type="text" class="table-input" disabled>
+                                <input id="directorDId_content" name="directorDId_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorDId_content')" value="Edit">
+                                           onclick="edit_click('directorDId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 E 姓名</td>
                             <td colspan="3">
-                                <input id="DirectorEName_content" name="DirectorEName_content" type="text" class="table-input" disabled>
+                                <input id="directorEName_content" name="directorEName_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorEName_content')" value="Edit">
+                                           onclick="edit_click('directorEName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 E 統編</td>
                             <td colspan="3">
-                                <input id="DirectorEId_content" name="DirectorEId_content" type="text" class="table-input" disabled>
+                                <input id="directorEId_content" name="directorEId_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorEId_content')" value="Edit">
+                                           onclick="edit_click('directorEId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 F 姓名</td>
                             <td colspan="3">
-                                <input id="DirectorFName_content" name="DirectorFName_content" type="text" class="table-input" disabled>
+                                <input id="directorFName_content" name="directorFName_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorFName_content')" value="Edit">
+                                           onclick="edit_click('directorFName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 F 統編</td>
                             <td colspan="3">
-                                <input id="DirectorFId_content" name="DirectorFId_content" type="text" class="table-input" disabled>
+                                <input id="directorFId_content" name="directorFId_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorFId_content')" value="Edit">
+                                           onclick="edit_click('directorFId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 G 姓名</td>
                             <td colspan="3">
-                                <input id="DirectorGName_content" name="DirectorGName_content" type="text" class="table-input" disabled>
+                                <input id="directorGName_content" name="directorGName_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorGName_content')" value="Edit">
+                                           onclick="edit_click('directorGName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司董監事 G 統編</td>
                             <td colspan="3">
-                                <input id="DirectorGId_content" name="DirectorGId_content" type="text" class="table-input" disabled>
+                                <input id="directorGId_content" name="directorGId_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('DirectorGId_content')" value="Edit">
+                                           onclick="edit_click('directorGId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1155,12 +1155,12 @@
                         <tr>
                             <td class="bold-right-border">股東人數</td>
                             <td colspan="3">
-                                <input id="ShareholderNum_content" name="ShareholderNum_content" type="text" class="table-input" disabled>
+                                <input id="stockholderNum_content" name="stockholderNum_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('ShareholderNum_content')" value="Edit">
+                                           onclick="edit_click('stockholderNum_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1170,12 +1170,12 @@
                             </td>
                             <td class="bold-right-border">負責人姓名<span style="color: red;">*</span></td>
                             <td colspan="3">
-                                <input id="PrName_content" name="PrName_content" type="text" class="table-input" disabled>
+                                <input id="prName_content" name="prName_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('PrName_content')" value="Edit">
+                                           onclick="edit_click('prName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3397,7 +3397,7 @@
     let table_type;
     let data_type;
     // 下拉選單列表
-    let select_array = ['CompType_content', 'BusinessType_content', 'CompDuType_content', 'bizRegAddrOwner_content', 'isBizAddrEqToBizRegAddr_content', 'BizTaxFileWay_content',
+    let select_array = ['CompType_content', 'businessTypeCode_content', 'CompDuType_content', 'bizRegAddrOwner_content', 'isBizAddrEqToBizRegAddr_content', 'BizTaxFileWay_content',
         'IsPrMarried_content', 'IsPrSpouseGu_content', 'RealPr_content', 'realBizRegAddressOwner_content', 'realBizAddressOwner_content', 'realBizAddrOwner_content', 'OthRealPrRelWithPr_content',
         'GuOneRelWithPr_content', 'GuOneCompany_content', 'GuTwoRelWithPr_content', 'GuTwoCompany_content', 'PrEduLevel_content', 'CompMajorOwnership_content', 'CompMajorSetting_content'];
     // 原始檔案圖片-附件資料表
@@ -3406,7 +3406,7 @@
     ];
     // 送出時為數字欄位
     let is_int_array = {
-        [SKBANK_ID]: ['CompCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'OthRealPrSHRatio', 'employeeNum', 'ShareholderNum']
+        [SKBANK_ID]: ['compCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'OthRealPrSHRatio', 'employeeNum', 'stockholderNum']
     };
 
     function edit_click(id_content) {
@@ -3491,10 +3491,10 @@
                 value = $(`[name="${key}"]`).eq(0).val();
                 key = key.replace(/_content/g, '');
                 if (bank_int_array.includes(key)) {
-                    if (value) {
+                    if (Number.isInteger(value)) {
                         value = parseInt(value);
                     } else {
-                        value = 0;
+                        return;
                     }
                 }
                 all_data[key] = value;
@@ -3542,7 +3542,7 @@
         });
     }
 
-    async function save(send_type) {
+    async function save(send_type, bank) {
         // 收件檢核表資料傳送
         const sendData = (bank_num) => {
             return new Promise((resolve) => {
@@ -3615,14 +3615,10 @@
             })
         }
         if (send_type == 'text_list') {
-            for (const bank of BANK_LIST) {
-                await sendData(bank)
-            }
+            await sendData(bank);
         }
         if (send_type == 'image_list') {
-            for (const bank of BANK_LIST) {
-                await sendImageList(bank)
-            }
+            await sendImageList(bank);
         }
     }
 
@@ -3691,8 +3687,7 @@
         $('.sendBtn').click(function () {
             $(".sendBtn").prop("disabled", true);
             let bank = $(this).parents('.nav-page').data('bankid');
-
-            save(this.id);
+            save(this.id, bank);
         });
 
     });

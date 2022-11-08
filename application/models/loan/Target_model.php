@@ -1056,4 +1056,19 @@ class Target_model extends MY_Model
             ->get()
             ->result_array();
     }
+
+    /**
+     * 依案件 id 取得對應的產品 id
+     * @param $id
+     * @return mixed
+     */
+    public function get_product_id_by_id($id)
+    {
+        return $this->db
+            ->select(['product_id', 'sub_product_id'])
+            ->from('p2p_loan.targets')
+            ->where('id', $id)
+            ->get()
+            ->first_row('array');
+    }
 }

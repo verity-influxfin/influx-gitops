@@ -318,13 +318,26 @@ END:
             $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no' => $inputArr['MsgNo'], 'type' => 'text']);
             if($mapping_info)
             {
-                $adapter = Adapter_factory::getInstance($mapping_info->bank);
+                $adapter = Adapter_factory::getInstance($mapping_info->bank, $mapping_info->target_id);
+                if ( ! isset($adapter))
+                {
+                    $result['error'] = 'cannot get Adapter instance';
+                    goto END;
+                }
                 $inputArr = $adapter->convert_text($inputArr);
                 $requestContent = ['converted_data' => $inputArr['Data']];
+
                 $chk_required_column = $adapter->check_required_column($inputArr);
                 if ( ! isset($chk_required_column['success']) || $chk_required_column['success'] !== TRUE)
                 {
                     $result['error'] = $chk_required_column['error'];
+                    goto END;
+                }
+
+                $chk_date_format = $adapter->check_date_format($inputArr);
+                if ( ! isset($chk_date_format['success']) || $chk_date_format['success'] !== TRUE)
+                {
+                    $result['error'] = $chk_date_format['error'];
                     goto END;
                 }
             }

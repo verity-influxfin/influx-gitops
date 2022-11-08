@@ -163,6 +163,54 @@
                                             <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddress"></td>
                                         </tr>
                                         <tr>
+                                            <td><span>營業登記地址_縣市</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressCity"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_鄉鎮市區</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressArea"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_路街名(不含路、街)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressRoad"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_路 OR 街</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressRoadType"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_段</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressSec"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_巷</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressLn"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_弄</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressAly"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_號(不含之號)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressNo"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_之號</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressNoExt"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_樓(不含之樓、室)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressFloor"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_之樓</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressFloorExt"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_室</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressRoom"></td>
+                                        </tr>
+                                        <tr>
                                             <td><span>是否有法人投資</span></td>
                                             <td>
                                                 <select v-model="formData.hasJuridicalInvest" class="table-input sk-input form-control">
@@ -327,6 +375,54 @@
                                     <tr>
                                         <td><span>營業登記地址</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddress"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_縣市</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressCity"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_鄉鎮市區</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressArea"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_路街名(不含路、街)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressRoad"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_路 OR 街</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressRoadType"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_段</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressSec"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_巷</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressLn"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_弄</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressAly"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_號(不含之號)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressNo"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_之號</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressNoExt"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_樓(不含之樓、室)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressFloor"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_之樓</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressFloorExt"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>營業登記地址_室</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.bizRegAddressRoom"></td>
                                     </tr>
                                     <tr>
                                         <td><span>是否有法人投資</span></td>

@@ -313,7 +313,12 @@ END:
 
             if($mapping_info)
             {
-                $adapter = Adapter_factory::getInstance($mapping_info->bank);
+                $adapter = Adapter_factory::getInstance($mapping_info->bank, $mapping_info->target_id);
+                if ( ! isset($adapter))
+                {
+                    $result['error'] = 'cannot get Adapter instance';
+                    goto END;
+                }
                 $inputArr = $adapter->convert_text($inputArr);
             }
 
