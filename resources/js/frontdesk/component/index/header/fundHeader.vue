@@ -5,7 +5,7 @@
       <div class="col-12">
         <img
           src="@/asset/images/index/header/fund-header-phone.png"
-          class="d-block mx-auto"
+          class="d-block mx-auto img-fluid fund-phone"
         />
       </div>
     </div>
@@ -14,7 +14,7 @@
       <div class="col-12">
         <img
           src="@/asset/images/index/header/fund-header.png"
-          class="w-100"
+          class="w-100 img-fluid"
         />
       </div>
     </div>
@@ -49,6 +49,9 @@
     padding-right: 0;
     display: block;
     margin: 65px auto 0;
+  }
+  .fund-phone{
+    max-height: 330px;
   }
 }
 </style>
