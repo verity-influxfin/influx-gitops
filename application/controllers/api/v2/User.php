@@ -10,7 +10,7 @@ class User extends REST_Controller {
     {
         parent::__construct();
         $method 		= $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous'];
+        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous', 'check_phone'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -3337,5 +3337,32 @@ END:
             'verify' => (int) ($bank_account->verify ?? 0),
             'status' => (int) ($bank_account->status ?? 0),
         ]]);
+    }
+
+    // 檢查使用者手機是否存在
+    public function check_phone_get()
+    {
+        $phone = $this->input->get('phone');
+        if (empty($phone))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+        $user_info = $this->user_model->get_many_by(['phone' => $phone, 'status' => 1]);
+        $user_company_status = array_column($user_info, 'id', 'company_status');
+
+        if ( ! empty($user_company_status[0]) && ! empty($user_company_status[1]))
+        { // 該手機號碼已註冊自然人、法人
+            $status = 2;
+        }
+        elseif ( ! empty($user_company_status[0]))
+        { // 該手機號碼僅註冊自然人
+            $status = 1;
+        }
+        else
+        { // 該手機號碼未註冊
+            $status = 0;
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['status' => $status]]);
     }
 }

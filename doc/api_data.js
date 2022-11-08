@@ -44866,6 +44866,87 @@ define({
         },
         {
             "type": "get",
+            "url": "/v2/user/check_phone",
+            "title": "遊客檢查手機號碼是否存在",
+            "version": "0.2.0",
+            "name": "GetUserCheckPhone",
+            "group": "User",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "string",
+                            "optional": false,
+                            "field": "phone",
+                            "description": "<p>手機號碼</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data",
+                            "description": "<p>回傳查詢結果</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "data.status",
+                            "description": "<p>該手機號碼的註冊狀態<br/>0:未註冊<br/>1:僅註冊自然人<br/>2:已註冊自然人、法人</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"data\": {\n        \"status\": 1\n    }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/check_phone"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>輸入不正確資料</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"error\": 200\n}",
+                        "type": "Object"
+                    },
+                ]
+            }
+        },
+        {
+            "type": "get",
             "url": "/user/chagetoken",
             "title": "會員 交換Token",
             "version": "0.1.0",
