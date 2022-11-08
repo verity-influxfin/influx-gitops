@@ -457,16 +457,27 @@ class User extends REST_Controller {
                 $this->user_meta_model->insert_many($company_meta);
             // 新增自然人帳號
             } else {
+                // Generate promote code.
+                $this->load->model('user/qrcode_setting_model');
+                $this->load->library('user_lib');
+                $alias_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
+                $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias_name]);
+                $promote_code = '';
+                if (isset($qrcode_settings))
+                {
+                    $promote_code = $this->user_lib->get_promote_code($qrcode_settings->length, $qrcode_settings->prefix);
+                }
+                $new_account_data['my_promote_code'] = $promote_code;
 
                 $new_id = $this->user_model->insert($new_account_data);
                 if ($new_id) {
 
                     // 若facebook的token存在，則新增'社群'認證
                     $facebook_access_token = isset($input['access_token']) ? $input['access_token'] : false;
+                    $this->load->model('user/user_certification_model');
                     if ($facebook_access_token) {
                         $this->load->library('facebook_lib');
                         $info = $this->facebook_lib->get_info($facebook_access_token);
-                        $this->load->model('user/user_certification_model');
                         $this->user_certification_model->insert([
                                 'user_id' => $new_id,
                                 'certification_id' => 4,
@@ -475,6 +486,67 @@ class User extends REST_Controller {
                             ]);
                     }
 
+                    // QR Code
+
+                    $this->load->library('contract_lib');
+                    $this->load->library('qrcode_lib');
+
+                    // contract_id
+                    $promote_cert_list = $this->config->item('promote_code_certs');
+                    $certifications = [];
+                    $doneCertifications = [];
+                    if ( ! empty($promote_cert_list))
+                    {
+                        $param = array(
+                            'user_id' => $new_id,
+                            'certification_id' => $promote_cert_list,
+                            'investor' => $new_account_data['investor_status'],
+                            'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_SUCCEED,
+                                CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
+                        );
+                        $certList = $this->user_certification_model->order_by('created_at', 'desc')->get_many_by($param);
+                        $certifications = array_reduce($certList, function ($list, $item) use (&$doneCertifications) {
+                            if ( ! isset($list[$item->certification_id]))
+                            {
+                                $list[$item->certification_id] = $item;
+                                if ($item->status == CERTIFICATION_STATUS_SUCCEED)
+                                    $doneCertifications[$item->certification_id] = $item;
+                            }
+                            return $list;
+                        }, []);
+                    }
+                    $settings = json_decode($qrcode_settings->settings, TRUE);
+                    $settings['certification_id'] = array_column($certifications, 'id');
+                    $settings['description'] = $qrcode_settings->description;
+                    $settings['investor'] = $new_account_data['investor_status'];
+                    $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($qrcode_settings->alias);
+                    $contract = $this->qrcode_lib->get_contract_format_content($contract_type_name, '', '', '', $settings);
+                    $contract_id = $this->contract_lib->sign_contract($contract_type_name, $contract);
+
+                    if (isset($qrcode_settings))
+                    {
+                        $start_time = date('Y-m-d H:i:s');
+                        $end_time = date("Y-m-d H:i:s", strtotime("+ 1 year"));
+                        $rs = $this->user_qrcode_model->insert([
+                            'user_id' => $new_id,
+                            'alias' => $alias_name,
+                            'promote_code' => $promote_code,
+                            'contract_id' => $contract_id,
+                            'start_time' => $start_time,
+                            'end_time' => $end_time,
+                            'contract_end_time' => $end_time,
+                            'settings' => json_encode($settings),
+                            'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+                        ]);
+                        if ( ! $rs)
+                        {
+                            log_message('error', "user_qrcode insert failed for user {$new_id}.");
+                        }
+                    }
+                    else
+                    {
+                        log_message('error', "No qrcode_setting of alias {$alias_name}.");
+                    }
                 } else {
                     $result['error'] = INSERT_ERROR;
                     goto END;
