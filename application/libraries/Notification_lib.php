@@ -1066,6 +1066,8 @@ econtent;
         $devices = $this->CI->Log_userlogin_model->get_filtered_deviceid(
             ['user_ids' => $user_ids, 'android' => TRUE, 'ios' => TRUE], NotificationTargetCategory::Investment
         );
+        $old_rate = rtrim(strval($old_rate), '0');
+        $old_rate = rtrim($old_rate, '.');
         $result = $this->send_notification([
             'user_id' => SYSTEM_ADMIN_ID,
             'sender_name' => "利率提升系統提醒",
