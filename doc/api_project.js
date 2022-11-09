@@ -12,6 +12,7 @@ define({
     "User",
     "PostUserRegisterphone",
     "PostUserRegister",
+    "PostUserCompanyRegister",
     "PostUserLogin",
     "PostUserBind",
     "PostUserSociallogin",

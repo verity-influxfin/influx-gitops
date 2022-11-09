@@ -39,6 +39,7 @@ class User_model extends MY_Model
 	protected function before_data_c($data)
     {
 		$data['password'] 	= sha1($data['password']);
+		$data['user_id'] 	= sha1($data['user_id']);
         $data['created_at'] = $data['updated_at'] = time();
         $data['created_ip'] = $data['updated_ip'] = get_ip();
         return $data;
@@ -217,5 +218,20 @@ class User_model extends MY_Model
             ->where('u.status', 1)
             ->get()
             ->result_array();
+    }
+
+    /**
+     * 以統編取得使用者 ID
+     * @param $tax_id : 統編
+     * @return mixed
+     */
+    public function get_exit_judicial_person($tax_id)
+    {
+        $query = $this->db->query("
+            SELECT `jp`.`user_id` FROM `p2p_user`.`judicial_person` `jp` WHERE `jp`.`tax_id`='{$tax_id}' AND `jp`.`status`!=2
+	        UNION
+	        SELECT `u`.`id` AS `user_id` FROM `p2p_user`.`users` `u` WHERE `u`.`id_number`='{$tax_id}' AND `u`.`company_status`=1
+	    ");
+        return $query->result();
     }
 }

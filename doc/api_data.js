@@ -48611,6 +48611,303 @@ define({
         },
         {
             "type": "post",
+            "url": "/v2/user/register_company",
+            "title": "會員 法人註冊",
+            "version": "0.2.0",
+            "name": "PostUserCompanyRegister",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": true,
+                            "field": "request_token",
+                            "description": "<p>自然人登入後取得的 Request token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "size": "6..50",
+                            "optional": false,
+                            "field": "password",
+                            "description": "<p>設定密碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "tax_id",
+                            "description": "<p>統一編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "company_user_id",
+                            "description": "<p>設定帳號 (至少9碼大小寫英數)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "governmentauthorities_image",
+                            "description": "<p>設立(變更)事項登記表 (圖片 IDs 以逗號隔開，最多30個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "allowedValues": [
+                                "0",
+                                "1"
+                            ],
+                            "optional": true,
+                            "field": "investor",
+                            "defaultValue": "0",
+                            "description": "<p>1:投資端 0:借款端</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "size": "0..16",
+                            "optional": true,
+                            "field": "promote_code",
+                            "description": "<p>邀請碼</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "token",
+                            "description": "<p>request_token</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "first_time",
+                            "description": "<p>是否首次本端</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "expiry_time",
+                            "description": "<p>token 失效時間</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n\t\"result\": \"SUCCESS\",\n\t\"data\": {\n\t\t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n\t\t\"expiry_time\": \"1522673418\",\n\t\t\"first_time\": 1\n\t}\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>token 解析錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "214",
+                            "description": "<p>公司已存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "213",
+                            "description": "<p>自然人非該公司登記負責人</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "215",
+                            "description": "<p>此公司或商行不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "219",
+                            "description": "<p>統一編號長度非8碼</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "220",
+                            "description": "<p>自然人實名認證未通過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "223",
+                            "description": "<p>公司不是核准設立狀態</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "301",
+                            "description": "<p>會員已存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "312",
+                            "description": "<p>密碼長度錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "319",
+                            "description": "<p>商業司回應格式有誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "320",
+                            "description": "<p>商業司連線失敗，請稍後再試</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "324",
+                            "description": "<p>帳號格式有誤 (非9碼或非大小寫英數混合)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "325",
+                            "description": "<p>帳號重複</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "213",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "215",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"215\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "219",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"219\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "220",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"220\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "223",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"223\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "301",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"301\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "303",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "305",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "308",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "312",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "319",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"319\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "320",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"320\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/register_company"
+                }
+            ]
+        },
+        {
+            "type": "post",
             "url": "/user/register",
             "title": "會員 註冊",
             "version": "0.1.0",

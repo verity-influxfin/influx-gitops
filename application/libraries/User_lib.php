@@ -1286,4 +1286,46 @@ class User_lib {
 
         return $data;
     }
+
+    /**
+     * 檢查是否有相同統編之使用者存在
+     * @param $tax_id : 統編 (users.id_number)
+     * @return bool
+     */
+    public function check_company_exit($tax_id): bool
+    {
+        $this->CI->load->model('user/user_model');
+        $result = $this->CI->user_model->get_exit_judicial_person($tax_id);
+        return ! empty($result);
+    }
+
+    /**
+     * 以手機號碼取得相同負責人之公司資訊
+     * @param $phone : 手機號碼 (users.phone)
+     * @return array
+     */
+    public function get_all_certificated_companies_by_phone($phone): array
+    {
+        $companies_info = $this->CI->user_model->as_array()->get_many_by([
+            'phone' => $phone,
+            'company_status' => USER_IS_COMPANY,
+            'status' => 1
+        ]);
+
+        if (empty($companies_info))
+        {
+            return [];
+        }
+
+        $result = [];
+        foreach ($companies_info as $single_company)
+        {
+            $result[] = [
+                'id' => $single_company['id'],
+                'name' => $single_company['name'], // 公司名稱
+                'tax' => $single_company['id_number'], // 統一編號
+            ];
+        }
+        return $result;
+    }
 }
