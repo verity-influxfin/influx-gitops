@@ -1061,10 +1061,12 @@ END:
 
         $this->load->model('user/user_certification_model');
         if (isset($this->user_info->company) && $this->user_info->company != 0)
-        {
+        { // 法人
             $this->load->library('judicialperson_lib');
             $natural_person = $this->judicialperson_lib->getNaturalPerson($this->user_info->id);
             $identity_cert = $this->user_certification_model->get_content($natural_person->id, CERTIFICATION_IDENTITY);
+            $same_company_responsible_user = $this->user_model->get_same_company_responsible_user_by_phone($natural_person->phone);
+            $data['company_list'] = $same_company_responsible_user;
         }
         else
         {

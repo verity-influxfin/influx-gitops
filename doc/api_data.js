@@ -45339,13 +45339,48 @@ define({
                             "optional": false,
                             "field": "expiry_time",
                             "description": "<p>token時效</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "has_spouse",
+                            "description": "<p>該自然人有無配偶 或 該法人帳號的負責人有無配偶</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Array",
+                            "optional": false,
+                            "field": "company_list",
+                            "description": "<p>相同負責人的公司列表</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "company_list.id",
+                            "description": "<p>公司id</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "company_list.name",
+                            "description": "<p>公司名</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "company_list.tax",
+                            "description": "<p>公司統編</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"id\": \"1\",\n  \t\"name\": \"\",\n  \t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n  \t\"nickname\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"investor_status\": \"1\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",\n  \t\"id_number\": null,\n  \t\"transaction_password\": true,\n  \t\"investor\": 1,  \n  \t\"company\": 0,  \n  \t\"incharge\": 0,  \n  \t\"created_at\": \"1522651818\",     \n  \t\"updated_at\": \"1522653939\",     \n  \t\"expiry_time\": \"1522675539\"     \n  }\n}",
+                        "content": "{\n\t\"result\": \"SUCCESS\",\n\t\"data\": {\n\t\t\"id\": \"1\",\n\t\t\"name\": \"\",\n\t\t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n\t\t\"nickname\": \"陳霈\",\n\t\t\"phone\": \"0912345678\",\n\t\t\"investor_status\": \"1\",\n\t\t\"my_promote_code\": \"9JJ12CQ5\",\n\t\t\"id_number\": null,\n\t\t\"transaction_password\": true,\n\t\t\"investor\": 1,\n\t\t\"company\": 0,\n\t\t\"incharge\": 0,\n\t\t\"created_at\": \"1522651818\",\n\t\t\"updated_at\": \"1522653939\",\n\t\t\"expiry_time\": \"1522675539\",\n\t\t\"has_spouse\": true,\n\t\t\"company_list\": [\n\t\t\t{\n\t\t\t\t\"id\": 123456,\n\t\t\t\t\"name\": \"久安企業社\",\n\t\t\t\t\"tax\": \"68566881\"\n\t\t\t}\n\t\t]\n\t}\n}",
                         "type": "Object"
                     }
                 ]

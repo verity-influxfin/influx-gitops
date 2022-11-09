@@ -194,4 +194,28 @@ class User_model extends MY_Model
 
         return $query['amount'] ?? 0;
     }
+
+    /**
+     * 取得相同手機號碼的公司資料
+     * @param $phone : 手機號碼
+     * @return mixed
+     */
+    public function get_same_company_responsible_user_by_phone($phone)
+    {
+        $sub_query = $this->db
+            ->select('user_id')
+            ->where('status', CERTIFICATION_STATUS_SUCCEED)
+            ->where('certification_id', CERTIFICATION_GOVERNMENTAUTHORITIES)
+            ->get_compiled_select('user_certification', TRUE);
+
+        return $this->db
+            ->select(['u.id', 'u.name', 'u.id_number AS tax'])
+            ->from('users u')
+            ->join("({$sub_query}) a", 'a.user_id=u.id')
+            ->where('u.phone', $phone)
+            ->where('u.company_status', USER_IS_COMPANY)
+            ->where('u.status', 1)
+            ->get()
+            ->result_array();
+    }
 }
