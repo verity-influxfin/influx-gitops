@@ -129,7 +129,7 @@ export default {
         category(v) {
             this.current_category = v;
             this.current_questions = this.questions.filter((j) => {
-                return v !== 'all' ? j.type === v : true;
+                return v !== 'all' ? j.type.includes(v) : true;
             })
         },
 
