@@ -3622,7 +3622,9 @@ export default {
 
           if ((ang >= 0 && ang <= 75) || (ang >= -75 && ang <= 0)) {
             let deg = (ang - 75) * -1;
-            let rateCount = ((this.maxRate) * (deg - 0) / 149) + this.minRate;
+            const maxRate = Number(this.maxRate)
+            const minRate = Number(this.minRate)
+            let rateCount = (maxRate - minRate) * (deg) / 140 + minRate
             this.rateCount = (rateCount - (rateCount % 0.5));
             this.rotate(ang);
           }

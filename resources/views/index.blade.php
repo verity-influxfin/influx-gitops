@@ -41,6 +41,9 @@
     <link rel="icon" href="{{ asset('images/site_icon.png') }}">
 
     <!-- package -->
+    @if (isset($meta_canonical))
+    <link rel="canonical" href="{{ $meta_canonical }}" />
+    @endif
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/jquery-ui.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/bootstrap.min.css') }}">
@@ -293,7 +296,7 @@
                                                     <a href="/blog" class="link-text">普匯小學堂</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/vlog" class="link-text">小學堂影音</a>
+                                                    <a href="/vlog?q=share" class="link-text">小學堂影音</a>
                                                 </div>
                                             </div>
                                         </div>

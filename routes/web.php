@@ -341,13 +341,14 @@ Route::get('/{path?}', function (Request $request, $path = '') {
                 $meta_data = (new App\Http\Controllers\NewsController)->get_meta_info($id);
                 break;
         }
-
+        $meta_data['link'] = $request->fullUrl();
         return view('index', [
             'meta_description' => !empty($meta_data['meta_description']) ? $meta_data['meta_description'] : $default_desc,
             'meta_og_description' => !empty($meta_data['meta_og_description']) ? $meta_data['meta_og_description'] : $default_desc,
             'web_title' => !empty($meta_data['web_title']) ? $meta_data['web_title'] : $default_title,
             'meta_og_title' => !empty($meta_data['meta_og_title']) ? $meta_data['meta_og_title'] : $default_title,
-            'meta_og_image' => !empty($meta_data['meta_og_image']) ? $meta_data['meta_og_image'] : $default_og_img
+            'meta_og_image' => !empty($meta_data['meta_og_image']) ? $meta_data['meta_og_image'] : $default_og_img,
+            'meta_canonical' => !empty($meta_data['link']) ? $meta_data['link'] : ''
         ]);
     } else {
         return view('index', [
