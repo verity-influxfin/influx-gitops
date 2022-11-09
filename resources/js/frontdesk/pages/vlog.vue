@@ -76,6 +76,13 @@ export default {
     category: "",
     filterVideo: [],
   }),
+  beforeRouteEnter(to, from, next) {
+    if (Object.keys(to.query).length < 1) {
+      next('/vlog?q=share')
+    } else {
+      next()
+    }
+  },
   computed: {
     video() {
       return this.$store.getters.VideoData;
