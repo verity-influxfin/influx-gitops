@@ -16,8 +16,8 @@
                 <!--<a @click="changeOrderBy('date')" class="項目" :class="{'項目_啟用的': order_by === 'date'}">上架日</a>-->
                 <!--<a @click="changeOrderBy('amount')" class="項目" :class="{'項目_啟用的': order_by === 'amount'}">金額</a>-->
                 <a @click="changeOrderBy('instalment')" class="項目" :class="{'項目_啟用的': order_by === 'instalment'}">期數</a>
-                <a @click="changeOrderBy('interest')" class="項目" :class="{'項目_啟用的': order_by === 'interest'}">年利率</a>
-                <a @click="changeOrderBy('creditLevel')" class="項目" :class="{'項目_啟用的': order_by === 'creditLevel'}">信評</a>
+                <a @click="changeOrderBy('interest_rate')" class="項目" :class="{'項目_啟用的': order_by === 'interest_rate'}">年利率</a>
+                <a @click="changeOrderBy('credit_level')" class="項目" :class="{'項目_啟用的': order_by === 'credit_level'}">信評</a>
                 <div class="項目">
                     <div class="箭頭群組">
                         <img @click="changeSortBy('desc')" class="排序項目 排序項目_上" :class="{'排序項目_啟用的': sort_by === 'desc'}" src="/images/alesis-work-loan-arrow-up.svg">
