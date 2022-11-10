@@ -620,7 +620,7 @@ END:
         }
 
         // 檢查帳號是否存在
-        $company_user_id_exist = $this->user_model->get_by(['user_id' => sha1($input['company_user_id'])]);
+        $company_user_id_exist = $this->user_model->check_user_id_exist($input['company_user_id'], $input['tax_id']);
         if ( ! empty($company_user_id_exist))
         {
             $result['error'] = USER_ID_EXIST;
@@ -1212,6 +1212,50 @@ END:
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
+
+    // 忘記帳號
+    public function forgot_user_id_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $fields = ['new_company_user_id', 'tax_id'];
+        foreach ($fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+        }
+        // 檢查帳號
+        if ( ! preg_match("/(?=.{9})(?=.*[A-Z])(?=.*[a-z])(?=.*\d)/", $input['new_company_user_id']))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => USER_ID_FORMAT_ERROR));
+        }
+        $user_id_exist = $this->user_model->check_user_id_exist($input['new_company_user_id'], $input['tax_id']);
+        if ( ! empty($user_id_exist))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => USER_ID_EXIST));
+        }
+
+        $user_info = $this->user_model->get_by([
+            'phone' => $this->user_info->phone,
+            'id_number' => $input['tax_id'],
+            'company_status' => 1
+        ]);
+        if (empty($user_info))
+        { // 統編不存在，APP提示「前往註冊」
+            $this->response(array('result' => 'ERROR', 'error' => COMPANY_NOT_EXIST));
+        }
+
+        $user_update_res = $this->user_model->update($user_info->id, array('user_id' => $input['new_company_user_id']));
+        if ($user_update_res)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
 
 	/**
      * @api {get} /v2/user/info 會員 個人資訊

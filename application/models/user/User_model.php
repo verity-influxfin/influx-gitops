@@ -50,6 +50,10 @@ class User_model extends MY_Model
 		if(isset($data['password']) && !empty($data['password'])){
 			$data['password'] 	= sha1($data['password']);
 		}
+        if (isset($data['user_id']) && ! empty($data['user_id']))
+        {
+            $data['user_id'] = sha1($data['user_id']);
+        }
 		
 		if(isset($data['transaction_password']) && !empty($data['transaction_password'])){
 			$data['transaction_password'] 	= sha1($data['transaction_password']);
@@ -233,5 +237,21 @@ class User_model extends MY_Model
 	        SELECT `u`.`id` AS `user_id` FROM `p2p_user`.`users` `u` WHERE `u`.`id_number`='{$tax_id}' AND `u`.`company_status`=1
 	    ");
         return $query->result();
+    }
+
+    /**
+     * 檢查帳號是否已存在
+     * @param $user_id : 帳號 (users.user_id)
+     * @param $tax_id : 統編 (users.id_number)
+     * @return bool
+     */
+    public function check_user_id_exist($user_id, $tax_id)
+    {
+        $this->db
+            ->select('1')
+            ->from('users')
+            ->where('user_id', sha1($user_id))
+            ->where('id_number !=', $tax_id);
+        return ! empty($this->db->get()->first_row());
     }
 }
