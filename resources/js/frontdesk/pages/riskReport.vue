@@ -15,7 +15,7 @@
         </div>
       </section>
       <section class="anniversary">
-        <h1 class="h1">平均年化報酬率</h1>
+        <div class="h1">平均年化報酬率</div>
         <div class="block-content">
           <div class="value-group">
             <span class="value-1">{{ yearRateOfReturnRender.num }}</span>
@@ -29,7 +29,7 @@
       <section class="apply-cases">
         <div class="block-content">
           <div class="success-case-item">
-            <h1 class="h1">累放金額</h1>
+            <div class="h1">累放金額</div>
             <div class="success-case-value">
               <span class="em">{{
                 format(reportData.total_apply.amount)
@@ -38,7 +38,7 @@
             </div>
           </div>
           <div class="success-case-item">
-            <h1 class="h1">累放筆數</h1>
+            <div class="h1">累放筆數</div>
             <div class="success-case-value">
               <span class="em">{{ format(reportData.total_apply.count) }}</span>
               <span class="h1">筆</span>
@@ -46,10 +46,10 @@
           </div>
         </div>
       </section>
-      <section class="success-cases">
+      <!-- <section class="success-cases">
         <div class="block-content">
           <div class="success-case-item">
-            <h1 class="h1">平均每筆借款金額</h1>
+            <div class="h1">平均每筆借款金額</div>
             <div class="success-case-value">
               <span class="em">{{
                 format(reportData.total_apply.avg_invest)
@@ -62,7 +62,7 @@
       <section class="index-cases">
         <div class="block-content">
           <div class="success-case-item">
-            <h1 class="h1">累計回收逾期金額</h1>
+            <div class="h1">累計回收逾期金額</div>
             <div class="success-case-value">
               <span class="em">{{
                 format(reportData.total_apply.delay_return_amount)
@@ -71,9 +71,9 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
       <section class="repay">
-        <h1 class="h1">各信評等級回款率</h1>
+        <div class="h1">各信評等級回款率</div>
         <div class="block-content">
           <div class="risk-rank" :style="{ '--bg1': 'url(' + rankBg[0] + ')' }">
             <img
@@ -485,24 +485,24 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
   .block-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    position: relative;
+    &::before {
+      content: '';
+      width: 100%;
+      top: 50px;
+      height: 320px;
+      position: absolute;
+      background-image: url('~images/risk/risk-value-bg-1.svg'),
+        url('~images/risk/risk-value-bg-2.svg');
+      background-position: left 10% top 50px, right 10% top 0;
+      background-repeat: no-repeat;
+      z-index: 1;
+    }
   }
 }
 .success-cases {
   background: $color__background--gradient;
   padding: 48px 0;
-  position: relative;
-  .block-content::before {
-    content: '';
-    width: 100%;
-    top: 140px;
-    height: 320px;
-    position: absolute;
-    background-image: url('~images/risk/risk-value-bg-1.svg'),
-      url('~images/risk/risk-value-bg-2.svg');
-    background-position: left 10% top 50px, right 10% top 0;
-    background-repeat: no-repeat;
-    z-index: 1;
-  }
 }
 .index-cases {
   padding: 48px 0;
@@ -704,18 +704,18 @@ $color__background--gradient: linear-gradient(180deg, #ffffff 0%, #f3f9fc 100%);
     .block-content {
       gap: 20px;
       grid-template-columns: 1fr;
+      &::before {
+        content: '';
+        top: 0;
+        width: 210%;
+        transform: scale(0.6);
+        background-position: left 0 bottom 0, right 0 bottom 0;
+      }
     }
   }
   .success-cases {
     background: $color__background--gradient;
     padding: 30px 0;
-    .block-content::before {
-      content: '';
-      top: 0;
-      width: 210%;
-      transform: scale(0.6);
-      background-position: left 0 bottom 0, right 0 bottom 0;
-    }
   }
   .index-cases {
     padding: 43px 0;
