@@ -739,7 +739,7 @@ END:
 	 * @apiName PostUserLogin
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
-     * @apiParam {String{8}} tax_id 統編(若為法人身份)
+     * @apiParam {String{9,}} company_user_id 帳號(目前僅開放法人身份)
      * @apiParam {String{6..50}} password 密碼
 	 * @apiParam {Number=0,1} [investor=0] 1:投資端 0:借款端
      *
@@ -781,7 +781,6 @@ END:
      *     }
 	 *
      */
-
     public function login_post()
     {
 		$input = $this->input->post(NULL, TRUE);
@@ -802,10 +801,11 @@ END:
 		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
 
         // 自然人或法人判斷
-        if (isset($input['tax_id'])) {
+        if ( ! empty($input['company_user_id']))
+        {
             // 法人
             $user_info = $this->user_model->get_by([
-                'id_number' => $input['tax_id'],
+                'user_id' => sha1($input['company_user_id']),
                 'phone' => $input['phone'],
                 'company_status' => 1
             ]);
@@ -860,9 +860,9 @@ END:
 
                 // 負責人
                 $is_charge = 0;
-                if (isset($input['tax_id'])) {
+                if (isset($input['company_user_id'])) {
                     $this->load->model('user/judicial_person_model');
-                    $charge_person = $this->judicial_person_model->check_valid_charge_person($input['tax_id']);
+                    $charge_person = $this->judicial_person_model->check_valid_charge_person($user_info->id_number);
                     if ($charge_person) {
                         $userData = $this->user_model->get($charge_person->user_id);
                         $userData ? $is_charge = 1 : '';
@@ -900,7 +900,7 @@ END:
 					'auth_otp'		=> get_rand_token(),
 					'expiry_time'	=> time() + REQUEST_TOKEN_EXPIRY,
 					'investor'		=> $investor,
-					'company'		=> isset($input['tax_id']) ? 1 : 0,
+					'company'		=> isset($input['company_user_id']) ? 1 : 0,
 					'incharge'		=> $is_charge,
 					'agent'			=> 0,
 				];

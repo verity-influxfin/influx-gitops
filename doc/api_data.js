@@ -47887,8 +47887,8 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "tax_id",
-                            "description": "<p>統一編號</p>"
+                            "field": "company_user_id",
+                            "description": "<p>帳號</p>"
                         },
                         {
                             "group": "Parameter",
