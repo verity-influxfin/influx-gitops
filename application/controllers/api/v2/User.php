@@ -809,7 +809,17 @@ END:
                 'phone' => $input['phone'],
                 'company_status' => 1
             ]);
-        } else {
+        }
+        elseif ( ! empty($input['tax_id']))
+        { // todo: 因官網尚未同步 APP 以「手機＋帳號＋密碼」登入，故保留原登入方式
+            // 法人
+            $user_info = $this->user_model->get_by([
+                'id_number' => $input['tax_id'],
+                'phone' => $input['phone'],
+                'company_status' => 1
+            ]);
+        }
+        else {
             // 自然人
             $user_info = $this->user_model->get_by([
                 'phone' => $input['phone'],
@@ -860,7 +870,8 @@ END:
 
                 // 負責人
                 $is_charge = 0;
-                if (isset($input['company_user_id'])) {
+                if (isset($input['company_user_id']) || isset($input['tax_id']))
+                {
                     $this->load->model('user/judicial_person_model');
                     $charge_person = $this->judicial_person_model->check_valid_charge_person($user_info->id_number);
                     if ($charge_person) {
@@ -900,7 +911,7 @@ END:
 					'auth_otp'		=> get_rand_token(),
 					'expiry_time'	=> time() + REQUEST_TOKEN_EXPIRY,
 					'investor'		=> $investor,
-					'company'		=> isset($input['company_user_id']) ? 1 : 0,
+                    'company'       => (isset($input['company_user_id']) || isset($input['tax_id'])) ? 1 : 0,
 					'incharge'		=> $is_charge,
 					'agent'			=> 0,
 				];
