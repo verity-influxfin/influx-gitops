@@ -17,6 +17,7 @@ define({
     "PostUserBind",
     "PostUserSociallogin",
     "GetUserInfo",
+    "GetUserCompanyList",
     "GetUserEditpwphone",
     "PostUserEditpw",
     "PostUserEdittpw",

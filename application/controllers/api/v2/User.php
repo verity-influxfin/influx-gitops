@@ -3584,4 +3584,22 @@ END:
 
         $this->response(['result' => 'SUCCESS', 'data' => ['status' => $status]]);
     }
+
+    // 撈取相同負責人的公司列表
+    public function company_list_get()
+    {
+        $company_list = $this->user_model->as_array()->get_many_by([
+            'phone' => $this->user_info->phone,
+            'company_status' => USER_IS_COMPANY
+        ]);
+        $company_list = array_map(function ($element) {
+            return [
+                'id'=> $element['id'],
+                'name' => $element['name'],
+                'tax' => $element['id_number']
+            ];
+        }, $company_list);
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['company_list' => $company_list]]);
+    }
 }

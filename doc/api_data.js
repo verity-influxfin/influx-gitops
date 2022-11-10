@@ -45425,6 +45425,119 @@ define({
         },
         {
             "type": "get",
+            "url": "/v2/user/company_list",
+            "title": "會員 公司清單",
+            "version": "0.2.0",
+            "name": "GetUserCompanyList",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>(自然人)登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data",
+                            "description": "<p>相同負責人的公司列表</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Array",
+                            "optional": false,
+                            "field": "data.company_list",
+                            "description": "<p>公司列表</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "data.company_list.id",
+                            "description": "<p>公司id</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "data.company_list.name",
+                            "description": "<p>公司名</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "data.company_list.tax",
+                            "description": "<p>公司統編</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n    \"company_list\": [\n      {\n        \"id\": \"1000326\",\n        \"name\": \"嗷創意有限公司\"\n        \"tax\": \"97291671\"\n      }\n    ]\n  }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/company_list"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "get",
             "url": "/user/info",
             "title": "會員 個人資訊",
             "version": "0.1.0",
