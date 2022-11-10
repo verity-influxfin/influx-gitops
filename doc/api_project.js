@@ -18,6 +18,7 @@ define({
     "PostUserSociallogin",
     "GetUserInfo",
     "GetUserCompanyList",
+    "GetUserCompanyIdentityStatus",
     "GetUserEditpwphone",
     "PostUserEditpw",
     "PostUserEdittpw",

@@ -3602,4 +3602,58 @@ END:
 
         $this->response(['result' => 'SUCCESS', 'data' => ['company_list' => $company_list]]);
     }
+
+    // 撈取該法人的實名狀況
+    public function company_identity_status_get()
+    {
+        $result = ['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT];
+        $tax_id = $this->input->get('tax_id');
+        if (empty($tax_id))
+        {
+            goto END;
+        }
+        // 檢查公司帳號
+        $company_info = $this->user_model->as_array()->get_by([
+            'id_number' => $tax_id,
+            'company_status' => USER_IS_COMPANY
+        ]);
+        if (empty($company_info))
+        {
+            $result['error'] = COMPANY_NOT_EXIST;
+            goto END;
+        }
+        // 檢查公司負責人
+        $this->load->model('user/user_meta_model');
+        $responsible_info = $this->user_meta_model->get_by([
+            'user_id' => $company_info['id'],
+            'meta_key' => 'company_responsible_user_id',
+            'meta_value' => $this->user_info->id,
+        ]);
+        if (empty($responsible_info))
+        {
+            $result['error'] = NOT_IN_CHARGE;
+            goto END;
+        }
+
+        $this->load->library('certification_lib');
+        $certification_info = $this->certification_lib->get_certification_info($company_info['id'], CERTIFICATION_GOVERNMENTAUTHORITIES, $this->user_info->investor);
+
+        if ($certification_info === FALSE)
+        { // 未提交
+            $status = 0;
+        }
+        elseif ($certification_info->status === CERTIFICATION_STATUS_SUCCEED)
+        { // 已通過
+            $status = 1;
+        }
+        else
+        { // 審核中
+            $status = 2;
+        }
+
+        $result = ['result' => 'SUCCESS', 'data' => ['status' => $status]];
+
+        END:
+        $this->response($result);
+    }
 }
