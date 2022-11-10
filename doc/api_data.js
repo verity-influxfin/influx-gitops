@@ -48115,6 +48115,148 @@ define({
         },
         {
             "type": "post",
+            "url": "/v2/user/forgot_user_id",
+            "title": "會員 忘記帳號",
+            "version": "0.2.0",
+            "name": "PostUserForgotUserId",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": true,
+                            "field": "request_token",
+                            "description": "<p>自然人登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "tax_id",
+                            "description": "<p>統一編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "new_company_user_id",
+                            "description": "<p>新帳號 (至少9碼大小寫英數)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>更新時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "215",
+                            "description": "<p>公司不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "312",
+                            "description": "<p>密碼長度錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "324",
+                            "description": "<p>帳號格式有誤 (非9碼或非大小寫英數混合)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "325",
+                            "description": "<p>帳號重複</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "215",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "312",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "324",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "325",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/forgot_user_id"
+                }
+            ]
+        },
+        {
+            "type": "post",
             "url": "/user/forgotpw",
             "title": "會員 忘記密碼",
             "version": "0.1.0",

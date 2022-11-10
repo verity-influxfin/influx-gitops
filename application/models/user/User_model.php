@@ -254,4 +254,22 @@ class User_model extends MY_Model
             ->where('id_number !=', $tax_id);
         return ! empty($this->db->get()->first_row());
     }
+
+    /**
+     * 依條件取得使用者 ID
+     * @param array $where
+     * @return mixed
+     */
+    public function get_id_by_condition(array $where = [])
+    {
+        $this->_database
+            ->select('id')
+            ->from('p2p_user.users');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
 }

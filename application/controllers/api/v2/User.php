@@ -1398,6 +1398,61 @@ END:
         }
     }
 
+    // 法人忘記帳號
+    public function forgot_user_id_post()
+    {
+        // 檢查必填
+        $input = $this->input->post(NULL, TRUE);
+        $fields = ['new_company_user_id', 'tax_id'];
+        foreach ($fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+        }
+
+        // 檢查帳號
+        try
+        {
+            $this->load->library('user_lib');
+            $this->user_lib->check_user_id_validation($input['new_company_user_id'], $input['tax_id']);
+        }
+        catch (Exception $e)
+        {
+            $this->response([
+                'result' => 'ERROR',
+                'error' => empty($e->getCode()) ? INPUT_NOT_CORRECT : $e->getCode(),
+            ]);
+        }
+
+        $user_info = $this->user_model->get_id_by_condition([
+            'phone' => $this->user_info->phone,
+            'id_number' => $input['tax_id'],
+            'company_status' => 1
+        ]);
+        if (empty($user_info))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => COMPANY_NOT_EXIST));
+        }
+        elseif (count($user_info) > 1)
+        {
+            log_message('error', "無法更新法人帳號，因phone=\"{$this->user_info->phone}\" AND id_number=\"{$input['tax_id']}\"找到不只一組使用者資料");
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+        $user_info = $user_info[0];
+
+        $user_update_res = $this->user_model->update($user_info['id'], array('user_id' => $input['new_company_user_id']));
+        if ($user_update_res)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
 	/**
      * @api {get} /v2/user/info 會員 個人資訊
 	 * @apiVersion 0.2.0

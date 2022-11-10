@@ -1358,4 +1358,49 @@ class User_lib {
         }
         return $result;
     }
+
+    /**
+     * 檢查使用者帳號的有效性
+     * @param $user_id : 使用者帳號
+     * @param $tax_id : 統一編號
+     * @throws Exception
+     */
+    public function check_user_id_validation($user_id, $tax_id)
+    {
+        // 檢查帳號格式
+        $this->check_user_id_format($user_id);
+        // 檢查帳號是否存在
+        $this->check_distinct_user_id($user_id, $tax_id);
+    }
+
+    /**
+     * 檢查使用者帳號格式
+     * @param $user_id : 使用者帳號
+     * @return void
+     * @throws Exception
+     */
+    public function check_user_id_format($user_id)
+    {
+        if ( ! preg_match("/(?=.{9})(?=.*[A-Z])(?=.*[a-z])(?=.*\d)/", $user_id))
+        {
+            throw new Exception('帳號格式有誤', USER_ID_FORMAT_ERROR);
+        }
+    }
+
+    /**
+     * 檢查使用者帳號是否存在
+     * @param $user_id : 使用者帳號
+     * @param $tax_id : 統一編號
+     * @return void
+     * @throws Exception
+     */
+    public function check_distinct_user_id($user_id, $tax_id)
+    {
+        $this->CI->load->model('user/user_model');
+        $company_user_id_exist = $this->CI->user_model->check_user_id_exist($user_id, $tax_id);
+        if ( ! empty($company_user_id_exist))
+        {
+            throw new Exception('帳號已申請過', USER_ID_EXIST);
+        }
+    }
 }
