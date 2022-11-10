@@ -24,6 +24,7 @@ define({
     "PostUserEdittpw",
     "PostUserSmsloginphone",
     "PostUserForgotpw",
+    "PostUserForgotpwCompany",
     "PostUserForgotUserId",
     "GetUserChagetoken",
     "PostUserContact",

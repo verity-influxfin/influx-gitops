@@ -1224,6 +1224,45 @@ END:
 		}
 	}
 
+    // 法人忘記密碼
+    public function forgotpw_company_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $fields = ['new_password', 'tax_id'];
+        foreach ($fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+        }
+        // 檢查密碼
+        if (strlen($input['new_password']) < PASSWORD_LENGTH || strlen($input['new_password']) > PASSWORD_LENGTH_MAX)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => PASSWORD_LENGTH_ERROR));
+        }
+
+        $user_info = $this->user_model->get_by([
+            'phone' => $this->user_info->phone,
+            'id_number' => $input['tax_id'],
+            'company_status' => 1
+        ]);
+        if (empty($user_info))
+        { // 統編不存在，APP提示「前往註冊」
+            $this->response(array('result' => 'ERROR', 'error' => COMPANY_NOT_EXIST));
+        }
+
+        $user_update_res = $this->user_model->update($user_info->id, array('password' => $input['new_password']));
+        if ($user_update_res)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
     // 忘記帳號
     public function forgot_user_id_post()
     {
