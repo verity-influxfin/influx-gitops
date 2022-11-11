@@ -3266,8 +3266,20 @@ END:
                 'master_user_qrcode_id' => $master_user_qrcode->id,
             ]);
 
+            $sub_user_id = intval($this->input->post(NULL, TRUE)['sub_user_id']);
+            if ( ! $this->user_model->get($sub_user_id))
+            {
+                $this->response([
+                    'result'   => 'SUCCESS',
+                    'data'     => [
+                        'valid'  => FALSE,
+                        'text'   => '二級經銷商會員編號錯誤：無此會員'
+                    ]
+                ]);
+            }
+
             $new_qrcode_id = $this->user_qrcode_model->insert([
-                'user_id' => 0,
+                'user_id' => $sub_user_id,
                 'alias' => $master_user_qrcode->alias,
                 'promote_code' => $promote_code,
                 'status' => PROMOTE_STATUS_AVAILABLE,

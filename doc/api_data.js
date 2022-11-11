@@ -46170,6 +46170,19 @@ define({
                     ]
                 }
             },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "sub_user_id",
+                            "description": "<p>subcode 要給的對象的 user_id</p>"
+                        }
+                    ]
+                }
+            },
             "success": {
                 "fields": {
                     "Success 200": [
