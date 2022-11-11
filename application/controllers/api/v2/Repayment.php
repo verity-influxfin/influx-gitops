@@ -190,10 +190,11 @@ class Repayment extends REST_Controller {
             // 全部案件
             $all_targets = array_column($transaction, 'limit_date', 'target_id');
             $all_targets_id = array_keys($all_targets);
-            // 逾期案件 (包含寬限期內的案件)
+            // 逾期案件
             $delay_targets = $this->target_model->as_array()->order_by('delay_days', 'desc')->get_many_by([
                 'id' => $all_targets_id,
                 'delay' => 1,
+                'delay_days >' => GRACE_PERIOD,
                 'status' => TARGET_REPAYMENTING
             ]);
             $delay_targets_id = array_column($delay_targets, 'id');
@@ -241,7 +242,7 @@ class Repayment extends REST_Controller {
                     $normal_repayment_amount += $value->amount;
                 }
             }
-            $next_repayment['amount'] = $delay_repayment_amount === 0 ? $normal_repayment_amount : $delay_repayment_amount;
+            $next_repayment['amount'] = $delay_repayment_amount === 0 ? $normal_repayment_amount : $delay_repayment_amount + $normal_repayment_amount;
             // 若有逾期案件，以首逾日期示之
             $next_repayment['date'] = ! empty($first_delay_repayment_date) ? $first_delay_repayment_date : $first_normal_repayment_date;
 		}
