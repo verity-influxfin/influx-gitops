@@ -8,7 +8,7 @@
             <a href="/borrowLink" target="_blank">
               <button class="btn btn-smeg-primary">立即申辦</button>
             </a>
-            <div style="width:250px" class="d-sm-block d-none"></div>
+            <div style="width: 250px" class="d-sm-block d-none"></div>
           </div>
         </div>
         <div class="banner-img"></div>
@@ -192,6 +192,40 @@
           <div class="advantage-row-text">
             <div>•普匯審核、銀行放款</div>
             <div>•加速資金取得</div>
+            <div @click.prevent>
+              •<a @click="showCoop = true" class="clickable">合作銀行列表</a>
+            </div>
+          </div>
+          <div class="advantage-row-modal" v-show="showCoop">
+            <div class="advantage-row-modal-title">
+              <div></div>
+              <div>合作銀行</div>
+              <div>
+                <button type="button" class="close" @click="showCoop = false">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+            <div class="advantage-row-modal-content">
+              <div>
+                <a
+                  href="https://www.skbank.com.tw/index.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img src="@/asset/images/skg_logo.png" class="img-fluid skg-logo" alt="新光銀行" />
+                </a>
+              </div>
+              <div>
+                <a
+                  href="https://www.skbank.com.tw/45be1b3a15.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="clickable"
+                  >個人資料告知事項</a
+                >
+              </div>
+            </div>
           </div>
           <div class="advantage-row-bg">ADVANTAGE 03</div>
         </div>
@@ -336,7 +370,10 @@
         <div>您想知道的，這裡通通有！</div>
       </h2>
       <div class="question-rows">
-        <faq-row title="• 普匯中小企業融資專案貸款的申請資格？" bg-text="ISSUE 01">
+        <faq-row
+          title="• 普匯中小企業融資專案貸款的申請資格？"
+          bg-text="ISSUE 01"
+        >
           <div class="faq-content">
             <div>1. 具有合法公司登記或商業登記</div>
             <div>2. 非金融及保險業、宗教職業及類似組織、特殊娛樂業</div>
@@ -430,7 +467,8 @@ export default {
           title: '步驟四',
           info: '<div>等待系統審核並媒合資金方(銀行)</div><div>銀行最終核准後、簽約對保、立即撥款</div>'
         }
-      ]
+      ],
+      showCoop: false
     }
   },
   methods: {
@@ -570,6 +608,11 @@ $color__background--primary: #f3f9fc;
   to {
     transform: rotate(0deg);
   }
+}
+.clickable {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #036eb7;
 }
 .btn-link {
   text-decoration: underline;
@@ -1072,6 +1115,43 @@ $color__background--primary: #f3f9fc;
       color: $color__text--primary;
       opacity: 0.05;
     }
+    &-modal {
+      border-radius: 16px;
+      position: absolute;
+      top: 5px;
+      right: 50px;
+      z-index: 2;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+      .close{
+        color: #fff;
+      }
+      &-title {
+        border-radius: 16px 16px 0 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 5px;
+        align-items: center;
+        background: linear-gradient(90deg, #3781c7 0%, #74bbe4 100%);
+        font-style: normal;
+        font-weight: 500;
+        font-size: 26px;
+        line-height: 1.4;
+        color: #fff;
+      }
+      &-content {
+        border-radius: 0 0 16px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 25px 30px;
+        gap: 16px;
+        background: #fff;
+        .clickable {
+          font-style: normal;
+          font-weight: 500;
+          font-size: 20px;
+        }
+      }
+    }
   }
 }
 .consultation {
@@ -1484,6 +1564,31 @@ $color__background--primary: #f3f9fc;
         line-height: 1;
         color: $color__text--primary;
         opacity: 0.05;
+      }
+      &-modal {
+        right: -5px;
+        .close{
+          font-size: 16px;
+        }
+        &-title {
+          border-radius: 16px 16px 0 0;
+          grid-template-columns: 1fr 1fr 1fr 5px;
+          font-size: 16px;
+          line-height: 1.4;
+          color: #fff;
+        }
+        &-content {
+          padding: 10px 20px;
+          gap: 6px;
+          .skg-logo{
+            width: 150px;
+          }
+          .clickable {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 12px;
+          }
+        }
       }
     }
   }
