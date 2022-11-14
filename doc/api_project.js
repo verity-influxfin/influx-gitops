@@ -27,6 +27,7 @@ define({
     "PostUserForgotpwCompany",
     "PostUserForgotUserId",
     "GetUserChagetoken",
+    "PostUserChangeCompanyToken",
     "PostUserContact",
     "GetUserPromote",
     "PostUserCredittest",

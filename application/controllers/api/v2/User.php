@@ -1725,6 +1725,152 @@ END:
 		$this->response(array('result' => 'SUCCESS','data' => array('token'=>$request_token,'expiry_time'=>$token->expiry_time) ));
     }
 
+    // 以法人 token 交換法人 token
+    public function change_company_token_post()
+    {
+        // 欲交換 token 的法人帳號 ID
+        $change_id = $this->input->post('company_list_id');
+        if (empty($change_id))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        // 判斷是否為法人身份
+        if ( ! $this->user_info->company)
+        { // 非法人就讓他走原本的「交換 token」
+            $this->chagetoken_get();
+        }
+
+        // 撈新的使用者資料
+        $new_user_info = $this->user_model->get_by([
+            'phone' => $this->user_info->phone,
+            'id' => $change_id,
+            'company_status' => USER_IS_COMPANY,
+        ]);
+        if (empty($new_user_info))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => COMPANY_NOT_EXIST));
+        }
+
+        // 判斷鎖定狀態並解除
+        $this->load->library('user_lib');
+        $unblock_status = $this->user_lib->unblock_user($new_user_info->id);
+        if ($unblock_status)
+        {
+            $new_user_info->block_status = 0;
+        }
+        if ($new_user_info->block_status == 3)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => SYSTEM_BLOCK_USER));
+        }
+        elseif ($new_user_info->block_status == 2)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => TEMP_BLOCK_USER));
+        }
+        elseif ($new_user_info->block_status != 0)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => BLOCK_USER));
+        }
+
+        // 判斷交換 token 的來源
+        $app_identity = $this->input->request_headers()['User-Agent'] ?? '';
+        $investor = isset($this->user_info->investor) && $this->user_info->investor ? 1 : 0;
+        if (strpos($app_identity, 'PuHey') !== FALSE)
+        {
+            if ($investor == 1 && $new_user_info->app_investor_status == 0)
+            {
+                $new_user_info->app_investor_status = 1;
+                $this->user_model->update($new_user_info->id, array('app_investor_status' => 1));
+            }
+            else if ($investor == 0 && $new_user_info->app_status == 0)
+            {
+                $new_user_info->app_status = 1;
+                $this->user_model->update($new_user_info->id, array('app_status' => 1));
+            }
+        }
+
+        // 判斷是否第一次登入
+        if ($investor == 1 && $new_user_info->investor_status == 0)
+        {
+            $new_user_info->investor_status = 1;
+            $this->user_model->update($new_user_info->id, array('investor_status' => 1));
+            $first_time = 1;
+
+        }
+        else if ($investor == 0 && $new_user_info->status == 0)
+        {
+            $new_user_info->status = 1;
+            $this->user_model->update($new_user_info->id, array('status' => 1));
+            $first_time = 1;
+        }
+        else
+        {
+            $first_time = 0;
+        }
+
+        // 判斷是否為負責人
+        $this->load->model('user/judicial_person_model');
+        $charge_person = $this->judicial_person_model->check_valid_charge_person($new_user_info->id_number);
+        $is_charge = 0;
+        if ($charge_person)
+        {
+            $charge_person_user_info = $this->user_model->get($charge_person->user_id);
+            if ( ! empty($charge_person_user_info))
+            {
+                $is_charge = 1;
+            }
+        }
+
+        // 針對法人進行法人與負責人的綁定
+        $this->load->model('user/user_meta_model');
+        $rs = $this->user_meta_model->get_by(['user_id' => $new_user_info->id, 'meta_key' => 'company_responsible_user_id']);
+        if ( ! isset($rs))
+        {
+            $responsible_user_info = $this->user_model->get_by([
+                'phone' => $new_user_info->phone,
+                'company_status' => 0
+            ]);
+            if (isset($responsible_user_info))
+            {
+                $company_meta = [
+                    [
+                        'user_id' => $new_user_info->id,
+                        'meta_key' => 'company_responsible_user_id',
+                        'meta_value' => $responsible_user_info->id,
+                    ]
+                ];
+                $this->user_meta_model->insert_many($company_meta);
+            }
+        }
+
+        // 產生新 token
+        $token = (object) [
+            'id' => $new_user_info->id,
+            'phone' => $new_user_info->phone,
+            'auth_otp' => get_rand_token(),
+            'expiry_time' => time() + REQUEST_RETOKEN_EXPIRY,
+            'investor' => $investor,
+            'company' => USER_IS_COMPANY,
+            'incharge' => $is_charge,
+            'agent' => 0,
+        ];
+        $request_token = AUTHORIZATION::generateUserToken($token);
+        $this->user_model->update($new_user_info->id, array('auth_otp' => $token->auth_otp));
+        if ($first_time)
+        {
+            $this->load->library('notification_lib');
+            $this->notification_lib->first_login($new_user_info->id, $investor);
+        }
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => [
+                'token' => $request_token,
+                'expiry_time' => $token->expiry_time,
+                'first_time' => $first_time,
+            ]
+        ]);
+    }
+
 	/**
      * @api {post} /v2/user/contact 會員 投訴與建議
 	 * @apiVersion 0.2.0
