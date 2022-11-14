@@ -45430,15 +45430,22 @@ define({
             "version": "0.2.0",
             "name": "GetUserCompanyList",
             "group": "User",
-            "header": {
+            "parameter": {
                 "fields": {
-                    "Header": [
+                    "Parameter": [
                         {
-                            "group": "Header",
+                            "group": "Parameter",
                             "type": "String",
                             "optional": false,
-                            "field": "request_token",
-                            "description": "<p>(自然人)登入後取得的 Request Token</p>"
+                            "field": "phone",
+                            "description": "<p>手機號碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "password",
+                            "description": "<p>(自然人)密碼</p>"
                         }
                     ]
                 }

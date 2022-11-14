@@ -10,7 +10,7 @@ class User extends REST_Controller {
     {
         parent::__construct();
         $method 		= $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous', 'check_phone'];
+        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous', 'check_phone', 'company_list'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -3828,8 +3828,16 @@ END:
     // 撈取相同負責人的公司列表
     public function company_list_get()
     {
+        // 用自然人手機＋密碼，取得相同負責人的公司清單
+        $input = $this->input->get(NULL, TRUE);
+        if (empty($input['phone']) || empty($input['password']))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
         $company_list = $this->user_model->as_array()->get_many_by([
-            'phone' => $this->user_info->phone,
+            'phone' => $input['phone'],
+            'password' => sha1($input['password']),
             'company_status' => USER_IS_COMPANY
         ]);
         $company_list = array_map(function ($element) {
