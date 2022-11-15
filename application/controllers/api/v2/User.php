@@ -526,20 +526,8 @@ END:
         ];
 
         // 檢查必填
-        if (empty($input['tax_id']) || empty($input['company_user_id']) || empty($input['password']) || empty($input['governmentauthorities_image']))
+        if (empty($input['tax_id']))
         {
-            goto END;
-        }
-        // 檢查密碼長度
-        if (strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password']) > PASSWORD_LENGTH_MAX)
-        {
-            $result['error'] = PASSWORD_LENGTH_ERROR;
-            goto END;
-        }
-        // 檢查帳號格式
-        if ( ! preg_match("/(?=.{9})(?=.*[A-Z])(?=.*[a-z])(?=.*\d)/", $input['company_user_id']))
-        {
-            $result['error'] = USER_ID_FORMAT_ERROR;
             goto END;
         }
         // 檢查統編
@@ -549,82 +537,83 @@ END:
             goto END;
         }
 
-        // 解析 token 資訊
-        try
+        // 檢查密碼長度
+        if ( ! empty($input['password']))
         {
-            $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
-            $request_method = $this->request->method ?? '';
-
-            if (empty($token))
+            if (strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password']) > PASSWORD_LENGTH_MAX)
             {
-                $result['error'] = TOKEN_NOT_CORRECT;
+                $result['error'] = PASSWORD_LENGTH_ERROR;
                 goto END;
             }
-            $this->load->library('user_lib');
-            $natural_person_token_info = $this->user_lib->parse_token($token, $request_method, $this->uri->uri_string());
-        }
-        catch (Exception $e)
-        {
-            $result['error'] = $e->getCode();
-            goto END;
         }
 
-        // 檢查變卡照片
-        $image_ids = explode(',', $input['governmentauthorities_image']);
-        if (count($image_ids) > 30)
+        // 檢查帳號
+        if ( ! empty($input['company_user_id']))
         {
-            $image_ids = array_slice($image_ids, 0, 30);
+            // 檢查帳號格式
+            if ( ! preg_match("/(?=.{9})(?=.*[A-Z])(?=.*[a-z])(?=.*\d)/", $input['company_user_id']))
+            {
+                $result['error'] = USER_ID_FORMAT_ERROR;
+                goto END;
+            }
+            // 檢查帳號是否存在
+            $company_user_id_exist = $this->user_model->check_user_id_exist($input['company_user_id'], $input['tax_id']);
+            if ( ! empty($company_user_id_exist))
+            {
+                $result['error'] = USER_ID_EXIST;
+                goto END;
+            }
         }
-        $this->load->model('log/log_image_model');
-        $list = $this->log_image_model->as_array()->get_many_by([
-            'id' => $image_ids,
-            'user_id' => $natural_person_token_info->id,
-        ]);
-        if (count($list) !== count($image_ids))
-        {
-            goto END;
+
+        // 檢查公司是否存在
+        $company_info = $this->user_lib->get_exist_company_user_id($input['tax_id']);
+        if ( ! empty($company_info['id']))
+        { // 存在
+            $company_exist = TRUE;
+        }
+        else
+        { // 不存在
+            $company_exist = FALSE;
+            if (empty($input['password']) || empty($input['company_user_id']) || empty($input['governmentauthorities_image']))
+            {
+                $result['error'] = INPUT_NOT_CORRECT;
+                goto END;
+            }
         }
 
         // 確認自然人需通過實名認證
         $this->load->library('certification_lib');
-        $user_certification = $this->certification_lib->get_certification_info($natural_person_token_info->id, CERTIFICATION_IDENTITY, $natural_person_token_info->investor);
+        $user_certification = $this->certification_lib->get_certification_info($this->user_info->id, CERTIFICATION_IDENTITY, $natural_person_token_info->investor);
         if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
         {
             $result['error'] = NO_CER_IDENTITY;
             goto END;
         }
 
-        // 確認自然人姓名與登記公司負責人一樣
-        try
+        // 檢查變卡照片
+        if ( ! empty($input['governmentauthorities_image']))
         {
-            $this->load->library('gcis_lib');
-            $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $natural_person_token_info->name);
-            if ( ! $is_business_responsible)
+            $image_ids = explode(',', $input['governmentauthorities_image']);
+            if (count($image_ids) > 30)
             {
-                $result['error'] = NOT_IN_CHARGE;
+                $image_ids = array_slice($image_ids, 0, 30);
+            }
+            $this->load->model('log/log_image_model');
+            $list = $this->log_image_model->as_array()->get_many_by([
+                'id' => $image_ids,
+                'user_id' => $this->user_info->id,
+            ]);
+            if (count($list) !== count($image_ids))
+            {
                 goto END;
             }
-            $company_info = $this->gcis_lib->get_company_president_info($input['tax_id']);
-        }
-        catch (Exception $e)
-        {
-            $result['error'] = $e->getCode();
-            goto END;
-        }
 
-        // 檢查公司是否存在
-        if ($this->user_lib->check_company_exit($input['tax_id']))
-        {
-            $result['error'] = COMPANY_EXIST;
-            goto END;
-        }
-
-        // 檢查帳號是否存在
-        $company_user_id_exist = $this->user_model->check_user_id_exist($input['company_user_id'], $input['tax_id']);
-        if ( ! empty($company_user_id_exist))
-        {
-            $result['error'] = USER_ID_EXIST;
-            goto END;
+            $cert_governmentauthorities_content = [
+                'governmentauthorities_image' => array_map(function ($element) {
+                    return $element['url'];
+                }, $list),
+                'group_id' => $list[0]['group_info'] ?? ''
+            ];
         }
 
         // investor
@@ -633,88 +622,162 @@ END:
             $input['investor'] = 0;
         }
 
-        // 新增法人帳號
-        $new_company_user_param = [
-            'phone' => $natural_person_token_info->phone,
-            'id_number' => $input['tax_id'],
-            'user_id' => $input['company_user_id'],
-            'password' => $input['password'],
-            'company_status' => 1, // 法人狀態: 1=啟用
-            'auth_otp' => get_rand_token(),
-            'name' => $company_info['company_name'] ?? '',
-            'status' => $input['investor'] ? 0 : 1,
-            'investor_status' => $input['investor'] ? 1 : 0,
-            'promote_code' => $input['promote_code'] ?? ''
-        ];
+        // 異動公司 user 相關資料
         $this->user_model->trans_begin();
         $this->user_certification_model->trans_begin();
         $this->user_meta_model->trans_begin();
         try
         {
-            $new_id = $this->user_model->insert($new_company_user_param);
-            if ($new_id)
+            $this->load->model('user/user_certification_model');
+            if ($company_exist === FALSE)
             {
-                $cert_governmentauthorities_content = [
-                    'governmentauthorities_image' => array_map(function ($element) {
-                        return $element['url'];
-                    }, $list),
-                    'group_id' => $list[0]['group_info'] ?? ''
-                ];
+                // 確認自然人姓名與登記公司負責人一樣
+                $this->load->library('gcis_lib');
+                $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $this->user_info->name);
+                if ( ! $is_business_responsible)
+                {
+                    $result['error'] = NOT_IN_CHARGE;
+                    goto END;
+                }
+                $gcis_company_info = $this->gcis_lib->get_company_president_info($input['tax_id']);
 
-                $this->load->model('user/user_certification_model');
-                $this->user_certification_model->insert_many([
-                    [ // 自動寫入「開通法人投資」的徵信項
+                // 新增法人帳號
+                $insert_user_param = [
+                    'phone' => $this->user_info->phone,
+                    'id_number' => $input['tax_id'],
+                    'user_id' => $input['company_user_id'],
+                    'password' => $input['password'],
+                    'company_status' => 1, // 法人狀態: 1=啟用
+                    'auth_otp' => get_rand_token(),
+                    'name' => $gcis_company_info['company_name'] ?? '',
+                    'status' => $input['investor'] ? 0 : 1,
+                    'investor_status' => $input['investor'] ? 1 : 0,
+                    'promote_code' => $input['promote_code'] ?? ''
+                ];
+                $new_id = $this->user_model->insert($insert_user_param);
+                if ( ! $new_id)
+                {
+                    $result['error'] = INSERT_ERROR;
+                    goto END;
+                }
+
+                // 自動寫入「開通法人投資」的徵信項
+                $insert_certification_param = [
+                    [
                         'user_id' => $new_id,
                         'certification_id' => CERTIFICATION_TARGET_APPLY,
                         'investor' => USER_INVESTOR,
                         'content' => '',
                         'remark' => '',
                         'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
-                    ],
-                    [
+                    ]
+                ];
+                if (isset($cert_governmentauthorities_content))
+                {
+                    // 自動寫入「設立(變更)事項登記表」的徵信項
+                    $insert_certification_param[] = [
                         'user_id' => $new_id,
                         'certification_id' => CERTIFICATION_GOVERNMENTAUTHORITIES,
                         'investor' => $input['investor'],
                         'content' => json_encode($cert_governmentauthorities_content),
                         'remark' => '',
                         'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
-                    ]
+                    ];
+                }
+                $this->user_certification_model->insert_many($insert_certification_param);
+
+                // 新增「公司-負責人」的關係
+                $responsible_user_info = $this->user_model->get_by([
+                    'phone' => $natural_person_token_info->phone,
+                    'company_status' => 0, // 法人狀態: 0=未啟用
                 ]);
+                $this->load->model('user/user_meta_model');
+                $this->user_meta_model->insert([
+                    'user_id' => $new_id,
+                    'meta_key' => 'company_responsible_user_id',
+                    'meta_value' => (int) $responsible_user_info->id,
+                ]);
+
+                // 回傳創建帳號成功之token
+                $token = (object) [
+                    'id' => $new_id,
+                    'phone' => $responsible_user_info->phone,
+                    'auth_otp' => $insert_user_param['auth_otp'],
+                    'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
+                    'investor' => $insert_user_param['investor_status'],
+                    'company' => 1,
+                    'incharge' => 0,
+                    'agent' => 0,
+                ];
+
+                // 第一次登入通知
+                $this->load->library('notification_lib');
+                $this->notification_lib->first_login($new_id, $input['investor']);
+
+                $request_token = AUTHORIZATION::generateUserToken($token);
+                $result = [
+                    'result' => 'SUCCESS',
+                    'data' => [
+                        'token' => $request_token,
+                        'expiry_time' => $token->expiry_time,
+                        'first_time' => 1
+                    ]
+                ];
             }
-
-            $responsible_user_info = $this->user_model->get_by([
-                'phone' => $natural_person_token_info->phone,
-                'company_status' => 0, // 法人狀態: 0=未啟用
-            ]);
-            $this->load->model('user/user_meta_model');
-            $this->user_meta_model->insert([
-                'user_id' => $new_id,
-                'meta_key' => 'company_responsible_user_id',
-                'meta_value' => (int) $responsible_user_info->id,
-            ]);
-
-            // 回傳創建帳號成功之token
-            $token = (object) [
-                'id' => $new_id,
-                'phone' => $responsible_user_info->phone,
-                'auth_otp' => $new_company_user_param['auth_otp'],
-                'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
-                'investor' => $new_company_user_param['investor_status'],
-                'company' => 1,
-                'incharge' => 0,
-                'agent' => 0,
-            ];
-            $request_token = AUTHORIZATION::generateUserToken($token);
-            $this->load->library('notification_lib');
-            $this->notification_lib->first_login($new_id, $input['investor']);
-            $result = [
-                'result' => 'SUCCESS',
-                'data' => [
-                    'token' => $request_token,
-                    'expiry_time' => $token->expiry_time,
-                    'first_time' => 1
-                ]
-            ];
+            else
+            {
+                // 更新使用者帳號
+                if ( ! empty($input['company_user_id']))
+                {
+                    $update_user_param = [
+                        'auth_otp' => get_rand_token(),
+                        'user_id' => $input['company_user_id']
+                    ];
+                    $this->user_model->update_by([
+                        'phone' => $natural_person_token_info->phone,
+                        'id_number' => $input['tax_id']
+                    ], $update_user_param);
+                }
+                // 更新認證徵信項
+                if (isset($cert_governmentauthorities_content))
+                {
+                    // 設立(變更)事項登記表
+                    // 把舊的更新為失敗
+                    $this->user_certification_model->update_by([
+                        'user_id' => $company_info['id'], 'certification_id' => CERTIFICATION_GOVERNMENTAUTHORITIES
+                    ], [
+                        'status' => CERTIFICATION_STATUS_FAILED
+                    ]);
+                    // 新增
+                    $insert_certification_param = [
+                        'user_id' => $company_info['id'],
+                        'certification_id' => CERTIFICATION_GOVERNMENTAUTHORITIES,
+                        'investor' => $input['investor'],
+                        'content' => json_encode($cert_governmentauthorities_content),
+                        'remark' => '',
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+                    ];
+                    $this->user_certification_model->insert($insert_certification_param);
+                }
+                $token = (object) [
+                    'id' => $company_info['id'],
+                    'phone' => $natural_person_token_info->phone,
+                    'auth_otp' => $update_user_param['auth_otp'],
+                    'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
+                    'investor' => $input['investor'] ? 1 : 0,
+                    'company' => 1,
+                    'incharge' => 0,
+                    'agent' => 0,
+                ];
+                $request_token = AUTHORIZATION::generateUserToken($token);
+                $result = [
+                    'result' => 'SUCCESS',
+                    'data' => [
+                        'token' => $request_token,
+                        'expiry_time' => $token->expiry_time,
+                    ]
+                ];
+            }
 
             $this->user_meta_model->trans_commit();
             $this->user_certification_model->trans_commit();
@@ -1253,50 +1316,6 @@ END:
         }
 
         $user_update_res = $this->user_model->update($user_info->id, array('password' => $input['new_password']));
-        if ($user_update_res)
-        {
-            $this->response(array('result' => 'SUCCESS'));
-        }
-        else
-        {
-            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
-        }
-    }
-
-    // 忘記帳號
-    public function forgot_user_id_post()
-    {
-        $input = $this->input->post(NULL, TRUE);
-        $fields = ['new_company_user_id', 'tax_id'];
-        foreach ($fields as $field)
-        {
-            if (empty($input[$field]))
-            {
-                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-            }
-        }
-        // 檢查帳號
-        if ( ! preg_match("/(?=.{9})(?=.*[A-Z])(?=.*[a-z])(?=.*\d)/", $input['new_company_user_id']))
-        {
-            $this->response(array('result' => 'ERROR', 'error' => USER_ID_FORMAT_ERROR));
-        }
-        $user_id_exist = $this->user_model->check_user_id_exist($input['new_company_user_id'], $input['tax_id']);
-        if ( ! empty($user_id_exist))
-        {
-            $this->response(array('result' => 'ERROR', 'error' => USER_ID_EXIST));
-        }
-
-        $user_info = $this->user_model->get_by([
-            'phone' => $this->user_info->phone,
-            'id_number' => $input['tax_id'],
-            'company_status' => 1
-        ]);
-        if (empty($user_info))
-        { // 統編不存在，APP提示「前往註冊」
-            $this->response(array('result' => 'ERROR', 'error' => COMPANY_NOT_EXIST));
-        }
-
-        $user_update_res = $this->user_model->update($user_info->id, array('user_id' => $input['new_company_user_id']));
         if ($user_update_res)
         {
             $this->response(array('result' => 'SUCCESS'));

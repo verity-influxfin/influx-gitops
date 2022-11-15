@@ -236,7 +236,7 @@ class User_model extends MY_Model
 	        UNION
 	        SELECT `u`.`id` AS `user_id` FROM `p2p_user`.`users` `u` WHERE `u`.`id_number`='{$tax_id}' AND `u`.`company_status`=1
 	    ");
-        return $query->result();
+        return $query->first_row('array');
     }
 
     /**

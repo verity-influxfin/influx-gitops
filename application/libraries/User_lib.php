@@ -1290,13 +1290,13 @@ class User_lib {
     /**
      * 檢查是否有相同統編之使用者存在
      * @param $tax_id : 統編 (users.id_number)
-     * @return bool
+     * @return array
      */
-    public function check_company_exit($tax_id): bool
+    public function get_exist_company_user_id($tax_id): array
     {
         $this->CI->load->model('user/user_model');
         $result = $this->CI->user_model->get_exit_judicial_person($tax_id);
-        return ! empty($result);
+        return ['id' => $result['user_id']];
     }
 
     /**
