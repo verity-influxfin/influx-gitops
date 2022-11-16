@@ -122,4 +122,14 @@ class Adapter_kgi_bank extends Adapter_base
     {
         return ['success' => TRUE];
     }
+
+    /**
+     * 檢查日期欄位的格式
+     * @param array $data
+     * @return array
+     */
+    public function check_date_format(array $data): array
+    {
+        return ['success' => TRUE];
+    }
 }
