@@ -8,8 +8,7 @@ use GuzzleHttp\Client;
 class ERP extends MY_Admin_Controller
 {
     public $host;
-    private $erp_client_1;
-    private $erp_client_2;
+    private $erp_client;
 
     public function __construct()
     {
@@ -21,15 +20,11 @@ class ERP extends MY_Admin_Controller
             'host' => getenv('ENV_ERP_HOST')
         ]);
 
-        $this->erp_client_1 = new Client([
-            'base_uri' => getenv('ENV_ERP_HOST_1'),
+        $this->erp_client = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST'),
             'timeout' => 300,
         ]);
 
-        $this->erp_client_2 = new Client([
-            'base_uri' => getenv('ENV_ERP_HOST_2'),
-            'timeout' => 300,
-        ]);
     }
      
     /**
@@ -77,7 +72,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_assets_sheet_data(){
 
-        $data = $this->erp_client_1->request('GET', 'assets_sheet', [
+        $data = $this->erp_client->request('GET', 'assets_sheet', [
             'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
@@ -92,7 +87,7 @@ class ERP extends MY_Admin_Controller
      */
     public function assets_sheet_spreadsheet(){
         // get file from guzzle assets_sheet/excel
-        $res = $this->erp_client_1->request('GET', 'assets_sheet/excel', [
+        $res = $this->erp_client->request('GET', 'assets_sheet/excel', [
             'query' => $this->input->get()
         ]);
         $des = $res->getHeader('content-disposition')[0];
@@ -157,7 +152,7 @@ class ERP extends MY_Admin_Controller
     public function etpr_spreadsheet()
     {
         // get file from guzzle replayment_schedule/excel
-        $res = $this->erp_client_1->request('GET', '/v1/replayment_schedule/excel', [
+        $res = $this->erp_client->request('GET', '/v1/replayment_schedule/excel', [
             'query' => $this->input->get()
         ]);
         $des = $res->getHeader('content-disposition')[0];
@@ -180,7 +175,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_etpr_data()
     {
-        $data = $this->erp_client_1->request('GET', '/v1/replayment_schedule', [
+        $data = $this->erp_client->request('GET', '/v1/replayment_schedule', [
             'query' => $this->input->get() 
         ])->getBody()->getContents();
         echo $data;
@@ -215,7 +210,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_replayment_data()
     {
-        $data = $this->erp_client_1->request('GET', '/v2/replayment_schedule_list', [
+        $data = $this->erp_client->request('GET', '/v2/replayment_schedule_list', [
             'query' => $this->input->get() 
         ])->getBody()->getContents();
         echo $data;
@@ -230,7 +225,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_replayment_data_latest()
     {
-        $data = $this->erp_client_1->request('GET', '/v2/replayment_schedule_list/latest', [
+        $data = $this->erp_client->request('GET', '/v2/replayment_schedule_list/latest', [
             'query' => $this->input->get() 
         ])->getBody()->getContents();
         echo $data;
@@ -267,7 +262,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_sofp_data()
     {
-        $data = $this->erp_client_2->request('GET', 'sofp', [
+        $data = $this->erp_client->request('GET', 'sofp', [
             'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
@@ -282,7 +277,7 @@ class ERP extends MY_Admin_Controller
      */
     public function sofp_spreadsheet()
     {
-        $res = $this->erp_client_2->request('GET', 'sofp/excel', [
+        $res = $this->erp_client->request('GET', 'sofp/excel', [
             'query' => $this->input->get()
         ]);
         $des = $res->getHeader('content-disposition')[0];
@@ -325,7 +320,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_soci_data()
     {
-        $data = $this->erp_client_2->request('GET', 'soci', [
+        $data = $this->erp_client->request('GET', 'soci', [
             'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
@@ -334,7 +329,7 @@ class ERP extends MY_Admin_Controller
     
     public function soci_spreadsheet()
     {
-        $res = $this->erp_client_2->request('GET', 'soci/excel', [
+        $res = $this->erp_client->request('GET', 'soci/excel', [
             'query' => $this->input->get()
         ]);
         $des = $res->getHeader('content-disposition')[0];
@@ -371,7 +366,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_journal_data()
     {
-        $data = $this->erp_client_2->request('GET', 'entry', [
+        $data = $this->erp_client->request('GET', 'entry', [
             'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
@@ -450,7 +445,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_balance_sheet_dict()
     {
-        $data = $this->erp_client_1->request('GET', 'balance_sheet/dict', [
+        $data = $this->erp_client->request('GET', 'balance_sheet/dict', [
             'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
@@ -465,7 +460,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_balance_sheet_diff()
     {
-        $data = $this->erp_client_1->request('GET', 'balance_sheet/diff', [
+        $data = $this->erp_client->request('GET', 'balance_sheet/diff', [
             'query' => $this->input->get()
         ])->getBody()->getContents();
         echo $data;
