@@ -117,149 +117,204 @@
         </div>
         <div class="intro-products">
           <div class="group group-web">
-            <router-link to="/collegeLoan" class="product-item">
+            <div class="product-item">
               <div class="card">
-                <div class="card-title">學生貸</div>
-                <div class="card-sub">最大的學生貸</div>
+                <div class="card-title">年輕貸</div>
+                <hr class="card-hr" />
+                <div class="card-sub">AI風控 助你圓夢</div>
+                <div class="card-info">
+                  <div>全台首創一支手機完成貸款，全程人工智慧無人化</div>
+                  <div>專為年輕人媒合資金、完成夢想</div>
+                </div>
                 <div class="card-content">
-                  <div class="card-subtitle">
-                    台灣最大學生貸平台進修、學雜費、3C、機車
-                  </div>
-                  <div class="card-image">
+                  <router-link to="/collegeLoan" class="card-link clickable">
                     <img
-                      class="p1"
                       src="@/asset/images/index/mortarboard1.png"
+                      alt="學生貸"
+                      class="card-link-img"
                     />
-                  </div>
-                </div>
-              </div>
-            </router-link>
-            <router-link to="/workLoan" class="product-item">
-              <div class="card">
-                <div class="card-title">上班族貸</div>
-                <div class="card-sub">公開透明借貸</div>
-                <div class="card-content">
-                  <div class="card-subtitle">
-                    公開透明，無人化自動審核信用評分，申辦不收手續費
-                  </div>
-                  <div class="card-image">
-                    <img class="p2" src="@/asset/images/index/id1.png" />
-                  </div>
-                </div>
-              </div>
-            </router-link>
-            <router-link to="/engineerLoan" class="product-item">
-              <div class="card">
-                <div class="card-title">資訊工程師貸</div>
-                <div class="card-sub">最優惠貸款</div>
-                <div class="card-content">
-                  <div class="card-subtitle">
-                    工程師最優惠貸款，就在普匯 只要你•工程師
-                  </div>
-                  <div class="card-image">
-                    <img class="p3" src="@/asset/images/index/computer1.png" />
-                  </div>
-                </div>
-              </div>
-            </router-link>
-            <div class="product-item">
-              <div class="card">
-                <div class="card-title">汽車貸款</div>
-                <div class="card-sub">只要有車</div>
-                <div class="card-content">
-                  <div class="card-subtitle">
-                    只要你有車，貸給你車商、購車，都能貸
-                  </div>
-                  <div class="card-image">
-                    <img src="@/asset/images/index/car1.png" class="p4" />
+                    <div class="card-link-text">學生貸</div>
+                  </router-link>
+                  <router-link to="/workLoan" class="card-link clickable">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="上班族貸"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">上班族貸</div>
+                  </router-link>
+                  <router-link to="/engineerLoan" class="card-link clickable">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="資訊工程師貸"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">資訊工程師貸</div>
+                  </router-link>
+                  <div class="card-link">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="網紅KOL專區"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">網紅KOL專區</div>
                   </div>
                 </div>
               </div>
             </div>
-            <router-link to="/invest" class="product-item">
-              <div class="card">
-                <div class="card-title">投資人專區</div>
-                <div class="card-sub">小額分散 低風險</div>
-                <div class="card-content">
-                  <div class="card-subtitle">
-                    小額、分期，最佳投資心法低風險、高報酬，複利滾投
-                  </div>
-                  <div class="card-image">
-                    <img src="@/asset/images/index/line-chart.png" class="p5" />
-                  </div>
-                </div>
-              </div>
-            </router-link>
             <div class="product-item">
               <div class="card">
-                <div class="card-title">企業主速貸</div>
-                <div class="card-sub">新創獨惠</div>
-                <div class="card-content">
-                  <div class="card-subtitle">
-                    速速來貸，最高額度100萬 歡迎新創、微企，快速貸給你
+                <div class="card-title">中小企業融資</div>
+                <hr class="card-hr" />
+                <div class="card-sub">普惠金融 多元資金滿足你</div>
+                <div class="card-info">
+                  <div>
+                    首創第一，透過普匯完全免費，銀行放款 信保保證，一站式服
                   </div>
-                  <div class="card-image">
-                    <img src="@/asset/images/index/clock1.png" class="p6" />
+                  <div>
+                    務，一份資料多方資金 銀行同步，提供資金解決企業週轉困擾
+                  </div>
+                </div>
+                <div class="card-content">
+                  <router-link to="/collegeLoan" class="card-link clickable">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="學生貸"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">企業主速貸</div>
+                  </router-link>
+                  <router-link to="/workLoan" class="card-link clickable">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="上班族貸"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">信保專案</div>
+                  </router-link>
+                  <router-link to="/engineerLoan" class="card-link clickable">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="資訊工程師貸"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">中小企業信貸</div>
+                  </router-link>
+                  <div class="card-link">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="網紅KOL專區"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">網紅KOL專區</div>
                   </div>
                 </div>
               </div>
             </div>
-            <router-link to="/business-loan/smeg" class="product-item">
-              <div class="card">
-                <div class="card-title">中小企業融資(信保)</div>
-                <div class="card-sub">銀行放款</div>
-                <div class="card-content">
-                  <div class="card-subtitle">
-                    普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
-                  </div>
-                  <div class="card-image">
-                    <img src="@/asset/images/index/bank1.png" class="p7" />
-                  </div>
-                </div>
-              </div>
-            </router-link>
             <div class="product-item">
               <div class="card">
-                <div class="card-title">中小企業信貸</div>
-                <div class="card-sub">中小企業專屬</div>
+                <div class="card-title">聰明投資</div>
+                <hr class="card-hr" />
+                <div class="card-sub">小額分散 複利滾投</div>
+                <div class="card-info">
+                  <div>小金額大財富，穩穩投入、月月回款</div>
+                  <div>1000元即可創造人生第一桶金，實現夢想</div>
+                </div>
                 <div class="card-content">
-                  <div class="card-subtitle">專為中小企業，最高信貸2000萬</div>
-                  <div class="card-image">
-                    <img src="@/asset/images/index/building1.png" class="p8" />
+                  <router-link to="/collegeLoan" class="card-link clickable">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="債權投資"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">債權投資</div>
+                  </router-link>
+                  <router-link to="/workLoan" class="card-link clickable">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="債權轉讓"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">債權轉讓</div>
+                  </router-link>
+                  <router-link to="/engineerLoan" class="card-link clickable">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="AI智能投資"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">AI智能投資</div>
+                  </router-link>
+                  <div class="card-link">
+                    <img
+                      src="@/asset/images/index/mortarboard1.png"
+                      alt="風險報告書"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">風險報告書</div>
                   </div>
                 </div>
               </div>
             </div>
-            <router-link to="/charitable" class="product-item">
+            <div class="product-item">
               <div class="card">
-                <div class="card-title">慈善公益</div>
-                <div class="card-sub">一生為你</div>
+                <div class="card-title">你的專屬 各項好康</div>
+                <hr class="card-hr" />
+                <div class="card-sub">普匯錢包 便利生活 培養信用 隨身使用</div>
                 <div class="card-content">
-                  <div class="card-subtitle">
-                    <div>台大兒童基金會、</div>
-                    <div>張鈞甯、鍾欣凌，</div>
-                    <div>聯合勸募</div>
+                  <div>
+                    <router-link to="/collegeLoan" class="card-link clickable">
+                      <img
+                        src="@/asset/images/index/mortarboard1.png"
+                        alt="普匯錢包"
+                        class="card-link-img"
+                      />
+                      <div class="card-link-text">普匯錢包</div>
+                    </router-link>
+                    <div class="card-info">•便利生活 培養信用 隨身使用</div>
                   </div>
-                  <div class="card-image">
-                    <img src="@/asset/images/index/love1.png" class="p9" />
+                  <div>
+                    <router-link to="/workLoan" class="card-link clickable">
+                      <img
+                        src="@/asset/images/index/mortarboard1.png"
+                        alt="電商合作"
+                        class="card-link-img"
+                      />
+                      <div class="card-link-text">電商合作</div>
+                    </router-link>
+                    <div class="card-info">•專屬錢包、無卡分期、BNPL</div>
+                  </div>
+                  <div>
+                    <router-link to="/engineerLoan" class="card-link clickable">
+                      <img
+                        src="@/asset/images/index/mortarboard1.png"
+                        alt="醫美專案"
+                        class="card-link-img"
+                      />
+                      <div class="card-link-text">醫美專案</div>
+                    </router-link>
+                    <div class="card-info">
+                      <div>•專為你的美麗提供資金</div>
+                      <div>•助你快速美貌成真</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="card-link">
+                      <img
+                        src="@/asset/images/index/mortarboard1.png"
+                        alt="慈善公益"
+                        class="card-link-img"
+                      />
+                      <div class="card-link-text">慈善公益</div>
+                    </div>
+                    <div class="card-info">
+                      <div>•人美心更美 跟著愛心大使 行善助人</div>
+                      <div>•你的100元可以讓世界變得更美好</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </router-link>
-            <router-link to="/promote-code-intro" class="product-item">
-              <div class="card">
-                <div class="card-title">分享QR賺外快</div>
-                <div class="card-sub">歡迎OA、兼差</div>
-                <div class="card-content">
-                  <div class="card-subtitle">
-                    <div>取得普匯QR，分享爽賺 會員、特約商管理專區</div>
-                  </div>
-                  <div class="card-image">
-                    <img src="@/asset/images/index/qr1.png" class="p10" />
-                  </div>
-                </div>
-              </div>
-            </router-link>
+            </div>
           </div>
           <div class="group group-phone">
             <router-link to="/collegeLoan" class="product-item">
@@ -1436,101 +1491,84 @@ export default {
           display: none;
         }
         margin: 15px 45px 16px 30px;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
       }
     }
     .product-item {
       .card {
-        padding: 12px;
+        padding: 32px 36px;
         border-radius: 4px;
         overflow: hidden;
         background-image: url('~images/index/product-card-bg.png');
         background-repeat: no-repeat;
-        background-position: top right;
+        background-position: bottom right;
+        height: 360px;
       }
       .card-title {
         font-weight: 700;
-        font-size: 24px;
-        line-height: 35px;
-        color: #393939;
-        margin-bottom: 0;
+        font-style: normal;
+        font-size: 36px;
+        line-height: 1.4;
+        color: #083a6e;
+      }
+      .card-hr {
+        margin: 4px 0;
+        background: #ddeafa;
+        height: 2px;
+        width: 80px;
       }
       .card-sub {
         font-style: normal;
         font-weight: 500;
-        font-size: 16px;
-        line-height: 23px;
+        font-size: 24px;
+        line-height: 35px;
         color: #036eb7;
+      }
+      .card-info {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 170%;
+        color: #393939;
+        opacity: 0.75;
       }
       .card-content {
         display: grid;
-        margin-top: 10px;
-        grid-template-columns: 10fr 7fr;
-        grid-template-rows: 60px;
-        grid-template-areas: 'subtitle image';
+        grid-template-columns: 220px 1fr;
+        margin-top: 16px;
+        gap: 20px;
       }
-      .card-subtitle {
-        grid-area: subtitle;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 13px;
-        line-height: 19px;
-        color: #707070;
-        opacity: 0.75;
-      }
-      .card-image {
-        grid-area: image;
-        position: relative;
-        .p1 {
-          position: absolute;
-          left: 12px;
-          top: -15px;
+      .card-link {
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid #7ac1ea;
+        border-radius: 6px;
+        padding: 6px 18px;
+        display: flex;
+        align-items: center;
+        max-width: 220px;
+        margin-left: 0;
+        &.clickable {
+          cursor: pointer;
+          transition: all 0.3s;
+          &:hover {
+            background: #7ac1ea;
+            .card-link-text {
+              color: #fff;
+            }
+          }
         }
-        .p2 {
-          position: absolute;
-          left: -19px;
-          top: -38px;
+        &-img {
+          width: 20px;
+          height: 20px;
+          margin-right: 11px;
         }
-        .p3 {
-          position: absolute;
-          left: 2px;
-          top: -13px;
-        }
-        .p4 {
-          position: absolute;
-          left: 0px;
-          top: -15px;
-        }
-        .p5 {
-          position: absolute;
-          left: 17px;
-          top: -13px;
-        }
-        .p6 {
-          position: absolute;
-          left: 15px;
-          top: -16px;
-        }
-        .p7 {
-          position: absolute;
-          left: 17px;
-          top: -17px;
-        }
-        .p8 {
-          position: absolute;
-          left: 17px;
-          top: -17px;
-        }
-        .p9 {
-          position: absolute;
-          left: 9px;
-          top: -32px;
-        }
-        .p10 {
-          position: absolute;
-          left: 16px;
-          top: -16px;
+        &-text {
+          font-style: normal;
+          font-weight: 400;
+          font-size: 20px;
+          line-height: 29px;
+          color: #393939;
         }
       }
     }
