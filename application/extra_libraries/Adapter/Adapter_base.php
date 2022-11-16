@@ -28,4 +28,10 @@ abstract class Adapter_base implements Adapter_definition
      */
     abstract public function check_required_column(array $data): array;
 
+    /**
+     * 檢查日期欄位的格式
+     * @param array $data
+     * @return array
+     */
+    abstract public function check_date_format(array $data): array;
 }

@@ -22,6 +22,10 @@ class Adapter_sk_bank extends Adapter_base
 
     public static $mapping_option_table = ['BizRegAddrOwner' => ['A' => 'B', 'B' => 'C', 'C' => 'A'], 'RealBizAddrOwner' => ['A' => 'B', 'B' => 'C', 'C' => 'A']];
     public static $required_column_table = ['CompName', 'CompSetDate', 'CompCapital', 'CompIdustry', 'CompType', 'CompDuType', 'CompRegAddrZip', 'CompRegAddrZipName', 'CompRegAddress', 'CompMajorAddrZip', 'CompMajorAddrZipName', 'CompMajorAddress', 'CompTelAreaCode', 'CompTelNo', 'PrName', 'PrBirth'];
+    public static $date_format_table = ['CompSetDate' => 'YYYYMMDD', 'PrBirth' => 'YYYYMMDD', 'SpouseBirth' => 'YYYYMMDD', 'GuOneBirth' => 'YYYYMMDD', 'GuTwoBirth' => 'YYYYMMDD', 'PrOnboardDay' => 'YYYYMMDD', 'ExPrOnboardDay' => 'YYYYMMDD', 'ExPrOnboardDay2' => 'YYYYMMDD', 'AnnualIncomeYear1' => 'YYYYMMDD', 'AnnualIncomeYear2' => 'YYYYMMDD', 'AnnualIncomeYear3' => 'YYYYMMDD',
+        'NumOfInsuredYM1' => 'YYYYMM', 'NumOfInsuredYM2' => 'YYYYMM', 'NumOfInsuredYM3' => 'YYYYMM', 'NumOfInsuredYM4' => 'YYYYMM', 'NumOfInsuredYM5' => 'YYYYMM', 'NumOfInsuredYM6' => 'YYYYMM', 'NumOfInsuredYM7' => 'YYYYMM', 'NumOfInsuredYM8' => 'YYYYMM', 'NumOfInsuredYM9' => 'YYYYMM', 'NumOfInsuredYM10' => 'YYYYMM', 'NumOfInsuredYM11' => 'YYYYMM', 'NumOfInsuredYM12' => 'YYYYMM',
+        'CompJCICQueryDate' => 'YYYYMMDD', 'CompJCICDataDate' => 'YYYYMM', 'MidTermLnYM' => 'YYYYMM', 'ShortTermLnYM' => 'YYYYMM', 'PrLaborQryDate' => 'YYYYMMDD', 'SpouseLaborQryDate' => 'YYYYMMDD', 'GuOneLaborQryDate' => 'YYYYMMDD', 'GuTwoLaborQryDate' => 'YYYYMMDD', 'PrJCICQueryDate' => 'YYYYMMDD', 'PrJCICDataDate' => 'YYYYMM', 'SpouseJCICQueryDate' => 'YYYYMMDD', 'SpouseJCICDataDate' => 'YYYYMM',
+        'GuOneJCICQueryDate' => 'YYYYMMDD', 'GuOneJCICDataDate' => 'YYYYMM', 'GuTwoJCICQueryDate' => 'YYYYMMDD', 'GuTwoJCICDataDate' => 'YYYYMM', 'LastPaidInCapitalDate' => 'YYYYMMDD', 'PrStartYear' => 'YYYY', 'OthRealPrBirth' => 'YYYYMMDD', 'OthRealPrStartYear' => 'YYYY'];
 
     /**
      * 轉換資料格式
@@ -88,6 +92,36 @@ class Adapter_sk_bank extends Adapter_base
         if ( ! empty($empty_column))
         {
             return ['success' => FALSE, 'error' => '尚有必填欄位未填寫: ' . implode(',', $empty_column)];
+        }
+        return ['success' => TRUE];
+    }
+
+    /**
+     * 檢查日期欄位的格式
+     * @param array $data
+     * @return array
+     */
+    public function check_date_format(array $data): array
+    {
+        $wrong_format_column = [];
+
+        foreach (self::$date_format_table as $api_field => $api_date_format)
+        {
+            if (empty($data['Data'][$api_field]))
+            {
+                continue;
+            }
+            $format = preg_replace(['/YYYY/', '/MM/', '/DD/'], ['Y', 'm', 'd'], $api_date_format);
+            $date_obj = \DateTime::createFromFormat($format, $data['Data'][$api_field]);
+
+            if (($date_obj && $date_obj->format($format) == $data['Data'][$api_field]) !== TRUE)
+            {
+                $wrong_format_column[] = $api_field;
+            }
+        }
+        if ( ! empty($wrong_format_column))
+        {
+            return ['success' => FALSE, 'error' => '日期欄位格式錯誤: ' . implode(',', $wrong_format_column)];
         }
         return ['success' => TRUE];
     }

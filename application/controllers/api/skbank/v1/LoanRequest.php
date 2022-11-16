@@ -327,6 +327,13 @@ END:
                     $result['error'] = $chk_required_column['error'];
                     goto END;
                 }
+
+                $chk_date_format = $adapter->check_date_format($inputArr);
+                if ( ! isset($chk_date_format['success']) || $chk_date_format['success'] !== TRUE)
+                {
+                    $result['error'] = $chk_date_format['error'];
+                    goto END;
+                }
             }
 
             $dataJsonStr = json_encode($inputArr["Data"]);
