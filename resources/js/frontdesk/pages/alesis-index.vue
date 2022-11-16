@@ -117,7 +117,7 @@
         </div>
         <div class="intro-products">
           <div class="group group-web">
-            <div class="product-item">
+            <div class="product-item item-1">
               <div class="card">
                 <div class="card-title">年輕貸</div>
                 <hr class="card-hr" />
@@ -129,7 +129,7 @@
                 <div class="card-content">
                   <router-link to="/collegeLoan" class="card-link clickable">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
+                      src="@/asset/images/edit_black.svg"
                       alt="學生貸"
                       class="card-link-img"
                     />
@@ -137,7 +137,7 @@
                   </router-link>
                   <router-link to="/workLoan" class="card-link clickable">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
+                      src="@/asset/images/work_outline_black.svg"
                       alt="上班族貸"
                       class="card-link-img"
                     />
@@ -145,7 +145,7 @@
                   </router-link>
                   <router-link to="/engineerLoan" class="card-link clickable">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
+                      src="@/asset/images/settings_black.svg"
                       alt="資訊工程師貸"
                       class="card-link-img"
                     />
@@ -153,7 +153,7 @@
                   </router-link>
                   <div class="card-link">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
+                      src="@/asset/images/perm_identity_black.svg"
                       alt="網紅KOL專區"
                       class="card-link-img"
                     />
@@ -162,7 +162,7 @@
                 </div>
               </div>
             </div>
-            <div class="product-item">
+            <div class="product-item item-2">
               <div class="card">
                 <div class="card-title">中小企業融資</div>
                 <hr class="card-hr" />
@@ -176,33 +176,33 @@
                   </div>
                 </div>
                 <div class="card-content">
-                  <router-link to="/collegeLoan" class="card-link clickable">
+                  <div class="card-link">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
-                      alt="學生貸"
+                      src="@/asset/images/paid_black.svg"
+                      alt="企業主速貸"
                       class="card-link-img"
                     />
                     <div class="card-link-text">企業主速貸</div>
-                  </router-link>
-                  <router-link to="/workLoan" class="card-link clickable">
+                  </div>
+                  <router-link to="/business-loan/smeg" class="card-link clickable">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
-                      alt="上班族貸"
+                      src="@/asset/images/collections_bookmark_black.svg"
+                      alt="信保專案"
                       class="card-link-img"
                     />
                     <div class="card-link-text">信保專案</div>
                   </router-link>
-                  <router-link to="/engineerLoan" class="card-link clickable">
+                  <div  class="card-link">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
-                      alt="資訊工程師貸"
+                      src="@/asset/images/paid_black.svg"
+                      alt="中小企業信貸"
                       class="card-link-img"
                     />
                     <div class="card-link-text">中小企業信貸</div>
-                  </router-link>
+                  </div>
                   <div class="card-link">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
+                      src="@/asset/images/perm_identity_black.svg"
                       alt="網紅KOL專區"
                       class="card-link-img"
                     />
@@ -211,7 +211,7 @@
                 </div>
               </div>
             </div>
-            <div class="product-item">
+            <div class="product-item item-3">
               <div class="card">
                 <div class="card-title">聰明投資</div>
                 <hr class="card-hr" />
@@ -221,92 +221,92 @@
                   <div>1000元即可創造人生第一桶金，實現夢想</div>
                 </div>
                 <div class="card-content">
-                  <router-link to="/collegeLoan" class="card-link clickable">
+                  <router-link to="/investment" class="card-link clickable">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
+                      src="@/asset/images/paid_black.svg"
                       alt="債權投資"
                       class="card-link-img"
                     />
                     <div class="card-link-text">債權投資</div>
                   </router-link>
-                  <router-link to="/workLoan" class="card-link clickable">
+                  <router-link to="/transfer" class="card-link clickable">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
+                      src="@/asset/images/paid_black.svg"
                       alt="債權轉讓"
                       class="card-link-img"
                     />
                     <div class="card-link-text">債權轉讓</div>
                   </router-link>
-                  <router-link to="/engineerLoan" class="card-link clickable">
+                  <router-link to="/investment" class="card-link clickable">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
+                      src="@/asset/images/smart_toy_black.svg"
                       alt="AI智能投資"
                       class="card-link-img"
                     />
                     <div class="card-link-text">AI智能投資</div>
                   </router-link>
-                  <div class="card-link">
+                  <router-link to="/risk" class="card-link clickable">
                     <img
-                      src="@/asset/images/index/mortarboard1.png"
+                      src="@/asset/images/description_black.svg"
                       alt="風險報告書"
                       class="card-link-img"
                     />
                     <div class="card-link-text">風險報告書</div>
-                  </div>
+                  </router-link>
                 </div>
               </div>
             </div>
-            <div class="product-item">
+            <div class="product-item item-4">
               <div class="card">
                 <div class="card-title">你的專屬 各項好康</div>
                 <hr class="card-hr" />
                 <div class="card-sub">普匯錢包 便利生活 培養信用 隨身使用</div>
                 <div class="card-content">
                   <div>
-                    <router-link to="/collegeLoan" class="card-link clickable">
+                    <div class="card-link">
                       <img
-                        src="@/asset/images/index/mortarboard1.png"
+                        src="@/asset/images/paid_black.svg"
                         alt="普匯錢包"
                         class="card-link-img"
                       />
                       <div class="card-link-text">普匯錢包</div>
-                    </router-link>
+                    </div>
                     <div class="card-info">•便利生活 培養信用 隨身使用</div>
                   </div>
                   <div>
-                    <router-link to="/workLoan" class="card-link clickable">
+                    <div to="/workLoan" class="card-link">
                       <img
-                        src="@/asset/images/index/mortarboard1.png"
+                        src="@/asset/images/collections_bookmark_black.svg"
                         alt="電商合作"
                         class="card-link-img"
                       />
                       <div class="card-link-text">電商合作</div>
-                    </router-link>
+                    </div>
                     <div class="card-info">•專屬錢包、無卡分期、BNPL</div>
                   </div>
                   <div>
-                    <router-link to="/engineerLoan" class="card-link clickable">
+                    <div to="/engineerLoan" class="card-link">
                       <img
-                        src="@/asset/images/index/mortarboard1.png"
+                        src="@/asset/images/collections_bookmark_black.svg"
                         alt="醫美專案"
                         class="card-link-img"
                       />
                       <div class="card-link-text">醫美專案</div>
-                    </router-link>
+                    </div>
                     <div class="card-info">
                       <div>•專為你的美麗提供資金</div>
                       <div>•助你快速美貌成真</div>
                     </div>
                   </div>
                   <div>
-                    <div class="card-link">
+                    <router-link to="/charitable" class="card-link clickable">
                       <img
-                        src="@/asset/images/index/mortarboard1.png"
+                        src="@/asset/images/paid_black.svg"
                         alt="慈善公益"
                         class="card-link-img"
                       />
                       <div class="card-link-text">慈善公益</div>
-                    </div>
+                    </router-link>
                     <div class="card-info">
                       <div>•人美心更美 跟著愛心大使 行善助人</div>
                       <div>•你的100元可以讓世界變得更美好</div>
@@ -316,126 +316,7 @@
               </div>
             </div>
           </div>
-          <div class="group group-phone">
-            <router-link to="/collegeLoan" class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img class="p1" src="@/asset/images/index/mortarboard1.png" />
-                </div>
-                <div class="card-title">學生貸</div>
-                <div class="card-sub">最大的學生貸</div>
-                <div class="card-subtitle">
-                  台灣最大學生貸平台進修、學雜費、3C、機車
-                </div>
-              </div>
-            </router-link>
-            <router-link to="/workLoan" class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img class="p2" src="@/asset/images/index/id1.png" />
-                </div>
-                <div class="card-title">上班族貸</div>
-                <div class="card-sub">公開透明借貸</div>
-                <div class="card-subtitle">
-                  公開透明，無人化自動審核信用評分，申辦不收手續費
-                </div>
-              </div>
-            </router-link>
-            <router-link to="/engineerLoan" class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img class="p3" src="@/asset/images/index/computer1.png" />
-                </div>
-                <div class="card-title">資訊工程師貸</div>
-                <div class="card-sub">最優惠貸款</div>
-                <div class="card-subtitle">
-                  工程師最優惠貸款，就在普匯 只要你•工程師
-                </div>
-              </div>
-            </router-link>
-            <div class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img src="@/asset/images/index/car1.png" class="p4" />
-                </div>
-                <div class="card-title">汽車貸款</div>
-                <div class="card-sub">只要有車</div>
-                <div class="card-subtitle">
-                  只要你有車，貸給你車商、購車，都能貸
-                </div>
-              </div>
-            </div>
-            <router-link to="/charitable" class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img src="@/asset/images/index/love1.png" class="p9" />
-                </div>
-                <div class="card-title">慈善公益</div>
-                <div class="card-sub">一生為你</div>
-                <div class="card-subtitle">
-                  台大兒童基金會、張鈞甯、鍾欣凌，聯合勸募
-                </div>
-              </div>
-            </router-link>
-            <div class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img src="@/asset/images/index/clock1.png" class="p6" />
-                </div>
-                <div class="card-title">企業主速貸</div>
-                <div class="card-sub">新創獨惠</div>
-                <div class="card-subtitle">
-                  速速來貸，最高額度100萬 歡迎新創、微企，快速貸給你
-                </div>
-              </div>
-            </div>
-            <router-link to="/business-loan/smeg" class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img src="@/asset/images/index/bank1.png" class="p7" />
-                </div>
-                <div class="card-title">中小企業融資(信保)</div>
-                <div class="card-sub">銀行放款</div>
-                <div class="card-subtitle">
-                  普匯銀行攜手，信保保證 銀行貸給你，最高額度600萬
-                </div>
-              </div>
-            </router-link>
-            <div class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img src="@/asset/images/index/building1.png" class="p8" />
-                </div>
-                <div class="card-title">中小企業信貸</div>
-                <div class="card-sub">中小企業專屬</div>
-                <div class="card-subtitle">專為中小企業，最高信貸2000萬</div>
-              </div>
-            </div>
-            <router-link to="/invest" class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img src="@/asset/images/index/line-chart.png" class="p5" />
-                </div>
-                <div class="card-title">投資人專區</div>
-                <div class="card-sub">小額分散 低風險</div>
-                <div class="card-subtitle">
-                  小額、分期，最佳投資心法低風險、高報酬，複利滾投
-                </div>
-              </div>
-            </router-link>
-            <router-link to="/promote-code-intro" class="product-item">
-              <div class="card">
-                <div class="card-image">
-                  <img src="@/asset/images/index/qr1.png" class="p10" />
-                </div>
-                <div class="card-title">分享QR賺外快</div>
-                <div class="card-sub">歡迎OA、兼差</div>
-                <div class="card-subtitle">
-                  取得普匯QR，分享爽賺 會員、特約商管理專區
-                </div>
-              </div>
-            </router-link>
-          </div>
+          <div class="group group-phone"></div>
         </div>
       </div>
     </div>
@@ -1496,11 +1377,24 @@ export default {
       }
     }
     .product-item {
+      &.item-1 .card {
+        background-image: url('~images/index/product-bg-1.jpg');
+      }
+      &.item-2 .card {
+        background-image: url('~images/index/product-bg-2.jpg');
+      }
+      &.item-3 .card {
+        background-image: url('~images/index/product-bg-3.jpg');
+      }
+      &.item-4 .card {
+        background-image: url('~images/index/product-bg-4.jpg');
+      }
       .card {
+        box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
         padding: 32px 36px;
-        border-radius: 4px;
+        border-radius: 6px;
         overflow: hidden;
-        background-image: url('~images/index/product-card-bg.png');
+        background-size: cover;
         background-repeat: no-repeat;
         background-position: bottom right;
         height: 360px;
@@ -1559,8 +1453,8 @@ export default {
           }
         }
         &-img {
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
           margin-right: 11px;
         }
         &-text {
