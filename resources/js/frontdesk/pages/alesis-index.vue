@@ -80,7 +80,7 @@
                   <div class="col-12">
                     <img
                       src="@/asset/images/index/header/header-csr.png"
-                      class="w-100 img-fluid pb-5 mb-5"
+                      class="w-100 img-fluid p-4"
                     />
                   </div>
                 </div>
@@ -1312,9 +1312,12 @@ export default {
   z-index: 5;
 }
 .index-intro {
+  .block-content{
+    max-width: 1220px;
+  }
   background-image: url('~images/index/index-header-bg.png');
   background-position: center;
-  padding: 100px 0 15px;
+  padding: 15px 0 15px 100px;
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 750px;
@@ -1337,11 +1340,12 @@ export default {
       .speech {
         flex-wrap: nowrap;
         .text-bg {
+          margin-top: 50px;
           height: 245px;
           width: 472px;
         }
         .solgan {
-          margin-top: 100px;
+          margin-top: 50px;
           font-style: normal;
           font-weight: 700;
           font-size: 24px;
@@ -1351,8 +1355,8 @@ export default {
         .speech-cover {
           left: 60px;
           position: relative;
-          height: 485px;
-          top: -50px;
+          height: 375px;
+          top: 15px;
         }
       }
       .general {
@@ -1383,7 +1387,8 @@ export default {
       margin-bottom: -190px;
       .group {
         display: grid;
-        margin: 15px 45px 16px 30px;
+        margin: 15px auto;
+        max-width: 1200px;
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
       }
@@ -1403,19 +1408,20 @@ export default {
       }
       .card {
         box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
-        padding: 32px 36px;
+        padding: 18px 32px;
         border-radius: 6px;
         overflow: hidden;
         background-size: cover;
         background-repeat: no-repeat;
         background-position: bottom right;
-        height: 360px;
+        height: 300px;
       }
       .card-title {
         font-weight: 700;
         font-style: normal;
         font-size: 36px;
         line-height: 1.4;
+        margin-bottom: 0;
         color: #083a6e;
       }
       .card-hr {
@@ -1442,8 +1448,8 @@ export default {
       .card-content {
         display: grid;
         grid-template-columns: 220px 1fr;
-        margin-top: 16px;
-        gap: 20px;
+        margin-top: 10px;
+        gap: 12px;
       }
       .card-link {
         background: rgba(255, 255, 255, 0.8);
@@ -2322,6 +2328,7 @@ export default {
           padding-top: 20px;
           flex-wrap: wrap;
           .text-bg {
+            margin-top: 0;
             height: 210px;
             width: 178px;
           }
