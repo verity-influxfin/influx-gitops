@@ -116,7 +116,7 @@
           </div>
         </div>
         <div class="intro-products">
-          <div class="group group-web">
+          <div class="group">
             <div class="product-item item-1">
               <div class="card">
                 <div class="card-title">年輕貸</div>
@@ -167,13 +167,18 @@
                 <div class="card-title">中小企業融資</div>
                 <hr class="card-hr" />
                 <div class="card-sub">普惠金融 多元資金滿足你</div>
-                <div class="card-info">
+                <div class="card-info d-md-block d-none">
                   <div>
                     首創第一，透過普匯完全免費，銀行放款 信保保證，一站式服
                   </div>
                   <div>
                     務，一份資料多方資金 銀行同步，提供資金解決企業週轉困擾
                   </div>
+                </div>
+                <div class="card-info d-md-none d-block">
+                  <div>首創第一，透過普匯完全免費，銀行放款 信保保證，</div>
+                  <div>一站式服務，一份資料多方資金 銀行同步，提供資金</div>
+                  <div>解決企業週轉困擾</div>
                 </div>
                 <div class="card-content">
                   <div class="card-link">
@@ -184,7 +189,10 @@
                     />
                     <div class="card-link-text">企業主速貸</div>
                   </div>
-                  <router-link to="/business-loan/smeg" class="card-link clickable">
+                  <router-link
+                    to="/business-loan/smeg"
+                    class="card-link clickable"
+                  >
                     <img
                       src="@/asset/images/collections_bookmark_black.svg"
                       alt="信保專案"
@@ -192,7 +200,7 @@
                     />
                     <div class="card-link-text">信保專案</div>
                   </router-link>
-                  <div  class="card-link">
+                  <div class="card-link">
                     <img
                       src="@/asset/images/paid_black.svg"
                       alt="中小企業信貸"
@@ -271,7 +279,13 @@
                       />
                       <div class="card-link-text">普匯錢包</div>
                     </div>
-                    <div class="card-info">•便利生活 培養信用 隨身使用</div>
+                    <div class="card-info d-md-block d-none">
+                      •便利生活 培養信用 隨身使用
+                    </div>
+                    <div class="card-info d-md-none d-block">
+                      <div>•便利生活 培養信用</div>
+                      <div class="pl-2 ml-1">隨身使用</div>
+                    </div>
                   </div>
                   <div>
                     <div to="/workLoan" class="card-link">
@@ -307,16 +321,19 @@
                       />
                       <div class="card-link-text">慈善公益</div>
                     </router-link>
-                    <div class="card-info">
+                    <div class="card-info d-md-block d-none">
                       <div>•人美心更美 跟著愛心大使 行善助人</div>
                       <div>•你的100元可以讓世界變得更美好</div>
+                    </div>
+                    <div class="card-info d-md-none d-block">
+                      •人美心更美 跟著愛心大使行善助人
+                      你的100元可以讓世界變得更美好
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="group group-phone"></div>
         </div>
       </div>
     </div>
@@ -1365,12 +1382,7 @@ export default {
       top: -190px;
       margin-bottom: -190px;
       .group {
-        &.group-web {
-          display: grid;
-        }
-        &.group-phone {
-          display: none;
-        }
+        display: grid;
         margin: 15px 45px 16px 30px;
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
@@ -2349,118 +2361,57 @@ export default {
         top: -260px;
         margin-bottom: -300px;
         .group {
-          &.group-web {
-            display: none;
-          }
-          &.group-phone {
-            display: grid;
-          }
-          gap: 13px;
-          margin: 20px 13px;
+          display: grid;
+          margin: 15px;
           grid-template-columns: 1fr;
+          gap: 18px;
         }
       }
       .product-item {
+        &.item-1 .card {
+          background-image: url('~images/index/product-bg-phone-1.jpg');
+        }
+        &.item-2 .card {
+          background-image: url('~images/index/product-bg-phone-2.jpg');
+        }
+        &.item-3 .card {
+          background-image: url('~images/index/product-bg-phone-3.jpg');
+        }
+        &.item-4 .card {
+          background-image: url('~images/index/product-bg-phone-4.jpg');
+        }
         .card {
-          width: auto;
-          padding: 8px;
-          position: relative;
-          display: grid;
-          grid-template-areas:
-            '. image'
-            'sub image'
-            'subtitle image';
-          grid-template-columns: 250px 1fr;
-          grid-template-rows: auto auto;
-          font-size: 12px;
-          line-height: 1.5;
+          padding: 16px;
+          overflow: hidden;
+          height: auto;
         }
         .card-title {
-          grid-area: 1 / 1 / 2 / 2;
-          font-size: 14px;
-          line-height: 1.2;
-          margin-bottom: 0;
-          text-align: left;
-          &.space-bottom {
-            padding-bottom: 15px;
-          }
+          font-size: 26px;
+        }
+        .card-hr {
+          width: 40px;
         }
         .card-sub {
-          grid-area: sub;
-          font-size: 13px;
+          font-size: 18px;
+          line-height: 1.4;
         }
-        .card-subtitle {
-          margin: 0;
-          font-size: 12px;
-          line-height: 1.2;
-          margin: 4px 0;
-          text-align: left;
-        }
-        .card-image {
-          .p1 {
-            transform: scale(0.65);
-            left: initial;
-            right: -36px;
-            top: -3px;
-          }
-          .p2 {
-            transform: scale(0.65);
-            left: initial;
-            right: -73px;
-            top: -7px;
-          }
-          .p3 {
-            transform: scale(0.65);
-            left: initial;
-            right: -35px;
-            top: -4px;
-          }
-          .p4 {
-            transform: scale(0.65);
-            left: initial;
-            right: -48px;
-            top: -4px;
-          }
-          .p5 {
-            transform: scale(0.65);
-            left: initial;
-            right: -33px;
-            top: 5px;
-          }
-          .p6 {
-            transform: scale(0.65);
-            left: initial;
-            right: -32px;
-            top: 11px;
-          }
-          .p7 {
-            transform: scale(0.65);
-            left: initial;
-            right: -32px;
-            top: 10px;
-          }
-          .p8 {
-            transform: scale(0.65);
-            left: initial;
-            right: -30px;
-            top: -4px;
-          }
-          .p9 {
-            transform: scale(0.65);
-            left: initial;
-            right: -35px;
-            top: -18px;
-          }
-          .p10 {
-            transform: scale(0.65);
-            left: initial;
-            right: -32px;
-            top: -4px;
-          }
+        .card-content {
+          grid-template-columns: 155px 1fr;
+          gap: 11px;
+          margin-top: 12px;
         }
         .card-link {
-          font-size: 12px;
-          line-height: 1.2;
+          padding: 6px 8px;
+          max-width: 155px;
+          &-img {
+            width: 20px;
+            height: 20px;
+            margin-right: 4px;
+          }
+          &-text {
+            font-size: 18px;
+            line-height: 1.4;
+          }
         }
       }
     }
