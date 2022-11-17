@@ -63,6 +63,9 @@
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
+                <smegHeader />
+              </div>
+              <div class="swiper-slide">
                 <fund-header />
               </div>
               <div class="swiper-slide">
@@ -76,11 +79,11 @@
                 href="https://www.influxfin.com/articlepage?q=news-8202"
                 target="_blank"
               >
-                <div class="row no-gutters">
+                <div class="row no-gutters mt-5">
                   <div class="col-12">
                     <img
                       src="@/asset/images/index/header/header-csr.png"
-                      class="w-100 img-fluid p-4"
+                      class="w-100 img-fluid"
                     />
                   </div>
                 </div>
@@ -1174,6 +1177,7 @@ import float from '../component/floatComponent'
 import workloanHeader from '../component/index/header/workloanHeader.vue'
 import collegeloanHeader from '../component/index/header/collegeloanHeader.vue'
 import fundHeader from '../component/index/header/fundHeader'
+import smegHeader from '../component/index/header/smegHeader'
 import { alesisIndexCounter } from './api'
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
@@ -1187,7 +1191,8 @@ export default {
     AlesisCounter,
     workloanHeader,
     collegeloanHeader,
-    fundHeader
+    fundHeader,
+    smegHeader
   },
   data: () => ({
     indexCounter: {}

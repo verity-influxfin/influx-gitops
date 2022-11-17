@@ -10,11 +10,11 @@
       </div>
     </div>
     <!-- web -->
-    <div class="d-sm-flex d-none no-gutters justify-content-lg-between">
+    <div class="d-sm-flex d-none no-gutters justify-content-lg-between mt-5">
       <div class="col-12">
         <img
           src="@/asset/images/index/header/fund-header.png"
-          class="w-100 img-fluid p-4"
+          class="w-100 img-fluid p-1"
         />
       </div>
     </div>
