@@ -20,6 +20,7 @@ mix.webpackConfig({
  */
 
 mix.js('resources/js/frontdesk/layout.js', 'public/js/web.js')
+    .extract(['vue'])
     .js('resources/js/backend/layout.js', 'public/js/backend.js')
     .js('resources/js/campusJoin.js', 'public/js/campusJoin.js')
     .js('resources/js/greeting/layout.js', 'public/js/greeting.js')

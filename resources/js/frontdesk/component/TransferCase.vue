@@ -55,7 +55,8 @@ export default {
         accounts_receivable:{
             default: Math.random()*1000 + Math.random()*100,
         },
-        target:{
+        target: {
+          default:()=>({
             user: {
                 sex:{
                     default:"M",
@@ -73,6 +74,7 @@ export default {
             instalment:{
                 default: 24,
             }
+          })
         },
         target_no: {
             default: "STN2020122218828",

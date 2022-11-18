@@ -122,7 +122,18 @@ export default {
     userInfo,
   },
   data: () => ({
-    myRepayment: {},
+    myRepayment: {
+      next_repayment:{
+        date: ''
+      },
+      virtual_account:{
+        bank_code: '',
+        bank_name: '',
+        branch_code: '',
+        branch_name: '',
+        virtual_account: ''
+      }
+    },
     userData: JSON.parse(sessionStorage.getItem("userData")),
     repaymentDate: "",
     funds: 0,

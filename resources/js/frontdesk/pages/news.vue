@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 let newsRow = Vue.extend({
   props: ["item", "index"],
   template: `

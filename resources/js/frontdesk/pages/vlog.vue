@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 let postRow = Vue.extend({
   props: ["item", "category"],
   template: `
