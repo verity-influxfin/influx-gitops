@@ -1403,4 +1403,18 @@ class User_lib {
             throw new Exception('帳號已申請過', USER_ID_EXIST);
         }
     }
+
+    /**
+     * 檢查密碼
+     * @param $password : 密碼
+     * @return void
+     * @throws Exception
+     */
+    public function check_password($password)
+    {
+        if (strlen($password) < PASSWORD_LENGTH || strlen($password) > PASSWORD_LENGTH_MAX)
+        {
+            throw new Exception('密碼長度有誤', PASSWORD_LENGTH_ERROR);
+        }
+    }
 }
