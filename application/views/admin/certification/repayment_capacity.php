@@ -184,7 +184,7 @@ $new_calculate_algo = isset($content['totalEffectiveDebt']);  // 還款力相關
                                             <td>薪資22倍：</td>
                                             <td><input type="text"
                                                        disabled
-                                                       value="<?php echo isset($content['total_repayment'])
+                                                       value="<?php echo ! empty($content['total_repayment']) || is_numeric($content['total_repayment'])
                                                            ? (strpos($content['total_repayment'], ',') === FALSE
                                                                ? number_format($content['total_repayment'] * 1000)
                                                                : $content['total_repayment'] . '千')
@@ -197,7 +197,7 @@ $new_calculate_algo = isset($content['totalEffectiveDebt']);  // 還款力相關
                                             <td><input type="text"
                                                        disabled
                                                        id="monthly_repayment"
-                                                       value="<?php echo isset($content['monthly_repayment'])
+                                                       value="<?php echo ! empty($content['monthly_repayment']) || is_numeric($content['monthly_repayment'])
                                                            ? (strpos($content['monthly_repayment'], ',') === FALSE
                                                                ? number_format($content['monthly_repayment'] * 1000)
                                                                : $content['monthly_repayment'] . '千')
@@ -214,6 +214,19 @@ $new_calculate_algo = isset($content['totalEffectiveDebt']);  // 還款力相關
                                         </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                                <hr/>
+                                <div class="form-group">
+                                    <label>驗證結果</label>
+                                    <?php
+                                    if ( ! empty($remark['verify_result']))
+                                    {
+                                        foreach ($remark['verify_result'] as $value)
+                                        {
+                                            echo '<p style="color:red;" class="form-control-static">' . $value . '</p>';
+                                        }
+                                    }
+                                    ?>
                                 </div>
                             </div>
                             <div class="col-lg-12" <?= $btn_hidden ?>>
