@@ -183,7 +183,7 @@ class Certification extends REST_Controller {
 		}
 
         // 撈取負責人的個人徵信項內容
-        if ( $company == USER_IS_COMPANY && $target)
+        if ($company == USER_IS_COMPANY)
         {
             if (empty($natural_person->id))
             {
@@ -194,13 +194,17 @@ class Certification extends REST_Controller {
             $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target, $natural_person->id);
 
             $individual_certification_list = $this->certification_lib->get_status($natural_person->id, $investor, $company, TRUE, $target, FALSE, TRUE);
+            $exist_target_submitted = $target && chk_target_submitted($target->status, $target->certificate_status ?? 0);
             foreach($individual_certification_list as $key => $value){
+                if ( ! $target && $key != CERTIFICATION_IDENTITY)
+                {
+                    continue;
+                }
                 if (in_array($key, [CERTIFICATION_IDENTITY, CERTIFICATION_EMAIL, CERTIFICATION_SIMPLIFICATIONFINANCIAL, CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2]))
                 {
-                    $exist_target_submitted = chk_target_submitted($target->status, $target->certificate_status ?? 0);
                     $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
                         USER_BORROWER,
-                        is_judicial_product($target->product_id)
+                        TRUE
                     );
 
                     if (in_array($key, $skip_certification_ids))
@@ -209,7 +213,7 @@ class Certification extends REST_Controller {
                     }
                     else if ($truly_failed)
                     {
-                        if (in_array($target->status, [TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_WAITING_BIDDING, TARGET_WAITING_LOAN]))
+                        if (isset($target->status) && in_array($target->status, [TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_WAITING_BIDDING, TARGET_WAITING_LOAN]))
                         {
                             $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
                         }
