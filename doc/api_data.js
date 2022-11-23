@@ -46171,7 +46171,7 @@ define({
         {
             "type": "post",
             "url": "/v2/user/apply_subcode",
-            "title": "會員 推薦碼subcode申請",
+            "title": "會員 推薦碼新增subcode(二級經銷商)",
             "version": "0.2.0",
             "name": "PostUserApplyPromoteSubCode",
             "group": "User",
@@ -46196,7 +46196,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "sub_user_id",
-                            "description": "<p>subcode 要給的對象的 user_id</p>"
+                            "description": "<p>欲成為subcode(二級經銷商)的使用者ID</p>"
                         }
                     ]
                 }
@@ -46206,7 +46206,7 @@ define({
                     "Success 200": [
                         {
                             "group": "Success 200",
-                            "type": "Object",
+                            "type": "String",
                             "optional": false,
                             "field": "result",
                             "description": "<p>SUCCESS</p>"
@@ -46244,37 +46244,59 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "201",
+                            "description": "<p>新增失敗</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "226",
                             "description": "<p>找不到合法的推薦主碼紀錄</p>"
                         },
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "408",
-                            "description": "<p>已有該身分證字號的申請紀錄</p>"
+                            "field": "229",
+                            "description": "<p>subcode 身份非一般經銷商，不得被加為二級經銷商</p>"
                         },
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "504",
-                            "description": "<p>錯誤格式的身分證字號</p>"
+                            "field": "230",
+                            "description": "<p>推薦主碼身份非特約通路商，不得新增二級經銷商</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "231",
+                            "description": "<p>找不到合法的 subcode 紀錄</p>"
                         }
                     ]
                 },
                 "examples": [
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
                     {
                         "title": "226",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"226\"\n}",
                         "type": "Object"
                     },
                     {
-                        "title": "408",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"408\"\n}",
+                        "title": "229",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"229\"\n}",
                         "type": "Object"
                     },
                     {
-                        "title": "504",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"504\"\n}",
+                        "title": "230",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"230\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "231",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"231\"\n}",
                         "type": "Object"
                     }
                 ]

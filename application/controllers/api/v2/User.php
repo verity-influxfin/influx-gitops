@@ -3325,10 +3325,13 @@ END:
         {
             $this->response(array('result' => 'ERROR', 'error' => PROMOTE_CODE_NOT_EXIST, 'msg' => '找不到合法的推薦主碼紀錄'));
         }
-        $this->load->library('qrcode_lib');
 
-        $this->load->library('user_lib');
-        $promote_code = $this->user_lib->get_promote_code(8, 'SUB');
+        // 檢查是否為特約通路商
+        $this->load->library('qrcode_lib');
+        if ($this->qrcode_lib->is_appointed_type($master_user_qrcode->alias) === FALSE)
+        {
+            $this->response(['result' => 'ERROR', 'error' => PROMOTE_CODE_NOT_APPOINTED, 'msg' => 'QRCode 身份非特約通路商，不得新增二級經銷商']);
+        }
 
         $this->user_qrcode_model->trans_begin();
         $this->user_subcode_model->trans_begin();
@@ -3343,42 +3346,34 @@ END:
                 'master_user_qrcode_id' => $master_user_qrcode->id,
             ]);
 
-            $sub_user_id = intval($this->input->post(NULL, TRUE)['sub_user_id']);
-            if ( ! $this->user_model->get($sub_user_id))
-            {
-                $this->response([
-                    'result'   => 'SUCCESS',
-                    'data'     => [
-                        'valid'  => FALSE,
-                        'text'   => '二級經銷商會員編號錯誤：無此會員'
-                    ]
-                ]);
-            }
-
-            $new_qrcode_id = $this->user_qrcode_model->insert([
-                'user_id' => $sub_user_id,
-                'alias' => $master_user_qrcode->alias,
-                'promote_code' => $promote_code,
-                'status' => PROMOTE_STATUS_AVAILABLE,
-                'subcode_flag' => 1,
-                'start_time' => date('Y-m-d H:i:s'),
-                'end_time' => $master_user_qrcode->end_time,
-                'contract_end_time' => '0000-00-00 00:00:00',
-                'settings' => json_encode([]),
+            $subcode_user_id = intval($this->input->post('sub_user_id')); // 欲成為二級經銷商的使用者 ID
+            $subcode_info = $this->user_qrcode_model->as_array()->get_by([
+                'user_id' => $subcode_user_id,
+                'status !=' => PROMOTE_STATUS_DISABLED
             ]);
+            if (empty($subcode_info))
+            {
+                $this->response(['result' => 'ERROR', 'error' => PROMOTE_SUBCODE_NOT_EXIST]);
+            }
+            if ($subcode_info['subcode_flag'] || $this->qrcode_lib->is_appointed_type($subcode_info['alias']))
+            {
+                // 二級經銷商僅得以由一般經銷商轉換而來 (換言之，不得由特約通路商或其他二級經銷商轉換而來)
+                $this->response(['result' => 'ERROR', 'error' => PROMOTE_CODE_NOT_GENERAL, 'msg' => 'sub_user_id 身份非一般經銷商，不得加為二級經銷商']);
+            }
 
             $user_subcode_id = $this->user_subcode_model->insert([
                 'alias' => "經銷商".($record_num+1),
                 'registered_id' => 0,
                 'master_user_qrcode_id' => $master_user_qrcode->id,
-                'user_qrcode_id' => (int) $new_qrcode_id,
+                'user_qrcode_id' => (int) $subcode_info['id'],
             ]);
+            $this->user_qrcode_model->update($subcode_info['id'], ['subcode_flag' => 1]);
 
-            if ( ! $new_qrcode_id || ! $user_subcode_id ||
+            if ( ! $user_subcode_id ||
                 $this->user_qrcode_model->trans_status() === FALSE ||
                 $this->user_subcode_model->trans_status() === FALSE)
             {
-                throw new \Exception('新增qrcode失敗');
+                throw new \Exception('新增二級經銷商失敗');
             }
             $this->user_qrcode_model->trans_commit();
             $this->user_subcode_model->trans_commit();
