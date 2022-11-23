@@ -57,11 +57,11 @@ export default {
             default: 4,
         },
         user: {
-            default: {
+            default:()=>({
                 sex: "M",
                 age: 24,
                 company_name: "國立臺灣大學",
-            }
+            })
         },
         target_no: {
             default: "STN2020122218828",

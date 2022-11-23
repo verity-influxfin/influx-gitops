@@ -138,6 +138,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 let bannerRow = Vue.extend({
   props: ["item", "vm"],
   data: () => ({

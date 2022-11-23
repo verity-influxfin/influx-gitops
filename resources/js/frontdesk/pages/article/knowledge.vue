@@ -38,7 +38,7 @@
                                     </span>
                                     <input type="text" class="form-control" :value="article.link" @click="copy()" />
                                 </div>
-                                <div v-if="this.isCopyed" class="copyed">
+                                <div v-if="this.copied" class="copyed">
                                     <i class="fas fa-check-circle"></i>
                                 </div>
                             </div>

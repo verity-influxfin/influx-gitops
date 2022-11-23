@@ -133,8 +133,8 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getRecoveriesList");
-    this.$store.dispatch("getRecoveriesFinished");
+    // this.$store.dispatch("getRecoveriesList");
+    // this.$store.dispatch("getRecoveriesFinished");
     this.$store.dispatch("getMyInvestment");
 
     $("title").text(`投資專區 - inFlux普匯金融科技`);

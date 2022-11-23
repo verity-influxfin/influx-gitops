@@ -420,46 +420,6 @@
                 </div>
             </div>
         </div>
-
-        <script type="text/javascript">
-            window.addEventListener('load', function() {
-                document.querySelector(".icon-hamburger").addEventListener("click", () => {
-                    document.querySelector(".rwd-list").classList.toggle("-active")
-                })
-
-                /*document.querySelector("body").addEventListener("click", (e) =>{
-                    if (e.target.closest(".item") !== null) {
-                        return
-                    }
-                        document.querySelectorAll(".aside > .item, .center > .item").forEach((v) => {
-                            v.classList.remove("-active")
-                        })
-                })
-
-                document.querySelectorAll(".aside > .item, .center > .item").forEach((v) => {
-                    v.addEventListener("click", (e) => {
-                        Array.prototype.filter.call(document.querySelectorAll(".aside .item , .center > .item"), (j) => {
-                            return v !== j
-                        }).forEach((v) =>{
-                            v.classList.remove("-active")
-                        })
-                        v.classList.toggle("-active")
-                    })
-                })*/
-
-                document.querySelectorAll(".rwd-list .item").forEach((v) => {
-                    v.addEventListener("click", (e) => {
-                        Array.prototype.filter.call(document.querySelectorAll(".rwd-list .item"), (j) => {
-                            return v !== j
-                        }).forEach((v) => {
-                            v.classList.remove("-active")
-                        })
-                        v.classList.toggle("-active")
-                    })
-                })
-            })
-        </script>
-
         <div class="content-wrapper">
             <router-view></router-view>
         </div>
@@ -579,7 +539,7 @@
                         <a href="/companycooperation" class="item">企業合作</a> |
                         <a href="/promote-code-intro" class="item">推薦有賞</a>
                     </div>
-                    <div class="externals" v-if="!location.pathname.includes('/business-loan/sme')">
+                    <div class="externals" v-if="isBussinessPage">
                         <a class="item" href="/borrowLink">我想申貸</a>
                         <a class="item -invest" href="/investLink">我想投資</a>
                     </div>
@@ -691,11 +651,7 @@
 <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/vue-cookies.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/package/v-calendar.umd.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/aos.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/echarts.min.js') }}"></script>
@@ -704,6 +660,8 @@
 <script type="text/javascript" src="{{ asset('js/package/particles.min.js') }}"></script>
 
 <!-- local -->
+<script src="/js/manifest.js"></script>
+<script src="/js/vendor.js"></script>
 <script type="text/javascript" src="{{ mix('js/web.js') }}"></script>
 
 </html>

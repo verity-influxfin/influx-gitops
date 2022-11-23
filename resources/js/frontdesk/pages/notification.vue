@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 let notificationRow = Vue.extend({
   props: ["item", "index", "vm"],
   template: `

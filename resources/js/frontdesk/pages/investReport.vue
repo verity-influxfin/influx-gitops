@@ -118,8 +118,8 @@
               <div class="table-title item">正常還款中</div>
               <div
                 class="item"
-                v-for="x in localInvestDescription.amount_not_delay"
-                :key="x"
+                v-for="(x, index) in localInvestDescription.amount_not_delay"
+                :key="'amount_not_delay' + index"
               >
                 {{ formate(x) }}
               </div>
@@ -128,8 +128,8 @@
               <div class="table-title item">逾期中</div>
               <div
                 class="item"
-                v-for="x in localInvestDescription.amount_delay"
-                :key="x"
+                v-for="(x, index) in localInvestDescription.amount_delay"
+                :key="'delay-' + index"
               >
                 {{ formate(x) }}
               </div>
@@ -138,8 +138,8 @@
               <div class="table-title item">本金餘額</div>
               <div
                 class="item"
-                v-for="x in localInvestDescription.total_amount"
-                :key="x"
+                v-for="(x, index) in localInvestDescription.total_amount"
+                :key="'total_amount-' + index"
               >
                 {{ formate(x) }}
               </div>
@@ -469,6 +469,7 @@ export default {
         estimate_IRR: 0.161
         */
       },
+      unreadCount: 0,
       userData: {},
       loading: true,
       accountReceivable: 0,
@@ -485,6 +486,9 @@ export default {
     this.loading = false
     // $parent myInvestment.vue
     this.userData = JSON.parse(sessionStorage.getItem('userData'))
+  },
+  mounted() {
+    this.getNotification()
   },
   computed: {
     today() {
@@ -585,7 +589,23 @@ export default {
       this.available = this.myInvsetment.funds.total - totalFrozen;
       this.frozen = totalFrozen;
       this.insufficient = money;
-    }
+    },
+    getNotification() {
+      this.unreadCount = 0;
+      axios.post(`/getNotification`)
+        .then(({ data }) => {
+          data.data.list.forEach((item, index) => {
+            if (item.status == 1) {
+              this.unreadCount++;
+            }
+          })
+        })
+        .catch((error) => {
+          if (error.response.data.error !== 100) {
+            console.log("getNotification 發生錯誤，請稍後再試");
+          }
+        });
+    },
   },
   watch: {
     myInvsetment() {

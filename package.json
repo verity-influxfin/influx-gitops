@@ -39,13 +39,17 @@
     "animejs": "^3.2.1",
     "ckeditor4": "^4.14.1",
     "ckeditor4-vue": "^1.0.1",
+    "file-loader": "^2.0.0",
     "gsap": "^3.10.4",
     "html2canvas": "^1.4.1",
     "liquor-tree": "^0.2.70",
     "superagent": "^6.1.0",
     "swiper": "^6.8.0",
-    "vue-router": "^3.5.1",
+    "v-calendar": "^2.4.1",
+    "vue": "^2.6.12",
+    "vue-router": "^3.6.5",
     "vue2-touch-events": "^3.0.1",
-    "vuedraggable": "^2.24.3"
+    "vuedraggable": "^2.24.3",
+    "vuex": "^3.6.2"
   }
 }
