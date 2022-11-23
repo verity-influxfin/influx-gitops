@@ -135,6 +135,8 @@ class Product_lib
     {
         return [
             'DS2P1', // 在庫車融資
+            'J2', // 普匯微企e秒貸
+            'LJ2P1',
         ];
     }
 
