@@ -49000,23 +49000,10 @@ define({
         {
             "type": "post",
             "url": "/v2/user/register",
-            "title": "會員 註冊",
+            "title": "會員 自然人註冊",
             "version": "0.2.0",
             "name": "PostUserRegister",
             "group": "User",
-            "header": {
-                "fields": {
-                    "Header": [
-                        {
-                            "group": "Header",
-                            "type": "String",
-                            "optional": true,
-                            "field": "request_token",
-                            "description": "<p>自然人登入後取得的 Request Token (法人註冊才需要)</p>"
-                        }
-                    ]
-                }
-            },
             "parameter": {
                 "fields": {
                     "Parameter": [
@@ -49041,13 +49028,6 @@ define({
                             "optional": false,
                             "field": "code",
                             "description": "<p>簡訊驗證碼</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "tax_id",
-                            "description": "<p>統一編號</p>"
                         },
                         {
                             "group": "Parameter",

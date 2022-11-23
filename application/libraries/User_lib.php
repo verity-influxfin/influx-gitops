@@ -860,6 +860,10 @@ class User_lib {
     public function get_identified_responsible_user($company_user_id, $investor): int
     {
         // 確認負責人需通過實名認證
+        // 負責人實名定義：
+        // 1. 負責人的個人實名認證 (CERTIFICATION_IDENTITY)
+        // 2. 公司的設立(變更)事項登記表 (CERTIFICATION_GOVERNMENTAUTHORITIES)
+
         $this->CI->load->model('user/user_meta_model');
         $rs = $this->CI->user_meta_model->get_by(['user_id' => $company_user_id, 'meta_key' => 'company_responsible_user_id']);
         if ( ! isset($rs))
@@ -875,6 +879,14 @@ class User_lib {
         {
             throw new \Exception('法人沒有通過負責人實名', NO_RESPONSIBLE_IDENTITY);
         }
+
+        $user_certification = $this->CI->certification_lib->get_certification_info($company_user_id, CERTIFICATION_GOVERNMENTAUTHORITIES,
+            $investor);
+        if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
+        {
+            throw new \Exception('法人沒有通過負責人實名', NO_RESPONSIBLE_IDENTITY);
+        }
+
         return (int)$responsible_user_id;
     }
 
@@ -1415,6 +1427,21 @@ class User_lib {
         if (strlen($password) < PASSWORD_LENGTH || strlen($password) > PASSWORD_LENGTH_MAX)
         {
             throw new Exception('密碼長度有誤', PASSWORD_LENGTH_ERROR);
+        }
+    }
+
+    /**
+     * 檢查統一編號
+     * @param $tax_id : 統一編號
+     * @return void
+     * @throws Exception
+     */
+    public function check_tax_id($tax_id)
+    {
+        // 檢查統編
+        if (strlen($tax_id) != 8)
+        {
+            throw new Exception('統編長度有誤', TAX_ID_LENGTH_ERROR);
         }
     }
 }

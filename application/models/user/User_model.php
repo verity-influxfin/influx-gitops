@@ -39,7 +39,7 @@ class User_model extends MY_Model
 	protected function before_data_c($data)
     {
 		$data['password'] 	= sha1($data['password']);
-		$data['user_id'] 	= sha1($data['user_id']);
+        ! isset($data['user_id']) ?: $data['user_id'] = sha1($data['user_id']);
         $data['created_at'] = $data['updated_at'] = time();
         $data['created_ip'] = $data['updated_ip'] = get_ip();
         return $data;

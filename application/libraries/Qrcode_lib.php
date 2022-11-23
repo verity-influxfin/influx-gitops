@@ -1157,4 +1157,128 @@ class Qrcode_lib
         }
         return FALSE;
     }
+
+    /**
+     * 產生一般經銷商 (法人/自然人) 的 QRCode
+     * @param $user_id : 使用者 ID
+     * @param $investor : 投資人/借款人
+     * @param bool $company : 是否為公司戶
+     * @return false|string
+     * @throws Exception
+     */
+    public function generate_general_qrcode($user_id, $investor, bool $company)
+    {
+        $this->CI->load->library('contract_lib');
+        $this->CI->load->library('user_lib');
+        $this->CI->load->model('user/qrcode_setting_model');
+
+        // 取得一般經銷商的 QRCode 設定
+        $alias_name = $company === TRUE
+            ? PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL
+            : PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL;
+        $qrcode_settings = $this->CI->qrcode_setting_model->get_by(['alias' => $alias_name]);
+        if ( ! isset($qrcode_settings))
+        {
+            throw new Exception('QRCode 產生失敗', INSERT_ERROR);
+        }
+
+        // 產生 QRCode 本 code
+        $promote_code = $this->CI->user_lib->get_promote_code($qrcode_settings->length, $qrcode_settings->prefix);
+
+        // 產生 QRCode 合約
+        $settings = json_decode($qrcode_settings->settings, TRUE);
+        $settings['certification_id'] = []; // 一般經銷商在註冊時，即產生 QRCode，因此無通過的徵信項可寫入
+        $settings['description'] = $qrcode_settings->description;
+        $settings['investor'] = $investor;
+        $contract_type_name = $this->get_contract_type_by_alias($qrcode_settings->alias);
+        $contract = $this->get_contract_format_content($contract_type_name, '', '', '', $settings);
+
+        // 簽約
+        $contract_id = $this->CI->contract_lib->sign_contract($contract_type_name, $contract);
+
+        // 新增 QRCode 資料進資料庫
+        $start_time = date('Y-m-d H:i:s');
+        $end_time = date('Y-m-d H:i:s', strtotime('+ 6 month'));
+        $rs = $this->CI->user_qrcode_model->insert([
+            'user_id' => $user_id,
+            'alias' => $alias_name,
+            'promote_code' => $promote_code,
+            'contract_id' => $contract_id,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'contract_end_time' => $end_time,
+            'settings' => json_encode($settings),
+            'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+        ]);
+
+        if ( ! $rs)
+        {
+            return FALSE;
+        }
+        return $promote_code;
+    }
+
+    /**
+     * 產生特約通路商 (法人/自然人) 的 QRCode
+     * @param $user_id : 使用者 ID
+     * @param $investor : 投資人/借款人
+     * @param bool $company : 是否為公司戶
+     * @param $alias_name
+     * @return false|string
+     * @throws Exception
+     */
+    public function generate_appointed_qrcode($user_id, $investor, bool $company, $alias_name)
+    {
+        $this->CI->load->library('contract_lib');
+        $this->CI->load->library('user_lib');
+        $this->CI->load->model('user/qrcode_setting_model');
+
+        // 檢查是否為特約通路商之方案
+        if ($this->is_appointed_type($alias_name) === FALSE)
+        {
+            throw new Exception('非特約通路商之設定，不得更改方案', INPUT_NOT_CORRECT);
+        }
+
+        // 取得特約通路商的 QRCode 設定
+        $qrcode_settings = $this->CI->qrcode_setting_model->get_by(['alias' => $alias_name]);
+        if ( ! isset($qrcode_settings))
+        {
+            throw new Exception('QRCode 產生失敗', INSERT_ERROR);
+        }
+
+        // 產生 QRCode 本 code
+        $promote_code = $this->CI->user_lib->get_promote_code($qrcode_settings->length, $qrcode_settings->prefix);
+
+        // 產生 QRCode 合約
+        $settings = json_decode($qrcode_settings->settings, TRUE);
+        $settings['certification_id'] = []; // 一般經銷商在註冊時，即產生 QRCode，因此無通過的徵信項可寫入
+        $settings['description'] = $qrcode_settings->description;
+        $settings['investor'] = $investor;
+        $contract_type_name = $this->get_contract_type_by_alias($qrcode_settings->alias);
+        $contract = $this->get_contract_format_content($contract_type_name, '', '', '', $settings);
+
+        // 簽約
+        $contract_id = $this->CI->contract_lib->sign_contract($contract_type_name, $contract);
+
+        // 新增 QRCode 資料進資料庫
+        $start_time = date('Y-m-d H:i:s');
+        $end_time = date('Y-m-d H:i:s', strtotime('+ 6 month'));
+        $rs = $this->CI->user_qrcode_model->insert([
+            'user_id' => $user_id,
+            'alias' => $alias_name,
+            'promote_code' => $promote_code,
+            'contract_id' => $contract_id,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'contract_end_time' => $end_time,
+            'settings' => json_encode($settings),
+            'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+        ]);
+
+        if ( ! $rs)
+        {
+            return FALSE;
+        }
+        return $promote_code;
+    }
 }
