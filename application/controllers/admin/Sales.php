@@ -2121,7 +2121,8 @@ class Sales extends MY_Admin_Controller {
                 }
             }
 
-            $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], ['settings' => json_encode($settings)]);
+            $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], ['settings' => json_encode($settings),
+                'status' => PROMOTE_STATUS_CAN_SIGN_CONTRACT]);
 
             $this->load->model('user/user_certification_model');
             $this->load->library('certification_lib');

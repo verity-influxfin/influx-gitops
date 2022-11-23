@@ -2746,48 +2746,50 @@ END:
         $this->load->library('user_lib');
         $this->load->model('user/user_model');
         $this->load->model('user/user_qrcode_model');
+        $this->load->model('user/user_qrcode_apply_model');
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('user/user_certification_model');
         $input = $this->input->post(NULL, TRUE);
         $user_id = $this->user_info->id;
         $investor = $this->user_info->investor;
         $company = $this->user_info->company;
-        $promote_code = $this->user_info->my_promote_code;
 
+        // 取得 qrcode_setting 的 alias
         if ($company == USER_NOT_COMPANY)
         {
-            // 一般方案 qrcode_setting 的 alias
+            // 一般經銷商 (自然人) 取得 qrcode_setting 的 alias
             $promote_cert_list = $this->config->item('promote_code_certs');
-            $alias_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
+            $email_cert_id = CERTIFICATION_EMAIL; // 常用電子信箱
+
+            $user_info = $this->user_model->get($user_id);
+            $name = $user_info->name ?? '';
+            $address = $user_info->address ?? '';
+            $id_number = $user_info->id_number ?? '';
         }
         else
         {
             // 確認負責人需通過實名認證
             try
             {
-                $responsible_user = $this->user_lib->get_identified_responsible_user($user_id, $investor);
+                $this->user_lib->get_identified_responsible_user($user_id, $investor);
             }
             catch (Exception $e)
             {
                 $this->response(array('result' => 'ERROR', 'error' => $e->getCode(), 'msg' => $e->getMessage()));
             }
 
-            // 特約方案 qrcode_setting 的 alias
+            // 一般經銷商 (法人) 取得 qrcode_setting 的 alias
             $promote_cert_list = $this->config->item('promote_code_certs_company');
-            $alias_name = PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME;
+            $email_cert_id = CERTIFICATION_COMPANYEMAIL; // 公司電子信箱
+
+            $this->load->model('user/judicial_person_model');
+            $judicial_person_info = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
+            $name = $judicial_person_info->company ?? '';
+            $address = $judicial_person_info->cooperation_address ?? '';
+            $id_number = $judicial_person_info->tax_id ?? '';
         }
 
-        if ( ! empty($input['alias']))
-        {
-            $alias_name = $input['alias'];
-        }
-
-        $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias_name]);
-        if ( ! isset($qrcode_settings))
-        {
-            $this->response(array('result' => 'ERROR', 'error' => EXIT_DATABASE));
-        }
-
+        // 取得不同方案的必要徵信項
         $certifications = [];
         $doneCertifications = [];
         if ( ! empty($promote_cert_list))
@@ -2811,157 +2813,237 @@ END:
             }, []);
         }
 
-        if (count($certifications) != count($promote_cert_list))
+        // 取得該 user 的 QRCode 資訊
+        $user_qrcode = $this->user_qrcode_model->get_by(['user_id' => $user_id, 'status !=' => PROMOTE_STATUS_DISABLED]);
+        if (empty($user_qrcode))
         {
-            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NEVER_VERIFY));
+            // 預設大家都有一組 QRCode，沒有的 user 例外處理，需由客服洽開發部門協助
+            $this->response(['result' => 'ERROR', 'error' => PROMOTE_CODE_NOT_EXIST, 'msg' => 'QRCode 失效或不存在，請洽客服人員協助處理']);
         }
-
-        $user_qrcode = $this->user_qrcode_model->get_by(['user_id' => $user_id, 'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY]]);
-        if (isset($user_qrcode) && in_array($user_qrcode->status, [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_VERIFY]))
+        if (in_array($user_qrcode->status, [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_VERIFY]))
         {
             $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST));
         }
 
-        if ($promote_code == '')
+        // 取得 qrcode_setting
+        $alias_name = empty($input['alias']) ? $user_qrcode->alias : $input['alias'];
+        $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias_name]);
+        if ( ! isset($qrcode_settings))
         {
-            $this->load->library('user_lib');
-            $promote_code = $this->user_lib->get_promote_code($qrcode_settings->length, $qrcode_settings->prefix);
+            $this->response(array('result' => 'ERROR', 'error' => EXIT_DATABASE));
         }
 
-        $settings = json_decode($qrcode_settings->settings, TRUE);
-        $settings['certification_id'] = array_column($certifications, 'id');
-        $settings['description'] = $qrcode_settings->description;
-        $settings['investor'] = $investor;
-
-        $this->load->library('contract_lib');
-        $this->load->library('qrcode_lib');
-        $start_time = date('Y-m-d H:i:s');
-        $end_time = date("Y-m-d H:i:s", strtotime("+ 1 year"));
-
-        $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($qrcode_settings->alias);
-        $apply_qualification = $this->qrcode_lib->has_apply_permission($contract_type_name, $company);
-        if ( ! $apply_qualification)
+        $this->user_model->trans_begin();
+        $this->user_qrcode_model->trans_begin();
+        $this->user_qrcode_apply_model->trans_begin();
+        $trans_commit = function () {
+            $this->user_qrcode_apply_model->trans_commit();
+            $this->user_qrcode_model->trans_commit();
+            $this->user_model->trans_commit();
+        };
+        $trans_rollback = function () {
+            $this->user_qrcode_apply_model->trans_rollback();
+            $this->user_qrcode_model->trans_rollback();
+            $this->user_model->trans_rollback();
+        };
+        try
         {
-            $this->response(array('result' => 'ERROR', 'error' => APPLY_NO_PERMISSION));
-        }
-
-        if ($company == USER_NOT_COMPANY)
-        {
-            $user_info = $this->user_model->get($user_id);
-            $name = $user_info->name ?? '';
-            $address = $user_info->address ?? '';
-            $id_number = $user_info->id_number ?? '';
-        }
-        else
-        {
-            $this->load->model('user/judicial_person_model');
-            $judicial_person_info = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
-            $name = $judicial_person_info->company ?? '';
-            $address = $judicial_person_info->cooperation_address ?? '';
-            $id_number = $judicial_person_info->tax_id ?? '';
-        }
-
-        $rs = FALSE;
-        if (isset($user_qrcode))
-        {
-            if ($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT)
+            // 申請的新 QRCode 方案與該使用者舊有的 QRCode 方案不同者
+            // 目前僅接受由「一般經銷商」更改為「特約通路商」
+            $this->load->library('qrcode_lib');
+            $is_appointed = $this->qrcode_lib->is_appointed_type($alias_name) ; // 是否為特約通路商
+            if ($user_qrcode->alias != $alias_name)
             {
-                // 不是特約方案才會直接到待審核
-                if ( ! $this->qrcode_lib->is_appointed_type($alias_name))
+                // 非特約通路商，直接跳到檢查徵信項
+                if ($is_appointed === FALSE)
                 {
-                    $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
-                        ['status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
+                    goto EMAIL_VERIFY;
+                }
+
+                // 「二級經銷商」不可變更為特約通路商
+                if ($user_qrcode->subcode_flag)
+                {
+                    throw new Exception('QRCode 身份為二級經銷商，不得變更為特約通路商', PROMOTE_CODE_NOT_GENERAL);
+                }
+
+                // 「特約通路商」不可變更為其他特約通路商
+                if ($this->qrcode_lib->is_appointed_type($user_qrcode->alias))
+                {
+                    throw new Exception('QRCode 身份已為特約通路商，不得變更為特約通路商', PROMOTE_CODE_NOT_GENERAL);
+                }
+
+                // 是特約通路商，給使用者新的 QRCode
+                $promote_code = $this->qrcode_lib->generate_appointed_qrcode($this->user_info->id, $this->user_info->investor, $this->user_info->company, $alias_name);
+                if ( ! $promote_code)
+                {
+                    throw new Exception('QRCode 特約通路商身份修改失敗', INSERT_ERROR);
+                }
+                $rs = $this->user_qrcode_model->update_by(['promote_code !=' => $promote_code, 'user_id' => $this->user_info->id], ['status' => PROMOTE_STATUS_DISABLED]);
+                if ( ! $rs)
+                {
+                    throw new Exception('QRCode 特約通路商身份修改失敗', INSERT_ERROR);
+                }
+                $rs = $this->user_model->update($this->user_info->id, ['my_promote_code' => $promote_code]);
+                if ( ! $rs)
+                {
+                    throw new Exception('QRCode 特約通路商身份修改失敗', INSERT_ERROR);
+                }
+                $user_qrcode = $this->user_qrcode_model->get_by(['promote_code' => $promote_code, 'status !=' => PROMOTE_STATUS_DISABLED]);
+            }
+
+            // 檢查「電子信箱」是否已提交驗證
+            EMAIL_VERIFY:
+            if ( ! isset($certifications[$email_cert_id]->status))
+            {
+                // 信箱只要沒交，就一直卡著
+                $certifications_config = $this->config->item('certifications');
+                throw new Exception('尚未更新' . $certifications_config[$email_cert_id]['name'] ?? '電子信箱', PROMOTE_CODE_NOT_APPLY);
+            }
+            elseif ($certifications[$email_cert_id]->status != CERTIFICATION_STATUS_SUCCEED)
+            {
+                // 未申請成功者 (=email 狀態非成功)，回去繼續等
+                if ($user_qrcode->status != PROMOTE_STATUS_PENDING_TO_SENT ||
+                    $user_qrcode->sub_status != PROMOTE_SUB_STATUS_PENDING_TO_VERIFY_EMAIL)
+                {
+                    $rs = $this->user_qrcode_model->update($user_qrcode->id, [
+                        'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+                        'sub_status' => PROMOTE_SUB_STATUS_PENDING_TO_VERIFY_EMAIL
+                    ]);
+                    if ( ! $rs)
+                    {
+                        throw new Exception('更新失敗');
+                    }
+                }
+                $trans_commit();
+                $this->response(['result' => 'SUCCESS', 'data' => [], 'msg' => '我們已收到您的申請，將於2個工作天內回覆']);
+            }
+            else
+            {
+                // 申請成功，可開始提交其餘徵信項
+                if ($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT &&
+                    $user_qrcode->sub_status != PROMOTE_SUB_STATUS_EMAIL_SUCCESS)
+                {
+                    $rs = $this->user_qrcode_model->update($user_qrcode->id, [
+                        'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+                        'sub_status' => PROMOTE_SUB_STATUS_EMAIL_SUCCESS
+                    ]);
+                    if ( ! $rs)
+                    {
+                        throw new Exception('更新失敗');
+                    }
+                    $trans_commit();
+                    $this->response(['result' => 'SUCCESS', 'data' => [], 'msg' => '我們已收到您的申請，請耐心等待電子合約']);
+                }
+
+                // 檢查該提交的徵信項是否已提交完畢
+                if (count($certifications) != count($promote_cert_list))
+                {
+                    throw new Exception('徵信項未提交完畢', CERTIFICATION_NEVER_VERIFY);
+                }
+
+                // 「一般經銷商」的狀態會直接到審核中
+                // 「特約通路商」的狀態因需下一步制定合約並獲同意，所以維持待送出審核
+                $rs = TRUE;
+                if ($is_appointed === FALSE)
+                {
+                    $user_qrcode->status = PROMOTE_STATUS_PENDING_TO_VERIFY;
+                    $rs = $this->user_qrcode_model->update($user_qrcode->id, ['status' => $user_qrcode->status]);
+                    if ( ! $rs)
+                    {
+                        throw new Exception('更新失敗');
+                    }
+                }
+            }
+
+            // 更新合約內容
+            $contract_content = $this->qrcode_lib->get_finish_contract_cloze($user_qrcode, [
+                'name' => $name,
+                'id_number' => $id_number,
+                'address' => $address,
+            ]);
+            if ($contract_content === FALSE)
+            {
+                throw new Exception('更新失敗');
+            }
+
+            // 特約方案需增加過審合約
+            if ($is_appointed === TRUE)
+            {
+                $qrcode_apply = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $user_qrcode->id, 'status !=' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
+                if (empty($qrcode_apply))
+                {
+                    $contract_format = $this->contract_format_model->get_by(['type' => $user_qrcode->alias]);
+                    $rs = $this->user_qrcode_apply_model->insert([
+                        'user_qrcode_id' => $user_qrcode->id,
+                        'status' => PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP,
+                        'contract_format_id' => $contract_format->id ?? 0,
+                        'contract_content' => json_encode($contract_content),
+                    ]);
+                }
+
+                if (in_array($user_qrcode->status, [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_VERIFY]))
+                {
+                    $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST));
+                }
+
+                if ($user_qrcode->status == PROMOTE_STATUS_CAN_SIGN_CONTRACT && $qrcode_apply->status == PROMOTE_REVIEW_STATUS_SUCCESS)
+                {
+                    // 特約通路商的合約經老闆審核通過，QRCode 方可送出審核
+                    $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id], ['status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
+                    goto PROMOTE_CODE_VERIFY;
                 }
                 else
                 {
-                    $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
-                        [
-                            'start_time' => $start_time,
-                            'end_time' => $end_time,
-                            'contract_end_time' => $end_time
-                        ]);
+                    $rs = $this->contract_model->update($user_qrcode->contract_id, ['content' => json_encode($contract_content)]);
+                }
+
+                if ( ! $rs)
+                {
+                    throw new Exception('更新失敗');
                 }
             }
-        }
-        else
-        {
-            $contract = $this->qrcode_lib->get_contract_format_content($contract_type_name, $name, $id_number, $address, $settings);
-            $contract_id = $this->contract_lib->sign_contract($contract_type_name, $contract);
-
-            switch ($this->qrcode_lib->is_appointed_type($alias_name))
+            elseif ($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT)
             {
-                case TRUE:
-                    $status = PROMOTE_STATUS_PENDING_TO_SENT;
-                    break;
-                default:
-                    $status = PROMOTE_STATUS_PENDING_TO_VERIFY;
-                    break;
+                // 非特約通路商，且 QRCode 狀態為待送出審核，方可更新合約
+                $rs = $this->contract_model->update($user_qrcode->contract_id, ['content' => json_encode($contract_content)]);
+                if ( ! $rs)
+                {
+                    throw new Exception('更新失敗');
+                }
             }
 
-            $rs = $this->user_qrcode_model->insert([
-                'user_id' => $user_id,
-                'alias' => $alias_name,
-                'promote_code' => $promote_code,
-                'contract_id' => $contract_id,
-                'start_time' => $start_time,
-                'end_time' => $end_time,
-                'contract_end_time' => $end_time,
-                'settings' => json_encode($settings),
-                'status' => $status,
+            PROMOTE_CODE_VERIFY:
+            if (count($doneCertifications) === count($promote_cert_list))
+            {
+                if ($company == USER_NOT_COMPANY && isset($doneCertifications[CERTIFICATION_IDENTITY]))
+                {
+                    $this->response(1);
+                    $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDENTITY], FALSE);
+                }
+                else if ($company == USER_IS_COMPANY && isset($doneCertifications[CERTIFICATION_JUDICIALGUARANTEE]))
+                {
+                    $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_JUDICIALGUARANTEE], FALSE);
+                }
+            }
+
+            if ($rs)
+            {
+                $trans_commit();
+                $this->response(array('result' => 'SUCCESS', 'data' => []));
+            }
+            else
+            {
+                $trans_rollback();
+                $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+            }
+        }
+        catch (Exception $e)
+        {
+            $trans_rollback();
+            $this->response(['result' => 'ERROR',
+                'error' => empty($e->getCode()) ? INSERT_ERROR : $e->getCode(),
+                'msg' => $e->getMessage()
             ]);
-        }
-
-        // 特約方案需增加過審合約
-        $user_qrcode = $this->user_qrcode_model->get_by([
-            'user_id' => $user_id,
-            'alias' => $alias_name,
-            'status != ' => PROMOTE_STATUS_DISABLED
-        ]);
-        if (isset($user_qrcode) && $this->qrcode_lib->is_appointed_type($user_qrcode->alias))
-        {
-            $this->load->model('user/user_qrcode_apply_model');
-            $this->load->model('admin/contract_format_model');
-            $this->load->library('qrcode_lib');
-            $contract_format = $this->contract_format_model->get_by(['type' => $user_qrcode->alias]);
-
-            $qrcode_apply = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $user_qrcode->id, 'status !=' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
-            if ( ! isset($qrcode_apply))
-            {
-                $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($user_qrcode->alias);
-                $rs = $this->user_qrcode_apply_model->insert([
-                    'user_qrcode_id' => $user_qrcode->id,
-                    'status' => PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP,
-                    'contract_format_id' => $contract_format->id ?? 0,
-                    'contract_content' => json_encode($this->qrcode_lib->get_contract_format_content($contract_type_name, $name, $id_number, $address)),
-                ]);
-            }
-            else if ($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT && $qrcode_apply->status == PROMOTE_REVIEW_STATUS_SUCCESS)
-            {
-                $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
-                    ['status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
-            }
-        }
-
-        if (count($doneCertifications) === count($promote_cert_list))
-        {
-            $this->load->library('Certification_lib');
-            if ($company == USER_NOT_COMPANY && isset($doneCertifications[CERTIFICATION_IDENTITY]))
-            {
-                $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDENTITY], FALSE);
-            }
-            else if ($company == USER_IS_COMPANY && isset($doneCertifications[CERTIFICATION_GOVERNMENTAUTHORITIES]))
-            {
-                $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_GOVERNMENTAUTHORITIES], FALSE);
-            }
-        }
-
-        if ($rs)
-        {
-            $this->response(array('result' => 'SUCCESS', 'data' => []));
-        }
-        else
-        {
-            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
         }
     }
 
@@ -3176,16 +3258,27 @@ END:
                 $data['expired_time'] = $userQrcodeInfo['end_time'];
                 $data['detail_list'] = $list;
             }
+            elseif ($userQrcodeInfo['status'] != PROMOTE_STATUS_DISABLED)
+            {
+                $data['promote_code'] = $promote_code;
+                $data['promote_url'] = $url;
+                $data['promote_qrcode'] = $qrcode;
+            }
             $data['promote_name'] = $settings['description'] ?? '';
             $data['promote_alias'] = $userQrcodeInfo['alias'];
             $data['status'] = intval($userQrcodeInfo['status']);
 
-            // 法人的 qrcode 狀態：
-            // 預設狀態或無任何已通過審查合約紀錄   : 0 (app顯示待申請)
-            // 點選我要申請後                   : 0->2 (app顯示合約審核中)
-            // 經辦人員新增合約，且老闆審核過後    : 2->4 (app顯示合約，待進行簽約)
-            // 法人按下同意合約進行申請後         : 4->3 (app顯示審核中)
-            // 當該過的認證項都通過              : 3->1 (app顯示QR code和已收到的獎金)
+            // [一般經銷商]
+            // 0    : 失效
+            // 2    : 待送出審核，註冊即產生並供 user 分享推廣 (app 明細頁的按鈕顯示「簽約領獎」)
+            // 2->3 : 審核中，user 點擊簽約領獎，並提交對應徵信項、同意合約書
+            // 3->1 : 啟用，admin 審核成功必要徵信項 (app 明細頁的按鈕顯示「獎金提領」)
+            // [特約通路商]
+            // 0    : 失效
+            // 2    : 待送出審核，註冊即產生並供 user 分享推廣 (app 明細頁的按鈕顯示「簽約領獎」)
+            // 2->4 : 合約已經老闆同意，待特約通路商送出審核
+            // 4->3 : 審核中，user 點擊簽約領獎，並提交對應徵信項、同意合約書
+            // 3->1 : 啟用，admin 審核成功必要徵信項 (app 明細頁的按鈕顯示「獎金提領」)
             $this->load->model('user/user_qrcode_apply_model');
             $apply_info = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $userQrcodeInfo['id']]);
             if (isset($apply_info))

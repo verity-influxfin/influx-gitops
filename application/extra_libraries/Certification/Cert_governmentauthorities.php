@@ -291,14 +291,60 @@ class Cert_governmentauthorities extends Certification_base
     {
         $this->CI->load->helper('user_certification');
         $this->CI->load->library('scraper/judicial_yuan_lib');
-        $domicile = get_domicile($this->content['compRegAddress']);
+        $domicile = get_domicile($this->content['compRegAddress'] ?? '');
         if ($domicile != '')
         {
             $this->CI->judicial_yuan_lib->request_verdicts($this->content['compName'], $domicile);
         }
         else
         {
-            log_message('error', '[post_success]變更登記卡的爬蟲因找不到縣市而忽略觸發。地址：{$domicile}');
+            log_message('error', "[post_success]變更登記卡的爬蟲因找不到縣市而忽略觸發。地址：{$domicile}");
+        }
+
+        $this->CI->load->library('mapping/user/certification_data');
+        $update_user_param = [];
+        if ( ! empty($this->content['compName']))
+        {
+            $update_user_param['name'] = $this->content['compName'];
+        }
+        if ( ! empty($this->content['address']))
+        {
+            $update_user_param['address'] = $this->content['address'];
+        }
+        if ( ! empty($update_user_param))
+        {
+            $this->CI->user_model->update($this->certification['user_id'], $update_user_param);
+        }
+
+        $company = $this->CI->user_model->get_by(['id' => $this->certification['user_id']]);
+        $user = $this->CI->user_model->get_by(['phone' => $company->phone, 'company_status' => 0]);
+        if ( ! empty($user))
+        {
+            // 新建法人歸戶資料
+            $param = [
+                'user_id' => $user->id,
+                'company_type' => $this->content['compType'] ?? '',
+                'company' => $this->content['compName'] ?? ($company->name ?? ''),
+                'company_user_id' => $this->certification['user_id'],
+                'tax_id' => $this->content['compId'] ?? ($company->id_number ?? ''),
+                'status' => 3,
+                'enterprise_registration' => json_encode(['enterprise_registration_image' => $this->content['governmentauthorities_image']])
+            ];
+            $this->CI->load->model('user/judicial_person_model');
+            $judicial_person_info = $this->CI->judicial_person_model->get_by(['company_user_id' => $this->certification['user_id']]);
+            if ($judicial_person_info)
+            {
+                $rs = $this->CI->judicial_person_model->update_by(['company_user_id' => $this->certification['user_id']], $param);
+            }
+            else
+            {
+                $rs = $this->CI->judicial_person_model->insert($param);
+            }
+
+            if ( ! $rs)
+            {
+                return FALSE;
+            }
         }
 
         return $this->CI->certification_lib->fail_other_cer($this->certification);

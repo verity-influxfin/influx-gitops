@@ -50,6 +50,10 @@ class Qrcode_lib
         {
             case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
             case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
                 return [$name, $contract_year, $contract_month, $contract_day,
                     $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
                     $settings['reward']['product']['small_enterprise']['amount'] ?? 0,
@@ -135,6 +139,73 @@ class Qrcode_lib
                     $contract_year, $contract_month, $contract_day];
         }
         return [];
+    }
+
+    /**
+     * 更新 QRCode 合約值
+     * @param $user_qrcode
+     * @param array $new_contract_data
+     * @return false|mixed
+     */
+    public function get_finish_contract_cloze($user_qrcode, array $new_contract_data)
+    {
+        $this->CI->load->model('loan/contract_model');
+        $contract_info = $this->CI->contract_model->as_array()->get($user_qrcode->contract_id);
+
+        $contract_content = json_decode($contract_info['content'], TRUE);
+        if (json_last_error() !== JSON_ERROR_NONE)
+        {
+            return false;
+        }
+
+        $contract_type = $this->get_contract_type_by_alias($user_qrcode->alias);
+
+        switch ($contract_type)
+        {
+            case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[7] = $contract_content[8] = $new_contract_data['name'];
+                empty($new_contract_data['address']) ?: $contract_content[9] = $new_contract_data['address'];
+                break;
+            case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[8] = $contract_content[9] = $new_contract_data['name'];
+                empty($new_contract_data['address']) ?: $contract_content[10] = $new_contract_data['address'];
+                break;
+            case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[12] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[13] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[14] = $new_contract_data['address'];
+                break;
+            case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[15] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[16] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[17] = $new_contract_data['address'];
+                break;
+            case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[14] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[15] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[16] = $new_contract_data['address'];
+                break;
+            case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[12] = $contract_content[13] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[14] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[15] = $new_contract_data['address'];
+                break;
+            case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[14] = $contract_content[15] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[16] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[17] = $new_contract_data['address'];
+                break;
+        }
+        return $contract_content;
     }
 
     /**
@@ -541,10 +612,27 @@ class Qrcode_lib
         return $this->CI->user_estatement_model->insert_many($param);
     }
 
+    /**
+     * 依 QRCode 設定的 alias 判斷是否為法人之申請
+     * @param string $alias : qrcode_setting.alias
+     * @return bool
+     */
     public function is_company(string $alias): bool
     {
         $this->CI->load->model('user/qrcode_setting_model');
-        return $alias == $this->CI->qrcode_setting_model->appointedCaseAliasName;
+        switch ($alias)
+        {
+            case $this->CI->qrcode_setting_model->generalCaseAliasName:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+                return FALSE;
+            case $this->CI->qrcode_setting_model->appointedCaseAliasName:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+                return TRUE;
+        }
+        return FALSE;
     }
 
     /**
@@ -1107,8 +1195,12 @@ class Qrcode_lib
         switch ($alias)
         {
             case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
                 return FALSE;
             case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
             case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
             case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
             case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
@@ -1120,6 +1212,7 @@ class Qrcode_lib
             case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
                 return TRUE;
         }
+        return FALSE;
     }
 
     /**
@@ -1134,6 +1227,7 @@ class Qrcode_lib
         {
             switch ($contract_type)
             {
+                case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME:
                 case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
                 case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
                 case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:

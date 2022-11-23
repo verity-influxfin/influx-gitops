@@ -220,9 +220,10 @@ class Certification_lib{
                     return FALSE;
                 }
 
-                if ($company)
+                $this->CI->load->library('qrcode_lib');
+                if ($this->CI->qrcode_lib->is_appointed_type($promoteCode->alias))
                 {
-                    // 公司需等合約審核過才可以通過
+                    // 特約通路商需等合約審核過才可以通過
                     $this->CI->load->model('user/user_qrcode_apply_model');
                     $apply_info = $this->CI->user_qrcode_apply_model->get_by(['user_qrcode_id' => $promoteCode->id, 'status != ' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
                     if ( ! isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_SUCCESS)

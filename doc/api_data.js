@@ -46013,7 +46013,7 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "alias",
-                            "description": "<p>想申請的qrcode專案別名</p>"
+                            "description": "<p>想申請的 QRCode 專案別名</p>"
                         }
                     ]
                 }
@@ -46073,7 +46073,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "201",
-                            "description": "<p>新增時發生錯誤</p>"
+                            "description": "<p>更新時發生錯誤</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -46086,6 +46086,24 @@ define({
                             "optional": false,
                             "field": "225",
                             "description": "<p>法人沒有通過負責人實名</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "226",
+                            "description": "<p>查無使用者推薦碼</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "228",
+                            "description": "<p>使用者尚未提交常用電子信箱/公司信箱</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "229",
+                            "description": "<p>非一般經銷商，不得變更為特約通路商</p>"
                         },
                         {
                             "group": "Error 4xx",

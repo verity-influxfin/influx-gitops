@@ -2281,7 +2281,7 @@ $config['certifications_msg'] = [
     1004 => [],
     1005 => [],
     1006 => [],
-
+    CERTIFICATION_GOVERNMENTAUTHORITIES => [],
     2000 => []
 ];
 
@@ -2374,7 +2374,7 @@ $config['cer_profilejudicial'] = [
 
 // 推薦碼需要的徵信項目
 $config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];
-$config['promote_code_certs_company'] = [CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_COMPANYEMAIL, CERTIFICATION_JUDICIALGUARANTEE];
+$config['promote_code_certs_company'] = [CERTIFICATION_COMPANYEMAIL, CERTIFICATION_JUDICIALGUARANTEE];
 
 // 捐款案收據方式
 $config['charity_receipt_type_list'] = [CHARITY_RECEIPT_TYPE_SINGLE_PAPER => "單次紙本收據"];
