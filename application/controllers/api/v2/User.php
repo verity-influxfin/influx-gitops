@@ -3078,7 +3078,7 @@ END:
             switch ($input['action'])
             {
                 case 'agree': // 一般經銷商同意成為二級經銷商
-                    if ($subcode_info['status'] != PROMOTE_SUBCODE_STATUS_DISABLED || $subcode_info['sub_status'] != PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_APPROVE)
+                    if ($subcode_info['status'] != PROMOTE_SUBCODE_STATUS_DISABLED || $subcode_info['sub_status'] != PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD)
                     {
                         throw new Exception('未有此 subcode 申請', PROMOTE_SUBCODE_NOT_EXIST);
                     }
@@ -3100,7 +3100,7 @@ END:
                     break;
                 case 'reject': // 拒絕成為二級經銷商
                     if ($subcode_info['status'] != PROMOTE_SUBCODE_STATUS_DISABLED ||
-                        $subcode_info['sub_status'] != PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_APPROVE ||
+                        $subcode_info['sub_status'] != PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD ||
                         $this->user_info->id != $user_qrcode_info['user_id']
                     )
                     {
@@ -3405,22 +3405,98 @@ END:
             {
                 // 撈待確認成為二級經銷商的清單
                 $this->load->model('user/user_subcode_model');
-                $subcode_info = $this->user_subcode_model->get_info_by_user_id($user_id, ['status' => PROMOTE_SUBCODE_STATUS_DISABLED, 'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_APPROVE]);
-                if ( ! empty($subcode_info))
+                $user_subcode_info = $this->user_subcode_model->get_info_by_user_id($user_id, ['sub_status !=' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT]);
+                if ( ! empty($user_subcode_info))
                 {
-                    $subcode_info = reset($subcode_info);
-                    $master_user_qrcode_id = $subcode_info['master_user_qrcode_id'];
-                    $user_name = $this->user_qrcode_model->get_user_name_by_id($master_user_qrcode_id);
-                    $data['subcode'] = [
-                        'id' => $subcode_info['id'],
-                        'master_user_qrcode_name' => $user_name['name']
-                    ];
+                    foreach ($user_subcode_info as $value)
+                    {
+                        if ($value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
+                            $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ)
+                        { // 特約通路商刪除二級經銷商，待二級經銷商閱讀 (即便二級經銷商未閱讀，刪除關係依然生效)
+                            $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
+                            $data['subcode'] = [
+                                'id' => $value['id'],
+                                'master_user_qrcode_name' => $user_name['name'],
+                                'status' => $value['sub_status']
+                            ];
+                            goto END;
+                        }
+
+                        if ($value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
+                            $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD)
+                        { // 特約通路商加入 (待二級經銷商同意)
+                            $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
+                            $data['subcode'] = [
+                                'id' => $value['id'],
+                                'master_user_qrcode_name' => $user_name['name'] ?? '',
+                                'status' => $value['sub_status']
+                            ];
+                            goto END;
+                        }
+                    }
                 }
             }
 
             $data['contract'] = ! empty($contract) ? $contract['content'] : $data['contract'];
         }
+        else
+        {
+            $user_qrcode_info = $this->user_qrcode_model->as_array()->get_by([
+                'user_id' => $user_id,
+                'status !=' => PROMOTE_STATUS_DISABLED,
+            ]);
+            if (empty($user_qrcode_info))
+            {
+                goto END;
+            }
+            $url = 'https://event.influxfin.com/R/url?p=' . $user_qrcode_info['promote_code'];
+            $qrcode = get_qrcode($url);
 
+            $data['promote_code'] = $user_qrcode_info['promote_code'];
+            $data['promote_url'] = $url;
+            $data['promote_qrcode'] = $qrcode;
+            $data['status'] = $user_qrcode_info['status'];
+            $data['start_time'] = $user_qrcode_info['start_time'];
+            $data['expired_time'] = $user_qrcode_info['end_time'];
+
+            $this->load->model('user/user_subcode_model');
+            $user_subcode_info = $this->user_subcode_model->as_array()->order_by('created_at', 'desc')->get_many_by([
+                'user_qrcode_id' => $user_qrcode_info['id'],
+            ]);
+            if (empty($user_subcode_info))
+            {
+                goto END;
+            }
+
+            foreach ($user_subcode_info as $value)
+            {
+                if ($value['status'] == PROMOTE_SUBCODE_STATUS_AVAILABLE &&
+                    $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE)
+                { // 二級經銷商申請退出 (待特約通路商同意)
+                    $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
+                    $data['subcode'] = [
+                        'id' => $value['id'],
+                        'master_user_qrcode_name' => $user_name['name'] ?? '',
+                        'status' => $value['sub_status']
+                    ];
+                    goto END;
+                }
+
+                if ($value['status'] == PROMOTE_SUBCODE_STATUS_AVAILABLE &&
+                    $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_DEFAULT)
+                {
+                    $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
+                    $data['subcode'] = [
+                        'id' => $value['id'],
+                        'master_user_qrcode_name' => $user_name['name'] ?? '',
+                        'status' => $value['sub_status']
+                    ];
+                    goto END;
+                }
+            }
+        }
+
+        END:
         $this->response(array('result' => 'SUCCESS', 'data' => $data));
     }
 
@@ -3483,7 +3559,7 @@ END:
                 'master_user_qrcode_id' => $master_user_qrcode->id,
                 'user_qrcode_id' => (int) $subcode_info['id'],
                 'status' => PROMOTE_STATUS_DISABLED, // 尚未啟用
-                'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_APPROVE, // 待二級經銷商同意
+                'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD, // 待二級經銷商同意
             ]);
             $this->user_qrcode_model->update($subcode_info['id'], ['subcode_flag' => IS_NOT_PROMOTE_SUBCODE]);
 

@@ -45938,6 +45938,34 @@ define({
                             "optional": false,
                             "field": "detail_list",
                             "description": "<p>詳細獎勵列表</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "subcode",
+                            "description": "<p>subcode(二級經銷商)相關資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "subcode.id",
+                            "description": "<p>subcode ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "subcode.master_user_qrcode_name",
+                            "description": "<p>subcode的特約通路商名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "subcode.status",
+                            "description": "<p>subcode的狀態<br/>0：啟用中的subcode<br/>1：二級經銷商申請退出，待特約通路商同意<br/>2：特約通路商新增二級經銷商，待一般經銷商同意成為二級經銷商<br/>3：特約通路商已刪除二級經銷商，二級經銷商尚未閱讀通知</p>"
                         }
                     ]
                 },
