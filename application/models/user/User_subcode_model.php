@@ -76,4 +76,42 @@ class user_subcode_model extends MY_Model
         return $this->db->get()->result_array();
     }
 
+    public function get_id_by_user_id($user_id)
+    {
+        $subquery = $this->db
+            ->select('id')
+            ->from('p2p_user.user_qrcode')
+            ->where('user_id', $user_id)
+            ->where('status !=', PROMOTE_STATUS_DISABLED)
+            ->get_compiled_select('', TRUE);
+
+        return $this->db->select('us.id')
+            ->from('p2p_user.user_subcode us')
+            ->join("({$subquery}) a", 'a.id=us.user_qrcode_id')
+            ->where('us.status', PROMOTE_SUBCODE_STATUS_AVAILABLE)
+            ->get()
+            ->result_array();
+    }
+
+    public function get_info_by_user_id($user_id, $where = [])
+    {
+        $subquery = $this->db
+            ->select('id')
+            ->from('p2p_user.user_qrcode')
+            ->where('user_id', $user_id)
+            ->where('status !=', PROMOTE_STATUS_DISABLED)
+            ->get_compiled_select('', TRUE);
+
+        $this->_database
+            ->select('us.*')
+            ->from('p2p_user.user_subcode us')
+            ->join("({$subquery}) a", 'a.id=us.user_qrcode_id')
+            ->order_by('created_at', 'DESC');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
 }

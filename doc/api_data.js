@@ -45987,6 +45987,129 @@ define({
         },
         {
             "type": "post",
+            "url": "/v2/user/promote_code",
+            "title": "會員 推薦碼修改",
+            "version": "0.2.0",
+            "name": "PostUserPromoteCode",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "subcode_id",
+                            "description": "<p>subcode ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "action",
+                            "description": "<p>行為：<br/>agree：一般經銷商同意成為二級經銷商<br/>reject：一般經銷商拒絕成為二級經銷商<br/>read：二級經銷商已閱讀退出二級經銷商的訊息</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": \"[]\"\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/promote_code"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>資料異動失敗</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "226",
+                            "description": "<p>推薦碼不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "231",
+                            "description": "<p>未有此 subcode 申請</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "226",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"226\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "231",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"231\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "post",
             "url": "/v2/user/apply_promote_code",
             "title": "會員 推薦碼申請",
             "version": "0.2.0",
@@ -46328,18 +46451,17 @@ define({
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "subcode_id",
-                            "description": "<p>subcode的id</p>"
+                            "description": "<p>subcode的id (若不填寫，即視為二級經銷商自行提出)</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "alias",
-                            "description": "<p>想設定的暱稱別名</p>"
-                        }
-                        ,
+                            "description": "<p>欲設定的暱稱別名</p>"
+                        },
                         {
                             "group": "Parameter",
                             "type": "Integer",
@@ -46387,7 +46509,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "404",
-                            "description": "<p>不允許非禁用的操作或找不到合法的 subcode</p>"
+                            "description": "<p>不允許非停權的操作或找不到合法的 subcode</p>"
                         },
                         {
                             "group": "Error 4xx",

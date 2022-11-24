@@ -229,6 +229,10 @@ class Qrcode_lib
         {
             case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
             case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
                 $input_start = 4;
                 $input_end = 6;
                 $content_list[4] = 'student_reward_amount';
@@ -1233,6 +1237,8 @@ class Qrcode_lib
                 case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
                 case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
                 case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+                case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
                     return TRUE;
             }
         }
@@ -1246,6 +1252,8 @@ class Qrcode_lib
                 case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
                 case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
                 case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+                case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
                     return TRUE;
             }
         }

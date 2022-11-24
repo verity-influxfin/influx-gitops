@@ -292,3 +292,13 @@ VALUES (23,'qrcode_general_v2_judicial','業務合作契約書','立書人
 中華民國         %s    年    %s    月    %s    日
 
 ',1653271200,'114.34.172.44',2,'業務合作協議書(一般經銷商) 法人',1656991998,'114.34.172.44','V2.0.0');
+
+ALTER TABLE `p2p_user`.`user_subcode`
+    ADD COLUMN `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0: 失效 1: 啟用' AFTER `updated_ip`,
+    ADD COLUMN `sub_status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0: default 1: 二級經銷商申請退出，待特約通路商同意 2: 特約通路商加入，待二級經銷商同意' AFTER `status`;
+ALTER TABLE `p2p_user`.`user_subcode`
+    CHANGE COLUMN `status` `status` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '0: 失效 1: 啟用' AFTER `last_handle_time`,
+    CHANGE COLUMN `sub_status` `sub_status` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '0: default 1: 二級經銷商申請退出，待特約通路商同意 2: 特約通路商加入，待二級經銷商同意' AFTER `status`;
+
+
+

@@ -374,4 +374,15 @@ class user_qrcode_model extends MY_Model
             return $this->_database->get_compiled_select('', TRUE);
         return $this->_database->get()->result_array();
     }
+
+    public function get_user_name_by_id($id)
+    {
+        return $this->db
+            ->select('u.name')
+            ->from('p2p_user.user_qrcode uq')
+            ->join('p2p_user.users u', 'u.id=uq.user_id')
+            ->where('uq.id', $id)
+            ->get()
+            ->first_row('array');
+    }
 }
