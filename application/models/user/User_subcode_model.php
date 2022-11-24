@@ -58,6 +58,8 @@ class user_subcode_model extends MY_Model
         $user_subcode = $this->_database->get_compiled_select('', TRUE);
 
         $this->_database->select('r.id, r.alias, r.registered_id, r.master_user_qrcode_id, uq.id AS user_qrcode_id, uq.promote_code, uq.status, uq.start_time, uq.end_time')
+            ->select('r.status AS user_subcode_status')
+            ->select('r.sub_status AS user_subcode_sub_status')
             ->from('p2p_user.user_qrcode as uq')
             ->join("({$user_subcode}) as `r`", "`r`.`user_qrcode_id` = `uq`.`id`");
 
@@ -113,5 +115,20 @@ class user_subcode_model extends MY_Model
         }
 
         return $this->_database->get()->result_array();
+    }
+
+    public function get_user_qrcode_info_by_subcode_id($subcode_id)
+    {
+        $subquery = $this->db->select('us.user_qrcode_id')
+            ->from('p2p_user.user_subcode us')
+            ->where('us.id', $subcode_id)
+            ->get_compiled_select();
+
+        return $this->db->select(['uq.*', 'users.company_status'])
+            ->from('p2p_user.user_qrcode uq')
+            ->join("({$subquery}) a", 'a.user_qrcode_id=uq.id')
+            ->join('p2p_user.users', 'users.id=uq.user_id')
+            ->get()
+            ->first_row('array');
     }
 }

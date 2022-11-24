@@ -46014,6 +46014,207 @@ define({
             }
         },
         {
+            "type": "get",
+            "url": "/v2/user/promote_code/contract",
+            "title": "會員 推薦碼subcode合約",
+            "version": "0.2.0",
+            "name": "GetUserPromoteCodeSubcodeContract",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "subcode_id",
+                            "description": "<p>subcode ID</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data",
+                            "description": "<p>查詢到的結果</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "data.contract",
+                            "description": "<p>合約內容</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n        \"promote_name\": \"特約方案\"\n    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/promote_code/contract"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "get",
+            "url": "/v2/user/promote_code/detail_list",
+            "title": "會員 推薦碼subcode業績明細",
+            "version": "0.2.0",
+            "name": "GetUserPromoteCodeSubcodeDetailList",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "subcode_id",
+                            "description": "<p>subcode ID</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "total_reward_amount",
+                            "description": "<p>推廣總獎勵金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "overview",
+                            "description": "<p>累計至今獎勵資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "detail_list",
+                            "description": "<p>詳細獎勵列表</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n        \"total_reward_amount\": 1927,\n        \"overview\": {\n            \"fullMemberCount\": 4,\n            \"loanedCount\": {\n                \"student\": 3,\n                \"salary_man\": 1,\n                \"small_enterprise\": 1\n            },\n            \"rewardAmount\": {\n                \"student\": 12,\n                \"salary_man\": 15,\n                \"small_enterprise\": 1100\n            },\n            \"collaboration\": [\n                {\n                    \"detail\": [],\n                    \"count\": 4,\n                    \"rewardAmount\": 800,\n                    \"collaborator\": \"王道銀行\"\n                },\n                {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0,\n                    \"collaborator\": \"凱基銀行\"\n                },\n                {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0,\n                    \"collaborator\": \"上海銀行\"\n                }\n            ]\n        },\n        \"detail_list\": {\n            \"2021-12\": {\n                \"registered\": [],\n                \"registeredCount\": 0,\n                \"fullMember\": [],\n                \"fullMemberCount\": 0,\n                \"fullMemberRewardAmount\": 0,\n                \"student\": {\n                    \"detail\": [\n                        {\n                            \"id\": \"1000345\",\n                            \"user_id\": \"47295\",\n                            \"product_id\": \"1\",\n                            \"loan_amount\": \"13000\",\n                            \"loan_date\": \"2021-12-09\"\n                        }\n                    ],\n                    \"count\": 1,\n                    \"rewardAmount\": 0\n                },\n                \"salary_man\": {\n                    \"detail\": [\n                        {\n                            \"id\": \"1000354\",\n                            \"user_id\": \"47295\",\n                            \"product_id\": \"3\",\n                            \"loan_amount\": \"32000\",\n                            \"loan_date\": \"2021-12-09\"\n                        }\n                    ],\n                    \"count\": 1,\n                    \"rewardAmount\": 0\n                },\n                \"small_enterprise\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"collaboration\": [\n                    {\n                        \"detail\": [\n                            {\n                                \"loan_time\": \"2021-12-07 12:00:00\"\n                            },\n                            {\n                                \"loan_time\": \"2021-12-07 12:00:00\"\n                            },\n                            {\n                                \"loan_time\": \"2021-12-07 12:00:00\"\n                            },\n                            {\n                                \"loan_time\": \"2021-12-09 12:00:00\"\n                            }\n                        ],\n                        \"count\": 4,\n                        \"rewardAmount\": 800,\n                        \"collaborator\": \"王道銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"凱基銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"上海銀行\"\n                    }\n                ]\n            }\n        }\n    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/promote_code/detail_list"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
             "type": "post",
             "url": "/v2/user/promote_code",
             "title": "會員 推薦碼修改",
@@ -46671,6 +46872,13 @@ define({
                             "optional": false,
                             "field": "status",
                             "description": "<p>狀態(0:失效,1:啟用)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "subcode_status",
+                            "description": "<p>subcode狀態<br/>0：啟用中的subcode<br/>1：二級經銷商申請退出，待特約通路商同意<br/>2：特約通路商新增二級經銷商，待一般經銷商同意成為二級經銷商</p>"
                         }
                     ]
                 },
