@@ -222,10 +222,6 @@ abstract class Certification_base implements Certification_definition
 
             $post_flag = $this->post_success($sys_check);
             $notified = $this->success_notification();
-
-            // 驗證推薦碼
-            $this->CI->load->library('certification_lib');
-            $this->CI->certification_lib->verify_promote_code((object) $this->certification, FALSE);
         }
         return $pre_flag && $rs && $post_flag && $notified;
     }

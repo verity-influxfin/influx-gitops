@@ -152,9 +152,6 @@ class Certification_lib{
 						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
 					}
 
-                    // 驗證推薦碼
-                    $this->verify_promote_code($info, FALSE);
-
 					return $rs;
 				}
 			}
@@ -173,7 +170,10 @@ class Certification_lib{
         $this->CI->load->model('user/user_qrcode_model');
         $this->CI->load->model('user/qrcode_setting_model');
         $this->CI->load->library('qrcode_lib');
-        $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
+        $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => [
+            PROMOTE_STATUS_PENDING_TO_VERIFY,
+            PROMOTE_STATUS_CAN_SIGN_CONTRACT
+        ]]);
         if ( ! isset($promoteCode))
         {
             return FALSE;

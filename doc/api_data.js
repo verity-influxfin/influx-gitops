@@ -46430,6 +46430,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "212",
+                            "description": "<p>沒通過認證Email</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "224",
                             "description": "<p>法人帳號沒有綁定自然人帳號</p>"
                         },
@@ -46466,8 +46472,8 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "503",
-                            "description": "<p>尚未通過所有認證徵信項目</p>"
+                            "field": "501",
+                            "description": "<p>徵信項未全數審核成功</p>"
                         },
                     ]
                 },
@@ -46498,6 +46504,11 @@ define({
                         "type": "Object"
                     },
                     {
+                        "title": "212",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
+                        "type": "Object"
+                    },
+                    {
                         "title": "224",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"224\"\n}",
                         "type": "Object"
@@ -46513,8 +46524,8 @@ define({
                         "type": "Object"
                     },
                     {
-                        "title": "503",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
                         "type": "Object"
                     }
                 ]
