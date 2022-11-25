@@ -46362,10 +46362,10 @@ define({
                     "Parameter": [
                         {
                             "group": "Parameter",
-                            "type": "String",
+                            "type": "Boolean",
                             "optional": true,
-                            "field": "alias",
-                            "description": "<p>想申請的 QRCode 專案別名</p>"
+                            "field": "appointed",
+                            "description": "<p>是否變更為特約通路商</p>"
                         }
                     ]
                 }

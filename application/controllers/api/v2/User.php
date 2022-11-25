@@ -2826,7 +2826,14 @@ END:
         }
 
         // 取得 qrcode_setting
-        $alias_name = empty($input['alias']) ? $user_qrcode->alias : $input['alias'];
+        if (isset($input['appointed']) && $input['appointed'] === TRUE)
+        {
+            $alias_name = $company == USER_NOT_COMPANY ? PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL : PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL;
+        }
+        else
+        {
+            $alias_name = $user_qrcode->alias;
+        }
         $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias_name]);
         if ( ! isset($qrcode_settings))
         {
