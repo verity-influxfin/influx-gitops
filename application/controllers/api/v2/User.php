@@ -921,7 +921,7 @@ END:
                 if (isset($input['company_user_id']) || isset($input['tax_id']))
                 {
                     $this->load->model('user/judicial_person_model');
-                    $charge_person = $this->judicial_person_model->check_valid_charge_person($user_info->id_number);
+                    $charge_person = $this->judicial_person_model->check_valid_charge_person($user_info->id_number, $user_info->id);
                     if ($charge_person) {
                         $userData = $this->user_model->get($charge_person->user_id);
                         $userData ? $is_charge = 1 : '';
