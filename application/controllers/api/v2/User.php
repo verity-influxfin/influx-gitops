@@ -3427,11 +3427,7 @@ END:
                             $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ)
                         { // 特約通路商刪除二級經銷商，待二級經銷商閱讀 (即便二級經銷商未閱讀，刪除關係依然生效)
                             $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
-                            $data['subcode'] = [
-                                'id' => $value['id'],
-                                'master_user_qrcode_name' => $user_name['name'],
-                                'status' => $value['sub_status']
-                            ];
+                            $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
                             goto END;
                         }
 
@@ -3439,11 +3435,7 @@ END:
                             $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD)
                         { // 特約通路商加入 (待二級經銷商同意)
                             $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
-                            $data['subcode'] = [
-                                'id' => $value['id'],
-                                'master_user_qrcode_name' => $user_name['name'] ?? '',
-                                'status' => $value['sub_status']
-                            ];
+                            $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
                             goto END;
                         }
                     }
@@ -3487,11 +3479,7 @@ END:
                     $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE)
                 { // 二級經銷商申請退出 (待特約通路商同意)
                     $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
-                    $data['subcode'] = [
-                        'id' => $value['id'],
-                        'master_user_qrcode_name' => $user_name['name'] ?? '',
-                        'status' => $value['sub_status']
-                    ];
+                    $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
                     goto END;
                 }
 
@@ -3499,11 +3487,7 @@ END:
                     $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_DEFAULT)
                 {
                     $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
-                    $data['subcode'] = [
-                        'id' => $value['id'],
-                        'master_user_qrcode_name' => $user_name['name'] ?? '',
-                        'status' => $value['sub_status']
-                    ];
+                    $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
                     goto END;
                 }
             }

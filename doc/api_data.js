@@ -45957,8 +45957,15 @@ define({
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
-                            "field": "subcode.master_user_qrcode_name",
-                            "description": "<p>subcode的特約通路商名稱</p>"
+                            "field": "subcode.title",
+                            "description": "<p>subcode的dialogue標題</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "subcode.description",
+                            "description": "<p>subcode的dialogue內文</p>"
                         },
                         {
                             "group": "Success 200",

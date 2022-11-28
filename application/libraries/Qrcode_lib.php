@@ -1383,4 +1383,41 @@ class Qrcode_lib
         }
         return $promote_code;
     }
+
+    public function get_subcode_dialogue_content($subcode_id, $subcode_master_qrcode_name, $subcode_status)
+    {
+        $result = [
+            'id' => $subcode_id,
+            'title' => '',
+            'description' => '',
+            'status' => 0
+        ];
+
+        switch ($subcode_status)
+        {
+            case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ:
+                $result['status'] = $subcode_status;
+                $result['title'] = '退出二級經銷商';
+                $result['description'] = "普匯特約通路商{$subcode_master_qrcode_name}，已將您的二級經銷商權限移除，您現在為一般經銷商，可繼續透過您的QR code分享賺外快。";
+                break;
+            case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD:
+                $result['status'] = $subcode_status;
+                $result['title'] = '確認成為二級經銷商';
+                $result['description'] = "普匯特約通路商{$subcode_master_qrcode_name}，透過您的會員id，邀請您成為二級經銷商。
+
+二級經銷商分享成功之案件，均併入特約通路商計算，並享{$subcode_master_qrcode_name}和普匯合作之分潤規則。
+
+您及{$subcode_master_qrcode_name}可隨時提出將您回復為一般經銷商之身分；經特約通路商確認同意後，即可轉為一般經銷商。
+
+具體分潤內容請洽(個人/公司名稱)，是否同意？";
+                break;
+            case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE:
+                $result['status'] = $subcode_status;
+                $result['title'] = '是否確認退出二級經銷商';
+                $result['description'] = '申請送出後，待您的特約通路商確認即可回復一般經銷商身分。';
+                break;
+        }
+
+        return $result;
+    }
 }
