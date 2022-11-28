@@ -546,9 +546,15 @@ END:
                 $this->user_lib->check_distinct_user_id($input['company_user_id'], $input['tax_id']);
             }
 
+            // 撈取負責人資料
+            $responsible_user_info = $this->user_model->get_by([
+                'phone' => $this->user_info->phone,
+                'company_status' => 0, // 法人狀態: 0=未啟用
+            ]);
+
             // 確認自然人需通過實名認證
             $this->load->library('certification_lib');
-            $user_certification = $this->certification_lib->get_certification_info($this->user_info->id, CERTIFICATION_IDENTITY, $this->user_info->investor);
+            $user_certification = $this->certification_lib->get_certification_info($responsible_user_info->id, CERTIFICATION_IDENTITY, $this->user_info->investor);
             if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
             {
                 throw new Exception('請先完成自然人實名', NO_CER_IDENTITY);
@@ -607,7 +613,7 @@ END:
             {
                 // 確認自然人姓名與登記公司負責人一樣
                 $this->load->library('gcis_lib');
-                $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $this->user_info->name);
+                $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $responsible_user_info->name);
                 if ( ! $is_business_responsible)
                 {
                     throw new Exception('非公司負責人', NOT_IN_CHARGE);
@@ -659,10 +665,6 @@ END:
                 $this->user_certification_model->insert_many($insert_certification_param);
 
                 // 新增「公司-負責人」的關係
-                $responsible_user_info = $this->user_model->get_by([
-                    'phone' => $this->user_info->phone,
-                    'company_status' => 0, // 法人狀態: 0=未啟用
-                ]);
                 $this->load->model('user/user_meta_model');
                 $this->user_meta_model->insert([
                     'user_id' => $new_id,
