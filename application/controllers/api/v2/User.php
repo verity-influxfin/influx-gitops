@@ -3667,24 +3667,24 @@ END:
                 $subcode_param['alias'] = $input['alias'];
             }
             // 刪除二級經銷商
-            if (isset($input['status']))
-            {
-                if ($input['status'] != PROMOTE_STATUS_DISABLED)
-                {
-                    $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST, 'msg' => '非停權的操作不允許'));
-                }
-                $promote_param['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
-            }
-
             $user_subcode = $this->qrcode_lib->get_subcode_list($user_id, ['id' => $input['subcode_id']]);
             if ( empty($user_subcode))
             {
                 $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST, 'msg' => '找不到合法的 subcode 紀錄'));
             }
             $subcode_id = $input['subcode_id'];
+            if ( ! isset($input['status']))
+            {
+                goto UPDATE_SUBCODE;
+            }
+            if ($input['status'] != PROMOTE_STATUS_DISABLED)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST, 'msg' => '非停權的操作不允許'));
+            }
+            $promote_param['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
             $subcode_info = $this->user_subcode_model->as_array()->get($subcode_id);
-            if ($subcode_info['status'] == PROMOTE_SUBCODE_STATUS_DISABLED)
+            if ($subcode_info['status'] == PROMOTE_SUBCODE_STATUS_DISABLED && $subcode_info['sub_status'] != PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD)
             {
                 $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST, 'msg' => '找不到合法的 subcode 紀錄'));
             }
@@ -3694,6 +3694,7 @@ END:
             ];
         }
 
+        UPDATE_SUBCODE:
         $rs = $this->qrcode_lib->update_subcode_info($subcode_id, $subcode_param, $promote_param);
         if ($rs)
         {
