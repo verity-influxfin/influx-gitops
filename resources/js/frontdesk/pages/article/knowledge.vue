@@ -127,7 +127,7 @@
                     let data = res.data;
                     this.article = {
                         cover_img: data.media_link ? data.media_link : '',
-                        media_alt: data.media_alt ? data.media_alt : data.media_link.split('/').pop(),
+                        media_alt: data.media_alt ? data.media_alt : data.media_link.split('/').pop().split('.').shift(),
                         title    : data.post_title,
                         date     : data.post_date.substr(0, 10),
                         content  : data.post_content,
