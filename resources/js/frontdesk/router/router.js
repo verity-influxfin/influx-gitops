@@ -78,7 +78,7 @@ let routers = [
     { path: '/vlog', component: vlog },
     { path: '/invest', component: invest },
     { path: '/videopage', component: videoPage },
-    { path: '/articlepage', component: articlePage },
+    // { path: '/articlepage', component: articlePage },
     { path: '/userTerms', component: userTerms },
     // redirect for facebook
     { path: '/privacy-policy', redirect: '/privacyTerms' },

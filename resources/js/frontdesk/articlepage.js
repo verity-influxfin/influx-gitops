@@ -1,3 +1,4 @@
+// for article page
 //vuex store
 import state from './store/state';
 import getters from './store/getters';
@@ -5,16 +6,11 @@ import actions from './store/actions';
 import mutations from './store/mutations';
 import enterprise from './store/module/enterprise'
 //vue router
-import routers from './router/router';
 import Vue from 'vue'
-import VueRouter from 'vue-router'
 import Vuex from 'vuex'
-import Vue2TouchEvents from 'vue2-touch-events'
 
-export default () => {
+const createApp = () => {
   Vue.use(Vuex)
-  Vue.use(VueRouter)
-  Vue.use(Vue2TouchEvents)
   const sessionStoragePlugin = store => {
     store.subscribe((mutation, { userData }) => {
       if (mutation.type === "mutationUserData") {
@@ -27,27 +23,6 @@ export default () => {
       }
     });
   };
-  // const timeLineMax = new TimelineMax({ paused: true, reversed: true });
-
-  const router = new VueRouter({
-    routes: routers,
-    mode: 'history',
-  });
-
-  router.beforeEach((to, from, next) => {
-    if (to.path === "/") {
-      gtag("config", "UA-117279688-9", { page_path: '/index' });
-      next('/index');
-    } else {
-      gtag("config", "UA-117279688-9", { page_path: to.path });
-      $(window).scrollTop(0);
-      next();
-    }
-
-    if ($('.navbar-toggler').attr('aria-expanded') === 'true') {
-      $('.navbar-toggler').click();
-    }
-  });
 
   const store = new Vuex.Store({
     modules: {
@@ -63,7 +38,6 @@ export default () => {
   return new Vue({
     // el: '#web_index',
     store,
-    router,
     data: {
       menuList: [],
       actionList: [],
@@ -88,6 +62,7 @@ export default () => {
       currentTime: 0,
       inputing: false,
       searchText: '',
+      copied: false
     },
     computed: {
       isInvestor() {
@@ -121,7 +96,6 @@ export default () => {
     },
     mounted() {
       this.$nextTick(() => {
-
         let now = new Date();
         let startDate = new Date('2021-02-01 00:00:00');
         let endDate = new Date('2021-12-31 00:00:00');
@@ -169,10 +143,6 @@ export default () => {
         AOS.refresh();
       },
       openLoginModal() {
-        // 5th
-        if (this.$route.path === '/5th-anniversary') {
-          this.$store.commit('mutationloginHideOption', true)
-        }
         $(this.$refs.loginForm).modal("show");
       },
       hideLoginModal() {
@@ -188,21 +158,6 @@ export default () => {
         this.counter = 180;
         this.isSended = false;
         this.isReset = !this.isReset;
-      },
-      loginReload(path) {
-        // path with Reload
-        const reloadPath = ['/invest-report', '/risk']
-        return reloadPath.some(x => x === path)
-      },
-      goFeedback() {
-        let { userData, $router } = this;
-
-        if (Object.keys(userData).length === 0) {
-          $(this.$refs.loginForm).modal("show");
-          this.$router.history.pending = { path: '/feedback' };
-        } else {
-          $router.push("/feedback");
-        }
       },
       doLogin() {
         grecaptcha.ready(() => {
@@ -233,36 +188,10 @@ export default () => {
                 .then((res) => {
                   this.$store.commit('mutationUserData', res.data);
                   $(this.$refs.loginForm).modal("hide");
-                  // check reload
-                  if (this.loginReload(this.$route.path)) {
-                    location.reload()
-                    return
-                  }
                   if (investor === '1') {
-                    this.$router.push('investnotification');
+                    location.href = location.origin + '/investnotification';
                   } else {
-                    this.$router.push('loannotification');
-                  }
-
-                  if ($("#loginModal").attr("data-type") == "cardgame") {
-                    let data = {
-                      user_id: localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData"))["id"] : {},
-                    };
-                    axios
-                      .post("/getData", data)
-                      .then((res) => {
-                        this.process = false;
-                        if (!res.data) {
-                          location.replace('/cardgame');
-                        } else {
-                          alert('您已參加過遊戲囉!!');
-                        }
-                      })
-                      .catch((err) => {
-                        console.error(err);
-                      });
-                  } else {
-                    location.reload();
+                    location.href = location.origin + '/loannotification';
                   }
                 })
                 .catch((error) => {
@@ -375,22 +304,76 @@ export default () => {
         }
       },
       doSearch() {
-        if (this.$route.path === '/articlepage') {
-          location.href = location.origin + '/search?q=' + this.searchText
-          location.reload()
-          return
-        }
-        this.$router.push({ name: 'search', query: { q: this.searchText } })
+        location.href = location.origin + '/search?q=' + this.searchText
         this.searchText = ''
         this.inputing = false
-        // console.log('s',this.searchText)
       },
       clickSearch() {
         this.inputing = true
         this.$nextTick(() => {
           this.$refs.search.focus()
         })
-      }
+      },
+      // articlepage專用
+      addToFB() {
+        window.open(
+          `https://www.addtoany.com/add_to/facebook?linkurl=${this.page_link}`,
+          "_blank",
+          "top=" +
+          (window.outerHeight / 2 - 265) +
+          ", left=" +
+          (window.outerWidth / 2 - 265) +
+          ",height=530,width=530,toolbar=no,resizable=no,location=no"
+        );
+      },
+      addToLINE() {
+        window.open(
+          `https://lineit.line.me/share/ui?url=${this.page_link}`,
+          "_blank",
+          "top=" +
+          (window.outerHeight / 2 - 265) +
+          ", left=" +
+          (window.outerWidth / 2 - 265) +
+          ",height=530,width=530,toolbar=no,resizable=no,location=no"
+        );
+      },
+      copyLink() {
+        let self = this;
+        navigator.clipboard.writeText(this.page_link).then(function () {
+          self.copied = true;
+          setTimeout(function () {
+            self.copied = false;
+          }, 1000);
+        });
+      },
     }
   });
 }
+
+$(() => {
+  createApp().$mount('#web_index')
+  $('.back-top').fadeOut();
+  document.querySelector(".icon-hamburger").addEventListener("click", () => {
+    document.querySelector(".rwd-list").classList.toggle("-active")
+  })
+  document.querySelectorAll(".rwd-list .item").forEach((v) => {
+    v.addEventListener("click", (e) => {
+      Array.prototype.filter.call(document.querySelectorAll(".rwd-list .item"), (j) => {
+        return v !== j
+      }).forEach((v) => {
+        v.classList.remove("-active")
+      })
+      v.classList.toggle("-active")
+    })
+  })
+  $(document).scroll(function () {
+    AOS.refresh();
+    window.dispatchEvent(new Event("resize"));
+    var y = $(this).scrollTop();
+    if (y > 800) {
+      $('.back-top').fadeIn();
+    } else {
+      $('.back-top').fadeOut();
+    }
+  });
+});

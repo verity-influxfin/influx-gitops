@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KnowledgeArticle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KnowledgeArticleController extends Controller
 {
@@ -46,5 +47,18 @@ class KnowledgeArticleController extends Controller
         }
 
         return $result;
+    }
+
+    public function get_knowledge_article($id){
+        return DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where([['id', '=', $id], ['isActive', '=', 'on']])->orderBy('id', 'desc')->first();
+    }
+
+    public function get_knowledge_articles()
+    {
+        return DB::table('knowledge_article')
+            ->select('post_title', 'created_at as post_date', 'id as ID', 'updated_at as post_modified')
+            ->whereIn('type', ['article', 'investtonic'])
+            ->where('isActive', '=', 'on')
+            ->take(5)->orderBy('id', 'desc')->get();
     }
 }
