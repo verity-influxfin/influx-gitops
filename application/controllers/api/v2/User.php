@@ -3072,7 +3072,7 @@ END:
                         'status' => PROMOTE_SUBCODE_STATUS_AVAILABLE,
                         'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT
                     ]);
-                    $this->user_subcode_model->update_by(['id !=' => $subcode_info['id']], [
+                    $this->user_subcode_model->update_by(['id !=' => $subcode_info['id'], 'user_qrcode_id' => $user_qrcode_info['id']], [
                         'status' => PROMOTE_SUBCODE_STATUS_DISABLED,
                         'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT
                     ]);
@@ -3791,6 +3791,7 @@ END:
         $sent = FALSE;
         $user_id = $this->user_info->id;
         $investor = $this->user_info->investor;
+        $input = $this->input->post(NULL, TRUE);
 
         try
         {

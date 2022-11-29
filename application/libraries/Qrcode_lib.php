@@ -801,7 +801,7 @@ class Qrcode_lib
             $main_qrcode_ids[] = $main_qrcode['info']['id'];
         }
         $this->CI->load->model('user/user_subcode_model');
-        $subcode_list = $this->CI->user_subcode_model->get_subcode_list($main_qrcode_ids);
+        $subcode_list = $this->CI->user_subcode_model->get_subcode_list($main_qrcode_ids, ['us.status' => PROMOTE_SUBCODE_STATUS_AVAILABLE], ['status !=' => PROMOTE_STATUS_DISABLED]);
         $subcode_list = array_column($subcode_list, NULL, 'user_qrcode_id');
 
         $this->CI->load->library('qrcode_lib');
@@ -809,7 +809,8 @@ class Qrcode_lib
 
         if ( ! empty($subcode_list))
         {
-            $where = ['id' => array_values($user_qrcode_id_list)];
+            $where = ['id' => array_values($user_qrcode_id_list),
+                'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY, PROMOTE_STATUS_CAN_SIGN_CONTRACT]];
             $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where,
                 $start_date, $end_date, $limit, $offset, $filter_delayed);
         }
@@ -973,7 +974,7 @@ class Qrcode_lib
 
         $where = ['user_id' => $master_user_id, 'status' => [PROMOTE_STATUS_AVAILABLE],
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
-        $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
+        $user_qrcode = $this->get_promoted_reward_info($where);
         if (!isset($user_qrcode) || empty($user_qrcode))
         {
             throw new \Exception('該推薦碼不存在', PROMOTE_CODE_NOT_EXIST);
@@ -1023,16 +1024,16 @@ class Qrcode_lib
 
         $where = [];
         $where['user_id'] = $master_user_id;
-        $where['status'] = [PROMOTE_STATUS_AVAILABLE];
+        $where['status'] = [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY, PROMOTE_STATUS_CAN_SIGN_CONTRACT];
         $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
-        $user_qrcode_list = $this->CI->qrcode_lib->get_promoted_reward_info($where, $start_time ?? '', $end_time ?? '', 0, 0, FALSE, FALSE);
-        $user_subcode_list = $this->CI->qrcode_lib->get_subcode_list($master_user_id, [], ['status' => PROMOTE_STATUS_AVAILABLE]);
+        $user_qrcode_list = $this->get_promoted_reward_info($where, $start_time ?? '', $end_time ?? '', 0, 0, FALSE, FALSE);
+        $user_subcode_list = $this->get_subcode_list($master_user_id, ['us.status' => PROMOTE_SUBCODE_STATUS_AVAILABLE], ['status !=' => PROMOTE_STATUS_DISABLED]);
         $user_subcode_list = array_column($user_subcode_list, NULL, 'user_qrcode_id');
 
         foreach ($user_qrcode_list as $user_qrcode)
         {
-            if ( ! isset($user_qrcode) || empty($user_qrcode) ||
+            if (empty($user_qrcode) ||
                 ! isset($user_qrcode['info']['subcode_flag']) || $user_qrcode['info']['subcode_flag'] == IS_NOT_PROMOTE_SUBCODE)
             {
                 continue;
@@ -1066,7 +1067,7 @@ class Qrcode_lib
             ];
             foreach (array_keys($this->CI->user_lib->rewardCategories) as $category)
             {
-                if ( ! isset($user_qrcode[$category]) || empty($user_qrcode[$category]))
+                if (empty($user_qrcode[$category]))
                 {
                     continue;
                 }
