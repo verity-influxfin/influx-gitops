@@ -28,6 +28,8 @@ $config['influx_user_list'] = [
         'user_id' => 83929],
     [ // 黃偉銘John
         'user_id' => 84644],
+    [ // 林子玄
+        'user_id' => 67450],
     [ // Wawa
         'user_id' => 91424],
     [ // Howard
