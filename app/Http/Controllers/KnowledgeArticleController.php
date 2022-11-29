@@ -12,6 +12,7 @@ class KnowledgeArticleController extends Controller
         $knowledge_info = KnowledgeArticle::select(
             [
                 'media_link',
+                'media_alt',
                 'post_title',
                 'post_content',
                 'web_title',
