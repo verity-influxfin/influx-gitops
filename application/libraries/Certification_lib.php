@@ -195,10 +195,15 @@ class Certification_lib{
             $this->CI->load->library('Notification_lib');
             if ($failed)
             {
-                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                $user_qrcode_update_param = [
                     'status' => PROMOTE_STATUS_PENDING_TO_SENT,
-                ]);
+                ];
+                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], $user_qrcode_update_param);
                 $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", CERTIFICATION_STATUS_FAILED);
+                // 寫 log
+                $this->CI->load->model('log/log_user_qrcode_model');
+                $user_qrcode_update_param['user_qrcode_id'] = $promoteCode->id;
+                $this->CI->log_user_qrcode_model->insert_log($user_qrcode_update_param);
             }
             else
             {
@@ -234,10 +239,16 @@ class Certification_lib{
 
                 $settings = json_decode($promoteCode->settings, TRUE);
                 $settings['certification_id'] = array_column($certifications, 'id');
-                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                $user_qrcode_update_param = [
                     'settings' => json_encode($settings),
                     'status' => PROMOTE_STATUS_AVAILABLE,
-                ]);
+                ];
+                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], $user_qrcode_update_param);
+                // 寫 log
+                $this->CI->load->model('log/log_user_qrcode_model');
+                $user_qrcode_update_param['user_qrcode_id'] = $promoteCode->id;
+                $this->CI->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
                 $this->CI->load->library('contract_lib');
                 $raw_contract = $this->CI->contract_lib->raw_contract($promoteCode->contract_id);
                 if (isset($raw_contract))
@@ -1813,7 +1824,12 @@ class Certification_lib{
                 $subcode = $this->CI->user_subcode_model->get_by(['registered_id' => $content['id_number']]);
                 if (isset($subcode))
                 {
-                    $this->CI->user_qrcode_model->update_by(['id' => $subcode->user_qrcode_id], ['user_id' => $user->id]);
+                    $user_qrcode_update_param = ['user_id' => $user->id];
+                    $this->CI->user_qrcode_model->update_by(['id' => $subcode->user_qrcode_id], $user_qrcode_update_param);
+                    // 寫 log
+                    $this->CI->load->model('log/log_user_qrcode_model');
+                    $user_qrcode_update_param['user_qrcode_id'] = $subcode->user_qrcode_id;
+                    $this->CI->log_user_qrcode_model->insert_log($user_qrcode_update_param);
                 }
             }
 

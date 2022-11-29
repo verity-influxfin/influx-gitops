@@ -7,21 +7,23 @@ INSERT INTO p2p_user.qrcode_setting (alias, description, status, start_time, end
 INSERT INTO p2p_user.qrcode_setting (alias, description, status, start_time, end_time, settings, `length`, prefix, created_at, created_ip, created_admin_id, updated_at, updated_ip, updated_admin_id) VALUES('qrcode_appointed_v2_judicial', '特約通路商 (法人)', 1, '2021-10-20 00:00:00', '0000-00-00 00:00:00', '{"reward": {"product": {"student": {"amount": 0, "product_id": [1, 2], "borrower_percent": 1.2, "investor_percent": 3}, "salary_man": {"amount": 0, "product_id": [3, 4], "borrower_percent": 1.2, "investor_percent": 3}, "small_enterprise": {"amount": 0, "product_id": [1002], "borrower_percent": 0, "investor_percent": 0}, "small_enterprise2": {"amount": 0, "product_id": [0], "borrower_percent": 0, "investor_percent": 0}, "small_enterprise3": {"amount": 0, "product_id": [0], "borrower_percent": 0, "investor_percent": 0}}, "download": {"amount": 0}, "full_member": {"amount": 0}, "collaboration_person": {"amount": 0}, "collaboration_enterprise": {"amount": 0}}}', 8, '', '2021-10-20 18:20:00', '', 0, '2021-10-20 18:20:00', '', 0);
 
 # 新增 QRCode log 表
-CREATE TABLE p2p_log.user_qrcode_log
+CREATE TABLE `p2p_log`.`user_qrcode_log`
 (
-    id             int AUTO_INCREMENT NOT NULL,
-    user_qrcode_id int                NOT NULL,
-    alias          varchar(45)        NULL,
-    status         tinyint            NULL,
-    sub_status     tinyint            NULL,
-    contract_id    int                NULL,
-    created_at     timestamp          NOT NULL,
-    created_ip     varchar(15)        NOT NULL,
+    `id`             int(11)     NOT NULL AUTO_INCREMENT,
+    `user_qrcode_id` int(11)     NULL DEFAULT NULL,
+    `user_id`        int(11)     NULL DEFAULT NULL,
+    `alias`          varchar(45) NULL DEFAULT NULL,
+    `status`         tinyint(4)  NULL DEFAULT NULL,
+    `sub_status`     tinyint(4)  NULL DEFAULT NULL,
+    `subcode_flag`   tinyint(4)  NULL DEFAULT NULL,
+    `contract_id`    int(11)     NULL DEFAULT NULL,
+    `handle_time`    timestamp   NULL DEFAULT NULL,
+    `settings`       json        NULL DEFAULT NULL,
+    `created_at`     timestamp   NOT NULL,
+    `created_ip`     varchar(15) NOT NULL,
     PRIMARY KEY (`id`)
-)
-    ENGINE = InnoDB
-    DEFAULT CHARSET = utf8
-    COLLATE = utf8_general_ci;
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 # 新增合約格式
 INSERT INTO p2p_admin.contract_format (id,`type`,title,content,created_at,created_ip,creator_id,remark,updated_at,updated_ip,version)

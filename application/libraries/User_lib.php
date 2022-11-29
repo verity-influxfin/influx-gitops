@@ -704,8 +704,13 @@ class User_lib {
                     'json_data' => json_encode($data),
                 ]);
 
+                $user_qrcode_update_param = ['handle_time' => $today];
                 $this->CI->user_qrcode_model->update_by([
-                    'id' => $qrcode['id']], ['handle_time' => $today]);
+                    'id' => $qrcode['id']], $user_qrcode_update_param);
+                // 寫 log
+                $this->CI->load->model('log/log_user_qrcode_model');
+                $user_qrcode_update_param['user_qrcode_id'] = $qrcode['id'];
+                $this->CI->log_user_qrcode_model->insert_log($user_qrcode_update_param);
 
                 if ($this->CI->user_qrcode_model->trans_status() === TRUE && $this->CI->qrcode_reward_model->trans_status() === TRUE)
                 {

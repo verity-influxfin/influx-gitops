@@ -1534,9 +1534,15 @@ class Sales extends MY_Admin_Controller {
                 'settings' => json_encode($formula_list),
                 'admin_id' => $this->login_info->id,
             ]);
-            $this->user_qrcode_model->update_by(['id' => $qrcode_id], [
+            $user_qrcode_update_param = [
                 'settings' => json_encode($settings)
-            ]);
+            ];
+            $this->user_qrcode_model->update_by(['id' => $qrcode_id], $user_qrcode_update_param);
+            // 寫 log
+            $this->load->model('log/log_user_qrcode_model');
+            $user_qrcode_update_param['user_qrcode_id'] = $qrcode_id;
+            $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
             $this->json_output->setStatusCode(200)->setResponse(['success' => TRUE, 'msg' => "修改成功。"])->send();
         }
 
@@ -2121,8 +2127,13 @@ class Sales extends MY_Admin_Controller {
                 }
             }
 
-            $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], ['settings' => json_encode($settings),
-                'status' => PROMOTE_STATUS_CAN_SIGN_CONTRACT]);
+            $user_qrcode_update_param = ['settings' => json_encode($settings),
+                'status' => PROMOTE_STATUS_CAN_SIGN_CONTRACT];
+            $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], $user_qrcode_update_param);
+            // 寫 log
+            $this->load->model('log/log_user_qrcode_model');
+            $user_qrcode_update_param['user_qrcode_id'] = $qrcode_code->id;
+            $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
 
             $this->load->model('user/user_certification_model');
             $this->load->library('certification_lib');
@@ -2169,7 +2180,13 @@ class Sales extends MY_Admin_Controller {
             {
                 $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE, 'msg' => '找不到對應的推薦碼'))->send();
             }
-            $this->user_qrcode_model->update_by(['id' => $apply_info->user_qrcode_id], ['status' => PROMOTE_STATUS_PENDING_TO_SENT]);
+            $user_qrcode_update_param = ['status' => PROMOTE_STATUS_PENDING_TO_SENT];
+            $this->user_qrcode_model->update_by(['id' => $apply_info->user_qrcode_id], $user_qrcode_update_param);
+            // 寫 log
+            $this->load->model('log/log_user_qrcode_model');
+            $user_qrcode_update_param['user_qrcode_id'] = $apply_info->user_qrcode_id;
+            $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
             $settings = json_decode($qrcode_code->settings, TRUE);
             if (isset($settings) && isset($settings['investor']))
             {
@@ -2286,6 +2303,10 @@ class Sales extends MY_Admin_Controller {
         }
 
         $rs = $this->user_qrcode_model->update_by(['id' => $where['user_qrcode_id']], $param);
+        // 寫 log
+        $this->load->model('log/log_user_qrcode_model');
+        $this->log_user_qrcode_model->insert_log(array_merge($param, ['user_qrcode_id' => $where['user_qrcode_id']]));
+
         if ( ! $rs)
         {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();

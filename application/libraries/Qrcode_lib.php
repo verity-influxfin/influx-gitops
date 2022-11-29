@@ -719,6 +719,10 @@ class Qrcode_lib
 
             $subcode_rs = $this->CI->user_subcode_model->update_by(['id' => $subcode->id], $subcode_param);
             $qrcode_rs = $this->CI->user_qrcode_model->update_by(['id' => $subcode->user_qrcode_id], $qrcode_param);
+            // 寫 log
+            $this->CI->load->model('log/log_user_qrcode_model');
+            $this->CI->log_user_qrcode_model->insert_log(array_merge($qrcode_param, ['user_qrcode_id' => $subcode->user_qrcode_id]));
+
             if ( ! $subcode_rs || ! $qrcode_rs ||
                 $this->CI->user_qrcode_model->trans_status() === FALSE ||
                 $this->CI->user_subcode_model->trans_status() === FALSE)
@@ -1302,7 +1306,7 @@ class Qrcode_lib
         // 新增 QRCode 資料進資料庫
         $start_time = date('Y-m-d H:i:s');
         $end_time = date('Y-m-d H:i:s', strtotime('+ 6 month'));
-        $rs = $this->CI->user_qrcode_model->insert([
+        $insert_param = [
             'user_id' => $user_id,
             'alias' => $alias_name,
             'promote_code' => $promote_code,
@@ -1312,7 +1316,11 @@ class Qrcode_lib
             'contract_end_time' => $end_time,
             'settings' => json_encode($settings),
             'status' => PROMOTE_STATUS_PENDING_TO_SENT,
-        ]);
+        ];
+        $rs = $this->CI->user_qrcode_model->insert($insert_param);
+        $this->CI->load->model('log/log_user_qrcode_model');
+        $insert_param['user_qrcode_id'] = $rs;
+        $this->CI->log_user_qrcode_model->insert_log($insert_param);
 
         if ( ! $rs)
         {
@@ -1366,7 +1374,7 @@ class Qrcode_lib
         // 新增 QRCode 資料進資料庫
         $start_time = date('Y-m-d H:i:s');
         $end_time = date('Y-m-d H:i:s', strtotime('+ 6 month'));
-        $rs = $this->CI->user_qrcode_model->insert([
+        $insert_param = [
             'user_id' => $user_id,
             'alias' => $alias_name,
             'promote_code' => $promote_code,
@@ -1376,7 +1384,11 @@ class Qrcode_lib
             'contract_end_time' => $end_time,
             'settings' => json_encode($settings),
             'status' => PROMOTE_STATUS_PENDING_TO_SENT,
-        ]);
+        ];
+        $rs = $this->CI->user_qrcode_model->insert($insert_param);
+        $this->CI->load->model('log/log_user_qrcode_model');
+        $insert_param['user_qrcode_id'] = $rs;
+        $this->CI->log_user_qrcode_model->insert_log($insert_param);
 
         if ( ! $rs)
         {

@@ -881,7 +881,13 @@ class Cron extends CI_Controller
             {
                 $settings['reward'] = array_replace_recursive($qrcode_setting_list[$qrcode->alias]['settings']['reward'], $settings['reward']);
                 $qrcode->settings = json_encode($settings) ?? [];
-                $rs = $this->user_qrcode_model->update_by(['id' => $qrcode->id], ['settings' => $qrcode->settings]);
+                $user_qrcode_update_param = ['settings' => $qrcode->settings];
+                $rs = $this->user_qrcode_model->update_by(['id' => $qrcode->id], $user_qrcode_update_param);
+                // 寫 log
+                $this->load->model('log/log_user_qrcode_model');
+                $user_qrcode_update_param['user_qrcode_id'] = $qrcode->id;
+                $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
                 if ($rs)
                 {
                     $count++;

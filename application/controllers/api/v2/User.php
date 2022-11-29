@@ -2887,7 +2887,14 @@ END:
                 {
                     throw new Exception('QRCode 特約通路商身份修改失敗', INSERT_ERROR);
                 }
-                $rs = $this->user_qrcode_model->update_by(['promote_code !=' => $promote_code, 'user_id' => $this->user_info->id], ['status' => PROMOTE_STATUS_DISABLED]);
+                $user_qrcode_update_param = ['status' => PROMOTE_STATUS_DISABLED];
+                $rs = $this->user_qrcode_model->update_by(['promote_code !=' => $promote_code, 'user_id' => $this->user_info->id], $user_qrcode_update_param);
+                // 寫 log
+                $this->load->model('log/log_user_qrcode_model');
+                $user_qrcode_update_param['user_id'] = $this->user_info->id;
+                $user_qrcode_update_param['promote_code'] = "! {$promote_code}";
+                $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
                 if ( ! $rs)
                 {
                     throw new Exception('QRCode 特約通路商身份修改失敗', INSERT_ERROR);
@@ -2930,10 +2937,16 @@ END:
                 if ($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT &&
                     $user_qrcode->sub_status != PROMOTE_SUB_STATUS_EMAIL_SUCCESS)
                 {
-                    $rs = $this->user_qrcode_model->update($user_qrcode->id, [
+                    $user_qrcode_update_param = [
                         'status' => $is_appointed ? PROMOTE_STATUS_PENDING_TO_VERIFY : PROMOTE_STATUS_CAN_SIGN_CONTRACT,
                         'sub_status' => PROMOTE_SUB_STATUS_EMAIL_SUCCESS
-                    ]);
+                    ];
+                    $rs = $this->user_qrcode_model->update($user_qrcode->id, $user_qrcode_update_param);
+                    // 寫 log
+                    $this->load->model('log/log_user_qrcode_model');
+                    $user_qrcode_update_param['user_qrcode_id'] = $user_qrcode->id;
+                    $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
                     if ( ! $rs)
                     {
                         throw new Exception('更新失敗');
@@ -3065,9 +3078,15 @@ END:
                     {
                         throw new Exception('未有此 subcode 申請', PROMOTE_SUBCODE_NOT_EXIST);
                     }
-                    $this->user_qrcode_model->update($user_qrcode_info['id'], [
+                    $user_qrcode_update_param = [
                         'subcode_flag' => IS_PROMOTE_SUBCODE,
-                    ]);
+                    ];
+                    $this->user_qrcode_model->update($user_qrcode_info['id'], $user_qrcode_update_param);
+                    // 寫 log
+                    $this->load->model('log/log_user_qrcode_model');
+                    $user_qrcode_update_param['user_qrcode_id'] = $user_qrcode_info['id'];
+                    $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
                     $this->user_subcode_model->update($subcode_info['id'], [
                         'status' => PROMOTE_SUBCODE_STATUS_AVAILABLE,
                         'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT
@@ -3574,7 +3593,13 @@ END:
                 'status' => PROMOTE_STATUS_DISABLED, // 尚未啟用
                 'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD, // 待二級經銷商同意
             ]);
-            $this->user_qrcode_model->update($subcode_info['id'], ['subcode_flag' => IS_NOT_PROMOTE_SUBCODE]);
+            $user_qrcode_update_param = ['subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
+            $this->user_qrcode_model->update($subcode_info['id'], $user_qrcode_update_param);
+            // 寫 log
+            $this->load->model('log/log_user_qrcode_model');
+            $user_qrcode_update_param['user_qrcode_id'] = $subcode_info['id'];
+            $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
 
             if ( ! $user_subcode_id ||
                 $this->user_qrcode_model->trans_status() === FALSE ||
