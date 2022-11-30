@@ -434,8 +434,8 @@
                             <img class="cover" src="{{ $article->media_link }}"
                                 alt="<?php
                                     if (empty($article->media_alt)) {
-                                        $filename = basename($article->media_link);
-                                        $filename = explode('.', $filename);
+                                        preg_match('/\/([^\/]+)$/', $article->media_link, $matches);
+                                        $filename = explode('.', $matches[1]);
                                         echo $filename[0];
                                     } else {
                                         echo $article->media_alt;
