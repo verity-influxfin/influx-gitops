@@ -641,27 +641,15 @@ class Target_model extends MY_Model
      */
     public function get_total_loan_amount()
     {
-        $subquery_investment = $this->db
+        $query = $this->db
             ->select_sum('loan_amount')
             ->where_in('status', [
                 INVESTMENT_STATUS_REPAYING,
                 INVESTMENT_STATUS_PAID_OFF
             ])
-            ->get_compiled_select('`p2p_loan`.`investments`', TRUE);
+            ->get('`p2p_loan`.`investments`')->row_array();
 
-        $subquery_transfer = $this->db
-            ->select_sum('amount')
-            ->where('status', 10)
-            ->get_compiled_select('`p2p_loan`.`transfers`', TRUE);
-
-        $result = $this->db
-            ->select('(`r1`.`loan_amount` + `r2`.`amount`) AS total_loan_amount')
-            ->from("({$subquery_investment}) `r1`")
-            ->from("({$subquery_transfer}) `r2`")
-            ->get()
-            ->first_row('array');
-
-        return (int) ($result['total_loan_amount'] ?? 0);
+        return (int) ($query['loan_amount'] ?? 0);
     }
 
     /**

@@ -209,10 +209,6 @@
 	{
 		$CI 	=& get_instance();
 		$list 	= $CI->config->item('access_ip_list');
-        if (ENVIRONMENT === 'development')
-        {
-            return TRUE;
-        }
 		foreach($list as $ip){
 			if(preg_match('/\.\*$/',$ip)){
 				list($main, $sub) = explode('.*', $ip);

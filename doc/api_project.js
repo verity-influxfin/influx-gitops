@@ -159,7 +159,8 @@ define({
     "GetTransferBatch",
     "PostTransferBatch",
     "GetTransferApplylist",
-    "GetTransferCancel"
+    "GetTransferCancel",
+    "Config"
   ],
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",

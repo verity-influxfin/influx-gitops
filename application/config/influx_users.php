@@ -6,8 +6,6 @@
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $config['influx_user_list'] = [
-    [ // News
-        'user_id' => 82],
     [ // Arthur
         'user_id' => 88],
     [ // Mori
@@ -16,8 +14,6 @@ $config['influx_user_list'] = [
         'user_id' => 23643],
     [ // Frankie
         'user_id' => 47141],
-    [ // Frank
-        'user_id' => 50410],
     [ // 柏元
         'user_id' => 53468],
     [ // Katia
@@ -32,22 +28,20 @@ $config['influx_user_list'] = [
         'user_id' => 83929],
     [ // 黃偉銘John
         'user_id' => 84644],
-    [ // 許良
-        'user_id' => 85279],
-    [ // 子倩
-        'user_id' => 90053],
+    [ // 林子玄
+        'user_id' => 67450],
     [ // Wawa
         'user_id' => 91424],
-    [ // Rebecca
-        'user_id' => 88429],
-    [ // 堅孟
-        'user_id' => 91434],
     [ // Howard
         'user_id' => 90323],
-    [ // James
-        'user_id' => 91755],
     [ // 曲素玉
         'user_id' => 92479],
     [ // 彭崇博
         'user_id' => 92525],
+    [ // 常瑋倫
+        'user_id' => 92048],
+    [ // 張琬琳
+        'user_id' => 98375],
+    [ // 邱俊霖
+        'user_id' => 98279],
 ];
