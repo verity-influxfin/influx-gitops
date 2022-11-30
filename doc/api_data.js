@@ -45595,7 +45595,7 @@ define({
                         },
                         {
                             "group": "Success 200",
-                            "type": "Boolean",
+                            "type": "Number",
                             "optional": false,
                             "field": "data.status",
                             "description": "<p>變卡狀態 0:未提交 1:已通過 2:審核中</p>"
