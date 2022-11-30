@@ -375,11 +375,6 @@ export default () => {
         }
       },
       doSearch() {
-        if (this.$route.path === '/articlepage') {
-          location.href = location.origin + '/search?q=' + this.searchText
-          location.reload()
-          return
-        }
         this.$router.push({ name: 'search', query: { q: this.searchText } })
         this.searchText = ''
         this.inputing = false

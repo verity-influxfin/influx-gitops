@@ -7,7 +7,6 @@ import charitableStatus from "../pages/charitableStatus"
 import blog from "../pages/blog";
 import vlog from "../pages/vlog";
 import videoPage from '../pages/videoPage';
-import articlePage from '../pages/articlePage';
 import userTerms from '../pages/userTerms';
 import privacyTerms from '../pages/privacyTerms';
 import loanerTerms from '../pages/loanerTerms';
@@ -29,7 +28,6 @@ import notification from '../pages/notification';
 import myrepayment from '../pages/myrepayment';
 import feedback from '../pages/feedback';
 import event from '../pages/event';
-import scsbank from '../pages/scsbank';
 import skbank from '../pages/skbank';
 import obank from '../pages/obank';
 
@@ -78,7 +76,6 @@ let routers = [
     { path: '/vlog', component: vlog },
     { path: '/invest', component: invest },
     { path: '/videopage', component: videoPage },
-    // { path: '/articlepage', component: articlePage },
     { path: '/userTerms', component: userTerms },
     // redirect for facebook
     { path: '/privacy-policy', redirect: '/privacyTerms' },
