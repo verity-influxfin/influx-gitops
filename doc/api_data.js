@@ -49797,6 +49797,75 @@ define({
                     "url": "/api/v2/product/skip_certification"
                 }
             ]
-        }
+        },
+        {
+            "type": "get",
+            "url": "/v2/config/:config/:item",
+            "title": "設定檔 取得設定檔資料",
+            "version": "0.2.0",
+            "name": "GetConfigIndex",
+            "group": "Config",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": ":config",
+                            "description": "<p>設定檔的名稱 (e.g. credit)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": ":item",
+                            "description": "<p>設定檔的項目，若為空則回傳 :config 內的所有資料 (e.g. credit_level_1)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data",
+                            "description": "<p>回傳結果</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "data.config_list",
+                            "description": "<p>整個設定檔或設定檔的特定項目內容</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    "result":"SUCCESS",\n    "data":{\n        "config_list":{\n            "credit_level_1":{\n                1:{\n                    "start":2571,\n                    "end":9999,\n                    "rate":{"3":4, "6":4.5}\n                }\n            },\n            "credit_level_2":{}\n        }\n    }\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Config.php",
+            "groupTitle": "Config",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/config/:config/:item"
+                }
+            ]
+        },
     ]
 });
