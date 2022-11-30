@@ -7,6 +7,7 @@
 	.popover-content {
 		padding: 10px;
 		white-space: pre-line;
+        overflow-wrap: break-word;
 	}
 
 	.panel-heading {
@@ -733,7 +734,8 @@
 					table.row.add(t)
 				})
 				table.draw()
-				$('[data-toggle="popover"]').popover({ trigger: 'focus' })
+                $('.popover').popover('hide')
+				$('[data-toggle="popover"]').popover()
 			},
 			"riskTreeSelect.node1"() {
 				this.riskTreeSelect.node2 = {}
