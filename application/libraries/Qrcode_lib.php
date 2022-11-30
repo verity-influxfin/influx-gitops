@@ -1406,6 +1406,8 @@ class Qrcode_lib
             'status' => 0
         ];
 
+        $subcode_status = (int) $subcode_status;
+
         switch ($subcode_status)
         {
             case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ:
