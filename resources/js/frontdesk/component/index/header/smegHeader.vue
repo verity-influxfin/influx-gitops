@@ -10,7 +10,7 @@
       </div>
     </div>
     <!-- web -->
-    <div class="d-sm-flex d-none no-gutters justify-content-lg-between mt-5">
+    <div class="d-sm-flex d-none no-gutters justify-content-lg-between">
       <div class="col-12">
         <img
           src="@/asset/images/index/header/smeg-header.jpg"

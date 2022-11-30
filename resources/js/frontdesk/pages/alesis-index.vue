@@ -6,6 +6,9 @@
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
+                <smegHeader />
+              </div>
+              <div class="swiper-slide">
                 <fund-header />
               </div>
               <a class="swiper-slide" href="/workLoan" target="_blank">
@@ -79,7 +82,7 @@
                 href="https://www.influxfin.com/articlepage?q=news-8202"
                 target="_blank"
               >
-                <div class="row no-gutters mt-5">
+                <div class="row no-gutters">
                   <div class="col-12">
                     <img
                       src="@/asset/images/index/header/header-csr.png"
@@ -1318,11 +1321,11 @@ export default {
 }
 .index-intro {
   .block-content{
-    max-width: 1220px;
+    max-width: 1400px;
   }
   background-image: url('~images/index/index-header-bg.png');
   background-position: center;
-  padding: 15px 0 15px 100px;
+  padding: 100px 0 15px;
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 750px;
@@ -1333,6 +1336,7 @@ export default {
       .swiper-slide {
         padding: 0 45px;
         color: white;
+        overflow: hidden;
       }
       .swiper-button-prev,
       .swiper-button-next {
@@ -1345,12 +1349,11 @@ export default {
       .speech {
         flex-wrap: nowrap;
         .text-bg {
-          margin-top: 50px;
           height: 245px;
           width: 472px;
         }
         .solgan {
-          margin-top: 50px;
+          margin-top: 100px;
           font-style: normal;
           font-weight: 700;
           font-size: 24px;
@@ -1360,8 +1363,8 @@ export default {
         .speech-cover {
           left: 60px;
           position: relative;
-          height: 375px;
-          top: 15px;
+          height: 485px;
+          top: -50px;
         }
       }
       .general {
