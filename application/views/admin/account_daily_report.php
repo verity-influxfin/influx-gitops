@@ -4,6 +4,7 @@
                     <h1 class="page-header">虛擬帳戶交易明細表
 						<a href="<?=admin_url('Account/daily_report?display=pdf&sdate='.$sdate.'&edate='.$edate) ?>" target="_blank" class="btn btn-primary float-right" >匯出PDF</a>
 						<a href="<?=admin_url('Account/daily_report?display=excel&sdate='.$sdate.'&edate='.$edate) ?>" target="_blank" class="btn btn-primary float-right" >匯出Excel</a>
+						<a href="<?=admin_url('Account/daily_report?display=excel2&sdate='.$sdate.'&edate='.$edate) ?>" target="_blank" class="btn btn-primary float-right" >匯出Excel<br/><span style="font-size: 5px">(無合併儲存格)</span></a>
 					</h1>
 
                 </div>
