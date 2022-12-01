@@ -166,7 +166,7 @@
                 <div class="單張卡片 m-3" :class="{'單張卡片_媒合成功': item.invested >= item.loan_amount}" v-for="item in dataList" :key="item.target_no" :id="item.target_no" @click="imageOutput(item.target_no)">
                     <div class="標題">
                         <div class="階級">
-                            <img class="圖片" style="max-width:70px;" v-bind:src="'/assets/creadits/credit_' + item.credit_level + '.png'">
+                            <img class="圖片" style="max-width:70px;" v-bind:src="'/assets/credits/credit_' + item.credit_level + '.png'">
                         </div>
                         <div class="個人資料">
                             <div class="象徵">{{ item.user.sex === 'M' ? '男' : '女'}} / {{ item.user.age }}歲</div>
