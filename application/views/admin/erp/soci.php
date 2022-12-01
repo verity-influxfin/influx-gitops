@@ -25,7 +25,7 @@
                             <label class="sr-only" for="investor_id">投資人 ID</label>
                             <input type="text" class="form-control" v-model="searchform.user_id_int" id="investor_id" name="investor_id" placeholder="投資人 ID" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
                             <i class="fa fa-search"></i> 搜尋
                         </button>
                         <button class="btn btn-primary pull-right" type="button" @click="downloadExcel" :disabled="is_waiting_response">

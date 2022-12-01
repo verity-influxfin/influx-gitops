@@ -33,6 +33,12 @@ var app = new Vue({
         $('#end_date').datepicker({
             'format': 'yyyy-mm-dd',
         }).on('change', function () { self.searchform.end_date = this.value });
+        setInterval(() => {
+            if (document.cookie.split(';').some((item) => item.includes('fileDownload=true'))) {
+                self.is_waiting_response = false
+                document.cookie = 'fileDownload=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            }
+        }, 1000);
     },
     computed: {
         table_has_data: function () {
@@ -80,6 +86,7 @@ var app = new Vue({
                 .filter(([key, value]) => value !== '')
                 .map(([key, value]) => `${key}=${value}`)
                 .join('&')
+            this.is_waiting_response = true
             $("body").append(
                 `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
             );

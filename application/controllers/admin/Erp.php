@@ -96,6 +96,7 @@ class ERP extends MY_Admin_Controller
         header('content-type: application/octet-stream');
         header('content-disposition:' . $des);
         header('content-length: ' . strlen($data));
+        setcookie('fileDownload', 'true', 0, '/');
         echo $data;
         die();
     }
@@ -161,6 +162,7 @@ class ERP extends MY_Admin_Controller
         header('content-type: application/octet-stream');
         header('content-disposition:' . $des);
         header('content-length: ' . strlen($data));
+        setcookie('fileDownload', 'true', 0, '/');
         echo $data;
         die();
     }
@@ -286,6 +288,7 @@ class ERP extends MY_Admin_Controller
         header('content-type: application/octet-stream');
         header('content-disposition:' . $des);
         header('content-length: ' . strlen($data));
+        setcookie('fileDownload', 'true', 0, '/');
         echo $data;
         die();
     }
@@ -338,6 +341,7 @@ class ERP extends MY_Admin_Controller
         header('content-type: application/octet-stream');
         header('content-disposition:' . $des);
         header('content-length: ' . strlen($data));
+        setcookie('fileDownload', 'true', 0, '/');
         echo $data;
         die();
     }
