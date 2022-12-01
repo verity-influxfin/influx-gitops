@@ -50,6 +50,12 @@
                 </div>
                 <div class="panel-body">
                     <div class="tab-content">
+                        <div v-if="is_waiting_response" class="w-100">
+                            <div class="text-center">
+                                <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
                         <template v-if="dictData.user_id_int">
                             <div class="row">
                                 <div class="col-md-6">
@@ -219,6 +225,12 @@
                 </div>
                 <div class="panel-body">
                     <div class="tab-content">
+                        <div v-if="is_waiting_response" class="w-100">
+                            <div class="text-center">
+                                <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
                         <template v-if="diffData.user_id_int">
                             <div class="row">
                                 <div class="col-md-6">

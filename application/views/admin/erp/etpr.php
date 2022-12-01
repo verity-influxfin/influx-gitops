@@ -46,7 +46,17 @@
                                         <th v-for="(item,index) in column" :key="index">{{item}}</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody v-if="is_waiting_response">
+                                    <tr>
+                                        <td colspan="22">
+                                            <div class="text-center">
+                                                <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
                                     <tr v-if="tableData.length < 1">
                                         <td colspan="99" class="text-center">沒有資料</td>
                                     </tr>
