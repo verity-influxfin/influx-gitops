@@ -716,10 +716,10 @@ class Account extends MY_Admin_Controller {
 			$pdf->writeHTML($html, 1, 0, true, true, '');
 			$files = $pdf->Output("daily report_".date("Y-m-d").'.pdf',"D");
 		}
-        elseif($display === 'excel')
+        elseif (in_array($display, ['excel', 'excel2']))
         { // 匯出Excel
             $this->load->library('Spreadsheet_lib');
-            $spreadsheet = $this->_draw_daily_report_excel($list, $page_data);
+            $spreadsheet = $this->_draw_daily_report_excel($list, $page_data, $display);
 
             $start_date = '';
             $end_date = '';
@@ -750,9 +750,10 @@ class Account extends MY_Admin_Controller {
      * 匯出「虛擬帳戶交易明細表」-excel格式
      * @param $list
      * @param $page_data
+     * @param $display
      * @return mixed
      */
-    private function _draw_daily_report_excel($list, $page_data)
+    private function _draw_daily_report_excel($list, $page_data, $display)
     {
         $title_rows = [
             'entering_date' => ['name' => '交易日期', 'width' => 12, 'rowspan' => 2, 'alignment' => ['h' => 'center', 'v' => 'center']],
@@ -822,7 +823,13 @@ class Account extends MY_Admin_Controller {
 
             $sum = $this->_daily_report_sum_amount_extracted($data_rows[$data_rows_index], $sum);
 
-            if ( ! empty($value['sub_list']))
+            if (empty($value['sub_list']))
+            {
+                $data_rows_index++;
+                continue;
+            }
+
+            if ($display == 'excel')
             {
                 $sub_list_count = count($value['sub_list']) + 1;
                 $data_rows[$data_rows_index]['entering_date'] = ['value' => $data_rows[$data_rows_index]['entering_date'], 'rowspan' => $sub_list_count];
@@ -832,6 +839,37 @@ class Account extends MY_Admin_Controller {
                 {
                     $data_rows_index++;
                     $data_rows[$data_rows_index] = [
+                        'user_from' => $sub_list_value['user_from'] ?? '',
+                        'v_bank_account_from' => $sub_list_value['v_bank_account_from'] ?? '',
+                        'v_amount_from' => ! empty($sub_list_value['v_amount_from']) && is_numeric($sub_list_value['v_amount_from']) ? (int) $sub_list_value['v_amount_from'] : '',
+                        'bank_account_from' => $sub_list_value['bank_account_from'] ?? '',
+                        'amount_from' => ! empty($sub_list_value['amount_from']) && is_numeric($sub_list_value['amount_from']) ? (int) $sub_list_value['amount_from'] : '',
+                        'user_to' => $sub_list_value['user_to'] ?? '',
+                        'v_bank_account_to' => $sub_list_value['v_bank_account_to'] ?? '',
+                        'v_amount_to' => ! empty($sub_list_value['v_amount_to']) && is_numeric($sub_list_value['v_amount_to']) ? (int) $sub_list_value['v_amount_to'] : '',
+                        'bank_account_to' => $sub_list_value['bank_account_to'] ?? '',
+                        'amount_to' => ! empty($sub_list_value['amount_to']) && is_numeric($sub_list_value['amount_to']) ? (int) $sub_list_value['amount_to'] : '',
+                        'principal' => ! empty($sub_list_value['principal']) && is_numeric($sub_list_value['principal']) ? (int) $sub_list_value['principal'] : '',
+                        'interest' => ! empty($sub_list_value['interest']) && is_numeric($sub_list_value['interest']) ? (int) $sub_list_value['interest'] : '',
+                        'platform_fee' => ! empty($sub_list_value['platform_fee']) && is_numeric($sub_list_value['platform_fee']) ? (int) $sub_list_value['platform_fee'] : '',
+                        'damages' => ! empty($sub_list_value['damages']) && is_numeric($sub_list_value['damages']) ? (int) $sub_list_value['damages'] : '',
+                        'allowance' => ! empty($sub_list_value['allowance']) && is_numeric($sub_list_value['allowance']) ? (int) $sub_list_value['allowance'] : '',
+                        'delay_interest' => ! empty($sub_list_value['delay_interest']) && is_numeric($sub_list_value['delay_interest']) ? (int) $sub_list_value['delay_interest'] : '',
+                        'else' => ! empty($sub_list_value['else']) && is_numeric($sub_list_value['else']) ? (int) $sub_list_value['else'] : '',
+                    ];
+
+                    $sum = $this->_daily_report_sum_amount_extracted($data_rows[$data_rows_index], $sum);
+                }
+            }
+            else
+            {
+                foreach ($value['sub_list'] as $sub_list_value)
+                {
+                    $data_rows_index++;
+                    $data_rows[$data_rows_index] = [
+                        'entering_date' => $data_rows[$data_rows_index - 1]['entering_date'],
+                        'target_no' => $data_rows[$data_rows_index - 1]['target_no'],
+                        'source_type' => $data_rows[$data_rows_index - 1]['source_type'],
                         'user_from' => $sub_list_value['user_from'] ?? '',
                         'v_bank_account_from' => $sub_list_value['v_bank_account_from'] ?? '',
                         'v_amount_from' => ! empty($sub_list_value['v_amount_from']) && is_numeric($sub_list_value['v_amount_from']) ? (int) $sub_list_value['v_amount_from'] : '',
