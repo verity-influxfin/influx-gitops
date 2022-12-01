@@ -45558,7 +45558,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "request_token",
-                            "description": "<p>(自然人)登入後取得的 Request Token</p>"
+                            "description": "<p>登入後取得的 Request Token</p>"
                         }
                     ]
                 }

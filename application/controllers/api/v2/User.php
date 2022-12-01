@@ -4358,12 +4358,22 @@ END:
             goto END;
         }
         // 檢查公司負責人
-        $this->load->model('user/user_meta_model');
-        $responsible_info = $this->user_meta_model->get_by([
-            'user_id' => $company_info['id'],
-            'meta_key' => 'company_responsible_user_id',
-            'meta_value' => $this->user_info->id,
-        ]);
+        if ($this->user_info->company)
+        { // 法人token
+            $responsible_info = $this->user_model->get_by([
+                'phone' => $this->user_info->phone,
+                'company_status' => USER_NOT_COMPANY
+            ]);
+        }
+        else
+        { // 自然人 token
+            $this->load->model('user/user_meta_model');
+            $responsible_info = $this->user_meta_model->get_by([
+                'user_id' => $company_info['id'],
+                'meta_key' => 'company_responsible_user_id',
+                'meta_value' => $this->user_info->id,
+            ]);
+        }
         if (empty($responsible_info))
         {
             $result['error'] = NOT_IN_CHARGE;
