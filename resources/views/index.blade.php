@@ -153,29 +153,45 @@
                     <div class="d-sm-flex d-none no-gutters w-100">
                         <div class="functions col-auto">
                             <div class="function-item">
-                                <div class="function-title">貸款產品</div>
+                                <div class="function-title">個人貸款</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content product">
                                             <div class="function-list-items">
-                                                <div class="link-title">個人融資</div>
+                                                <div class="link-title">AI風控 助你圓夢</div>
                                                 <div class="link-item">
-                                                    <a href="/collegeLoan" class="link-text">學生貸</a>
+                                                    <div class="link-text">普匯電子錢包</div>
+                                                    <div class="link-coming-soon">(coming soon)</div>
                                                 </div>
                                                 <div class="link-item">
                                                     <a href="/workLoan" class="link-text">上班族貸</a>
                                                 </div>
                                                 <div class="link-item">
+                                                    <a href="/collegeLoan" class="link-text">學生貸</a>
+                                                </div>
+                                                <div class="link-item">
                                                     <a href="/engineerLoan" class="link-text">資訊工程師貸</a>
                                                 </div>
-                                            </div>
-                                            <div class="function-list-items">
-                                                <div class="link-title">企業融資</div>
                                                 <div class="link-item">
-                                                    <a href="/business-loan/smeg" class="link-text">
-                                                        <div>信保專案(銀行合作)</div>
-                                                    </a>
+                                                    <div class="link-text">房屋貸款</div>
+                                                    <div class="link-coming-soon">(coming soon)</div>
                                                 </div>
+                                                <div class="link-item">
+                                                    <div class="link-text">消費分期</div>
+                                                    <div class="link-coming-soon">(coming soon)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-title">中小企業貸款</div>
+                                <div class="function-list row no-gutters">
+                                    <div class="col-auto d-flex no-gutters">
+                                        <div class="function-list-content enterprise">
+                                            <div class="function-list-items ">
+                                                <div class="link-title">普惠金融 貸你滿足</div>
                                                 <div class="link-item">
                                                     <div class="link-text">
                                                         <div>企業主速貸</div>
@@ -184,36 +200,18 @@
                                                 </div>
                                                 <div class="link-item">
                                                     <div class="link-text">
+                                                        <div>新創/網紅/SOHO</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/business-loan/smeg" class="link-text">
+                                                        <div>信保專案</div>
+                                                    </a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <div class="link-text">
                                                         <div>中小企業信貸</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="function-list-items">
-                                                <div class="link-title">汽車貸款</div>
-                                                <div class="link-item">
-                                                    <div class="link-text">
-                                                        <div>我是消費者</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
-                                                    </div>
-                                                </div>
-                                                <div class="link-item">
-                                                    <div class="link-text">
-                                                        <div>我是車商</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="function-list-items">
-                                                <div class="link-title">分享QR賺外快</div>
-                                                <div class="link-item">
-                                                    <div class="link-text">
-                                                        <a href="/promote-code-intro" class="link-text">我是推薦者</a>
-                                                    </div>
-                                                </div>
-                                                <div class="link-item">
-                                                    <div class="link-text">
-                                                        <div>我是特約商</div>
                                                         <div class="link-coming-soon">(coming soon)</div>
                                                     </div>
                                                 </div>
@@ -223,23 +221,23 @@
                                 </div>
                             </div>
                             <div class="function-item">
-                                <div class="function-title">投資專區</div>
+                                <div class="function-title">分期超市</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
-                                        <div class="function-list-content invest">
+                                        <div class="function-list-content project">
                                             <div class="function-list-items">
-                                                <div class="link-title">投資專區</div>
+                                                <div class="link-title">體驗金融科技帶來的便利</div>
                                                 <div class="link-item">
-                                                    <a href="/investment" class="link-text">債權投資</a>
+                                                    <div class="link-text">
+                                                        <div>美賣店商</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/transfer" class="link-text">債權轉讓</a>
-                                                </div>
-                                                <div class="link-item">
-                                                    <a href="/risk" class="link-text">風險報告書</a>
-                                                </div>
-                                                <div class="link-item">
-                                                    <a href="/projects" class="link-text">查看案件</a>
+                                                    <div class="link-text">
+                                                        <div>醫美分期</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -252,10 +250,34 @@
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content charitable">
                                             <div class="function-list-items">
-                                                <div class="link-title">慈善捐款</div>
+                                                <div class="link-title">永續經營 幸福無所不在</div>
                                                 <div class="link-item">
                                                     <a href="/charitable" class="link-text">台大兒醫</a>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-title">投資專區</div>
+                                <div class="function-list row no-gutters">
+                                    <div class="col-auto d-flex no-gutters">
+                                        <div class="function-list-content invest">
+                                        <div class="function-list-items">
+                                            <div class="link-title">小額分散 複利滾投</div>
+                                            <div class="link-item">
+                                                <a href="/investment" class="link-text">債權投資</a>
+                                            </div>
+                                            <div class="link-item">
+                                                <a href="/transfer" class="link-text">債權轉讓</a>
+                                            </div>
+                                            <div class="link-item">
+                                                <a href="/risk" class="link-text">風險報告書</a>
+                                            </div>
+                                            <div class="link-item">
+                                                <a href="/projects" class="link-text">查看案件</a>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>

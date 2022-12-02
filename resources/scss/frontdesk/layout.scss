@@ -278,7 +278,25 @@ $ci-color: #153a71;
             }
             &.charitable{
                 .function-list-items{
-                    margin-left: 300px;
+                    margin-left: 449px;
+                    width: 220px;
+                }
+                .link-title,.link-item{
+                    text-align: left;
+                }
+            }
+            &.project{
+                .function-list-items{
+                    margin-left: 335px;
+                    width: 220px;
+                }
+                .link-title,.link-item{
+                    text-align: left;
+                }
+            }
+            &.enterprise{
+                .function-list-items{
+                    margin-left: 214px;
                     width: 200px;
                 }
                 .link-title,.link-item{
@@ -287,7 +305,7 @@ $ci-color: #153a71;
             }
             &.invest{
                 .function-list-items{
-                    margin-left: 188px;
+                    margin-left: 560px;
                     width: 200px;
                 }
                 .link-title,.link-item{
@@ -295,9 +313,9 @@ $ci-color: #153a71;
                 }
             }
             &.about{
-                padding-left: 447px;
+                padding-left: 710px;
                 .function-list-items{
-                    width: 200px;
+                    width: 180px;
                 }
                 .link-title,.link-item{
                     text-align: left;
