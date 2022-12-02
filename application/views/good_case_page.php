@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>優良案件列表</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="/assets/admin/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <style>
         @charset "UTF-8";
 
@@ -159,10 +160,35 @@
     <div class="container" id="app">
         <div class="row">
             <div class="col-12">
-                <h1>優良案件列表 (7日)</h1>
+                <h1>優良案件列表</h1>
                 <p>點擊案件產生圖片</p>
             </div>
-            <div class="d-flex flex-wrap">
+            <div class="col-12 d-flex align-items-center">
+                <div class="col-auto mb-3 mx-2">
+                    篩選器
+                </div>
+                <div class="input-group mb-3 w-25">
+                    <input class="form-control" placeholder="起始日" type="date" v-model.lazy="filters.start_date" :disabled="isLoading">
+                </div>
+                <div class="input-group mb-3 w-25">
+                    <input class="form-control" placeholder="終止日" type="date" v-model.lazy="filters.end_date" :disabled="isLoading">
+                </div>
+                <div class="input-group mb-3 w-25">
+                    <input type="text" class="form-control" placeholder="特定案件" v-model.lazy="filters.target_no" :disabled="isLoading">
+                </div>
+                <select class="form-select w-25 mb-3" v-model.lazy="filters.order_by" :disabled="isLoading">
+                    <option>Sort by</option>
+                    <option :value="'created_at'">案件日期</option>
+                    <option :value="'credit_level'">信評</option>
+                    <option :value="'loan_amount'">金額</option>
+                </select>
+            </div>
+            <div :class="{'d-none': !isLoading}" class="col-12">
+                <div class="text-center">
+                    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                </div>
+            </div>
+            <div :class="{'d-flex': !isLoading,'d-none': isLoading}" class="flex-wrap">
                 <div class="單張卡片 m-3" :class="{'單張卡片_媒合成功': item.invested >= item.loan_amount}" v-for="item in dataList" :key="item.target_no" :id="item.target_no" @click="imageOutput(item.target_no)">
                     <div class="標題">
                         <div class="階級">
@@ -199,7 +225,7 @@
                         <div class="進度" :class="{'進度_媒合成功': item.invested >= item.loan_amount}">
                             <div class="標籤">
                                 <div class="種類">{{ item.product_name }}</div>
-                                <div class="剩餘">{{ item.invested < item.loan_amount  ? '可投餘額'+format(item.loan_amount-invested)+'元' : '媒合成功'}}</div>
+                                <div class="剩餘">{{ item.invested < item.loan_amount  ? '可投餘額'+format(item.loan_amount - item.invested)+'元' : '媒合成功'}}</div>
                             </div>
                             <div class="條"></div>
                         </div>
@@ -229,8 +255,8 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     const {
-        reactive,
         ref,
+        reactive,
         onMounted,
         onUnmounted,
         computed,
@@ -238,7 +264,8 @@
     } = Vue;
     Vue.createApp({
         setup() {
-            const dataList = reactive(<?php echo json_encode($list); ?>);
+            const dataList = ref([]);
+            const isLoading = ref(true);
             const format = (data) => {
                 data = parseInt(data);
                 if (!isNaN(data)) {
@@ -261,10 +288,42 @@
                     modalBody.appendChild(canvas);
                 });
             }
+            const filters = reactive({
+                start_date: new Date(new Date().setDate(new Date().getDate() - 360)).toISOString().split('T')[0],
+                end_date: new Date().toISOString().split('T')[0],
+                target_no: '',
+                order_by: 'created_at'
+            })
+
+            const getData = async () => {
+                isLoading.value = true
+                return axios({
+                    method: 'get',
+                    url: '/page/get_good_case',
+                    params: {
+                        filters
+                    }
+                }).then(({
+                    data
+                }) => {
+                    isLoading.value = false
+                    dataList.value = [...data]
+                })
+            }
+
+            onMounted(() => {
+                getData()
+            })
+
+            watch(filters, () => {
+                getData()
+            })
             return {
                 dataList,
                 format,
-                imageOutput
+                isLoading,
+                imageOutput,
+                filters
             }
         }
     }).mount('#app')
