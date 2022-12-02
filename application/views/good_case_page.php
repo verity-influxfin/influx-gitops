@@ -289,7 +289,7 @@
                 });
             }
             const filters = reactive({
-                start_date: new Date(new Date().setDate(new Date().getDate() - 360)).toISOString().split('T')[0],
+                start_date: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split('T')[0],
                 end_date: new Date().toISOString().split('T')[0],
                 target_no: '',
                 order_by: 'created_at'
