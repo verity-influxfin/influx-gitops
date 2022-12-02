@@ -10,12 +10,11 @@ class Page extends CI_Controller
 {
     public function __construct()
     {
-        $this->load->helper('std');
+        parent::__construct();
         if ( ! app_access())
         {
             show_404();
         }
-        parent::__construct();
         $this->load->model('user/user_model');
         $this->load->model('user/user_meta_model');
         $this->load->model('user/sale_dashboard_model');
