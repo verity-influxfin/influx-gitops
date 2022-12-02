@@ -277,9 +277,9 @@ Route::post('/uploadGreetingAuthorImg', 'Greetingcontroller@uploadGreetingAuthor
 
 Route::post('/deleteGreetingAuthorImg', 'Greetingcontroller@deleteGreetingAuthorImg');
 
-Route::post('setGreetingData','Greetingcontroller@setGreetingData');
+Route::post('setGreetingData', 'Greetingcontroller@setGreetingData');
 
-Route::post('getGreetingData','Greetingcontroller@getGreetingData');
+Route::post('getGreetingData', 'Greetingcontroller@getGreetingData');
 
 Route::view('/greeting/{path?}', 'greeting');
 
@@ -301,20 +301,19 @@ Route::get('/borrowLink', function () {
 Route::get('/cardgame', function () {
     return view('cardgame');
 });
-Route::post('getAns','Cardgamecontroller@getAns');
-Route::post('getData','Cardgamecontroller@getData');
-Route::post('setGamePrize','Cardgamecontroller@setGamePrize');
+Route::post('getAns', 'Cardgamecontroller@getAns');
+Route::post('getData', 'Cardgamecontroller@getData');
+Route::post('setGamePrize', 'Cardgamecontroller@setGamePrize');
 
 Route::view('/cardgame/{path?}', 'cardgame');
 
-Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
+Route::get('/campaign/{name}/{path?}', function (string $name, string $path = 'index') {
 
     $name = str_replace('-', '_', strtolower($name));
 
-    switch (true)
-    {
+    switch (true) {
 
-        // 報名截止跳轉活動介紹頁
+            // 報名截止跳轉活動介紹頁
         case $name == '2021_campus_ambassador' && $path != 'index':
             return redirect('/campaign/2021-campus-ambassador');
 
@@ -322,6 +321,44 @@ Route::get('/campaign/{name}/{path?}', function (string $name, string $path='ind
             return view($path);
     }
     throw new NotFoundHttpException();
+});
+
+Route::get('/articlepage', function (Request $request, $path = '') {
+    $input = $request->all();
+
+    @list($type, $params) = explode('-', $input['q']);
+    if ($type == 'knowledge') {
+        $ArticleController = (new App\Http\Controllers\KnowledgeArticleController);
+        $meta_data = $ArticleController->get_meta_info($params);
+        $article = $ArticleController->get_knowledge_article($params);
+        $latestArticles = $ArticleController->get_knowledge_articles();
+        // check article not null
+        if (empty($article)) {
+            return redirect('/index');
+        }
+        return view('articlePage', [
+            'type' => $type,
+            'article' => $article,
+            'latestArticles' => $latestArticles,
+            'meta_data' => $meta_data
+        ]);
+    } else if ($type == 'news') {
+        //get news
+        $newsController = (new App\Http\Controllers\NewsController);
+        $meta_data = $newsController->get_meta_info($params);
+        $news = $newsController->get_news($params);
+        if (empty($news)){
+            return redirect('/index');
+        }
+        return view('articlePage', [
+            'type' => $type,
+            'article' => $news,
+            'meta_data' => $meta_data
+        ]);
+    } else {
+        return redirect('/');
+    }
+
 });
 
 Route::get('/{path?}', function (Request $request, $path = '') {
@@ -363,7 +400,7 @@ Route::get('/{path?}', function (Request $request, $path = '') {
 
 
 // API v1
-Route::prefix('api/v1')->group(function() {
+Route::prefix('api/v1')->group(function () {
 
     // 全站搜尋
     Route::get('search', 'SearchController@page');
@@ -438,4 +475,3 @@ Route::prefix('/chk/cert')->group(function () {
         'uses' => 'CertController@chk_status'
     ]);
 });
-
