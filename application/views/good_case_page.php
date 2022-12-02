@@ -102,7 +102,6 @@
             border-radius: 0.5rem;
             background: #686868;
             color: #FFF;
-            box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
             line-height: 1;
             position: relative;
             font-size: 0.9rem;
@@ -112,7 +111,7 @@
         }
 
         .單張卡片 .目標 .進度.進度_媒合成功 .條 {
-            width: 98%;
+            width: 97%;
             background: #E8BB76;
         }
 
@@ -136,9 +135,9 @@
         .單張卡片 .目標 .進度 .條 {
             position: absolute;
             border-radius: 0.5rem;
-            top: 0.2rem;
-            left: 0.2rem;
-            bottom: 0.2rem;
+            top: 0.25rem;
+            left: 0.25rem;
+            bottom: 0.25rem;
             width: 10%;
             background: #E9A944;
             z-index: 0;
@@ -227,7 +226,7 @@
                                 <div class="種類">{{ item.product_name }}</div>
                                 <div class="剩餘">{{ item.invested < item.loan_amount  ? '可投餘額'+format(item.loan_amount - item.invested)+'元' : '媒合成功'}}</div>
                             </div>
-                            <div class="條"></div>
+                            <div class="條" :style="{'width': setWidth(item.invested,item.loan_amount) }"></div>
                         </div>
                         <div class="動作">
                             <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank" class="項目">看更多</a>
@@ -310,6 +309,11 @@
                     dataList.value = [...data]
                 })
             }
+            
+            const setWidth = (invested,loan_amount) => {
+                // 10 ~ 97%
+                return (invested/loan_amount*87+10)+'%'
+            }
 
             onMounted(() => {
                 getData()
@@ -323,7 +327,8 @@
                 format,
                 isLoading,
                 imageOutput,
-                filters
+                filters,
+                setWidth
             }
         }
     }).mount('#app')
