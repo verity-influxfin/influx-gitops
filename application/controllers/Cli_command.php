@@ -9,6 +9,7 @@ class Cli_command extends CI_Controller
         {
             show_404();
         }
+        $this->load->helper('std');
         if ( ! app_access())
         {
             show_404();
