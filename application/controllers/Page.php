@@ -107,8 +107,7 @@ class Page extends CI_Controller
 
     public function good_case()
     {
-        $data['list'] = $this->get_good_case();
-        $this->load->view('good_case_page', $data);
+        $this->load->view('good_case_page');
     }
 
     public function get_eboard_data()
@@ -180,7 +179,7 @@ class Page extends CI_Controller
             ]));
     }
 
-    private function get_good_case()
+    public function get_good_case()
     {
         // from application/controllers/api/v2/Website.php list_get()
         $list = [];
@@ -188,9 +187,19 @@ class Page extends CI_Controller
             'status' => [3, 4, 5, 10],
             'created_at >=' => strtotime('-30 days'),
         ];
-
         $orderby = 'created_at';
         $sort = 'desc';
+        $filters = $this->input->get('filters');
+        if($filters['start_date'] && $filters['end_date']){
+            $where['created_at >='] = strtotime($filters['start_date']);
+            $where['created_at <='] = strtotime($filters['end_date']);
+        }
+        if($filters['target_no']){
+            $where['target_no like'] = '%'.$filters['target_no'].'%';
+        }
+        if($filters['order_by']){
+            $orderby = $filters['order_by'];
+        }
         $this->target_model->order_by($orderby,$sort);
         
         $this->target_model->limit(1000);
@@ -317,7 +326,8 @@ class Page extends CI_Controller
                 $list[] = $param;
             }
         }
-        return $list;
+        echo json_encode($list);
+        die();
     }
 
     private function sub_product_profile($product,$sub_product){
