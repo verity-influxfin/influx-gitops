@@ -311,8 +311,8 @@
             }
             
             const setWidth = (invested,loan_amount) => {
-                // 10 ~ 97%
-                return (invested/loan_amount*87+10)+'%'
+                // 0 ~ 97%
+                return (invested/loan_amount*97)+'%'
             }
 
             onMounted(() => {
