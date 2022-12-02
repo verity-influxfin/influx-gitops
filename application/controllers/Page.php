@@ -10,6 +10,7 @@ class Page extends CI_Controller
 {
     public function __construct()
     {
+        $this->load->helper('std');
         if ( ! app_access())
         {
             show_404();
