@@ -6,7 +6,7 @@
         <div class="text-bg">
           <img
             src="@/asset/images/index/header/collegeloan-header-text-phone.png"
-            class="mx-auto d-block"
+            class="mx-auto d-block img-fluid"
             alt="學生貸"
           />
         </div>

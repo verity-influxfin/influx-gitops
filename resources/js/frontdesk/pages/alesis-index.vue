@@ -57,9 +57,6 @@
                 </div>
               </a>
             </div>
-            <!-- If we need navigation buttons -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
           </div>
         </div>
         <div class="d-sm-flex d-none">
@@ -136,7 +133,7 @@
                       alt="普匯錢包"
                       class="card-link-img"
                     />
-                    <div class="card-link-text">普匯錢包</div>
+                    <div class="card-link-text">普匯電子錢包</div>
                   </div>
                   <router-link to="/workLoan" class="card-link clickable">
                     <img
@@ -256,7 +253,7 @@
                       alt="慈善公益"
                       class="card-link-img"
                     />
-                    <div class="card-link-text">慈善公益</div>
+                    <div class="card-link-text">台大兒醫</div>
                   </router-link>
                 </div>
               </div>
@@ -1353,12 +1350,12 @@ export default {
           font-weight: 700;
           font-size: 24px;
           letter-spacing: 0.04em;
-          color: #ffffff;
+          color: #393939;
         }
         .speech-cover {
           left: 60px;
           position: relative;
-          height: 485px;
+          height: 456px;
           top: -50px;
         }
       }
@@ -1374,7 +1371,7 @@ export default {
           font-weight: 700;
           font-size: 24px;
           letter-spacing: 0.04em;
-          color: #ffffff;
+          color: #393939;
         }
         .man {
           left: 350px;
@@ -1447,6 +1444,7 @@ export default {
         font-weight: 500;
         font-size: 16px;
         line-height: 1.4;
+        margin-bottom: 5px;
         color: #036eb7;
       }
       .card-info {
@@ -2326,7 +2324,7 @@ export default {
       .sw-headers {
         min-height: 300px;
         .swiper-slide {
-          padding: 0 35px;
+          padding: 0 25px;
           color: white;
         }
         .swiper-button-prev,
