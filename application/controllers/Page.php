@@ -10,6 +10,10 @@ class Page extends CI_Controller
 {
     public function __construct()
     {
+        if ( ! app_access())
+        {
+            show_404();
+        }
         parent::__construct();
         $this->load->model('user/user_model');
         $this->load->model('user/user_meta_model');
