@@ -29,8 +29,8 @@ class KnowledgeArticleController extends Controller
         $result = [
             'meta_description' => $knowledge_info['meta_description'],
             'meta_og_description' => $knowledge_info['meta_og_description'],
-            'web_title' => !empty($knowledge_info['web_title']) ? $knowledge_info['web_title'] : $knowledge_info['title'],
-            'meta_og_title' => !empty($knowledge_info['meta_og_title']) ? $knowledge_info['meta_og_title'] : $knowledge_info['title'],
+            'web_title' => !empty($knowledge_info['web_title']) ? $knowledge_info['web_title'] : $knowledge_info['post_title'],
+            'meta_og_title' => !empty($knowledge_info['meta_og_title']) ? $knowledge_info['meta_og_title'] : $knowledge_info['post_title'],
             'meta_og_image' => !empty($knowledge_info['meta_og_image']) ? $knowledge_info['meta_og_image'] : asset($knowledge_info['media_link'])
         ];
 
