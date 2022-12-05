@@ -192,7 +192,7 @@
                                         <th>日期</th>
                                         <th>應收本金</th>
                                         <th>應收利息</th>
-                                        <th>本金餘額</th>
+                                        <th>逾期本金餘額</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="is_waiting_response">
@@ -211,7 +211,7 @@
                                             <td style="padding-left: 1em;">{{ row.date }}</td>
                                             <td class="text-right">{{ amount(row.principal_receivable) }}</td>
                                             <td class="text-right">{{ amount(row.interest_receivable) }}</td>
-                                            <td class="text-right">{{ amount(row.principal_balance) }}</td>
+                                            <td class="text-right">{{ amount(row.delay_principal_balance) }}</td>
                                         </tr>
                                     </template>
                                 </tbody>
