@@ -330,6 +330,7 @@ Route::get('/articlepage', function (Request $request, $path = '') {
     if ($type == 'knowledge') {
         $ArticleController = (new App\Http\Controllers\KnowledgeArticleController);
         $meta_data = $ArticleController->get_meta_info($params);
+        $meta_data['link'] = $request->fullUrl();
         $article = $ArticleController->get_knowledge_article($params);
         $latestArticles = $ArticleController->get_knowledge_articles();
         // check article not null
@@ -346,6 +347,7 @@ Route::get('/articlepage', function (Request $request, $path = '') {
         //get news
         $newsController = (new App\Http\Controllers\NewsController);
         $meta_data = $newsController->get_meta_info($params);
+        $meta_data['link'] = $request->fullUrl();
         $news = $newsController->get_news($params);
         if (empty($news)){
             return redirect('/index');
@@ -365,37 +367,13 @@ Route::get('/{path?}', function (Request $request, $path = '') {
     $default_desc = '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。';
     $default_title = 'inFlux普匯金融科技';
     $default_og_img = asset('images/site_icon.png');
-
-    preg_match("/^(knowledge|news)-([\d]+)$/i", $request->get('q'), $matches);
-    if ($path == 'articlepage' && !empty($matches[1]) && !empty($matches[2])) {
-        $type = $matches[1];
-        $id = $matches[2];
-        switch ($type) {
-            case 'knowledge': // 小學堂文章
-                $meta_data = (new App\Http\Controllers\KnowledgeArticleController)->get_meta_info($id);
-                break;
-            case 'news': // 最新消息
-                $meta_data = (new App\Http\Controllers\NewsController)->get_meta_info($id);
-                break;
-        }
-        $meta_data['link'] = $request->fullUrl();
-        return view('index', [
-            'meta_description' => !empty($meta_data['meta_description']) ? $meta_data['meta_description'] : $default_desc,
-            'meta_og_description' => !empty($meta_data['meta_og_description']) ? $meta_data['meta_og_description'] : $default_desc,
-            'web_title' => !empty($meta_data['web_title']) ? $meta_data['web_title'] : $default_title,
-            'meta_og_title' => !empty($meta_data['meta_og_title']) ? $meta_data['meta_og_title'] : $default_title,
-            'meta_og_image' => !empty($meta_data['meta_og_image']) ? $meta_data['meta_og_image'] : $default_og_img,
-            'meta_canonical' => !empty($meta_data['link']) ? $meta_data['link'] : ''
-        ]);
-    } else {
-        return view('index', [
-            'meta_description' => $default_desc,
-            'meta_og_description' => $default_desc,
-            'web_title' => $default_title,
-            'meta_og_title' => $default_title,
-            'meta_og_image' => $default_og_img
-        ]);
-    }
+    return view('index', [
+        'meta_description' => $default_desc,
+        'meta_og_description' => $default_desc,
+        'web_title' => $default_title,
+        'meta_og_title' => $default_title,
+        'meta_og_image' => $default_og_img
+    ]);
 });
 
 

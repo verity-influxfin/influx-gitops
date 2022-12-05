@@ -41,9 +41,6 @@
     <link rel="icon" href="{{ asset('images/site_icon.png') }}">
 
     <!-- package -->
-    @if (isset($meta_canonical))
-    <link rel="canonical" href="{{ $meta_canonical }}" />
-    @endif
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/jquery-ui.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/bootstrap.min.css') }}">
