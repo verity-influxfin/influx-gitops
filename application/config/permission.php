@@ -598,7 +598,7 @@ $config['permission'] = [
           'etpr_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'replayment' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'get_replayment_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
-          'get_replayment_data_latest' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'get_stack_replayment_schedule' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
           'soci' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
           'get_soci_data' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
           'soci_spreadsheet' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],

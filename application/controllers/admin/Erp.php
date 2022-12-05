@@ -220,14 +220,14 @@ class ERP extends MY_Admin_Controller
     }
 
     /**
-     * 取得本攤表v2 API 資料
+     * 取得堆疊後本攤表 API 資料
      * 
      * @created_at            2021-11-03
      * @created_at            Allan
      */
-    public function get_replayment_data_latest()
+    public function get_stack_replayment_schedule()
     {
-        $data = $this->erp_client->request('GET', '/v2/replayment_schedule_list/latest', [
+        $data = $this->erp_client->request('GET', '/stack_replayment_schedule', [
             'query' => $this->input->get() 
         ])->getBody()->getContents();
         echo $data;

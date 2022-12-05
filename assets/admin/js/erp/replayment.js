@@ -50,7 +50,7 @@ var app = new Vue({
                 .join('&')
             // axios get get_replayment_data
             this.is_waiting_response = true
-            axios.get('/admin/erp/get_replayment_data_latest?' + string)
+            axios.get('/admin/erp/get_stack_replayment_schedule?' + string)
                 .then(({ data }) => {
                     this.replayment_list_latest = data
                 }).catch((error) => {

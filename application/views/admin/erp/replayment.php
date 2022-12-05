@@ -172,7 +172,7 @@
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
-                                    <template v-for="row in replayment_list_latest.sum_codedRs_list">
+                                    <template v-for="row in replayment_list_latest.stacked_coded1_rsRow_list">
                                         <tr>
                                             <td style="padding-left: 1em;">{{ row.date }}</td>
                                             <td class="text-right">{{ amount(row.principal_receivable) }}</td>
@@ -206,7 +206,7 @@
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
-                                    <template v-for="row in replayment_list_latest.sum_codedRs_list">
+                                    <template v-for="row in replayment_list_latest.stacked_coded2_rsRow_list">
                                         <tr>
                                             <td style="padding-left: 1em;">{{ row.date }}</td>
                                             <td class="text-right">{{ amount(row.principal_receivable) }}</td>
