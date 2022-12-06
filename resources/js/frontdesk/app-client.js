@@ -35,15 +35,9 @@ export default () => {
   });
 
   router.beforeEach((to, from, next) => {
-    if (to.path === "/") {
-      gtag("config", "UA-117279688-9", { page_path: '/index' });
-      next('/index');
-    } else {
-      gtag("config", "UA-117279688-9", { page_path: to.path });
-      $(window).scrollTop(0);
-      next();
-    }
-
+    gtag("config", "UA-117279688-9", { page_path: to.path });
+    $(window).scrollTop(0);
+    next();
     if ($('.navbar-toggler').attr('aria-expanded') === 'true') {
       $('.navbar-toggler').click();
     }

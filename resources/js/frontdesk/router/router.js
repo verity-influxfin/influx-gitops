@@ -56,8 +56,8 @@ import campus2022Result from '../pages/2022_campus_ambassador/result'
 import campus2022Personal from '../pages/2022_campus_ambassador/personal'
 
 let routers = [
-    { path: '*', redirect: '/index' },
-    { path: '/index', component: index },
+    { path: '*', redirect: '/' },
+    { path: '/', component: index, },
     { path: '/borrow', component: borrow },
     { path: '/workLoan', component: workLoan },
     { path: '/collegeLoan', component: collegeLoan },

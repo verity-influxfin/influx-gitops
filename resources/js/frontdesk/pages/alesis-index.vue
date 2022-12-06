@@ -1372,6 +1372,7 @@ export default {
       .swiper-slide {
         padding: 0 45px;
         color: white;
+        overflow: hidden;
       }
       .swiper-button-prev,
       .swiper-button-next {
