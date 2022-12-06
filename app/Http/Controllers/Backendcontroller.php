@@ -249,10 +249,19 @@ class Backendcontroller extends BaseController
                 $filename = $file->getClientOriginalName();
                 $file->move('upload/article', "$filename");
                 $pic_path = 'upload/article/' . $filename;
-                echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(0, "' . $pic_path . '","");</script>';
+                return response()->json([
+                    'uploaded' => 1,
+                    'fileName' => $filename,
+                    'url' =>  '/' . $pic_path
+                ], 200);
             }
         } else {
-            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+            return response()->json([
+                'uploaded' => 0,
+                'error' => [
+                    'message' => '上傳失敗'
+                ]
+            ], 400);
         }
     }
 
