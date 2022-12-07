@@ -142,7 +142,7 @@ class NewsController extends Controller
     {
         $show = new Show(News::findOrFail($id));
 
-        $show->setting_id('Setting id');
+        $show->panel()->title('詳細資訊 可點列表回上一頁');
 
         return $show;
     }

@@ -246,12 +246,14 @@ class Backendcontroller extends BaseController
         if ($request->hasFile('upload')) {
             $file = $request->file('upload');
             if ($file->isValid()) {
-                $filename = $file->getClientOriginalName();
-                $file->move('upload/article', "$filename");
+                $now = date('YmdHis');
+                $origin_filename = $file->getClientOriginalName();
+                $filename = $now . '_' . $origin_filename;
+                $file->move('upload/article/', "$filename");
                 $pic_path = 'upload/article/' . $filename;
                 return response()->json([
                     'uploaded' => 1,
-                    'fileName' => $filename,
+                    'fileName' => $origin_filename,
                     'url' =>  '/' . $pic_path
                 ], 200);
             }
