@@ -145,7 +145,7 @@
             <div class="row no-gutters">
                 <div class="col-auto alesis-header">
                     <div class="logo">
-                        <a href="/index"><img src="/images/logo.png" class="image"></a>
+                        <a href="/"><img src="/images/logo.png" class="image"></a>
                     </div>
                     <div class="d-sm-flex d-none no-gutters w-100">
                         <div class="functions col-auto">
