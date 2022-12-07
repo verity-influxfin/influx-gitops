@@ -6,7 +6,7 @@
         <div class="text-bg">
           <img
             src="@/asset/images/index/header/workloan-header-text-phone.png"
-            class="mx-auto d-block"
+            class="mx-auto d-block img-fluid"
             alt="上班族信貸"
           />
         </div>
@@ -71,7 +71,7 @@
   .people-bg {
     padding-right: 0;
     display: block;
-    margin: 35px auto 0;
+    margin: 40px auto 0;
   }
 }
 </style>

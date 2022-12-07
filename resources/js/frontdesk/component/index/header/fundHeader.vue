@@ -14,7 +14,7 @@
       <div class="col-12">
         <img
           src="@/asset/images/index/header/fund-header.png"
-          class="w-100 img-fluid"
+          class="w-100 img-fluid p-1"
         />
       </div>
     </div>
