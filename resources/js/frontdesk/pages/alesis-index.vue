@@ -1434,7 +1434,7 @@ export default {
         color: #083a6e;
       }
       .card-hr {
-        margin: 4px 0;
+        margin: 2px 0;
         background: #ddeafa;
         height: 2px;
         width: 40px;
