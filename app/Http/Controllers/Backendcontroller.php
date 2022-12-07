@@ -248,7 +248,13 @@ class Backendcontroller extends BaseController
             if ($file->isValid()) {
                 $now = date('YmdHis');
                 $origin_filename = $file->getClientOriginalName();
-                $filename = $now . '_' . $origin_filename;
+                $filename = $origin_filename;
+                // check file exist
+                if (file_exists('upload/article/' . $origin_filename)) {
+                    // rename file form filename.type to filename_now.type
+                    $filenameExplode = explode('.', $origin_filename);
+                    $filename = $filenameExplode[0] . '_' . $now . '.' . $filenameExplode[1];
+                }
                 $file->move('upload/article/', "$filename");
                 $pic_path = 'upload/article/' . $filename;
                 return response()->json([
