@@ -7,16 +7,30 @@
     >下載檔案</button>
     <div class="input-group">
       <v-date-picker
-        mode="range"
         v-model="range"
+        is-range
         class="date-picker"
-        :popover="{ visibility: 'click' }"
-        :key="new Date()"
-      />
-      <button class="btn btn-custom" type="button" @click="type='range';search()">
+        :masks="masks"
+      >
+        <template v-slot="{ inputValue, inputEvents }">
+          <div class="d-flex align-items-center">
+            <input
+              :value="inputValue.start"
+              v-on="inputEvents.start"
+              class="form-control w-50"
+            />
+            <span class="mx-2">-</span>
+            <input
+              :value="inputValue.end"
+              v-on="inputEvents.end"
+              class="form-control w-75"
+            />
+          </div>
+        </template>
+      </v-date-picker>
+      <button class="btn btn-custom" type="button" @click="search()">
         <i class="fas fa-search"></i>
       </button>
-
       <label class="btn-rel" @click="search()">
         <input type="radio" name="radio" value="month" v-model="type" />
         <span>本月</span>
@@ -48,13 +62,21 @@
 </template>
 
 <script>
+import VDatePicker from 'v-calendar/lib/components/date-picker.umd';
+
 export default {
   props: ["list"],
+  components: {
+    VDatePicker,
+  },
   data: () => ({
     type: "",
     range: {
       start: new Date(),
       end: new Date(),
+    },
+    masks:{
+      input: 'YY-MM-DD',
     },
     passbook: [],
   }),
@@ -103,6 +125,9 @@ export default {
           });
         }
       });
+    },
+    'range'() {
+      this.search();
     },
   },
   methods: {

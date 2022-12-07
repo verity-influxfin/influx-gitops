@@ -191,7 +191,6 @@
 <script>
 export default {
   created() {
-    this.getBannerData();
     $('title').text(`徵才服務 - inFlux普匯金融科技`);
   },
 }

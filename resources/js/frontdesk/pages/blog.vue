@@ -43,7 +43,7 @@
                                     <div class="row">
                                         <div class="col-lg-7">
                                             <a :href="item.link">
-                                                <img class="cover" :src="item.media_link ? item.media_link : '/images/default-image.png'">
+                                                <img class="cover" :src="item.media_link ? item.media_link : '/images/default-image.png'" :alt="item.media_alt ? item.media_alt : item.media_link.split('/').pop().split('.').shift()">
                                             </a>
                                         </div>
                                         <div class="col-lg-5">

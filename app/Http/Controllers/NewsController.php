@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class NewsController extends Controller
 {
@@ -45,5 +45,9 @@ class NewsController extends Controller
         }
 
         return $result;
+    }
+    public function get_news($id)
+    {
+        return DB::table('news')->select('*')->where('id', '=', $id)->first();
     }
 }

@@ -1,0 +1,155 @@
+.knowledge-wrapper {
+  padding: 30px;
+  overflow: hidden;
+  position: relative;
+  .article {
+    .title {
+      color: #153a71;
+      font-weight: bold;
+      font-size: 2em;
+    }
+    img.cover {
+      width: 100%;
+      object-fit: contain;
+      margin-bottom: 1em;
+      padding-right: 4em;
+    }
+    .info {
+      margin-bottom: 1em;
+      .date {
+        color: #909090;
+        font-size: 1.1em;
+        margin-left: 0.3em;
+      }
+    }
+    .content {
+      padding-right: 4em;
+      img {
+        margin-bottom: 1em;
+      }
+      big,
+      big strong {
+        color: #153a71;
+        font-weight: bold;
+      }
+      p {
+        color: #5d5555;
+      }
+      img {
+        max-width: 100%;
+      }
+    }
+  }
+
+  .share {
+    .title {
+      color: #153a71;
+      font-weight: bold;
+      font-size: 1.5em;
+      margin-top: 1em;
+    }
+    .link {
+      padding: 0;
+      margin: 0 1em;
+      img {
+        max-height: 2em;
+      }
+    }
+  }
+
+  .ad_aside {
+    img {
+      width: 100%;
+    }
+  }
+
+  .search-form {
+    .form-control {
+      border-color: #3489c5;
+      border-right: none;
+    }
+    .btn-search {
+      border-left: none;
+      border-color: #3489c5;
+      background: none;
+      color: #3489c5;
+    }
+  }
+
+  .latest-article {
+    .section-title {
+      color: #153a71;
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+    .list-group-item {
+      padding: 0.75rem 0.5rem;
+
+      &:hover .title {
+        text-decoration: underline;
+      }
+      .title {
+        color: #5d5555;
+        white-space: nowrap;
+        font-size: 1em;
+        font-weight: bold;
+        width: 16em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .date {
+        color: #036eb7;
+      }
+    }
+  }
+}
+.article-wrapper {
+  width: 100%;
+  overflow: hidden;
+  padding: 50px 30px 30px 30px;
+  background-image: url('../../js/frontdesk/asset/images/article.png');
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  .news-view {
+    width: 80%;
+    margin: 0 auto;
+    .title {
+      font-size: 40px;
+      font-weight: bold;
+      line-height: normal;
+      text-align: center;
+      color: #061164;
+      margin-bottom: 4rem;
+      white-space: pre-wrap;
+    }
+    .title-img {
+      text-align: center;
+    }
+    .main-content {
+      padding: 20px;
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .knowledge-wrapper .article img.cover {
+    padding-right: 0;
+  }
+  .knowledge-wrapper .article .content {
+    padding-right: 0;
+  }
+  .article-wrapper {
+    padding: 20px 10px 10px 10px;
+    .news-view {
+      width: 100%;
+    }
+    .news-view {
+      width: 100%;
+      .title {
+        font-size: 20px;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}

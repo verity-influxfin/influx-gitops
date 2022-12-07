@@ -277,9 +277,9 @@ Route::post('/uploadGreetingAuthorImg', 'Greetingcontroller@uploadGreetingAuthor
 
 Route::post('/deleteGreetingAuthorImg', 'Greetingcontroller@deleteGreetingAuthorImg');
 
-Route::post('setGreetingData','Greetingcontroller@setGreetingData');
+Route::post('setGreetingData', 'Greetingcontroller@setGreetingData');
 
-Route::post('getGreetingData','Greetingcontroller@getGreetingData');
+Route::post('getGreetingData', 'Greetingcontroller@getGreetingData');
 
 Route::view('/greeting/{path?}', 'greeting');
 
@@ -301,20 +301,19 @@ Route::get('/borrowLink', function () {
 Route::get('/cardgame', function () {
     return view('cardgame');
 });
-Route::post('getAns','Cardgamecontroller@getAns');
-Route::post('getData','Cardgamecontroller@getData');
-Route::post('setGamePrize','Cardgamecontroller@setGamePrize');
+Route::post('getAns', 'Cardgamecontroller@getAns');
+Route::post('getData', 'Cardgamecontroller@getData');
+Route::post('setGamePrize', 'Cardgamecontroller@setGamePrize');
 
 Route::view('/cardgame/{path?}', 'cardgame');
 
-Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
+Route::get('/campaign/{name}/{path?}', function (string $name, string $path = 'index') {
 
     $name = str_replace('-', '_', strtolower($name));
 
-    switch (true)
-    {
+    switch (true) {
 
-        // 報名截止跳轉活動介紹頁
+            // 報名截止跳轉活動介紹頁
         case $name == '2021_campus_ambassador' && $path != 'index':
             return redirect('/campaign/2021-campus-ambassador');
 
@@ -324,46 +323,62 @@ Route::get('/campaign/{name}/{path?}', function (string $name, string $path='ind
     throw new NotFoundHttpException();
 });
 
+Route::get('/articlepage', function (Request $request, $path = '') {
+    $input = $request->all();
+
+    @list($type, $params) = explode('-', $input['q']);
+    if ($type == 'knowledge') {
+        $ArticleController = (new App\Http\Controllers\KnowledgeArticleController);
+        $meta_data = $ArticleController->get_meta_info($params);
+        $meta_data['link'] = $request->fullUrl();
+        $article = $ArticleController->get_knowledge_article($params);
+        $latestArticles = $ArticleController->get_knowledge_articles();
+        // check article not null
+        if (empty($article)) {
+            return redirect('/index');
+        }
+        return view('articlePage', [
+            'type' => $type,
+            'article' => $article,
+            'latestArticles' => $latestArticles,
+            'meta_data' => $meta_data
+        ]);
+    } else if ($type == 'news') {
+        //get news
+        $newsController = (new App\Http\Controllers\NewsController);
+        $meta_data = $newsController->get_meta_info($params);
+        $meta_data['link'] = $request->fullUrl();
+        $news = $newsController->get_news($params);
+        if (empty($news)){
+            return redirect('/index');
+        }
+        return view('articlePage', [
+            'type' => $type,
+            'article' => $news,
+            'meta_data' => $meta_data
+        ]);
+    } else {
+        return redirect('/');
+    }
+
+});
+
 Route::get('/{path?}', function (Request $request, $path = '') {
     $default_desc = '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。';
     $default_title = 'inFlux普匯金融科技';
     $default_og_img = asset('images/site_icon.png');
-
-    preg_match("/^(knowledge|news)-([\d]+)$/i", $request->get('q'), $matches);
-    if ($path == 'articlepage' && !empty($matches[1]) && !empty($matches[2])) {
-        $type = $matches[1];
-        $id = $matches[2];
-        switch ($type) {
-            case 'knowledge': // 小學堂文章
-                $meta_data = (new App\Http\Controllers\KnowledgeArticleController)->get_meta_info($id);
-                break;
-            case 'news': // 最新消息
-                $meta_data = (new App\Http\Controllers\NewsController)->get_meta_info($id);
-                break;
-        }
-        $meta_data['link'] = $request->fullUrl();
-        return view('index', [
-            'meta_description' => !empty($meta_data['meta_description']) ? $meta_data['meta_description'] : $default_desc,
-            'meta_og_description' => !empty($meta_data['meta_og_description']) ? $meta_data['meta_og_description'] : $default_desc,
-            'web_title' => !empty($meta_data['web_title']) ? $meta_data['web_title'] : $default_title,
-            'meta_og_title' => !empty($meta_data['meta_og_title']) ? $meta_data['meta_og_title'] : $default_title,
-            'meta_og_image' => !empty($meta_data['meta_og_image']) ? $meta_data['meta_og_image'] : $default_og_img,
-            'meta_canonical' => !empty($meta_data['link']) ? $meta_data['link'] : ''
-        ]);
-    } else {
-        return view('index', [
-            'meta_description' => $default_desc,
-            'meta_og_description' => $default_desc,
-            'web_title' => $default_title,
-            'meta_og_title' => $default_title,
-            'meta_og_image' => $default_og_img
-        ]);
-    }
+    return view('index', [
+        'meta_description' => $default_desc,
+        'meta_og_description' => $default_desc,
+        'web_title' => $default_title,
+        'meta_og_title' => $default_title,
+        'meta_og_image' => $default_og_img
+    ]);
 });
 
 
 // API v1
-Route::prefix('api/v1')->group(function() {
+Route::prefix('api/v1')->group(function () {
 
     // 全站搜尋
     Route::get('search', 'SearchController@page');
@@ -438,4 +453,3 @@ Route::prefix('/chk/cert')->group(function () {
         'uses' => 'CertController@chk_status'
     ]);
 });
-

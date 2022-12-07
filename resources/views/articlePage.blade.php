@@ -17,7 +17,7 @@
             j.src =
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '{{env('APP_ENV ') == 'production ' ? 'GTM - 5 Z439PW ' : 'GTM - 589 Z9H6 '}}');
+        })(window, document, 'script', 'dataLayer', '<?php echo env('APP_ENV ') == 'production ' ? 'GTM-5Z439PW' : 'GTM-589Z9H6' ?>');
     </script>
     <!-- End Google Tag Manager -->
     <meta charset="utf-8">
@@ -29,18 +29,20 @@
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="keywords" content="新北產業發展論壇、一金二造三區域、信貸、小額貸款、房貸試算、裝潢貸款、車貸試算、投資、債務整合、p2p金融科技、智慧製造、中小企業、中小企業融資">
-    <meta property="og:description" content="{{ $meta_og_description ?? '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。' }}">
-    <meta name="description" content="{{ $meta_description ?? '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。' }}">
+    <meta property="og:description" content="{{ $meta_data['meta_og_description'] ?? '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。' }}">
+    <meta name="description" content="{{ $meta_data['meta_description'] ?? '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。' }}">
     <meta property="og:site_name" content="inFlux普匯金融科技">
-    <meta property="og:title" content="{{ $meta_og_title ?? 'inFlux普匯金融科技' }}">
+    <meta property="og:title" content="{{ $meta_data['meta_og_title'] ?? 'inFlux普匯金融科技' }}">
     <meta name="google-site-verification" content="2arsm3rXMMsobi4wX5akzPpQO6-Q6zgUjqwIT0P9UKo" />
-    <meta property="og:image" content="{{ $meta_og_image ?? asset('images/site_icon.png') }}">
+    <meta property="og:image" content="{{ $meta_data['meta_og_image'] ??  asset('images/site_icon.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="fb:app_id" content="2194926914163491">
-    <title>{{ $web_title ?? 'inFlux普匯金融科技' }}</title>
+    <title>{{ $article->post_title .' - inFlux普匯金融科技' ?? 'inFlux普匯金融科技' }}</title>
     <link rel="icon" href="{{ asset('images/site_icon.png') }}">
-
     <!-- package -->
+    @if (isset($meta_data['link']))
+    <link rel="canonical" href="{{ $meta_data['link'] }}" />
+    @endif
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/jquery-ui.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/bootstrap.min.css') }}">
@@ -55,6 +57,7 @@
 
     <!-- local -->
     <link rel="stylesheet" href="{{ mix('css/web.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/articlepage.css') }}">
 
     <!--Facebook Comments-->
     <script>
@@ -140,7 +143,7 @@
     <noscript>
         please turn on your jacascript
     </noscript>
-    <div id="web_index" @mousemove="clicked">
+    <div id="web_index">
         <div class="header-container">
             <div class="row no-gutters">
                 <div class="col-auto alesis-header">
@@ -150,45 +153,29 @@
                     <div class="d-sm-flex d-none no-gutters w-100">
                         <div class="functions col-auto">
                             <div class="function-item">
-                                <div class="function-title">個人貸款</div>
+                                <div class="function-title">貸款產品</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content product">
                                             <div class="function-list-items">
-                                                <div class="link-title">AI風控 助你圓夢</div>
+                                                <div class="link-title">個人融資</div>
                                                 <div class="link-item">
-                                                    <div class="link-text">普匯電子錢包</div>
-                                                    <div class="link-coming-soon">(coming soon)</div>
+                                                    <a href="/collegeLoan" class="link-text">學生貸</a>
                                                 </div>
                                                 <div class="link-item">
                                                     <a href="/workLoan" class="link-text">上班族貸</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/collegeLoan" class="link-text">學生貸</a>
-                                                </div>
-                                                <div class="link-item">
                                                     <a href="/engineerLoan" class="link-text">資訊工程師貸</a>
                                                 </div>
-                                                <div class="link-item">
-                                                    <div class="link-text">房屋貸款</div>
-                                                    <div class="link-coming-soon">(coming soon)</div>
-                                                </div>
-                                                <div class="link-item">
-                                                    <div class="link-text">消費分期</div>
-                                                    <div class="link-coming-soon">(coming soon)</div>
-                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="function-item">
-                                <div class="function-title">中小企業貸款</div>
-                                <div class="function-list row no-gutters">
-                                    <div class="col-auto d-flex no-gutters">
-                                        <div class="function-list-content enterprise">
-                                            <div class="function-list-items ">
-                                                <div class="link-title">普惠金融 貸你滿足</div>
+                                            <div class="function-list-items">
+                                                <div class="link-title">企業融資</div>
+                                                <div class="link-item">
+                                                    <a href="/business-loan/smeg" class="link-text">
+                                                        <div>信保專案(銀行合作)</div>
+                                                    </a>
+                                                </div>
                                                 <div class="link-item">
                                                     <div class="link-text">
                                                         <div>企業主速貸</div>
@@ -197,18 +184,36 @@
                                                 </div>
                                                 <div class="link-item">
                                                     <div class="link-text">
-                                                        <div>新創/網紅/SOHO</div>
+                                                        <div>中小企業信貸</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="function-list-items">
+                                                <div class="link-title">汽車貸款</div>
+                                                <div class="link-item">
+                                                    <div class="link-text">
+                                                        <div>我是消費者</div>
                                                         <div class="link-coming-soon">(coming soon)</div>
                                                     </div>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/business-loan/smeg" class="link-text">
-                                                        <div>信保專案</div>
-                                                    </a>
+                                                    <div class="link-text">
+                                                        <div>我是車商</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="function-list-items">
+                                                <div class="link-title">分享QR賺外快</div>
+                                                <div class="link-item">
+                                                    <div class="link-text">
+                                                        <a href="/promote-code-intro" class="link-text">我是推薦者</a>
+                                                    </div>
                                                 </div>
                                                 <div class="link-item">
                                                     <div class="link-text">
-                                                        <div>中小企業信貸</div>
+                                                        <div>我是特約商</div>
                                                         <div class="link-coming-soon">(coming soon)</div>
                                                     </div>
                                                 </div>
@@ -218,23 +223,23 @@
                                 </div>
                             </div>
                             <div class="function-item">
-                                <div class="function-title">分期超市</div>
+                                <div class="function-title">投資專區</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
-                                        <div class="function-list-content project">
+                                        <div class="function-list-content invest">
                                             <div class="function-list-items">
-                                                <div class="link-title">體驗金融科技帶來的便利</div>
+                                                <div class="link-title">投資專區</div>
                                                 <div class="link-item">
-                                                    <div class="link-text">
-                                                        <div>美賣店商</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
-                                                    </div>
+                                                    <a href="/investment" class="link-text">債權投資</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <div class="link-text">
-                                                        <div>醫美分期</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
-                                                    </div>
+                                                    <a href="/transfer" class="link-text">債權轉讓</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/risk" class="link-text">風險報告書</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/projects" class="link-text">查看案件</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -247,34 +252,10 @@
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content charitable">
                                             <div class="function-list-items">
-                                                <div class="link-title">永續經營 幸福無所不在</div>
+                                                <div class="link-title">慈善捐款</div>
                                                 <div class="link-item">
                                                     <a href="/charitable" class="link-text">台大兒醫</a>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="function-item">
-                                <div class="function-title">投資專區</div>
-                                <div class="function-list row no-gutters">
-                                    <div class="col-auto d-flex no-gutters">
-                                        <div class="function-list-content invest">
-                                        <div class="function-list-items">
-                                            <div class="link-title">小額分散 複利滾投</div>
-                                            <div class="link-item">
-                                                <a href="/investment" class="link-text">債權投資</a>
-                                            </div>
-                                            <div class="link-item">
-                                                <a href="/transfer" class="link-text">債權轉讓</a>
-                                            </div>
-                                            <div class="link-item">
-                                                <a href="/risk" class="link-text">風險報告書</a>
-                                            </div>
-                                            <div class="link-item">
-                                                <a href="/projects" class="link-text">查看案件</a>
-                                            </div>
                                             </div>
                                         </div>
                                     </div>
@@ -338,10 +319,10 @@
                                     <a class="nav-link dropdown-toggle" style="color: #036EB7;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                                     <ul class="dropdown-menu" style="min-width: 5rem;">
                                         <li v-if="isInvestor == 0">
-                                            <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
+                                            <a class="dropdown-item loan-link" href="/loannotification">借款人</a>
                                         </li>
                                         <li v-else>
-                                            <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
+                                            <a class="dropdown-item invest-link" href="/investnotification">投資人</a>
                                         </li>
                                         <li v-if="flag === 'login'">
                                             <p class="dropdown-item" @click="logout">登出</p>
@@ -426,10 +407,10 @@
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                         <ul class="dropdown-menu" style="min-width: 5rem;">
                             <li v-if="isInvestor == 0">
-                                <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
+                                <a class="dropdown-item loan-link" href="/loannotification">借款人</a>
                             </li>
                             <li v-else>
-                                <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
+                                <a class="dropdown-item invest-link" href="/investnotification">投資人</a>
                             </li>
                             <li v-if="flag === 'login'">
                                 <p class="dropdown-item" @click="logout">登出</p>
@@ -440,7 +421,86 @@
             </div>
         </div>
         <div class="content-wrapper">
-            <router-view></router-view>
+            @if ($type == 'knowledge')
+            <div class="knowledge-wrapper container">
+                <div class="row">
+                    <div class="col-12 col-lg-9 mb-3">
+                        <article class="article">
+                            <h1 class="title">{{ $article->post_title }}</h1>
+                            <div class="info">
+                                <span class="date">{{ $article->post_date }}</span>
+                            </div>
+                            <img class="cover" src="{{ $article->media_link }}"
+                                alt="<?php
+                                    if (empty($article->media_alt)) {
+                                        preg_match('/\/([^\/]+)$/', $article->media_link, $matches);
+                                        $filename = explode('.', $matches[1]);
+                                        echo $filename[0];
+                                    } else {
+                                        echo $article->media_alt;
+                                    }?>"/>
+                            <div class="content">
+                                {!! $article->post_content !!}
+                            </div>
+                        </article>
+                        <div class="row share">
+                            <div class="col">
+                                <span class="title">分享：</span>
+                                <button class="btn btn_link link" @click="addToFB">
+                                    <img :src="'/images/facebook.svg'" class="img-fluid" />
+                                </button>
+                                <button class="btn btn_link link" @click="addToLINE">
+                                    <img :src="'/images/line.png'" class="img-fluid" />
+                                </button>
+                                <button class="btn btn_link link" @click="copyLink">
+                                    <img :src="'/images/link_grey.svg'" class="img-fluid" />
+                                </button>
+                                <span v-if="copied">網址複製成功 !</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 ">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col latest-article">
+                                        <h3 class="section-title">最新文章</h3>
+                                        @foreach ($latestArticles as $latestArticle)
+                                        <div class="list-group list-group-flush">
+                                            <a class="list-group-item list-group-item-action" href="/articlepage?q=knowledge-{{$latestArticle->ID}}">
+                                                <h5 class="title"> {{ $latestArticle->post_title }} </h5>
+                                                <small class="date">
+                                                    {{ $latestArticle->post_date }}
+                                                </small>
+                                            </a>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif ($type == 'news')
+            <div class="article-wrapper">
+                <div class='news-view'>
+                    <h3 class="title">{{$article->post_title}}</h3>
+                    <div class="contenier">
+                        <div class="title-img">
+                            <img src="{{$article->image_url}}" class="img-fluid" />
+                        </div>
+                        <div class="main-content">
+                            {!! $article->post_content !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
         <div class="row no-gutters" style="background: #153a71;">
             <div class="alesis-footer">
@@ -569,8 +629,6 @@
                 </div>
             </div>
         </div>
-
-
         <!--<a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>-->
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
@@ -651,7 +709,7 @@
                     <div class="alert alert-danger" v-if="message">@{{message}}</div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-submit" @click="doLogin">登入</button>
-                        <router-link v-if="!isCompany" class="btn btn-register" @click.native="hideLoginModal()" to="/register">會員註冊</router-link>
+                        <a v-if="!isCompany" class="btn btn-register" href="/register">會員註冊</a>
                     </div>
                 </div>
             </div>
@@ -679,8 +737,8 @@
 <script type="text/javascript" src="{{ asset('js/package/particles.min.js') }}"></script>
 
 <!-- local -->
-<script src="/js/manifest.js"></script>
+<script src="/js/manifest.js"></script> -->
 <script src="/js/vendor.js"></script>
-<script type="text/javascript" src="{{ mix('js/web.js') }}"></script>
+<script type="text/javascript" src="{{ mix('js/articlepage.js') }}"></script>
 
 </html>

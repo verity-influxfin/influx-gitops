@@ -8,7 +8,7 @@
                         <div class="info">
                             <span class="date">{{article.date}}</span>
                         </div>
-                        <img class="cover" :src="article.cover_img" v-if="article.cover_img" />
+                        <img class="cover" :src="article.cover_img" v-if="article.cover_img" :alt="article.media_alt" />
                         <div class="content" v-html="article.content"></div>
                     </article>
                     <div class="row share">
@@ -38,7 +38,7 @@
                                     </span>
                                     <input type="text" class="form-control" :value="article.link" @click="copy()" />
                                 </div>
-                                <div v-if="this.isCopyed" class="copyed">
+                                <div v-if="this.copied" class="copyed">
                                     <i class="fas fa-check-circle"></i>
                                 </div>
                             </div>
@@ -125,9 +125,9 @@
                 FB.XFBML.parse();
                 if (res.data && Object.keys(res.data).length > 0) {
                     let data = res.data;
-
                     this.article = {
                         cover_img: data.media_link ? data.media_link : '',
+                        media_alt: data.media_alt ? data.media_alt : data.media_link.split('/').pop().split('.').shift(),
                         title    : data.post_title,
                         date     : data.post_date.substr(0, 10),
                         content  : data.post_content,
