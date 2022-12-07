@@ -58,7 +58,7 @@ let newsRow = Vue.extend({
         <a :href="item.link">
           <div class="img"><img :src="item.image_url" class="img-custom" /></div>
           <div class="cnt">
-            <span class="date">{{item.post_date}}</span>
+            <span class="date" v-if="item.post_date">{{item.post_date.substr(0,10)}}</span>
             <p class="title">{{filterBr(item.post_title)}}</p>
           </div>
           <div class="read">Read more+</div>

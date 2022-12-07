@@ -48,6 +48,6 @@ class NewsController extends Controller
     }
     public function get_news($id)
     {
-        return DB::table('news')->select('*')->where('id', '=', $id)->first();
+        return DB::table('news')->select('*', DB::raw('CASE WHEN release_time IS NULL THEN created_at ELSE release_time END AS post_date'))->where('id', '=', $id)->first();
     }
 }
