@@ -199,7 +199,6 @@ class NewsController extends Controller
 
         $form->divider();
         $form->html('<h3>SEO 相關設定</h3>');
-        $form->text('web_title', '網頁title')->placeholder('預設為本篇文章標題；建議中文保持在 30 個字元、英文 60 個字元以內。');
         $form->text('meta_description', '網頁description')->placeholder('本網頁於搜尋結果的描述；建議文意通順，提綱挈領。');
         $form->text('meta_og_description', 'og:description')->placeholder('本篇文章分享至社交平台的內文預覽；建議文意通順，提綱挈領。');
         $form->text('meta_og_title', 'og:title')->placeholder('本篇文章分享至社交平台的標題；建議中文保持在 30 個字元、英文 60 個字元以內。');
