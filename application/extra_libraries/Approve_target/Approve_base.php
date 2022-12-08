@@ -1,0 +1,923 @@
+<?php
+
+namespace Approve_target;
+
+use CertificationResult\IdentityCertificationResult;
+use CreditSheet\CreditSheetFactory;
+
+abstract class Approve_base implements Approve_interface
+{
+    protected $CI;
+    protected $target;
+    protected $result;
+    protected $credit;
+    protected $product_config;
+    protected $product_config_cert;
+    protected $target_product_id;
+    protected $target_sub_product_id;
+    protected $target_user_id;
+    protected $script_status;
+    protected $user_certs;
+    protected $loan_amount;
+    protected $platform_fee;
+
+    public function __construct($target)
+    {
+        $this->CI = &get_instance();
+
+        $this->result = $this->get_initial_result();
+        $this->target = $target;
+        $this->script_status = TARGET_SCRIPT_STATUS_APPROVE_TARGET;
+
+        $this->CI->load->library('anti_fraud_lib');
+        $this->CI->load->library('brookesia/black_list_lib');
+        $this->CI->load->library('brookesia/brookesia_lib');
+        $this->CI->load->library('certification_lib');
+        $this->CI->load->library('contract_lib');
+        $this->CI->load->library('credit_lib');
+        $this->CI->load->library('loanmanager/product_lib');
+        $this->CI->load->library('judicialperson_lib');
+        $this->CI->load->library('user_bankaccount_lib');
+        $this->CI->load->library('verify/data_verify_lib');
+
+        $this->CI->load->model('log/log_integration_model');
+        $this->CI->load->model('log/log_usercertification_model');
+        $this->CI->load->model('loan/target_associate_model');
+        $this->CI->load->model('transaction/order_model');
+        $this->CI->load->model('user/judicial_person_model');
+        $this->CI->load->model('user/user_bankaccount_model');
+        $this->CI->load->model('user/user_certification_model');
+
+        $this->CI->config->load('credit', TRUE);
+    }
+
+    /**
+     * 案件核可主行為
+     * @param $renew : 是否為人工同意通過
+     * @return bool
+     */
+    public function approve(bool $renew): bool
+    {
+        $match_brookesia = FALSE;
+
+        // 檢查是否為產轉
+        $subloan_list = $this->CI->config->item('subloan_list');
+        $subloan_status = (bool) preg_match('/' . $subloan_list . '/', $this->target['target_no']);
+
+        // 核可前的行為
+        if ($this->check_before_approve() === FALSE)
+        {
+            goto END;
+        }
+
+        // 檢查申貸時間
+        if ($this->check_apply_time() === FALSE)
+        {
+            goto END;
+        }
+
+        // 檢查使用者提交的徵信項，沒完成不繼續
+        $this->user_certs = $this->get_user_cert($this->target_user_id, $this->target_product_id, $this->target);
+        if ($this->check_cert($this->user_certs) === FALSE)
+        {
+            goto END;
+        }
+        // 檢查是否符合產品設定，不符合不繼續
+        if ($this->check_product() === FALSE)
+        {
+            goto END;
+        }
+
+        // 檢查額度
+        $this->credit = $this->get_user_credit();
+        if ($this->check_credit($subloan_status) === FALSE)
+        {
+            goto END;
+        }
+
+        // 檢查是否命中反詐欺
+        $match_brookesia = $this->check_brookesia();
+        $user_checked = $this->CI->brookesia_lib->is_user_checked($this->target_user_id, $this->target['id']);
+        if ($user_checked === FALSE)
+        {
+            $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
+            $this->result->set_action_cancel();
+            goto END;
+        }
+
+        END:
+        if ($this->result->action_is_cancel())
+        {
+            $this->set_action_cancellation();
+            return FALSE;
+        }
+
+        // 檢查戶役政
+        if ($this->check_identity($this->target_user_id) === FALSE)
+        {
+            goto END;
+        }
+
+        // 檢查是否需要進二審
+        $need_second_instance = $this->get_need_second_instance($match_brookesia);
+        if ($need_second_instance === TRUE)
+        {
+            $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_SECOND_INSTANCE);
+        }
+
+        $status = $this->result->get_status();
+        switch ($status)
+        {
+            case TARGET_WAITING_SIGNING:
+            case TARGET_ORDER_WAITING_VERIFY:
+                $res = $this->set_target_success($renew);
+                if ($res === TRUE)
+                {
+                    $res = $this->success_notify($subloan_status);
+                }
+                break;
+            case TARGET_FAIL:
+                $res = $this->set_target_failure();
+                if ($res === TRUE)
+                {
+                    $res = $this->failure_notify($subloan_status);
+                }
+                break;
+            case TARGET_WAITING_APPROVE:
+                if ($need_second_instance === TRUE)
+                {
+                    $res = $this->set_target_second_instance();
+                }
+                break;
+            default:
+                log_message('error', "該狀態 ({$this->target['status']}:{$this->target['sub_status']}) 於 approve target 後，無對應的行為");
+                $res = $this->set_action_cancellation();
+        }
+
+        return $res;
+    }
+
+    /**
+     * 取得 flag 案件是否需進二審
+     * @param bool $match_brookesia : 是否命中反詐欺
+     * @return bool
+     */
+    public function get_need_second_instance(bool $match_brookesia): bool
+    {
+        if ($match_brookesia === TRUE)
+        {
+            // 命中反詐欺
+            return TRUE;
+        }
+        if ($this->product_config['secondInstance'] === TRUE)
+        {
+            // 產品設定檔設定需二審
+            return TRUE;
+        }
+
+        // todo: 如果後台二審審核通過也要共用這個架構，再想辦法
+
+        return $this->check_need_second_instance_by_product();
+    }
+
+    /**
+     * 依不同產品檢查是否需進二審
+     * @return bool
+     */
+    abstract protected function check_need_second_instance_by_product(): bool;
+
+    /**
+     * 檢查申貸時間
+     * @return bool
+     */
+    protected function check_apply_time(): bool
+    {
+        //自動取消
+        $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
+        $create_date = date('Y-m-d', $this->target['created_at']);
+
+        if ($limit_date > $create_date)
+        {
+            $this->result->add_msg(TARGET_FAIL, '系統自動取消');
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    /**
+     * 檢查使用者提交的徵信項
+     * @param $user_certs : 使用者提交的徵信項
+     * @return bool
+     */
+    abstract protected function check_cert($user_certs): bool;
+
+    /**
+     * 檢查是否符合產品設定
+     * @return bool
+     */
+    abstract protected function check_product(): bool;
+
+    /**
+     * 檢查戶役政
+     * @param $user_id
+     * @return bool
+     */
+    protected function check_identity($user_id): bool
+    {
+        if ($this->is_submitted() === TRUE)
+        {
+            $identity_cert = $this->CI->user_certification_model->get_by([
+                'investor' => BORROWER,
+                'status' => CERTIFICATION_STATUS_SUCCEED,
+                'user_id' => $user_id,
+                'certification_id' => CERTIFICATION_IDENTITY
+            ]);
+            if ($identity_cert)
+            {
+                // Avoid checking for the same target too many times.
+                $api_verify_log = $this->CI->log_integration_model->order_by('created_at', 'DESC')->get_by([
+                    'user_certification_id' => $identity_cert->id
+                ]);
+                $check_id_card = FALSE;
+                if ( ! empty($api_verify_log))
+                {
+                    $current_time = date('Y-m-d H:i:s');
+                    $one_day_ago = date("Y-m-d H:i:s", strtotime($current_time . ' -1 day'));
+                    if ($api_verify_log->created_at < $one_day_ago)
+                    {
+                        $check_id_card = TRUE;
+                    }
+                }
+                else
+                {
+                    $check_id_card = TRUE;
+                }
+
+                if ($check_id_card === TRUE)
+                {
+                    $identity_content = json_decode($identity_cert->content, TRUE);
+                    $remark = json_decode($identity_cert->remark, TRUE);
+                    $err_msg = $remark['error'] ?? '';
+                    $result = $this->CI->certification_lib->verify_id_card_info(
+                        $identity_cert->id, $identity_content, $err_msg, $remark['OCR'] ?? []
+                    );
+
+                    // Update user_certification.
+                    $to_update = ['content' => json_encode($identity_content, JSON_INVALID_UTF8_IGNORE)];
+                    if ($err_msg)
+                    {
+                        $remark['error'] = $err_msg;
+                        $to_update['remark'] = json_encode($remark, JSON_INVALID_UTF8_IGNORE);
+                    }
+                    $this->CI->user_certification_model->update($identity_cert->id, $to_update);
+
+                    if ($result[0] && $result[1])  // Existed id card info is wrong.
+                    {
+                        $this->CI->log_usercertification_model->insert([
+                            'user_certification_id' => $identity_cert->id,
+                            'status' => CERTIFICATION_STATUS_FAILED,
+                            'change_admin' => SYSTEM_ADMIN_ID,
+                        ]);
+                        $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+                        if (isset($cert_helper))
+                        {
+                            $rs = $cert_helper->set_failure(TRUE, IdentityCertificationResult::$ID_CARD_FAILED_MESSAGE);
+                        }
+                        else
+                        {
+                            $rs = $this->CI->certification_lib->set_failed($identity_cert->id, IdentityCertificationResult::$ID_CARD_FAILED_MESSAGE);
+                        }
+                        if ($rs === TRUE)
+                        {
+                            $this->CI->user_certification_model->update($identity_cert->id, [
+                                'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT
+                            ]);
+                        }
+                        else
+                        {
+                            log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
+                        }
+                        $this->result->set_action_cancel();
+                        return FALSE;
+                    }
+                }
+                else
+                {
+                    return TRUE;
+                }
+            }
+        }
+        $this->result->set_action_cancel();
+        return FALSE;
+    }
+
+    /**
+     * 檢查是否命中反詐欺
+     * @return bool
+     */
+    protected function check_brookesia(): bool
+    {
+        $match_brookesia = FALSE;
+
+        // 檢查黑名單結果，是否需要處置
+        $is_user_blocked = $this->CI->black_list_lib->check_user($this->target_user_id, CHECK_APPLY_PRODUCT);
+        $is_user_second_instance = $this->CI->black_list_lib->check_user($this->target_user_id, CHECK_SECOND_INSTANCE);
+
+        // 確認黑名單結果是否需轉二審(子系統回應異常、禁止申貸、轉二審)
+        if (empty($is_user_blocked) || empty($is_user_second_instance))
+        {
+            $this->CI->black_list_lib->add_block_log(['userId' => $this->target_user_id]);
+            $match_brookesia = TRUE;
+        }
+        elseif ($is_user_blocked['isUserBlocked'])
+        {
+            $this->CI->black_list_lib->add_block_log($is_user_blocked);
+            $match_brookesia = TRUE;
+        }
+        elseif ($is_user_second_instance['isUserSecondInstance'])
+        {
+            $this->CI->black_list_lib->add_block_log($is_user_second_instance);
+            $match_brookesia = TRUE;
+        }
+        return $match_brookesia;
+    }
+
+    /**
+     * 檢查額度
+     * @param bool $subloan_status : 是否為產轉案件
+     * @return bool
+     */
+    protected function check_credit(bool $subloan_status): bool
+    {
+        if (empty($this->credit))
+        {
+            // 算不出或找不到信用額度->失敗
+            $this->result->set_action_cancel();
+            return FALSE;
+        }
+
+        if (empty($this->credit['rate']))
+        {
+            // 無核可利率->失敗
+            $this->result->add_msg(TARGET_FAIL, Approve_target_result::TARGET_FAIL_DEFAULT_MSG);
+            $this->result->add_memo(TARGET_FAIL, '無核可利率', Approve_target_result::DISPLAY_BACKEND);
+            return FALSE;
+        }
+
+        $used_amount = 0;
+        $other_used_amount = 0;
+        $user_max_credit_amount = $this->CI->credit_lib->get_user_max_credit_amount($this->target_user_id);
+
+        // 取得所有產品申請或進行中的案件
+        $target_list = $this->CI->target_model->get_many_by([
+            'id !=' => $this->target['id'],
+            'user_id' => $this->target_user_id,
+            'status NOT' => [TARGET_CANCEL, TARGET_FAIL, TARGET_REPAYMENTED]
+        ]);
+        if ( ! empty($target_list))
+        {
+            foreach ($target_list as $value)
+            {
+                if ($this->target_product_id == $value->product_id)
+                {
+                    $used_amount = $used_amount + (int) $value->loan_amount;
+                }
+                else
+                {
+                    $other_used_amount = $other_used_amount + (int) $value->loan_amount;
+                }
+                // 取得案件已還款金額
+                $pay_back_transactions = $this->CI->transaction_model->get_many_by(array(
+                    'source' => SOURCE_PRINCIPAL,
+                    'user_from' => $this->target_user_id,
+                    'target_id' => $value->id,
+                    'status' => TRANSACTION_STATUS_PAID_OFF
+                ));
+                // 扣除已還款金額
+                foreach ($pay_back_transactions as $value2)
+                {
+                    if ($this->target_product_id == $value->product_id)
+                    {
+                        $used_amount = $used_amount - (int) $value2->amount;
+                    }
+                    else
+                    {
+                        $other_used_amount = $other_used_amount - (int) $value2->amount;
+                    }
+                }
+            }
+
+            // 無條件進位使用額度(千元) ex: 1001->1100
+            $used_amount = ($used_amount % 1000 != 0)
+                ? ceil($used_amount * 0.001) * 1000
+                : $used_amount;
+            $other_used_amount = ($other_used_amount % 1000 != 0)
+                ? ceil($other_used_amount * 0.001) * 1000
+                : $other_used_amount;
+        }
+
+        // 產轉不需檢查金額
+        if ($subloan_status === FALSE)
+        {
+            // 檢查個人最高歸戶剩餘額度
+            $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
+            if ($user_current_credit_amount < 1000)
+            {
+                // 可用額度低於1000->失敗
+                $this->result->add_msg(TARGET_FAIL, Approve_target_result::TARGET_FAIL_DEFAULT_MSG);
+                $this->result->add_memo(TARGET_FAIL, '可用額度不足1000', Approve_target_result::DISPLAY_BACKEND);
+                return FALSE;
+            }
+
+            // 檢查申貸額度
+            $loan_amount = ($this->target['amount'] > $this->credit['amount'])
+                ? $this->credit['amount']
+                : $this->target['amount'];
+
+            // 金額取整
+            $loan_amount = ($loan_amount % 1000 != 0)
+                ? floor($loan_amount * 0.001) * 1000
+                : $loan_amount;
+
+            if ($loan_amount < $this->product_config['loan_range_s'])
+            {
+                $this->result->add_msg(TARGET_FAIL, Approve_target_result::TARGET_FAIL_DEFAULT_MSG);
+                $this->result->add_memo(TARGET_FAIL, '可用額度不足產品設定之最低申貸額度', Approve_target_result::DISPLAY_BACKEND);
+                return FALSE;
+            }
+        }
+        else
+        {
+            $loan_amount = $this->target['amount'];
+        }
+
+        // 申貸金額
+        $this->loan_amount = $loan_amount;
+        // 平台服務費
+        $this->platform_fee = $this->CI->financial_lib->get_platform_fee($this->loan_amount, $this->product_config['charge_platform']);
+
+        return TRUE;
+    }
+
+    /**
+     * 取得使用者信用額度
+     * @return array
+     */
+    protected function get_user_credit(): array
+    {
+        $credit = $this->CI->credit_lib->get_credit($this->target_user_id, $this->target_product_id, $this->target_sub_product_id, $this->target);
+        if (empty($credit))
+        {
+            if (isset($this->product_config['checkOwner']) && $this->product_config['checkOwner'] === TRUE)
+            {
+                $mix_credit = $this->CI->target_lib->get_associates_user_data($this->target['id'], 'all', [0, 1], TRUE);
+                $total_point = 0;
+                foreach ($mix_credit as $value)
+                {
+                    $total_point += $this->CI->credit_lib->approve_credit($value, $this->target_product_id, $this->target_sub_product_id, NULL, FALSE, FALSE, TRUE, $this->target['instalment'], $this->target);
+                }
+                $rs = $this->CI->credit_lib->approve_associates_credit($this->target, $total_point);
+            }
+            else
+            {
+                $rs = $this->CI->credit_lib->approve_credit($this->target_user_id, $this->target_product_id, $this->target_sub_product_id, NULL, FALSE, $credit, FALSE, $this->target['instalment'], $this->target);
+            }
+
+            if ( ! $rs)
+            {
+                $this->result->set_action_cancel();
+                return [];
+            }
+
+            $credit = $this->CI->credit_lib->get_credit($this->target_user_id, $this->target_product_id, $this->target_sub_product_id, $this->target);
+        }
+        return $credit;
+    }
+
+    /**
+     * 取得申貸戶提交之徵信項
+     * @param $user_id : 使用者 ID
+     * @param $product_id : 產品 ID
+     * @param $target : 案件
+     * @return array
+     */
+    protected function get_user_cert($user_id, $product_id, $target): array
+    {
+        // 取得產品設定的徵信項設定檔
+        $cert_config = $this->CI->config->item('certifications');
+        $product_cert = $this->product_config_cert;
+        array_filter($cert_config, function ($value) use ($product_cert) {
+            return in_array($value, $product_cert);
+        }, ARRAY_FILTER_USE_KEY);
+
+        // 取得案件略過的徵信項 ID
+        $skip_cert_ids = $this->CI->certification_lib->get_skip_certification_ids($target);
+
+        // 確認是否為法人
+        $is_judicial = $this->is_judicial_product($product_id);
+        if ($is_judicial)
+        {
+            // 取得公司負責人
+            $natural_person_info = $this->CI->judicialperson_lib->getNaturalPerson($user_id);
+        }
+
+        $result = [];
+        foreach ($cert_config as $key => $value)
+        {
+            if ($is_judicial && is_judicial_certification($key) === FALSE)
+            {
+                $user_cert = $this->CI->certification_lib->get_certification_info($natural_person_info->id, $key, USER_BORROWER, FALSE, TRUE);
+            }
+            else
+            {
+                $user_cert = $this->CI->certification_lib->get_certification_info($user_id, $key, USER_BORROWER, FALSE, TRUE);
+            }
+
+            if ( ! empty($user_cert) && $user_cert->status == CERTIFICATION_STATUS_SUCCEED)
+            {
+                $result[$key] = [
+                    'id' => $user_cert->id,
+                    'status' => (int) $user_cert->status,
+                    'certification_id' => (int) $user_cert->certification_id,
+                ];
+            }
+            elseif (in_array($key, $skip_cert_ids))
+            {
+                $result[$key] = [
+                    'id' => $user_cert->id,
+                    'status' => (int) $user_cert->status,
+                    'certification_id' => (int) $user_cert->certification_id,
+                ];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * assign property: $product_config_cert
+     * @return void
+     */
+    public function set_product_config_cert()
+    {
+        $this->product_config_cert = $this->CI->product_lib->get_product_certs_by_product_id($this->target_product_id, $this->target_sub_product_id, []);
+    }
+
+    /**
+     * 是否為法人產品
+     * @param $product_id : 產品 ID
+     * @return bool
+     */
+    protected function is_judicial_product($product_id): bool
+    {
+        $this->CI->load->helper('product');
+        return is_judicial_product($product_id) === TRUE;
+    }
+
+    /**
+     * 取得產品設定檔
+     * @param $product_id : 產品 ID
+     * @param $sub_product_id : 子產品 ID
+     * @return array
+     */
+    public function get_product_config($product_id, $sub_product_id): array
+    {
+        return $this->CI->product_lib->get_exact_product($product_id, $sub_product_id);
+    }
+
+    /**
+     * 定義屬性值
+     * @return void
+     */
+    private function assign_property()
+    {
+        $this->target_product_id = $this->get_target_product_id();
+        $this->target_sub_product_id = $this->get_target_sub_product_id();
+        $this->target_user_id = $this->get_target_user_id();
+    }
+
+    /**
+     * 取得案件的產品 ID
+     * @return string
+     */
+    private function get_target_product_id(): string
+    {
+        return $this->target['product_id'] ?? '';
+    }
+
+    /**
+     * 取得案件的子產品 ID
+     * @return string
+     */
+    private function get_target_sub_product_id(): string
+    {
+        return $this->target['sub_product_id'] ?? '';
+    }
+
+    /**
+     * 取得案件的使用者 ID
+     * @return string
+     */
+    private function get_target_user_id(): string
+    {
+        return $this->target['user_id'] ?? '';
+    }
+
+    /**
+     * 核可前的行為
+     * @return bool
+     */
+    private function check_before_approve(): bool
+    {
+        // 檢查案件是否可核可
+        if ($this->can_approve() === FALSE)
+        {
+            $this->result->set_action_cancel();
+            return FALSE;
+        }
+
+        // 取得案件基本資訊
+        $this->target = $this->CI->target_model->as_array()->get($this->target['id']);
+        $this->assign_property();
+
+        // 取得產品設定
+        $this->product_config = $this->get_product_config($this->target_product_id, $this->target_sub_product_id);
+        if (empty($this->product_config))
+        {
+            log_message('error', "Approve target 查無產品設定檔 ({$this->target_product_id}:{$this->target_sub_product_id})");
+            $this->result->set_action_cancel();
+            return FALSE;
+        }
+
+        // 取得使用者提交的徵信項
+        $this->set_product_config_cert();
+        return TRUE;
+    }
+
+    /**
+     * 是否可進行核可流程
+     * @return bool
+     */
+    public function can_approve(): bool
+    {
+        if ($this->is_waiting_approve_status() === TRUE &&
+            $this->is_script_status_not_use() === TRUE &&
+            $this->is_submitted() === TRUE)
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    /**
+     * 是否為待核可狀態
+     * @return bool
+     */
+    abstract protected function is_waiting_approve_status(): bool;
+
+    /**
+     * 是否未被其他跑批處理中
+     * @return bool
+     */
+    protected function is_script_status_not_use(): bool
+    {
+        $affected_row = $this->update_target_script_status();
+        return $affected_row > 0;
+    }
+
+    /**
+     * 是否已提交審核
+     * @return bool
+     */
+    abstract protected function is_submitted(): bool;
+
+    /**
+     * 將案件 script status 改為 approve target 處理中
+     * @return int
+     */
+    protected function update_target_script_status(): int
+    {
+        return $this->CI->target_model->get_affected_after_update($this->target['id'], [
+            'script_status' => $this->script_status,
+        ], [
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
+        ]);
+    }
+
+    /**
+     * 取得 property $result 的初始值
+     * @return Approve_target_result
+     */
+    abstract public function get_initial_result(): Approve_target_result;
+
+    /**
+     * 取消該次該案的跑批流程
+     * @return bool
+     */
+    protected function set_action_cancellation(): bool
+    {
+        $res = $this->CI->target_model->update($this->target['id'], ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+        if ($res)
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    private function get_new_target_data(): array
+    {
+        $target_data = json_decode($this->target['target_data'], TRUE);
+        $target_data['certification_id'] = array_column($this->user_certs, 'id');
+
+        return $target_data;
+    }
+
+    /**
+     * 案件審核成功
+     * @param $renew : 是否為人工同意通過
+     * @return bool
+     */
+    public function set_target_success($renew): bool
+    {
+        $param = $this->get_approve_success_param($renew);
+        if (empty($param))
+        {
+            return FALSE;
+        }
+
+        $this->CI->target_model->update($this->target['id'], $param);
+
+        $credit_sheet = CreditSheetFactory::getInstance($this->target['id']);
+        $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '一審通過');
+        if ($this->target['status'] == TARGET_WAITING_APPROVE)
+        {
+            $credit_sheet->setFinalReviewerLevel($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM);
+            $credit_sheet->archive($this->credit);
+        }
+
+        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+        $this->target = array_replace($this->target, $param);
+        return TRUE;
+    }
+
+    /**
+     * 取得更新「審核成功案件」的參數
+     * @param $renew : 是否為人工同意通過
+     * @return array
+     */
+    protected function get_approve_success_param($renew): array
+    {
+        $target_data = $this->get_new_target_data();
+        $param = [
+            'sub_product_id' => $this->target_sub_product_id,
+            'loan_amount' => $this->loan_amount,
+            'credit_level' => $this->credit['level'],
+            'platform_fee' => $this->platform_fee,
+            'interest_rate' => $this->credit['rate'],
+            'status' => TARGET_WAITING_SIGNING,
+            'sub_status' => $renew ? TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : TARGET_SUBSTATUS_NORNAL,
+            'target_data' => json_encode($target_data),
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+        ];
+
+        $remark = $this->result->get_msg(TARGET_WAITING_SIGNING);
+        if ( ! empty($remark))
+        {
+            $param['remark'] = (empty($this->target['remark']) ? $remark : $this->target['remark'] . ', ' . $remark);
+        }
+
+        $memo = $this->result->get_all_memo(TARGET_WAITING_SIGNING);
+        if ( ! empty($memo))
+        {
+            $param['memo'] = json_encode($memo, JSON_PRETTY_PRINT);
+        }
+
+        if (empty($this->target['contract_id']) || $this->target['loan_amount'] != $this->loan_amount)
+        {
+            $contract_type = 'lend';
+
+            if ($this->target_product_id == PRODUCT_FOREX_CAR_VEHICLE && $this->target_sub_product_id == 3)
+            {
+                $company_data = $this->CI->judicial_person_model->get_by(['company_user_id' => $this->target_user_id]);
+                $userData = $this->CI->user_model->get($company_data->user_id);
+                $contract_year = date('Y') - 1911;
+                $contract_month = date('m');
+                $contract_day = date('d');
+                $contract_type = 'lend_FEV';
+                $contract_data = ['', $this->target_user_id, $this->loan_amount, $this->target['interest_rate'], $contract_year, $contract_month, $contract_day, $target_data['vin'], '', '', '', $company_data->company, $userData->name, $company_data->tax_id, $company_data->cooperation_address];
+            }
+            else
+            {
+                $contract_data = ['', $this->target_user_id, $this->loan_amount, $this->credit['rate'], ''];
+            }
+            $param['contract_id'] = $this->CI->contract_lib->sign_contract($contract_type, $contract_data);
+        }
+
+        return $param;
+    }
+
+    /**
+     * 案件審核失敗
+     * @return bool
+     */
+    public function set_target_failure(): bool
+    {
+        $param = $this->get_approve_failure_param();
+        if (empty($param))
+        {
+            return FALSE;
+        }
+
+        $this->CI->target_model->update($this->target['id'], $param);
+        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+        $this->target = array_replace($this->target, $param);
+        return TRUE;
+    }
+
+    /**
+     * 取得更新「案件審核失敗」的參數
+     * @return array
+     */
+    protected function get_approve_failure_param(): array
+    {
+        $param = [
+            'loan_amount' => 0,
+            'status' => TARGET_FAIL,
+            'remark' => $this->result->get_msg(TARGET_FAIL),
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+        ];
+
+        $memo = $this->result->get_all_memo(TARGET_FAIL);
+        if ( ! empty($memo))
+        {
+            $param['memo'] = json_encode($memo, JSON_PRETTY_PRINT);
+        }
+
+        return $param;
+    }
+
+    /**
+     * 案件進二審
+     * @return bool
+     */
+    public function set_target_second_instance(): bool
+    {
+        $param = $this->get_approve_second_instance_param();
+        if (empty($param))
+        {
+            return FALSE;
+        }
+
+        $this->CI->target_model->update($this->target['id'], $param);
+
+        $credit_sheet = CreditSheetFactory::getInstance($this->target['id']);
+        $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
+
+        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+        $this->target = array_replace($this->target, $param);
+        return TRUE;
+    }
+
+    /**
+     * 取得更新「進二審案件」的參數
+     * @return array
+     */
+    protected function get_approve_second_instance_param(): array
+    {
+        $target_data = $this->get_new_target_data();
+        return [
+            'sub_product_id' => $this->target_sub_product_id,
+            'loan_amount' => $this->loan_amount,
+            'credit_level' => $this->credit['level'],
+            'platform_fee' => $this->platform_fee,
+            'interest_rate' => $this->credit['rate'],
+            'status' => TARGET_WAITING_APPROVE,
+            'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE,
+            'target_data' => json_encode($target_data),
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
+        ];
+    }
+
+    /**
+     * 審核成功的通知
+     * @param bool $subloan_status : 是否為產轉案件
+     * @return bool
+     */
+    public function success_notify(bool $subloan_status): bool
+    {
+        if ($this->target['status'] == TARGET_WAITING_APPROVE)
+        {
+            return $this->CI->notification_lib->approve_target($this->target_user_id, TARGET_WAITING_SIGNING, $this->target, $this->loan_amount, $subloan_status);
+        }
+        return TRUE;
+    }
+
+    /**
+     * 審核失敗的通知
+     * @param bool $subloan_status : 是否為產轉案件
+     * @return bool
+     */
+    public function failure_notify(bool $subloan_status): bool
+    {
+        return $this->CI->notification_lib->approve_target($this->target_user_id, TARGET_FAIL, $this->target, 0, $subloan_status, $this->target['remark']);
+    }
+}

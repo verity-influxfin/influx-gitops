@@ -110,3 +110,17 @@ function verify_fraud_pdf($pdf_url): array
     }
     return [$cert_status, $details];
 }
+
+/**
+ * 確認是否為法人徵信項
+ * @param $certification_id
+ * @return bool
+ */
+function is_judicial_certification($certification_id): bool
+{
+    if ($certification_id < CERTIFICATION_FOR_JUDICIAL)
+    {
+        return FALSE;
+    }
+    return TRUE;
+}
