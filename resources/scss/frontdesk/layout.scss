@@ -276,10 +276,10 @@ $ci-color: #153a71;
                     text-align: left;
                 }
             }
-            &.charitable{
+            &.enterprise{
                 .function-list-items{
-                    margin-left: 449px;
-                    width: 220px;
+                    margin-left: 186px;
+                    width: 200px;
                 }
                 .link-title,.link-item{
                     text-align: left;
@@ -294,10 +294,10 @@ $ci-color: #153a71;
                     text-align: left;
                 }
             }
-            &.enterprise{
+            &.charitable{
                 .function-list-items{
-                    margin-left: 214px;
-                    width: 200px;
+                    margin-left: 335px;
+                    width: 220px;
                 }
                 .link-title,.link-item{
                     text-align: left;
@@ -305,7 +305,7 @@ $ci-color: #153a71;
             }
             &.invest{
                 .function-list-items{
-                    margin-left: 560px;
+                    margin-left: 449px;
                     width: 200px;
                 }
                 .link-title,.link-item{
@@ -313,7 +313,7 @@ $ci-color: #153a71;
                 }
             }
             &.about{
-                padding-left: 710px;
+                padding-left: 598px;
                 .function-list-items{
                     width: 180px;
                 }
