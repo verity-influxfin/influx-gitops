@@ -140,7 +140,7 @@
               </div>
             </div>
           </div>
-          <div>
+          <div >
             <img
               src="@/asset/images/investment/product-row-p3.png"
               class="img-fluid"
@@ -389,7 +389,7 @@ export default {
     this.total = 5.4
     if (this.$route.hash === '#ai') {
       setTimeout(() => {
-        document.querySelector('#ai').scrollIntoView({ behavior: 'smooth', block: 'end' })
+        document.querySelector('#ai').scrollIntoView({ behavior: 'smooth', block: 'center' })
       }, 1000)
     }
   },
