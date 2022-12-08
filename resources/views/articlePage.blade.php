@@ -160,10 +160,6 @@
                                             <div class="function-list-items">
                                                 <div class="link-title">AI風控 助你圓夢</div>
                                                 <div class="link-item">
-                                                    <div class="link-text">普匯電子錢包</div>
-                                                    <div class="link-coming-soon">(coming soon)</div>
-                                                </div>
-                                                <div class="link-item">
                                                     <a href="/workLoan" class="link-text">上班族貸</a>
                                                 </div>
                                                 <div class="link-item">
@@ -174,10 +170,6 @@
                                                 </div>
                                                 <div class="link-item">
                                                     <div class="link-text">房屋貸款</div>
-                                                    <div class="link-coming-soon">(coming soon)</div>
-                                                </div>
-                                                <div class="link-item">
-                                                    <div class="link-text">消費分期</div>
                                                     <div class="link-coming-soon">(coming soon)</div>
                                                 </div>
                                             </div>
@@ -193,34 +185,16 @@
                                             <div class="function-list-items ">
                                                 <div class="link-title">普惠金融 貸你滿足</div>
                                                 <div class="link-item">
-                                                    <div class="link-text">
-                                                        <div>企業主速貸</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
-                                                    </div>
-                                                </div>
-                                                <div class="link-item">
-                                                    <div class="link-text">
-                                                        <div>新創/網紅/SOHO</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
-                                                    </div>
-                                                </div>
-                                                <div class="link-item">
                                                     <a href="/business-loan/smeg" class="link-text">
                                                         <div>信保專案</div>
                                                     </a>
-                                                </div>
-                                                <div class="link-item">
-                                                    <div class="link-text">
-                                                        <div>中小企業信貸</div>
-                                                        <div class="link-coming-soon">(coming soon)</div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="function-item">
+                            <div class="function-item d-none">
                                 <div class="function-title">分期超市</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">

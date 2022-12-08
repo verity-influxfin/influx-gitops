@@ -113,7 +113,12 @@
             </div>
           </div>
         </div>
-        <div class="product-row" data-aos="fade-left" data-aos-duration="800">
+        <div
+          class="product-row"
+          data-aos="fade-left"
+          data-aos-duration="800"
+          id="ai"
+        >
           <div>
             <div class="product-row-title">3. AI智能投資</div>
             <div class="product-row-intro">
@@ -382,6 +387,11 @@ export default {
       console.error('getCase 發生錯誤，請稍後再試');
     });
     this.total = 5.4
+    if (this.$route.hash === '#ai') {
+      setTimeout(() => {
+        document.querySelector('#ai').scrollIntoView({ behavior: 'smooth', block: 'end' })
+      }, 1000)
+    }
   },
   methods: {
     format(x) {

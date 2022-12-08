@@ -127,14 +127,6 @@
                   <div>專為年輕人媒合資金、完成夢想</div>
                 </div>
                 <div class="card-content">
-                  <div class="card-link">
-                    <img
-                      src="@/asset/images/paid_black.svg"
-                      alt="普匯錢包"
-                      class="card-link-img"
-                    />
-                    <div class="card-link-text">普匯電子錢包</div>
-                  </div>
                   <router-link to="/workLoan" class="card-link clickable">
                     <img
                       src="@/asset/images/work_outline_black.svg"
@@ -166,14 +158,6 @@
                       class="card-link-img"
                     />
                     <div class="card-link-text">房屋貸款</div>
-                  </div>
-                  <div class="card-link">
-                    <img
-                      src="@/asset/images/date_range_black.svg"
-                      alt="消費分期"
-                      class="card-link-img"
-                    />
-                    <div class="card-link-text">消費分期</div>
                   </div>
                 </div>
               </div>
@@ -258,7 +242,7 @@
                 </div>
               </div>
             </div>
-            <div class="product-item item-4">
+            <div class="product-item item-4 d-none">
               <div class="card">
                 <div class="card-title">各項消費分期專案</div>
                 <hr class="card-hr" />
@@ -315,7 +299,7 @@
                     />
                     <div class="card-link-text">債權轉讓</div>
                   </router-link>
-                  <router-link to="/investment" class="card-link clickable">
+                  <router-link to="/investment#ai" class="card-link clickable">
                     <img
                       src="@/asset/images/smart_toy_black.svg"
                       alt="AI智能投資"
@@ -1390,7 +1374,7 @@ export default {
         margin: 15px auto;
         max-width: 1300px;
         grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: 280px 234px;
+        grid-template-rows: 234px 234px;
         gap: 20px;
       }
     }
@@ -1400,11 +1384,6 @@ export default {
       }
       &.item-2 .card {
         background-image: url('~images/index/product-bg-2.jpg');
-        .card-content {
-          flex: 1;
-          grid-template-rows: max-content max-content;
-          align-content: center;
-        }
       }
       &.item-3 .card {
         background-image: url('~images/index/product-bg-3.jpg');
@@ -1422,7 +1401,7 @@ export default {
         overflow: hidden;
         background-size: cover;
         background-repeat: no-repeat;
-        background-position: bottom right;
+        background-position: top -15px right;
         height: 100%;
       }
       .card-title {
