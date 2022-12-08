@@ -122,6 +122,11 @@ function get_domicile($address)
     return $domicile;
 }
 
+/**
+ * 確認是否為法人徵信項
+ * @param $certification_id
+ * @return bool
+ */
 function is_judicial_certification(int $certification_id): bool
 {
     if ($certification_id < CERTIFICATION_FOR_JUDICIAL)

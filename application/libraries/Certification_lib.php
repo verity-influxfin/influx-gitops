@@ -1196,10 +1196,9 @@ class Certification_lib{
 		    $res = $this->CI->data_legalize_lib->legalize_governmentauthorities($info->user_id,$data);
 		    // 寫入結果(不論對錯都寫入，方便查驗)
 		    $info->remark = $res['error_message'];
-            if (empty($res['error_message']))
-            {
-                $status = 1;
-            }
+				if(empty($res['error_message'])){
+					$status = 1;
+				}
 		    $info->content['error_location'] = $res['error_location'];
 		    $info->content['result'][$imageIds[0]] = [
 		      'action_user' => 'system',
@@ -3800,6 +3799,10 @@ class Certification_lib{
         $skip_certification_ids = [];
         if ( ! empty($target))
         {
+            if (is_array($target))
+            {
+                $target = json_decode(json_encode($target));
+            }
             $this->CI->load->model('loan/target_meta_model');
             $target_meta = $this->CI->target_meta_model->as_array()->get_by([
                 'target_id' => $target->id,
@@ -3820,6 +3823,10 @@ class Certification_lib{
      */
     public function associate_certs_are_succeed($target): bool
     {
+        if (is_array($target))
+        {
+            $target = json_decode(json_encode($target));
+        }
         $this->CI->load->model('loan/target_associate_model');
         // 歸案之自然人資料
         $associates_list = $this->CI->target_associate_model->get_many_by([
@@ -3903,4 +3910,3 @@ class Certification_lib{
         return FALSE;
     }
 }
-

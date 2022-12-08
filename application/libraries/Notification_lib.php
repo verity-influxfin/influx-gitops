@@ -171,6 +171,10 @@ class Notification_lib{
 		}
 
 		if($status==9){
+            if (is_array($target))
+            {
+                $target = json_decode(json_encode($target));
+            }
 			$title = "【借款審核】 您的借款審核未通過";
 			$content = "親愛的用戶，您好！
 很抱歉的通知，您的借款審核未能通過，

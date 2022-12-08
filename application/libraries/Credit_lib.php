@@ -1322,6 +1322,10 @@ class Credit_lib{
 
 	//取得信用評分
 	public function get_credit($user_id,$product_id,$sub_product_id=0,$target=false){
+        if ($target && is_array($target))
+        {
+            $target = json_decode(json_encode($target));
+        }
 		if($user_id && $product_id){
 			$param = array(
 				'user_id'			=> $user_id,
