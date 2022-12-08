@@ -39,11 +39,11 @@ class GenerateSitemap extends Command
     public function handle()
     {
         // delete last line of file and save
-        $file = file('public/upload/sitemap.xml');
+        $file = file('public/sitemap.xml');
         array_pop($file);
-        file_put_contents('public/upload/sitemap.xml', $file);
+        file_put_contents('public/sitemap.xml', $file);
         // add new xml data to file
-        $file = fopen('public/upload/sitemap.xml', 'a');
+        $file = fopen('public/sitemap.xml', 'a');
         // get date yesterday
         $date_search = date('Y-m-d', strtotime('-1 day'));
         // 取得一天內的所有文章(最新消息，小學堂文章)
@@ -54,7 +54,7 @@ class GenerateSitemap extends Command
             $date = gmdate('Y-m-d\TH:i:s', strtotime($n->created_at));
             $content = '<url>'.PHP_EOL;
             $content .= '  <loc>https://www.influxfin.com/articlepage?q=news-' . $n->id . '</loc>'.PHP_EOL;
-            $content .= '  <lastmod>' . $date . '</lastmod>'.PHP_EOL;
+            $content .= '  <lastmod>' . $date .'+08:00</lastmod>'.PHP_EOL;
             $content .= '  <changefreq>weekly</changefreq>'.PHP_EOL;
             $content .= '  <priority>0.6</priority>'.PHP_EOL;
             $content .= '</url>'.PHP_EOL;
@@ -65,7 +65,7 @@ class GenerateSitemap extends Command
             $date = gmdate('Y-m-d\TH:i:s', strtotime($k->created_at));
             $content = '<url>'.PHP_EOL;
             $content .= '  <loc>https://www.influxfin.com/articlepage?q=knowledge-' . $k->id . '</loc>'.PHP_EOL;
-            $content .= '  <lastmod>' . $date . '</lastmod>'.PHP_EOL;
+            $content .= '  <lastmod>' . $date . '+08:00</lastmod>'.PHP_EOL;
             $content .= '  <changefreq>weekly</changefreq>'.PHP_EOL;
             $content .= '  <priority>0.6</priority>'.PHP_EOL;
             $content .= '</url>'.PHP_EOL;

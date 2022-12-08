@@ -604,7 +604,7 @@ class Controller extends BaseController
 
     public function getKnowledgeData(Request $request)
     {
-        $knowledge = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->whereIn('type', ['article','investtonic'])->where('isActive', '=', 'on')->orderBy('id', 'desc')->get();
+        $knowledge = DB::table('knowledge_article')->select('*',DB::raw('CASE WHEN release_time IS NULL THEN created_at ELSE release_time END AS post_date'),'id as ID','updated_at as post_modified')->whereIn('type', ['article','investtonic'])->where('isActive', '=', 'on')->orderBy('id', 'desc')->get();
 
         return response()->json($knowledge, 200);
     }
@@ -625,7 +625,7 @@ class Controller extends BaseController
 
     public function getNewsData(Request $request)
     {
-        $news = DB::table('news')->select('*','id as ID')->where('isActive', '=', 'on')
+        $news = DB::table('news')->select('*','id as ID', DB::raw('CASE WHEN release_time IS NULL THEN created_at ELSE release_time END AS post_date'))->where('isActive', '=', 'on')
             ->orderBy('pinned', 'desc')
             ->orderBy('id', 'desc')->get();
 

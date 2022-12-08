@@ -148,7 +148,7 @@
             <div class="row no-gutters">
                 <div class="col-auto alesis-header">
                     <div class="logo">
-                        <a href="/index"><img src="/images/logo.png" class="image"></a>
+                        <a href="/"><img src="/images/logo.png" class="image"></a>
                     </div>
                     <div class="d-sm-flex d-none no-gutters w-100">
                         <div class="functions col-auto">
@@ -512,6 +512,9 @@
             <div class="article-wrapper">
                 <div class='news-view'>
                     <h3 class="title">{{$article->post_title}}</h3>
+                    <div class="info">
+                        <span class="date">發布日期：{{ $article->post_date }}</span>
+                    </div>
                     <div class="contenier">
                         <div class="title-img">
                             <img src="{{$article->image_url}}" class="img-fluid" />

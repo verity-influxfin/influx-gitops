@@ -27,4 +27,5 @@ Route::group([
     $router->resource('workloan_share', WorkLoanShareController::class);
     $router->resource('businessloan_contact', BusinessLoanContactController::class);
     $router->resource('borrow_report', BorrowReportController::class);
+    $router->resource('route_meta', RouteMetaController::class);
 });

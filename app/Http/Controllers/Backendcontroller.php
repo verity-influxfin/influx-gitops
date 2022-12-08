@@ -246,13 +246,30 @@ class Backendcontroller extends BaseController
         if ($request->hasFile('upload')) {
             $file = $request->file('upload');
             if ($file->isValid()) {
-                $filename = $file->getClientOriginalName();
-                $file->move('upload/article', "$filename");
+                $now = date('YmdHis');
+                $origin_filename = $file->getClientOriginalName();
+                $filename = $origin_filename;
+                // check file exist
+                if (file_exists('upload/article/' . $origin_filename)) {
+                    // rename file form filename.type to filename_now.type
+                    $filenameExplode = explode('.', $origin_filename);
+                    $filename = $filenameExplode[0] . '_' . $now . '.' . $filenameExplode[1];
+                }
+                $file->move('upload/article/', "$filename");
                 $pic_path = 'upload/article/' . $filename;
-                echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(0, "' . $pic_path . '","");</script>';
+                return response()->json([
+                    'uploaded' => 1,
+                    'fileName' => $origin_filename,
+                    'url' =>  '/' . $pic_path
+                ], 200);
             }
         } else {
-            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+            return response()->json([
+                'uploaded' => 0,
+                'error' => [
+                    'message' => '上傳失敗'
+                ]
+            ], 400);
         }
     }
 

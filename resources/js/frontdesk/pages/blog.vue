@@ -251,7 +251,8 @@ export default {
             border:1px solid #036eb7 !important;
             border-right:none !important;
              > a {
-                background: none !important;
+                background: #036eb7 !important;
+                color: #fff !important;
                 line-height: 28px !important;
              }
         }
