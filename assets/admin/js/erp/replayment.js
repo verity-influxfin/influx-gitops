@@ -67,29 +67,35 @@ var app = new Vue({
         },
         eventCode(code) {
             /*
-            10: 正常放款 (產生)
-            11: 債權受讓 (產生)
-            20: 發生逾期 (突發)
-            21: 逾期本攤 (突發)
-            22: 逾期還款 (突發)
-            30: 債權出讓 (突發結束)
-            31: 提前清償 (突發結束)
+            10: 正常放款
+            11: 正常案債權受讓
+            12: 發生逾期
+            13: 提前清償
+            14: 正常案債權出讓
+            20: 逾期債權之產生
+            21: 逾期案債權受讓
+            23: 逾期還款
+            24: 逾期案債權出讓
             */
             switch (Number(code)) {
                 case 10:
                     return '正常放款'
                 case 11:
-                    return '債權受讓'
-                case 20:
+                    return '正常案債權受讓'
+                case 12:
                     return '發生逾期'
-                case 21:
-                    return '逾期本攤'
-                case 22:
-                    return '逾期還款'
-                case 30:
-                    return '債權出讓'
-                case 31:
+                case 13:
                     return '提前清償'
+                case 14:
+                    return '正常案債權出讓'
+                case 20:
+                    return '逾期債權之產生'
+                case 21:
+                    return '逾期案債權受讓'
+                case 23:
+                    return '逾期還款'
+                case 24:
+                    return '逾期案債權出讓'
                 default:
                     return '未知'
             }
