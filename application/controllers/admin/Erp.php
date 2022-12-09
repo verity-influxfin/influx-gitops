@@ -220,18 +220,63 @@ class ERP extends MY_Admin_Controller
     }
 
     /**
+     * 取得本攤表v2 Excel 下載
+     * 
+     * @created_at            2021-10-27
+     * @created_at            Allan
+     */
+    public function get_replayment_spreadsheet()
+    {
+        // get file from guzzle replayment_schedule/excel
+        $res = $this->erp_client->request('GET', '/coded_replayment_schedules_list/excel', [
+            'query' => $this->input->get()
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        setcookie('fileDownload', 'true', 0, '/');
+        echo $data;
+        die();
+    }
+
+    /**
      * 取得堆疊後本攤表 API 資料
      * 
      * @created_at            2021-11-03
      * @created_at            Allan
      */
-    public function get_stack_replayment_schedule()
+    public function get_stack_replayment_schedule_data()
     {
         $data = $this->erp_client->request('GET', '/stack_replayment_schedule', [
             'query' => $this->input->get() 
         ])->getBody()->getContents();
         echo $data;
         die();
+    }
+
+    /**
+     * 取得堆疊後本攤表 API 資料
+     * 
+     * @created_at            2021-11-03
+     * @created_at            Allan
+     */
+    public function get_stack_replayment_schedule_spreadsheet()
+    {
+      $res = $this->erp_client->request('GET', '/stack_replayment_schedule/excel', [
+          'query' => $this->input->get()
+      ]);
+      $des = $res->getHeader('content-disposition')[0];
+      $data = $res->getBody()->getContents();
+      // create download file by data
+      header('content-type: application/octet-stream');
+      header('content-disposition:' . $des);
+      header('content-length: ' . strlen($data));
+      setcookie('fileDownload', 'true', 0, '/');
+      echo $data;
+      die();
     }
 
     /**

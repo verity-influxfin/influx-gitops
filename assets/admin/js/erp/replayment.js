@@ -10,7 +10,7 @@ var app = new Vue({
         is_waiting_response: false,
         replayment_list: [],
         replayment_list_latest: [],
-        tab:'tab1'
+        tab: 'tab1'
     },
     computed: {
     },
@@ -23,6 +23,12 @@ var app = new Vue({
         $('#end_date').datepicker({
             'format': 'yyyy-mm-dd',
         }).on('change', function () { self.searchform.end_date = this.value });
+        setInterval(() => {
+            if (document.cookie.split(';').some((item) => item.includes('fileDownload=true'))) {
+                self.is_waiting_response = false
+                document.cookie = 'fileDownload=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            }
+        }, 1000);
     },
     methods: {
         doSearch() {
@@ -50,7 +56,7 @@ var app = new Vue({
                 .join('&')
             // axios get get_replayment_data
             this.is_waiting_response = true
-            axios.get('/admin/erp/get_stack_replayment_schedule?' + string)
+            axios.get('/admin/erp/get_stack_replayment_schedule_data?' + string)
                 .then(({ data }) => {
                     this.replayment_list_latest = data
                 }).catch((error) => {
@@ -99,6 +105,34 @@ var app = new Vue({
                 default:
                     return '未知'
             }
+        },
+        downloadExcel() {
+            $("#fileDownloadIframe").remove();
+            let url = '/admin/erp/get_replayment_spreadsheet?'
+            // build params form searchform
+            const { start_date, end_date, user_id_int, investment_id_int_list_str } = this.searchform
+            url += Object.entries({ start_date, end_date, user_id_int, investment_id_int_list_str })
+                .filter(([key, value]) => value !== '')
+                .map(([key, value]) => `${key}=${value}`)
+                .join('&')
+            this.is_waiting_response = true
+            $("body").append(
+                `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
+            );
+        },
+        downloadExcelLatest() {
+            $("#fileDownloadIframe").remove();
+            let url = '/admin/erp/get_stack_replayment_schedule_spreadsheet?'
+            // build params form searchform
+            const { start_date, end_date, user_id_int, investment_id_int_list_str } = this.searchform
+            url += Object.entries({ start_date, end_date, user_id_int, investment_id_int_list_str })
+                .filter(([key, value]) => value !== '')
+                .map(([key, value]) => `${key}=${value}`)
+                .join('&')
+            this.is_waiting_response = true
+            $("body").append(
+                `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
+            );
         }
     }
 })
