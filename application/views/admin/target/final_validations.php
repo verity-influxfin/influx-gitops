@@ -2306,7 +2306,8 @@
 					table.row.add(t)
 				})
 				table.draw()
-				$('[data-toggle="popover"]').popover({ trigger: 'focus' })
+				$('[data-toggle="popover"]').popover('hide')
+				$('[data-toggle="popover"]').popover()
 			}
 		}
 	})
