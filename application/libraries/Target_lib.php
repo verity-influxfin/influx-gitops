@@ -1919,11 +1919,11 @@ class Target_lib
                                             $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
                                             if (isset($cert_helper))
                                             {
-                                                $rs = $cert_helper->set_failure(TRUE, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                                $rs = $cert_helper->set_failure(TRUE, IdentityCertificationResult::$ID_CARD_FAILED_MESSAGE);
                                             }
                                             else
                                             {
-                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, IdentityCertificationResult::$ID_CARD_FAILED_MESSAGE);
                                             }
                                             if ($rs === TRUE)
                                             {
