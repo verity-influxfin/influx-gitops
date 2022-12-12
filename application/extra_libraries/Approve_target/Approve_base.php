@@ -105,17 +105,17 @@ abstract class Approve_base implements Approve_interface
             goto END;
         }
 
+        // 檢查戶役政
+        if ($this->check_identity($this->target_user_id) === FALSE)
+        {
+            goto END;
+        }
+
         END:
         if ($this->result->action_is_cancel())
         {
             $this->set_action_cancellation();
             return FALSE;
-        }
-
-        // 檢查戶役政
-        if ($this->check_identity($this->target_user_id) === FALSE)
-        {
-            goto END;
         }
 
         // 檢查是否需要進二審
@@ -299,6 +299,10 @@ abstract class Approve_base implements Approve_interface
                         }
                         $this->result->set_action_cancel();
                         return FALSE;
+                    }
+                    else
+                    {
+                        return TRUE;
                     }
                 }
                 else
