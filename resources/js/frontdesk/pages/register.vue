@@ -325,9 +325,15 @@ export default {
             window.location = url
           }
       };
+      // 廣告註冊轉換率ga
       gtag('event', 'conversion', {
-          'send_to': 'AW-692812197/vIb2COOs1uADEKXzrcoC',
-          'event_callback': callback
+        'send_to': 'AW-692812197/vIb2COOs1uADEKXzrcoC',
+        'event_callback': callback
+      });
+      // 實際有註冊成功的ga
+      gtag('event', 'websign', {
+        'event_category': 'event',
+        'send_to': 'UA-117279688-9'
       });
       return false
     }
