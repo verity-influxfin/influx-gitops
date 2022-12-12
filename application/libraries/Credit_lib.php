@@ -19,7 +19,8 @@ class Credit_lib{
     }
 
 	//信用評比
-	public function approve_credit($user_id,$product_id,$sub_product_id=0, $approvalExtra = null, $stage_cer = false, $credit = false, $mix_credit = false, $instalment = 0){
+    public function approve_credit($user_id, $product_id, $sub_product_id = 0, $approvalExtra = NULL, $stage_cer = FALSE, $credit = FALSE, $mix_credit = FALSE, $instalment = 0, $target = NULL)
+    {
 		if($user_id && $product_id){
 
             //信用低落
@@ -65,7 +66,7 @@ class Credit_lib{
             $this->scoreHistory = [];
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
+				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);
 				return $rs;
 			}
 		}
@@ -127,7 +128,7 @@ class Credit_lib{
         return $this->CI->credit_model->insert($param);
     }
 
-	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
+	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
 
         $total = 0;
         $param = [
@@ -365,11 +366,11 @@ class Credit_lib{
 		return $rs;
 	}
 
-	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
-		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
+	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
+		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);
 	}
 
-	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
+	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
         $total = 0;
 
         $param = [
@@ -600,31 +601,31 @@ class Credit_lib{
 		return $rs;
 	}
 
-	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
-		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
+	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
+		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);
 	}
 
-    private function approve_7($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
-        $rs = $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
+    private function approve_7($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
+        $rs = $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);
         return $rs;
     }
 
-    private function approve_8($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
-        $rs = $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
+    private function approve_8($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
+        $rs = $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);
 	    return $rs;
     }
 
-    private function approve_9($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
-        $rs = $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
+    private function approve_9($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
+        $rs = $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);
         return $rs;
     }
 
-    private function approve_10($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
-        $rs = $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
+    private function approve_10($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
+        $rs = $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);
         return $rs;
     }
 
-    private function approve_1000($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
+    private function approve_1000($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
 
         $info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
         $user_info 	= $this->CI->user_model->get($user_id);
@@ -682,6 +683,194 @@ class Credit_lib{
 
         $rs 		= $this->CI->credit_model->insert($param);
         return $rs;
+    }
+
+    private function approve_1002($user_id, $product_id, $sub_product_id, $expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target)
+    {
+
+        $total = 0;
+        $param = [
+            'product_id' => $product_id,
+            'sub_product_id' => $sub_product_id,
+            'user_id' => $user_id,
+            'amount' => 0,
+            'instalment' => $instalment,
+            'type_code' => 0
+        ];
+
+        $this->CI->config->load('credit', TRUE);
+        $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
+        $this->CI->load->model('user/user_certification_model');
+        $this->CI->load->library('target_lib');
+        $this->CI->load->library('certification_lib');
+
+
+        $register_certs_content = [];
+        $spouse_certs_content = [];
+        $certs_content = $this->CI->certification_lib->get_content($user_id, USER_BORROWER, [CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_INVESTIGATIONJUDICIAL, CERTIFICATION_INCOMESTATEMENT, CERTIFICATION_EMPLOYEEINSURANCELIST, CERTIFICATION_PROFILEJUDICIAL]);
+        $associate_list = $this->CI->target_lib->get_associates_data($target->id, 'all');
+        if (isset($associate_list[ASSOCIATES_CHARACTER_OWNER]['user_id']))
+        {
+            $register_certs_content = $this->CI->certification_lib->get_content($associate_list[ASSOCIATES_CHARACTER_OWNER]['user_id'], USER_BORROWER, [CERTIFICATION_INVESTIGATIONA11]);
+        }
+        if (isset($associate_list[ASSOCIATES_CHARACTER_SPOUSE]['user_id']))
+        {
+            $spouse_certs_content = $this->CI->certification_lib->get_content($associate_list[ASSOCIATES_CHARACTER_SPOUSE]['user_id'], USER_BORROWER, [CERTIFICATION_INVESTIGATIONA11]);
+        }
+
+        $this->CI->load->model('loan/target_meta_model');
+        $meta_info = $this->CI->target_meta_model->as_array()->get_many_by([
+            'target_id' => $target->id
+        ]);
+        $target_meta_list = array_column($meta_info, 'meta_value', 'meta_key');
+
+        $credit_list = [];
+        if (isset($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]['businessTypeCode']))
+        {
+            $param['type_code'] = $certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]['businessTypeCode'];
+            switch ($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]['businessTypeCode'])
+            {
+                case INDUSTRY_CODE_MANUFACTURING:
+                    $credit_list = [
+                        new Credit_industry_life_cycle($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]),
+                        new Credit_year_in_business($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]),
+                        new Credit_registered_capital($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]),
+                        new Credit_per_captial_output(array_merge($certs_content[CERTIFICATION_INCOMESTATEMENT], $certs_content[CERTIFICATION_EMPLOYEEINSURANCELIST] ?? [], $certs_content[CERTIFICATION_PROFILEJUDICIAL])),
+                        new Credit_average_collection_period($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_days_payable_outstanding($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_gross_margin($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_business_finance_ratio(array_merge($certs_content[CERTIFICATION_INCOMESTATEMENT], $certs_content[CERTIFICATION_INVESTIGATIONJUDICIAL] ?? [], $register_certs_content[CERTIFICATION_INVESTIGATIONA11] ?? [], $spouse_certs_content[CERTIFICATION_INVESTIGATIONA11] ?? [])),
+                        new Credit_debit_ratio(array_merge($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES], $certs_content[CERTIFICATION_INVESTIGATIONJUDICIAL] ?? [], $register_certs_content[CERTIFICATION_INVESTIGATIONA11] ?? [], $spouse_certs_content[CERTIFICATION_INVESTIGATIONA11] ?? [])),
+                        new Credit_break_even_point($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_revenue_stability($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_smec_qualification(json_decode(json_encode($target), TRUE)),
+                        new Credit_asset($target_meta_list),
+                        new Credit_background($target_meta_list),
+                        new Credit_guarantor($target_meta_list),
+                        new Credit_human_resource($target_meta_list),
+                        new Credit_job_seniority($target_meta_list),
+                        new Credit_team_seniority($target_meta_list),
+                    ];
+                    break;
+                case INDUSTRY_CODE_MERCHANDISING_SECTOR:
+                case INDUSTRY_CODE_SERVICE:
+                    $credit_list = [
+                        new Credit_industry_life_cycle($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]),
+                        new Credit_year_in_business($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]),
+                        new Credit_registered_capital($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES]),
+                        new Credit_per_captial_output(array_merge($certs_content[CERTIFICATION_INCOMESTATEMENT] ?? [],
+                            $certs_content[CERTIFICATION_EMPLOYEEINSURANCELIST] ?? [], $certs_content[CERTIFICATION_PROFILEJUDICIAL] ?? [])),
+                        new Credit_average_collection_period($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_days_payable_outstanding($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_days_sales_of_inventory($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_gross_margin($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_business_finance_ratio(array_merge($certs_content[CERTIFICATION_INCOMESTATEMENT] ?? [],
+                            $certs_content[CERTIFICATION_INVESTIGATIONJUDICIAL] ?? [], $register_certs_content[CERTIFICATION_INVESTIGATIONA11] ?? [],
+                            $spouse_certs_content[CERTIFICATION_INVESTIGATIONA11] ?? [])),
+                        new Credit_debit_ratio(array_merge($certs_content[CERTIFICATION_GOVERNMENTAUTHORITIES] ?? [],
+                            $certs_content[CERTIFICATION_INVESTIGATIONJUDICIAL] ?? [], $register_certs_content[CERTIFICATION_INVESTIGATIONA11] ?? [],
+                            $spouse_certs_content[CERTIFICATION_INVESTIGATIONA11] ?? [])),
+                        new Credit_break_even_point($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_revenue_stability($certs_content[CERTIFICATION_INCOMESTATEMENT]),
+                        new Credit_smec_qualification(json_decode(json_encode($target), TRUE)),
+                        new Credit_asset($target_meta_list),
+                        new Credit_background($target_meta_list),
+                        new Credit_guarantor($target_meta_list),
+                        new Credit_human_resource($target_meta_list),
+                        new Credit_job_seniority($target_meta_list),
+                        new Credit_team_seniority($target_meta_list),
+                    ];
+                    break;
+            }
+        }
+
+        $score_list = [];
+
+        foreach ($credit_list as $credit_entity)
+        {
+            $credit_entity->scoring();
+            $score_list[] = [
+                'item' => $credit_entity->get_item(),
+                'subitem' => $credit_entity->get_subitem(),
+                'option' => $credit_entity->get_option(),
+                'score' => $credit_entity->get_score(),
+            ];
+            $total += $credit_entity->get_score();
+        }
+
+        if ($approvalExtra && $approvalExtra->getExtraPoints())
+        {
+            $total += $approvalExtra->getExtraPoints();
+        }
+        $param['points'] = intval($total);
+
+        if ($mix_credit)
+        {
+            return $param['points'];
+        }
+
+        $param['level'] = $this->get_credit_level($total, $product_id, $sub_product_id);
+
+        // 取得額度對照表
+        if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
+        {
+            $credit_amount = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
+        }
+        else
+        {
+            $credit_amount = $this->credit['credit_amount_' . $product_id];
+        }
+
+        if ( ! empty($credit_amount))
+        {
+            foreach ($credit_amount as $key => $value)
+            {
+                if ($param['points'] >= $value['start'] && $param['points'] <= $value['end'])
+                {
+                    $param['amount'] = $value['amount'];
+                    break;
+                }
+            }
+        }
+
+        $param['expire_time'] = $expire_time;
+
+        // 額度不能「小」於產品的最「小」允許額度
+        $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
+
+        // 額度不能「大」於產品的最「大」允許額度
+        $param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
+
+        if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10)
+        {
+            $param['score_list'] = json_encode($score_list);
+            return $param;
+        }
+        $this->CI->credit_model->update_by(
+            [
+                'product_id' => $product_id,
+                'sub_product_id' => $sub_product_id,
+                'user_id' => $user_id,
+                'status' => 1
+            ],
+            ['status' => 0]
+        );
+        $param['remark'] = json_encode(['score_list' => $score_list]);
+        return $this->CI->credit_model->insert($param);
+    }
+
+    public function get_business_type_code($business_type)
+    {
+        $business_type_list = $this->CI->config->item('business_type_list');
+        $business_prefix_type = substr($business_type ?? '', 0, 2);
+        foreach ($business_type_list as $business_type_info)
+        {
+            if ($business_prefix_type >= $business_type_info['range'][0] && $business_prefix_type <= $business_type_info['range'][1])
+            {
+                return $business_type_info['code'];
+            }
+        }
+        return '';
     }
 
     public function get_school_point($school_name = '', $school_system = 0, $school_major = '', $school_department = FALSE, $sub_product_id = 0, $product_id = 0)

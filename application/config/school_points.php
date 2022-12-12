@@ -13742,7 +13742,3 @@ $config['department_points'] = array (
     ),
   ),
 );
-
-// 研究所學校加分
-$config['master_points'] = [
-];
