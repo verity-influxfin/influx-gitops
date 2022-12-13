@@ -1638,6 +1638,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_PASSBOOKCASHFLOW,
                     CERTIFICATION_INCOMESTATEMENT,
                     CERTIFICATION_BUSINESSTAX,
+                    CERTIFICATION_EMPLOYEEINSURANCELIST,
+                    CERTIFICATION_INVESTIGATIONJUDICIAL,
+                    CERTIFICATION_INVESTIGATIONA11,
                     CERTIFICATION_COMPANYEMAIL,
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
@@ -1660,7 +1663,10 @@ $config['sub_product_list'] = [
                         CERTIFICATION_JUDICIALGUARANTEE,
                         CERTIFICATION_PROFILEJUDICIAL,
                         CERTIFICATION_PASSBOOKCASHFLOW,
+                        CERTIFICATION_EMPLOYEEINSURANCELIST,
                         CERTIFICATION_INCOMESTATEMENT,
+                        CERTIFICATION_INVESTIGATIONJUDICIAL,
+                        CERTIFICATION_INVESTIGATIONA11,
                         CERTIFICATION_BUSINESSTAX,
                         CERTIFICATION_COMPANYEMAIL,
                     ]
