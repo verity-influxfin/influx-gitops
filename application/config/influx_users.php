@@ -30,8 +30,6 @@ $config['influx_user_list'] = [
         'user_id' => 84644],
     [ // 林子玄
         'user_id' => 67450],
-    [ // Wawa
-        'user_id' => 91424],
     [ // Howard
         'user_id' => 90323],
     [ // 曲素玉
@@ -40,8 +38,6 @@ $config['influx_user_list'] = [
         'user_id' => 92525],
     [ // 常瑋倫
         'user_id' => 92048],
-    [ // 張琬琳
-        'user_id' => 98375],
     [ // 邱俊霖
         'user_id' => 98279],
 ];

@@ -2073,7 +2073,7 @@ class Certification_lib{
                 if($count){
                     $this->CI->load->library('s3_upload');
                     $url = $this->CI->s3_upload->image_by_data($image_data, basename($url), $user_id, 'id_card', 'rotate');
-                    return array('count' => $count,'url' => $url);
+                    return array('count' => $count, 'url' => $url, 'system' => $system);
                 }
             }
 		}
@@ -3711,8 +3711,10 @@ class Certification_lib{
                 $identity_cer_face = $this->CI->azure_lib->detect($identity_cer->content['person_image'], $user_id, $cer_id);
                 $signing_face = $this->CI->azure_lib->detect($url, $user_id, $cer_id);
                 $signing_face_count = count($signing_face);
+                $remark['memo']['first_count'] = $signing_face_count;
                 if ($signing_face_count == 0) {
                     $rotate = $this->face_rotate($url, $user_id);
+                    $remark['memo']['first_rotate'] = $rotate;
                     if ($rotate) {
                         $identity_cer->content['person_image'] = $rotate['url'];
                         $signing_face_count = $rotate['count'];
@@ -3728,8 +3730,10 @@ class Certification_lib{
                         $identity_cer_token = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image'], $user_id, $cer_id);
                         $signing_face_token = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image'], $user_id, $cer_id);
                         $signing_face_count = $signing_face_token && is_array($signing_face_token) ? count($signing_face_token) : 0;
+                        $remark['memo']['second_count'] = $signing_face_count;
                         if ($signing_face_count == 0) {
                             $rotate = $this->face_rotate($identity_cer->content['person_image'], $user_id, $cer_id, 'faceplusplus');
+                            $remark['memo']['second_rotate'] = $rotate;
                             if ($rotate) {
                                 $identity_cer->content['person_image'] = $rotate['url'];
                                 $signing_face_count = $rotate['count'];
