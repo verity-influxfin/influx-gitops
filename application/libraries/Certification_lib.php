@@ -3698,7 +3698,7 @@ class Certification_lib{
     {
         if ($url) {
             $msg = '';
-            $remark = [];
+            $remark = ['memo' => []];
             $identity_cer = $this->get_certification_info($user_id, CERTIFICATION_IDENTITY, BORROWER);
             $student_cer = $this->get_certification_info($user_id, CERTIFICATION_STUDENT, BORROWER);
             $diploma_cer = $this->get_certification_info($user_id, CERTIFICATION_DIPLOMA, BORROWER);

@@ -3346,6 +3346,7 @@ class Product extends REST_Controller {
                 $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
             }
         }
+        log_message('debug', "[Product/type1_signing][user_bankaccount][verify] {$bank_account->verify}");
 
         $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
         if (in_array($product['id'], $allow_fast_verify_product)
