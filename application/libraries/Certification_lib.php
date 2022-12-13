@@ -3700,11 +3700,11 @@ class Certification_lib{
             $msg = '';
             $remark = ['memo' => []];
             $identity_cer = $this->get_certification_info($user_id, CERTIFICATION_IDENTITY, BORROWER);
-            $student_cer = $this->get_certification_info($user_id, CERTIFICATION_STUDENT, BORROWER);
-            $diploma_cer = $this->get_certification_info($user_id, CERTIFICATION_DIPLOMA, BORROWER);
+            // $student_cer = $this->get_certification_info($user_id, CERTIFICATION_STUDENT, BORROWER);
+            // $diploma_cer = $this->get_certification_info($user_id, CERTIFICATION_DIPLOMA, BORROWER);
             if ($identity_cer && $identity_cer->status == CERTIFICATION_STATUS_SUCCEED
-                && (isset($student_cer->content['school']) && !preg_match('/\(自填\)/', $student_cer->content['school']))
-                && (isset($diploma_cer->content['school']) && !preg_match('/\(自填\)/', $diploma_cer->content['school']))
+                // && (isset($student_cer->content['school']) && !preg_match('/\(自填\)/', $student_cer->content['school']))
+                // && (isset($diploma_cer->content['school']) && !preg_match('/\(自填\)/', $diploma_cer->content['school']))
             ) {
                 $cer_id = $identity_cer->id;
                 $this->CI->load->library('Azure_lib');

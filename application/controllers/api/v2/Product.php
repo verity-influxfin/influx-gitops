@@ -3361,7 +3361,7 @@ class Product extends REST_Controller {
             if ($faceDetect) {
                 $this->load->library('certification_lib');
                 $faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $param['person_image']);
-                if ($faceDetect_res['error'] == '') {
+                if (isset($faceDetect_res['error']) && $faceDetect_res['error'] == '') {
                     $target->status = TARGET_WAITING_VERIFY;
                     $targetData->autoVerifyLog[] = [
                         'faceDetect' => $faceDetect_res,
