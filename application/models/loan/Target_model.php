@@ -653,8 +653,11 @@ class Target_model extends MY_Model
      */
     public function get_transaction_count()
     {
+        // investment 3, 10 包含正常放款及受讓債權
+        // transfer 10 代表成功出讓債權
+        // target 5, 10 代表成功借款
         $result = $this->db
-            ->select('((((`r1`.`c` + (`r2`.`c` * 2)) + `r3`.`c`) + `r4`.`c`) + (`r5`.`c` * 2)) AS transaction_count')
+            ->select('(`r1`.`c` + `r2`.`c` + `r3`.`c` + `r4`.`c` + `r5`.`c`) AS transaction_count')
             ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_REPAYING . ' ) `r1`')
             ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_PAID_OFF . ' ) `r2`')
             ->from('(SELECT COUNT(1) as c FROM p2p_loan.transfers WHERE `status` = 10 ) `r3`')
