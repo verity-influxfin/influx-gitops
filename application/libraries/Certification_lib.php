@@ -3534,6 +3534,7 @@ class Certification_lib{
 			foreach($user_certifications as $key => $value){
 				switch($value->certification_id){
                     case CERTIFICATION_REPAYMENT_CAPACITY:
+                    case CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS:
                         break;
 					default:
 						$this->verify($value);
@@ -3544,6 +3545,7 @@ class Certification_lib{
 		}
 
         $this->repayment_capacity_verify();
+        $this->land_and_building_transactions_verify();
 
 		return $count;
 	}
@@ -3900,6 +3902,39 @@ class Certification_lib{
         return TRUE;
     }
 
+    // 土地建物謄本
+    public function land_and_building_transactions_verify()
+    {
+        // 取得有案件「待核可」的使用者ID
+        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE], [
+            'product_id' => PRODUCT_ID_HOME_LOAN
+        ]);
+        if (empty($user_lists))
+        {
+            return TRUE;
+        }
+
+        foreach ($user_lists as $user)
+        {
+            $info = $this->get_certification_info($user['user_id'], CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS, USER_BORROWER, FALSE, TRUE);
+            if ( ! empty($info))
+            {
+                $cert = Certification_factory::get_instance_by_model_resource($info);
+                $cert->verify();
+                continue;
+            }
+
+            $this->CI->user_certification_model->insert([
+                'user_id' => $user['user_id'],
+                'certification_id' => CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                'investor' => USER_BORROWER,
+                'content' => json_encode([]),
+                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+            ]);
+        }
+        return TRUE;
+    }
+
     /**
      * @param $id : user_certification.id
      * @param $print_timestamp : 印表日期
@@ -4059,5 +4094,133 @@ class Certification_lib{
             $rs = $rs && $cert->set_failure(TRUE);
         }
         return $rs;
+    }
+
+    public function get_content($user_id, $investor, $certification_id_list) {
+        $certs_content = [];
+        $this->CI->load->model('user/user_certification_model');
+        $certs_rs = $this->CI->user_certification_model->as_array()->get_many_by(['user_id' => $user_id, 'investor' => $investor, 'status' => CERTIFICATION_STATUS_SUCCEED,
+            'certification_id' => $certification_id_list]);
+        foreach ($certs_rs as $v) {
+            $v['content'] = json_decode($v['content'], TRUE);
+            $certs_content[$v['certification_id']] = $v['content'];
+        }
+        return $certs_content;
+    }
+
+    public function get_skip_certification_ids($target, $user_id = 0)
+    {
+        $skip_certification_ids = [];
+        if ( ! empty($target))
+        {
+            if (is_array($target))
+            {
+                $target = json_decode(json_encode($target));
+            }
+            $this->CI->load->model('loan/target_meta_model');
+            $target_meta = $this->CI->target_meta_model->as_array()->get_by([
+                'target_id' => $target->id,
+                'meta_key' => 'skip_certification_ids',
+                'user_id' => $user_id
+            ]);
+            $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
+            $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
+        }
+        return $skip_certification_ids;
+    }
+
+    /**
+     * 確認案件關係人是否都通過徵信項
+     * @param $target
+     * @throws Exception
+     * @return Boolean
+     */
+    public function associate_certs_are_succeed($target): bool
+    {
+        if (is_array($target))
+        {
+            $target = json_decode(json_encode($target));
+        }
+        $this->CI->load->model('loan/target_associate_model');
+        // 歸案之自然人資料
+        $associates_list = $this->CI->target_associate_model->get_many_by([
+            'status' => ASSOCIATES_STATUS_APPROVED,
+            'target_id' => $target->id
+        ]);
+        if ( ! empty($associates_list))
+        {
+            $user_id_list = array_column($associates_list, 'user_id', 'character');
+
+            // 有未註冊之自然人 (id 為 NULL)
+            if (count(array_filter($user_id_list)) != count($user_id_list))
+            {
+                return FALSE;
+            }
+
+            $associates_certifications_config = $this->CI->config->item('associates_certifications');
+            if ( ! isset($associates_certifications_config[$target->product_id]))
+            {
+                throw new Exception("Not supported for this product (product_id:{$target->product_id})");
+            }
+
+            $this->CI->load->model('user/user_certification_model');
+            $associates_certifications = $associates_certifications_config[$target->product_id];
+            foreach ($associates_list as $associates_info)
+            {
+                if (isset($associates_certifications[$associates_info->character]))
+                {
+                    $associates_certifications_list = $this->CI->user_certification_model->get_many_by([
+                        'investor' => BORROWER,
+                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                        'user_id' => $associates_info->user_id,
+                        'certification_id' => $associates_certifications[$associates_info->character]
+                    ]);
+                    // 確認認證徵信是否完成
+                    if (count($associates_certifications[$associates_info->character])
+                        == count(json_decode(json_encode($associates_certifications_list), TRUE)))
+                    {
+                        return TRUE;
+                    }
+                }
+            }
+
+        }
+
+        return TRUE;
+    }
+
+    /**
+     * 確認徵信項是否審核失敗
+     * @param $exist_target_submitted : 是否已有送出案件
+     * @param $certification_id : 徵信項id (user_certification.id)
+     * @param int $investor : 借款端/投資端
+     * @param bool $is_judicial_product
+     * @return bool
+     */
+    public function certification_truly_failed($exist_target_submitted, $certification_id, int $investor = USER_BORROWER, bool $is_judicial_product = FALSE): bool
+    {
+        $cert = Certification_factory::get_instance_by_id($certification_id);
+        if ( ! isset($cert))
+        {
+            return FALSE;
+        }
+
+        if ($investor == USER_INVESTOR ||
+            $is_judicial_product === TRUE ||
+            ($exist_target_submitted === TRUE || ($exist_target_submitted === FALSE && $cert->is_submit_to_review()))
+        )
+        {
+            if ($cert->is_failed())
+            {
+                return TRUE;
+            }
+
+            if ($cert->is_expired())
+            {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
     }
 }

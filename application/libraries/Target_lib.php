@@ -2,7 +2,9 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use Approve_target\Approve_factory;
 use Certification\Cert_identity;
+use CertificationResult\IdentityCertificationResult;
 use CreditSheet\CreditSheetFactory;
 
 class Target_lib
@@ -1705,6 +1707,17 @@ class Target_lib
         $allow_stage_cer = [1, 3];
         if ($targets && !empty($targets)) {
             foreach ($targets as $key => $value) {
+                // todo: 只放學生貸進新架構，剩餘的等之後開發好再說
+                if ($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0)
+                {
+                    $approve_factory = new Approve_factory();
+                    $approve_instance = $approve_factory->get_instance_by_model_data($value);
+                    if ($approve_instance->approve(FALSE) === TRUE)
+                    {
+                        $count++;
+                    }
+                    continue;
+                }
                 $list[$value->product_id][$value->id] = $value;
                 $ids[] = $value->id;
             }
@@ -1906,11 +1919,11 @@ class Target_lib
                                             $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
                                             if (isset($cert_helper))
                                             {
-                                                $rs = $cert_helper->set_failure(TRUE, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                                $rs = $cert_helper->set_failure(TRUE, IdentityCertificationResult::$ID_CARD_FAILED_MESSAGE);
                                             }
                                             else
                                             {
-                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, IdentityCertificationResult::$ID_CARD_FAILED_MESSAGE);
                                             }
                                             if ($rs === TRUE)
                                             {

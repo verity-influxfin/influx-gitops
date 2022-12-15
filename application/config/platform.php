@@ -424,6 +424,81 @@ $config['product_list'] = [
         'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
         'checkOwner' => false,
     ],
+    5 => [
+        'id' => 5,
+        'visul_id' => 'H1',
+        'type' => 1,
+        'identity' => 2,
+        'alias' => 'HLN',
+        'name' => '不動產融資',
+        'loan_range_s' => 30000,
+        'loan_range_e' => 1000000,
+        'interest_rate_s' => 5,
+        'interest_rate_e' => 16,
+        'condition_rate' => [
+            'salary_below' => 35000,
+            'rate' => 4.5
+        ],
+        'available_company_categories' => [
+            COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
+            COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
+            COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
+            COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
+        ],
+        'charge_platform' => 3,
+        'charge_platform_min' => 10000,
+        'sub_product' => [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES],
+        'certifications' => [
+            CERTIFICATION_IDENTITY,
+            CERTIFICATION_DEBITCARD,
+            CERTIFICATION_SOCIAL,
+            CERTIFICATION_EMERGENCY,
+            CERTIFICATION_EMAIL,
+            CERTIFICATION_FINANCIALWORKER,
+            CERTIFICATION_DIPLOMA,
+            CERTIFICATION_INVESTIGATION,
+            CERTIFICATION_JOB,
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [APP]上選填的徵信項，避免系統無法一審
+        'option_certifications' => [
+            CERTIFICATION_REPAYMENT_CAPACITY,
+            CERTIFICATION_DIPLOMA,
+        ],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
+            CERTIFICATION_DIPLOMA
+        ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDENTITY,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIALWORKER,
+                CERTIFICATION_DIPLOMA,
+                CERTIFICATION_INVESTIGATION,
+                CERTIFICATION_JOB,
+                CERTIFICATION_REPAYMENT_CAPACITY
+            ]
+        ],
+        'instalment' => [3, 6, 12, 18, 24, 36],
+        'repayment' => [1],
+        'targetData' => [],
+        'secondInstance' => FALSE,
+        'weight' => [],
+        'status' => 1,
+        'dealer' => [],
+        'multi_target' => 0,
+        'hiddenMainProduct' => FALSE,
+        'hiddenSubProduct' => FALSE,
+        'allow_age_range' => [20, 45],
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
+        'checkOwner' => FALSE,
+    ],
     //5 => [
     //    'id' => 5,
     //    'visul_id' => 'N3',
@@ -1140,6 +1215,38 @@ $config['visul_id_des'] = [
         'url' => '',
         'status' => 1
     ],
+    'H1' => [
+        'name' => '不動產融資',
+        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>還沒有人說要寫啥</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'HL1' => [
+        'name' => '購房不足額',
+        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>還沒有人說要寫啥</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'HL2' => [
+        'name' => '房屋裝修款',
+        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>還沒有人說要寫啥</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'HL3' => [
+        'name' => '添購傢俱家電',
+        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>還沒有人說要寫啥</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
 ];
 $config['sub_product_mapping'] = [
     1 => 'config_techi',
@@ -1805,6 +1912,279 @@ $config['sub_product_list'] = [
         ],
         'status' => 1
     ],
+    SUB_PRODUCT_ID_HOME_LOAN_SHORT => [
+        'visul_id' => 'HL1',
+        'identity' => [
+            2 => [
+                'visul_id' => 'HL1P1',
+                'name' => '購房不足額',
+                'product_id' => '5:10',
+                'loan_range_s' => 30000,
+                'loan_range_e' => 1000000,
+                'apply_range_s' => 30000,
+                'apply_range_e' => 1000000,
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 16,
+                'condition_rate' => [
+                    'salary_below' => 35000,
+                    'rate' => 4.5
+                ],
+                'need_upload_images' => [],
+                'available_company_categories' => [
+                    COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
+                    COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
+                    COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
+                    COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
+                ],
+                'charge_platform' => 3,
+                'charge_platform_min' => 10000,
+                'certifications' => [
+                    CERTIFICATION_IDENTITY,
+                    CERTIFICATION_DEBITCARD,
+                    CERTIFICATION_SOCIAL,
+                    CERTIFICATION_EMERGENCY,
+                    CERTIFICATION_EMAIL,
+                    CERTIFICATION_FINANCIALWORKER,
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_INVESTIGATION,
+                    CERTIFICATION_JOB,
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_HOUSE_CONTRACT,
+                    CERTIFICATION_HOUSE_RECEIPT,
+                    CERTIFICATION_HOUSE_DEED,
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                ],
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_HOUSE_RECEIPT,
+                    CERTIFICATION_HOUSE_DEED,
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_HOUSE_RECEIPT,
+                ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDENTITY,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIALWORKER,
+                        CERTIFICATION_DIPLOMA,
+                        CERTIFICATION_INVESTIGATION,
+                        CERTIFICATION_JOB,
+                        CERTIFICATION_REPAYMENT_CAPACITY,
+                        CERTIFICATION_HOUSE_CONTRACT,
+                        CERTIFICATION_HOUSE_RECEIPT,
+                        CERTIFICATION_HOUSE_DEED,
+                        CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    ]
+                ],
+                'default_reason' => '購屋不足額',
+                'instalment' => [3, 6, 12, 18, 24, 36],
+                'repayment' => [1],
+                'targetData' => [],
+                'secondInstance' => FALSE,
+                'weight' => [],
+                'status' => 1,
+                'dealer' => [],
+                'multi_target' => 0,
+                'hiddenMainProduct' => FALSE,
+                'hiddenSubProduct' => FALSE,
+                'allow_age_range' => [20, 45],
+                'description' => '*須提供購房合約上傳',
+                'checkOwner' => FALSE,
+            ]
+        ],
+        'status' => 1
+    ],
+    SUB_PRODUCT_ID_HOME_LOAN_RENOVATION => [
+        'visul_id' => 'HL2',
+        'identity' => [
+            2 => [
+                'visul_id' => 'HL2P1',
+                'name' => '房屋裝修款',
+                'product_id' => '5:10',
+                'loan_range_s' => 30000,
+                'loan_range_e' => 1000000,
+                'apply_range_s' => 30000,
+                'apply_range_e' => 1000000,
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 16,
+                'condition_rate' => [
+                    'salary_below' => 35000,
+                    'rate' => 4.5
+                ],
+                'need_upload_images' => [],
+                'available_company_categories' => [
+                    COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
+                    COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
+                    COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
+                    COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
+                ],
+                'charge_platform' => 3,
+                'charge_platform_min' => 10000,
+                'certifications' => [
+                    CERTIFICATION_IDENTITY,
+                    CERTIFICATION_DEBITCARD,
+                    CERTIFICATION_SOCIAL,
+                    CERTIFICATION_EMERGENCY,
+                    CERTIFICATION_EMAIL,
+                    CERTIFICATION_FINANCIALWORKER,
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_INVESTIGATION,
+                    CERTIFICATION_JOB,
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_RENOVATION_CONTRACT,
+                    CERTIFICATION_RENOVATION_RECEIPT,
+                    CERTIFICATION_HOUSE_DEED,
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                ],
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_RENOVATION_RECEIPT,
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_RENOVATION_RECEIPT,
+                ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDENTITY,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIALWORKER,
+                        CERTIFICATION_DIPLOMA,
+                        CERTIFICATION_INVESTIGATION,
+                        CERTIFICATION_JOB,
+                        CERTIFICATION_REPAYMENT_CAPACITY,
+                        CERTIFICATION_RENOVATION_CONTRACT,
+                        CERTIFICATION_RENOVATION_RECEIPT,
+                        CERTIFICATION_HOUSE_DEED,
+                        CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    ]
+                ],
+                'default_reason' => '購屋裝修',
+                'instalment' => [3, 6, 12, 18, 24, 36],
+                'repayment' => [1],
+                'targetData' => [],
+                'secondInstance' => FALSE,
+                'weight' => [],
+                'status' => 1,
+                'dealer' => [],
+                'multi_target' => 0,
+                'hiddenMainProduct' => FALSE,
+                'hiddenSubProduct' => FALSE,
+                'allow_age_range' => [20, 45],
+                'description' => '*須提供裝修合約上傳',
+                'checkOwner' => FALSE,
+            ]
+        ],
+        'status' => 1
+    ],
+    SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES => [
+        'visul_id' => 'HL1',
+        'identity' => [
+            2 => [
+                'visul_id' => 'HL3P1',
+                'name' => '添購傢俱家電',
+                'product_id' => '5:10',
+                'loan_range_s' => 30000,
+                'loan_range_e' => 1000000,
+                'apply_range_s' => 30000,
+                'apply_range_e' => 1000000,
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 16,
+                'condition_rate' => [
+                    'salary_below' => 35000,
+                    'rate' => 4.5
+                ],
+                'need_upload_images' => [],
+                'available_company_categories' => [
+                    COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
+                    COMPANY_CATEGORY_FINANCIAL => COMPANY_CATEGORY_NAME_FINANCIAL,
+                    COMPANY_CATEGORY_GOVERNMENT => COMPANY_CATEGORY_NAME_GOVERNMENT,
+                    COMPANY_CATEGORY_LISTED => COMPANY_CATEGORY_NAME_LISTED,
+                ],
+                'charge_platform' => 3,
+                'charge_platform_min' => 10000,
+                'certifications' => [
+                    CERTIFICATION_IDENTITY,
+                    CERTIFICATION_DEBITCARD,
+                    CERTIFICATION_SOCIAL,
+                    CERTIFICATION_EMERGENCY,
+                    CERTIFICATION_EMAIL,
+                    CERTIFICATION_FINANCIALWORKER,
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_INVESTIGATION,
+                    CERTIFICATION_JOB,
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT,
+                    CERTIFICATION_HOUSE_DEED,
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                ],
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
+                    CERTIFICATION_DIPLOMA,
+                ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDENTITY,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIALWORKER,
+                        CERTIFICATION_DIPLOMA,
+                        CERTIFICATION_INVESTIGATION,
+                        CERTIFICATION_JOB,
+                        CERTIFICATION_REPAYMENT_CAPACITY,
+                        CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT,
+                        CERTIFICATION_HOUSE_DEED,
+                        CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    ]
+                ],
+                'default_reason' => '購屋不足額',
+                'instalment' => [3, 6, 12, 18, 24, 36],
+                'repayment' => [1],
+                'targetData' => [],
+                'secondInstance' => FALSE,
+                'weight' => [],
+                'status' => 1,
+                'dealer' => [],
+                'multi_target' => 0,
+                'hiddenMainProduct' => FALSE,
+                'hiddenSubProduct' => FALSE,
+                'allow_age_range' => [20, 45],
+                'description' => '*須提供家電合約或家電發票上傳',
+                'checkOwner' => FALSE,
+            ]
+        ],
+        'status' => 1
+    ],
     5000 => [
         'visul_id' => 'LS1',
         'identity' => [
@@ -2230,7 +2610,13 @@ $config['certifications'] = [
     15 => ['id' => CERTIFICATION_REPAYMENT_CAPACITY, 'alias' => 'repayment_capacity', 'name' => '還款力計算', 'status' => 1, 'description' => '提供還款力計算結果', 'optional' => [], 'show' => FALSE],
     20 => ['id' => CERTIFICATION_CRIMINALRECORD, 'alias' => 'criminalrecord', 'name' => '良民證', 'status' => 1, 'description' => '提供良民證', 'optional' => []],
     21 => ['id' => CERTIFICATION_SOCIAL_INTELLIGENT, 'alias' => 'social_intelligent', 'name' => '社交帳號', 'status' => 1, 'description' => '個人社交帳號', 'optional' => []],
-
+    22 => ['id' => CERTIFICATION_HOUSE_CONTRACT, 'alias' => 'house_contract', 'name' => '購屋合約', 'status' => 1, 'description' => '購屋合約', 'optional' => []],
+    23 => ['id' => CERTIFICATION_HOUSE_RECEIPT, 'alias' => 'house_receipt', 'name' => '購屋發票', 'status' => 1, 'description' => '購屋發票', 'optional' => []],
+    24 => ['id' => CERTIFICATION_RENOVATION_CONTRACT, 'alias' => 'renovation_contract', 'name' => '裝修合約', 'status' => 1, 'description' => '裝修合約', 'optional' => []],
+    25 => ['id' => CERTIFICATION_RENOVATION_RECEIPT, 'alias' => 'renovation_receipt', 'name' => '裝修發票', 'status' => 1, 'description' => '裝修發票', 'optional' => []],
+    26 => ['id' => CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT, 'alias' => 'appliance_contract_receipt', 'name' => '傢俱家電合約或發票收據', 'status' => 1, 'description' => '傢俱家電合約或發票收據', 'optional' => []],
+    27 => ['id' => CERTIFICATION_HOUSE_DEED, 'alias' => 'house_deed', 'name' => '房屋所有權狀', 'status' => 1, 'description' => '房屋所有權狀', 'optional' => []],
+    28 => ['id' => CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS, 'alias' => 'land_and_building_transactions', 'name' => '土地建物謄本', 'status' => 1, 'description' => '土地建物謄本', 'optional' => []],
 
     500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務收支', 'status' => 1, 'description' => '提供個人財務收支資料', 'optional' => []],
     501 => ['id' => CERTIFICATION_SIMPLIFICATIONJOB, 'alias' => 'simplificationjob', 'name' => '工作資料', 'status' => 1, 'description' => '提供簡易工作資料', 'optional' => []],
@@ -2278,8 +2664,17 @@ $config['certifications_sort'] = [
     CERTIFICATION_INVESTIGATIONA11,
     CERTIFICATION_CRIMINALRECORD,
     CERTIFICATION_SOCIAL_INTELLIGENT,
+    CERTIFICATION_HOUSE_CONTRACT,
+    CERTIFICATION_HOUSE_RECEIPT,
+    CERTIFICATION_RENOVATION_CONTRACT,
+    CERTIFICATION_RENOVATION_RECEIPT,
+    CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT,
+    CERTIFICATION_HOUSE_DEED,
+    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+
     CERTIFICATION_SIMPLIFICATIONFINANCIAL,
     CERTIFICATION_SIMPLIFICATIONJOB,
+    CERTIFICATION_PASSBOOKCASHFLOW_2,
 
     CERTIFICATION_GOVERNMENTAUTHORITIES,
     CERTIFICATION_INVESTIGATIONJUDICIAL,

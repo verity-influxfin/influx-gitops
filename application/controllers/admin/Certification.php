@@ -99,6 +99,15 @@ class Certification extends MY_Admin_Controller {
 					$page_data['certification_list'] = $this->certification_name_list;
 					$page_data['data'] = $info;
 					$page_data['content'] = json_decode($info->content, true);
+                    $page_data['user_name'] = $this->user_model->get_user_name_by_id($info->user_id);
+                    $cert_house_deed = $this->user_certification_model->as_array()->order_by('created_at', 'desc')->get_by([
+                        'certification_id' => CERTIFICATION_HOUSE_DEED,
+                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                        'user_id' => $info->user_id,
+                        'investor' => $info->investor
+                    ]);
+                    $cert_house_deed_content = json_decode($cert_house_deed['content'] ?? '', TRUE);
+                    $page_data['house_deed_address'] = $cert_house_deed_content['admin_edit']['address'] ?? $cert_house_deed_content['address'] ?? '';
 				}
 				if($cid == CERTIFICATION_CERCREDITJUDICIAL || $info->certification_id == CERTIFICATION_CERCREDITJUDICIAL){
 					$selltype = isset($get['selltype'])?$get['selltype']:0;
@@ -231,12 +240,14 @@ class Certification extends MY_Admin_Controller {
                     CERTIFICATION_INVESTIGATION, CERTIFICATION_PROFILE, CERTIFICATION_INVESTIGATIONA11,
                     CERTIFICATION_SIMPLIFICATIONFINANCIAL, CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2,
                     CERTIFICATION_BUSINESSTAX, CERTIFICATION_BALANCESHEET, CERTIFICATION_INCOMESTATEMENT, CERTIFICATION_INVESTIGATIONJUDICIAL, CERTIFICATION_PASSBOOKCASHFLOW, CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_EMPLOYEEINSURANCELIST, CERTIFICATION_PROFILEJUDICIAL, CERTIFICATION_JUDICIALGUARANTEE,
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS
                 ];
                 // 可上傳 PDF 的徵信項
                 $cert_can_upload_pdf = [
                     CERTIFICATION_INVESTIGATIONA11,
                     CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2,
                     CERTIFICATION_BUSINESSTAX, CERTIFICATION_BALANCESHEET, CERTIFICATION_INCOMESTATEMENT, CERTIFICATION_INVESTIGATIONJUDICIAL, CERTIFICATION_PASSBOOKCASHFLOW, CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_EMPLOYEEINSURANCELIST, CERTIFICATION_PROFILEJUDICIAL, CERTIFICATION_JUDICIALGUARANTEE,
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS
                 ];
                 if (in_array($info->certification_id, $cert_can_upload_image))
                 {
@@ -321,6 +332,77 @@ class Certification extends MY_Admin_Controller {
                         {
                             alert('更新失敗', $back_url);
                         }
+                        break;
+                    case CERTIFICATION_HOUSE_CONTRACT:
+                        $info = $this->user_certification_model->get($post['id']);
+                        if ((int) ($info->status) !== CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        $filter_key = ['address', 'contract_amount', 'down_payment', 'contract_date'];
+                        $admin_edit_upd_res = $this->admin_edit_extracted($post, $filter_key, $info);
+                        if ($admin_edit_upd_res === TRUE)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        alert('更新失敗', $back_url);
+                        break;
+                    case CERTIFICATION_RENOVATION_CONTRACT:
+                        $info = $this->user_certification_model->get($post['id']);
+                        if ((int) ($info->status) !== CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        $filter_key = ['contract_amount', 'contract_date'];
+                        $admin_edit_upd_res = $this->admin_edit_extracted($post, $filter_key, $info);
+                        if ($admin_edit_upd_res === TRUE)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        alert('更新失敗', $back_url);
+                        break;
+                    case CERTIFICATION_HOUSE_RECEIPT:
+                    case CERTIFICATION_RENOVATION_RECEIPT:
+                        $info = $this->user_certification_model->get($post['id']);
+                        if ((int) ($info->status) !== CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        $filter_key = ['receipt_number', 'receipt_amount'];
+                        $admin_edit_upd_res = $this->admin_edit_extracted($post, $filter_key, $info);
+                        if ($admin_edit_upd_res === TRUE)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        alert('更新失敗', $back_url);
+                        break;
+                    case CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT:
+                        $info = $this->user_certification_model->get($post['id']);
+                        if ((int) ($info->status) !== CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        $filter_key = ['amount', 'receipt_number', 'contract_date'];
+                        $admin_edit_upd_res = $this->admin_edit_extracted($post, $filter_key, $info);
+                        if ($admin_edit_upd_res === TRUE)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        alert('更新失敗', $back_url);
+                        break;
+                    case CERTIFICATION_HOUSE_DEED:
+                        $info = $this->user_certification_model->get($post['id']);
+                        if ((int) ($info->status) !== CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        $filter_key = ['address'];
+                        $admin_edit_upd_res = $this->admin_edit_extracted($post, $filter_key, $info);
+                        if ($admin_edit_upd_res === TRUE)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        alert('更新失敗', $back_url);
                         break;
                     case CERTIFICATION_TARGET_APPLY: // 開通法人認購債權
                         if (empty($post['id']))
@@ -463,6 +545,7 @@ class Certification extends MY_Admin_Controller {
 				}
 
 				$info = $this->user_certification_model->get($post['id']);
+                $rs = FALSE;
 				if($info){
 					$certification = $this->certification[$info->certification_id];
 					if($certification['alias']=='debitcard'){
@@ -546,6 +629,7 @@ class Certification extends MY_Admin_Controller {
 								]);
 							}
 						}
+                        GENERAL_SAVE:
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
 						$this->log_usercertification_model->insert(array(
@@ -568,6 +652,7 @@ class Certification extends MY_Admin_Controller {
                         }
                         else if ($post['status'] == CERTIFICATION_STATUS_FAILED)
                         {
+                            $fail = ! empty($post['fail2']) ? $post['fail2'] : ($post['fail'] ?? '');
                             if (isset($cert))
                             {
                                 $rs = $cert->set_failure(FALSE, $fail);
@@ -1386,7 +1471,8 @@ class Certification extends MY_Admin_Controller {
 						$image_id_array[] = $v->id;
 					}
 					$this->log_image_model->insertGroupById($image_id_array,['group_info'=>$group_id]);
-					$certification_content = json_decode($this->user_certification_model->get($post['user_certification_id'])->content,true);
+                    $user_certification_info = $this->user_certification_model->get($post['user_certification_id']);
+                    $certification_content = json_decode($user_certification_info->content, TRUE);
                     // TODO: 暫時寫死
                     if (isset($post['certification_id']))
                     {
@@ -1418,10 +1504,15 @@ class Certification extends MY_Admin_Controller {
                     }
 
 					$certification_content['group_id'] = $group_id;
-
-					$res = $this->user_certification_model->update($post['user_certification_id'], [
-						'content' => json_encode($certification_content)
-					]);
+                    $update_data = [
+                        'content' => json_encode($certification_content)
+                    ];
+                    if ($user_certification_info->certification_id == CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS)
+                    {
+                        // 若為土地建物謄本者，一旦上傳完資料就將狀態改為待驗證
+                        $update_data['status'] = CERTIFICATION_STATUS_PENDING_TO_VALIDATE;
+                    }
+                    $res = $this->user_certification_model->update($post['user_certification_id'], $update_data);
 					// 觸發上傳檔案 ocr
 					// $this->load->library('ocr/report_scan_lib');
 					// to do : 可能會有聯徵之外的檔案從後台上傳並觸發
@@ -1460,6 +1551,8 @@ class Certification extends MY_Admin_Controller {
                 return 'passbook_image';
             case CERTIFICATION_SIMPLIFICATIONJOB: // 工作資料
                 return 'labor_image';
+            case CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS:
+                return 'transactions_image';
             case CERTIFICATION_PASSBOOKCASHFLOW_2: // (自然人)近六個月往來存摺封面及內頁
                 return 'passbook_image';
             case CERTIFICATION_BUSINESSTAX:
@@ -1776,5 +1869,28 @@ class Certification extends MY_Admin_Controller {
     {
         return ['result' => FALSE, 'msg' => $msg];
     }
+
+    /**
+     * @param $post
+     * @param array $filter_key
+     * @param $info
+     * @return mixed
+     */
+    private function admin_edit_extracted($post, array $filter_key, $info)
+    {
+        if (empty($post['admin_edit']))
+        {
+            return FALSE;
+        }
+        $admin_edit_data = array_filter($post['admin_edit'], function ($value) use ($filter_key) {
+            return in_array($value, $filter_key);
+        }, ARRAY_FILTER_USE_KEY);
+        $update_content_data = json_decode($info->content ?? '', TRUE);
+        $update_content_data['admin_edit'] = $admin_edit_data;
+        $this->user_certification_model->update($post['id'], [
+            'content' => json_encode($update_content_data)
+        ]);
+        return TRUE;
+    }
 }
-?>
+

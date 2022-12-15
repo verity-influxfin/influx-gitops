@@ -671,16 +671,22 @@ class Target_model extends MY_Model
 
     /** 依targets.status取得不重複的使用者ID
      * @param array $status
+     * @param array $where
      * @return mixed
      */
-    public function get_distinct_user_by_status(array $status)
+    public function get_distinct_user_by_status(array $status, array $where = [])
     {
-        $this->db
+        $this->_database
             ->select('DISTINCT(user_id) AS user_id')
             ->from('p2p_loan.targets')
             ->where_in('status', $status);
 
-        return $this->db->get()->result_array();
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
     }
 
     public function get_apply_target_count($where)
@@ -987,6 +993,7 @@ class Target_model extends MY_Model
     public function chk_exist_by_status($condition): bool
     {
         $this->_database
+            ->select('1')
             ->from('`p2p_loan`.`targets`');
         if ( ! empty($condition))
         {
@@ -1043,5 +1050,35 @@ class Target_model extends MY_Model
             ->where('script_status', 0)
             ->get()
             ->result_array();
+    }
+
+    /**
+     * @param $target_id
+     * @param $update_param
+     * @param $where_param
+     * @return int
+     */
+    public function get_affected_after_update($target_id, $update_param, $where_param): int
+    {
+        if (empty($update_param))
+        {
+            return 0;
+        }
+
+        if ( ! empty($where_param))
+        {
+            $this->_set_where([0 => $where_param]);
+        }
+
+        foreach ($update_param as $key => $value)
+        {
+            $this->_database->set($key, $value);
+        }
+
+        $this->_database
+            ->where('id', $target_id)
+            ->update('p2p_loan.targets');
+
+        return $this->_database->affected_rows();
     }
 }

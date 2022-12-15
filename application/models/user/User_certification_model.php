@@ -134,7 +134,7 @@ class User_certification_model extends MY_Model
         return $list;
     }
 
-	public function get_content($userId, $certification_id, $limit = 1, $offset = 0)
+	public function get_content($userId, $certification_id, $limit = 1, $offset = 0, int $investor = USER_BORROWER)
     {
         $query = $this->db
             ->select('content')
@@ -142,6 +142,7 @@ class User_certification_model extends MY_Model
             ->where('user_id', $userId)
             ->where('status', 1)
             ->where('certification_id', $certification_id)
+            ->where('investor', $investor)
             ->limit($limit, $offset)
             ->get();
 
