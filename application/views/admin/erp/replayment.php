@@ -160,7 +160,14 @@
                             <table class="table table-striped table-bordered table-hover" width="100%">
                                 <thead>
                                     <tr class="info" style="position: sticky;top: 0px;">
-                                        <th colspan="99">一般本攤表</th>
+                                        <th colspan="99">
+                                            <div class="d-flex aic">
+                                                <div class="mr-4">一般本攤表</div>
+                                                <button class="btn btn-default" @click="hide = !hide">
+                                                    <i class="fa" :class="eyeIcon"></i>
+                                                </button>
+                                            </div>
+                                        </th>
                                     </tr>
                                     <tr class="info" style="position: sticky;top: 38px;">
                                         <th>日期</th>
@@ -180,7 +187,7 @@
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
-                                    <template v-for="row in replayment_list_latest.stacked_coded1_rsRow_list">
+                                    <template v-for="row in filteredReplaymentListLatest.stacked_coded1_rsRow_list">
                                         <tr>
                                             <td style="padding-left: 1em;">{{ row.date }}</td>
                                             <td class="text-right">{{ amount(row.principal_receivable) }}</td>
@@ -194,7 +201,14 @@
                             <table class="table table-striped table-bordered table-hover" width="100%">
                                 <thead>
                                     <tr class="info" style="position: sticky;top: 0px;">
-                                        <th colspan="99">逾期本攤表</th>
+                                        <th colspan="99">
+                                            <div class="d-flex aic">
+                                                <div class="mr-4">逾期本攤表</div>
+                                                <button class="btn btn-default" @click="hide = !hide">
+                                                    <i class="fa" :class="eyeIcon"></i>
+                                                </button>
+                                            </div>
+                                        </th>
                                     </tr>
                                     <tr class="info" style="position: sticky;top: 38px;">
                                         <th>日期</th>
@@ -213,7 +227,7 @@
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
-                                    <template v-for="row in replayment_list_latest.stacked_coded2_rsRow_list">
+                                    <template v-for="row in filteredReplaymentListLatest.stacked_coded2_rsRow_list">
                                         <tr>
                                             <td style="padding-left: 1em;">{{ row.date }}</td>
                                             <td class="text-right">{{ amount(row.interest_receivable) }}</td>

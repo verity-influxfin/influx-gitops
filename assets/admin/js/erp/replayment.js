@@ -10,9 +10,24 @@ var app = new Vue({
         is_waiting_response: false,
         replayment_list: [],
         replayment_list_latest: [],
-        tab: 'tab1'
+        tab: 'tab1',
+        hide: false
     },
     computed: {
+        eyeIcon() {
+            return this.hide ? 'fa-eye-slash' : 'fa-eye'
+        },
+        filteredReplaymentListLatest() {
+            if (this.hide) {
+                // use moment get this month last day
+                const lastDay = moment().startOf('month').format('YYYY-MM-DD')
+                const replayment_list_latest = { ...this.replayment_list_latest }
+                replayment_list_latest.stacked_coded1_rsRow_list = this.replayment_list_latest.stacked_coded1_rsRow_list.filter(item => moment(item.date).isAfter(lastDay))
+                replayment_list_latest.stacked_coded2_rsRow_list = this.replayment_list_latest.stacked_coded2_rsRow_list.filter(item => moment(item.date).isAfter(lastDay))
+                return replayment_list_latest
+            }
+            return this.replayment_list_latest
+        }
     },
     mounted() {
         var self = this;
