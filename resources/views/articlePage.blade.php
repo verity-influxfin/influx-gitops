@@ -291,7 +291,7 @@
                                 </div>
                             </div>
                             <div class="function-item">
-                                <div class="function-title">普匯小學堂</div>
+                                <div class="function-title">小學堂</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content article">
@@ -396,8 +396,12 @@
                 <div class="item -dropdown">
                     <div class="text">小學堂金融科技</div>
                     <div class="sub">
-                        <a href="/blog" class="item">小學堂</a>
                         <a href="/vlog?q=share" class="item">小學堂影音</a>
+                        @foreach ($latestArticles as $latestArticle)
+                        <a class="item" href="/articlepage?q=knowledge-{{$latestArticle->ID}}">
+                            {{ $latestArticle->post_title }}
+                        </a>
+                        @endforeach
                     </div>
                 </div>
                 <div class="item -dropdown">
