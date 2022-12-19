@@ -321,6 +321,15 @@ $ci-color: #153a71;
                     text-align: left;
                 }
             }
+            &.article{
+                padding-left: 708px;
+                .function-list-items:first-of-type{
+                  width: 350px;
+                }
+                .link-item{
+                  font-size: 16px;
+                }
+            }
         }
     }
 }
@@ -702,6 +711,9 @@ $ci-color: #153a71;
                     color: #8f8f8f;
                     background-color: #fff;
                 }
+            }
+            &.article .item{
+                font-size: 14px;
             }
         }
 
