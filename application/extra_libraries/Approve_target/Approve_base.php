@@ -120,9 +120,12 @@ abstract class Approve_base implements Approve_interface
 
         // 檢查是否需要進二審
         $need_second_instance = $this->get_need_second_instance($match_brookesia);
-        if ($need_second_instance === TRUE)
+        if ($this->check_before_second_instance() === TRUE)
         {
-            $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_SECOND_INSTANCE);
+            if ($need_second_instance === TRUE)
+            {
+                $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_SECOND_INSTANCE);
+            }
         }
 
         $status = $this->result->get_status();
@@ -181,10 +184,22 @@ abstract class Approve_base implements Approve_interface
     }
 
     /**
+     * 進二審前的檢查
+     * @return bool
+     */
+    protected function check_before_second_instance(): bool
+    {
+        return TRUE;
+    }
+
+    /**
      * 依不同產品檢查是否需進二審
      * @return bool
      */
-    abstract protected function check_need_second_instance_by_product(): bool;
+    protected function check_need_second_instance_by_product(): bool
+    {
+        return FALSE;
+    }
 
     /**
      * 檢查申貸時間
