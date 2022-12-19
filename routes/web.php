@@ -367,6 +367,7 @@ Route::get('/{path?}', function (Request $request, $path = '') {
     $default_desc = '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。';
     $default_title = 'inFlux普匯金融科技';
     $default_og_img = asset('images/site_icon.png');
+    $latestArticles = (new App\Http\Controllers\KnowledgeArticleController)->get_knowledge_articles();
     if(!empty($path)){
       $meta_data = (new App\Http\Controllers\RouteMetaController)->getMeta($path);
     }
@@ -376,7 +377,8 @@ Route::get('/{path?}', function (Request $request, $path = '') {
         'web_title' => !empty($meta_data['web_title']) ? $meta_data['web_title'] : $default_title,
         'meta_og_title' => !empty($meta_data['meta_og_title']) ? $meta_data['meta_og_title'] : $default_title,
         'meta_og_image' => !empty($meta_data['meta_og_image']) ? $meta_data['meta_og_image'] : $default_og_img,
-        'meta_canonical' => !empty($meta_data['link']) ? $meta_data['link'] : ''
+        'meta_canonical' => !empty($meta_data['link']) ? $meta_data['link'] : '',
+        'latestArticles' => $latestArticles
     ]);
 });
 
