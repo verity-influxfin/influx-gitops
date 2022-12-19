@@ -77,10 +77,10 @@ class Product_student extends Approve_target_credit_base
     }
 
     /**
-     * 依不同產品檢查是否需進二審
+     * 進二審前的檢查
      * @return bool
      */
-    protected function check_need_second_instance_by_product(): bool
+    protected function check_before_second_instance(): bool
     {
         // 風控：曾申請上班族貸“成功申貸”者->二審系統自動退件不通過
         $apply_prod_salary_man_res = $this->CI->target_model->chk_exist_by_status([
