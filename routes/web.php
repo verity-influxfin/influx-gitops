@@ -327,12 +327,12 @@ Route::get('/articlepage', function (Request $request, $path = '') {
     $input = $request->all();
 
     @list($type, $params) = explode('-', $input['q']);
+    $ArticleController = (new App\Http\Controllers\KnowledgeArticleController);
+    $latestArticles = $ArticleController->get_knowledge_articles();
     if ($type == 'knowledge') {
-        $ArticleController = (new App\Http\Controllers\KnowledgeArticleController);
         $meta_data = $ArticleController->get_meta_info($params);
         $meta_data['link'] = $request->fullUrl();
         $article = $ArticleController->get_knowledge_article($params);
-        $latestArticles = $ArticleController->get_knowledge_articles();
         // check article not null
         if (empty($article)) {
             return redirect('/index');
@@ -355,7 +355,8 @@ Route::get('/articlepage', function (Request $request, $path = '') {
         return view('articlePage', [
             'type' => $type,
             'article' => $news,
-            'meta_data' => $meta_data
+            'meta_data' => $meta_data,
+            'latestArticles' => $latestArticles,
         ]);
     } else {
         return redirect('/');
