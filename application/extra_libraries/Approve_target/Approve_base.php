@@ -473,7 +473,7 @@ abstract class Approve_base implements Approve_interface
         // 申貸金額
         $this->loan_amount = $loan_amount;
         // 平台服務費
-        $this->platform_fee = $this->CI->financial_lib->get_platform_fee($this->loan_amount, $this->product_config['charge_platform']);
+        $this->platform_fee = $this->CI->financial_lib->get_platform_fee($this->loan_amount, $this->product_config['charge_platform'], $this->product_config['charge_platform_min']);
 
         return TRUE;
     }
