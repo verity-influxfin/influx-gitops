@@ -20,6 +20,35 @@
         })(window, document, 'script', 'dataLayer', '{{env('APP_ENV ') == 'production ' ? 'GTM - 5 Z439PW ' : 'GTM - 589 Z9H6 '}}');
     </script>
     <!-- End Google Tag Manager -->
+    @if (Request::path() == '/')
+    <!-- Local business -->
+    <script type='application/ld+json'>
+      {
+        "@context": "http://www.schema.org",
+        "@type": "ProfessionalService",
+        "name": "普匯金融科技",
+        "url": "https://www.influxfin.com",
+        "logo": "https://www.influxfin.com/images/logo.png",
+        "image": "https://www.influxfin.com/images/logo.png",
+        "description": "普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "台北市中山區松江路111號11樓-1",
+            "addressLocality": "taipei",
+            "addressCountry": "TW",
+            "postalCode":"10491"
+        },
+        "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 25.05217214471883,
+              "longitude": 121.53316646930858
+            },
+        "openingHours": "Mo, Tu, We, Th, Fr, Sa, Su 00:00-23:59",
+        "telephone":"+886-25079990",
+        "email":"service@influxfin.com"
+      }
+    </script>
+    @endif
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
