@@ -315,6 +315,9 @@ const createApp = () => {
         })
       },
       // articlepage專用
+      returnToBlog() {
+        window.history.back();
+      },
       addToFB() {
         window.open(
           `https://www.addtoany.com/add_to/facebook?linkurl=${this.page_link}`,

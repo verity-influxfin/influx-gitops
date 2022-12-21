@@ -472,6 +472,9 @@
                                 <span v-if="copied">網址複製成功 !</span>
                             </div>
                         </div>
+                        <div class="row mt-3 no-gutters">
+                            <button @click="returnToBlog" class="btn login-btn"><i class="mr-2 fa fa-arrow-left"></i>返回列表</button>
+                        </div>
                     </div>
                     <div class="col-lg-3 ">
                         <div class="panel panel-default">

@@ -333,6 +333,20 @@ $ci-color: #153a71;
         }
     }
 }
+.login-btn{
+    padding: 3px 24px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #036EB7;
+    border-radius: 4px;
+    &:hover,&:focus{
+        color: #fff;
+    }
+    @include rwd{
+        padding: 3px 14px;
+        font-size: 16px;
+    }
+}
 .alesis-header {
     color: #393939;
     display: flex;
@@ -398,16 +412,7 @@ $ci-color: #153a71;
             position: absolute;
             right: 10px;
         }
-
     }
-    .login-btn{
-        padding: 3px 24px;
-        font-size: 18px;
-        color: #fff;
-        background-color: #036EB7;
-        border-radius: 4px;
-    }
-
     @include rwd {
         padding:5px 15px !important;
         justify-content: space-between;
@@ -715,14 +720,6 @@ $ci-color: #153a71;
             &.article .item{
                 font-size: 14px;
             }
-        }
-
-        .login-btn{
-            padding: 3px 14px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #036EB7;
-            border-radius: 4px;
         }
     }
 }
