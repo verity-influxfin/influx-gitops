@@ -426,25 +426,28 @@ abstract class Approve_base implements Approve_interface
                 }
             }
 
-            // 無條件進位使用額度(千元) ex: 1001->1100
-            $used_amount = ($used_amount % 1000 != 0)
-                ? ceil($used_amount * 0.001) * 1000
+            // 無條件進位使用額度 (基本單位為千，詳細需視產品辦法而定)
+            $amount_unit = $this->get_loan_amount_unit();
+            $used_amount = ($used_amount % $amount_unit != 0)
+                ? ceil($used_amount * 0.001) * $amount_unit
                 : $used_amount;
-            $other_used_amount = ($other_used_amount % 1000 != 0)
-                ? ceil($other_used_amount * 0.001) * 1000
+            $other_used_amount = ($other_used_amount % $amount_unit != 0)
+                ? ceil($other_used_amount * 0.001) * $amount_unit
                 : $other_used_amount;
         }
 
         // 產轉不需檢查金額
         if ($subloan_status === FALSE)
         {
+            $amount_unit = $this->get_loan_amount_unit();
+
             // 檢查個人最高歸戶剩餘額度
             $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
-            if ($user_current_credit_amount < 1000)
+            if ($user_current_credit_amount < $amount_unit)
             {
-                // 可用額度低於1000->失敗
+                // 可用額度低於 $amount_unit ->失敗
                 $this->result->add_msg(TARGET_FAIL, Approve_target_result::TARGET_FAIL_DEFAULT_MSG);
-                $this->result->add_memo(TARGET_FAIL, '可用額度不足1000', Approve_target_result::DISPLAY_BACKEND);
+                $this->result->add_memo(TARGET_FAIL, "可用額度不足{$amount_unit}", Approve_target_result::DISPLAY_BACKEND);
                 return FALSE;
             }
 
@@ -454,8 +457,8 @@ abstract class Approve_base implements Approve_interface
                 : $this->target['amount'];
 
             // 金額取整
-            $loan_amount = ($loan_amount % 1000 != 0)
-                ? floor($loan_amount * 0.001) * 1000
+            $loan_amount = ($loan_amount % $amount_unit != 0)
+                ? floor($loan_amount * 0.001) * $amount_unit
                 : $loan_amount;
 
             if ($loan_amount < $this->product_config['loan_range_s'])
@@ -476,6 +479,15 @@ abstract class Approve_base implements Approve_interface
         $this->platform_fee = $this->CI->financial_lib->get_platform_fee($this->loan_amount, $this->product_config['charge_platform'], $this->product_config['charge_platform_min']);
 
         return TRUE;
+    }
+
+    /**
+     * 取得額度金額以 n 為計量單位
+     * @return int
+     */
+    protected function get_loan_amount_unit(): int
+    {
+        return 1000;
     }
 
     /**
