@@ -1081,4 +1081,20 @@ class Target_model extends MY_Model
 
         return $this->_database->affected_rows();
     }
+
+    public function get_newest_no_by_condition($where)
+    {
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+        $target = $this->_database
+            ->select('target_no')
+            ->from('p2p_loan.targets')
+            ->order_by('created_at', 'desc')
+            ->get()
+            ->first_row('array');
+
+        return $target['target_no'] ?? '';
+    }
 }

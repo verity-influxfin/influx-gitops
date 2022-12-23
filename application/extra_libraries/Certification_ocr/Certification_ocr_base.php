@@ -33,6 +33,12 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     }
 
     /**
+     * 取得 OCR 子系統 port
+     * @return string
+     */
+    abstract protected function get_ocr_port(): string;
+
+    /**
      * 取得該徵信項的 OCR 任務 id
      * @param $type
      * @return string

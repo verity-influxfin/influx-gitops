@@ -3885,17 +3885,20 @@ class Certification_lib{
             $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY, USER_BORROWER, FALSE, TRUE);
             if (empty($info))
             {
-                $this->CI->user_certification_model->insert([
+                $id = $this->CI->user_certification_model->insert([
                     'user_id' => $user['user_id'],
                     'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
                     'investor' => USER_BORROWER,
                     'content' => json_encode([]),
                     'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
                 ]);
-                $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY);
+            }
+            else
+            {
+                $id = $info->id;
             }
 
-            $cert = Certification_factory::get_instance_by_model_resource($info);
+            $cert = Certification_factory::get_instance_by_id($id);
             $cert->verify();
         }
 
@@ -3919,7 +3922,7 @@ class Certification_lib{
             $info = $this->get_certification_info($user['user_id'], CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS, USER_BORROWER, FALSE, TRUE);
             if ( ! empty($info))
             {
-                $cert = Certification_factory::get_instance_by_model_resource($info);
+                $cert = Certification_factory::get_instance_by_id($info->id);
                 $cert->verify();
                 continue;
             }

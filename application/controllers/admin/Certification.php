@@ -404,6 +404,23 @@ class Certification extends MY_Admin_Controller {
                         }
                         alert('更新失敗', $back_url);
                         break;
+                    case CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS:
+                        $info = $this->user_certification_model->get($post['id']);
+                        if ((int) ($info->status) !== CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        $content = json_decode($info->content ?? '', TRUE);
+                        $content['admin_edit'] = array_replace_recursive($content['admin_edit'], $post['admin_edit']);
+                        $admin_edit_upd_res = $this->user_certification_model->update($post['id'], [
+                            'content' => json_encode($content),
+                        ]);
+                        if ($admin_edit_upd_res === TRUE)
+                        {
+                            goto GENERAL_SAVE;
+                        }
+                        alert('更新失敗', $back_url);
+                        break;
                     case CERTIFICATION_TARGET_APPLY: // 開通法人認購債權
                         if (empty($post['id']))
                         {
@@ -1509,6 +1526,10 @@ class Certification extends MY_Admin_Controller {
                     ];
                     if ($user_certification_info->certification_id == CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS)
                     {
+                        if ($user_certification_info->status != CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                        {
+                            $this->json_output->setStatusCode(200)->setErrorCode('資料更改失敗，狀態未在待人工審核中')->send();
+                        }
                         // 若為土地建物謄本者，一旦上傳完資料就將狀態改為待驗證
                         $update_data['status'] = CERTIFICATION_STATUS_PENDING_TO_VALIDATE;
                     }

@@ -13,7 +13,16 @@ abstract class Ocr_marker_base extends Certification_ocr_base
 {
     public function __construct($certification)
     {
-        $this->api_url = 'http://' . getenv('CERT_OCR_MARKER_IP') . ':' . getenv('CERT_OCR_MARKER_PORT');
+        $this->api_url = 'http://' . getenv('CERT_OCR_MARKER_IP') . ':' . $this->get_ocr_port();
         parent::__construct($certification);
+    }
+
+    /**
+     * 取得 OCR 子系統 port
+     * @return string
+     */
+    protected function get_ocr_port(): string
+    {
+        return getenv('CERT_OCR_MARKER_PORT');
     }
 }
