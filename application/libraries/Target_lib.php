@@ -2946,12 +2946,19 @@ class Target_lib
         return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
     }
 
+    public function get_home_loan_product_ids():array
+    {
+        return [PRODUCT_ID_HOME_LOAN];
+    }
+
     public function get_product_id_by_tab($tabname): array
     {
         switch ($tabname)
         {
             case PRODUCT_TAB_ENTERPRISE:
                 return $this->get_enterprise_product_ids();
+            case PRODUCT_TAB_HOME_LOAN:
+                return $this->get_home_loan_product_ids();
             case PRODUCT_TAB_INDIVIDUAL:
             default:
                 return $this->get_individual_product_ids();

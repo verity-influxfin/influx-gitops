@@ -140,10 +140,20 @@
             url = new URL(location.href)
             const tab1 = document.querySelector('#tab1')
             const tab2 = document.querySelector('#tab2')
+            const tab3 = document.querySelector('#tab3')
             if(url.searchParams.get('tab')){
-                if(url.searchParams.get('tab')==='enterprise'){
-                    tab2.classList.add('active')
-                    tab1.classList.remove('active')
+                $('.category-tab-item').removeClass('active');
+                switch (url.searchParams.get('tab'))
+                {
+                    case 'enterprise':
+                        tab2.classList.add('active');
+                        break;
+                    case 'home_loan':
+                        tab3.classList.add('active');
+                        break;
+                    case 'individual':
+                    default:
+                        tab1.classList.add('active');
                 }
             }
 
