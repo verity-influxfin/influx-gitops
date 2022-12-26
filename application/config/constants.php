@@ -170,6 +170,7 @@ defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);
 defined('PICTURE_NOT_EXIST')  		OR define('PICTURE_NOT_EXIST'		, 423);
 defined('PRODUCT_HAS_NO_CREDIT') or define('PRODUCT_HAS_NO_CREDIT', 424); // 該產品已無額度，不起新案
 defined('BLACK_LIST_APPLY_PRODUCT') OR define('BLACK_LIST_APPLY_PRODUCT', 426);
+defined('PRODUCT_CANNOT_BOOK_TIME') or define('PRODUCT_CANNOT_BOOK_TIME', 427); // 無法預約時段
 
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501);
@@ -622,6 +623,7 @@ defined('UnknownMethod')  	            OR define('UnknownMethod'		        , 360)
 defined('ItemNotFound')  	            OR define('ItemNotFound'		        , 361);//商品不存在
 defined('ApplyFail')  	                OR define('ApplyFail'		            , 362);//訂單建立失敗
 defined('CooperationAccountNotFound') OR define('CooperationAccountNotFound' , 363);//法人帳號不存在
+defined('SUB_SYSTEM_REQUEST_ERROR') OR define('SUB_SYSTEM_REQUEST_ERROR' , 364); // 無法訪問子系統
 
 defined('COOPER_ID')   			OR define('COOPER_ID'				, getenv('ENV_COOPER_ID'));
 defined('COOPER_KEY')   			OR define('COOPER_KEY'				, getenv('ENV_COOPER_KEY'));
