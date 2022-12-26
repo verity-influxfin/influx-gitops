@@ -571,6 +571,21 @@ class Credit_lib{
         $param['amount'] = round($param['amount'] * ($instalment_modifier_list[$instalment] ?? 1));
         $this->scoreHistory[] = '借款期數' . $instalment . '期: 額度 * ' . ($instalment_modifier_list[$instalment] ?? 1);
 
+        // 舊客戶加碼
+        $this->CI->load->model('loan/target_model');
+        $has_delayed = $this->CI->target_model->count_by([
+            'user_id' => $param['user_id'],
+            'delay_days>' => 0,
+        ]);
+        if ($has_delayed === 0)
+        {
+            $markup_amount = $this->get_markup_amount($param['user_id']);
+            $max_key = max(array_keys($markup_amount));
+            $max_times = $max_key / 100;
+            $param['amount'] = $param['amount'] * $max_times;
+            $this->scoreHistory[] = "舊客戶加碼：<br/>額度 * {$max_times} 倍，因符合其中一條件：" . implode('、', $markup_amount[$max_key]);
+        }
+
         // 額度不能「小」於產品的最「小」允許額度
         $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
 
@@ -1642,5 +1657,108 @@ class Credit_lib{
         }
 
         return $loan_range_end;
+    }
+
+    public function get_markup_amount($user_id)
+    {
+        $result = [
+            // key: 原核定額度可以乘以的倍率 (單位 %)
+            // value: 達成該條件的敘述
+        ];
+        $this->CI->load->model('transaction/transaction_model');
+
+        // 歷史還款紀錄
+        $repayment_date_list = $this->CI->transaction_model->get_repayment_date($user_id);
+        $flag_on_time = 0;
+        foreach ($repayment_date_list as $value)
+        {
+            if (empty($value['entering_date']) || empty($value['limit_date']))
+            {
+                continue;
+            }
+            $entering_date = new DateTimeImmutable($value['entering_date']);
+            $limit_date = new DateTimeImmutable($value['limit_date']);
+            if ($entering_date === $limit_date)
+            {
+                $flag_on_time++;
+            }
+        }
+        if ($flag_on_time > 10)
+        {
+            $result[200][] = '非寬限期還款>10次';
+        }
+        elseif ($flag_on_time > 5)
+        {
+            $result[150][] = '非寬限期還款>5次';
+        }
+        elseif ($flag_on_time > 3)
+        {
+            $result[120][] = '非寬限期還款>3次';
+        }
+
+        // 正常結案
+        $normal_repayment_list = $this->CI->transaction_model->get_normal_repayment($user_id);
+        switch (count($normal_repayment_list))
+        {
+            case 0:
+                break;
+            case 1:
+                $result[110][] = '正常結案1次';
+                break;
+            case 2:
+                $result[130][] = '正常結案2次';
+                break;
+            default:
+                $result[150][] = '正常結案3次(含)以上';
+        }
+
+        // 提前還款
+        $prepayment_target_list = $this->CI->transaction_model->get_prepayment_target($user_id);
+        switch (count($prepayment_target_list))
+        {
+            case 0:
+                break;
+            case 1:
+                $result[120][] = '提前還款1次';
+                break;
+            case 2:
+                $result[150][] = '提前還款2次';
+                break;
+            default:
+                $result[200][] = '提前還款3次(含)以上';
+        }
+
+        // 累計清償總金額
+        $repayment_amount_list = $this->CI->transaction_model->get_repayment_amount($user_id);
+        $repayment_amount_list = array_column($repayment_amount_list, 'total_amount', 'product_id');
+        $amount_1 = $repayment_amount_list[PRODUCT_ID_STUDENT] ?? 0;
+        $amount_3 = $repayment_amount_list[PRODUCT_ID_SALARY_MAN] ?? 0;
+        $amount_1_and_3 = $amount_1 + $amount_3;
+        if ($amount_1 > 150000)
+        {
+            $result[200][] = '累計清償總金額，學生貸大於15萬';
+        }
+        elseif ($amount_1 > 100000)
+        {
+            $result[150][] = '累計清償總金額，學生貸大於10萬';
+        }
+        elseif ($amount_1 > 50000)
+        {
+            $result[120][] = '累計清償總金額，學生貸大於5萬';
+        }
+        if ($amount_1_and_3 > 500000)
+        {
+            $result[200][] = '累計清償總金額，(學生貸+上班族貸)大於50萬';
+        }
+        elseif ($amount_1_and_3 > 300000)
+        {
+            $result[150][] = '累計清償總金額，(學生貸+上班族貸)大於30萬';
+        }
+        elseif ($amount_1_and_3 > 150000)
+        {
+            $result[120][] = '累計清償總金額，(學生貸+上班族貸)大於15萬';
+        }
+
+        return $result;
     }
 }
