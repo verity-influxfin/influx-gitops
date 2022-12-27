@@ -1732,7 +1732,7 @@ $config['sub_product_list'] = [
                 'checkOwner' => false,
             ]
         ],
-        'status' => 1
+        'status' => 0
     ],
     8 => [
         'visul_id' => 'LF3',
@@ -1821,7 +1821,7 @@ $config['sub_product_list'] = [
                 'checkOwner' => false,
             ]
         ],
-        'status' => 1
+        'status' => 0
     ],
     9 => [
         'visul_id' => 'LF4',
@@ -1910,7 +1910,7 @@ $config['sub_product_list'] = [
                 'checkOwner' => false,
             ]
         ],
-        'status' => 1
+        'status' => 0
     ],
     SUB_PRODUCT_ID_HOME_LOAN_SHORT => [
         'visul_id' => 'HL1',
