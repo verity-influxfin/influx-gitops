@@ -123,7 +123,7 @@
               <div class="suit-title">適用對象</div>
               <div class="suit-underline d-md-none"></div>
             </div>
-            <div class="suit-item">•20~45歲</div>
+            <div class="suit-item">•18~45歲</div>
             <div class="suit-item">•持雙證件自拍上傳</div>
             <div class="suit-item">•提供基本收入資料</div>
             <div class="suit-item">•信用良好（無催收/呆帳紀錄）</div>
