@@ -426,53 +426,53 @@ $user_id = $data->user_id ?? '';
                                     </tr>
                                     <tr>
                                         <td>案號：</td>
-                                        <td><input type="text" name="admin_edit[landPart][case_no]"
+                                        <td><input type="text" class="form-control" name="admin_edit[landPart][case_no]"
                                                    value="<?= $admin_edit_ary['landPart']['case_no'] ?? ''; ?>"></td>
                                         <td>所有權人：</td>
-                                        <td><input type="text" name="admin_edit[landPart][owner_str]"
+                                        <td><input type="text" class="form-control" name="admin_edit[landPart][owner_str]"
                                                    value="<?= $admin_edit_ary['landPart']['owner_str'] ?? ''; ?>"></td>
                                         <td>原因發生日期</td>
-                                        <td><input type="text" name="admin_edit[landPart][reason_occur_date]"
+                                        <td><input type="text" class="form-control" name="admin_edit[landPart][reason_occur_date]"
                                                    value="<?= $admin_edit_ary['landPart']['reason_occur_date'] ?? ''; ?>">
                                         </td>
                                         <td>登記原因：</td>
-                                        <td colspan="2"><input type="text"
+                                        <td colspan="2"><input type="text" class="form-control"
                                                                name="admin_edit[landPart][registration_reason_str]"
                                                                value="<?= $admin_edit_ary['landPart']['registration_reason_str'] ?? ''; ?>">
                                         </td>
                                         <td>鑑估日期</td>
-                                        <td><input type="text" name="admin_edit[landPart][appraisal_date]"
+                                        <td><input type="text" class="form-control" name="admin_edit[landPart][appraisal_date]"
                                                    value="<?= $admin_edit_ary['landPart']['appraisal_date'] ?? ''; ?>">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td rowspan="3">土地標示部</td>
                                         <td rowspan="3">使用分區：</td>
-                                        <td rowspan="3"><input type="text" name="admin_edit[landPart][use_zone_str]"
+                                        <td rowspan="3"><input type="text" class="form-control" name="admin_edit[landPart][use_zone_str]"
                                                                value="<?= $admin_edit_ary['landPart']['use_zone_str'] ?? ''; ?>"></input>
                                         </td>
                                         <td rowspan="3">使用地類別：</td>
-                                        <td rowspan="3"><input type="text"
+                                        <td rowspan="3"><input type="text" class="form-control"
                                                                name="admin_edit[landPart][use_land_type_str]"
                                                                value="<?= $admin_edit_ary['landPart']['use_land_type_str'] ?? ''; ?>"></input>
                                         </td>
                                         <td rowspan="3">其他登記事項</td>
                                         <td>土地標示部</td>
-                                        <td colspan="4"><input type="text"
+                                        <td colspan="4"><input type="text" class="form-control"
                                                                name="admin_edit[landPart][landMarking_other_registration_item_str]"
                                                                value="<?= $admin_edit_ary['landPart']['landMarking_other_registration_item_str'] ?? ''; ?>"></input>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>土地所有權部</td>
-                                        <td colspan="4"><input type="text"
+                                        <td colspan="4"><input type="text" class="form-control"
                                                                name="admin_edit[landPart][landOwnership_other_registration_item_str]"
                                                                value="<?= $admin_edit_ary['landPart']['landOwnership_other_registration_item_str'] ?? ''; ?>">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>土地他項權利部</td>
-                                        <td colspan="4"><input type="text"
+                                        <td colspan="4"><input type="text" class="form-control"
                                                                name="admin_edit[landPart][landOtherRight_other_registration_item_str]"
                                                                value="<?= $admin_edit_ary['landPart']['landOtherRight_other_registration_item_str'] ?? ''; ?>">
                                         </td>
@@ -495,44 +495,44 @@ $user_id = $data->user_id ?? '';
                                         foreach ($admin_edit_ary['landPart']['land_list'] as $key => $value)
                                         { ?>
                                             <tr>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][no]"
                                                            value="<?= $value['no'] ?? ''; ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][area_num]"
                                                            value="<?= $value['area_num'] ?? ''; ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][ownership_portion_numerator_int]"
                                                            value="<?= $value['ownership_portion_numerator_int'] ?? ''; ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][ownership_portion_denominator_int]"
                                                            value="<?= $value['ownership_portion_denominator_int'] ?? ''; ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][ownership_portion_area_num]"
                                                            value="<?= $value['ownership_portion_area_num'] ?? ''; ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][public_land_value_int]"
                                                            value="<?= $value['public_land_value_int'] ?? ''; ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][previous_transfer_value_int]"
                                                            value="<?= $value['previous_transfer_value_int'] ?? ''; ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][previous_transfer_yyy_mm_str]"
                                                            value="<?= $value['previous_transfer_yyy_mm_str'] ?? ''; ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][ownership_portion_years_num]"
                                                            value="<?= $value['ownership_portion_years_num'] ?? ''; ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][price_index_num]"
                                                            value="<?= $value['price_index_num'] ?? ''; ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[landPart][land_list][<?= $key ?>][public_value_added_tax_num]"
                                                            value="<?= $value['public_value_added_tax_num'] ?? ''; ?>">
                                                 </td>
@@ -541,12 +541,12 @@ $user_id = $data->user_id ?? '';
                                     } ?>
                                     <tr>
                                         <td rowspan="2">合計</td>
-                                        <td rowspan="2"><input type="text" name="admin_edit[landPart][sum_area_num]"
+                                        <td rowspan="2"><input type="text" class="form-control" name="admin_edit[landPart][sum_area_num]"
                                                                value="<?= $admin_edit_ary['landPart']['sum_area_num'] ?? '' ?>">
                                         </td>
                                         <td rowspan="2"></td>
                                         <td rowspan="2"></td>
-                                        <td><input type="text"
+                                        <td><input type="text" class="form-control"
                                                    name="admin_edit[landPart][sum_ownership_portion_area_num]"
                                                    value="<?= $admin_edit_ary['landPart']['sum_ownership_portion_area_num'] ?? '' ?>">
                                         </td>
@@ -555,13 +555,13 @@ $user_id = $data->user_id ?? '';
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td rowspan="2"><input type="text"
+                                        <td rowspan="2"><input type="text" class="form-control"
                                                                name="admin_edit[landPart][sum_public_value_added_tax_num]"
                                                                value="<?= $admin_edit_ary['landPart']['sum_public_value_added_tax_num'] ?? '' ?>">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="text"
+                                        <td><input type="text" class="form-control"
                                                    name="admin_edit[landPart][sum_ownership_portion_square_feet_area_str]"
                                                    value="<?= $admin_edit_ary['landPart']['sum_ownership_portion_square_feet_area_str'] ?? '' ?>">
                                         </td>
@@ -577,34 +577,34 @@ $user_id = $data->user_id ?? '';
                                     </tr>
                                     <tr>
                                         <td>建物門牌:</td>
-                                        <td colspan="3"><input type="text" name="admin_edit[buildingPart][address_str]"
+                                        <td colspan="3"><input type="text" class="form-control" name="admin_edit[buildingPart][address_str]"
                                                                value="<?= $admin_edit_ary['buildingPart']['address_str'] ?? '' ?>">
                                         </td>
                                         <td>建物坐落地號</td>
-                                        <td colspan="2"><input type="text" name="admin_edit[buildingPart][land_no_str]"
+                                        <td colspan="2"><input type="text" class="form-control" name="admin_edit[buildingPart][land_no_str]"
                                                                value="<?= $admin_edit_ary['buildingPart']['land_no_str'] ?? '' ?>">
                                         </td>
                                         <td>建築完成日期</td>
-                                        <td><input type="text" name="admin_edit[buildingPart][complete_date]"
+                                        <td><input type="text" class="form-control" name="admin_edit[buildingPart][complete_date]"
                                                    value="<?= $admin_edit_ary['buildingPart']['complete_date'] ?? '' ?>">
                                         </td>
                                         <td>屋齡</td>
-                                        <td><input type="text" name="admin_edit[buildingPart][building_age_num]"
+                                        <td><input type="text" class="form-control" name="admin_edit[buildingPart][building_age_num]"
                                                    value="<?= $admin_edit_ary['buildingPart']['building_age_num'] ?? '' ?>">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>建物登記建號</td>
-                                        <td colspan="3"><input type="text"
+                                        <td colspan="3"><input type="text" class="form-control"
                                                                name="admin_edit[buildingPart][registration_no]"
                                                                value="<?= $admin_edit_ary['buildingPart']['registration_no'] ?? '' ?>">
                                         </td>
                                         <td>主要用途</td>
-                                        <td><input type="text" name="admin_edit[buildingPart][main_use_str]"
+                                        <td><input type="text" class="form-control" name="admin_edit[buildingPart][main_use_str]"
                                                    value="<?= $admin_edit_ary['buildingPart']['main_use_str'] ?? '' ?>">
                                         </td>
                                         <td>主要建材</td>
-                                        <td><input type="text" name="admin_edit[buildingPart][main_material_str]"
+                                        <td><input type="text" class="form-control" name="admin_edit[buildingPart][main_material_str]"
                                                    value="<?= $admin_edit_ary['buildingPart']['main_material_str'] ?? '' ?>">
                                         </td>
                                         <td></td>
@@ -613,7 +613,7 @@ $user_id = $data->user_id ?? '';
                                     </tr>
                                     <tr>
                                         <td>標示部其他登記事項</td>
-                                        <td colspan="10"><input type="text"
+                                        <td colspan="10"><input type="text" class="form-control"
                                                                 name="admin_edit[buildingPart][marking_other_registration_item_str]"
                                                                 value="<?= $admin_edit_ary['buildingPart']['marking_other_registration_item_str'] ?? '' ?>">
                                         </td>
@@ -635,40 +635,40 @@ $user_id = $data->user_id ?? '';
                                         foreach ($admin_edit_ary['buildingPart']['buildingItem_list'] as $key => $value)
                                         { ?>
                                             <tr>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][name]"
                                                            value="<?= $value['name'] ?? '' ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][floor_str]"
                                                            value="<?= $value['floor_str'] ?? '' ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][area_num]"
                                                            value="<?= $value['area_num'] ?? '' ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][ownership_portion_numerator_int]"
                                                            value="<?= $value['ownership_portion_numerator_int'] ?? '' ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][ownership_portion_denominator_int]"
                                                            value="<?= $value['ownership_portion_denominator_int'] ?? '' ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][ownership_portion_area_num]"
                                                            value="<?= $value['ownership_portion_area_num'] ?? '' ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][ownership_portion_square_feet_area_num]"
                                                            value="<?= $value['ownership_portion_square_feet_area_num'] ?? '' ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][square_feet_unit_price_int]"
                                                            value="<?= $value['square_feet_unit_price_int'] ?? '' ?>">
                                                 </td>
-                                                <td colspan="2"><input type="text"
+                                                <td colspan="2"><input type="text" class="form-control"
                                                                        name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][appraisal_total_price_num]"
                                                                        value="<?= $value['appraisal_total_price_num'] ?? '' ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingItem_list][<?= $key ?>][other_registration_item_str]"
                                                            value="<?= $value['other_registration_item_str'] ?? '' ?>">
                                                 </td>
@@ -681,11 +681,11 @@ $user_id = $data->user_id ?? '';
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td><input type="text"
+                                        <td><input type="text" class="form-control"
                                                    name="admin_edit[buildingPart][sum_ownership_portion_area_num]"
                                                    value="<?= $admin_edit_ary['buildingPart']['sum_ownership_portion_area_num']; ?>">
                                         </td>
-                                        <td><input type="text"
+                                        <td><input type="text" class="form-control"
                                                    name="admin_edit[buildingPart][sum_ownership_portion_square_feet_area_num]"
                                                    value="<?= $admin_edit_ary['buildingPart']['sum_ownership_portion_square_feet_area_num']; ?>">
                                         </td>
@@ -696,7 +696,7 @@ $user_id = $data->user_id ?? '';
                                     <tr>
                                         <td colspan="8"></td>
                                         <td>鑑估總值</td>
-                                        <td colspan="2"><input type="text"
+                                        <td colspan="2"><input type="text" class="form-control"
                                                                name="admin_edit[buildingPart][sum_appraisal_total_sprice_num]"
                                                                value="<?= $admin_edit_ary['buildingPart']['sum_appraisal_total_sprice_num']; ?>">
                                         </td>
@@ -704,7 +704,7 @@ $user_id = $data->user_id ?? '';
                                     <tr>
                                         <td colspan="8"></td>
                                         <td>鑑估淨值</td>
-                                        <td colspan="2"><input type="text"
+                                        <td colspan="2"><input type="text" class="form-control"
                                                                name="admin_edit[buildingPart][net_sum_appraisal_total_sprice_num]"
                                                                value="<?= $admin_edit_ary['buildingPart']['net_sum_appraisal_total_sprice_num']; ?>">
                                         </td>
@@ -724,30 +724,30 @@ $user_id = $data->user_id ?? '';
                                         foreach ($admin_edit_ary['buildingPart']['buildingOtherRight_list'] as $key => $value)
                                         { ?>
                                             <tr>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingOtherRight_list][<?= $key ?>][rank_str]"
                                                            value="<?= $value['rank_str'] ?? ''; ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingOtherRight_list][<?= $key ?>][registration_order_int]"
                                                            value="<?= $value['registration_order_int'] ?? ''; ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingOtherRight_list][<?= $key ?>][registration_date_str]"
                                                            value="<?= $value['registration_date_str'] ?? ''; ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingOtherRight_list][<?= $key ?>][right_type_str]"
                                                            value="<?= $value['right_type_str'] ?? ''; ?>">
                                                 </td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingOtherRight_list][<?= $key ?>][registration_reason_str]"
                                                            value="<?= $value['registration_reason_str'] ?? ''; ?>"></td>
-                                                <td colspan="2"><input type="text"
+                                                <td colspan="2"><input type="text" class="form-control"
                                                                        name="admin_edit[buildingPart][buildingOtherRight_list][<?= $key ?>][owner_name]"
                                                                        value="<?= $value['owner_name'] ?? ''; ?>"></td>
-                                                <td><input type="text"
+                                                <td><input type="text" class="form-control"
                                                            name="admin_edit[buildingPart][buildingOtherRight_list][<?= $key ?>][debt_ratio_str]"
                                                            value="<?= $value['debt_ratio_str'] ?? ''; ?>">
                                                 </td>
-                                                <td colspan="3"><input type="text"
+                                                <td colspan="3"><input type="text" class="form-control"
                                                                        name="admin_edit[buildingPart][buildingOtherRight_list][<?= $key ?>][debt_total_amount_int]"
                                                                        value="<?= $value['debt_total_amount_int'] ?? ''; ?>">
                                                 </td>
@@ -765,86 +765,136 @@ $user_id = $data->user_id ?? '';
                                     </tr>
                                     <tr>
                                         <td>社區名稱：</td>
-                                        <td><input type="text" name="admin_edit[ddReport][community_name]"
+                                        <td colspan="2"><input type="text" class="form-control" name="admin_edit[ddReport][community_name]"
                                                    value="<?= $admin_edit_ary['ddReport']['community_name'] ?? ''; ?>">
                                         </td>
-                                        <td></td>
                                         <td>公設比</td>
-                                        <td><input type="text" name="admin_edit[ddReport][public_ratio]"
+                                        <td colspan="2"><input type="text" class="form-control" name="admin_edit[ddReport][public_ratio]"
                                                    value="<?= $admin_edit_ary['ddReport']['public_ratio'] ?? ''; ?>">
                                         </td>
-                                        <td></td>
                                         <td>有無現勘：</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td colspan="2">
+                                        <label>
+                                            <input type="radio" class="form-check-input" name="">
+                                                有
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                無
+                                            </label>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>建物維修狀況：</td>
-                                        <td>□正常</td>
-                                        <td>□有漏水、壁癌</td>
-                                        <td>□外觀殘破</td>
-                                        <td>□地下室積水</td>
-                                        <td>□陰暗破舊</td>
-                                        <td>□其他:</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td colspan="8">
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                正常
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                有漏水、壁癌
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                地下室積水
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                陰暗破舊
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                其他：
+                                            </label>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>使用情形</td>
-                                        <td>□自用</td>
-                                        <td>□出租</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td colspan="8">
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                自用
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                出租
+                                            </label>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>臨路狀況：</td>
-                                        <td>6米</td>
-                                        <td>□4米以下</td>
-                                        <td>□未臨路</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td colspan="8">
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                6米
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                4米以下
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                未臨路
+                                            </label>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>不動產類別：</td>
-                                        <td>□公寓</td>
-                                        <td>□電梯大厦</td>
-                                        <td>□套房</td>
-                                        <td>□別墅</td>
-                                        <td>□透天厝</td>
-                                        <td>□辦公室</td>
-                                        <td>□店面、商場</td>
-                                        <td>□其他</td>
+                                        <td colspan="8">
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                公寓
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                電梯大厦
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                套房
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                別墅
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                透天厝
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                辦公室
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                店面、商場
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                其他
+                                            </label>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>嫌惡因素：</td>
-                                        <td>□無</td>
-                                        <td>□有（宮廟、路沖、墳場、殯葬館）</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td colspan="8">
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                無
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input" name="">
+                                                有（宮廟、路沖、墳場、殯葬館）
+                                            </label>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>輻射屋/海砂屋查詢</td>
-                                        <td><input type="text" name="admin_edit[ddReport][radiation_or_sand_house_str]"
+                                        <td colspan="8">
+                                            <input type="text" class="form-control" name="admin_edit[ddReport][radiation_or_sand_house_str]"
                                                    value="<?= $admin_edit_ary['ddReport']['radiation_or_sand_house_str'] ?? ''; ?>">
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>特別說明：</td>
@@ -865,7 +915,7 @@ $user_id = $data->user_id ?? '';
                                             <tr>
                                                 <td><label>房屋門牌地址</label></td>
                                                 <td>
-                                                    <input type="text" class="form-control" name="" value="<?= '' ?>"
+                                                    <input type="text" class="form-control" class="form-control" name="" value="<?= '' ?>"
                                                            disabled>
                                                 </td>
                                             </tr>
@@ -883,14 +933,14 @@ $user_id = $data->user_id ?? '';
                                             <tr>
                                                 <td><label>合約地址</label></td>
                                                 <td>
-                                                    <input type="text" class="form-control" name="" value="<?= '' ?>"
+                                                    <input type="text" class="form-control" class="form-control" name="" value="<?= '' ?>"
                                                            disabled>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><label>房屋門牌地址</label></td>
                                                 <td>
-                                                    <input type="text" class="form-control" name="admin_edit[address]"
+                                                    <input type="text" class="form-control" class="form-control" name="admin_edit[address]"
                                                            value="<?= $admin_edit_ary['address'] ?? '' ?>" <?= $input_disabled ?>>
                                                 </td>
                                             </tr>
@@ -917,7 +967,7 @@ $user_id = $data->user_id ?? '';
                                             <?php } ?>
                                             <option value="other">其它</option>
                                         </select>
-                                        <input type="text" class="form-control" id="fail2" name="fail2"
+                                        <input type="text" class="form-control" class="form-control" id="fail2" name="fail2"
                                                value="<?= $fail_msg; ?>"
                                                style="background-color:white!important;display:none">
                                     </div>
