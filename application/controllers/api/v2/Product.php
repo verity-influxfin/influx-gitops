@@ -4112,6 +4112,7 @@ class Product extends REST_Controller {
         }
     }
 
+    // 取得使用者的預約列表
     public function user_booking_list_get()
     {
         try
@@ -4147,17 +4148,7 @@ class Product extends REST_Controller {
             {
                 $this->response(['result' => 'SUCCESS', 'data' => ['booking_table' => []]]);
             }
-
-            $booking_table = [];
-            foreach ($result as $value)
-            {
-                $date = (new DateTimeImmutable($value['date']))->format('Y-m-d');
-                $booking_table[$date][] = [
-                    'booking_id' => $value['_id'],
-                    'time' => $value['session_name'],
-                ];
-            }
-            $this->response(['result' => 'SUCCESS', 'data' => ['booking_table' => $booking_table]]);
+            $this->response(['result' => 'SUCCESS', 'data' => ['booking_table' => $result]]);
         }
         catch (Exception $e)
         {

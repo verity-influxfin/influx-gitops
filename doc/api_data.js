@@ -24016,20 +24016,6 @@ define({
                             "optional": false,
                             "field": "data.booking_table",
                             "description": "<p>預約的時間表</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "data.booking_table.booking_id",
-                            "description": "<p>預約ID</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "data.booking_table.time",
-                            "description": "<p>預約時段</p>"
                         }
                     ]
                 },
@@ -24037,22 +24023,21 @@ define({
                     {
                         "title": "SUCCESS",
                         "content": "{\n" +
-                            "    \"result\":\"SUCCESS\",\n" +
-                            "    \"data\":{\n" +
-                            "        \"booking_table\":{\n" +
-                            "            \"2022-12-29\":[\n" +
-                            "                {\n" +
-                            "                    \"booking_id\":\"63a96a7ca3e6491db834afea\",\n" +
-                            "                    \"time\":\"09:00 AM\"\n" +
-                            "                }\n" +
-                            "            ],\n" +
-                            "            \"2022-12-30\":[\n" +
-                            "                {\n" +
-                            "                    \"booking_id\":\"63a96a9ca3e6491db834afeb\",\n" +
-                            "                    \"time\":\"09:00 AM\"\n" +
-                            "                }\n" +
-                            "            ]\n" +
-                            "        }\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"booking_table\": [\n" +
+                            "            {\n" +
+                            "                \"_id\": \"63aa638ba3e6491db834aff2\",\n" +
+                            "                \"date\": \"2022-12-30T00:00:00\",\n" +
+                            "                \"session_name\": \"13:00 PM\",\n" +
+                            "                \"target_id_int\": 1001698,\n" +
+                            "                \"user_id_int\": 1000533,\n" +
+                            "                \"title\": \"\",\n" +
+                            "                \"status_int\": 1,\n" +
+                            "                \"create_ts_sec_int\": 1672110987,\n" +
+                            "                \"update_ts_sec_int\": 1672110987\n" +
+                            "            }\n" +
+                            "        ]\n" +
                             "    }\n" +
                             "}",
                         "type": "Object"
