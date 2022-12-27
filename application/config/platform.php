@@ -2098,7 +2098,7 @@ $config['sub_product_list'] = [
         'status' => 1
     ],
     SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES => [
-        'visul_id' => 'HL1',
+        'visul_id' => 'HL3',
         'identity' => [
             2 => [
                 'visul_id' => 'HL3P1',
