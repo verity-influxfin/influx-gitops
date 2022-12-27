@@ -318,96 +318,6 @@ $user_id = $data->user_id ?? '';
                                 } ?>
                                 </tbody>
                             </table>
-                            <table border="1" cellpadding="2" cellspacing="0" class="table mt-2">
-                                <tbody>
-                                <tr style="font-weight: bold; background-color: #aaa;">
-                                    <td colspan="9">
-                                        <h3>DD報告</h3>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>社區名稱：</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>公設比</td>
-                                    <td><?= $ocr_parser_ary['ddReport']['public_ratio'] ?? ''; ?></td>
-                                    <td></td>
-                                    <td>有無現勘：</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>建物維修狀況：</td>
-                                    <td>□正常</td>
-                                    <td>□有漏水、壁癌</td>
-                                    <td>□外觀殘破</td>
-                                    <td>□地下室積水</td>
-                                    <td>□陰暗破舊</td>
-                                    <td>□其他:</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>使用情形</td>
-                                    <td>□自用</td>
-                                    <td>□出租</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>臨路狀況：</td>
-                                    <td>6米</td>
-                                    <td>□4米以下</td>
-                                    <td>□未臨路</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>不動產類別：</td>
-                                    <td>□公寓</td>
-                                    <td>□電梯大厦</td>
-                                    <td>□套房</td>
-                                    <td>□別墅</td>
-                                    <td>□透天厝</td>
-                                    <td>□辦公室</td>
-                                    <td>□店面、商場</td>
-                                    <td>□其他</td>
-                                </tr>
-                                <tr>
-                                    <td>嫌惡因素：</td>
-                                    <td>□無</td>
-                                    <td>□有（宮廟、路沖、墳場、殯葬館）</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>輻射屋/海砂屋查詢</td>
-                                    <td><?= $ocr_parser_ary['ddReport']['radiation_or_sand_house_str'] ?? ''; ?></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>特別說明：</td>
-                                    <td colspan="8"></td>
-                                </tr>
-                                </tbody>
-                            </table>
                         </div>
                         <!-- 人員 -->
                         <form role="form" method="post" action="/admin/certification/user_certification_edit">
@@ -429,10 +339,12 @@ $user_id = $data->user_id ?? '';
                                         <td><input type="text" class="form-control" name="admin_edit[landPart][case_no]"
                                                    value="<?= $admin_edit_ary['landPart']['case_no'] ?? ''; ?>"></td>
                                         <td>所有權人：</td>
-                                        <td><input type="text" class="form-control" name="admin_edit[landPart][owner_str]"
+                                        <td><input type="text" class="form-control"
+                                                   name="admin_edit[landPart][owner_str]"
                                                    value="<?= $admin_edit_ary['landPart']['owner_str'] ?? ''; ?>"></td>
                                         <td>原因發生日期</td>
-                                        <td><input type="text" class="form-control" name="admin_edit[landPart][reason_occur_date]"
+                                        <td><input type="text" class="form-control"
+                                                   name="admin_edit[landPart][reason_occur_date]"
                                                    value="<?= $admin_edit_ary['landPart']['reason_occur_date'] ?? ''; ?>">
                                         </td>
                                         <td>登記原因：</td>
@@ -441,14 +353,16 @@ $user_id = $data->user_id ?? '';
                                                                value="<?= $admin_edit_ary['landPart']['registration_reason_str'] ?? ''; ?>">
                                         </td>
                                         <td>鑑估日期</td>
-                                        <td><input type="text" class="form-control" name="admin_edit[landPart][appraisal_date]"
+                                        <td><input type="text" class="form-control"
+                                                   name="admin_edit[landPart][appraisal_date]"
                                                    value="<?= $admin_edit_ary['landPart']['appraisal_date'] ?? ''; ?>">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td rowspan="3">土地標示部</td>
                                         <td rowspan="3">使用分區：</td>
-                                        <td rowspan="3"><input type="text" class="form-control" name="admin_edit[landPart][use_zone_str]"
+                                        <td rowspan="3"><input type="text" class="form-control"
+                                                               name="admin_edit[landPart][use_zone_str]"
                                                                value="<?= $admin_edit_ary['landPart']['use_zone_str'] ?? ''; ?>"></input>
                                         </td>
                                         <td rowspan="3">使用地類別：</td>
@@ -541,7 +455,8 @@ $user_id = $data->user_id ?? '';
                                     } ?>
                                     <tr>
                                         <td rowspan="2">合計</td>
-                                        <td rowspan="2"><input type="text" class="form-control" name="admin_edit[landPart][sum_area_num]"
+                                        <td rowspan="2"><input type="text" class="form-control"
+                                                               name="admin_edit[landPart][sum_area_num]"
                                                                value="<?= $admin_edit_ary['landPart']['sum_area_num'] ?? '' ?>">
                                         </td>
                                         <td rowspan="2"></td>
@@ -577,19 +492,23 @@ $user_id = $data->user_id ?? '';
                                     </tr>
                                     <tr>
                                         <td>建物門牌:</td>
-                                        <td colspan="3"><input type="text" class="form-control" name="admin_edit[buildingPart][address_str]"
+                                        <td colspan="3"><input type="text" class="form-control"
+                                                               name="admin_edit[buildingPart][address_str]"
                                                                value="<?= $admin_edit_ary['buildingPart']['address_str'] ?? '' ?>">
                                         </td>
                                         <td>建物坐落地號</td>
-                                        <td colspan="2"><input type="text" class="form-control" name="admin_edit[buildingPart][land_no_str]"
+                                        <td colspan="2"><input type="text" class="form-control"
+                                                               name="admin_edit[buildingPart][land_no_str]"
                                                                value="<?= $admin_edit_ary['buildingPart']['land_no_str'] ?? '' ?>">
                                         </td>
                                         <td>建築完成日期</td>
-                                        <td><input type="text" class="form-control" name="admin_edit[buildingPart][complete_date]"
+                                        <td><input type="text" class="form-control"
+                                                   name="admin_edit[buildingPart][complete_date]"
                                                    value="<?= $admin_edit_ary['buildingPart']['complete_date'] ?? '' ?>">
                                         </td>
                                         <td>屋齡</td>
-                                        <td><input type="text" class="form-control" name="admin_edit[buildingPart][building_age_num]"
+                                        <td><input type="text" class="form-control"
+                                                   name="admin_edit[buildingPart][building_age_num]"
                                                    value="<?= $admin_edit_ary['buildingPart']['building_age_num'] ?? '' ?>">
                                         </td>
                                     </tr>
@@ -600,11 +519,13 @@ $user_id = $data->user_id ?? '';
                                                                value="<?= $admin_edit_ary['buildingPart']['registration_no'] ?? '' ?>">
                                         </td>
                                         <td>主要用途</td>
-                                        <td><input type="text" class="form-control" name="admin_edit[buildingPart][main_use_str]"
+                                        <td><input type="text" class="form-control"
+                                                   name="admin_edit[buildingPart][main_use_str]"
                                                    value="<?= $admin_edit_ary['buildingPart']['main_use_str'] ?? '' ?>">
                                         </td>
                                         <td>主要建材</td>
-                                        <td><input type="text" class="form-control" name="admin_edit[buildingPart][main_material_str]"
+                                        <td><input type="text" class="form-control"
+                                                   name="admin_edit[buildingPart][main_material_str]"
                                                    value="<?= $admin_edit_ary['buildingPart']['main_material_str'] ?? '' ?>">
                                         </td>
                                         <td></td>
@@ -765,21 +686,25 @@ $user_id = $data->user_id ?? '';
                                     </tr>
                                     <tr>
                                         <td>社區名稱：</td>
-                                        <td colspan="2"><input type="text" class="form-control" name="admin_edit[ddReport][community_name]"
-                                                   value="<?= $admin_edit_ary['ddReport']['community_name'] ?? ''; ?>">
+                                        <td colspan="2"><input type="text" class="form-control"
+                                                               name="admin_edit[ddReport][community_name]"
+                                                               value="<?= $admin_edit_ary['ddReport']['community_name'] ?? ''; ?>">
                                         </td>
                                         <td>公設比</td>
-                                        <td colspan="2"><input type="text" class="form-control" name="admin_edit[ddReport][public_ratio]"
-                                                   value="<?= $admin_edit_ary['ddReport']['public_ratio'] ?? ''; ?>">
+                                        <td colspan="2"><input type="text" class="form-control"
+                                                               name="admin_edit[ddReport][public_ratio]"
+                                                               value="<?= $admin_edit_ary['ddReport']['public_ratio'] ?? ''; ?>">
                                         </td>
                                         <td>有無現勘：</td>
                                         <td colspan="2">
-                                        <label>
-                                            <input type="radio" class="form-check-input" name="">
+                                            <label>
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][site_survey]" value="1">
                                                 有
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][site_survey]" value="0">
                                                 無
                                             </label>
                                         </td>
@@ -788,24 +713,35 @@ $user_id = $data->user_id ?? '';
                                         <td>建物維修狀況：</td>
                                         <td colspan="8">
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][maintenance_condition]" value="1">
                                                 正常
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][maintenance_condition]" value="2">
                                                 有漏水、壁癌
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][maintenance_condition]" value="3">
                                                 地下室積水
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][maintenance_condition]" value="4">
                                                 陰暗破舊
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][maintenance_condition]" value="0">
                                                 其他：
+                                            </label>
+                                            <label>
+                                                <input type="text" class="form-control"
+                                                       name="admin_edit[ddReport][maintenance_condition_other]"
+                                                       value="<?= $admin_edit_ary['ddReport']['maintenance_condition_other'] ?? ''; ?>"
+                                                       readonly>
                                             </label>
                                         </td>
                                     </tr>
@@ -813,11 +749,13 @@ $user_id = $data->user_id ?? '';
                                         <td>使用情形</td>
                                         <td colspan="8">
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][usage]" value="1">
                                                 自用
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][usage]" value="2">
                                                 出租
                                             </label>
                                         </td>
@@ -826,15 +764,22 @@ $user_id = $data->user_id ?? '';
                                         <td>臨路狀況：</td>
                                         <td colspan="8">
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
-                                                6米
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][road_side]" value="0">
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="text" class="form-control"
+                                                       name="admin_edit[ddReport][road_side_other]"
+                                                       value="<?= $admin_edit_ary['ddReport']['road_side_other'] ?? '' ?>">
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][road_side]" value="1">
                                                 4米以下
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][road_side]" value="2">
                                                 未臨路
                                             </label>
                                         </td>
@@ -843,36 +788,50 @@ $user_id = $data->user_id ?? '';
                                         <td>不動產類別：</td>
                                         <td colspan="8">
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][building_type]" value="1">
                                                 公寓
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][building_type]" value="2">
                                                 電梯大厦
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][building_type]" value="3">
                                                 套房
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][building_type]" value="4">
                                                 別墅
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][building_type]" value="5">
                                                 透天厝
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][building_type]" value="6">
                                                 辦公室
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][building_type]" value="7">
                                                 店面、商場
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][building_type]" value="0">
                                                 其他
+                                            </label>
+                                            <label>
+                                                <input type="text" class="form-control"
+                                                       name="admin_edit[ddReport][building_type_other]"
+                                                       value="<?= $admin_edit_ary['ddReport']['building_type_other'] ?? ''; ?>"
+                                                       readonly>
                                             </label>
                                         </td>
                                     </tr>
@@ -880,11 +839,13 @@ $user_id = $data->user_id ?? '';
                                         <td>嫌惡因素：</td>
                                         <td colspan="8">
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][aversion_reason]" value="0">
                                                 無
                                             </label>
                                             <label>
-                                                <input type="radio" class="form-check-input" name="">
+                                                <input type="radio" class="form-check-input"
+                                                       name="admin_edit[ddReport][aversion_reason]" value="1">
                                                 有（宮廟、路沖、墳場、殯葬館）
                                             </label>
                                         </td>
@@ -892,13 +853,17 @@ $user_id = $data->user_id ?? '';
                                     <tr>
                                         <td>輻射屋/海砂屋查詢</td>
                                         <td colspan="8">
-                                            <input type="text" class="form-control" name="admin_edit[ddReport][radiation_or_sand_house_str]"
+                                            <input type="text" class="form-control"
+                                                   name="admin_edit[ddReport][radiation_or_sand_house_str]"
                                                    value="<?= $admin_edit_ary['ddReport']['radiation_or_sand_house_str'] ?? ''; ?>">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>特別說明：</td>
-                                        <td colspan="8"></td>
+                                        <td colspan="8">
+                                            <textarea class="form-control"
+                                                      name="admin_edit[ddReport][memo]"><?= $admin_edit_ary['ddReport']['memo'] ?? '' ?></textarea>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -915,7 +880,8 @@ $user_id = $data->user_id ?? '';
                                             <tr>
                                                 <td><label>房屋門牌地址</label></td>
                                                 <td>
-                                                    <input type="text" class="form-control" class="form-control" name="" value="<?= '' ?>"
+                                                    <input type="text" class="form-control" class="form-control" name=""
+                                                           value="<?= '' ?>"
                                                            disabled>
                                                 </td>
                                             </tr>
@@ -933,14 +899,16 @@ $user_id = $data->user_id ?? '';
                                             <tr>
                                                 <td><label>合約地址</label></td>
                                                 <td>
-                                                    <input type="text" class="form-control" class="form-control" name="" value="<?= '' ?>"
+                                                    <input type="text" class="form-control" class="form-control" name=""
+                                                           value="<?= '' ?>"
                                                            disabled>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><label>房屋門牌地址</label></td>
                                                 <td>
-                                                    <input type="text" class="form-control" class="form-control" name="admin_edit[address]"
+                                                    <input type="text" class="form-control" class="form-control"
+                                                           name="admin_edit[address]"
                                                            value="<?= $admin_edit_ary['address'] ?? '' ?>" <?= $input_disabled ?>>
                                                 </td>
                                             </tr>
@@ -967,7 +935,8 @@ $user_id = $data->user_id ?? '';
                                             <?php } ?>
                                             <option value="other">其它</option>
                                         </select>
-                                        <input type="text" class="form-control" class="form-control" id="fail2" name="fail2"
+                                        <input type="text" class="form-control" class="form-control" id="fail2"
+                                               name="fail2"
                                                value="<?= $fail_msg; ?>"
                                                style="background-color:white!important;display:none">
                                     </div>
@@ -987,3 +956,45 @@ $user_id = $data->user_id ?? '';
     <!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+<script>
+    $(document).ready(function () {
+        $('input[name="admin_edit[ddReport][maintenance_condition]"]').on('click', function () {
+            if ($(this).val() === '0') {
+                $('input[name="admin_edit[ddReport][maintenance_condition_other]"]').prop('readonly', false);
+            } else {
+                $('input[name="admin_edit[ddReport][maintenance_condition_other]"]').prop('readonly', true).val('');
+            }
+        });
+
+        $('input[name="admin_edit[ddReport][building_type]"]').on('click', function () {
+            if ($(this).val() === '0') {
+                $('input[name="admin_edit[ddReport][building_type_other]"]').prop('readonly', false);
+            } else {
+                $('input[name="admin_edit[ddReport][building_type_other]"]').prop('readonly', true).val('');
+            }
+        });
+
+        $('input[name="admin_edit[ddReport][road_side]"]').on('click', function () {
+            if ($(this).val() === '0') {
+                $('input[name="admin_edit[ddReport][road_side_other]"]').prop('readonly', false);
+            } else {
+                $('input[name="admin_edit[ddReport][road_side_other]"]').prop('readonly', true).val('');
+            }
+        });
+
+        let maintenance_condition = '<?= $admin_edit_ary['ddReport']['maintenance_condition'] ?? ''; ?>';
+        $(`input[name="admin_edit[ddReport][maintenance_condition]"][value="${maintenance_condition}"]`)
+            .prop('checked', true)
+            .trigger('click');
+
+        let road_side = '<?= $admin_edit_ary['ddReport']['road_side'] ?? ''; ?>';
+        $(`input[name="admin_edit[ddReport][road_side]"][value="${road_side}"]`)
+            .prop('checked', true)
+            .trigger('click');
+
+        let building_type = '<?= $admin_edit_ary['ddReport']['building_type'] ?? ''; ?>';
+        $(`input[name="admin_edit[ddReport][building_type]"][value="${building_type}"]`)
+            .prop('checked', true)
+            .trigger('click');
+    });
+</script>
