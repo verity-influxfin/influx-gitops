@@ -4214,7 +4214,7 @@ class Product extends REST_Controller {
     }
 
     // 使用者取消預約時段
-    public function booking_cancel_post($booking_id)
+    public function booking_cancel_post($booking_id = '')
     {
         try
         {
