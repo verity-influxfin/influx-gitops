@@ -471,7 +471,7 @@ class Transfer extends REST_Controller {
      *       "error": "203"
      *     }
 	 *
-     * @apiError 208 未滿20歲
+     * @apiError 208 未滿18歲
      * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
@@ -530,7 +530,7 @@ class Transfer extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 			}
 			
-			if(get_age($this->user_info->birthday) < 20){
+			if(get_age($this->user_info->birthday) < 18){
 				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 			}
 			
@@ -681,7 +681,7 @@ class Transfer extends REST_Controller {
      *       "error": "203"
      *     }
 	 *
-     * @apiError 208 未滿20歲
+     * @apiError 208 未滿18歲
      * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
@@ -701,7 +701,7 @@ class Transfer extends REST_Controller {
 		$user_id 			= $this->user_info->id;
 		$investor 			= $this->user_info->investor;
 	
-		if(get_age($this->user_info->birthday) < 20){
+		if(get_age($this->user_info->birthday) < 18){
 			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 		}
 
@@ -855,7 +855,7 @@ class Transfer extends REST_Controller {
      *       "error": "203"
      *     }
 	 *
-     * @apiError 208 未滿20歲
+     * @apiError 208 未滿18歲
      * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
@@ -922,7 +922,7 @@ class Transfer extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
 
-		if(get_age($this->user_info->birthday) < 20){
+		if(get_age($this->user_info->birthday) < 18){
 			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 		}
 		
