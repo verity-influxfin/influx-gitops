@@ -787,7 +787,7 @@ class Credit_lib{
         {
             case SUB_PRODUCT_ID_HOME_LOAN_SHORT:
                 // 取得徵信項
-                $user_cert_info_contract = $this->user_certification_model->get_content($user_id, CERTIFICATION_HOUSE_CONTRACT);
+                $user_cert_info_contract = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_HOUSE_CONTRACT);
                 if (empty($user_cert_info_contract[0]->content))
                 {
                     break;
@@ -803,8 +803,8 @@ class Credit_lib{
                 break;
             case SUB_PRODUCT_ID_HOME_LOAN_RENOVATION:
                 // 取得徵信項
-                $user_cert_info_contract = $this->user_certification_model->get_content($user_id, CERTIFICATION_RENOVATION_CONTRACT);
-                $user_cert_info_receipt = $this->user_certification_model->get_content($user_id, CERTIFICATION_RENOVATION_RECEIPT);
+                $user_cert_info_contract = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_RENOVATION_CONTRACT);
+                $user_cert_info_receipt = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_RENOVATION_RECEIPT);
                 if (empty($user_cert_info_contract[0]->content) && empty($user_cert_info_receipt[0]->content))
                 {
                     break;
@@ -821,7 +821,7 @@ class Credit_lib{
                 break;
             case SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES:
                 // 取得徵信項
-                $user_cert_info_contract = $this->user_certification_model->get_content($user_id, CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT);
+                $user_cert_info_contract = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT);
                 if (empty($user_cert_info_contract[0]->content))
                 {
                     break;
@@ -838,7 +838,7 @@ class Credit_lib{
         }
 
         // 土地建物謄本
-        $user_cert_info = $this->user_certification_model->get_content($user_id, CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS);
+        $user_cert_info = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS);
         if (empty($user_cert_info[0]->content))
         {
             goto SKIP_TRANSACTION_VALUE;

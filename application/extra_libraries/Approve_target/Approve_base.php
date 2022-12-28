@@ -172,7 +172,7 @@ abstract class Approve_base implements Approve_interface
             // 命中反詐欺
             return TRUE;
         }
-        if ($this->product_config['secondInstance'] === TRUE)
+        if (isset($this->product_config['secondInstance']) && $this->product_config['secondInstance'] === TRUE)
         {
             // 產品設定檔設定需二審
             return TRUE;
