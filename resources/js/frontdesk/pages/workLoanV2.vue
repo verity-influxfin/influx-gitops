@@ -631,7 +631,7 @@
           </div>
         </div>
         <div class="row no-gutters justify-content-center">
-          <div class="slogan">假日放款全年無休</div>
+          <div class="slogan">假日也放款全年無休</div>
         </div>
         <div class="row no-gutters justify-content-center mt-5">
           <a href="/borrowLink" target="_blank" rel="noopener noreferrer">
