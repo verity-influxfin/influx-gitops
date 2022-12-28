@@ -6,48 +6,48 @@
         <!-- Slides -->
         <div class="swiper-slide">
           <img
-            src="@/asset/images/workloan/workloan-cover.png"
+            src="@/asset/images/workloan/workloan-cover.jpg"
             alt="普匯上班族貸主banner"
             class="img-fluid d-sm-block d-none w-100"
           />
           <img
-            src="@/asset/images/workloan/workloan-cover-phone.png"
+            src="@/asset/images/workloan/workloan-cover-phone.jpg"
             alt="普匯上班族貸主banner"
             class="img-fluid d-sm-none d-block w-100"
           />
         </div>
         <div class="swiper-slide">
           <img
-            src="@/asset/images/workloan/workloan-cover-1.png"
+            src="@/asset/images/workloan/workloan-cover-1.jpg"
             alt="普匯上班族購房貸banner"
             class="img-fluid d-sm-block d-none w-100"
           />
           <img
-            src="@/asset/images/workloan/workloan-cover-phone-1.png"
+            src="@/asset/images/workloan/workloan-cover-phone-1.jpg"
             alt="普匯上班族購房貸banner"
             class="img-fluid d-sm-none d-block w-100"
           />
         </div>
         <div class="swiper-slide">
           <img
-            src="@/asset/images/workloan/workloan-cover-2.png"
+            src="@/asset/images/workloan/workloan-cover-2.jpg"
             alt="普匯上班族裝修貸banner"
             class="img-fluid d-sm-block d-none w-100"
           />
           <img
-            src="@/asset/images/workloan/workloan-cover-phone-2.png"
+            src="@/asset/images/workloan/workloan-cover-phone-2.jpg"
             alt="普匯上班族裝修貸banner"
             class="img-fluid d-sm-none d-block w-100"
           />
         </div>
         <div class="swiper-slide">
           <img
-            src="@/asset/images/workloan/workloan-cover-3.png"
+            src="@/asset/images/workloan/workloan-cover-3.jpg"
             alt="普匯上班族購車貸banner"
             class="img-fluid d-sm-block d-none w-100"
           />
           <img
-            src="@/asset/images/workloan/workloan-cover-phone-3.png"
+            src="@/asset/images/workloan/workloan-cover-phone-3.jpg"
             alt="普匯上班族購車貸banner"
             class="img-fluid d-sm-none d-block w-100"
           />
