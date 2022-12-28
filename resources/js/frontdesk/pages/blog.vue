@@ -132,16 +132,7 @@ export default {
                     date: item.post_date.substr(0,10),
                     link: item.link
                 };
-            }).sort((a, b) => {
-            switch (true) {
-                case a.date < b.date:
-                    return 1;
-                case a.date > b.date:
-                    return -1;
-                default:
-                    return 0;
-            }
-        }).slice(0, 5);
+            }).slice(0, 5);
     });
   },
   mounted() {
