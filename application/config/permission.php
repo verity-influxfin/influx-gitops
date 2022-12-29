@@ -165,6 +165,7 @@ $config['permission'] = [
             'booking_timetable' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'read'],
             'get_booking_timetable' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'read'],
             'create_booking' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'update'],
+            'site_survey_booking' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'read'],
         ],
     ],
     'Passbook' => [

@@ -1953,6 +1953,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_HOUSE_RECEIPT,
                     CERTIFICATION_HOUSE_DEED,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
@@ -1961,6 +1962,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_HOUSE_RECEIPT,
                     CERTIFICATION_HOUSE_DEED,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
@@ -1985,6 +1987,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_HOUSE_RECEIPT,
                         CERTIFICATION_HOUSE_DEED,
                         CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                        CERTIFICATION_SITE_SURVEY_VIDEO,
                     ]
                 ],
                 'default_reason' => '購屋不足額',
@@ -2046,6 +2049,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_RENOVATION_RECEIPT,
                     CERTIFICATION_HOUSE_DEED,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
@@ -2053,6 +2057,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_RENOVATION_RECEIPT,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
@@ -2077,6 +2082,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_RENOVATION_RECEIPT,
                         CERTIFICATION_HOUSE_DEED,
                         CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                        CERTIFICATION_SITE_SURVEY_VIDEO,
                     ]
                 ],
                 'default_reason' => '購屋裝修',
@@ -2137,12 +2143,14 @@ $config['sub_product_list'] = [
                     CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT,
                     CERTIFICATION_HOUSE_DEED,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
                     CERTIFICATION_REPAYMENT_CAPACITY,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
@@ -2165,6 +2173,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT,
                         CERTIFICATION_HOUSE_DEED,
                         CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                        CERTIFICATION_SITE_SURVEY_VIDEO,
                     ]
                 ],
                 'default_reason' => '購屋不足額',
@@ -2616,7 +2625,8 @@ $config['certifications'] = [
     25 => ['id' => CERTIFICATION_RENOVATION_RECEIPT, 'alias' => 'renovation_receipt', 'name' => '裝修發票', 'status' => 1, 'description' => '裝修發票', 'optional' => []],
     26 => ['id' => CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT, 'alias' => 'appliance_contract_receipt', 'name' => '傢俱家電合約或發票收據', 'status' => 1, 'description' => '傢俱家電合約或發票收據', 'optional' => []],
     27 => ['id' => CERTIFICATION_HOUSE_DEED, 'alias' => 'house_deed', 'name' => '房屋所有權狀', 'status' => 1, 'description' => '房屋所有權狀', 'optional' => []],
-    28 => ['id' => CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS, 'alias' => 'land_and_building_transactions', 'name' => '土地建物謄本', 'status' => 1, 'description' => '土地建物謄本', 'optional' => []],
+    28 => ['id' => CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS, 'alias' => 'land_and_building_transactions', 'name' => '土地建物謄本', 'status' => 1, 'description' => '土地建物謄本', 'optional' => [], 'show' => FALSE],
+    29 => ['id' => CERTIFICATION_SITE_SURVEY_VIDEO, 'alias' => 'site_survey_video', 'name' => '入屋現勘/遠端視訊影片', 'status' => 1, 'description' => '入屋現勘/遠端視訊影片', 'optional' => [], 'show' => FALSE],
 
     500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務收支', 'status' => 1, 'description' => '提供個人財務收支資料', 'optional' => []],
     501 => ['id' => CERTIFICATION_SIMPLIFICATIONJOB, 'alias' => 'simplificationjob', 'name' => '工作資料', 'status' => 1, 'description' => '提供簡易工作資料', 'optional' => []],

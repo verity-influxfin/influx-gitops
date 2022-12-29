@@ -201,8 +201,7 @@ class Risk extends MY_Admin_Controller {
 
             if ($product_id == PRODUCT_ID_HOME_LOAN)
             {
-                $additional_btn['site_survey_booking'] = '<a class="btn btn-circle btn-success" href="' . admin_url("risk/site_survey_booking/{$target->id}") . '"><i class="fa fa-check"></i></a>';
-                $additional_btn['site_survey_video'] = '<a class="btn btn-circle btn-success" href="' . admin_url("risk/site_survey_video/{$target->id}") . '"><i class="fa fa-check"></i></a>';
+                $additional_btn['site_survey_booking'] = '<a class="btn btn-circle btn-success" target="_blank" href="' . admin_url("risk/site_survey_booking/{$target->id}") . '"><i class="fa fa-check"></i></a>';
             }
 
             if ($stage == 0 )
@@ -246,7 +245,6 @@ class Risk extends MY_Admin_Controller {
         {
             $result['cols'] = array_merge($result['cols'], [
                 ['id' => 'site_survey_booking', 'name' => '入屋現勘/遠端視訊預約時間'],
-                ['id' => 'site_survey_video', 'name' => '入屋現勘/遠端視訊影片'],
             ]);
         }
 
@@ -931,6 +929,34 @@ class Risk extends MY_Admin_Controller {
 
         echo json_encode($response);
         die();
+    }
+
+    public function site_survey_booking($target_id = '')
+    {
+        $page_data = [];
+        if (empty($target_id))
+        {
+            goto END;
+        }
+
+        $this->load->library('booking_lib');
+        $booking_info = $this->booking_lib->get_booked_list_by_target($target_id);
+        if ($booking_info['result'] !== 'SUCCESS' || empty($booking_info['data']['booking_table']))
+        {
+            goto END;
+        }
+
+        $booking_info = current($booking_info['data']['booking_table']);
+        $page_data = [
+            'date' => empty($booking_info['date']) ? '' : (new DateTimeImmutable($booking_info['date']))->format('Y-m-d'),
+            'time' => empty($booking_info['session_name']) ? '' : $booking_info['session_name'],
+        ];
+
+        END:
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/site_survey_booking', $page_data);
+        $this->load->view('admin/_footer');
     }
 }
 

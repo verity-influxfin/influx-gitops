@@ -240,7 +240,8 @@ class Certification extends MY_Admin_Controller {
                     CERTIFICATION_INVESTIGATION, CERTIFICATION_PROFILE, CERTIFICATION_INVESTIGATIONA11,
                     CERTIFICATION_SIMPLIFICATIONFINANCIAL, CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2,
                     CERTIFICATION_BUSINESSTAX, CERTIFICATION_BALANCESHEET, CERTIFICATION_INCOMESTATEMENT, CERTIFICATION_INVESTIGATIONJUDICIAL, CERTIFICATION_PASSBOOKCASHFLOW, CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_EMPLOYEEINSURANCELIST, CERTIFICATION_PROFILEJUDICIAL, CERTIFICATION_JUDICIALGUARANTEE,
-                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
                 ];
                 // 可上傳 PDF 的徵信項
                 $cert_can_upload_pdf = [
@@ -248,6 +249,10 @@ class Certification extends MY_Admin_Controller {
                     CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2,
                     CERTIFICATION_BUSINESSTAX, CERTIFICATION_BALANCESHEET, CERTIFICATION_INCOMESTATEMENT, CERTIFICATION_INVESTIGATIONJUDICIAL, CERTIFICATION_PASSBOOKCASHFLOW, CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_EMPLOYEEINSURANCELIST, CERTIFICATION_PROFILEJUDICIAL, CERTIFICATION_JUDICIALGUARANTEE,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS
+                ];
+                // 可上傳影片的徵信項
+                $cert_can_upload_video = [
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
                 ];
                 if (in_array($info->certification_id, $cert_can_upload_image))
                 {
@@ -257,6 +262,10 @@ class Certification extends MY_Admin_Controller {
                         if (in_array($info->certification_id, $cert_can_upload_pdf))
                         {
                             $input_config['data']['file_type'] .= ',.pdf';
+                        }
+                        if (in_array($info->certification_id, $cert_can_upload_video))
+                        {
+                            $input_config['data']['file_type'] .= ',video/*';
                         }
 						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
                     }
@@ -1464,6 +1473,22 @@ class Certification extends MY_Admin_Controller {
                             continue;
                         }
                         $media['pdf'][] = $pdf;
+                    }
+                    elseif (is_video($field['type']))
+                    {
+                        $file['video'] = $field;
+                        $video = $this->s3_upload->media(
+                            file_get_contents($field['tmp_name']),
+                            'video',
+                            $post['user_id'],
+                            "certification/{$post['user_certification_id']}"
+                        );
+                        if ($video === FALSE)
+                        {
+                            $media_check = FALSE;
+                            continue;
+                        }
+                        $media['video'][] = $pdf;
                     }
                     else
                     {

@@ -1098,4 +1098,14 @@ class Target_model extends MY_Model
 
         return $target['target_no'] ?? '';
     }
+
+    public function get_user_id_by_id($target_id)
+    {
+        return $this->db
+            ->select('user_id')
+            ->from('p2p_loan.targets')
+            ->where('id', $target_id)
+            ->get()
+            ->first_row('array');
+    }
 }

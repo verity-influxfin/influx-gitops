@@ -106,6 +106,46 @@ class Booking_lib
         }
     }
 
+    public function get_booked_list_by_target($target_id): array
+    {
+        try
+        {
+            if (empty($target_id))
+            {
+                return ['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT];
+            }
+
+            $this->CI->load->model('loan/target_model');
+            $target_info = $this->CI->target_model->get_user_id_by_id($target_id);
+            if (empty($target_info))
+            {
+                return ['result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST];
+            }
+
+            $request = $this->client->request('GET', 'booked_session', [
+                'query' => [
+                    'target_id_int' => $target_id,
+                    'user_id_int' => $target_info['user_id'] ?? '',
+                ]
+            ]);
+            $res_content = $request->getBody()->getContents();
+            $result = json_decode($res_content, TRUE);
+            if (json_last_error() !== JSON_ERROR_NONE)
+            {
+                return ['result' => 'SUCCESS', 'data' => ['booking_table' => []]];
+            }
+            return ['result' => 'SUCCESS', 'data' => ['booking_table' => $result]];
+        }
+        catch (Exception $e)
+        {
+            return ['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT];
+        }
+        catch (\GuzzleHttp\Exception\GuzzleException $e)
+        {
+            return ['result' => 'ERROR', 'error' => SUB_SYSTEM_REQUEST_ERROR];
+        }
+    }
+
     /**
      * 新增一筆預約
      * @param $target_id : 案件 ID
