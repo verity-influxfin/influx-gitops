@@ -893,5 +893,44 @@ class Risk extends MY_Admin_Controller {
 	//
 	// 	return
 	// }
+
+    // 入屋現勘/遠端視訊預約時間
+    public function booking_timetable()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/booking_timetable');
+        $this->load->view('admin/_footer');
+    }
+
+    public function get_booking_timetable()
+    {
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+
+        $this->load->library('booking_lib');
+        $response = $this->booking_lib->get_whole_booking_timetable($start_date, $end_date);
+
+        echo json_encode($response);
+        die();
+    }
+
+    public function create_booking()
+    {
+        $target_id = 0;
+        $user_id = 0;
+
+        $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
+        $date = $input['date'] ?? '';
+        $time = $input['time'] ?? '';
+        $admin_id = $this->login_info->admin->id;
+        $title = "Admin-{$admin_id} arrangement";
+
+        $this->load->library('booking_lib');
+        $response = $this->booking_lib->create_booking($target_id, $user_id, $date, $time, $title);
+
+        echo json_encode($response);
+        die();
+    }
 }
-?>
+

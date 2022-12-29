@@ -4082,33 +4082,15 @@ class Product extends REST_Controller {
         try
         {
             $start_date = $this->input->get('start_date');
-            $start_date = empty($start_date) ? date('Y-m-d') : (new DateTimeImmutable($start_date))->format('Y-m-d');
             $end_date = $this->input->get('end_date');
-            $end_date = empty($end_date) ? date('Y-m-d') : (new DateTimeImmutable($end_date))->format('Y-m-d');
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->get_whole_booking_timetable($start_date, $end_date);
 
-            $api_url = 'http://' . getenv('CERT_OCR_IP') . ':' . getenv('CERT_OCR_HOME_LOAN_BOOKING_PORT');
-            $request = (new Client(['base_uri' => $api_url]))
-                ->request('GET', 'bookable_session', [
-                    'query' => [
-                        'start_date' => $start_date,
-                        'end_date' => $end_date,
-                    ]
-                ]);
-            $res_content = $request->getBody()->getContents();
-            $result = json_decode($res_content, TRUE);
-            if (json_last_error() !== JSON_ERROR_NONE)
-            {
-                $this->response(['result' => 'SUCCESS', 'data' => ['booking_table' => []]]);
-            }
-            $this->response(['result' => 'SUCCESS', 'data' => ['booking_table' => array_column($result, 'session_list', 'date')]]);
+            $this->response($response);
         }
         catch (Exception $e)
         {
             $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
-        }
-        catch (\GuzzleHttp\Exception\GuzzleException $e)
-        {
-            $this->response(['result' => 'ERROR', 'error' => SUB_SYSTEM_REQUEST_ERROR]);
         }
     }
 
@@ -4118,45 +4100,15 @@ class Product extends REST_Controller {
         try
         {
             $target_id = $this->input->get('target_id');
-            if (empty($target_id))
-            {
-                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
-            }
-
             $user_id = $this->user_info->id;
-            $this->load->model('loan/target_model');
-            $target_exist = $this->target_model->count_by([
-                'user_id' => $user_id,
-                'id' => $target_id,
-            ]);
-            if ($target_exist < 1)
-            {
-                $this->response(['result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST]);
-            }
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->get_booked_list_by_user($target_id, $user_id);
 
-            $api_url = 'http://' . getenv('CERT_OCR_IP') . ':' . getenv('CERT_OCR_HOME_LOAN_BOOKING_PORT');
-            $request = (new Client(['base_uri' => $api_url]))
-                ->request('GET', 'booked_session', [
-                    'query' => [
-                        'target_id_int' => $target_id,
-                        'user_id_int' => $user_id,
-                    ]
-                ]);
-            $res_content = $request->getBody()->getContents();
-            $result = json_decode($res_content, TRUE);
-            if (json_last_error() !== JSON_ERROR_NONE)
-            {
-                $this->response(['result' => 'SUCCESS', 'data' => ['booking_table' => []]]);
-            }
-            $this->response(['result' => 'SUCCESS', 'data' => ['booking_table' => $result]]);
+            $this->response($response);
         }
         catch (Exception $e)
         {
             $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
-        }
-        catch (\GuzzleHttp\Exception\GuzzleException $e)
-        {
-            $this->response(['result' => 'ERROR', 'error' => SUB_SYSTEM_REQUEST_ERROR]);
         }
     }
 
@@ -4165,51 +4117,24 @@ class Product extends REST_Controller {
     {
         try
         {
-            $post = $this->input->post(NULL, TRUE);
-            if (empty($post['target_id']) || empty($post['date']) || empty($post['time']))
+            $target_id = $this->input->post('target_id');
+            $user_id = $this->user_info->id;
+            $date = $this->input->post('date');
+            $time = $this->input->post('time');
+
+            if (empty($target_id))
             {
                 $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
             }
 
-            $user_id = $this->user_info->id;
-            $this->load->model('loan/target_model');
-            $target_exist = $this->target_model->count_by([
-                'user_id' => $user_id,
-                'id' => $post['target_id'],
-            ]);
-            if ($target_exist < 1)
-            {
-                $this->response(['result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST]);
-            }
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->create_booking($target_id, $user_id, $date, $time);
 
-            $api_url = 'http://' . getenv('CERT_OCR_IP') . ':' . getenv('CERT_OCR_HOME_LOAN_BOOKING_PORT');
-            $request = (new Client(['base_uri' => $api_url]))
-                ->request('POST', 'booking', [
-                    'body' => json_encode([
-                        'date' => $post['date'],
-                        'session_name' => $post['time'],
-                        'target_id_int' => $post['target_id'],
-                        'user_id_int' => $user_id,
-                        'title' => ''
-                    ])
-                ]);
-            $res_content = $request->getBody()->getContents();
-            $result = json_decode($res_content, TRUE);
-
-            if ( ! empty($result['_id']))
-            {
-                $this->response(['result' => 'SUCCESS']);
-            }
-            if ( ! empty($result['detail']) && $request->getStatusCode() == 400)
-            {
-                $this->response(['result' => 'ERROR', 'error' => PRODUCT_CANNOT_BOOK_TIME]);
-            }
-
-            $this->response(['result' => 'ERROR', 'error' => SUB_SYSTEM_REQUEST_ERROR]);
+            $this->response($response);
         }
-        catch (Exception|\GuzzleHttp\Exception\GuzzleException $e)
+        catch (Exception $e)
         {
-            $this->response(['result' => 'ERROR', 'error' => SUB_SYSTEM_REQUEST_ERROR]);
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
     }
 
@@ -4218,19 +4143,14 @@ class Product extends REST_Controller {
     {
         try
         {
-            if (empty($booking_id))
-            {
-                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
-            }
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->cancel_booking($booking_id);
 
-            $api_url = 'http://' . getenv('CERT_OCR_IP') . ':' . getenv('CERT_OCR_HOME_LOAN_BOOKING_PORT');
-            (new Client(['base_uri' => $api_url]))->request('DELETE', "booking/{$booking_id}");
-
-            $this->response(['result' => 'SUCCESS']);
+            $this->response($response);
         }
-        catch (Exception|\GuzzleHttp\Exception\GuzzleException $e)
+        catch (Exception $e)
         {
-            $this->response(['result' => 'ERROR', 'error' => SUB_SYSTEM_REQUEST_ERROR]);
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
     }
 }
