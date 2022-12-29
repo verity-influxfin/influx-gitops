@@ -260,12 +260,14 @@ class Target_model extends MY_Model
     }
 
     public function getUserStatusByTargetId($targetIds) {
-        $this->db->select('*')
+        $this->db
+            ->select('user_id')
+            ->select('created_at')
             ->from("`p2p_loan`.`targets`")
             ->where_in('id', $targetIds);
         $subquery = $this->db->get_compiled_select('', TRUE);
         $this->db
-            ->select('t.user_id, COUNT(*) as total_count')
+            ->select('t.user_id, COUNT(1) as total_count')
             ->from('`p2p_loan`.`targets` AS `t`')
             ->join("($subquery) as `r`", "`t`.`user_id` = `r`.`user_id`")
             ->where('t.created_at < r.created_at')
@@ -766,10 +768,10 @@ class Target_model extends MY_Model
      * @param int $investor : 投資人/借款人
      * @param array $cert_status : 徵信項狀態 (參考constant(CERTIFICATION_STATUS_*))
      * @param int $product_id : 產品ID
-     * @param $has_stage_target : 是否撈取階段上架的相關申貸案 (TRUE=只撈階段上架 FALSE=不撈取階段上架 NULL=不管是不是階段上架都撈)
+     * @param array $sub_product_id
      * @return mixed
      */
-    public function get_risk_person_list(int $investor, array $cert_status, int $product_id, $has_stage_target = NULL)
+    public function get_risk_person_list(int $investor, array $cert_status, int $product_id, array $sub_product_id)
     {
         $subquery = $this->db
             ->select('DISTINCT(user_id) AS user_id')
@@ -779,10 +781,17 @@ class Target_model extends MY_Model
             ->get_compiled_select(NULL, TRUE);
 
         $this->db
-            ->select('t.*')
+            ->select('t.id')
+            ->select('t.target_no')
+            ->select('t.user_id')
+            ->select('t.product_id')
+            ->select('t.sub_product_id')
+            ->select('t.certificate_status')
+            ->select('t.status')
+            ->select('t.updated_at')
             ->from('p2p_loan.targets t')
             ->join("({$subquery}) AS a", 'a.user_id=t.user_id')
-            ->where('t.product_id<', PRODUCT_FOREX_CAR_VEHICLE)
+            ->where('t.product_id<', PRODUCT_FOR_JUDICIAL)
             ->where_in('t.status', [
                 TARGET_WAITING_APPROVE,
                 TARGET_WAITING_SIGNING,
@@ -791,16 +800,8 @@ class Target_model extends MY_Model
                 TARGET_ORDER_WAITING_VERIFY
             ])
             ->where('t.product_id', $product_id)
+            ->where_in('t.sub_product_id', $sub_product_id)
             ->order_by('t.id', 'ASC');
-
-        if ($has_stage_target === FALSE)
-        {
-            $this->db->where('t.sub_product_id !=', STAGE_CER_TARGET);
-        }
-        elseif ($has_stage_target === TRUE)
-        {
-            $this->db->where('t.sub_product_id', STAGE_CER_TARGET);
-        }
 
         return $this->db->get()->result();
     }

@@ -537,7 +537,7 @@ abstract class Approve_base implements Approve_interface
         // 取得產品設定的徵信項設定檔
         $cert_config = $this->CI->config->item('certifications');
         $product_cert = $this->product_config_cert;
-        array_filter($cert_config, function ($value) use ($product_cert) {
+        $cert_config = array_filter($cert_config, function ($value) use ($product_cert) {
             return in_array($value, $product_cert);
         }, ARRAY_FILTER_USE_KEY);
 
@@ -576,7 +576,7 @@ abstract class Approve_base implements Approve_interface
             {
                 $result[$key] = [
                     'id' => $user_cert->id,
-                    'status' => (int) $user_cert->status,
+                    'status' => CERTIFICATION_STATUS_SUCCEED,
                     'certification_id' => (int) $user_cert->certification_id,
                 ];
             }
