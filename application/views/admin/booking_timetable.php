@@ -120,12 +120,11 @@
             }).then(({data}) => {
                 if (data.result !== 'SUCCESS') {
                     alert('送出失敗');
-                    // location.reload();
                     return;
                 }
 
                 alert('送出成功');
-                // location.reload();
+                location.reload();
             })
         })
     });

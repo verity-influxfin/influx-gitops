@@ -921,7 +921,7 @@ class Risk extends MY_Admin_Controller {
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
         $date = $input['date'] ?? '';
         $time = $input['time'] ?? '';
-        $admin_id = $this->login_info->admin->id;
+        $admin_id = $this->login_info->id;
         $title = "Admin-{$admin_id} arrangement";
 
         $this->load->library('booking_lib');

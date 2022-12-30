@@ -1453,7 +1453,7 @@ class Certification extends MY_Admin_Controller {
 			$this->load->library('S3_upload');
 			$file_array = [];
 			$media_check = true;
-            $media = ['image' => [], 'pdf' => []];
+            $media = ['image' => [], 'pdf' => [], 'video' => []];
 			if(!empty($_FILES['file_upload_tmp'])){
 				foreach($_FILES['file_upload_tmp'] as $k=>$v){
 					foreach($v as $k1=>$v1){
