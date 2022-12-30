@@ -1101,7 +1101,7 @@ $config['visul_id_des'] = [
     ],
     'LF1' => [
         'name' => '上班族貸',
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'><span style=\'font-size:14px;color:#4a4a4a\'>*毋須提供相關佐證</span>',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:16px;color:black;font-weight: 900;\'><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'url' => '',
@@ -1216,32 +1216,32 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'H1' => [
-        'name' => '不動產融資',
-        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>還沒有人說要寫啥</span>',
+        'name' => '房產消費貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>安心成家 圓夢最後一哩路</span><br><span style=\'font-size:14px;color:#4a4a4a\'>20~45歲信用良好者有穩定薪資收入</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
     ],
     'HL1' => [
-        'name' => '購房不足額',
-        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>還沒有人說要寫啥</span>',
+        'name' => '購房貸，貸你滿足',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供建物所有權狀、購屋合約上傳</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
     ],
     'HL2' => [
-        'name' => '房屋裝修款',
-        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>還沒有人說要寫啥</span>',
+        'name' => '房屋裝修款，貸你夢想',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供建物所有權狀、裝潢合約上傳</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
     ],
     'HL3' => [
-        'name' => '添購傢俱家電',
-        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>還沒有人說要寫啥</span>',
+        'name' => '添購傢俱家電，貸你溫馨',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供建物所有權狀、添購傢俱家電憑證</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',

@@ -100,14 +100,6 @@ class Certification extends MY_Admin_Controller {
 					$page_data['data'] = $info;
 					$page_data['content'] = json_decode($info->content, true);
                     $page_data['user_name'] = $this->user_model->get_user_name_by_id($info->user_id);
-                    $cert_house_deed = $this->user_certification_model->as_array()->order_by('created_at', 'desc')->get_by([
-                        'certification_id' => CERTIFICATION_HOUSE_DEED,
-                        'status' => CERTIFICATION_STATUS_SUCCEED,
-                        'user_id' => $info->user_id,
-                        'investor' => $info->investor
-                    ]);
-                    $cert_house_deed_content = json_decode($cert_house_deed['content'] ?? '', TRUE);
-                    $page_data['house_deed_address'] = $cert_house_deed_content['admin_edit']['address'] ?? $cert_house_deed_content['address'] ?? '';
 				}
 				if($cid == CERTIFICATION_CERCREDITJUDICIAL || $info->certification_id == CERTIFICATION_CERCREDITJUDICIAL){
 					$selltype = isset($get['selltype'])?$get['selltype']:0;
@@ -225,6 +217,18 @@ class Certification extends MY_Admin_Controller {
                     $certification = $this->certification[$info->certification_id];
                     $page_data['certification_type'] = $certification['name'];
                     $page_data['status'] = $info->status;
+                }
+                elseif (in_array($info->certification_id, [CERTIFICATION_RENOVATION_CONTRACT, CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT, CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS]))
+                {
+                    $cert_house_deed = $this->user_certification_model->as_array()->order_by('created_at', 'desc')->get_by([
+                        'certification_id' => CERTIFICATION_HOUSE_DEED,
+                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                        'user_id' => $info->user_id,
+                        'investor' => $info->investor
+                    ]);
+                    $cert_house_deed_content = json_decode($cert_house_deed['content'] ?? '', TRUE);
+                    $page_data['house_deed_address'] = $cert_house_deed_content['admin_edit']['address'] ?? $cert_house_deed_content['address'] ?? '';
+                    $page_data['house_deed_address_by_user'] = $cert_house_deed_content['address'] ?? '';
                 }
 				// 獲取 ocr 相關資料
 				// to do : ocr table 需優化 index 與 clinet table view
