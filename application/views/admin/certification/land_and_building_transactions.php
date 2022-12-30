@@ -274,8 +274,8 @@ $user_id = $data->user_id ?? '';
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><?= $ocr_parser_ary['buildingPart']['sum_ownership_portion_area_num']; ?></td>
-                                    <td><?= $ocr_parser_ary['buildingPart']['sum_ownership_portion_square_feet_area_num']; ?></td>
+                                    <td><?= $ocr_parser_ary['buildingPart']['sum_ownership_portion_area_num'] ?? ''; ?></td>
+                                    <td><?= $ocr_parser_ary['buildingPart']['sum_ownership_portion_square_feet_area_num'] ?? ''; ?></td>
                                     <td></td>
                                     <td colspan="2"></td>
                                     <td></td>
@@ -283,12 +283,12 @@ $user_id = $data->user_id ?? '';
                                 <tr>
                                     <td colspan="8"></td>
                                     <td>鑑估總值</td>
-                                    <td colspan="2"><?= $ocr_parser_ary['buildingPart']['sum_appraisal_total_sprice_num']; ?></td>
+                                    <td colspan="2"><?= $ocr_parser_ary['buildingPart']['sum_appraisal_total_sprice_num'] ?? ''; ?></td>
                                 </tr>
                                 <tr>
                                     <td colspan="8"></td>
                                     <td>鑑估淨值</td>
-                                    <td colspan="2"><?= $ocr_parser_ary['buildingPart']['net_sum_appraisal_total_sprice_num']; ?></td>
+                                    <td colspan="2"><?= $ocr_parser_ary['buildingPart']['net_sum_appraisal_total_sprice_num'] ?? ''; ?></td>
                                 </tr>
                                 <tr>
                                     <td>他項權利部</td>
@@ -604,11 +604,11 @@ $user_id = $data->user_id ?? '';
                                         <td></td>
                                         <td><input type="text" class="form-control"
                                                    name="admin_edit[buildingPart][sum_ownership_portion_area_num]"
-                                                   value="<?= $admin_edit_ary['buildingPart']['sum_ownership_portion_area_num']; ?>">
+                                                   value="<?= $admin_edit_ary['buildingPart']['sum_ownership_portion_area_num'] ?? ''; ?>">
                                         </td>
                                         <td><input type="text" class="form-control"
                                                    name="admin_edit[buildingPart][sum_ownership_portion_square_feet_area_num]"
-                                                   value="<?= $admin_edit_ary['buildingPart']['sum_ownership_portion_square_feet_area_num']; ?>">
+                                                   value="<?= $admin_edit_ary['buildingPart']['sum_ownership_portion_square_feet_area_num'] ?? ''; ?>">
                                         </td>
                                         <td></td>
                                         <td colspan="2"></td>
@@ -619,7 +619,7 @@ $user_id = $data->user_id ?? '';
                                         <td>鑑估總值</td>
                                         <td colspan="2"><input type="text" class="form-control"
                                                                name="admin_edit[buildingPart][sum_appraisal_total_sprice_num]"
-                                                               value="<?= $admin_edit_ary['buildingPart']['sum_appraisal_total_sprice_num']; ?>">
+                                                               value="<?= $admin_edit_ary['buildingPart']['sum_appraisal_total_sprice_num'] ?? ''; ?>">
                                         </td>
                                     </tr>
                                     <tr>
@@ -627,7 +627,7 @@ $user_id = $data->user_id ?? '';
                                         <td>鑑估淨值</td>
                                         <td colspan="2"><input type="text" class="form-control"
                                                                name="admin_edit[buildingPart][net_sum_appraisal_total_sprice_num]"
-                                                               value="<?= $admin_edit_ary['buildingPart']['net_sum_appraisal_total_sprice_num']; ?>">
+                                                               value="<?= $admin_edit_ary['buildingPart']['net_sum_appraisal_total_sprice_num'] ?? ''; ?>">
                                         </td>
                                     </tr>
                                     <tr>
@@ -881,7 +881,7 @@ $user_id = $data->user_id ?? '';
                                                 <td><label>房屋門牌地址</label></td>
                                                 <td>
                                                     <input type="text" class="form-control" class="form-control" name=""
-                                                           value="<?= '' ?>"
+                                                           value="<?= $house_deed_address_by_user ?? ''; ?>"
                                                            disabled>
                                                 </td>
                                             </tr>
@@ -900,7 +900,7 @@ $user_id = $data->user_id ?? '';
                                                 <td><label>合約地址</label></td>
                                                 <td>
                                                     <input type="text" class="form-control" class="form-control" name=""
-                                                           value="<?= '' ?>"
+                                                           value="<?= $house_deed_address ?? '' ?>"
                                                            disabled>
                                                 </td>
                                             </tr>

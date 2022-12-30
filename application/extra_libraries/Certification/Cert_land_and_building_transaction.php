@@ -227,10 +227,19 @@ class Cert_land_and_building_transaction extends Certification_base
 
     /**
      * @param $certification_id
-     * @return array
+     * @return string
      */
-    public function get_dependency_cert_content($certification_id): array
+    public function get_dependency_cert_content($certification_id): string
     {
         return $this->dependency_cert_list[$certification_id]->content ?? '';
+    }
+
+    /**
+     * 審核失敗的通知
+     * @return bool
+     */
+    public function failure_notification(): bool
+    {
+        return TRUE;
     }
 }
