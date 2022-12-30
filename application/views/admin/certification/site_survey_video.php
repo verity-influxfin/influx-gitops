@@ -92,14 +92,17 @@ $user_id = $data->user_id ?? '';
                         </div>
                         <div class="col-lg-6">
                             <h1>影片</h1>
-                            <fieldset disabled>
+                            <fieldset>
                                 <div class="form-group">
                                     <label for="disabledSelect"></label><br>
                                     <?php if ( ! empty($content['video']))
                                     {
+                                        $index = 0;
                                         foreach ($content['video'] as $video)
-                                        {
-                                            var_dump($video); ?>
+                                        { ?>
+                                            <a href="<?= $video ?>" class="btn btn-info">
+                                                影片<?= ++$index; ?>
+                                            </a>
                                         <?php }
                                     } ?>
                                 </div>

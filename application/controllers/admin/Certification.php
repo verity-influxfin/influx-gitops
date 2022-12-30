@@ -265,7 +265,7 @@ class Certification extends MY_Admin_Controller {
                         }
                         if (in_array($info->certification_id, $cert_can_upload_video))
                         {
-                            $input_config['data']['file_type'] .= ',video/*';
+                            $input_config['data']['file_type'] .= ',video/mp4,video/ogg';
                         }
 						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
                     }
@@ -1477,9 +1477,10 @@ class Certification extends MY_Admin_Controller {
                     elseif (is_video($field['type']))
                     {
                         $file['video'] = $field;
-                        $video = $this->s3_upload->media(
+                        $extension_array = explode('.', $field['name']);
+                        $video = $this->s3_upload->video(
                             file_get_contents($field['tmp_name']),
-                            'video',
+                            'video' . $post['user_id'] . round(microtime(TRUE) * 1000) . rand(1, 99) . '.' . end($extension_array),
                             $post['user_id'],
                             "certification/{$post['user_certification_id']}"
                         );
@@ -1488,9 +1489,9 @@ class Certification extends MY_Admin_Controller {
                             $media_check = FALSE;
                             continue;
                         }
-                        $media['video'][] = $pdf;
+                        $media['video'][] = $video;
                     }
-                    else
+                    elseif (is_image($field['type']))
                     {
                         $file['image'] = $field;
                         $image = $this->s3_upload->image($file, 'image', $post['user_id'], "certification/{$post['user_certification_id']}");
@@ -1540,9 +1541,18 @@ class Certification extends MY_Admin_Controller {
                     {
                         $certification_content['pdf'] = array_merge($certification_content['pdf'], $media['pdf']);
                     }
-                    else
+                    elseif ( ! empty($media['pdf']))
                     {
                         $certification_content['pdf'] = $media['pdf'];
+                    }
+
+                    if (isset($certification_content['video']))
+                    {
+                        $certification_content['video'] = array_merge($certification_content['video'], $media['video']);
+                    }
+                    elseif ( ! empty($media['video']))
+                    {
+                        $certification_content['video'] = $media['video'];
                     }
 
 					$certification_content['group_id'] = $group_id;
