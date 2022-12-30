@@ -1438,14 +1438,10 @@ class Product extends REST_Controller {
         $company_status	= $this->user_info->company;
         $target 			= $this->target_model->get($target_id);
         if(!empty($target)){
-            $product_list = $this->config->item('product_list');
-            $product = isset($product_list[$target->product_id]) ? $product_list[$target->product_id] : $product_list[1];
+            $this->load->library('loanmanager/product_lib');
+            $product = $this->product_lib->get_exact_product($target->product_id, $target->sub_product_id);
+
             $product_name = $product['name'];
-            $sub_product_id = $target->sub_product_id;
-            if($this->is_sub_product($product,$sub_product_id)){
-                $product = $this->trans_sub_product($product,$sub_product_id);
-                $product_name = $product['name'];
-            }
 
             $targetDatas = [];
             $cer_group = [];
