@@ -1545,7 +1545,7 @@ class Certification extends MY_Admin_Controller {
                     {
                         $certification_content['pdf'] = array_merge($certification_content['pdf'], $media['pdf']);
                     }
-                    elseif ( ! empty($media['pdf']))
+                    else
                     {
                         $certification_content['pdf'] = $media['pdf'];
                     }
@@ -1554,7 +1554,7 @@ class Certification extends MY_Admin_Controller {
                     {
                         $certification_content['video'] = array_merge($certification_content['video'], $media['video']);
                     }
-                    elseif ( ! empty($media['video']))
+                    else
                     {
                         $certification_content['video'] = $media['video'];
                     }
