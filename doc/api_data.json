@@ -6348,7 +6348,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -10747,7 +10747,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲或大於35歲</p>"
+            "description": "<p>未滿18歲或大於35歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -10982,7 +10982,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲或大於35歲</p>"
+            "description": "<p>未滿18歲或大於35歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -21152,7 +21152,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -21582,7 +21582,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -23014,7 +23014,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -23239,7 +23239,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -23469,7 +23469,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -24963,7 +24963,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -25396,7 +25396,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -27152,7 +27152,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -27369,7 +27369,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿18歲</p>"
           },
           {
             "group": "Error 4xx",

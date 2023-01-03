@@ -1111,7 +1111,7 @@ class Target extends REST_Controller {
      *       "error": "203"
      *     }
 	 *
-     * @apiError 208 未滿20歲
+     * @apiError 208 未滿18歲
      * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
@@ -1565,7 +1565,7 @@ class Target extends REST_Controller {
      *       "error": "203"
      *     }
 	 *
-     * @apiError 208 未滿20歲
+     * @apiError 208 未滿18歲
      * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
@@ -2237,7 +2237,7 @@ class Target extends REST_Controller {
 
 
 
-		if(get_age($this->user_info->birthday) < 20 && !$Judicialperson){
+		if(get_age($this->user_info->birthday) < 18 && !$Judicialperson){
 			$this->response(['result' => 'ERROR','error' => UNDER_AGE ]);
 		}
 	}
