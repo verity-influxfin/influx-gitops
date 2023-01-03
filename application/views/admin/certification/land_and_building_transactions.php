@@ -869,6 +869,44 @@ $user_id = $data->user_id ?? '';
                                 </table>
                             </div>
                             <div class="col-lg-12">
+                                <h4>爬蟲執行狀態</h4>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <!-- 規格尚未確定 -->
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <div class="d-flex aic my-2">
+                                                    <div class="mx-3" id="scrapper_status_1" hidden>
+                                                        <button type="button" class="btn btn-success btn-circle">
+                                                            <i class="fa fa-check"></i>
+                                                        </button>
+                                                        <label>執行成功</label>
+                                                    </div>
+                                                    <div class="mx-3" id="scrapper_status_2" hidden>
+                                                        <button type="button" class="btn btn-danger btn-circle">
+                                                            <i class="fa fa-times"></i>
+                                                        </button>
+                                                        <label>執行失敗</label>
+                                                    </div>
+                                                    <div class="mx-3" id="scrapper_status_4" hidden>
+                                                        <button type="button" class="btn btn-warning btn-circle">
+                                                            <i class="fa fa-refresh"></i>
+                                                        </button>
+                                                        <label>執行中</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-success"
+                                                onclick="recheck_ocr_parser(this)">
+                                            重新執行爬蟲
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-12">
                                 <input type="hidden" name="id" value="<?= $data->id ?? '' ?>">
                                 <input type="hidden" name="from" value="<?= $from ?? '' ?>">
                                 <input type="hidden" name="certification_id"
@@ -956,7 +994,26 @@ $user_id = $data->user_id ?? '';
     <!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    function recheck_ocr_parser(item) {
+        const apiUrl = '/admin/certification';
+        const searchParams = url.searchParams;
+        $(item).prop('disabled', true).text('執行中...');
+        axios.get(`${apiUrl}/recheck_land_and_building_transactions_ocr_parser`, {
+            params: {
+                id: searchParams.get('id')
+            }
+        }).then(({data}) => {
+            if (data.success === true) {
+                alert('執行成功');
+            } else {
+                alert(data.msg);
+            }
+            location.reload();
+        })
+    }
+
     $(document).ready(function () {
         $('input[name="admin_edit[ddReport][maintenance_condition]"]').on('click', function () {
             if ($(this).val() === '0') {
@@ -996,5 +1053,8 @@ $user_id = $data->user_id ?? '';
         $(`input[name="admin_edit[ddReport][building_type]"][value="${building_type}"]`)
             .prop('checked', true)
             .trigger('click');
+
+        let scraper_status = '<?= $ocr_parser_ary['scraperResult']['status_int'] ?? 4; ?>';
+        $(`div#scrapper_status_${scraper_status}`).prop('hidden', false);
     });
 </script>

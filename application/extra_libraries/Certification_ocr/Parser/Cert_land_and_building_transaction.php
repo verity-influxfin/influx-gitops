@@ -5,7 +5,7 @@ namespace Certification_ocr\Parser;
 use Certification\Certification_factory;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * OCR 辨識
@@ -18,6 +18,7 @@ class Cert_land_and_building_transaction extends Ocr_parser_base
     protected $task_type = self::TYPE_PARSER;
     private $content;
     private $cert_instance;
+    protected $retry_flag;
 
     public function __construct($certification)
     {
@@ -31,6 +32,8 @@ class Cert_land_and_building_transaction extends Ocr_parser_base
             $this->content = [];
         }
         $this->cert_instance = Certification_factory::get_instance_by_model_resource($this->certification);
+
+        $this->set_retry_failed_scraper_task();
     }
 
     /**
@@ -174,6 +177,7 @@ class Cert_land_and_building_transaction extends Ocr_parser_base
                     'query' => [
                         'building_address_str' => $building_address,
                         'user_certification_id_int' => $this->certification['id'],
+                        'retry_failed_scraper_task_bool' => $this->get_retry_failed_scraper_task()
                     ],
                 ]);
             $res_content = $request->getBody()->getContents();
@@ -192,5 +196,15 @@ class Cert_land_and_building_transaction extends Ocr_parser_base
             $this->insert_log($e->getCode(), $e->getMessage());
             return $this->return_failure('Exception occurred while attempting to GET task response.');
         }
+    }
+
+    public function set_retry_failed_scraper_task(bool $retry_flag = FALSE)
+    {
+        $this->retry_flag = $retry_flag;
+    }
+
+    public function get_retry_failed_scraper_task()
+    {
+        return $this->retry_flag;
     }
 }

@@ -4,6 +4,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 use Certification\Certification_factory;
+use Certification_ocr\Parser\Ocr_parser_factory;
 
 class Certification extends MY_Admin_Controller {
 
@@ -424,7 +425,7 @@ class Certification extends MY_Admin_Controller {
                             goto GENERAL_SAVE;
                         }
                         $content = json_decode($info->content ?? '', TRUE);
-                        $content['admin_edit'] = array_replace_recursive($content['admin_edit'], $post['admin_edit']);
+                        $content['admin_edit'] = array_replace_recursive($content['admin_edit'] ?? [], $post['admin_edit']);
                         $admin_edit_upd_res = $this->user_certification_model->update($post['id'], [
                             'content' => json_encode($content),
                         ]);
@@ -1951,6 +1952,92 @@ class Certification extends MY_Admin_Controller {
             'content' => json_encode($update_content_data)
         ]);
         return TRUE;
+    }
+
+    public function recheck_land_and_building_transactions_ocr_parser():string
+    {
+        $response = ['success' => FALSE];
+        try
+        {
+            $id = $this->input->get('id');
+            if (empty($id))
+            {
+                $response['msg'] = '查無徵信項資訊';
+                echo json_encode($response);
+                die();
+            }
+
+            $user_certification_info = $this->user_certification_model->as_array()->get($id);
+            if (empty($user_certification_info))
+            {
+                $response['msg'] = '查無徵信項資訊';
+                echo json_encode($response);
+                die();
+            }
+            if ($user_certification_info['status'] != CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+            {
+                $response['msg'] = '狀態非待人工審核，無法重新執行';
+                echo json_encode($response);
+                die();
+            }
+
+            $cert_ocr_parser_instance = Ocr_parser_factory::get_instance($user_certification_info);
+            $cert_ocr_parser_instance->set_retry_failed_scraper_task(TRUE);
+            $ocr_parser_result = $cert_ocr_parser_instance->get_result();
+
+            if (isset($ocr_parser_result['success']) && $ocr_parser_result['success'] === TRUE)
+            {
+                $tmp_content['ocr_parser']['res'] = TRUE;
+                $tmp_content['ocr_parser']['content'] = $ocr_parser_result['data'];
+
+                $old_content = json_decode($user_certification_info['content'], TRUE);
+                $new_content = array_replace_recursive($old_content, $tmp_content);
+
+                $new_content['admin_edit'] = $this->array_replace_when_empty($new_content['admin_edit'] ?? [], $ocr_parser_result['data']);
+                if (empty($new_content['admin_edit']['address']))
+                {
+                    $new_content['admin_edit']['address'] = $parsed_content['ocr_parser']['content']['buildingPart']['address_str'] ?? '';
+                }
+
+                $this->user_certification_model->update($id, [
+                    'content' => json_encode($new_content),
+                ]);
+            }
+            echo json_encode(['success' => TRUE]);
+            die();
+        }
+        catch (\Exception $e)
+        {
+            $response['msg'] = $e->getMessage();
+            echo json_encode($response);
+            die();
+        }
+    }
+
+    private function array_replace_when_empty($array, $replacement)
+    {
+        $result = [];
+        foreach ($replacement as $_key => $_value)
+        {
+            if ( ! isset($array[$_key]))
+            {
+                $result[$_key] = $_value;
+            }
+            elseif ( ! is_array($_value))
+            {
+                if ( ! empty($array[$_key]))
+                {
+                    $result[$_key] = $array[$_key];
+                    continue;
+                }
+                $result[$_key] = $_value;
+            }
+            else
+            {
+                $result[$_key] = $this->array_replace_when_empty($array[$_key], $_value);
+            }
+        }
+        return $result;
     }
 }
 

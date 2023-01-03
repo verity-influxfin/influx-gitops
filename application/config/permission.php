@@ -274,6 +274,7 @@ $config['permission'] = [
             'joint_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'user_bankaccount_list' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
             'save_company_cert' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'recheck_land_and_building_transactions_ocr_parser' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
         ],
     ],
     'Scraper' => [
