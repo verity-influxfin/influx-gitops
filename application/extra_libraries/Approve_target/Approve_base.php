@@ -564,6 +564,11 @@ abstract class Approve_base implements Approve_interface
                 $user_cert = $this->CI->certification_lib->get_certification_info($user_id, $key, USER_BORROWER, FALSE, TRUE);
             }
 
+            if ($user_cert === FALSE)
+            {
+                continue;
+            }
+
             if ( ! empty($user_cert) && $user_cert->status == CERTIFICATION_STATUS_SUCCEED)
             {
                 $result[$key] = [
