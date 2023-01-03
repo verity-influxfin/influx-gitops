@@ -3,6 +3,9 @@
 namespace Certification_ocr\Parser;
 
 use Certification\Certification_factory;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * OCR 辨識
@@ -147,5 +150,47 @@ class Cert_land_and_building_transaction extends Ocr_parser_base
             return '';
         }
         return $cert_house_deed_content['admin_edit']['address'];
+    }
+
+    /**
+     * 取得該徵信項的 OCR 結果
+     * @param $task_id : 任務 id
+     * @return array
+     * @throws RequestException
+     */
+    public function get_ocr_task_response($task_id = ''): array
+    {
+        try
+        {
+            $building_address = $this->get_building_address();
+
+            $get_api_url = 'http://' . $this->get_ocr_ip() . ':' . getenv('CERT_OCR_HOME_LOAN_BOOKING_PORT');
+            $request = (new Client(['base_uri' => $get_api_url]))
+                ->request('GET', '/home_consumer_loan/appraisal', [
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'Content-Type' => 'application/json'
+                    ],
+                    'query' => [
+                        'building_address_str' => $building_address,
+                        'user_certification_id_int' => $this->certification['id'],
+                    ],
+                ]);
+            $res_content = $request->getBody()->getContents();
+            $this->insert_log($request->getStatusCode(), $res_content);
+            $result = json_decode($res_content, TRUE);
+
+            return $this->return_success($result);
+        }
+        catch (BadResponseException $e)
+        {
+            $this->insert_log($e->getResponse()->getStatusCode(), $e->getResponse()->getBody()->getContents());
+            return $this->return_failure('Exception occurred while attempting to GET task response.');
+        }
+        catch (\Exception $e)
+        {
+            $this->insert_log($e->getCode(), $e->getMessage());
+            return $this->return_failure('Exception occurred while attempting to GET task response.');
+        }
     }
 }

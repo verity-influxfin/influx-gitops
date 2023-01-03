@@ -227,11 +227,11 @@ class Cert_land_and_building_transaction extends Certification_base
 
     /**
      * @param $certification_id
-     * @return string
+     * @return array
      */
-    public function get_dependency_cert_content($certification_id): string
+    public function get_dependency_cert_content($certification_id): array
     {
-        return $this->dependency_cert_list[$certification_id]->content ?? '';
+        return $this->dependency_cert_list[$certification_id]->content ?? [];
     }
 
     /**
