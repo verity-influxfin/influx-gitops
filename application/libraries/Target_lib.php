@@ -2373,7 +2373,7 @@ class Target_lib
             'instalment' => $sub_product['instalment'],
             'repayment' => $sub_product['repayment'],
             'targetData' => $sub_product['targetData'],
-            'secondInstance' => $sub_product['secondInstance'],
+            'secondInstance' => $sub_product['secondInstance'] ?? FALSE,
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => $product['checkOwner'] ?? FALSE,
