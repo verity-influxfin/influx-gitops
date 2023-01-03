@@ -21317,7 +21317,7 @@ define({
                             "                                \"status\": 1,\n" +
                             "                                \"name\": \"上班族貸\",\n" +
                             "                                \"description\": \"隨時線上照顧您的需求\n" +
-                            "年滿20歲的工作人士均可申請\",\n" +
+                            "年滿18歲的工作人士均可申請\",\n" +
                             "                                \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/marketing_res/marketing_app_product_worker.jpg\"\n" +
                             "                            }\n" +
                             "                        ]\n" +
@@ -23321,7 +23321,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲或大於35歲</p>"
+                            "description": "<p>未滿18歲或大於35歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -23556,7 +23556,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲或大於35歲</p>"
+                            "description": "<p>未滿18歲或大於35歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -35485,7 +35485,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲</p>"
+                            "description": "<p>未滿18歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -35915,7 +35915,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲</p>"
+                            "description": "<p>未滿18歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -37581,7 +37581,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲</p>"
+                            "description": "<p>未滿18歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -37806,7 +37806,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲</p>"
+                            "description": "<p>未滿18歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -38047,7 +38047,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲</p>"
+                            "description": "<p>未滿18歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -39601,7 +39601,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲</p>"
+                            "description": "<p>未滿18歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -40034,7 +40034,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲</p>"
+                            "description": "<p>未滿18歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -42288,7 +42288,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲</p>"
+                            "description": "<p>未滿18歲</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -42505,7 +42505,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "208",
-                            "description": "<p>未滿20歲</p>"
+                            "description": "<p>未滿18歲</p>"
                         },
                         {
                             "group": "Error 4xx",

@@ -518,7 +518,7 @@ class Product extends REST_Controller {
      *       "error": "206"
      *     }
 	 *
-     * @apiError 208 未滿20歲或大於35歲
+     * @apiError 208 未滿18歲或大於55歲
      * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
@@ -582,7 +582,7 @@ class Product extends REST_Controller {
 					}
 				}
 				
-				if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 55 ){
+				if(get_age($this->user_info->birthday) < 18 || get_age($this->user_info->birthday) > 55 ){
 					$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 				}
 				
