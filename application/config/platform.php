@@ -1960,7 +1960,6 @@ $config['sub_product_list'] = [
                     CERTIFICATION_REPAYMENT_CAPACITY,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_HOUSE_RECEIPT,
-                    CERTIFICATION_HOUSE_DEED,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
                     CERTIFICATION_SITE_SURVEY_VIDEO,
                 ],
