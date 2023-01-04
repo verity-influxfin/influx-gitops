@@ -783,6 +783,7 @@ class Credit_lib{
         $this->scoreHistory[] = '借款期數' . $instalment . '期: 額度 * ' . ($instalment_modifier_list[$instalment] ?? 1);
 
         // 依各子產品調整最高額度
+        $this->CI->load->model('user/user_certification_model');
         switch ($sub_product_id)
         {
             case SUB_PRODUCT_ID_HOME_LOAN_SHORT:
