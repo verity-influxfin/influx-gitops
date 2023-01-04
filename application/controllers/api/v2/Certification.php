@@ -5261,4 +5261,77 @@ class Certification extends REST_Controller {
             $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
         }
     }
+
+    // 入屋現勘/遠端視訊預約時間
+    public function site_survey_booking_post()
+    {
+        $certification_id = CERTIFICATION_SITE_SURVEY_BOOKING;
+        $certification = $this->certification[$certification_id];
+        if (empty($certification) || ! isset($certification['status']) || $certification['status'] != 1)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        // 是否驗證過
+        $this->was_verify($certification_id);
+
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $content = [];
+
+        // 必填欄位
+        $required_fields = ['date', 'time', 'target_id'];
+        foreach ($required_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            else
+            {
+                $content[$field] = trim($input[$field]);
+            }
+        }
+
+        $this->load->library('booking_lib');
+        $booking_response = $this->booking_lib->create_booking($content['target_id'], $user_id, $content['date'], $content['time']);
+        if ( ! isset($booking_response['result']) || $booking_response['result'] !== 'SUCCESS')
+        {
+            $this->response($booking_response);
+        }
+
+        $param = [
+            'user_id' => $user_id,
+            'certification_id' => $certification_id,
+            'investor' => $investor,
+            'content' => json_encode($content),
+            'status' => CERTIFICATION_STATUS_SUCCEED
+        ];
+
+        $insert = $this->user_certification_model->insert($param);
+        if ($insert)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
+    public function site_survey_booking_get()
+    {
+        $target_id = $this->input->get('target_id');
+        if (empty($target_id))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $user_id = $this->user_info->id;
+
+        $this->load->library('booking_lib');
+        $booking_detail = $this->booking_lib->get_booked_list_by_user($target_id, $user_id);
+        $this->response($booking_detail);
+    }
 }

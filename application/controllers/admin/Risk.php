@@ -199,11 +199,6 @@ class Risk extends MY_Admin_Controller {
 
             $additional_btn = [];
 
-            if ($product_id == PRODUCT_ID_HOME_LOAN)
-            {
-                $additional_btn['site_survey_booking'] = '<a class="btn btn-circle btn-success" target="_blank" href="' . admin_url("risk/site_survey_booking/{$target->id}") . '"><i class="fa fa-check"></i></a>';
-            }
-
             if ($stage == 0 )
             {
                 if ($user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['this_success_status'] ||
@@ -239,13 +234,6 @@ class Risk extends MY_Admin_Controller {
                 'status' => $this->target_model->status_list[$target->status] ?? '',
                 'updated_at' => date('Y-m-d H:i:s', $target->updated_at)
             ], $additional_btn);
-        }
-
-        if ($product_id == PRODUCT_ID_HOME_LOAN)
-        {
-            $result['cols'] = array_merge($result['cols'], [
-                ['id' => 'site_survey_booking', 'name' => '入屋現勘/遠端視訊預約時間'],
-            ]);
         }
 
         if ($stage == 2)

@@ -18,11 +18,11 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label>日期</label>
-                                <input type="text" class="form-control" disabled value="<?= $date ?? ''; ?>">
+                                <input type="text" class="form-control" disabled value="<?= $content['date'] ?? ''; ?>">
                             </div>
                             <div class="form-group">
                                 <label>時間</label>
-                                <input type="text" class="form-control" disabled value="<?= $time ?? ''; ?>">
+                                <input type="text" class="form-control" disabled value="<?= $content['time'] ?? ''; ?>">
                             </div>
                             <div class="form-group">
                                 <button type="button" class="btn btn-primary" id="submit" onclick="window.close()">確認

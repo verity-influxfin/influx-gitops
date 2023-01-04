@@ -96,6 +96,8 @@ define({
       "PostCertificationRenovationReceipt",
       "PostCertificationApplianceContractReceipt",
       "PostCertificationHouseDeed",
+      "PostCertificationSiteSurveyBooking",
+      "GetCertificationSiteSurveyBooking",
     "Judicialperson",
     "PostJudicialpersonApply",
     "GetJudicialpersonList",

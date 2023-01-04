@@ -1954,6 +1954,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_HOUSE_DEED,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
                     CERTIFICATION_SITE_SURVEY_VIDEO,
+                    CERTIFICATION_SITE_SURVEY_BOOKING,
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
@@ -1987,6 +1988,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_HOUSE_DEED,
                         CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
                         CERTIFICATION_SITE_SURVEY_VIDEO,
+                        CERTIFICATION_SITE_SURVEY_BOOKING,
                     ]
                 ],
                 'default_reason' => '購屋不足額',
@@ -2049,6 +2051,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_HOUSE_DEED,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
                     CERTIFICATION_SITE_SURVEY_VIDEO,
+                    CERTIFICATION_SITE_SURVEY_BOOKING,
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
@@ -2082,6 +2085,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_HOUSE_DEED,
                         CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
                         CERTIFICATION_SITE_SURVEY_VIDEO,
+                        CERTIFICATION_SITE_SURVEY_BOOKING,
                     ]
                 ],
                 'default_reason' => '購屋裝修',
@@ -2143,6 +2147,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_HOUSE_DEED,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
                     CERTIFICATION_SITE_SURVEY_VIDEO,
+                    CERTIFICATION_SITE_SURVEY_BOOKING,
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
@@ -2173,6 +2178,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_HOUSE_DEED,
                         CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
                         CERTIFICATION_SITE_SURVEY_VIDEO,
+                        CERTIFICATION_SITE_SURVEY_BOOKING,
                     ]
                 ],
                 'default_reason' => '購屋不足額',
@@ -2626,6 +2632,7 @@ $config['certifications'] = [
     27 => ['id' => CERTIFICATION_HOUSE_DEED, 'alias' => 'house_deed', 'name' => '房屋所有權狀', 'status' => 1, 'description' => '房屋所有權狀', 'optional' => []],
     28 => ['id' => CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS, 'alias' => 'land_and_building_transactions', 'name' => '土地建物謄本', 'status' => 1, 'description' => '土地建物謄本', 'optional' => [], 'show' => FALSE],
     29 => ['id' => CERTIFICATION_SITE_SURVEY_VIDEO, 'alias' => 'site_survey_video', 'name' => '入屋現勘/遠端視訊影片', 'status' => 1, 'description' => '入屋現勘/遠端視訊影片', 'optional' => [], 'show' => FALSE],
+    30 => ['id' => CERTIFICATION_SITE_SURVEY_BOOKING, 'alias' => 'site_survey_booking', 'name' => '入屋現勘/遠端視訊預約時間', 'status' => 1, 'description' => '入屋現勘/遠端視訊預約時間', 'optional' => []],
 
     500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務收支', 'status' => 1, 'description' => '提供個人財務收支資料', 'optional' => []],
     501 => ['id' => CERTIFICATION_SIMPLIFICATIONJOB, 'alias' => 'simplificationjob', 'name' => '工作資料', 'status' => 1, 'description' => '提供簡易工作資料', 'optional' => []],

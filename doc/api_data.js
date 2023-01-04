@@ -4684,6 +4684,381 @@ define({
         },
         {
             "type": "post",
+            "url": "/v2/certification/site_survey_booking",
+            "title": "認證 入屋現勘/遠端視訊預約時間",
+            "version": "0.2.0",
+            "name": "PostCertificationSiteSurveyBooking",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>案件ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "date",
+                            "description": "<p>預約日期</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "time",
+                            "description": "<p>預約時間</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\"\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>資料新增錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "364",
+                            "description": "<p>無法訪問子系統</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "401",
+                            "description": "<p>案件不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "427",
+                            "description": "<p>該時段無法預約</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "502",
+                            "description": "<p>此驗證已通過驗證</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "364",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"364\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "401",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "427",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"427\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/site_survey_booking"
+                }
+            ]
+        },
+        {
+            "type": "get",
+            "url": "/v2/certification/site_survey_booking",
+            "title": "認證 入屋現勘/遠端視訊預約時間",
+            "version": "0.2.0",
+            "name": "GetCertificationSiteSurveyBooking",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>案件ID</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data",
+                            "description": "<p>查詢結果</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data.booking_table",
+                            "description": "<p>時間表</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "data.booking_table.name",
+                            "description": "<p>時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "data.booking_table.is_bookable",
+                            "description": "<p>是否可預約</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"booking_table\": [\n" +
+                            "            {\n" +
+                            "                \"_id\": \"63aa638ba3e6491db834aff2\",\n" +
+                            "                \"date\": \"2022-12-30T00:00:00\",\n" +
+                            "                \"session_name\": \"13:00 PM\",\n" +
+                            "                \"target_id_int\": 1001698,\n" +
+                            "                \"user_id_int\": 1000533,\n" +
+                            "                \"title\": \"\",\n" +
+                            "                \"status_int\": 1,\n" +
+                            "                \"create_ts_sec_int\": 1672110987,\n" +
+                            "                \"update_ts_sec_int\": 1672110987\n" +
+                            "            }\n" +
+                            "        ]\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "364",
+                            "description": "<p>無法訪問子系統</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "401",
+                            "description": "<p>案件不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "502",
+                            "description": "<p>此驗證已通過驗證</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "364",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"364\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "401",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/site_survey_booking"
+                }
+            ]
+        },
+        {
+            "type": "post",
             "url": "/V2/certification/balancesheet",
             "title": "認證 資產負債表(法人)",
             "version": "0.2.0",
