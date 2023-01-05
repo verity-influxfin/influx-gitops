@@ -200,6 +200,15 @@ class User_model extends MY_Model
         return $query['amount'] ?? 0;
     }
 
+    public function get_company_status_by_ids(array $id_list)
+    {
+        return $this->db->select(['id', 'company_status'])
+            ->from('p2p_user.users')
+            ->where_in('id', $id_list)
+            ->get()
+            ->result_array();
+    }
+
     /**
      * 取得相同手機號碼的公司資料
      * @param $phone : 手機號碼

@@ -139,7 +139,6 @@ class Sales extends MY_Admin_Controller {
 			'sales' 	=>[],
 		];
 		$user_list		= $this->user_model->get_many_by([
-			'status' 		=> 1,
 			'created_at >='	=> strtotime($sdate.' 00:00:00'),
 			'created_at <='	=> strtotime($edate.' 23:59:59'),
 		]);

@@ -1073,7 +1073,7 @@ class Product extends REST_Controller {
      *       'error': '206'
      *     }
      *
-     * @apiError 208 未滿20歲或大於35歲
+     * @apiError 208 未滿18歲或大於35歲
      * @apiErrorExample {Object} 208
      *     {
      *       'result': 'ERROR',
@@ -2959,7 +2959,7 @@ class Product extends REST_Controller {
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => $sub_product['checkOwner'] ?? FALSE,
             'status' => $sub_product['status'],
-            'allow_age_range' => $sub_product['allow_age_range'] ?? [20, 55],
+            'allow_age_range' => $sub_product['allow_age_range'] ?? [18, 55],
             'apply_range_s' => $sub_product['apply_range_s'] ?? null,
             'apply_range_e' => $sub_product['apply_range_e'] ?? null,
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,
@@ -3483,6 +3483,7 @@ class Product extends REST_Controller {
                 $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
             }
         }
+        log_message('debug', "[Product/type1_signing][user_bankaccount][verify] {$bank_account->verify}");
 
         $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
         if (in_array($product['id'], $allow_fast_verify_product)
@@ -3497,7 +3498,7 @@ class Product extends REST_Controller {
             if ($faceDetect) {
                 $this->load->library('certification_lib');
                 $faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $param['person_image']);
-                if ($faceDetect_res['error'] == '') {
+                if (isset($faceDetect_res['error']) && $faceDetect_res['error'] == '') {
                     $target->status = TARGET_WAITING_VERIFY;
                     $targetData->autoVerifyLog[] = [
                         'faceDetect' => $faceDetect_res,

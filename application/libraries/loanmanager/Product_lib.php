@@ -151,7 +151,7 @@ class Product_lib
     public function is_age_available(int $age, int $product_id, int $sub_product_id = 0): bool
     {
         $product = $this->get_exact_product($product_id, $sub_product_id);
-        if ($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55))
+        if ($age < ($product['allow_age_range'][0] ?? 18) || $age > ($product['allow_age_range'][1] ?? 55))
         {
             return FALSE;
         }
