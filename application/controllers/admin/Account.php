@@ -378,7 +378,7 @@ class Account extends MY_Admin_Controller {
 					if($user_to_info){
 						foreach($user_to_info as $k =>$v){
 							$sub_list[] = array(
-								"user_to"				=> $user_name[$v['user_to']] ?? '',
+								"user_to"				=> $v['user_to'],
 								"v_bank_account_to"		=> $v['v_bank_account_to'],
 								"v_amount_to"			=> $v['principal'] + $v['interest'] + $v['allowance'] - $v['platform_fee'],
 								"principal"				=> $v['principal'],
