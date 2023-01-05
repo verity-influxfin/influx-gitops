@@ -580,10 +580,13 @@ class Credit_lib{
         if ($has_delayed === 0)
         {
             $markup_amount = $this->get_markup_amount($param['user_id']);
-            $max_key = max(array_keys($markup_amount));
-            $max_times = $max_key / 100;
-            $param['amount'] = $param['amount'] * $max_times;
-            $this->scoreHistory[] = "舊客戶加碼：<br/>額度 * {$max_times} 倍，因符合其中一條件：" . implode('、', $markup_amount[$max_key]);
+            if ( ! empty($markup_amount))
+            {
+                $max_key = max(array_keys($markup_amount));
+                $max_times = $max_key / 100;
+                $param['amount'] = $param['amount'] * $max_times;
+                $this->scoreHistory[] = "舊客戶加碼：<br/>額度 * {$max_times} 倍，因符合其中一條件：" . implode('、', $markup_amount[$max_key]);
+            }
         }
 
         // 額度不能「小」於產品的最「小」允許額度
