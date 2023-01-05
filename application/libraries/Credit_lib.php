@@ -1239,7 +1239,7 @@ class Credit_lib{
             case 3: // 一年至三年（含）
                 return ($job_salary < 40000) ? 100 : 150;
             case 4: // 三年以上
-                return ($job_salary < 50000) ? 200 : 100;
+                return ($job_salary < 50000) ? 100 : 200;
 		}
 		return 0;
 	}
