@@ -714,7 +714,7 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
-		$is_top_enterprise = $get["is_top_enterprise"] ?? 0;
+		$is_taiwan_1000 = $get["is_taiwan_1000"] ?? 0;
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -732,7 +732,7 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
-		$this->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);
+		$this->approvalextra->setSpecialInfo(['is_taiwan_1000' => $is_taiwan_1000]);
 
         $level = false;
         if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
@@ -1020,24 +1020,24 @@ class Target extends MY_Admin_Controller {
             $meta_list_by_key = array_column($userMeta, NULL, 'meta_key');
             $meta_info = $meta_list_by_key['job_company'] ?? new stdclass();
             $job_company = $meta_info->meta_value ?? '';
-            if (isset($target_meta['is_top_enterprise']))
+            if (isset($target_meta['is_taiwan_1000']))
             {
-                $is_top_enterprise = $target_meta['is_top_enterprise'];
+                $is_taiwan_1000 = $target_meta['is_taiwan_1000'];
             }
             else if ( ! empty($job_company))
             {
-                $this->config->load('top_enterprise');
-                $top_enterprise_list = $this->config->item("top_enterprise");
-                $m_array = preg_grep('/' . mb_substr($job_company, 0, 4) . '.*/', $top_enterprise_list);
-                $is_top_enterprise = ! empty($m_array) ? 1 : 0;
+                $this->config->load('taiwan_1000');
+                $taiwan_1000_list = $this->config->item('taiwan_1000');
+                $m_array = preg_grep('/' . mb_substr($job_company, 0, 4) . '.*/', $taiwan_1000_list);
+                $is_taiwan_1000 = ! empty($m_array) ? 1 : 0;
             }
             else
             {
-                $is_top_enterprise = 0;
+                $is_taiwan_1000 = 0;
             }
 
             $special_list = [
-                'is_top_enterprise' => $is_top_enterprise,
+                'is_taiwan_1000' => $is_taiwan_1000,
                 'job_company' => $job_company,
             ];
 

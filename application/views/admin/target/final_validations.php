@@ -631,7 +631,7 @@
                                             </td>
                                             <td>
                                                 <p id="job_company"></p>
-                                                <select id="is_top_enterprise" >
+                                                <select id="is_taiwan_1000" >
                                                     <option value="0">否</option>
                                                     <option value="1">是</option>
                                                 </select>
@@ -908,7 +908,7 @@
 						<div class="col-lg-12 text-center">
 							<input id="credit_test" type="text" name="score" value="0" / disabled>
 							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
-                            <input type="text" name="is_top_enterprise" value="0" hidden>
+                            <input type="text" name="is_taiwan_1000" value="0" hidden>
 							<button class="btn btn-warning need_chk_before_approve" type="submit">額度試算</button>
 							<button class="btn btn-danger need_chk_before_approve" data-url="/admin/Target/verify_failed"
 								id="verify_failed">不通過</button>
@@ -1124,7 +1124,7 @@
 	function send_opinion(target_id = '', group_id = '') {
 		let score = $(`#${group_id}_score`).val();
 		let opinion = $(`#${group_id}_opinion`).val();
-		let is_top_enterprise = $('#is_top_enterprise').val();
+		let is_taiwan_1000 = $('#is_taiwan_1000').val();
 		if (group_id && target_id) {
 			$.ajax({
 				type: "POST",
@@ -1134,7 +1134,7 @@
 					'score': score,
 					'opinion': opinion,
 					'group': group_id,
-					'is_top_enterprise': is_top_enterprise,
+					'is_taiwan_1000': is_taiwan_1000,
 					'type': 'person',
 				},
 				async: false,
@@ -1333,8 +1333,8 @@
 		location.reload()
         })
 
-        $('#is_top_enterprise').change(function() {
-            $('input[name=is_top_enterprise]').val($(this).val());
+        $('#is_taiwan_1000').change(function() {
+            $('input[name=is_taiwan_1000]').val($(this).val());
         });
 
 		var urlString = window.location.href;
@@ -2062,14 +2062,14 @@
 
         function fillTopSpecialList(specialList) {
 		    let company = specialList?.job_company;
-		    let is_top_enterprise = specialList?.is_top_enterprise;
+		    let is_taiwan_1000 = specialList?.is_taiwan_1000;
             company = company === undefined ? '' : company;
-            is_top_enterprise = is_top_enterprise === undefined ? 0 : is_top_enterprise;
+            is_taiwan_1000 = is_taiwan_1000 === undefined ? 0 : is_taiwan_1000;
 
             $('#job_company').text(company);
-            $('#is_top_enterprise').find("option:selected").removeAttr('selected');
-            $('#is_top_enterprise').find("option[value="+is_top_enterprise+"]").attr('selected', 'selected');
-            $('input[name=is_top_enterprise]').val(is_top_enterprise);
+            $('#is_taiwan_1000').find("option:selected").removeAttr('selected');
+            $('#is_taiwan_1000').find("option[value="+is_taiwan_1000+"]").attr('selected', 'selected');
+            $('input[name=is_taiwan_1000]').val(is_taiwan_1000);
         }
 
 		function getCenterTextCell(value, additionalCssClass = "") {
@@ -2098,11 +2098,11 @@
 			var form = $(this);
 			var url = form.attr('action');
 			var points = form.find('input[name="score"]').val();
-			var is_top_enterprise = form.find('input[name="is_top_enterprise"]').val();
+			var is_taiwan_1000 = form.find('input[name="is_taiwan_1000"]').val();
 			var remark = form.find('input[name="description"]').val();
 			$.ajax({
 				type: "GET",
-				url: url + "?id=" + caseId + "&points=" + points + "&is_top_enterprise=" + is_top_enterprise,
+				url: url + "?id=" + caseId + "&points=" + points + "&is_taiwan_1000=" + is_taiwan_1000,
 				beforeSend: function () {
 					changeReevaluationLoading(true);
 					clearCreditInfo(true);

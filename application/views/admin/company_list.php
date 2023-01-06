@@ -16,9 +16,9 @@
                             </tr>
                         </thead>
                         <tbody id="table-body">
-                        <? foreach($top_enterprise_list as $value){ ?>
+                        <? foreach($taiwan_1000_list as $key => $value){ ?>
 						    <tr>
-                                <td><?=$value?></td>
+                                <td><?=$key?></td>
                             </tr>
 						<? } ?>
                         </tbody>

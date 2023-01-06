@@ -9,9 +9,9 @@ class CompanyList extends MY_Admin_Controller
 
     public function index()
     {
-        $this->config->load('top_enterprise');
+        $this->config->load('taiwan_1000');
         $data = array(
-            'top_enterprise_list' => $this->config->item('top_enterprise')
+            'taiwan_1000_list' => $this->config->item('taiwan_1000')
         );
         $this->load->view('admin/_header');
         $this->load->view('admin/_title', $this->menu);
