@@ -21,13 +21,13 @@ class Labor_insurance_lib
     public function __construct()
     {
         $this->CI = &get_instance();
-        $this->CI->config->load('top_enterprise');
+        $this->CI->config->load('taiwan_1000');
         $this->CI->load->library('utility/labor_insurance_regex', [], 'l_regex');
         $this->CI->load->library('gcis_lib');
         $this->CI->load->model('user/user_model');
         $this->CI->load->model('user/user_meta_model');
         $this->CI->load->model('user/user_certification_model');
-        $this->topEnterprises = $this->CI->config->item("top_enterprise");
+        $this->taiwan_1000 = $this->CI->config->item('taiwan_1000');
     }
 
     public function check_labor_insurance($userId, $text, &$result)
@@ -840,7 +840,7 @@ class Labor_insurance_lib
             return $isTopCompany;
         }
 
-        if (in_array($companyName, $this->topEnterprises)) {
+        if (in_array($companyName, $this->taiwan_1000)) {
             $message["status"] = self::SUCCESS;
             $message["message"] .= "是";
             $isTopCompany = true;
