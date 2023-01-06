@@ -433,6 +433,12 @@ class Credit_lib{
                 $this->scoreHistory[] = "{$key}. {$value}";
             }
         }
+        else
+        {
+            $point = 250;
+            $total += $point;
+            $this->scoreHistory[] = "無提交最高學歷得分: {$point}";
+        }
 
         // 財務評分
         $get_financial_point = $this->get_financial_point_product_salary_man($data);
