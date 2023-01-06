@@ -1087,7 +1087,7 @@ class Product extends REST_Controller {
      *       'error': '206'
      *     }
      *
-     * @apiError 208 未滿20歲或大於35歲
+     * @apiError 208 未滿18歲或大於35歲
      * @apiErrorExample {Object} 208
      *     {
      *       'result': 'ERROR',
@@ -2820,7 +2820,7 @@ class Product extends REST_Controller {
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
             'status' => $sub_product['status'],
-            'allow_age_range' => $sub_product['allow_age_range'] ?? [20, 55],
+            'allow_age_range' => $sub_product['allow_age_range'] ?? [18, 55],
             'apply_range_s' => $sub_product['apply_range_s'] ?? null,
             'apply_range_e' => $sub_product['apply_range_e'] ?? null,
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,

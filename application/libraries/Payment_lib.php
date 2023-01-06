@@ -1479,6 +1479,13 @@ class Payment_lib{
                     }
                 }
 
+                // 取得 user_from 是否為法人
+                $user_from_list = array_keys($tax_list);
+                $this->CI->load->model('user/user_model');
+                $user_from_company_status_list = call_user_func_array('array_column', [
+                    $this->CI->user_model->get_company_status_by_ids($user_from_list), 'company_status', 'id'
+                ]);
+
                 if (!empty($tax_list)) {
                     foreach ($tax_list as $user_id => $amount) {
                         if ( ! $user_id) continue;
@@ -1490,7 +1497,16 @@ class Payment_lib{
                         if (!$today) {
                             $tax = $this->CI->financial_lib->get_tax_amount($amount);
                             $this->CI->ezpay_lib->set_amt($tax, $amount);
-                            $this->CI->ezpay_lib->set_item('influx', '平台服務費', 1, '筆', $amount);
+
+                            if ( ! empty($user_from_company_status_list[$user_id]))
+                            {
+                                $this->CI->ezpay_lib->set_item('influx', '平台服務費', 1, '筆', ($amount - $tax));
+                            }
+                            else
+                            {
+                                $this->CI->ezpay_lib->set_item('influx', '平台服務費', 1, '筆', $amount);
+                            }
+
                             $tax_info = $this->CI->ezpay_lib->send($user_id);
                             if ($tax_info) {
                                 $this->CI->receipt_model->insert(array(
@@ -1570,6 +1586,14 @@ class Payment_lib{
                 }
                 $tax_list[$value->user_from][$value->source] += $value->amount;
             }
+
+            // 取得 user_from 是否為法人
+            $user_from_list = array_keys($tax_list);
+            $this->CI->load->model('user/user_model');
+            $user_from_company_status_list = call_user_func_array('array_column', [
+                $this->CI->user_model->get_company_status_by_ids($user_from_list), 'company_status', 'id'
+            ]);
+
             if ( ! empty($tax_list))
             {
                 foreach ($tax_list as $user_id => $tax)
@@ -1594,6 +1618,14 @@ class Payment_lib{
                             $item_name[] = $receipt_item_name[$source];
                             $item_count[] = 1;
                             $item_unit[] = '筆';
+
+                            if ( ! empty($user_from_company_status_list[$user_id]))
+                            {
+                                $item_tax_amt = $this->CI->financial_lib->get_tax_amount($amount);
+                                $item_price[] = $amount - $item_tax_amt;
+                                $total_amt += $amount;
+                                continue;
+                            }
                             $item_price[] = $amount;
                             $total_amt += $amount;
                         }

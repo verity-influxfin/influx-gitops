@@ -102,7 +102,7 @@ defined('INVALID_EMAIL_FORMAT')  		OR define('INVALID_EMAIL_FORMAT'		, 204); //E
 defined('NOT_INVERTOR')  				OR define('NOT_INVERTOR'				, 205); //請登入出借端
 defined('FACE_ERROR')  					OR define('FACE_ERROR'					, 206); //人臉辨識錯誤
 defined('IS_INVERTOR')  				OR define('IS_INVERTOR'					, 207); //請登入借款端
-defined('UNDER_AGE')  					OR define('UNDER_AGE'					, 208); //未滿20歲
+defined('UNDER_AGE')  					OR define('UNDER_AGE'					, 208); //未滿18歲
 defined('NO_TRANSACTION_PASSWORD')  	OR define('NO_TRANSACTION_PASSWORD'		, 209); //未設置交易密碼
 defined('TRANSACTION_PASSWORD_ERROR')  	OR define('TRANSACTION_PASSWORD_ERROR'	, 210); //交易密碼錯誤
 defined('NOT_ENOUGH_FUNDS')  			OR define('NOT_ENOUGH_FUNDS'			, 211); //可用餘額不足
