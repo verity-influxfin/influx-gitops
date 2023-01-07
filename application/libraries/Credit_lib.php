@@ -1059,7 +1059,7 @@ class Credit_lib{
 
         // 2.職業情況
         if (isset($data['job_type'])) {
-            $job_type_point =  $data['job_type'] ? 50 : 100;
+            $job_type_point =  $data['job_type'] ? 100 : 50;
             $point += $job_type_point;
             $score_history[] = '職務性質(內/外勤): ' . $job_type_point;
         }
