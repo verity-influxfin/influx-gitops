@@ -486,6 +486,7 @@ class Credit_lib{
         // 每增加一個社交帳戶ID+100、調整係數0.5
         // 至多150分
         $cert_social_score = min(($cert_social_score * 0.5), 150);
+        $total += $cert_social_score;
         $this->scoreHistory[] = '提供社交帳戶認證ID: ' . $cert_social_score;
 
         if ($stage_cer)
