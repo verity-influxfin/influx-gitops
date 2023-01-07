@@ -1054,6 +1054,7 @@ class Credit_lib{
             $job_company_point[] = $this->get_job_company_in_medical_institute($data['job_company']);
 
             $job_company_point_max = max($job_company_point);
+            $point += $job_company_point_max;
             $score_history[] = '服務機構: ' . $job_company_point_max;
         }
 
