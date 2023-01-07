@@ -157,7 +157,7 @@ class Cert_social extends Certification_base
                     'posts_in_3months'      => $risk_res['postsIn3Months'] ?? '',
                     'posts_in_1months'       => (int) $risk_res['postsIn1Months'] ?? '', // 一個月內發文數
                     'key_word'              => $risk_res['postsWithKeyWords'] ?? '',
-                    'followers_grow_rate_in_3month' => (double) $risk_res['followersGrowRateIn3Month'] ?? '', // 三個月內增幅
+                    'followers_grow_rate_in_3month' => (double) $risk_res['followersGrowRateIn3Months'] ?? '', // 三個月內增幅
                 ];
 
                 // 帳號是否存在
