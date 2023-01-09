@@ -566,12 +566,18 @@ $config['permission'] = [
         ],
     ],
     'companyList' => [
-        'name' => '千大企業清單',
+        'name' => '優質企業',
         'menu' => [
-            'index' => ['name' => '千大企業清單'],
+            'index' => ['name' => '台灣千大企業'],
+            'world_500' => ['name' => '世界500大企業'],
+            'medical_institute' => ['name' => '醫療院所'],
+            'public_agency' => ['name' => '公家機關'],
         ],
         'permission' => [
-            'index' => ['model' => 'companyList', 'submodel' => 'index', 'action' => 'read']
+            'index' => ['model' => 'companyList', 'submodel' => 'index', 'action' => 'read'],
+            'world_500' => ['model' => 'companyList', 'submodel' => 'world_500', 'action' => 'read'],
+            'medical_institute' => ['model' => 'companyList', 'submodel' => 'medical_institute', 'action' => 'read'],
+            'public_agency' => ['model' => 'companyList', 'submodel' => 'public_agency', 'action' => 'read'],
         ],
     ],
     'Certificationreport' => [
