@@ -2,12 +2,12 @@
   <div class="college-loan">
     <div class="banner">
       <img
-        src="@/asset/images/collegeLoan/college-cover.png"
+        src="@/asset/images/collegeLoan/college-cover.jpg"
         alt="普匯學生貸banner"
         class="w-100 d-sm-block d-none"
       />
       <img
-        src="@/asset/images/collegeLoan/college-cover-phone.png"
+        src="@/asset/images/collegeLoan/college-cover-phone.jpg"
         alt="普匯學生貸手機banner"
         class="img-fluid d-block d-sm-none mx-auto w-100"
       />

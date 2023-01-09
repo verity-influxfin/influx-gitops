@@ -3,7 +3,7 @@
     <banner :data="bannerData" :isBorrow="true"></banner>
     <target
       :items="applyData.item"
-      text="滿20歲的在校生，準備您的雙證件、學生證、金融卡，在APP上拍照上傳，立即核准！"
+      text="滿18歲的在校生，準備您的雙證件、學生證、金融卡，在APP上拍照上傳，立即核准！"
     ></target>
     <apply title="申貸簡便四步驟" :step="applyData.step" />
     <div class="partner-card">
