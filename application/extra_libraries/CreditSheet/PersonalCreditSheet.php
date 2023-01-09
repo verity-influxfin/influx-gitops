@@ -214,8 +214,17 @@ class PersonalCreditSheet extends CreditSheetBase {
         $reviewedInfoList = $this->CI->credit_sheet_review_model->get_many_by(
             ['credit_sheet_id' => $this->creditSheetRecord->id]);
 
-        $target_meta = $this->CI->target_meta_model->get_by(['target_id' => $this->target->id, 'meta_key' => 'is_taiwan_1000']);
-        $is_taiwan_1000 = $target_meta->meta_value ?? NULL;
+        $target_meta = $this->CI->target_meta_model->as_array()->get_many_by(['target_id' => $this->target->id, 'meta_key' => [
+            'is_taiwan_1000',
+            'is_world_500',
+            'is_medical_institute',
+            'is_public_agency',
+        ]]);
+        $target_meta = array_column($target_meta, 'meta_value', 'meta_key');
+        $is_taiwan_1000 = $target_meta['is_taiwan_1000'] ?? NULL;
+        $is_world_500 = $target_meta['is_world_500'] ?? NULL;
+        $is_medical_institute = $target_meta['is_medical_institute'] ?? NULL;
+        $is_public_agency = $target_meta['is_public_agency'] ?? NULL;
 
         // 上班族階段上架 或 非階段上架之其他產品
         if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
@@ -227,6 +236,18 @@ class PersonalCreditSheet extends CreditSheetBase {
             if (isset($is_taiwan_1000))
             {
                 $this->CI->approvalextra->setSpecialInfo(['is_taiwan_1000' => $is_taiwan_1000]);
+            }
+            if (isset($is_world_500))
+            {
+                $this->CI->approvalextra->setSpecialInfo(['is_world_500' => $is_world_500]);
+            }
+            if (isset($is_medical_institute))
+            {
+                $this->CI->approvalextra->setSpecialInfo(['is_medical_institute' => $is_medical_institute]);
+            }
+            if (isset($is_public_agency))
+            {
+                $this->CI->approvalextra->setSpecialInfo(['is_public_agency' => $is_public_agency]);
             }
 
             // 上班族階段上架

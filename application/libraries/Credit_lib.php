@@ -1123,7 +1123,7 @@ class Credit_lib{
      * @param $job_company : 任職公司名稱
      * @return int
      */
-    private function get_job_company_in_world_500($job_company):int
+    public function get_job_company_in_world_500($job_company):int
     {
         $this->CI->load->config('world_500');
         $world_500_list = $this->CI->config->item('world_500');
@@ -1135,7 +1135,7 @@ class Credit_lib{
      * @param $job_company
      * @return int
      */
-    private function get_job_company_in_public_agency($job_company):int
+    public function get_job_company_in_public_agency($job_company):int
     {
         $this->CI->load->config('public_agency');
         $public_agency_list = $this->CI->config->item('public_agency');
@@ -1147,7 +1147,7 @@ class Credit_lib{
      * @param $job_company : 任職公司名稱
      * @return int
      */
-    private function get_job_company_in_taiwan_1000($job_company): int
+    public function get_job_company_in_taiwan_1000($job_company): int
     {
         $this->CI->load->config('taiwan_1000');
         $taiwan_1000_list = $this->CI->config->item('taiwan_1000');
@@ -1159,7 +1159,7 @@ class Credit_lib{
      * @param $job_company : 任職公司名稱
      * @return int
      */
-    private function get_job_company_in_medical_institute($job_company): int
+    public function get_job_company_in_medical_institute($job_company): int
     {
         $this->CI->load->config('medical_institute');
         $medical_institute_list = $this->CI->config->item('medical_institute');
