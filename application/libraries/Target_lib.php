@@ -3052,4 +3052,76 @@ class Target_lib
             'certificate_status' => [TARGET_CERTIFICATE_SUBMITTED, TARGET_CERTIFICATE_RE_SUBMITTING]
         ]);
     }
+
+    public function check_is_taiwan_1000($target_meta, $job_company)
+    {
+        if (isset($target_meta['is_taiwan_1000']))
+        {
+            $is_taiwan_1000 = $target_meta['is_taiwan_1000'];
+        }
+        else if ( ! empty($job_company))
+        {
+            $this->CI->load->library('credit_lib');
+            $is_taiwan_1000 = $this->CI->credit_lib->get_job_company_in_taiwan_1000($job_company) > 0 ? 1 : 0;
+        }
+        else
+        {
+            $is_taiwan_1000 = 0;
+        }
+        return $is_taiwan_1000;
+    }
+
+    public function check_is_world_500($target_meta, $job_company)
+    {
+        if (isset($target_meta['is_world_500']))
+        {
+            $is_world_500 = $target_meta['is_world_500'];
+        }
+        else if ( ! empty($job_company))
+        {
+            $this->CI->load->library('credit_lib');
+            $is_world_500 = $this->CI->credit_lib->get_job_company_in_world_500($job_company) > 0 ? 1 : 0;
+        }
+        else
+        {
+            $is_world_500 = 0;
+        }
+        return $is_world_500;
+    }
+
+    public function check_is_public_agency($target_meta, $job_company)
+    {
+        if (isset($target_meta['is_public_agency']))
+        {
+            $is_public_agency = $target_meta['is_public_agency'];
+        }
+        else if ( ! empty($job_company))
+        {
+            $this->CI->load->library('credit_lib');
+            $is_public_agency = $this->CI->credit_lib->get_job_company_in_public_agency($job_company) > 0 ? 1 : 0;
+        }
+        else
+        {
+            $is_public_agency = 0;
+        }
+        return $is_public_agency;
+    }
+
+    public function check_is_medical_institute($target_meta, $job_company)
+    {
+        if (isset($target_meta['is_medical_institute']))
+        {
+            $is_medical_institute = $target_meta['is_medical_institute'];
+        }
+        else if ( ! empty($job_company))
+        {
+            $this->CI->load->library('credit_lib');
+            $is_medical_institute = $this->CI->credit_lib->get_job_company_in_medical_institute($job_company) > 0 ? 1 : 0;
+        }
+        else
+        {
+            $is_medical_institute = 0;
+        }
+        return $is_medical_institute;
+    }
 }
