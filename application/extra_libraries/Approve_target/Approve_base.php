@@ -429,10 +429,10 @@ abstract class Approve_base implements Approve_interface
             // 無條件進位使用額度 (基本單位為千，詳細需視產品辦法而定)
             $amount_unit = $this->get_loan_amount_unit();
             $used_amount = ($used_amount % $amount_unit != 0)
-                ? ceil($used_amount * 0.001) * $amount_unit
+                ? ceil($used_amount / $amount_unit) * $amount_unit
                 : $used_amount;
             $other_used_amount = ($other_used_amount % $amount_unit != 0)
-                ? ceil($other_used_amount * 0.001) * $amount_unit
+                ? ceil($other_used_amount / $amount_unit) * $amount_unit
                 : $other_used_amount;
         }
 
@@ -458,7 +458,7 @@ abstract class Approve_base implements Approve_interface
 
             // 金額取整
             $loan_amount = ($loan_amount % $amount_unit != 0)
-                ? floor($loan_amount * 0.001) * $amount_unit
+                ? floor($loan_amount / $amount_unit) * $amount_unit
                 : $loan_amount;
 
             if ($loan_amount < $this->product_config['loan_range_s'])
