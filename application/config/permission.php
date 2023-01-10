@@ -264,6 +264,7 @@ $config['permission'] = [
             'sendskbank' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'getskbank' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'save_meta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'save_job_meta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'getmeta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'job_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'joint_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],

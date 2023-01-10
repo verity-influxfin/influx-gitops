@@ -166,6 +166,10 @@
                                         <label>月薪</label><br />
                                         <p class="form-control-static"><?=isset($content['salary'])?$content['salary']:""?></p>
                                     </div>
+                                    <div class="form-group">
+                                        <label>專業證書是否有效</label><br />
+                                        <p class="form-control-static"><?= $content['job_has_license'] === '1' ? '是' : '否' ?></p>
+                                    </div>
                                     <?}else{?>
                                         <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                             <div class="form-group">
@@ -176,7 +180,23 @@
                                             </div>
                                             <button type="submit" class="btn btn-primary">修改月薪</button>
                                         </form><br />
-                                    <? } ?>
+                                        <?php
+                                        if (in_array($data->status, [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_PENDING_TO_REVIEW]))
+                                        { ?>
+                                            <form role="form" method="post"
+                                                  action="/admin/certification/save_job_meta">
+                                                <div class="form-group">
+                                                    <label>專業證書是否有效</label><br/>
+                                                    <select name="job_has_license">
+                                                        <option value="0">否</option>
+                                                        <option value="1">是</option>
+                                                    </select>
+                                                    <input type="hidden" name="id" value="<?= $data->id ?? ''; ?>">
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">修改專業證書是否有效</button>
+                                            </form><br/>
+                                        <?php }
+                                    } ?>
 									<?
 										if (isset($content['incomeDate'])) {
 											echo '
@@ -340,7 +360,7 @@
                                                 echo '<br /><br /><br />';
                                             }?>
 
-                                            <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['license_image'])||isset($content['programming_language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
+                                            <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['programming_language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
                                                 echo '<h4>【其他輔助證明】</h4>';
                                                 if (isset($content['programming_language'])) {
                                                     echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
@@ -365,18 +385,6 @@
                                                     foreach($content['auxiliary_image'] as $key => $value){
                                                         echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
                                                     }
-                                                    echo '</div>';
-                                                }
-                                                if (isset($content['license_image'])) {
-                                                    !is_array($content['license_image'])?$content['license_image']=[$content['license_image']]:'';
-                                                    echo '<div class="form-group"><label for="disabledSelect">其他專業證明證照</label><br>';
-													if(isset($content['license_des'])){
-														$arr_license_desc = explode(',',$content['license_des']);
-	                                                    foreach($content['license_image'] as $key => $value){
-	                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
-	                                                         echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
-	                                                    }
-													}
                                                     echo '</div>';
                                                 }
                                                 if (isset($content['pro_certificate_image'])) {
@@ -406,8 +414,24 @@
                                             }
                                             echo '</div>';
                                           }
-                                        }?>
 
+                                            if (isset($content['license_image']))
+                                            {
+                                                $content['license_image'] = ! is_array($content['license_image']) ? [$content['license_image']] : $content['license_image'];
+                                                echo '<div class="form-group"><label for="disabledSelect">其他專業證明證照</label><br>';
+                                                if (isset($content['license_des']))
+                                                {
+                                                    $arr_license_desc = explode(',', $content['license_des']);
+                                                    foreach ($content['license_image'] as $key => $value)
+                                                    {
+                                                        echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:30%;max-width:400px"></a><br>';
+                                                        echo '圖片說明：' . (isset($arr_license_desc[$key]) && ! empty($arr_license_desc[$key]) ? $arr_license_desc[$key] : '未填寫說明') . "<br><br>";
+                                                    }
+                                                }
+                                                echo '</div>';
+                                            }
+
+                                        }?>
 									</fieldset>
 								</div>
                             </div>
@@ -433,3 +457,9 @@
                 padding: 2px 2px 2px 2px;
             }
         </style>
+        <script>
+            $(document).ready(function () {
+                let job_has_license = '<?php echo $job_has_license = $content['job_has_license'] ? 1 : 0; ?>';
+                $('select[name="job_has_license"]').val(job_has_license);
+            });
+        </script>
