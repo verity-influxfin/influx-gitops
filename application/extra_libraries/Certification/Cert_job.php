@@ -231,10 +231,10 @@ class Cert_job extends Cert_pdf
             'job_license' => $this->content['license_status'] ?? '',
             'job_pro_level' => $this->content['pro_level'] ?? '',
             'game_work_level' => $this->content['game_work_level'] ?? '',
+            'job_programming_language' => $this->content['programming_language'] ?? '',
+            'job_title' => $this->content['job_title'] ?? '',
+            'job_has_license' => $this->content['job_has_license']
         ];
-
-        $data['job_programming_language'] = $this->content['programming_language'] ?? '';
-        $data['job_title'] = $this->content['job_title'] ?? '';
 
         $this->CI->certification_lib->user_meta_progress($data, $this->certification);
 
