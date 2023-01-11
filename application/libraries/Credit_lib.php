@@ -1051,7 +1051,8 @@ class Credit_lib{
             $point += $job_salary_point;
             $score_history[] = '薪資: ' . $job_salary_point;
         }
-        if (isset($data['job_license']) && $data['job_license']) {
+        if ( ! empty($data['job_has_license']) && $data['job_has_license'] === '1')
+        {
             $job_license_point = 100;
             $point += $job_license_point;
             $score_history[] = '提供專業證書: ' . $job_license_point;
