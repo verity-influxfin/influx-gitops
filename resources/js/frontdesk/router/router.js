@@ -49,6 +49,7 @@ import smeIndex from '../pages/BusinessLoan/smeLoan'
 import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
 import smeg from '../pages/BusinessLoan/smeg'
+import article1 from '../pages/article/article1'
 import campus2022 from '../pages/2022_campus_ambassador/index'
 import campus2022Apply from '../pages/2022_campus_ambassador/applyTemplate'
 import campus2022Group from '../pages/2022_campus_ambassador/group'
@@ -154,6 +155,7 @@ let routers = [
     {path:'/charitable',component:ntu},
     { path: '/charitable-status', component: charitableStatus},
     { path: '/search',name:'search', component: search },
+    { path: '/article/fintech-development', component: article1 },
 ];
 
 export default routers;
