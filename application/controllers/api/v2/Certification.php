@@ -3555,7 +3555,8 @@ class Certification extends REST_Controller {
                 }
             }
 
-            $file_fields = ['legal_person_mq_image','postal_image'];
+            // todo: 這裡的 key 有新舊 key，現在很混沌，所以都寫進來
+            $file_fields = ['legal_person_mq_image','postal_image', 'receipt_postal_image', 'receipt_jcic_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 if (empty($input[$field])) continue;
@@ -3975,8 +3976,7 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['governmentauthorities_image', 'CompName',
-                'CompId', 'CompDate', 'CompCapital', 'CompRegAddress', 'PrName'];
+            $fields 	= ['governmentauthorities_image'];
             foreach ($fields as $field)
             {
                 if (empty($input[$field]))
@@ -3985,11 +3985,11 @@ class Certification extends REST_Controller {
                 }
                 else
                 {
-                    $content[lcfirst($field)] = $input[$field];
+                    $content[$field] = $input[$field];
                 }
             }
 
-            if (strlen($content['compId']) != 8)
+            if (strlen($input['CompId']) != 8)
             {
                 $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
             }

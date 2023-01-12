@@ -5083,7 +5083,7 @@ define({
         },
         {
             "type": "post",
-            "url": "/V2/post/certification/governmentauthorities",
+            "url": "/v2/post/certification/governmentauthorities",
             "title": "認證 設立(變更)事項登記表(法人)",
             "version": "0.2.0",
             "name": "PostCertificationGovernmentAuthorities",
@@ -5114,26 +5114,44 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "compName",
+                            "field": "CompName",
                             "description": "<p>公司名稱</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "compId",
+                            "field": "CompId",
                             "description": "<p>統一編號</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "compDate",
+                            "field": "CompDate",
                             "description": "<p>戳章日期</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "prName",
+                            "field": "CompCapital",
+                            "description": "<p>公司資本額</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompRegAddress",
+                            "description": "<p>公司登記地址</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "PrName",
                             "description": "<p>負責人姓名</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "PrincipalId",
+                            "description": "<p>負責人身分證</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
@@ -7130,6 +7148,18 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
+                            "field": "compFax",
+                            "description": "<p>企業聯絡人傳真</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "compContact",
+                            "description": "<p>企業聯絡人職稱</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
                             "field": "compEmail",
                             "description": "<p>企業Email</p>"
                         }, {
@@ -7156,6 +7186,13 @@ define({
                             "optional": true,
                             "field": "hasForeignInvestment",
                             "description": "<p>是否有海外投資 1:是 0:否</p>",
+                            "allowedValues": ["0", "1"],
+                        }, {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "getRelief",
+                            "description": "<p>支票存款戶經票據交換所註記為 ⌜紓困⌟ 1:是 0:否</p>",
                             "allowedValues": ["0", "1"],
                         }, {
                             "group": "Parameter",
