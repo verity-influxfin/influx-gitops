@@ -293,4 +293,29 @@ class User_model extends MY_Model
 
         return $info['name'] ?? '';
     }
+
+    public function get_company_list_with_identity_status($phone)
+    {
+        $sub_query = $this->db->select('id')->where('phone', $phone)->where('company_status', USER_IS_COMPANY)->get_compiled_select('p2p_user.users', TRUE);
+
+        $sub_query = $this->db
+            ->select(['MAX(id)', 'user_id', 'status'])
+            ->where("user_id IN ({$sub_query})")
+            ->where('certification_id', CERTIFICATION_GOVERNMENTAUTHORITIES)
+            ->where('status !=', CERTIFICATION_STATUS_FAILED)
+            ->group_by('user_id')
+            ->get_compiled_select('p2p_user.user_certification', TRUE);
+        
+        return $this->db
+            ->select('id')
+            ->select('name')
+            ->select('id_number as tax')
+            ->select('a.status')
+            ->from('p2p_user.users')
+            ->join("($sub_query) as a", 'a.user_id=users.id', 'LEFT')
+            ->where('phone', $phone)
+            ->where('company_status', USER_IS_COMPANY)
+            ->get()
+            ->result_array();
+    }
 }

@@ -1449,4 +1449,26 @@ class User_lib {
             throw new Exception('統編長度有誤', TAX_ID_LENGTH_ERROR);
         }
     }
+
+    // 取得相同負責人的公司列表，及其負責人實名的情況
+    // 0:未提交 1:已通過 2:審核中
+    public function get_company_list_with_identity_status($phone)
+    {
+        $this->CI->load->model('user/user_model');
+        $result = $this->CI->user_model->get_company_list_with_identity_status($phone);
+        array_walk($result, function (&$element) {
+            switch ($element['status'])
+            {
+                case NULL:
+                    $element['status'] = 0;
+                    break;
+                case CERTIFICATION_STATUS_SUCCEED:
+                    $element['status'] = 1;
+                    break;
+                default:
+                    $element['status'] = 2;
+            }
+        });
+        return $result;
+    }
 }

@@ -47448,13 +47448,20 @@ define({
                             "optional": false,
                             "field": "data.company_list.tax",
                             "description": "<p>公司統編</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "data.company_list.status",
+                            "description": "<p>變卡狀態(0:未提交 1:已通過 2:審核中)</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n    \"company_list\": [\n      {\n        \"id\": \"1000326\",\n        \"name\": \"嗷創意有限公司\"\n        \"tax\": \"97291671\"\n      }\n    ]\n  }\n}",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n    \"company_list\": [\n      {\n        \"id\": \"1000326\",\n        \"name\": \"嗷創意有限公司\",\n        \"tax\": \"97291671\",\n        \"status\": 1\n      }\n    ]\n  }\n}",
                         "type": "Object"
                     }
                 ]
