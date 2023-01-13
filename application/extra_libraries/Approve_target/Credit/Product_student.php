@@ -95,6 +95,6 @@ class Product_student extends Approve_target_credit_base
             return FALSE;
         }
 
-        return FALSE;
+        return TRUE;
     }
 }
