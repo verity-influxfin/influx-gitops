@@ -14,9 +14,10 @@ interface Approve_interface
     /**
      * 案件審核成功
      * @param bool $renew : 是否為人工同意通過
+     * @param bool $subloan_status
      * @return mixed
      */
-    public function set_target_success(bool $renew);
+    public function set_target_success(bool $renew, bool $subloan_status);
 
     /**
      * 案件審核失敗

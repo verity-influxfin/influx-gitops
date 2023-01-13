@@ -178,6 +178,7 @@ defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);
 defined('PICTURE_NOT_EXIST')  		OR define('PICTURE_NOT_EXIST'		, 423);
 defined('PRODUCT_HAS_NO_CREDIT') or define('PRODUCT_HAS_NO_CREDIT', 424); // 該產品已無額度，不起新案
 defined('BLACK_LIST_APPLY_PRODUCT') OR define('BLACK_LIST_APPLY_PRODUCT', 426);
+defined('PRODUCT_CANNOT_BOOK_TIME') or define('PRODUCT_CANNOT_BOOK_TIME', 427); // 無法預約時段
 
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501);
@@ -214,6 +215,15 @@ defined('CERTIFICATION_FINANCIALWORKER')   OR define('CERTIFICATION_FINANCIALWOR
 defined('CERTIFICATION_REPAYMENT_CAPACITY') or define('CERTIFICATION_REPAYMENT_CAPACITY', 15); // 還款力
 defined('CERTIFICATION_CRIMINALRECORD') OR define('CERTIFICATION_CRIMINALRECORD'     , 20);
 defined('CERTIFICATION_SOCIAL_INTELLIGENT') or define('CERTIFICATION_SOCIAL_INTELLIGENT', 21); // 名校貸社交帳號
+defined('CERTIFICATION_HOUSE_CONTRACT') or define('CERTIFICATION_HOUSE_CONTRACT', 22); // 購屋合約
+defined('CERTIFICATION_HOUSE_RECEIPT') or define('CERTIFICATION_HOUSE_RECEIPT', 23); // 購屋發票
+defined('CERTIFICATION_RENOVATION_CONTRACT') or define('CERTIFICATION_RENOVATION_CONTRACT', 24); // 裝修合約
+defined('CERTIFICATION_RENOVATION_RECEIPT') or define('CERTIFICATION_RENOVATION_RECEIPT', 25); // 裝修發票
+defined('CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT') or define('CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT', 26); // 傢俱家電合約或發票收據
+defined('CERTIFICATION_HOUSE_DEED') or define('CERTIFICATION_HOUSE_DEED', 27); // 房屋所有權狀
+defined('CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS') or define('CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS', 28); // 土地建物謄本
+defined('CERTIFICATION_SITE_SURVEY_VIDEO') or define('CERTIFICATION_SITE_SURVEY_VIDEO', 29); // 入屋現勘/遠端視訊影片
+defined('CERTIFICATION_SITE_SURVEY_BOOKING') or define('CERTIFICATION_SITE_SURVEY_BOOKING', 30); // 入屋現勘/遠端視訊預約時間
 
 defined('CERTIFICATION_SIMPLIFICATIONFINANCIAL') or define('CERTIFICATION_SIMPLIFICATIONFINANCIAL', 500);
 defined('CERTIFICATION_SIMPLIFICATIONJOB') or define('CERTIFICATION_SIMPLIFICATIONJOB', 501);
@@ -409,18 +419,23 @@ defined('PRODUCT_ID_STUDENT') or define('PRODUCT_ID_STUDENT', 1);               
 defined('PRODUCT_ID_STUDENT_ORDER') or define('PRODUCT_ID_STUDENT_ORDER', 2);       // 學生手機貸款
 defined('PRODUCT_ID_SALARY_MAN') or define('PRODUCT_ID_SALARY_MAN', 3);             // 上班族貸
 defined('PRODUCT_ID_SALARY_MAN_ORDER') or define('PRODUCT_ID_SALARY_MAN_ORDER', 4); // 上班族消費貸
+defined('PRODUCT_ID_HOME_LOAN') or define('PRODUCT_ID_HOME_LOAN', 5);               // 房貸
 defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000);  // 外匯車商
 defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002);      // 普匯信保專案融資
 
 defined('PRODUCT_FOR_JUDICIAL') or define('PRODUCT_FOR_JUDICIAL', 1000); //法人產品ID範圍
-defined('PRODUCT_TAB_INDIVIDUAL') or define('PRODUCT_TAB_INDIVIDUAL', 'individual'); // 個金產品類型名稱
+defined('PRODUCT_TAB_INDIVIDUAL') or define('PRODUCT_TAB_INDIVIDUAL', 'individual'); // 個金產品類型名稱 (除不動產融資)
 defined('PRODUCT_TAB_ENTERPRISE') or define('PRODUCT_TAB_ENTERPRISE', 'enterprise'); // 企金產品類型名稱
+defined('PRODUCT_TAB_HOME_LOAN') or define('PRODUCT_TAB_HOME_LOAN', 'home_loan'); // 不動產融資產品類型名稱
 
 // sub-product
 defined('SUBPRODUCT_INTELLIGENT_STUDENT') or define('SUBPRODUCT_INTELLIGENT_STUDENT', 6); // 3S名校貸
 defined('SUB_PRODUCT_ID_SALARY_MAN_CAR') or define('SUB_PRODUCT_ID_SALARY_MAN_CAR', 7); // 上班族貸(購車)
 defined('SUB_PRODUCT_ID_SALARY_MAN_HOUSE') or define('SUB_PRODUCT_ID_SALARY_MAN_HOUSE', 8); // 上班族貸(購房)
 defined('SUB_PRODUCT_ID_SALARY_MAN_RENOVATION') or define('SUB_PRODUCT_ID_SALARY_MAN_RENOVATION', 9); // 上班族貸(裝修)
+defined('SUB_PRODUCT_ID_HOME_LOAN_SHORT') or define('SUB_PRODUCT_ID_HOME_LOAN_SHORT', 10); // 房貸(不足額)
+defined('SUB_PRODUCT_ID_HOME_LOAN_RENOVATION') or define('SUB_PRODUCT_ID_HOME_LOAN_RENOVATION', 11); // 房貸(裝修)
+defined('SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES') or define('SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES', 12); // 房貸(家電)
 defined('SUB_PRODUCT_ID_SK_MILLION') or define('SUB_PRODUCT_ID_SK_MILLION', 5002); // 普匯信保專案融資(微企貸)
 defined('SUB_PRODUCT_ID_CREDIT_INSURANCE') or define('SUB_PRODUCT_ID_CREDIT_INSURANCE', 5003); // 普匯信保專案融資(擴大信保)
 
@@ -637,6 +652,7 @@ defined('UnknownMethod')  	            OR define('UnknownMethod'		        , 360)
 defined('ItemNotFound')  	            OR define('ItemNotFound'		        , 361);//商品不存在
 defined('ApplyFail')  	                OR define('ApplyFail'		            , 362);//訂單建立失敗
 defined('CooperationAccountNotFound') OR define('CooperationAccountNotFound' , 363);//法人帳號不存在
+defined('SUB_SYSTEM_REQUEST_ERROR') OR define('SUB_SYSTEM_REQUEST_ERROR' , 364); // 無法訪問子系統
 
 defined('COOPER_ID')   			OR define('COOPER_ID'				, getenv('ENV_COOPER_ID'));
 defined('COOPER_KEY')   			OR define('COOPER_KEY'				, getenv('ENV_COOPER_KEY'));

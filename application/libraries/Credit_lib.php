@@ -73,13 +73,13 @@ class Credit_lib{
 
             if(!$mix_credit){
                 //few target
-                $repayment_target  = $this->CI->target_model->order_by('loan_date','asc')->get_by([
+                $target  = $this->CI->target_model->order_by('loan_date','asc')->get_by([
                     'user_id'     => $user_id,
                     'status'      => 5,
                     'loan_date >' => date('Y-m-d',strtotime("-2 months", time())),
                 ]);
-                if($repayment_target){
-                    $expire_time = strtotime("+2 months", strtotime($repayment_target->loan_date));
+                if($target){
+                    $expire_time = strtotime("+2 months", strtotime($target->loan_date));
                 }
             }
 
@@ -632,6 +632,275 @@ class Credit_lib{
 	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
 		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);
 	}
+
+    // 不動產融資
+    private function approve_5($user_id, $product_id, $sub_product_id, $expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target)
+    {
+        // todo: 上班族貸信評會修改，到時候要記得也改這邊
+        $total = 0;
+        $param = [
+            'user_id' => $user_id,
+            'product_id' => $product_id,
+            'sub_product_id' => $sub_product_id,
+            'amount' => 0,
+            'instalment' => $instalment
+        ];
+
+        $user_meta_info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
+        $user_info = $this->CI->user_model->get($user_id);
+        $data = [];
+        foreach ($user_meta_info as $value)
+        {
+            $data[$value->meta_key] = $value->meta_value;
+        }
+
+        //畢業學校
+        if ( ! empty($data['diploma_name']))
+        {
+            $get_school_point = $this->get_school_point($data['diploma_name'], $data['diploma_system'], '', $data['diploma_department']);
+            $total += ((int) ($get_school_point['point'] ?? 0)) * 0.6;
+            $school_point_score_history = implode($get_school_point['score_history'] ?? [], ' + ');
+            $this->scoreHistory[] = "( {$school_point_score_history} ) * 0.6";
+        }
+
+        if (isset($data['job_type']))
+        {
+            $job_type_point = $data['job_type'] ? 50 : 100;
+            $total += $job_type_point;
+            $this->scoreHistory[] = '職務性質(內/外勤): ' . $job_type_point;
+        }
+
+        if (isset($data['job_salary']))
+        {
+            $job_salary_point = $this->get_job_salary_point(intval($data['job_salary']));
+            $total += $job_salary_point;
+            $this->scoreHistory[] = '薪資: ' . $job_salary_point;
+        }
+
+        if (isset($data['job_license']) && $data['job_license'])
+        {
+            $job_license_point = 100;
+            $total += $job_license_point;
+            $this->scoreHistory[] = '提供專業證書: ' . $job_license_point;
+        }
+
+        if (isset($data['job_employee']))
+        {
+            $job_employee_point = $this->get_job_employee_point(intval($data['job_employee']));
+            $total += $job_employee_point;
+            $this->scoreHistory[] = '任職公司規模: ' . $job_employee_point;
+        }
+
+        if (isset($data['job_position']))
+        {
+            $job_position_point = $this->get_job_position_point(intval($data['job_position']));
+            $total += $job_position_point;
+            $this->scoreHistory[] = '職位: ' . $job_position_point;
+        }
+
+        if (isset($data['job_seniority']))
+        {
+            $job_seniority_point = $this->get_job_seniority_point(intval($data['job_seniority']), intval($data['job_salary']));
+            $total += $job_seniority_point;
+            $this->scoreHistory[] = '畢業以來的工作期間: ' . $job_seniority_point;
+        }
+
+        if (isset($data['job_company_seniority']))
+        {
+            $job_company_seniority_point = $this->get_job_seniority_point(intval($data['job_company_seniority']), intval($data['job_salary']));
+            $total += $job_company_seniority_point;
+            $this->scoreHistory[] = '此公司工作期間: ' . $job_company_seniority_point;
+        }
+
+        if (isset($data['job_industry']))
+        {
+            $job_industry_point = $this->get_job_industry_point($data['job_industry']);
+            $total += $job_industry_point;
+            $this->scoreHistory[] = '公司類型: ' . $job_industry_point;
+        }
+
+        // 聯徵
+        if (isset($data['investigation_status']) && ! empty($data['investigation_status']))
+        {
+            if (isset($data['investigation_times']))
+            {
+                $investigation_times_point = $this->get_investigation_times_point(intval($data['investigation_times']));
+                $total += $investigation_times_point;
+                $this->scoreHistory[] = '聯徵查詢次數: ' . $investigation_times_point;
+            }
+
+            if (isset($data['investigation_credit_rate']))
+            {
+                $investigation_credit_rate_point = $this->get_investigation_rate_point(intval($data['investigation_credit_rate']));
+                $total += $investigation_credit_rate_point;
+                $this->scoreHistory[] = '聯徵信用卡使用率: ' . $investigation_credit_rate_point;
+            }
+
+            if (isset($data['investigation_months']))
+            {
+                $data['investigation_months'] = (int) $data['investigation_months'];
+                $investigation_months_point = $this->get_investigation_months_point($data['investigation_months']);
+                $total += $investigation_months_point;
+                $this->scoreHistory[] = '聯徵信用記錄' . $data['investigation_months'] . '個月: ' . $investigation_months_point;
+            }
+        }
+
+        $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
+        if ($approvalExtra)
+        {
+            if ($approvalExtra->getExtraPoints())
+            {
+                $extra_point = $approvalExtra->getExtraPoints();
+                $total += $extra_point;
+                $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
+            }
+        }
+
+        $param['points'] = (int) $total;
+
+        if ($mix_credit)
+        {
+            return $param['points'];
+        }
+
+        $param['level'] = $this->get_credit_level($total, $product_id, $sub_product_id, $stage_cer);
+        $credit_amount_list = $this->get_credit_amount_list($product_id, $sub_product_id);
+        if ( ! empty($credit_amount_list))
+        {
+            foreach ($credit_amount_list as $value)
+            {
+                if ($param['points'] >= $value['start'] && $param['points'] <= $value['end'])
+                {
+                    $param['amount'] = $salary * $value['rate'];
+                    break;
+                }
+            }
+        }
+
+        $param['expire_time'] = $expire_time;
+
+        // 月薪低於特定值，不能超過特定倍數的額度
+        if ( ! $stage_cer && intval($data['job_salary']) <= $this->product_list[$product_id]['condition_rate']['salary_below'])
+        {
+            $job_salary = intval($data['job_salary']) * $this->product_list[$product_id]['condition_rate']['rate'];
+            $param['amount'] = intval(min($param['amount'], $job_salary));
+        }
+
+        // 額度調整 = 額度 * 性別對應的系數
+        if ($user_info->sex == 'M')
+        {
+            // 男
+            $param['amount'] *= 0.9;
+            $this->scoreHistory[] = '性別男: 額度 * 0.9';
+        }
+        else
+        {
+            $this->scoreHistory[] = '性別女: 額度 * 1';
+        }
+
+        // 額度調整 = 額度 * 分期期數對應的系數
+        $this->CI->config->load('credit', TRUE);
+        $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_' . $product_id];
+        $param['amount'] = round($param['amount'] * ($instalment_modifier_list[$instalment] ?? 1));
+        $this->scoreHistory[] = '借款期數' . $instalment . '期: 額度 * ' . ($instalment_modifier_list[$instalment] ?? 1);
+
+        // 依各子產品調整最高額度
+        $this->CI->load->model('user/user_certification_model');
+        switch ($sub_product_id)
+        {
+            case SUB_PRODUCT_ID_HOME_LOAN_SHORT:
+                // 取得徵信項
+                $user_cert_info_contract = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_HOUSE_CONTRACT);
+                if (empty($user_cert_info_contract[0]->content))
+                {
+                    break;
+                }
+                $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, TRUE);
+                if (empty($user_cert_content_contract['admin_edit']['down_payment']))
+                {
+                    break;
+                }
+
+                // 最高借款金額不得超過該筆買賣合約頭期款之9成
+                $param['amount'] = min($param['amount'], ($user_cert_content_contract['admin_edit']['down_payment'] * 0.9));
+                break;
+            case SUB_PRODUCT_ID_HOME_LOAN_RENOVATION:
+                // 取得徵信項
+                $user_cert_info_contract = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_RENOVATION_CONTRACT);
+                $user_cert_info_receipt = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_RENOVATION_RECEIPT);
+                if (empty($user_cert_info_contract[0]->content) && empty($user_cert_info_receipt[0]->content))
+                {
+                    break;
+                }
+                $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, TRUE);
+                $user_cert_content_receipt = json_decode($user_cert_info_receipt[0]->content, TRUE);
+                $tmp_amount = min(
+                    (int) ($user_cert_content_contract['admin_edit']['contract_amount'] ?? 0),
+                    (int) ($user_cert_content_receipt['admin_edit']['receipt_amount'] ?? 0)
+                );
+
+                // 最高借款金額不得超過該筆買賣合約或發票金額之8成
+                $param['amount'] = min($param['amount'], ($tmp_amount * 0.8));
+                break;
+            case SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES:
+                // 取得徵信項
+                $user_cert_info_contract = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT);
+                if (empty($user_cert_info_contract[0]->content))
+                {
+                    break;
+                }
+                $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, TRUE);
+                $tmp_amount = min(
+                    (int) ($user_cert_content_contract['admin_edit']['contract_amount'] ?? 0),
+                    (int) ($user_cert_content_contract['admin_edit']['receipt_amount'] ?? 0)
+                );
+
+                // 最高借款金額不得超過該筆買賣合約或發票金額之8成
+                $param['amount'] = min($param['amount'], ($tmp_amount * 0.8));
+                break;
+        }
+
+        // 土地建物謄本
+        $user_cert_info = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS);
+        if (empty($user_cert_info[0]->content))
+        {
+            goto SKIP_TRANSACTION_VALUE;
+        }
+        $user_cert_content = json_decode($user_cert_info[0]->content, TRUE);
+        // 市價估值
+        if (empty($user_cert_content['admin_edit']['market_value']))
+        {
+            goto SKIP_TRANSACTION_VALUE;
+        }
+        // 最高借款額度為「市價估值扣除前順位抵押設定後之餘額」且「不得超過市價估值2成」
+        $param['amount'] = min($param['amount'], ($user_cert_content['admin_edit']['market_value'] * 0.2));
+        SKIP_TRANSACTION_VALUE:
+
+        // 額度不能「小」於產品的最「小」允許額度
+        $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
+
+        // 額度不能「大」於產品的最「大」允許額度
+        $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
+
+        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
+
+        if ($approvalExtra && $approvalExtra->shouldSkipInsertion())
+        {
+            return $param;
+        }
+
+        $this->CI->credit_model->update_by(
+            [
+                'product_id' => $product_id,
+                'sub_product_id' => $sub_product_id,
+                'user_id' => $user_id,
+                'status' => 1,
+            ],
+            ['status' => 0]
+        );
+        $rs = $this->CI->credit_model->insert($param);
+        return $rs;
+    }
 
     private function approve_7($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
         $rs = $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);

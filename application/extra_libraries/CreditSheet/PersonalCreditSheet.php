@@ -20,7 +20,9 @@ class PersonalCreditSheet extends CreditSheetBase {
 
     // 允許承作的產品類別列表
     public const ALLOW_PRODUCT_LIST = [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER,
-        PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
+        PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER,
+        PRODUCT_ID_HOME_LOAN
+    ];
 
     // 最終核准層次
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;

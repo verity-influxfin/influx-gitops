@@ -35,6 +35,12 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     }
 
     /**
+     * 取得 OCR 子系統 port
+     * @return string
+     */
+    abstract protected function get_ocr_port(): string;
+
+    /**
      * 取得該徵信項的 OCR 任務 id
      * @param $type
      * @return string
@@ -67,7 +73,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
                 'body' => json_encode($body)
             ]);
             $res_content = $request->getBody()->getContents();
-            $this->_insert_log($request->getStatusCode(), $res_content);
+            $this->insert_log($request->getStatusCode(), $res_content);
 
             $res_content = json_decode($res_content, TRUE);
             if (empty($res_content['task_id']))
@@ -82,7 +88,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         }
         catch (RequestException $e)
         {
-            $this->_insert_log($e->getResponse()->getStatusCode(), $e->getResponse()->getBody()->getContents());
+            $this->insert_log($e->getResponse()->getStatusCode(), $e->getResponse()->getBody()->getContents());
             $result = FALSE;
         }
         return $this->_chk_ocr_task_create($result);
@@ -105,17 +111,17 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
                 ]
             ]);
             $res_content = $request->getBody()->getContents();
-            $this->_insert_log($request->getStatusCode(), $res_content);
+            $this->insert_log($request->getStatusCode(), $res_content);
             $result = json_decode($res_content, TRUE);
         }
         catch (BadResponseException $e)
         {
-            $this->_insert_log($e->getResponse()->getStatusCode(), $e->getResponse()->getBody()->getContents());
+            $this->insert_log($e->getResponse()->getStatusCode(), $e->getResponse()->getBody()->getContents());
             $result = FALSE;
         }
         catch (\Exception $e)
         {
-            $this->_insert_log($e->getCode(), $e->getMessage());
+            $this->insert_log($e->getCode(), $e->getMessage());
             $result = FALSE;
         }
         return $this->_chk_ocr_task_response($result);
@@ -183,7 +189,7 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
      * @param $res_body
      * @return void
      */
-    private function _insert_log($res_status, $res_body)
+    protected function insert_log($res_status, $res_body)
     {
         $this->CI->log_certification_ocr_model->insert([
             'task_path' => $this->task_path,

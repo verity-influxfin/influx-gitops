@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(APPPATH.'/libraries/REST_Controller.php');
 
 use Certification\Certification_factory;
+use GuzzleHttp\Client;
 
 class Product extends REST_Controller {
 
@@ -1424,14 +1425,10 @@ class Product extends REST_Controller {
         $company_status	= $this->user_info->company;
         $target 			= $this->target_model->get($target_id);
         if(!empty($target)){
-            $product_list = $this->config->item('product_list');
-            $product = isset($product_list[$target->product_id]) ? $product_list[$target->product_id] : $product_list[1];
+            $this->load->library('loanmanager/product_lib');
+            $product = $this->product_lib->get_exact_product($target->product_id, $target->sub_product_id);
+
             $product_name = $product['name'];
-            $sub_product_id = $target->sub_product_id;
-            if($this->is_sub_product($product,$sub_product_id)){
-                $product = $this->trans_sub_product($product,$sub_product_id);
-                $product_name = $product['name'];
-            }
 
             $targetDatas = [];
             $cer_group = [];
@@ -4268,5 +4265,83 @@ class Product extends REST_Controller {
         }
 
         return $is_succeed;
+    }
+
+    // 取得可預約時段
+    public function booking_timetable_get()
+    {
+        try
+        {
+            $start_date = $this->input->get('start_date');
+            $end_date = $this->input->get('end_date');
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->get_whole_booking_timetable($start_date, $end_date);
+
+            $this->response($response);
+        }
+        catch (Exception $e)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+    }
+
+    // 取得使用者的預約列表
+    public function user_booking_list_get()
+    {
+        try
+        {
+            $target_id = $this->input->get('target_id');
+            $user_id = $this->user_info->id;
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->get_booked_list_by_user($target_id, $user_id);
+
+            $this->response($response);
+        }
+        catch (Exception $e)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+    }
+
+    // 使用者預約時段
+    public function booking_create_post()
+    {
+        try
+        {
+            $target_id = $this->input->post('target_id');
+            $user_id = $this->user_info->id;
+            $date = $this->input->post('date');
+            $time = $this->input->post('time');
+
+            if (empty($target_id))
+            {
+                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+            }
+
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->create_booking($target_id, $user_id, $date, $time);
+
+            $this->response($response);
+        }
+        catch (Exception $e)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+    }
+
+    // 使用者取消預約時段
+    public function booking_cancel_post($booking_id = '')
+    {
+        try
+        {
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->cancel_booking($booking_id);
+
+            $this->response($response);
+        }
+        catch (Exception $e)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
     }
 }

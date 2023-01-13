@@ -5368,4 +5368,556 @@ class Certification extends REST_Controller {
             $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
         }
     }
+
+    // 購屋合約
+    public function house_contract_post()
+    {
+        $certification_id = CERTIFICATION_HOUSE_CONTRACT;
+        $certification = $this->certification[$certification_id];
+        if (empty($certification) || ! isset($certification['status']) || $certification['status'] != 1)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        // 是否驗證過
+        $this->was_verify($certification_id);
+
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $content = [];
+
+        // 必填欄位
+        $required_fields = ['address', 'contract_amount', 'down_payment'];
+        // 整數欄位
+        $intval_fields = ['contract_amount', 'down_payment'];
+        foreach ($required_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            else
+            {
+                if (in_array($field, $intval_fields))
+                {
+                    $content[$field] = (int) $input[$field];
+                    continue;
+                }
+                $content[$field] = trim($input[$field]);
+            }
+        }
+
+        // 上傳檔案欄位
+        $file_fields = ['contract_images'];
+        foreach ($file_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            $image_ids = explode(',', $input[$field]);
+
+            $log_images = $this->log_image_model->get_many_by([
+                'id' => $image_ids,
+                'user_id' => $this->user_info->originalID,
+            ]);
+            if (count($log_images) != count($image_ids))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            foreach ($log_images as $image)
+            {
+                $content[$field][] = $image->url;
+            }
+        }
+
+        $param = [
+            'user_id' => $user_id,
+            'certification_id' => $certification_id,
+            'investor' => $investor,
+            'content' => json_encode($content),
+        ];
+
+        $insert = $this->user_certification_model->insert($param);
+        if ($insert)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
+    // 購屋發票
+    public function house_receipt_post()
+    {
+        $certification_id = CERTIFICATION_HOUSE_RECEIPT;
+        $certification = $this->certification[$certification_id];
+        if (empty($certification) || ! isset($certification['status']) || $certification['status'] != 1)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        // 是否驗證過
+        $this->was_verify($certification_id);
+
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $content = [];
+
+        // 必填欄位
+        $required_fields = ['receipt_number', 'receipt_amount'];
+        // 整數欄位
+        $intval_fields = ['receipt_amount'];
+        foreach ($required_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            else
+            {
+                if (in_array($field, $intval_fields))
+                {
+                    $content[$field] = (int) $input[$field];
+                    continue;
+                }
+                $content[$field] = trim($input[$field]);
+            }
+        }
+
+        // 上傳檔案欄位
+        $file_fields = ['receipt_images'];
+        foreach ($file_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            $image_ids = explode(',', $input[$field]);
+
+            $log_images = $this->log_image_model->get_many_by([
+                'id' => $image_ids,
+                'user_id' => $this->user_info->originalID,
+            ]);
+            if (count($log_images) != count($image_ids))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            foreach ($log_images as $image)
+            {
+                $content[$field][] = $image->url;
+            }
+        }
+
+        $param = [
+            'user_id' => $user_id,
+            'certification_id' => $certification_id,
+            'investor' => $investor,
+            'content' => json_encode($content),
+        ];
+
+        $insert = $this->user_certification_model->insert($param);
+        if ($insert)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
+    // 裝修合約
+    public function renovation_contract_post()
+    {
+        $certification_id = CERTIFICATION_RENOVATION_CONTRACT;
+        $certification = $this->certification[$certification_id];
+        if (empty($certification) || ! isset($certification['status']) || $certification['status'] != 1)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        // 是否驗證過
+        $this->was_verify($certification_id);
+
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $content = [];
+
+        // 必填欄位
+        $required_fields = ['contract_amount'];
+        // 整數欄位
+        $intval_fields = ['contract_amount'];
+        foreach ($required_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            else
+            {
+                if (in_array($field, $intval_fields))
+                {
+                    $content[$field] = (int) $input[$field];
+                    continue;
+                }
+                $content[$field] = trim($input[$field]);
+            }
+        }
+
+        // 上傳檔案欄位
+        $file_fields = ['contract_images'];
+        foreach ($file_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            $image_ids = explode(',', $input[$field]);
+
+            $log_images = $this->log_image_model->get_many_by([
+                'id' => $image_ids,
+                'user_id' => $this->user_info->originalID,
+            ]);
+            if (count($log_images) != count($image_ids))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            foreach ($log_images as $image)
+            {
+                $content[$field][] = $image->url;
+            }
+        }
+
+        $param = [
+            'user_id' => $user_id,
+            'certification_id' => $certification_id,
+            'investor' => $investor,
+            'content' => json_encode($content),
+        ];
+
+        $insert = $this->user_certification_model->insert($param);
+        if ($insert)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
+    // 裝修發票
+    public function renovation_receipt_post()
+    {
+        $certification_id = CERTIFICATION_RENOVATION_RECEIPT;
+        $certification = $this->certification[$certification_id];
+        if (empty($certification) || ! isset($certification['status']) || $certification['status'] != 1)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        // 是否驗證過
+        $this->was_verify($certification_id);
+
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $content = [];
+
+        // 必填欄位
+        $required_fields = ['receipt_number', 'receipt_amount'];
+        // 整數欄位
+        $intval_fields = ['receipt_amount'];
+        foreach ($required_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            else
+            {
+                if (in_array($field, $intval_fields))
+                {
+                    $content[$field] = (int) $input[$field];
+                    continue;
+                }
+                $content[$field] = trim($input[$field]);
+            }
+        }
+
+        // 上傳檔案欄位
+        $file_fields = ['receipt_images'];
+        foreach ($file_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            $image_ids = explode(',', $input[$field]);
+
+            $log_images = $this->log_image_model->get_many_by([
+                'id' => $image_ids,
+                'user_id' => $this->user_info->originalID,
+            ]);
+            if (count($log_images) != count($image_ids))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            foreach ($log_images as $image)
+            {
+                $content[$field][] = $image->url;
+            }
+        }
+
+        $param = [
+            'user_id' => $user_id,
+            'certification_id' => $certification_id,
+            'investor' => $investor,
+            'content' => json_encode($content),
+        ];
+
+        $insert = $this->user_certification_model->insert($param);
+        if ($insert)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
+    // 傢俱家電合約或發票收據
+    public function appliance_contract_receipt_post()
+    {
+        $certification_id = CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT;
+        $certification = $this->certification[$certification_id];
+        if (empty($certification) || ! isset($certification['status']) || $certification['status'] != 1)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        // 是否驗證過
+        $this->was_verify($certification_id);
+
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $content = [];
+
+        // 必填欄位
+        $optional_fields = ['contract_amount', 'receipt_number', 'receipt_amount'];
+        // 整數欄位
+        $intval_fields = ['contract_amount', 'receipt_amount'];
+        foreach ($optional_fields as $field)
+        {
+            if ( ! isset($input[$field]))
+            {
+                continue;
+            }
+            else
+            {
+                if (in_array($field, $intval_fields))
+                {
+                    $content[$field] = (int) $input[$field];
+                    continue;
+                }
+                $content[$field] = trim($input[$field]);
+            }
+        }
+
+        // 上傳檔案欄位
+        $file_fields = ['contract_images', 'receipt_images'];
+        foreach ($file_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                continue;
+            }
+            $image_ids = explode(',', $input[$field]);
+
+            $log_images = $this->log_image_model->get_many_by([
+                'id' => $image_ids,
+                'user_id' => $this->user_info->originalID,
+            ]);
+            if (count($log_images) != count($image_ids))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            foreach ($log_images as $image)
+            {
+                $content[$field][] = $image->url;
+            }
+        }
+
+        $param = [
+            'user_id' => $user_id,
+            'certification_id' => $certification_id,
+            'investor' => $investor,
+            'content' => json_encode($content),
+        ];
+
+        $insert = $this->user_certification_model->insert($param);
+        if ($insert)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
+    // 房屋所有權狀
+    public function house_deed_post()
+    {
+        $certification_id = CERTIFICATION_HOUSE_DEED;
+        $certification = $this->certification[$certification_id];
+        if (empty($certification) || ! isset($certification['status']) || $certification['status'] != 1)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        // 是否驗證過
+        $this->was_verify($certification_id);
+
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $content = [];
+
+        // 必填欄位
+        $required_fields = ['address'];
+        foreach ($required_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            else
+            {
+                $content[$field] = trim($input[$field]);
+            }
+        }
+
+        // 上傳檔案欄位
+        $file_fields = ['house_deed_images'];
+        foreach ($file_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            $image_ids = explode(',', $input[$field]);
+
+            $log_images = $this->log_image_model->get_many_by([
+                'id' => $image_ids,
+                'user_id' => $this->user_info->originalID,
+            ]);
+            if (count($log_images) != count($image_ids))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            foreach ($log_images as $image)
+            {
+                $content[$field][] = $image->url;
+            }
+        }
+
+        $param = [
+            'user_id' => $user_id,
+            'certification_id' => $certification_id,
+            'investor' => $investor,
+            'content' => json_encode($content),
+        ];
+
+        $insert = $this->user_certification_model->insert($param);
+        if ($insert)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
+    // 入屋現勘/遠端視訊預約時間
+    public function site_survey_booking_post()
+    {
+        $certification_id = CERTIFICATION_SITE_SURVEY_BOOKING;
+        $certification = $this->certification[$certification_id];
+        if (empty($certification) || ! isset($certification['status']) || $certification['status'] != 1)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+        }
+
+        // 是否驗證過
+        $this->was_verify($certification_id);
+
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $content = [];
+
+        // 必填欄位
+        $required_fields = ['date', 'time', 'target_id'];
+        foreach ($required_fields as $field)
+        {
+            if (empty($input[$field]))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+            else
+            {
+                $content[$field] = trim($input[$field]);
+            }
+        }
+
+        $this->load->library('booking_lib');
+        $booking_response = $this->booking_lib->create_booking($content['target_id'], $user_id, $content['date'], $content['time']);
+        if ( ! isset($booking_response['result']) || $booking_response['result'] !== 'SUCCESS')
+        {
+            $this->response($booking_response);
+        }
+
+        $param = [
+            'user_id' => $user_id,
+            'certification_id' => $certification_id,
+            'investor' => $investor,
+            'content' => json_encode($content),
+            'status' => CERTIFICATION_STATUS_SUCCEED
+        ];
+
+        $insert = $this->user_certification_model->insert($param);
+        if ($insert)
+        {
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        }
+    }
+
+    public function site_survey_booking_get()
+    {
+        $target_id = $this->input->get('target_id');
+        if (empty($target_id))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $user_id = $this->user_info->id;
+
+        $this->load->library('booking_lib');
+        $booking_detail = $this->booking_lib->get_booked_list_by_user($target_id, $user_id);
+        $this->response($booking_detail);
+    }
 }

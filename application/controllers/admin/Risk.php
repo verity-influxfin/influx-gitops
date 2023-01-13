@@ -35,7 +35,7 @@ class Risk extends MY_Admin_Controller {
         // 取得$_GET的產品ID和子產品ID
         list($product_id, $sub_product_id) = array_pad(explode(':', $this->input->get('product')), 2, 0);
         $this->load->library('loanmanager/product_lib');
-        $product_info = $this->product_lib->getProductInfo($product_id, $sub_product_id);
+        $product_info = $this->product_lib->get_exact_product($product_id, $sub_product_id);
 
         $stage = $this->input->get('stage');
         // 取得現階段要呈現的徵信項
@@ -46,17 +46,11 @@ class Risk extends MY_Admin_Controller {
                 $prev_stage_cert = [];
                 break;
             case 1: // 收件檢核階段
-                $this_stage_cert = array_merge(
-                    $product_info['certifications_stage'][0] ?? [],
-                    $product_info['certifications_stage'][1] ?? []
-                );
+                $this_stage_cert = call_user_func_array('array_merge', $product_info['certifications_stage'] ?? []);
                 $prev_stage_cert = $product_info['certifications_stage'][0] ?? [];
                 break;
             case 2: // 審核中階段
-                $this_stage_cert = array_merge(
-                    $product_info['certifications_stage'][0] ?? [],
-                    $product_info['certifications_stage'][1] ?? []
-                );
+                $this_stage_cert = call_user_func_array('array_merge', $product_info['certifications_stage'] ?? []);
                 $prev_stage_cert = $this_stage_cert;
                 break;
             default:
@@ -72,9 +66,32 @@ class Risk extends MY_Admin_Controller {
             ['id' => 'updated_at', 'name' => '最後更新時間'],
         ]];
         $cert_config = $this->config->item('certifications');
-        foreach ($this_stage_cert as $key => $cert)
+        $cert_config_name = array_column($cert_config, 'name', 'id');
+
+        array_walk($this_stage_cert, function ($value, $key) use (&$result, $cert_config_name) {
+            $result['cols'][] = ['id' => 'cert' . $key, 'name' => $cert_config_name[$value]];
+        });
+
+        if ($product_id == PRODUCT_ID_STUDENT)
         {
-            $result['cols'][] = ['id' => 'cert' . $key, 'name' => $cert_config[$cert]['name']];
+            $main_product_info = $this->product_lib->get_product_info($product_id);
+            $sub_product_id = $main_product_info['sub_product'];
+        }
+        elseif ($product_id == PRODUCT_ID_SALARY_MAN)
+        {
+            if ($sub_product_id == STAGE_CER_TARGET)
+            {
+                $sub_product_id = [STAGE_CER_TARGET];
+            }
+            else
+            {
+                $main_product_info = $this->product_lib->get_product_info($product_id);
+                $sub_product_id = array_diff($main_product_info['sub_product'], [STAGE_CER_TARGET]);
+            }
+        }
+        else
+        {
+            $sub_product_id = [$sub_product_id];
         }
 
         // 撈target
@@ -82,15 +99,13 @@ class Risk extends MY_Admin_Controller {
             CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
             CERTIFICATION_STATUS_SUCCEED,
             CERTIFICATION_STATUS_PENDING_TO_REVIEW
-        ], $product_id, ($product_id == PRODUCT_ID_SALARY_MAN ? $sub_product_id == STAGE_CER_TARGET : NULL));
-        $target_list = array_column($target_list, NULL, 'id');
+        ], $product_id, $sub_product_id);
         if (empty($target_list))
         {
             echo json_encode($result);
             return TRUE;
         }
-
-        $userStatusList = $this->target_model->getUserStatusByTargetId(array_keys($target_list));
+        $userStatusList = $this->target_model->getUserStatusByTargetId(array_column($target_list, 'id'));
         $userStatusList = array_column($userStatusList, 'total_count', 'user_id');
 
         $user_list = [];
@@ -121,7 +136,12 @@ class Risk extends MY_Admin_Controller {
 
                 // 撈user每個徵信項的最新狀態
                 $tmp = $this->certification_lib->get_last_status($target->user_id, BORROWER, USER_NOT_COMPANY, $target, FALSE, TRUE, TRUE);
-                $tmp = array_reduce($tmp, function ($list, $item) {
+                $tmp_success = [];
+                $tmp = array_reduce($tmp, function ($list, $item) use (&$tmp_success) {
+                    if ($item['user_status'] == CERTIFICATION_STATUS_SUCCEED)
+                    {
+                        $tmp_success[$item['id']] = $item['id'];
+                    }
                     $list[$item['id']] = [
                         'id' => $item['certification_id'], // =user_certification.id
                         'certification_id' => $item['id'], // =user_certification.certification_id
@@ -133,8 +153,8 @@ class Risk extends MY_Admin_Controller {
                     return $list;
                 }, []);
                 // 整理出驗證成功的徵信項
-                $tmp_success = $this->certification_lib->filterCertIdsInStatusList($tmp, [CERTIFICATION_STATUS_SUCCEED]);
                 $user_list[$target->user_id]['success_cert'] = $tmp_success;
+                $user_list[$target->user_id]['all_cert'] = $tmp;
             }
 
             if ( ! isset($user_cert_list[$target->user_id][$product_id][$target->sub_product_id]))
@@ -164,7 +184,7 @@ class Risk extends MY_Admin_Controller {
                 $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['btn'] = [];
                 foreach ($this_stage_cert_tmp as $key => $cert)
                 {
-                    $btn_factory = Certification_btn_factory::get_instance($tmp[$cert]);
+                    $btn_factory = Certification_btn_factory::get_instance($user_list[$target->user_id]['all_cert'][$cert]);
 
                     if ($btn_factory)
                     {
@@ -756,7 +776,6 @@ class Risk extends MY_Admin_Controller {
 
 			$product_list = $this->config->item('product_list');
 			$certification_list = $this->config->item('certifications');
-
 			$product = $product_list[$target->product_id];
 			$sub_product_id = $target->sub_product_id;
 			if ($this->is_sub_product($product, $sub_product_id)) {
@@ -888,5 +907,72 @@ class Risk extends MY_Admin_Controller {
 		$this->load->view('admin/risk/sme_loan');
 		$this->load->view('admin/_footer');
 	}
+
+    // 入屋現勘/遠端視訊預約時間
+    public function booking_timetable()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/booking_timetable');
+        $this->load->view('admin/_footer');
+    }
+
+    public function get_booking_timetable()
+    {
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
+
+        $this->load->library('booking_lib');
+        $response = $this->booking_lib->get_whole_booking_timetable($start_date, $end_date);
+
+        echo json_encode($response);
+        die();
+    }
+
+    public function create_booking()
+    {
+        $target_id = 0;
+        $user_id = 0;
+
+        $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
+        $date = $input['date'] ?? '';
+        $time = $input['time'] ?? '';
+        $admin_id = $this->login_info->id;
+        $title = "Admin-{$admin_id} arrangement";
+
+        $this->load->library('booking_lib');
+        $response = $this->booking_lib->create_booking($target_id, $user_id, $date, $time, $title);
+
+        echo json_encode($response);
+        die();
+    }
+
+    public function site_survey_booking($target_id = '')
+    {
+        $page_data = [];
+        if (empty($target_id))
+        {
+            goto END;
+        }
+
+        $this->load->library('booking_lib');
+        $booking_info = $this->booking_lib->get_booked_list_by_target($target_id);
+        if ($booking_info['result'] !== 'SUCCESS' || empty($booking_info['data']['booking_table']))
+        {
+            goto END;
+        }
+
+        $booking_info = current($booking_info['data']['booking_table']);
+        $page_data = [
+            'date' => empty($booking_info['date']) ? '' : (new DateTimeImmutable($booking_info['date']))->format('Y-m-d'),
+            'time' => empty($booking_info['session_name']) ? '' : $booking_info['session_name'],
+        ];
+
+        END:
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/site_survey_booking', $page_data);
+        $this->load->view('admin/_footer');
+    }
 }
-?>
+

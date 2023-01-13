@@ -1707,8 +1707,8 @@ class Target_lib
         $allow_stage_cer = [1, 3];
         if ($targets && !empty($targets)) {
             foreach ($targets as $key => $value) {
-                // todo: 只放學生貸進新架構，剩餘的等之後開發好再說
-                if ($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0)
+                // todo: 只放學生貸、不動產融資進新架構，剩餘的等之後開發好再說
+                if (($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0) || $value->product_id == PRODUCT_ID_HOME_LOAN)
                 {
                     $approve_factory = new Approve_factory();
                     $approve_instance = $approve_factory->get_instance_by_model_data($value);
@@ -2368,12 +2368,12 @@ class Target_lib
             'charge_platform' => $sub_product['charge_platform'],
             'charge_platform_min' => $sub_product['charge_platform_min'],
             'certifications' => $sub_product['certifications'],
-            'option_certifications' => $sub_product['option_certifications'],
-            'backend_option_certifications' => $sub_product['backend_option_certifications'],
+            'option_certifications' => $sub_product['option_certifications'] ?? [],
+            'backend_option_certifications' => $sub_product['backend_option_certifications'] ?? [],
             'instalment' => $sub_product['instalment'],
             'repayment' => $sub_product['repayment'],
             'targetData' => $sub_product['targetData'],
-            'secondInstance' => $sub_product['secondInstance'],
+            'secondInstance' => $sub_product['secondInstance'] ?? FALSE,
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => $product['checkOwner'] ?? FALSE,
@@ -2966,12 +2966,19 @@ class Target_lib
         return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
     }
 
+    public function get_home_loan_product_ids():array
+    {
+        return [PRODUCT_ID_HOME_LOAN];
+    }
+
     public function get_product_id_by_tab($tabname): array
     {
         switch ($tabname)
         {
             case PRODUCT_TAB_ENTERPRISE:
                 return $this->get_enterprise_product_ids();
+            case PRODUCT_TAB_HOME_LOAN:
+                return $this->get_home_loan_product_ids();
             case PRODUCT_TAB_INDIVIDUAL:
             default:
                 return $this->get_individual_product_ids();

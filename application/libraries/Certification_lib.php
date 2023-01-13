@@ -3255,6 +3255,7 @@ class Certification_lib{
 			foreach($user_certifications as $key => $value){
 				switch($value->certification_id){
                     case CERTIFICATION_REPAYMENT_CAPACITY:
+                    case CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS:
                         break;
 					default:
 						$this->verify($value);
@@ -3265,6 +3266,8 @@ class Certification_lib{
 		}
 
         $this->repayment_capacity_verify();
+        $this->land_and_building_transactions_verify();
+        $this->site_surve_video_verify();
 
 		return $count;
 	}
@@ -3604,20 +3607,89 @@ class Certification_lib{
             $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY, USER_BORROWER, FALSE, TRUE);
             if (empty($info))
             {
-                $this->CI->user_certification_model->insert([
+                $id = $this->CI->user_certification_model->insert([
                     'user_id' => $user['user_id'],
                     'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
                     'investor' => USER_BORROWER,
                     'content' => json_encode([]),
                     'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
                 ]);
-                $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY);
+            }
+            else
+            {
+                $id = $info->id;
             }
 
-            $cert = Certification_factory::get_instance_by_model_resource($info);
+            $cert = Certification_factory::get_instance_by_id($id);
             $cert->verify();
         }
 
+        return TRUE;
+    }
+
+    // 土地建物謄本
+    public function land_and_building_transactions_verify()
+    {
+        // 取得有案件「待核可」的使用者ID
+        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE], [
+            'product_id' => PRODUCT_ID_HOME_LOAN
+        ]);
+        if (empty($user_lists))
+        {
+            return TRUE;
+        }
+
+        foreach ($user_lists as $user)
+        {
+            $info = $this->get_certification_info($user['user_id'], CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS, USER_BORROWER, FALSE, TRUE);
+            if ( ! empty($info))
+            {
+                $cert = Certification_factory::get_instance_by_id($info->id);
+                $cert->verify();
+                continue;
+            }
+
+            $this->CI->user_certification_model->insert([
+                'user_id' => $user['user_id'],
+                'certification_id' => CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                'investor' => USER_BORROWER,
+                'content' => json_encode([]),
+                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+            ]);
+        }
+        return TRUE;
+    }
+
+    // 入屋現勘/遠端視訊影片
+    public function site_surve_video_verify()
+    {
+        // 取得有案件「待核可」的使用者ID
+        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE], [
+            'product_id' => PRODUCT_ID_HOME_LOAN
+        ]);
+        if (empty($user_lists))
+        {
+            return TRUE;
+        }
+
+        foreach ($user_lists as $user)
+        {
+            $info = $this->get_certification_info($user['user_id'], CERTIFICATION_SITE_SURVEY_VIDEO, USER_BORROWER, FALSE, TRUE);
+            if ( ! empty($info))
+            {
+                $cert = Certification_factory::get_instance_by_id($info->id);
+                $cert->verify();
+                continue;
+            }
+
+            $this->CI->user_certification_model->insert([
+                'user_id' => $user['user_id'],
+                'certification_id' => CERTIFICATION_SITE_SURVEY_VIDEO,
+                'investor' => USER_BORROWER,
+                'content' => json_encode([]),
+                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+            ]);
+        }
         return TRUE;
     }
 

@@ -13,7 +13,25 @@ abstract class Ocr_parser_base extends Certification_ocr_base
 {
     public function __construct($certification)
     {
-        $this->api_url = 'http://' . getenv('CERT_OCR_IP') . ':' . getenv('CERT_OCR_PORT');
+        $this->api_url = 'http://' . $this->get_ocr_ip() . ':' . $this->get_ocr_port();
         parent::__construct($certification);
+    }
+
+    /**
+     * 取得 OCR 子系統 port
+     * @return string
+     */
+    protected function get_ocr_port(): string
+    {
+        return getenv('CERT_OCR_PORT');
+    }
+
+    /**
+     * 取得 OCR 子系統 ip
+     * @return string
+     */
+    protected function get_ocr_ip(): string
+    {
+        return getenv('CERT_OCR_IP');
     }
 }

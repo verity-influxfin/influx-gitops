@@ -472,6 +472,11 @@
 		return in_array($file_type, $pdf_mimes, TRUE);
 	}
 
+    function is_video($file_type)
+    {
+        return preg_match('/^video\/(\w+)/', $file_type);
+    }
+
     /**
 	 * 依照前綴詞取得目前已定義的常數項
 	 * @param array $constants: 變數列表
