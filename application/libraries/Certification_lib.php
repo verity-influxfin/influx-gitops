@@ -3631,7 +3631,7 @@ class Certification_lib{
     public function land_and_building_transactions_verify()
     {
         // 取得有案件「待核可」的使用者ID
-        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE], [
+        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE], 0, [
             'product_id' => PRODUCT_ID_HOME_LOAN
         ]);
         if (empty($user_lists))
@@ -3664,7 +3664,7 @@ class Certification_lib{
     public function site_surve_video_verify()
     {
         // 取得有案件「待核可」的使用者ID
-        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE], [
+        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE], 0, [
             'product_id' => PRODUCT_ID_HOME_LOAN
         ]);
         if (empty($user_lists))
