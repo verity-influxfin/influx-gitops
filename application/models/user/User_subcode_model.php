@@ -60,6 +60,7 @@ class user_subcode_model extends MY_Model
         $this->_database->select('r.id, r.alias, r.registered_id, r.master_user_qrcode_id, uq.id AS user_qrcode_id, uq.promote_code, uq.status, uq.start_time, uq.end_time')
             ->select('r.status AS user_subcode_status')
             ->select('r.sub_status AS user_subcode_sub_status')
+            ->select('uq.user_id')
             ->from('p2p_user.user_qrcode as uq')
             ->join("({$user_subcode}) as `r`", "`r`.`user_qrcode_id` = `uq`.`id`");
 

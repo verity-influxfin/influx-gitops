@@ -3743,7 +3743,7 @@ END:
         $user_subcode_list = $this->qrcode_lib->get_subcode_list($user_id, $conditions, ['status !=' => PROMOTE_STATUS_DISABLED]);
         foreach ($user_subcode_list as $user_subcode)
         {
-            $keys = array_flip(['registered_id', 'alias', 'promote_code', 'status', 'start_time', 'end_time']);
+            $keys = array_flip(['registered_id', 'alias', 'promote_code', 'status', 'start_time', 'end_time', 'user_id']);
             $data = array_intersect_key($user_subcode, $keys);
 
             $data['subcode_id'] = (int)$user_subcode['id'];
