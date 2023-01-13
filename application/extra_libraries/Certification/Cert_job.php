@@ -233,8 +233,30 @@ class Cert_job extends Cert_pdf
             'game_work_level' => $this->content['game_work_level'] ?? '',
             'job_programming_language' => $this->content['programming_language'] ?? '',
             'job_title' => $this->content['job_title'] ?? '',
-            'job_has_license' => $this->content['job_has_license']
+            'job_has_license' => $this->content['job_has_license'] ?? 0,
         ];
+
+        $this->CI->load->library('credit_lib');
+        $job_company_world_500_point = $this->CI->credit_lib->get_job_company_in_world_500($data['job_company']);
+        $job_company_taiwan_1000_point = $this->CI->credit_lib->get_job_company_in_taiwan_1000($data['job_company']);
+        $job_company_public_agency_point = $this->CI->credit_lib->get_job_company_in_public_agency($data['job_company']);
+        $job_company_medical_institute_point = $this->CI->credit_lib->get_job_company_in_medical_institute($data['job_company']);
+        if (is_numeric($job_company_world_500_point))
+        {
+            $data['job_company_world_500_point'] = $job_company_world_500_point;
+        }
+        if (is_numeric($job_company_taiwan_1000_point))
+        {
+            $data['job_company_taiwan_1000_point'] = $job_company_taiwan_1000_point;
+        }
+        if (is_numeric($job_company_public_agency_point))
+        {
+            $data['job_company_public_agency_point'] = $job_company_public_agency_point;
+        }
+        if (is_numeric($job_company_medical_institute_point))
+        {
+            $data['job_company_medical_institute_point'] = $job_company_medical_institute_point;
+        }
 
         $this->CI->certification_lib->user_meta_progress($data, $this->certification);
 

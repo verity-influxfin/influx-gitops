@@ -1075,4 +1075,14 @@ class Target_model extends MY_Model
 
         return $this->_database->affected_rows();
     }
+
+    public function get_user_id_by_id($id)
+    {
+        return $this->db
+            ->select('user_id')
+            ->from('p2p_loan.targets')
+            ->where('id', $id)
+            ->get()
+            ->first_row('array');
+    }
 }

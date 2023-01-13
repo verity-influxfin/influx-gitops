@@ -702,10 +702,6 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
-		$is_taiwan_1000 = $get["is_taiwan_1000"] ?? 0;
-		$is_world_500 = $get['is_world_500'] ?? 0;
-		$is_medical_institute = $get['is_medical_institute'] ?? 0;
-		$is_public_agency = $get['is_public_agency'] ?? 0;
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -723,10 +719,24 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
-		$this->approvalextra->setSpecialInfo(['is_taiwan_1000' => $is_taiwan_1000]);
-		$this->approvalextra->setSpecialInfo(['is_world_500' => $is_world_500]);
-		$this->approvalextra->setSpecialInfo(['is_medical_institute' => $is_medical_institute]);
-		$this->approvalextra->setSpecialInfo(['is_public_agency' => $is_public_agency]);
+        $special_info_ary = [
+            'job_company_taiwan_1000_point' => '',
+            'job_company_world_500_point' => '',
+            'job_company_medical_institute_point' => '',
+            'job_company_public_agency_point' => '',
+        ];
+        foreach ($special_info_ary as $key => $value)
+        {
+            if (isset($get[$key]) && is_numeric($get[$key]))
+            {
+                $special_info_ary[$key] = $get[$key];
+            }
+            else
+            {
+                unset($special_info_ary[$key]);
+            }
+        }
+		$this->approvalextra->setSpecialInfo($special_info_ary);
 
         $level = false;
         if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
@@ -1015,16 +1025,20 @@ class Target extends MY_Admin_Controller {
             $meta_info = $meta_list_by_key['job_company'] ?? new stdclass();
             $job_company = $meta_info->meta_value ?? '';
 
-            $is_taiwan_1000 = $this->target_lib->check_is_taiwan_1000($target_meta, $job_company);
-            $is_world_500 = $this->target_lib->check_is_world_500($target_meta, $job_company);
-            $is_medical_institute = $this->target_lib->check_is_medical_institute($target_meta, $job_company);
-            $is_public_agency = $this->target_lib->check_is_public_agency($target_meta, $job_company);
+            $this->load->model('user/user_meta_model');
+            $user_meta_list = $this->user_meta_model->as_array()->get_many_by([
+                'user_id' => $userId,
+                'meta_key' => [
+                    'job_company_taiwan_1000_point', 'job_company_world_500_point', 'job_company_medical_institute_point', 'job_company_public_agency_point'
+                ],
+            ]);
+            $user_meta_list = array_column($user_meta_list, 'meta_value', 'meta_key');
 
             $special_list = [
-                'is_taiwan_1000' => $is_taiwan_1000,
-                'is_world_500' => $is_world_500,
-                'is_medical_institute' => $is_medical_institute,
-                'is_public_agency' => $is_public_agency,
+                'job_company_taiwan_1000_point' => $user_meta_list['job_company_taiwan_1000_point'] ?? '',
+                'job_company_world_500_point' => $user_meta_list['job_company_world_500_point'] ?? '',
+                'job_company_medical_institute_point' => $user_meta_list['job_company_medical_institute_point'] ?? '',
+                'job_company_public_agency_point' => $user_meta_list['job_company_public_agency_point'] ?? '',
                 'job_company' => $job_company,
             ];
 

@@ -115,57 +115,57 @@ class Creditmanagement extends MY_Admin_Controller
                 $this->json_output->setStatusCode(400)->setResponse(['msg' => $response['msg']])->send();
             }
         }
-
-        if (isset($this->inputData['is_taiwan_1000']))
+        $user_id = $this->target_model->get_user_id_by_id($this->inputData['target_id']);
+        if (isset($this->inputData['job_company_taiwan_1000_point']) && is_numeric($this->inputData['job_company_taiwan_1000_point']))
         {
-            $this->load->model('loan/target_meta_model');
-            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_taiwan_1000']);
+            $this->load->model('user/user_meta_model');
+            $rs = $this->user_meta_model->get_by(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_taiwan_1000_point']);
             if (isset($rs))
             {
-                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_taiwan_1000'], ['meta_value' => $this->inputData['is_taiwan_1000']]);
+                $this->user_meta_model->update_by(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_taiwan_1000_point'], ['meta_value' => $this->inputData['job_company_taiwan_1000_point']]);
             }
             else
             {
-                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_taiwan_1000', 'meta_value' => $this->inputData['is_taiwan_1000']]);
+                $this->user_meta_model->insert(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_taiwan_1000_point', 'meta_value' => $this->inputData['job_company_taiwan_1000_point']]);
             }
         }
-        if (isset($this->inputData['is_world_500']))
+        if (isset($this->inputData['job_company_world_500_point']) && is_numeric($this->inputData['job_company_world_500_point']))
         {
-            $this->load->model('loan/target_meta_model');
-            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_world_500']);
+            $this->load->model('user/user_meta_model');
+            $rs = $this->user_meta_model->get_by(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_world_500_point']);
             if (isset($rs))
             {
-                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_world_500'], ['meta_value' => $this->inputData['is_world_500']]);
+                $this->user_meta_model->update_by(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_world_500_point'], ['meta_value' => $this->inputData['job_company_world_500_point']]);
             }
             else
             {
-                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_world_500', 'meta_value' => $this->inputData['is_world_500']]);
+                $this->user_meta_model->insert(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_world_500_point', 'meta_value' => $this->inputData['job_company_world_500_point']]);
             }
         }
-        if (isset($this->inputData['is_medical_institute']))
+        if (isset($this->inputData['job_company_medical_institute_point']) && is_numeric($this->inputData['job_company_medical_institute_point']))
         {
-            $this->load->model('loan/target_meta_model');
-            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_medical_institute']);
+            $this->load->model('user/user_meta_model');
+            $rs = $this->user_meta_model->get_by(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_medical_institute_point']);
             if (isset($rs))
             {
-                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_medical_institute'], ['meta_value' => $this->inputData['is_medical_institute']]);
+                $this->user_meta_model->update_by(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_medical_institute_point'], ['meta_value' => $this->inputData['job_company_medical_institute_point']]);
             }
             else
             {
-                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_medical_institute', 'meta_value' => $this->inputData['is_medical_institute']]);
+                $this->user_meta_model->insert(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_medical_institute_point', 'meta_value' => $this->inputData['job_company_medical_institute_point']]);
             }
         }
-        if (isset($this->inputData['is_public_agency']))
+        if (isset($this->inputData['job_company_public_agency_point']) && is_numeric($this->inputData['job_company_public_agency_point']))
         {
-            $this->load->model('loan/target_meta_model');
-            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_public_agency']);
+            $this->load->model('user/user_meta_model');
+            $rs = $this->user_meta_model->get_by(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_public_agency_point']);
             if (isset($rs))
             {
-                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_public_agency'], ['meta_value' => $this->inputData['is_public_agency']]);
+                $this->user_meta_model->update_by(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_public_agency_point'], ['meta_value' => $this->inputData['job_company_public_agency_point']]);
             }
             else
             {
-                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_public_agency', 'meta_value' => $this->inputData['is_public_agency']]);
+                $this->user_meta_model->insert(['user_id' => $user_id['user_id'], 'meta_key' => 'job_company_public_agency_point', 'meta_value' => $this->inputData['job_company_public_agency_point']]);
             }
         }
 
