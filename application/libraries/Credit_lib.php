@@ -441,6 +441,14 @@ class Credit_lib{
         }
 
         // 財務評分
+        if ($approvalExtra && ! empty($approvalExtra->getSpecialInfo()))
+        {
+            $special_info = $approvalExtra->getSpecialInfo();
+            $special_info = array_filter($special_info, function ($value) {
+                return is_numeric($value);
+            });
+            $data = array_replace($data, $special_info);
+        }
         $get_financial_point = $this->get_financial_point_product_salary_man($data);
         $financial_point_m = min($get_financial_point['point'], 2250);
         $total += $financial_point_m;
@@ -1042,22 +1050,19 @@ class Credit_lib{
         $point = 0;
         $score_history = [];
         // 1.服務機構名稱
-        if ( ! empty($data['job_company']))
-        {
-            $job_company_point = [];
-            // 世界500大企業: 300
-            $job_company_point[] = $this->get_job_company_in_world_500($data['job_company']);
-            // 公家機關: 250
-            $job_company_point[] = $this->get_job_company_in_public_agency($data['job_company']);
-            // 台灣1000大企業: 前100大得300分、101-500得200分、501-1000得100分
-            $job_company_point[] = $this->get_job_company_in_taiwan_1000($data['job_company']);
-            // 台灣公私立醫院: 醫學中心300分、區域醫院200分、其他100分
-            $job_company_point[] = $this->get_job_company_in_medical_institute($data['job_company']);
+        // 世界500大企業: 300
+        // 公家機關: 250
+        // 台灣1000大企業: 前100大得300分、101-500得200分、501-1000得100分
+        // 台灣公私立醫院: 醫學中心300分、區域醫院200分、其他100分
 
-            $job_company_point_max = max($job_company_point);
-            $point += $job_company_point_max;
-            $score_history[] = '服務機構: ' . $job_company_point_max;
-        }
+        $job_company_point_max = max([
+            $data['job_company_world_500_point'] ?? 0,
+            $data['job_company_public_agency_point'] ?? 0,
+            $data['job_company_taiwan_1000_point'] ?? 0,
+            $data['job_company_medical_institute_point'] ?? 0,
+        ]);
+        $point += $job_company_point_max;
+        $score_history[] = '服務機構: ' . $job_company_point_max;
 
         // 2.職業情況
         if (isset($data['job_type'])) {
@@ -1122,49 +1127,45 @@ class Credit_lib{
     /**
      * 取得世界 500 大企業的分數
      * @param $job_company : 任職公司名稱
-     * @return int
      */
-    public function get_job_company_in_world_500($job_company):int
+    public function get_job_company_in_world_500($job_company)
     {
         $this->CI->load->config('world_500');
         $world_500_list = $this->CI->config->item('world_500');
-        return $world_500_list[$job_company] ?? 0;
+        return $world_500_list[$job_company] ?? '';
     }
 
     /**
      * 取得公家機關的分數
-     * @param $job_company
-     * @return int
+     * @param $job_company : 任職公司名稱
      */
-    public function get_job_company_in_public_agency($job_company):int
+    public function get_job_company_in_public_agency($job_company)
     {
         $this->CI->load->config('public_agency');
         $public_agency_list = $this->CI->config->item('public_agency');
-        return $public_agency_list[$job_company] ?? 0;
+        return $public_agency_list[$job_company] ?? '';
     }
 
     /**
      * 取得台灣 1000 大企業的分數
      * @param $job_company : 任職公司名稱
-     * @return int
      */
-    public function get_job_company_in_taiwan_1000($job_company): int
+    public function get_job_company_in_taiwan_1000($job_company)
     {
         $this->CI->load->config('taiwan_1000');
         $taiwan_1000_list = $this->CI->config->item('taiwan_1000');
-        return $taiwan_1000_list[$job_company] ?? 0;
+        return $taiwan_1000_list[$job_company] ?? '';
     }
 
     /**
      * 取得醫療院所的分數
      * @param $job_company : 任職公司名稱
-     * @return int
      */
-    public function get_job_company_in_medical_institute($job_company): int
+    public function get_job_company_in_medical_institute($job_company)
     {
         $this->CI->load->config('medical_institute');
         $medical_institute_list = $this->CI->config->item('medical_institute');
-        return $medical_institute_list[$job_company] ?? 0;
+        return $medical_institute_list[$job_company] ?? '';
     }
 
     /**

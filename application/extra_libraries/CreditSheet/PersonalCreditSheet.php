@@ -215,16 +215,16 @@ class PersonalCreditSheet extends CreditSheetBase {
             ['credit_sheet_id' => $this->creditSheetRecord->id]);
 
         $target_meta = $this->CI->target_meta_model->as_array()->get_many_by(['target_id' => $this->target->id, 'meta_key' => [
-            'is_taiwan_1000',
-            'is_world_500',
-            'is_medical_institute',
-            'is_public_agency',
+            'job_company_taiwan_1000_point',
+            'job_company_world_500_point',
+            'job_company_medical_institute_point',
+            'job_company_public_agency_point',
         ]]);
         $target_meta = array_column($target_meta, 'meta_value', 'meta_key');
-        $is_taiwan_1000 = $target_meta['is_taiwan_1000'] ?? NULL;
-        $is_world_500 = $target_meta['is_world_500'] ?? NULL;
-        $is_medical_institute = $target_meta['is_medical_institute'] ?? NULL;
-        $is_public_agency = $target_meta['is_public_agency'] ?? NULL;
+        $job_company_taiwan_1000_point = $target_meta['job_company_taiwan_1000_point'] ?? 0;
+        $job_company_world_500_point = $target_meta['job_company_world_500_point'] ?? 0;
+        $job_company_medical_institute_point = $target_meta['job_company_medical_institute_point'] ?? 0;
+        $job_company_public_agency_point = $target_meta['job_company_public_agency_point'] ?? 0;
 
         // 上班族階段上架 或 非階段上架之其他產品
         if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
@@ -233,22 +233,12 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
             $this->CI->approvalextra->setSkipInsertion(true);
             $this->CI->approvalextra->setExtraPoints($bonusScore);
-            if (isset($is_taiwan_1000))
-            {
-                $this->CI->approvalextra->setSpecialInfo(['is_taiwan_1000' => $is_taiwan_1000]);
-            }
-            if (isset($is_world_500))
-            {
-                $this->CI->approvalextra->setSpecialInfo(['is_world_500' => $is_world_500]);
-            }
-            if (isset($is_medical_institute))
-            {
-                $this->CI->approvalextra->setSpecialInfo(['is_medical_institute' => $is_medical_institute]);
-            }
-            if (isset($is_public_agency))
-            {
-                $this->CI->approvalextra->setSpecialInfo(['is_public_agency' => $is_public_agency]);
-            }
+            $this->CI->approvalextra->setSpecialInfo([
+                'job_company_taiwan_1000_point' => $job_company_taiwan_1000_point,
+                'job_company_world_500_point' => $job_company_world_500_point,
+                'job_company_medical_institute_point' => $job_company_medical_institute_point,
+                'job_company_public_agency_point' => $job_company_public_agency_point,
+            ]);
 
             // 上班族階段上架
             $level = false;

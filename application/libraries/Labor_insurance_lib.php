@@ -17,6 +17,10 @@ class Labor_insurance_lib
     const REJECT_DUE_TO_REPORT_NOT_COMPLETE = "請提供歷年勞工保險異動明細資料。";
     const REJECT_DUE_TO_UNEMPLOYMENT = "您提供的工作證明，無法辨識清楚，麻煩您重新操作一次，謝謝配合與協助！";
     const REJECT_DUR_TO_CONSTRAINT_NOT_PASSED = "經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+    private $taiwan_1000;
+    private $world_500;
+    private $medical_institute;
+    private $public_agency;
 
     public function __construct()
     {
@@ -851,7 +855,8 @@ class Labor_insurance_lib
             return $is_taiwan_1000;
         }
 
-        if (in_array($companyName, $this->taiwan_1000)) {
+        if ( ! empty($this->taiwan_1000[$companyName]))
+        {
             $message["status"] = self::SUCCESS;
             $message["message"] .= "是";
             $is_taiwan_1000 = true;
@@ -880,7 +885,7 @@ class Labor_insurance_lib
             return $is_world_500;
         }
 
-        if (in_array($companyName, $this->world_500))
+        if ( ! empty($this->world_500[$companyName]))
         {
             $message['status'] = self::SUCCESS;
             $message['message'] .= '是';
@@ -912,7 +917,7 @@ class Labor_insurance_lib
             return $is_medical_institute;
         }
 
-        if (in_array($companyName, $this->medical_institute))
+        if ( ! empty($this->medical_institute[$companyName]))
         {
             $message['status'] = self::SUCCESS;
             $message['message'] .= '是';
@@ -944,7 +949,7 @@ class Labor_insurance_lib
             return $is_public_agency;
         }
 
-        if (in_array($companyName, $this->public_agency))
+        if ( ! empty($this->public_agency[$companyName]))
         {
             $message['status'] = self::SUCCESS;
             $message['message'] .= '是';

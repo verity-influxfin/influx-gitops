@@ -631,10 +631,7 @@
                                             </td>
                                             <td>
                                                 <p class="job_company"></p>
-                                                <select id="is_taiwan_1000" >
-                                                    <option value="0">否</option>
-                                                    <option value="1">是</option>
-                                                </select>
+                                                <input type="text" id="job_company_taiwan_1000_point">
                                             </td>
                                         </tbody>
                                     </table>
@@ -653,10 +650,7 @@
                                         </td>
                                         <td>
                                             <p class="job_company"></p>
-                                            <select id="is_world_500" >
-                                                <option value="0">否</option>
-                                                <option value="1">是</option>
-                                            </select>
+                                            <input type="text" id="job_company_world_500_point">
                                         </td>
                                         </tbody>
                                     </table>
@@ -675,10 +669,7 @@
                                         </td>
                                         <td>
                                             <p class="job_company"></p>
-                                            <select id="is_medical_institute" >
-                                                <option value="0">否</option>
-                                                <option value="1">是</option>
-                                            </select>
+                                            <input type="text" id="job_company_medical_institute_point">
                                         </td>
                                         </tbody>
                                     </table>
@@ -697,10 +688,7 @@
                                         </td>
                                         <td>
                                             <p class="job_company"></p>
-                                            <select id="is_public_agency" >
-                                                <option value="0">否</option>
-                                                <option value="1">是</option>
-                                            </select>
+                                            <input type="text" id="job_company_public_agency_point">
                                         </td>
                                         </tbody>
                                     </table>
@@ -974,10 +962,6 @@
 						<div class="col-lg-12 text-center">
 							<input id="credit_test" type="text" name="score" value="0" / disabled>
 							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
-                            <input type="text" name="is_taiwan_1000" value="0" hidden>
-                            <input type="text" name="is_world_500" value="0" hidden>
-                            <input type="text" name="is_medical_institute" value="0" hidden>
-                            <input type="text" name="is_public_agency" value="0" hidden>
 							<button class="btn btn-warning need_chk_before_approve" type="submit">額度試算</button>
 							<button class="btn btn-danger need_chk_before_approve" data-url="/admin/Target/verify_failed"
 								id="verify_failed">不通過</button>
@@ -1193,10 +1177,10 @@
 	function send_opinion(target_id = '', group_id = '') {
 		let score = $(`#${group_id}_score`).val();
 		let opinion = $(`#${group_id}_opinion`).val();
-		let is_taiwan_1000 = $('#is_taiwan_1000').val();
-		let is_world_500 = $('#is_world_500').val();
-		let is_medical_institute = $('#is_medical_institute').val();
-		let is_public_agency = $('#is_public_agency').val();
+		let job_company_taiwan_1000_point = $('#job_company_taiwan_1000_point').val();
+		let job_company_world_500_point = $('#job_company_world_500_point').val();
+		let job_company_medical_institute_point = $('#job_company_medical_institute_point').val();
+		let job_company_public_agency_point = $('#job_company_public_agency_point').val();
 		if (group_id && target_id) {
 			$.ajax({
 				type: "POST",
@@ -1206,10 +1190,10 @@
 					'score': score,
 					'opinion': opinion,
 					'group': group_id,
-					'is_taiwan_1000': is_taiwan_1000,
-					'is_world_500': is_world_500,
-					'is_medical_institute': is_medical_institute,
-					'is_public_agency': is_public_agency,
+					'job_company_taiwan_1000_point': job_company_taiwan_1000_point,
+					'job_company_world_500_point': job_company_world_500_point,
+					'job_company_medical_institute_point': job_company_medical_institute_point,
+					'job_company_public_agency_point': job_company_public_agency_point,
 					'type': 'person',
 				},
 				async: false,
@@ -1407,19 +1391,6 @@
 		$('#newModal').modal('hide')
 		location.reload()
         })
-
-        $('#is_taiwan_1000').change(function() {
-            $('input[name=is_taiwan_1000]').val($(this).val());
-        });
-        $('#is_world_500').change(function() {
-            $('input[name=is_world_500]').val($(this).val());
-        });
-        $('#is_medical_institute').change(function() {
-            $('input[name=is_medical_institute]').val($(this).val());
-        });
-        $('#is_public_agency').change(function() {
-            $('input[name=is_public_agency]').val($(this).val());
-        });
 
 		var urlString = window.location.href;
 		var url = new URL(urlString);
@@ -2146,31 +2117,22 @@
 
         function fillTopSpecialList(specialList) {
 		    let company = specialList?.job_company;
-		    let is_taiwan_1000 = specialList?.is_taiwan_1000;
-		    let is_world_500 = specialList?.is_world_500;
-		    let is_medical_institute = specialList?.is_medical_institute;
-		    let is_public_agency = specialList?.is_public_agency;
+		    let job_company_taiwan_1000_point = specialList?.job_company_taiwan_1000_point;
+		    let job_company_world_500_point = specialList?.job_company_world_500_point;
+		    let job_company_medical_institute_point = specialList?.job_company_medical_institute_point;
+		    let job_company_public_agency_point = specialList?.job_company_public_agency_point;
             company = company === undefined ? '' : company;
-            is_taiwan_1000 = is_taiwan_1000 === undefined ? 0 : is_taiwan_1000;
-            is_world_500 = is_world_500 === undefined ? 0 : is_world_500;
-            is_medical_institute = is_medical_institute === undefined ? 0 : is_medical_institute;
-            is_public_agency = is_public_agency === undefined ? 0 : is_public_agency;
+            job_company_taiwan_1000_point = job_company_taiwan_1000_point === undefined ? '' : job_company_taiwan_1000_point;
+            job_company_world_500_point = job_company_world_500_point === undefined ? '' : job_company_world_500_point;
+            job_company_medical_institute_point = job_company_medical_institute_point === undefined ? '' : job_company_medical_institute_point;
+            job_company_public_agency_point = job_company_public_agency_point === undefined ? '' : job_company_public_agency_point;
 
             $('p.job_company').text(company);
-            $('#is_taiwan_1000').find("option:selected").removeAttr('selected');
-            $('#is_world_500').find("option:selected").removeAttr('selected');
-            $('#is_medical_institute').find("option:selected").removeAttr('selected');
-            $('#is_public_agency').find("option:selected").removeAttr('selected');
 
-            $('#is_taiwan_1000').find("option[value="+is_taiwan_1000+"]").attr('selected', 'selected');
-            $('#is_world_500').find("option[value="+is_world_500+"]").attr('selected', 'selected');
-            $('#is_medical_institute').find("option[value="+is_medical_institute+"]").attr('selected', 'selected');
-            $('#is_public_agency').find("option[value="+is_public_agency+"]").attr('selected', 'selected');
-
-            $('input[name=is_taiwan_1000]').val(is_taiwan_1000);
-            $('input[name=is_world_500]').val(is_world_500);
-            $('input[name=is_medical_institute]').val(is_medical_institute);
-            $('input[name=is_public_agency]').val(is_public_agency);
+            $('#job_company_taiwan_1000_point').val(job_company_taiwan_1000_point);
+            $('#job_company_world_500_point').val(job_company_world_500_point);
+            $('#job_company_medical_institute_point').val(job_company_medical_institute_point);
+            $('#job_company_public_agency_point').val(job_company_public_agency_point);
         }
 
 		function getCenterTextCell(value, additionalCssClass = "") {
@@ -2199,10 +2161,10 @@
 			var form = $(this);
 
 			var points = form.find('input[name="score"]').val();
-			var is_taiwan_1000 = form.find('input[name="is_taiwan_1000"]').val();
-			var is_world_500 = form.find('input[name="is_world_500"]').val();
-			var is_medical_institute = form.find('input[name="is_medical_institute"]').val();
-			var is_public_agency = form.find('input[name="is_public_agency"]').val();
+			let job_company_taiwan_1000_point = $('#job_company_taiwan_1000_point').val();
+			let job_company_world_500_point = $('#job_company_world_500_point').val();
+			let job_company_medical_institute_point = $('#job_company_medical_institute_point').val();
+			let job_company_public_agency_point = $('#job_company_public_agency_point').val();
 			var remark = form.find('input[name="description"]').val();
 
             let url = new URL(location.href);
@@ -2210,10 +2172,10 @@
             url.search = new URLSearchParams({
                 'id': caseId,
                 'points': points,
-                'is_taiwan_1000': is_taiwan_1000,
-                'is_world_500': is_world_500,
-                'is_medical_institute': is_medical_institute,
-                'is_public_agency': is_public_agency
+                'job_company_taiwan_1000_point': job_company_taiwan_1000_point,
+                'job_company_world_500_point': job_company_world_500_point,
+                'job_company_medical_institute_point': job_company_medical_institute_point,
+                'job_company_public_agency_point': job_company_public_agency_point
             });
 
 			$.ajax({

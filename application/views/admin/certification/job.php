@@ -168,7 +168,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>專業證書是否有效</label><br />
-                                        <p class="form-control-static"><?= $content['job_has_license'] === '1' ? '是' : '否' ?></p>
+                                        <p class="form-control-static"><?= ($content['job_has_license'] ?? '0') === '1' ? '是' : '否' ?></p>
                                     </div>
                                     <?}else{?>
                                         <form role="form" method="post" action="/admin/certification/user_certification_edit">
