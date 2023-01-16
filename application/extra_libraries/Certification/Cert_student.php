@@ -3,6 +3,7 @@
 namespace Certification;
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use Certification_ocr\Parser\Ocr_parser_factory;
 use CertificationResult\MessageDisplay;
 
 /**
@@ -53,21 +54,35 @@ class Cert_student extends Certification_base
      */
     public function parse()
     {
-        $this->CI->load->library('scraper/sip_lib');
+        $parsed_content = array_merge($this->content, $this->_get_ocr_info());
 
+        $sip_data = $this->CI->sip_lib->getDeepData($this->content['school'], $this->content['sip_account']);
+        $parsed_content['sip_data'] = $sip_data['response'] ?? [];
+        $parsed_content['meta']['last_grade'] = $sip_data['response']['result']['latestGrades'] ?? '';
+
+        return $parsed_content;
+    }
+
+    /**
+     * 驗證之前的前置確認作業
+     * @return bool
+     */
+    public function check_before_verify(): bool
+    {
         if (empty($this->content['school']) || empty($this->content['sip_account']) || empty($this->content['sip_password']))
         {
             $this->result->addMessage('SIP填入資訊為空', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return $this->content;
+            return FALSE;
         }
 
+        $this->CI->load->library('scraper/sip_lib');
         $sip_log = $this->CI->sip_lib->getLoginLog($this->content['school'], $this->content['sip_account']);
 
         // 判斷 login_log 是否有回應
         if ( ! isset($sip_log['status']))
         {
             $this->result->addMessage('SIP爬蟲LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return $this->content;
+            return FALSE;
         }
 
         // 判斷 login 是否執行完成
@@ -85,14 +100,14 @@ class Cert_student extends Certification_base
                 default:
                     $this->result->addMessage('SIP爬蟲LoginLog http回應: ' . $sip_log['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             }
-            return $this->content;
+            return FALSE;
         }
 
         // 判斷 login 執行完成後的結果
         if ( ! isset($sip_log['response']['status']))
         {
             $this->result->addMessage('無對應的SIP爬蟲LoginLog status，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return $this->content;
+            return FALSE;
         }
         if ($sip_log['response']['status'] != 'finished')
         {
@@ -119,7 +134,7 @@ class Cert_student extends Certification_base
                 default:
                     $this->result->addMessage('SIP爬蟲LoginLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             }
-            return $this->content;
+            return FALSE;
         }
 
         // 判斷 SIP 帳號密碼是否正確
@@ -145,7 +160,7 @@ class Cert_student extends Certification_base
                 MessageDisplay::Backend
             );
 
-            return $this->content;
+            return FALSE;
         }
 
         // 判斷 SIP 是否成功登入
@@ -157,14 +172,14 @@ class Cert_student extends Certification_base
                 CERTIFICATION_STATUS_PENDING_TO_REVIEW,
                 MessageDisplay::Backend
             );
-            return $this->content;
+            return FALSE;
         }
 
         // 判斷 deep_log 是否有回應
         $deep_log = $this->CI->sip_lib->getDeepLog($this->content['school'], $this->content['sip_account']);
         if ( ! isset($deep_log['status']) || ! isset($deep_log['response']['status']))
         {
-            return $this->content;
+            return FALSE;
         }
 
         // 判斷 deep_log 是否執行完成
@@ -179,7 +194,7 @@ class Cert_student extends Certification_base
                 default:
                     // 沒動作
             }
-            return $this->content;
+            return FALSE;
         }
 
         // 判斷 deep_log 執行完成後的結果
@@ -197,45 +212,8 @@ class Cert_student extends Certification_base
                 default:
                     $this->result->addMessage('SIP爬蟲DeepLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             }
-            return $this->content;
+            return FALSE;
         }
-
-        $sip_data = $this->CI->sip_lib->getDeepData($this->content['school'], $this->content['sip_account']);
-
-        // 判斷是否有資料
-        if ( ! isset($sip_data['response']['result']))
-        {
-            $this->result->addMessage('SIP爬蟲DeepScraper沒有資料，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-        }
-
-        // 判斷實名認證資料與 SIP 資料是否一致
-        $this->content['sip_data'] = $sip_data['response'] ?? [];
-        $this->content['meta']['last_grade'] = $sip_data['response']['result']['latestGrades'] ?? '';
-        $user_info = $this->dependency_cert_list[CERTIFICATION_IDENTITY]->content ?? []; // 取得實名認證的資料
-        $name = $user_info['name'] ?? '';
-        $id_number = $user_info['id_number'] ?? '';
-        $sip_name = $sip_data['response']['result']['name'] ?? '';
-        $sip_id_number = $sip_data['response']['result']['idNumber'] ?? '';
-
-        if ($name != $sip_name)
-        {
-            $this->result->addMessage("SIP姓名與實名認證資訊不同:1.實名認證姓名=\"{$name}\"2.SIP姓名=\"{$sip_name}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-        }
-
-        if ($id_number != $sip_id_number)
-        {
-            $this->result->addMessage("SIP身分證與實名認證資訊不同1.實名認證身分證=\"{$id_number}\"2.SIP身分證=\"{$sip_id_number}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-        }
-
-        return $this->content;
-    }
-
-    /**
-     * 驗證之前的前置確認作業
-     * @return bool
-     */
-    public function check_before_verify(): bool
-    {
         return TRUE;
     }
 
@@ -256,6 +234,18 @@ class Cert_student extends Certification_base
      */
     public function verify_data($content): bool
     {
+        if ($this->_chk_ocr_status($content) === FALSE)
+        {
+            return FALSE;
+        }
+
+        // 判斷是否有 SIP 資料
+        if ( ! isset($content['sip_data']['result']))
+        {
+            $this->result->addMessage('SIP爬蟲DeepScraper沒有資料，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
+        }
+
         if (empty($content['graduate_date']))
         {
             $this->result->addMessage('預計畢業時間格式錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
@@ -268,6 +258,16 @@ class Cert_student extends Certification_base
             return FALSE;
         }
 
+        return TRUE;
+    }
+
+    /**
+     * 依照授信規則審查資料
+     * @param $content : 徵信內容
+     * @return bool
+     */
+    public function review_data($content): bool
+    {
         $graduate_date = preg_replace('/民國/', '', $content['graduate_date']);
         $this->CI->load->library('mapping/time');
         $graduate_date = $this->CI->time->ROCDateToUnixTimestamp($graduate_date);
@@ -283,16 +283,56 @@ class Cert_student extends Certification_base
             }
         }
 
-        return TRUE;
-    }
+        // 判斷實名認證、自填資料與 SIP 資料是否一致
+        // 若不一致，改以 OCR 結果比對
+        $user_info = $this->dependency_cert_list[CERTIFICATION_IDENTITY]->content ?? []; // 取得實名認證的資料
+        $name = $user_info['name'] ?? '';
+        $school = $content['school'] ?? '';
+        $department = $content['department'] ?? '';
+        $sip_name = $content['sip_data']['result']['name'] ?? '';
+        $sip_school = $content['sip_data']['university'] ?? '';
+        $sip_department = $content['sip_data']['result']['department'] ?? '';
+        if ( ! isset($content['ocr_parser']['res']) || $content['ocr_parser']['res'] !== TRUE || empty($content['ocr_parser']['content']))
+        {
+            if ($name != $sip_name)
+            {
+                $this->result->addMessage("SIP姓名與實名認證資訊不同1.實名認證姓名=\"{$name}\"2.SIP姓名=\"{$sip_name}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                return FALSE;
+            }
+            if ($school != $sip_school)
+            {
+                $this->result->addMessage("SIP學校與學生認證資訊不同1.學生認證學校=\"{$school}\"2.SIP學校=\"{$sip_school}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                return FALSE;
+            }
+            if ($department != $sip_department)
+            {
+                $this->result->addMessage("SIP系所與學生認證資訊不同1.學生認證系所=\"{$department}\"2.SIP系所=\"{$sip_department}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                return FALSE;
+            }
+        }
+        if ($name == $sip_name && $school == $sip_school && $department == $sip_department)
+        {
+            return TRUE;
+        }
+        $ocr_name = $content['ocr_parser']['content']['student']['name'] ?? '';
+        $ocr_school = $content['ocr_parser']['content']['university']['name'] ?? '';
+        $ocr_department = $content['ocr_parser']['content']['student']['department'] ?? '';
+        if ($name != $ocr_name)
+        {
+            $this->result->addMessage("OCR姓名與實名認證資訊不同1.實名認證姓名=\"{$name}\"2.OCR姓名=\"{$ocr_name}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
+        }
+        if ($school != $ocr_school)
+        {
+            $this->result->addMessage("OCR學校與學生認證資訊不同1.學生認證學校=\"{$school}\"2.OCR學校=\"{$ocr_school}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
+        }
+        if ($department != $ocr_department)
+        {
+            $this->result->addMessage("OCR系所與學生認證資訊不同1.學生認證系所=\"{$department}\"2.OCR系所=\"{$ocr_department}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
+        }
 
-    /**
-     * 依照授信規則審查資料
-     * @param $content : 徵信內容
-     * @return bool
-     */
-    public function review_data($content): bool
-    {
         return TRUE;
     }
 
@@ -396,5 +436,43 @@ class Cert_student extends Certification_base
     public function is_expired(): bool
     {
         return FALSE;
+    }
+
+    // 要跑的 OCR 辨識
+    private function _get_ocr_info(): array
+    {
+        $result = [];
+        if ( ! isset($this->content['ocr_parser']['res']))
+        {
+            $cert_ocr_parser = Ocr_parser_factory::get_instance($this->certification);
+            $ocr_parser_result = $cert_ocr_parser->get_result();
+            if ($ocr_parser_result['success'] === TRUE)
+            {
+                if ($ocr_parser_result['code'] == 201 || $ocr_parser_result['code'] == 202)
+                { // OCR 任務剛建立，或是 OCR 任務尚未辨識完成
+                    return $result;
+                }
+                $result['ocr_parser']['res'] = TRUE;
+                $result['ocr_parser']['content'] = $ocr_parser_result['data'];
+            }
+            else
+            {
+                $result['ocr_parser']['res'] = FALSE;
+                $result['ocr_parser']['msg'] = $ocr_parser_result['msg'];
+            }
+        }
+
+        return $result;
+    }
+
+    // OCR 辨識後的檢查
+    private function _chk_ocr_status($content): bool
+    {
+        if ( ! isset($content['ocr_parser']['res']))
+        {
+            $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
+            return FALSE;
+        }
+        return TRUE;
     }
 }
