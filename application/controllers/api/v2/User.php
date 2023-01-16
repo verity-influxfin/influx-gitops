@@ -689,7 +689,7 @@ END:
                     'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
                     'investor' => $insert_user_param['investor_status'],
                     'company' => 1,
-                    'incharge' => 0,
+                    'incharge' => 1, // todo: incharge 固定為１，是許雲輔說要改的
                     'agent' => 0,
                 ];
 
@@ -749,7 +749,7 @@ END:
                     'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
                     'investor' => $input['investor'] ? 1 : 0,
                     'company' => 1,
-                    'incharge' => 0,
+                    'incharge' => 1, // todo: incharge 固定為１，是許雲輔說要改的
                     'agent' => 0,
                 ];
                 $request_token = AUTHORIZATION::generateUserToken($token);
