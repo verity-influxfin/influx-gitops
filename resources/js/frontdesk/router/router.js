@@ -1,6 +1,6 @@
 import engineerLoan from "../pages/engineerLoan";
 import transfer from "../pages/transfer";
-import company from "../pages/company";
+import company from "../pages/companyV2";
 import news from "../pages/news";
 import ntu from "../pages/ntu"
 import charitableStatus from "../pages/charitableStatus"
