@@ -99,6 +99,7 @@
       </div>
     </div>
     <div class="company-roadmap">
+      <div class="roadmap-title">發展歷程</div>
       <div class="swiper-container">
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper">
@@ -127,13 +128,16 @@
                 <div class="roadmap-item-content-title">致力ESG</div>
                 <div>
                   •2/10運用金融科技攜手知名藝人張鈞甯<br />
-                  透過手機APP線上協助台大兒童醫院募捐
+                  &nbsp;&nbsp;透過手機APP線上協助台大兒童醫院募捐
                 </div>
                 <div>
                   •6/30受邀新北市一金二造三區域_金融科<br />
-                  技業者出席政策規劃，共同打造國際 •經濟重鎮
+                  &nbsp;&nbsp;技業者出席政策規劃，共同打造國際
+                  &nbsp;&nbsp;經濟重鎮
                 </div>
-                <div>•7/30回饋台北大學母校，捐贈1200萬 •興建教室</div>
+                <div>
+                  •7/30回饋台北大學母校，捐贈1200萬<br />&nbsp;&nbsp;興建教室
+                </div>
                 <div>•會員數突破10萬人才</div>
               </div>
             </div>
@@ -146,6 +150,27 @@
                 <div>•新光金控創投入資為股東</div>
                 <div>•聯手新光銀行推出全線上中小企業</div>
                 <div>•信保融資平台，實現普惠金融</div>
+              </div>
+            </div>
+            <div class="roadmap-item item-3">
+              <div class="roadmap-item-title">2020</div>
+              <div class="roadmap-item-content">
+                <div class="roadmap-item-content-title">聯盟銀行</div>
+                <div>•聯手上海銀行推廣信貸及數存產品</div>
+                <div>•會員數突破6萬人次</div>
+                <div>•取得個人身分驗證裝置系統專利權</div>
+                <div>•領銜主辦第二屆全國AI金融科技競賽</div>
+              </div>
+            </div>
+            <div class="roadmap-item item-4">
+              <div class="roadmap-item-title">2019</div>
+              <div class="roadmap-item-content">
+                <div class="roadmap-item-content-title">創新金融科技</div>
+                <div>•攜手凱基銀行共同行銷信貸產品</div>
+                <div>•創新上班族、分期超市無人化自動風控</div>
+                <div>•經FTS金融總會評鑑市值破億未來獨角獸</div>
+                <div>•聯盟六大校五大金融機構主辦</div>
+                <div>•第一屆全國AI金融科技競賽</div>
               </div>
             </div>
           </div>
@@ -167,85 +192,31 @@
                 />
               </svg>
             </div>
-            <div class="roadmap-item item-1">
-              <div class="roadmap-item-title">2022</div>
+            <div class="roadmap-item item-5">
+              <div class="roadmap-item-title">2018</div>
               <div class="roadmap-item-content">
-                <div class="roadmap-item-content-title">致力ESG</div>
+                <div class="roadmap-item-content-title">系統建構</div>
+                <div>•納入金管會/FTS輔導之新創團隊</div>
                 <div>
-                  •2/10運用金融科技攜手知名藝人張鈞甯<br />
-                  透過手機APP線上協助台大兒童醫院募捐
+                  •推出全台第一個AI無人化風控審核<br />&nbsp;&nbsp;學生貸產品
                 </div>
-                <div>
-                  •6/30受邀新北市一金二造三區域_金融科<br />
-                  技業者出席政策規劃，共同打造國際 •經濟重鎮
-                </div>
-                <div>•7/30回饋台北大學母校，捐贈1200萬 •興建教室</div>
-                <div>•會員數突破10萬人才</div>
+                <div>•推出資金競標媒合系統</div>
+                <div>•首創金融科技債權轉讓系統</div>
+                <div>•受聘高科、東吳、北商大<br />&nbsp;&nbsp;金融科技顧問</div>
               </div>
             </div>
-            <div class="roadmap-item item-2">
-              <div class="roadmap-item-title">2021</div>
+            <div class="roadmap-item item-6">
+              <div class="roadmap-item-title">2017</div>
               <div class="roadmap-item-content">
-                <div class="roadmap-item-content-title">創新生態</div>
-                <div>•攜手王道銀行共同行銷信貸產品</div>
-                <div>•會員數突破7萬人次</div>
-                <div>•新光金控創投入資為股東</div>
-                <div>•聯手新光銀行推出全線上中小企業</div>
-                <div>•信保融資平台，實現普惠金融</div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="svg-path">
-              <svg
-                width="1208"
-                height="119"
-                viewBox="0 0 1208 119"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2.95703 2.53125C123.246 2.53125 123.246 116.001 243.536 116.001C363.825 116.001 363.825 2.53125 484.114 2.53125C604.403 2.53125 604.403 116.001 724.693 116.001C844.982 116.001 844.982 2.53125 965.271 2.53125C1085.56 2.53125 1085.56 116.001 1205.85 116.001"
-                  stroke="white"
-                  stroke-width="4"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </div>
-            <div class="roadmap-item item-1">
-              <div class="roadmap-item-title">2022</div>
-              <div class="roadmap-item-content">
-                <div class="roadmap-item-content-title">致力ESG</div>
-                <div>
-                  •2/10運用金融科技攜手知名藝人張鈞甯<br />
-                  透過手機APP線上協助台大兒童醫院募捐
-                </div>
-                <div>
-                  •6/30受邀新北市一金二造三區域_金融科<br />
-                  技業者出席政策規劃，共同打造國際 •經濟重鎮
-                </div>
-                <div>•7/30回饋台北大學母校，捐贈1200萬 •興建教室</div>
-                <div>•會員數突破10萬人才</div>
-              </div>
-            </div>
-            <div class="roadmap-item item-2">
-              <div class="roadmap-item-title">2021</div>
-              <div class="roadmap-item-content">
-                <div class="roadmap-item-content-title">創新生態</div>
-                <div>•攜手王道銀行共同行銷信貸產品</div>
-                <div>•會員數突破7萬人次</div>
-                <div>•新光金控創投入資為股東</div>
-                <div>•聯手新光銀行推出全線上中小企業</div>
-                <div>•信保融資平台，實現普惠金融</div>
+                <div class="roadmap-item-content-title">普匯啟航</div>
+                <div>•12月公司成立</div>
+                <div>•工研院納入輔導團隊</div>
+                <div>•榮獲亞洲矽谷輔導</div>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- If we need navigation buttons -->
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
+        <div class="swiper-pagination"></div>
       </div>
     </div>
     <div class="partner-card">
@@ -359,10 +330,9 @@ export default {
       AOS.init();
       SwiperCore.use([Navigation])
       const swiper = new Swiper(".swiper-container", {
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
+        pagination: {
+          el: '.swiper-pagination',
+        }
       })
     });
   },
@@ -557,9 +527,21 @@ export default {
     max-width: 1920px;
     margin: 30px auto;
     background-position: left center;
+    position: relative;
+    .roadmap-title {
+      position: absolute;
+      top: 75px;
+      left: calc(50% - 64px);
+      font-style: normal;
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 1.4;
+      text-align: center;
+      color: #036eb7;
+    }
     .swiper-container {
       position: relative;
-      height: 600px;
+      height: 670px;
       width: 1200px;
       top: 265px;
       left: 400px;
@@ -588,7 +570,7 @@ export default {
       &.item-1 {
         margin-top: 115px;
         margin-left: 15px;
-        .roadmap-item-title::before{
+        .roadmap-item-title::before {
           content: '';
           position: absolute;
           width: 2px;
@@ -604,7 +586,65 @@ export default {
         justify-content: flex-end;
         margin-top: 45px;
         left: -25px;
-        .roadmap-item-title::before{
+        .roadmap-item-title::before {
+          content: '';
+          position: absolute;
+          width: 2px;
+          height: 38px;
+          left: 50%;
+          top: -38px;
+          background: #fff;
+        }
+      }
+      &.item-3 {
+        margin-top: 115px;
+        margin-left: 0px;
+        .roadmap-item-title::before {
+          content: '';
+          position: absolute;
+          width: 2px;
+          height: 38px;
+          left: 50%;
+          bottom: -38px;
+          background: #fff;
+        }
+      }
+      &.item-4 {
+        position: relative;
+        flex-direction: column-reverse;
+        justify-content: flex-end;
+        margin-top: 45px;
+        left: -15px;
+        .roadmap-item-title::before {
+          content: '';
+          position: absolute;
+          width: 2px;
+          height: 38px;
+          left: 50%;
+          top: -38px;
+          background: #fff;
+        }
+      }
+      &.item-5 {
+        margin-top: 115px;
+        margin-left: 45px;
+        .roadmap-item-title::before {
+          content: '';
+          position: absolute;
+          width: 2px;
+          height: 38px;
+          left: 50%;
+          bottom: -38px;
+          background: #fff;
+        }
+      }
+      &.item-6 {
+        position: relative;
+        flex-direction: column-reverse;
+        justify-content: flex-end;
+        margin-top: 90px;
+        left: 50px;
+        .roadmap-item-title::before {
           content: '';
           position: absolute;
           width: 2px;
@@ -641,7 +681,6 @@ export default {
         font-size: 14px;
         line-height: 1.6;
         color: #393939;
-        text-align: center;
       }
     }
   }
