@@ -328,7 +328,11 @@
                                                 </div>
                                                 @foreach ($latestArticles as $latestArticle)
                                                 <div class="link-item">
+                                                @if (!empty($latestArticle->path))
+                                                    <a class="link-text" href="/articlepage/{{$latestArticle->path}}">
+                                                @else
                                                     <a class="link-text" href="/articlepage?q=knowledge-{{$latestArticle->ID}}">
+                                                @endif
                                                         {{ $latestArticle->post_title }}
                                                     </a>
                                                 </div>

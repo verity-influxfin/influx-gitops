@@ -60,7 +60,7 @@ class KnowledgeArticleController extends Controller
     public function get_knowledge_articles()
     {
         return DB::table('knowledge_article')
-            ->select('post_title', DB::raw('CASE WHEN release_time IS NULL THEN created_at ELSE release_time END AS post_date'), 'id as ID', 'updated_at as post_modified')
+            ->select('post_title', DB::raw('CASE WHEN release_time IS NULL THEN created_at ELSE release_time END AS post_date'), 'id as ID', 'updated_at as post_modified', 'path')
             ->whereIn('type', ['article', 'investtonic'])
             ->where('isActive', '=', 'on')
             ->take(5)->orderBy('id', 'desc')->get();

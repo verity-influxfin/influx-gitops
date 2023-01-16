@@ -352,6 +352,9 @@ Route::get('/articlepage/{path?}', function (Request $request, $path = '') {
         if (empty($article)) {
             return redirect('/');
         }
+        if (!empty($article->path)) {
+            return redirect('/articlepage/' . $article->path, 301);
+        }
         return view('articlePage', [
             'type' => $type,
             'article' => $article,

@@ -302,9 +302,13 @@
                                               </div>
                                               @foreach ($latestArticles as $latestArticle)
                                               <div class="link-item">
-                                                  <a class="link-text" href="/articlepage?q=knowledge-{{$latestArticle->ID}}">
-                                                      {{ $latestArticle->post_title }}
-                                                  </a>
+                                                @if (!empty($latestArticle->path))
+                                                    <a class="link-text" href="/articlepage/{{$latestArticle->path}}">
+                                                @else
+                                                    <a class="link-text" href="/articlepage?q=knowledge-{{$latestArticle->ID}}">
+                                                @endif
+                                                        {{ $latestArticle->post_title }}
+                                                    </a>
                                               </div>
                                               @endforeach
                                             </div>
@@ -488,7 +492,11 @@
                                         <h3 class="section-title">最新文章</h3>
                                         @foreach ($latestArticles as $latestArticle)
                                         <div class="list-group list-group-flush">
+                                            @if (!empty($latestArticle->path))
+                                            <a class="list-group-item list-group-item-action" href="/articlepage/{{$latestArticle->path}}">
+                                            @else
                                             <a class="list-group-item list-group-item-action" href="/articlepage?q=knowledge-{{$latestArticle->ID}}">
+                                            @endif
                                                 <h5 class="title"> {{ $latestArticle->post_title }} </h5>
                                                 <small class="date">
                                                     {{ $latestArticle->post_date }}
