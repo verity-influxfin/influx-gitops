@@ -362,6 +362,10 @@
                                             if($certification){
                                                 if(isset($input['investor']) && $input['investor'] == 0){
                                                     foreach( $certification[$productKey] as $k => $svalue){
+                                                        if ( ! isset($value->certification[$svalue['id']]))
+                                                        {
+                                                            continue;
+                                                        }
                                                         if(isset($input['company']) && $input['company'] == 1 && isset($value->certification) && $svalue['id'] >= 1000
                                                             || isset($input['company']) && $input['company'] == 0 && isset($value->certification) && $svalue['id'] < 1000){
                                                             if ($value->certification[$svalue['id']]["user_status"]!==null) {
