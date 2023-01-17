@@ -1,6 +1,6 @@
 <template>
   <div class="company-wrapper">
-    <div class="company-banner">
+    <div class="company-banner d-md-block d-none">
       <div class="img-l1" data-aos="fade-right">
         <img src="@/asset/images/company/banner-l1.png" />
       </div>
@@ -22,6 +22,18 @@
       </div>
       <div class="img-r3" data-aos="flip-up" data-aos-delay="1200">
         <img src="@/asset/images/company/banner-r3.png" />
+      </div>
+    </div>
+    <div class="company-banner d-md-none d-flex">
+      <div class="img-top">
+        <img src="@/asset/images/company/company-banner-phone-top.png" />
+      </div>
+      <div class="banner-text" data-aos="zoom-in">
+        <div class="banner-title">普匯相信每個年輕人</div>
+        <div class="banner-sub">我們致力幫助他們完成人生的夢想</div>
+      </div>
+      <div class="img-bottom">
+        <img src="@/asset/images/company/company-banner-phone-bottom.png" />
       </div>
     </div>
     <div class="company-intro">
@@ -65,7 +77,7 @@
           <div class="intro-group-item-icon">
             <img src="@/asset/images/company/company-group-icon-1.svg" alt="" />
           </div>
-          <div class="intro-group-item-text">
+          <div class="intro-group-item-text d-md-block d-none">
             <div>
               首創台灣<span class="color-primary"
                 >「AI風控審核無人化融資系統」</span
@@ -73,34 +85,46 @@
             </div>
             <div>全程無人為干擾，一支手機完成借貸！</div>
           </div>
+          <div class="intro-group-item-text d-md-none d-block">
+            首創台灣<span class="color-primary"
+              >「AI風控審核無人化融資系統」</span
+            >，利用高端科技， 全程無人為干擾，一支手機完成借貸！
+          </div>
         </div>
         <div class="intro-group-item">
           <div class="intro-group-item-icon">
             <img src="@/asset/images/company/company-group-icon-2.svg" alt="" />
           </div>
-          <div class="intro-group-item-text">
+          <div class="intro-group-item-text d-md-block d-none">
             <div>
               透過<span class="color-primary">P2P點對點技術</span
               >，進行大量、小額、分散式借貸投資
             </div>
             <div>及債權轉讓，保護借款人資訊，保障投資人權益。</div>
           </div>
+          <div class="intro-group-item-text d-md-none d-block">
+            透過<span class="color-primary">P2P點對點技術</span
+            >，進行大量、小額、分散式借貸投資及債權轉讓，保護借款人資訊，保障投資人權益。
+          </div>
         </div>
         <div class="intro-group-item">
           <div class="intro-group-item-icon">
             <img src="@/asset/images/company/company-group-icon-3.svg" alt="" />
           </div>
-          <div class="intro-group-item-text">
+          <div class="intro-group-item-text d-md-block d-none">
             <div>具備金融專業知識與實務經驗團隊，建立堅強AI自動風控</div>
             <div>模組，流暢友善UI設計，深受年輕人喜愛，完美呈現AI綠</div>
             <div>色金融科技體驗環境。</div>
+          </div>
+          <div class="intro-group-item-text d-md-none d-block">
+            具備金融專業知識與實務經驗團隊，建立堅強AI自動風控模組，流暢友善UI設計，深受年輕人喜愛，完美呈現AI綠色金融科技體驗環境。
           </div>
         </div>
       </div>
     </div>
     <div class="company-roadmap">
       <div class="roadmap-title">發展歷程</div>
-      <div class="swiper-container">
+      <div class="swiper-container  d-md-block d-none">
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper">
           <!-- Slides -->
@@ -177,6 +201,71 @@
           <div class="swiper-slide">
             <div class="svg-path">
               <svg
+                width="736"
+                height="113"
+                viewBox="0 0 736 113"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <mask
+                  id="mask0_512_46"
+                  style="mask-type: alpha"
+                  maskUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="732"
+                  height="113"
+                >
+                  <path
+                    d="M731.5 110.501L0.5 111.999V1.00377L731.5 6.49626V110.501Z"
+                    fill="#D9D9D9"
+                    stroke="black"
+                  />
+                </mask>
+                <g mask="url(#mask0_512_46)">
+                  <path
+                    d="M0 6C120.5 6 120.5 109 241 109C361.5 109 361.5 6 482 6C602.5 6 602.5 109 723 109C843.5 109 843.5 6 964 6C1084.5 6 1084.5 109 1205 109"
+                    stroke="white"
+                    stroke-width="4"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                  />
+                </g>
+              </svg>
+            </div>
+            <div class="roadmap-item item-5">
+              <div class="roadmap-item-title">2018</div>
+              <div class="roadmap-item-content">
+                <div class="roadmap-item-content-title">系統建構</div>
+                <div>•納入金管會/FTS輔導之新創團隊</div>
+                <div>
+                  •推出全台第一個AI無人化風控審核<br />&nbsp;&nbsp;學生貸產品
+                </div>
+                <div>•推出資金競標媒合系統</div>
+                <div>•首創金融科技債權轉讓系統</div>
+                <div>•受聘高科、東吳、北商大<br />&nbsp;&nbsp;金融科技顧問</div>
+              </div>
+            </div>
+            <div class="roadmap-item item-6">
+              <div class="roadmap-item-title">2017</div>
+              <div class="roadmap-item-content">
+                <div class="roadmap-item-content-title">普匯啟航</div>
+                <div>•12月公司成立</div>
+                <div>•工研院納入輔導團隊</div>
+                <div>•榮獲亞洲矽谷輔導</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+      <div class="swiper-container d-md-none d-block">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          <div class="swiper-slide">
+            <div class="svg-path">
+              <svg
                 width="1208"
                 height="119"
                 viewBox="0 0 1208 119"
@@ -192,6 +281,150 @@
                 />
               </svg>
             </div>
+            <div class="roadmap-item item-1">
+              <div class="roadmap-item-title">2022</div>
+              <div class="roadmap-item-content">
+                <div class="roadmap-item-content-title">致力ESG</div>
+                <div>
+                  •2/10運用金融科技攜手知名藝人張鈞甯<br />
+                  &nbsp;&nbsp;透過手機APP線上協助台大兒童醫院募捐
+                </div>
+                <div>
+                  •6/30受邀新北市一金二造三區域_金融科<br />
+                  &nbsp;&nbsp;技業者出席政策規劃，共同打造國際
+                  &nbsp;&nbsp;經濟重鎮
+                </div>
+                <div>
+                  •7/30回饋台北大學母校，捐贈1200萬<br />&nbsp;&nbsp;興建教室
+                </div>
+                <div>•會員數突破10萬人才</div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="svg-path">
+              <svg
+                width="1208"
+                height="119"
+                viewBox="0 0 1208 119"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2.95703 2.53125C123.246 2.53125 123.246 116.001 243.536 116.001C363.825 116.001 363.825 2.53125 484.114 2.53125C604.403 2.53125 604.403 116.001 724.693 116.001C844.982 116.001 844.982 2.53125 965.271 2.53125C1085.56 2.53125 1085.56 116.001 1205.85 116.001"
+                  stroke="white"
+                  stroke-width="4"
+                  stroke-miterlimit="10"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="roadmap-item item-2">
+              <div class="roadmap-item-title">2021</div>
+              <div class="roadmap-item-content">
+                <div class="roadmap-item-content-title">創新生態</div>
+                <div>•攜手王道銀行共同行銷信貸產品</div>
+                <div>•會員數突破7萬人次</div>
+                <div>•新光金控創投入資為股東</div>
+                <div>•聯手新光銀行推出全線上中小企業</div>
+                <div>•信保融資平台，實現普惠金融</div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="svg-path">
+              <svg
+                width="1208"
+                height="119"
+                viewBox="0 0 1208 119"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2.95703 2.53125C123.246 2.53125 123.246 116.001 243.536 116.001C363.825 116.001 363.825 2.53125 484.114 2.53125C604.403 2.53125 604.403 116.001 724.693 116.001C844.982 116.001 844.982 2.53125 965.271 2.53125C1085.56 2.53125 1085.56 116.001 1205.85 116.001"
+                  stroke="white"
+                  stroke-width="4"
+                  stroke-miterlimit="10"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="roadmap-item item-3">
+              <div class="roadmap-item-title">2020</div>
+              <div class="roadmap-item-content">
+                <div class="roadmap-item-content-title">聯盟銀行</div>
+                <div>•聯手上海銀行推廣信貸及數存產品</div>
+                <div>•會員數突破6萬人次</div>
+                <div>•取得個人身分驗證裝置系統專利權</div>
+                <div>•領銜主辦第二屆全國AI金融科技競賽</div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="svg-path">
+              <svg
+                width="1208"
+                height="119"
+                viewBox="0 0 1208 119"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2.95703 2.53125C123.246 2.53125 123.246 116.001 243.536 116.001C363.825 116.001 363.825 2.53125 484.114 2.53125C604.403 2.53125 604.403 116.001 724.693 116.001C844.982 116.001 844.982 2.53125 965.271 2.53125C1085.56 2.53125 1085.56 116.001 1205.85 116.001"
+                  stroke="white"
+                  stroke-width="4"
+                  stroke-miterlimit="10"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="roadmap-item item-4">
+              <div class="roadmap-item-title">2019</div>
+              <div class="roadmap-item-content">
+                <div class="roadmap-item-content-title">創新金融科技</div>
+                <div>•攜手凱基銀行共同行銷信貸產品</div>
+                <div>•創新上班族、分期超市無人化自動風控</div>
+                <div>•經FTS金融總會評鑑市值破億未來獨角獸</div>
+                <div>•聯盟六大校五大金融機構主辦</div>
+                <div>•第一屆全國AI金融科技競賽</div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="svg-path">
+              <svg
+                width="736"
+                height="113"
+                viewBox="0 0 736 113"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <mask
+                  id="mask0_512_46"
+                  style="mask-type: alpha"
+                  maskUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="732"
+                  height="113"
+                >
+                  <path
+                    d="M731.5 110.501L0.5 111.999V1.00377L731.5 6.49626V110.501Z"
+                    fill="#D9D9D9"
+                    stroke="black"
+                  />
+                </mask>
+                <g mask="url(#mask0_512_46)">
+                  <path
+                    d="M0 6C120.5 6 120.5 109 241 109C361.5 109 361.5 6 482 6C602.5 6 602.5 109 723 109C843.5 109 843.5 6 964 6C1084.5 6 1084.5 109 1205 109"
+                    stroke="white"
+                    stroke-width="4"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                  />
+                </g>
+              </svg>
+            </div>
             <div class="roadmap-item item-5">
               <div class="roadmap-item-title">2018</div>
               <div class="roadmap-item-content">
@@ -204,6 +437,42 @@
                 <div>•首創金融科技債權轉讓系統</div>
                 <div>•受聘高科、東吳、北商大<br />&nbsp;&nbsp;金融科技顧問</div>
               </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="svg-path">
+              <svg
+                width="736"
+                height="113"
+                viewBox="0 0 736 113"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <mask
+                  id="mask0_512_46"
+                  style="mask-type: alpha"
+                  maskUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="732"
+                  height="113"
+                >
+                  <path
+                    d="M731.5 110.501L0.5 111.999V1.00377L731.5 6.49626V110.501Z"
+                    fill="#D9D9D9"
+                    stroke="black"
+                  />
+                </mask>
+                <g mask="url(#mask0_512_46)">
+                  <path
+                    d="M0 6C120.5 6 120.5 109 241 109C361.5 109 361.5 6 482 6C602.5 6 602.5 109 723 109C843.5 109 843.5 6 964 6C1084.5 6 1084.5 109 1205 109"
+                    stroke="white"
+                    stroke-width="4"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                  />
+                </g>
+              </svg>
             </div>
             <div class="roadmap-item item-6">
               <div class="roadmap-item-title">2017</div>
@@ -626,8 +895,8 @@ export default {
         }
       }
       &.item-5 {
-        margin-top: 115px;
-        margin-left: 45px;
+        margin-top: 112px;
+        margin-left: 50px;
         .roadmap-item-title::before {
           content: '';
           position: absolute;
@@ -700,14 +969,12 @@ export default {
       font-weight: bolder;
     }
   }
-
   .hr {
     width: 260px;
     height: 1px;
     background-image: linear-gradient(to right, #0559ac, #ffffff);
     margin: 0px auto;
   }
-
   .text-card {
     position: relative;
 
@@ -747,7 +1014,6 @@ export default {
       }
     }
   }
-
   .media-card {
     padding: 30px;
     position: relative;
@@ -809,7 +1075,6 @@ export default {
       }
     }
   }
-
   .partner-card {
     padding: 30px;
 
@@ -896,7 +1161,6 @@ export default {
       }
     }
   }
-
   .modal-dialog {
     .modal-icon {
       position: absolute;
@@ -932,8 +1196,146 @@ export default {
       max-width: 800px;
     }
   }
-
   @media screen and (max-width: 767px) {
+    .company-banner {
+      min-height: 450px;
+      width: 100%;
+      flex-direction: column;
+      padding: 0 15px;
+      margin: 60px auto;
+      .banner-text {
+        position: relative;
+        margin: 8px 0;
+        top: 0;
+        .banner-title {
+          font-size: 30px;
+        }
+        .banner-sub {
+          font-size: 20px;
+        }
+      }
+    }
+    .company-intro {
+      padding: 50px 0;
+      .intro-title {
+        font-size: 28px;
+      }
+      .intro-items {
+        background-image: none;
+        max-width: 100%;
+        margin: 0 auto;
+        flex-direction: column;
+        height: auto;
+        .intro-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          &-title {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 1.4;
+            text-align: center;
+            color: #036eb7;
+          }
+          &.item-1,
+          &.item-2,
+          &.item-3 {
+            margin: 20px 0;
+          }
+        }
+      }
+      .intro-group {
+        gap: 12px;
+        &-item {
+          margin: 15px 0;
+          padding: 0 40px;
+          flex-direction: column;
+          gap: 24px;
+          align-items: center;
+          &-text {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+    .company-roadmap {
+      &::before {
+        background-image: url('~images/company/company-roadmap-bg-phone.svg');
+        height: 240px;
+        width: 100%;
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        content: '';
+        position: absolute;
+        top: -80px;
+      }
+      background-image: none;
+      background-color: #f3f9fc;
+      height: 700px;
+      width: 100%;
+      margin: 10px auto 30px;
+      .roadmap-title {
+        top: 35px;
+        left: calc(50% - 56px);
+        font-size: 28px;
+      }
+      .swiper-container {
+        position: relative;
+        height: 640px;
+        width: auto;
+        top: 0;
+        left: 0;
+      }
+      .swiper-slide {
+        padding: 0 0 0 30px;
+      }
+      .svg-path {
+        top: 250px;
+        left: -57px;
+        z-index: 1;
+      }
+      .roadmap-item {
+        padding: 30px 0;
+        gap: 58px;
+        &.item-1 {
+          margin-top: 115px;
+          margin-left: 15px;
+          .roadmap-item-title::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 38px;
+            left: 50%;
+            bottom: -38px;
+            background: #fff;
+          }
+        }
+        &.item-2 {
+          margin-top: 153px;
+          left: 44px;
+        }
+        &.item-3 {
+          margin-left: 46px;
+        }
+        &.item-4 {
+          margin-top: 153px;
+          left: 44px;
+        }
+        &.item-5 {
+          margin-top: 112px;
+          margin-left: 50px;
+        }
+        &.item-6 {
+          margin-top: 193px;
+          left: 64px;
+        }
+        &-content {
+          z-index: 4;
+        }
+      }
+    }
     .text-card {
       padding: 20px 10px;
 
