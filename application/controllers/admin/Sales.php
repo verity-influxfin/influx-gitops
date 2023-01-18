@@ -1864,7 +1864,7 @@ class Sales extends MY_Admin_Controller {
         $data['pagination'] = [];
         $data['pagination']['total_rows'] = $config["total_rows"];
         $data['pagination']['per_page'] = $config['per_page'];
-        $data['pagination']['last_page'] = max((int) ($config["total_rows"] / $config['per_page']), 1);
+        $data['pagination']['last_page'] = max((int) ceil(($config["total_rows"] / $config['per_page'])), 1);
         $data['pagination']['current_page'] = $current_page;
 
         $data['list'] = $list;
