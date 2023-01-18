@@ -88,6 +88,98 @@ class Eventcontroller extends BaseController
         return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
     }
 
+    // for 2023 new year event
+    public function newyearRegister(Request $request)
+    {
+        $this->validate($request, [
+            'phone' => 'required|digits:10',
+            'password' => 'required|string|min:6|max:50|confirmed',
+            'password_confirmation' => 'required|string|min:6|max:50',
+            'code' => 'required|digits:6'
+        ]);
+
+        $input = $request->all();
+
+        $promo = isset($input['promo']) ? $input['promo'] : '';
+        $email = isset($input['email']) ? $input['email'] : '';
+        $promote_info = isset($input['promote_info']) ? json_encode($input['promote_info']) : '';
+
+        $postData = [
+            'promote_code'    => $promo,
+            'phone'           => $input['phone'],
+            'password'        => $input['password'],
+            'code'            => $input['code'],
+            'investor'        => 0,
+        ];
+
+        $params = http_build_query($postData);
+        $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/register" -d "' . $params . '"');
+
+        $data = json_decode($curlScrapedPage, true);
+        if ($data['result'] === "SUCCESS") {
+            // 此活動要驗證常用電子信箱認證項目
+            $emailReq = shell_exec('curl -k -X POST "' . $this->apiGetway . 'certification/email" -H "' . "request_token:" . $data['data']['token'] . '" -d "email=' . $email . '"');
+            $emailResult = json_decode($emailReq, true);
+            if($emailResult['result'] === "SUCCESS"){
+                $registerData = [
+                    'phone' => $input['phone'],
+                    'promo' => $promo,
+                    'email' => $email,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_ip' => $_SERVER['REMOTE_ADDR'],
+                    'promo_info' => $promote_info
+                ];
+
+                DB::table('event_users')->insert($registerData);
+            }
+        }
+
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
+
+    public function newyearLogin(Request $request)
+    {
+        $this->validate($request, [
+            'phone' => ['required', new mobile()],
+            'password' => 'required|string|min:6|max:50',
+        ]);
+
+        $input = $request->all();
+        $phone = $input['phone'];
+        $password = $input['password'];
+        $email = $input['email'];
+
+        $params = http_build_query([
+            'phone' => $phone,
+            'password' => $password
+        ]);
+
+        $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/login" -d "' . $params . '"');
+
+        $data = json_decode($curlScrapedPage, true);
+
+        if ($data['result'] === "SUCCESS") {
+            Session::put('token', $data['data']['token']);
+            $token = $data['data']['token'];
+            $curlScrapedPage = shell_exec('curl -k -X GET "' . $this->apiGetway . 'user/info" -H "' . "request_token:" . $data['data']['token'] . '"');
+            $data = json_decode($curlScrapedPage, true);
+
+            Session::put('userData', $data['data']);
+            // 一律設定為非投資人
+            Session::put('investor', 0);
+            // 登入後發送驗證 不管正確與失敗
+            shell_exec('curl -k -X POST "' . $this->apiGetway . 'certification/email" -H "' . "request_token:" . $token . '" -d "email=' . $email . '"');
+            return response()->json([
+                'id' => $data['data']['id'],
+                'name' => $data['data']['name'],
+                'picture' => $data['data']['picture'],
+                'investor' => 0
+            ], 200);
+        } else {
+            return response()->json($data, 400);
+        }
+    }
+
 	public function bankEvent(Request $request)
 	{
 		$input = $request->all();
