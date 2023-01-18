@@ -5,11 +5,20 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <smegHeader />
+              <div class="swiper-slide" v-if="newYearHeader(1)">
+                <newyear-2023-header-1 />
+              </div>
+              <div class="swiper-slide" v-if="newYearHeader(2)">
+                <newyear-2023-header-2 />
+              </div>
+              <div class="swiper-slide" v-if="newYearHeader(3)">
+                <newyear-2023-header-3 />
+              </div>
+              <div class="swiper-slide" v-if="newYearHeader(4)">
+                <newyear-2023-header-4 />
               </div>
               <div class="swiper-slide">
-                <fund-header />
+                <smegHeader />
               </div>
               <a class="swiper-slide" href="/workLoan" target="_blank">
                 <workloan-header />
@@ -62,11 +71,20 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <smegHeader />
+              <div class="swiper-slide" v-if="newYearHeader(1)">
+                <newyear-2023-header-1 />
+              </div>
+              <div class="swiper-slide" v-if="newYearHeader(2)">
+                <newyear-2023-header-2 />
+              </div>
+              <div class="swiper-slide" v-if="newYearHeader(3)">
+                <newyear-2023-header-3 />
+              </div>
+              <div class="swiper-slide" v-if="newYearHeader(4)">
+                <newyear-2023-header-4 />
               </div>
               <div class="swiper-slide">
-                <fund-header />
+                <smegHeader />
               </div>
               <div class="swiper-slide">
                 <workloan-header />
@@ -1158,8 +1176,11 @@ import AlesisCounter from '../component/alesis/AlesisCounter'
 import float from '../component/floatComponent'
 import workloanHeader from '../component/index/header/workloanHeader.vue'
 import collegeloanHeader from '../component/index/header/collegeloanHeader.vue'
-import fundHeader from '../component/index/header/fundHeader'
 import smegHeader from '../component/index/header/smegHeader'
+import newyear2023Header1 from '../component/index/header/newyear2023Header1.vue'
+import newyear2023Header2 from '../component/index/header/newyear2023Header2.vue'
+import newyear2023Header3 from '../component/index/header/newyear2023Header3.vue'
+import newyear2023Header4 from '../component/index/header/newyear2023Header4.vue'
 import { alesisIndexCounter } from './api'
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
@@ -1173,8 +1194,11 @@ export default {
     AlesisCounter,
     workloanHeader,
     collegeloanHeader,
-    fundHeader,
-    smegHeader
+    smegHeader,
+    newyear2023Header1,
+    newyear2023Header2,
+    newyear2023Header3,
+    newyear2023Header4
   },
   data: () => ({
     indexCounter: {}
@@ -1266,6 +1290,35 @@ export default {
         delay: 5000,
       },
     })
+  },
+  methods: {
+    newYearHeader(page) {
+      const now = new Date('')
+      // 最後上班日
+      const date1 = new Date('2023-01-19 09:00')
+      // 休假第二天
+      const date3 = new Date('2023-01-21 00:00')
+      // 休假第三天
+      const date4 = new Date('2023-01-22 00:00')
+      // 開工後一天
+      const date5 = new Date('2023-01-30 00:00')
+      // 開工後週6
+      const date6 = new Date('2023-02-04 18:00')
+      switch (page) {
+        case 1:
+          // 最後上班日 ~ 休假第二天 || 休假第三天 ~ 開工後一天
+          return ( now > date1 && now < date3 )|| ( now > date4 && now < date5)
+        case 2:
+          // 最後上班日後 ~ 開工後一天
+          return now > date1 && now < date5
+        case 3:
+          // 開工第一天 ~ 開工後週6
+          return now > date5 && now < date6
+        case 4:
+          // 休假第二天 ~ 休假第三天
+          return now > date3 && now < date4
+      }
+    }
   }
 }
 </script>
