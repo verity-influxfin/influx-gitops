@@ -114,9 +114,9 @@ class Cardgamecontroller extends BaseController
     public function getAns(Request $request)
     {
         $input = $request->all();
-
+        // 新邏輯 id % 3 是答案
         $result = [
-            'ans' => $input['qnum'] == 7 && $input['qans'] == 'A' || $input['qnum'] != 7 && $input['qans'] == 'B' ? 0 : 1
+            'ans' => $input['qnum'] % 3 === $input['qans'] ? 1 : 0
         ];
         return response()->json($result, 200);
     }

@@ -116,6 +116,19 @@ class Eventcontroller extends BaseController
         $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/register" -d "' . $params . '"');
 
         $data = json_decode($curlScrapedPage, true);
+        if(!empty($data['data'])){
+            $userInfoReq = shell_exec('curl -k -X GET "' . $this->apiGetway . 'user/info" -H "' . "request_token:" . $data['data']['token'] . '"');
+            $userInfo = json_decode($userInfoReq, true);
+            $newyearObj = [
+                'user_id' => $userInfo['data']['id'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'created_ip' => $_SERVER['REMOTE_ADDR'],
+                // 新戶一定是1
+                'prize_status' => 1,
+            ];
+        }
+
         if ($data['result'] === "SUCCESS") {
             // 此活動要驗證常用電子信箱認證項目
             $emailReq = shell_exec('curl -k -X POST "' . $this->apiGetway . 'certification/email" -H "' . "request_token:" . $data['data']['token'] . '" -d "email=' . $email . '"');
@@ -129,8 +142,8 @@ class Eventcontroller extends BaseController
                     'created_ip' => $_SERVER['REMOTE_ADDR'],
                     'promo_info' => $promote_info
                 ];
-
                 DB::table('event_users')->insert($registerData);
+                DB::table('2023_newyear_event_prize')->insert($newyearObj);
             }
         }
 
@@ -169,10 +182,35 @@ class Eventcontroller extends BaseController
             Session::put('investor', 0);
             // 登入後發送驗證 不管正確與失敗
             shell_exec('curl -k -X POST "' . $this->apiGetway . 'certification/email" -H "' . "request_token:" . $token . '" -d "email=' . $email . '"');
+            $curlIdentity = shell_exec('curl -k -X GET "' . $this->apiGetway . 'certification/identity" -H "' . "request_token:" . $token . '"');
+            $identity_data = json_decode($curlIdentity, true);
+            // 設定前端用中獎變數
+            $prize = 0;
+            // 設定 2023_newyear_event_prize 用 中獎變數
+            $prize_status = 0;
+            if($identity_data['result'] == "SUCCESS" && $identity_data['data']['status'] == 0){
+                // 未完成實名認證 所以中獎
+                $prize = 1;
+                $prize_status = 2;
+            }
+            $dbData = DB::table('2023_newyear_event_prize')->where('user_id', $data['data']['id'])->first();
+            if($dbData){
+                // 已參加過活動
+                $prize = 2;
+            } else {
+                DB::table('2023_newyear_event_prize')->insert([
+                    'user_id' => $data['data']['id'],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'created_ip' => $_SERVER['REMOTE_ADDR'],
+                    'prize_status' => $prize_status,
+                ]);
+            }
             return response()->json([
                 'id' => $data['data']['id'],
                 'name' => $data['data']['name'],
                 'picture' => $data['data']['picture'],
+                'prize' => $prize,
                 'investor' => 0
             ], 200);
         } else {
