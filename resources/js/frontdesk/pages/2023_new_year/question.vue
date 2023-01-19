@@ -839,6 +839,7 @@ export default {
         .then((res) => {
           if (res.data.result == 'SUCCESS') {
             this.page = 'prize'
+            alert('恭喜您獲得全家點數50點')
           }
         })
         .catch((error) => {
@@ -1194,7 +1195,8 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 12px 40px;
-  margin: 20px 60px;
+  margin: 20px auto;
+  max-width: 295px;
   gap: 15px;
   background: #fda200;
   border-radius: 20px;
