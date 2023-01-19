@@ -209,7 +209,7 @@
         </div>
         <div class="input-group">
           <input
-            type="text"
+            type="email"
             class="form-control label-input"
             placeholder="請輸入email"
             v-model="email"
@@ -274,7 +274,7 @@
         </div>
         <div class="input-group">
           <input
-            type="text"
+            type="email"
             class="form-control label-input"
             placeholder="請輸入email"
             v-model="email"
