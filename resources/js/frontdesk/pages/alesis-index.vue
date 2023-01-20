@@ -5,6 +5,9 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <newyear-2023-event />
+              </div>
               <div class="swiper-slide" v-if="newYearHeader(1)">
                 <newyear-2023-header-1 />
               </div>
@@ -71,6 +74,9 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <newyear-2023-event />
+              </div>
               <div class="swiper-slide" v-if="newYearHeader(1)">
                 <newyear-2023-header-1 />
               </div>
@@ -1181,6 +1187,7 @@ import newyear2023Header1 from '../component/index/header/newyear2023Header1.vue
 import newyear2023Header2 from '../component/index/header/newyear2023Header2.vue'
 import newyear2023Header3 from '../component/index/header/newyear2023Header3.vue'
 import newyear2023Header4 from '../component/index/header/newyear2023Header4.vue'
+import newyear2023Event from '../component/index/header/newyear2023event.vue'
 import { alesisIndexCounter } from './api'
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
@@ -1198,7 +1205,8 @@ export default {
     newyear2023Header1,
     newyear2023Header2,
     newyear2023Header3,
-    newyear2023Header4
+    newyear2023Header4,
+    newyear2023Event
   },
   data: () => ({
     indexCounter: {}
