@@ -72,7 +72,6 @@
         </template>
       </div>
       <div class="cardgame-prize">挑戰答題 即有機會獲得全家點數！</div>
-      <div class="cardgame-prize">活動辦法</div>
       <div class="modal" id="falseModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -234,6 +233,13 @@
         </div>
         <div class="input-group justify-content-center">
           <button class="btn btn-next">送出</button>
+          <button
+            type="button"
+            class="btn btn-next ml-2"
+            @click="page = 'login'"
+          >
+            我要登入
+          </button>
         </div>
         <div class="message mt-0" v-if="message">{{ message }}</div>
       </form>
@@ -299,6 +305,13 @@
         </div>
         <div class="input-group justify-content-center">
           <button class="btn btn-next">登入</button>
+          <button
+            type="button"
+            class="btn btn-next ml-2"
+            @click="page = 'register'"
+          >
+            我要註冊
+          </button>
         </div>
       </form>
       <div class="message" v-if="message">{{ message }}</div>
@@ -735,7 +748,7 @@ export default {
                 $('#nextModal').modal('show')
                 return
               } else {
-                alert('恭喜您答對了!! 下一題~')
+                alert('恭喜你答對了!! 下一題~')
               }
             } else {
               $('#falseModal').modal('show')
@@ -839,7 +852,7 @@ export default {
         .then((res) => {
           if (res.data.result == 'SUCCESS') {
             this.page = 'prize'
-            alert('恭喜您獲得全家點數50點')
+            alert('恭喜你獲得全家點數50點')
           }
         })
         .catch((error) => {
