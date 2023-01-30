@@ -81,26 +81,30 @@ class Cert_social extends Certification_base
             $this->result->addMessage('此認證項缺少user_id', CERTIFICATION_STATUS_FAILED, MessageDisplay::Debug);
             return FALSE;
         }
-        if (! isset($content['facebook']['access_token']))
-        {
-            $this->result->addMessage('FB帳號未綁定', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
-            return FALSE;
-        }
+        // todo: 因FB政策問題，導致FB授權認證無法完成，故先註解起來，待申訴成功再打開
+        //
+        //        if (! isset($content['facebook']['access_token']))
+        //        {
+        //            $this->result->addMessage('FB帳號未綁定', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+        //            return FALSE;
+        //        }
         if (! isset($content['instagram']['username']))
         {
             $this->result->addMessage('未提供Instagram帳號', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
             return FALSE;
         }
-        if(! isset($content['facebook']['email']))
-        {
-            $this->result->addMessage('FB帳號缺少email', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
-            return FALSE;
-        }
-        if (! isset($content['facebook']['name']))
-        {
-            $this->result->addMessage('FB帳號缺少姓名', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
-            return FALSE;
-        }
+        // todo: 因FB政策問題，導致FB授權認證無法完成，故先註解起來，待申訴成功再打開
+        //
+        //        if(! isset($content['facebook']['email']))
+        //        {
+        //            $this->result->addMessage('FB帳號缺少email', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+        //            return FALSE;
+        //        }
+        //        if (! isset($content['facebook']['name']))
+        //        {
+        //            $this->result->addMessage('FB帳號缺少姓名', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+        //            return FALSE;
+        //        }
         $ig_username = $content['instagram']['username'];
         if (! $ig_username)
         {
