@@ -1301,7 +1301,7 @@ export default {
   },
   methods: {
     newYearHeader(page) {
-      const now = new Date('')
+      const now = new Date()
       // 最後上班日
       const date1 = new Date('2023-01-19 09:00')
       // 休假第二天
