@@ -932,6 +932,9 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
+.alesis-footer {
+  display: none !important;
+}
 .content-bg {
   background-image: url('~images/2023_new_year/newyear-bg0.jpg');
   background-size: cover;
