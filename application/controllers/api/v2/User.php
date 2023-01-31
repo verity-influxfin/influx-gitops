@@ -4316,21 +4316,21 @@ END:
     // 撈取相同負責人的公司列表
     public function company_list_get()
     {
-        // 用自然人手機＋密碼，取得相同負責人的公司清單
+        // 用自然人手機＋自然人密碼，取得相同負責人(意即相同手機號碼)的公司清單
         $input = $this->input->get(NULL, TRUE);
         if (empty($input['phone']) || empty($input['password']))
         {
             $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
 
-        $company_exist = $this->user_model->count_by([
+        $user_exist = $this->user_model->count_by([
             'phone' => $input['phone'],
             'password' => sha1($input['password']),
-            'company_status' => USER_IS_COMPANY
+            'company_status' => USER_NOT_COMPANY
         ]);
-        if (empty($company_exist))
+        if (empty($user_exist))
         {
-            $this->response(['result' => 'ERROR', 'error' => COMPANY_NOT_EXIST]);
+            $this->response(['result' => 'ERROR', 'error' => USER_NOT_EXIST]);
         }
         $this->load->library('user_lib');
         $company_list = $this->user_lib->get_company_list_with_identity_status($input['phone']);

@@ -47487,6 +47487,12 @@ define({
                             "optional": false,
                             "field": "101",
                             "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "302",
+                            "description": "<p>使用者不存在</p>"
                         }
                     ]
                 },
@@ -47499,6 +47505,11 @@ define({
                     {
                         "title": "101",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "302",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
                         "type": "Object"
                     }
                 ]
