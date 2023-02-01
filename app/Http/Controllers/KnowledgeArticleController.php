@@ -53,10 +53,14 @@ class KnowledgeArticleController extends Controller
         return DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where([['id', '=', $id], ['isActive', '=', 'on']])->orderBy('id', 'desc')->first();
     }
 
+    public function get_knowledge_article_by_path($path){
+      return DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where([['path', '=', $path], ['isActive', '=', 'on']])->orderBy('id', 'desc')->first();
+  }
+
     public function get_knowledge_articles()
     {
         return DB::table('knowledge_article')
-            ->select('post_title', DB::raw('CASE WHEN release_time IS NULL THEN created_at ELSE release_time END AS post_date'), 'id as ID', 'updated_at as post_modified')
+            ->select('post_title', DB::raw('CASE WHEN release_time IS NULL THEN created_at ELSE release_time END AS post_date'), 'id as ID', 'updated_at as post_modified', 'path')
             ->whereIn('type', ['article', 'investtonic'])
             ->where('isActive', '=', 'on')
             ->take(5)->orderBy('id', 'desc')->get();

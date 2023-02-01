@@ -337,19 +337,37 @@ Route::get('/campaign/{name}/{path?}', function (string $name, string $path = 'i
     throw new NotFoundHttpException();
 });
 
-Route::get('/articlepage', function (Request $request, $path = '') {
-    $input = $request->all();
-
-    @list($type, $params) = explode('-', $input['q']);
+Route::get('/articlepage/{path?}', function (Request $request, $path = '') {
     $ArticleController = (new App\Http\Controllers\KnowledgeArticleController);
     $latestArticles = $ArticleController->get_knowledge_articles();
+    if(!empty($path)){
+        // 自定義網址轉換
+        $article = $ArticleController->get_knowledge_article_by_path($path);
+        // check article not null
+        if (empty($article)) {
+            return redirect('/');
+        }
+        $meta_data = $ArticleController->get_meta_info($article->id);
+        $meta_data['link'] = $request->fullUrl();
+        return view('articlePage', [
+            'type' => 'knowledge',
+            'article' => $article,
+            'latestArticles' => $latestArticles,
+            'meta_data' => $meta_data
+        ]);
+    }
+    $input = $request->all();
+    @list($type, $params) = explode('-', $input['q']);
     if ($type == 'knowledge') {
         $meta_data = $ArticleController->get_meta_info($params);
         $meta_data['link'] = $request->fullUrl();
         $article = $ArticleController->get_knowledge_article($params);
         // check article not null
         if (empty($article)) {
-            return redirect('/index');
+            return redirect('/');
+        }
+        if (!empty($article->path)) {
+            return redirect('/articlepage/' . $article->path, 301);
         }
         return view('articlePage', [
             'type' => $type,
@@ -364,7 +382,7 @@ Route::get('/articlepage', function (Request $request, $path = '') {
         $meta_data['link'] = $request->fullUrl();
         $news = $newsController->get_news($params);
         if (empty($news)){
-            return redirect('/index');
+            return redirect('/');
         }
         return view('articlePage', [
             'type' => $type,

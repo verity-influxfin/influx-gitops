@@ -186,6 +186,7 @@ class KnowledgeArticleController extends Controller
         $form->select('type', '文章類型')->options(['article' => '小學堂','video'=>'小學堂影音','investtonic'=>'投資理財大補帖'])->required()->default('article');
         $form->image('media_link', '圖片')->required()->move('/upload/article')->rules('max:8192',['max'=>'圖片檔案大小不能超過8MB']);
         $form->text('media_alt', '圖片alt')->placeholder('請輸入圖片alt文字');
+        $form->text('path', '小學堂自定義網址')->placeholder('請輸入小學堂自定義網址')->help('如：/articlepage/test-page 則填入 test-page')->creationRules(['unique:knowledge_article'])->updateRules(['unique:knowledge_article,path,{{id}}']);
         $form->url('video_link', '影片連結')->help('文章類型為小學堂影音再填寫');
         $form->datetime('release_time','顯示的發佈時間')->format('YYYY-MM-DD HH:mm:ss')->help('若不填寫，則以建立時間為發佈時間');
         $form->ckeditor('post_content','內容');

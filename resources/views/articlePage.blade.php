@@ -302,9 +302,13 @@
                                               </div>
                                               @foreach ($latestArticles as $latestArticle)
                                               <div class="link-item">
-                                                  <a class="link-text" href="/articlepage?q=knowledge-{{$latestArticle->ID}}">
-                                                      {{ $latestArticle->post_title }}
-                                                  </a>
+                                                @if (!empty($latestArticle->path))
+                                                    <a class="link-text" href="/articlepage/{{$latestArticle->path}}">
+                                                @else
+                                                    <a class="link-text" href="/articlepage?q=knowledge-{{$latestArticle->ID}}">
+                                                @endif
+                                                        {{ $latestArticle->post_title }}
+                                                    </a>
                                               </div>
                                               @endforeach
                                             </div>
@@ -444,7 +448,7 @@
                             <div class="info">
                                 <span class="date">{{ $article->post_date }}</span>
                             </div>
-                            <img class="cover" src="{{ $article->media_link }}"
+                            <img class="cover" src="{{ asset($article->media_link) }}"
                                 alt="<?php
                                     if (empty($article->media_alt)) {
                                         preg_match('/\/([^\/]+)$/', $article->media_link, $matches);
@@ -472,6 +476,9 @@
                                 <span v-if="copied">網址複製成功 !</span>
                             </div>
                         </div>
+                        <div class="row mt-3 no-gutters">
+                            <button @click="returnToBlog" class="btn login-btn"><i class="mr-2 fa fa-arrow-left"></i>返回列表</button>
+                        </div>
                     </div>
                     <div class="col-lg-3 ">
                         <div class="panel panel-default">
@@ -485,7 +492,11 @@
                                         <h3 class="section-title">最新文章</h3>
                                         @foreach ($latestArticles as $latestArticle)
                                         <div class="list-group list-group-flush">
+                                            @if (!empty($latestArticle->path))
+                                            <a class="list-group-item list-group-item-action" href="/articlepage/{{$latestArticle->path}}">
+                                            @else
                                             <a class="list-group-item list-group-item-action" href="/articlepage?q=knowledge-{{$latestArticle->ID}}">
+                                            @endif
                                                 <h5 class="title"> {{ $latestArticle->post_title }} </h5>
                                                 <small class="date">
                                                     {{ $latestArticle->post_date }}

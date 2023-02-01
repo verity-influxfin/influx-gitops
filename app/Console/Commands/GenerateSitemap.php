@@ -48,7 +48,7 @@ class GenerateSitemap extends Command
         $date_search = date('Y-m-d', strtotime('-1 day'));
         // 取得一天內的所有文章(最新消息，小學堂文章)
         $news = DB::table('news')->select(['id', 'created_at'])->where('created_at', '>=', $date_search)->get();
-        $knowledge_article = DB::table('knowledge_article')->select(['id', 'created_at'])->where('created_at', '>=', $date_search)->get();
+        $knowledge_article = DB::table('knowledge_article')->select(['id', 'path', 'created_at'])->where('created_at', '>=', $date_search)->get();
         // for news
         foreach ($news as $n) {
             $date = gmdate('Y-m-d\TH:i:s', strtotime($n->created_at));
@@ -64,7 +64,11 @@ class GenerateSitemap extends Command
         foreach ($knowledge_article as $k) {
             $date = gmdate('Y-m-d\TH:i:s', strtotime($k->created_at));
             $content = '<url>'.PHP_EOL;
-            $content .= '  <loc>https://www.influxfin.com/articlepage?q=knowledge-' . $k->id . '</loc>'.PHP_EOL;
+            if(empty($k->path)){
+                $content .= '  <loc>https://www.influxfin.com/articlepage?q=knowledge-' . $k->id . '</loc>'.PHP_EOL;
+            } else {
+                $content .= '  <loc>https://www.influxfin.com/articlepage/' . $k->path . '</loc>'.PHP_EOL;
+            }
             $content .= '  <lastmod>' . $date . '+08:00</lastmod>'.PHP_EOL;
             $content .= '  <changefreq>weekly</changefreq>'.PHP_EOL;
             $content .= '  <priority>0.6</priority>'.PHP_EOL;
