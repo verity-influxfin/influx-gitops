@@ -448,7 +448,7 @@
                             <div class="info">
                                 <span class="date">{{ $article->post_date }}</span>
                             </div>
-                            <img class="cover" src="{{ $article->media_link }}"
+                            <img class="cover" src="{{ asset($article->media_link) }}"
                                 alt="<?php
                                     if (empty($article->media_alt)) {
                                         preg_match('/\/([^\/]+)$/', $article->media_link, $matches);
