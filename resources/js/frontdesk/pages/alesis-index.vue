@@ -8,17 +8,8 @@
               <div class="swiper-slide">
                 <newyear-2023-event />
               </div>
-              <div class="swiper-slide" v-if="newYearHeader(1)">
-                <newyear-2023-header-1 />
-              </div>
-              <div class="swiper-slide" v-if="newYearHeader(2)">
-                <newyear-2023-header-2 />
-              </div>
               <div class="swiper-slide" v-if="newYearHeader(3)">
                 <newyear-2023-header-3 />
-              </div>
-              <div class="swiper-slide" v-if="newYearHeader(4)">
-                <newyear-2023-header-4 />
               </div>
               <div class="swiper-slide">
                 <smegHeader />
@@ -77,17 +68,8 @@
               <div class="swiper-slide">
                 <newyear-2023-event />
               </div>
-              <div class="swiper-slide" v-if="newYearHeader(1)">
-                <newyear-2023-header-1 />
-              </div>
-              <div class="swiper-slide" v-if="newYearHeader(2)">
-                <newyear-2023-header-2 />
-              </div>
               <div class="swiper-slide" v-if="newYearHeader(3)">
                 <newyear-2023-header-3 />
-              </div>
-              <div class="swiper-slide" v-if="newYearHeader(4)">
-                <newyear-2023-header-4 />
               </div>
               <div class="swiper-slide">
                 <smegHeader />
@@ -1655,9 +1637,10 @@ export default {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
     .card-container {
-      padding: 24px 26px;
+      padding: 8px 26px;
     }
     .tip {
+      position: initial;
       text-align: center;
       font-size: 24px;
       color: #036eb7;

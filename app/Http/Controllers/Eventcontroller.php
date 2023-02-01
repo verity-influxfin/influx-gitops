@@ -125,7 +125,8 @@ class Eventcontroller extends BaseController
                 'updated_at' => date('Y-m-d H:i:s'),
                 'created_ip' => $_SERVER['REMOTE_ADDR'],
                 // 新戶一定是1
-                'prize_status' => 1,
+                // 活動結束
+                'prize_status' => 0,
             ];
         }
 
@@ -203,7 +204,8 @@ class Eventcontroller extends BaseController
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                     'created_ip' => $_SERVER['REMOTE_ADDR'],
-                    'prize_status' => $prize_status,
+                    // 活動結束
+                    'prize_status' => 0,
                 ]);
             }
             return response()->json([
