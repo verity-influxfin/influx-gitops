@@ -4668,6 +4668,9 @@ class Certification extends REST_Controller {
                 }
             }
 
+            // 先把前面取到的 $content 暫存下來（以不動到別人東西為原則）
+            $tmp_content = $content;
+
 			// 使用者手填資料
             $content = [
 				'ReportTime' => isset($input['ReportTime']) ? $input['ReportTime'] : '',
@@ -4679,6 +4682,9 @@ class Certification extends REST_Controller {
 					$content[$k] = $v;
 				}
 			}
+
+            // 把暫存的寫回 $content
+            $content = array_merge($tmp_content, $content);
 
             $param		= [
                 'user_id'			=> $user_id,
