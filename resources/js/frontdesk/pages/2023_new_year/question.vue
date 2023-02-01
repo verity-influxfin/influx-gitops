@@ -886,14 +886,14 @@ export default {
           email,
         })
         .then(({ data }) => {
-          if (data.prize && data.prize === 1) {
-            this.page = 'prize'
-          } else if (data.prize && data.prize === 2) {
-            // 2為已參加過
-            this.page = 'finished'
-          } else {
-            this.page = 'noPrize'
-          }
+          // if (data.prize && data.prize === 1) {
+          //   this.page = 'prize'
+          // } else if (data.prize && data.prize === 2) {
+          //   // 2為已參加過
+          //   this.page = 'noPrize'
+          // }
+          // 活動結束 不會中獎
+          this.page = 'noPrize'
         })
         .catch((error) => {
           let errorsData = error.response.data;
