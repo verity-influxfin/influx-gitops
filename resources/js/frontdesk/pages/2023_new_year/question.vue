@@ -151,7 +151,7 @@
       <form class="group-wrapper" @submit.prevent="newyearRegister">
         <div class="input-group">
           <span class="input-group-title">領取贈品</span>
-          <div class="form-control label-input">全家點數 50 點</div>
+          <div class="form-control label-input">已全數兌換完畢</div>
         </div>
         <div class="input-group">
           <span class="input-group-title">會員註冊</span>
@@ -851,8 +851,7 @@ export default {
         })
         .then((res) => {
           if (res.data.result == 'SUCCESS') {
-            this.page = 'prize'
-            alert('恭喜你獲得全家點數50點')
+            this.page = 'noPrize'
           }
         })
         .catch((error) => {
