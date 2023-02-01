@@ -156,8 +156,6 @@ let routers = [
     {path:'/charitable',component:ntu},
     { path: '/charitable-status', component: charitableStatus},
     { path: '/search',name:'search', component: search },
-    { path: '/article/fintech-development', component: article1 },
-    { path: '/2023-new-year', component: newYear2023 },
 ];
 
 export default routers;

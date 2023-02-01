@@ -309,9 +309,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="function-item">
-                                <a href="/2023-new-year" class="function-title">揚眉兔氣活動</a>
-                            </div>
                         </div>
                         <div class="col"></div>
                         <div class="col-auto d-flex">
@@ -416,7 +413,6 @@
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <a href="/charitable" class="item">慈善公益</a>
-                <a href="/2023-new-year" class="item">揚眉兔氣活動</a>
                 <div class="item">
                     <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login-btn btn">註冊/登入<i class="ml-2 fa fa-arrow-right"></i></button>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
