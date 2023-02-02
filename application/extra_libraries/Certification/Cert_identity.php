@@ -12,8 +12,6 @@ use CertificationResult\MessageDisplay;
  */
 class Cert_identity extends Certification_base
 {
-    public static $ID_CARD_FAILED_MESSAGE = '身分證資訊驗證失敗';
-
     /**
      * @var int 該徵信項之代表編號
      */

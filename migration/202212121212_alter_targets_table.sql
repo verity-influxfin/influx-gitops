@@ -1,0 +1,1 @@
+ALTER TABLE `p2p_loan`.`targets` ADD COLUMN `memo` JSON AFTER `remark`;
