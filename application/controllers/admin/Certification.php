@@ -554,7 +554,7 @@ class Certification extends MY_Admin_Controller {
 							'change_admin'			=> $this->login_info->id,
 						));
 
-                        $cert = \Certification\Certification_factory::get_instance_by_model_resource($info);
+                        $cert = \Certification\Certification_factory::get_instance_by_id($post['id']);
                         if ($post['status'] == CERTIFICATION_STATUS_SUCCEED)
                         {
                             if (isset($cert))

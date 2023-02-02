@@ -299,7 +299,7 @@ $config['product_list'] = [
         'interest_rate_e' => 16,
         'condition_rate' => [
             'salary_below' => 35000,
-            'rate' => 4.5
+            'rate' => 3
         ],
         'available_company_categories' => [
             COMPANY_CATEGORY_NORMAL => COMPANY_CATEGORY_NAME_NORMAL,
@@ -1553,7 +1553,7 @@ $config['sub_product_list'] = [
                 'interest_rate_e' => 16,
                 'condition_rate' => [
                     'salary_below' => 35000,
-                    'rate' => 4.5
+                    'rate' => 3
                 ],
                 'need_upload_images' => [
                     [
@@ -1642,7 +1642,7 @@ $config['sub_product_list'] = [
                 'interest_rate_e' => 16,
                 'condition_rate' => [
                     'salary_below' => 35000,
-                    'rate' => 4.5
+                    'rate' => 3
                 ],
                 'need_upload_images' => [
                     [
@@ -1731,7 +1731,7 @@ $config['sub_product_list'] = [
                 'interest_rate_e' => 16,
                 'condition_rate' => [
                     'salary_below' => 35000,
-                    'rate' => 4.5
+                    'rate' => 3
                 ],
                 'need_upload_images' => [
                     [

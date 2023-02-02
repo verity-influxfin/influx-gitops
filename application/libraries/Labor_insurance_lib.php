@@ -21,13 +21,19 @@ class Labor_insurance_lib
     public function __construct()
     {
         $this->CI = &get_instance();
-        $this->CI->config->load('top_enterprise');
+        $this->CI->config->load('taiwan_1000');
+        $this->CI->config->load('world_500');
+        $this->CI->config->load('medical_institute');
+        $this->CI->config->load('public_agency');
         $this->CI->load->library('utility/labor_insurance_regex', [], 'l_regex');
         $this->CI->load->library('gcis_lib');
         $this->CI->load->model('user/user_model');
         $this->CI->load->model('user/user_meta_model');
         $this->CI->load->model('user/user_certification_model');
-        $this->topEnterprises = $this->CI->config->item("top_enterprise");
+        $this->taiwan_1000 = $this->CI->config->item('taiwan_1000');
+        $this->world_500 = $this->CI->config->item('world_500');
+        $this->medical_institute = $this->CI->config->item('medical_institute');
+        $this->public_agency = $this->CI->config->item('public_agency');
     }
 
     public function check_labor_insurance($userId, $text, &$result)
@@ -44,8 +50,13 @@ class Labor_insurance_lib
         $this->processTotalJobExperience($rows, $result);
         $this->processJobExperiences($userId, $result);
         $salary = $this->processCurrentSalary($rows, $result);
-        $isTopCompany = $this->processApplicantServingWithTopCompany($companyName, $result);
-        $this->processApplicantHavingGreatJob($isTopCompany, $salary, $result);
+        $is_taiwan_1000 = $this->processApplicantServingWithTaiwan1000($companyName, $result);
+        $is_world_500 = $this->processApplicantServingWithWorld500($companyName, $result);
+        $is_medical_institute = $this->processApplicantServingWithMedicalInstitute($companyName, $result);
+        $is_public_agency = $this->processApplicantServingWithPublicAgency($companyName, $result);
+        $this->processApplicantHavingGreatJob([
+            $is_taiwan_1000, $is_world_500, $is_medical_institute, $is_public_agency
+        ], $result);
         $this->processApplicantHavingGreatSalary($salary, $result);
         $this->aggregate($result);
         $this->checkIfEmpty($text, $result);
@@ -824,43 +835,139 @@ class Labor_insurance_lib
         return $salary;
     }
 
-    public function processApplicantServingWithTopCompany($companyName, &$result)
+    public function processApplicantServingWithTaiwan1000($companyName, &$result)
     {
         $message = [
-            "stage" => "top_company",
+            "stage" => 'taiwan_1000',
             "status" => self::SUCCESS,
-            "message" => "是否為千大企業之員工 : ",
+            "message" => '是否為台灣千大企業之員工 : ',
         ];
 
-        $isTopCompany = false;
+        $is_taiwan_1000 = false;
         if (!$companyName) {
             $message["status"] = self::PENDING;
             $message["message"] = "無法辨識，未成功讀取公司名稱";
             $result['messages'][] = $message;
-            return $isTopCompany;
+            return $is_taiwan_1000;
         }
 
-        if (in_array($companyName, $this->topEnterprises)) {
+        if (in_array($companyName, $this->taiwan_1000)) {
             $message["status"] = self::SUCCESS;
             $message["message"] .= "是";
-            $isTopCompany = true;
+            $is_taiwan_1000 = true;
         } else {
             $message["message"] .= "否";
         }
 
         $result["messages"][] = $message;
-        return $isTopCompany;
+        return $is_taiwan_1000;
     }
 
-    public function processApplicantHavingGreatJob($isTopCompany, $salary, &$result)
+    public function processApplicantServingWithWorld500($companyName, &$result)
+    {
+        $message = [
+            'stage' => 'world_500',
+            'status' => self::SUCCESS,
+            'message' => '是否為世界500大企業之員工 : ',
+        ];
+
+        $is_world_500 = FALSE;
+        if ( ! $companyName)
+        {
+            $message['status'] = self::PENDING;
+            $message['message'] = '無法辨識，未成功讀取公司名稱';
+            $result['messages'][] = $message;
+            return $is_world_500;
+        }
+
+        if (in_array($companyName, $this->world_500))
+        {
+            $message['status'] = self::SUCCESS;
+            $message['message'] .= '是';
+            $is_world_500 = TRUE;
+        }
+        else
+        {
+            $message['message'] .= '否';
+        }
+
+        $result['messages'][] = $message;
+        return $is_world_500;
+    }
+
+    public function processApplicantServingWithMedicalInstitute($companyName, &$result)
+    {
+        $message = [
+            'stage' => 'medical_institute',
+            'status' => self::SUCCESS,
+            'message' => '是否為醫療院所之員工 : ',
+        ];
+
+        $is_medical_institute = FALSE;
+        if ( ! $companyName)
+        {
+            $message['status'] = self::PENDING;
+            $message['message'] = '無法辨識，未成功讀取公司名稱';
+            $result['messages'][] = $message;
+            return $is_medical_institute;
+        }
+
+        if (in_array($companyName, $this->medical_institute))
+        {
+            $message['status'] = self::SUCCESS;
+            $message['message'] .= '是';
+            $is_medical_institute = TRUE;
+        }
+        else
+        {
+            $message['message'] .= '否';
+        }
+
+        $result['messages'][] = $message;
+        return $is_medical_institute;
+    }
+
+    public function processApplicantServingWithPublicAgency($companyName, &$result)
+    {
+        $message = [
+            'stage' => 'public_agency',
+            'status' => self::SUCCESS,
+            'message' => '是否為公家機關之員工 : ',
+        ];
+
+        $is_public_agency = FALSE;
+        if ( ! $companyName)
+        {
+            $message['status'] = self::PENDING;
+            $message['message'] = '無法辨識，未成功讀取公司名稱';
+            $result['messages'][] = $message;
+            return $is_public_agency;
+        }
+
+        if (in_array($companyName, $this->public_agency))
+        {
+            $message['status'] = self::SUCCESS;
+            $message['message'] .= '是';
+            $is_public_agency = TRUE;
+        }
+        else
+        {
+            $message['message'] .= '否';
+        }
+
+        $result['messages'][] = $message;
+        return $is_public_agency;
+    }
+
+    public function processApplicantHavingGreatJob($great_job_condition, &$result)
     {
         $message = [
             "stage" => "great_job",
             "status" => self::SUCCESS,
-            "message" => "是否符合優良職業認定 : ",
+            "message" => "是否符合優良企業認定 : ",
         ];
 
-        if ($isTopCompany && $salary > self::HIGH_WAGE_FOR_TOP_COMPANY) {
+        if (in_array(TRUE, $great_job_condition, TRUE)) {
             $message["message"] .= "是";
         } else {
             $message["message"] .= "否";

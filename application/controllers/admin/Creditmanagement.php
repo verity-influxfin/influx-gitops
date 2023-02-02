@@ -116,19 +116,59 @@ class Creditmanagement extends MY_Admin_Controller
             }
         }
 
-        if (isset($this->inputData['is_top_enterprise']))
+        if (isset($this->inputData['is_taiwan_1000']))
         {
             $this->load->model('loan/target_meta_model');
-            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_top_enterprise']);
+            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_taiwan_1000']);
             if (isset($rs))
             {
-                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_top_enterprise'], ['meta_value' => $this->inputData['is_top_enterprise']]);
+                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_taiwan_1000'], ['meta_value' => $this->inputData['is_taiwan_1000']]);
             }
             else
             {
-                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_top_enterprise', 'meta_value' => $this->inputData['is_top_enterprise']]);
+                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_taiwan_1000', 'meta_value' => $this->inputData['is_taiwan_1000']]);
             }
         }
+        if (isset($this->inputData['is_world_500']))
+        {
+            $this->load->model('loan/target_meta_model');
+            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_world_500']);
+            if (isset($rs))
+            {
+                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_world_500'], ['meta_value' => $this->inputData['is_world_500']]);
+            }
+            else
+            {
+                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_world_500', 'meta_value' => $this->inputData['is_world_500']]);
+            }
+        }
+        if (isset($this->inputData['is_medical_institute']))
+        {
+            $this->load->model('loan/target_meta_model');
+            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_medical_institute']);
+            if (isset($rs))
+            {
+                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_medical_institute'], ['meta_value' => $this->inputData['is_medical_institute']]);
+            }
+            else
+            {
+                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_medical_institute', 'meta_value' => $this->inputData['is_medical_institute']]);
+            }
+        }
+        if (isset($this->inputData['is_public_agency']))
+        {
+            $this->load->model('loan/target_meta_model');
+            $rs = $this->target_meta_model->get_by(['target_id' => $this->target_id, 'meta_key' => 'is_public_agency']);
+            if (isset($rs))
+            {
+                $this->target_meta_model->update_by(['target_id' => $this->target_id, 'meta_key' => 'is_public_agency'], ['meta_value' => $this->inputData['is_public_agency']]);
+            }
+            else
+            {
+                $this->target_meta_model->insert(['target_id' => $this->target_id, 'meta_key' => 'is_public_agency', 'meta_value' => $this->inputData['is_public_agency']]);
+            }
+        }
+
         $adminId 		= $this->login_info->id;
         $rs = $this->creditSheet->approve(intval($this->inputData['group']), $this->inputData['opinion'],
             intval($this->inputData['score']), $adminId);

@@ -702,7 +702,10 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
-		$is_top_enterprise = $get["is_top_enterprise"] ?? 0;
+		$is_taiwan_1000 = $get["is_taiwan_1000"] ?? 0;
+		$is_world_500 = $get['is_world_500'] ?? 0;
+		$is_medical_institute = $get['is_medical_institute'] ?? 0;
+		$is_public_agency = $get['is_public_agency'] ?? 0;
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -720,7 +723,10 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
-		$this->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);
+		$this->approvalextra->setSpecialInfo(['is_taiwan_1000' => $is_taiwan_1000]);
+		$this->approvalextra->setSpecialInfo(['is_world_500' => $is_world_500]);
+		$this->approvalextra->setSpecialInfo(['is_medical_institute' => $is_medical_institute]);
+		$this->approvalextra->setSpecialInfo(['is_public_agency' => $is_public_agency]);
 
         $level = false;
         if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
@@ -928,24 +934,17 @@ class Target extends MY_Admin_Controller {
             $meta_list_by_key = array_column($userMeta, NULL, 'meta_key');
             $meta_info = $meta_list_by_key['job_company'] ?? new stdclass();
             $job_company = $meta_info->meta_value ?? '';
-            if (isset($target_meta['is_top_enterprise']))
-            {
-                $is_top_enterprise = $target_meta['is_top_enterprise'];
-            }
-            else if ( ! empty($job_company))
-            {
-                $this->config->load('top_enterprise');
-                $top_enterprise_list = $this->config->item("top_enterprise");
-                $m_array = preg_grep('/' . mb_substr($job_company, 0, 4) . '.*/', $top_enterprise_list);
-                $is_top_enterprise = ! empty($m_array) ? 1 : 0;
-            }
-            else
-            {
-                $is_top_enterprise = 0;
-            }
+
+            $is_taiwan_1000 = $this->target_lib->check_is_taiwan_1000($target_meta, $job_company);
+            $is_world_500 = $this->target_lib->check_is_world_500($target_meta, $job_company);
+            $is_medical_institute = $this->target_lib->check_is_medical_institute($target_meta, $job_company);
+            $is_public_agency = $this->target_lib->check_is_public_agency($target_meta, $job_company);
 
             $special_list = [
-                'is_top_enterprise' => $is_top_enterprise,
+                'is_taiwan_1000' => $is_taiwan_1000,
+                'is_world_500' => $is_world_500,
+                'is_medical_institute' => $is_medical_institute,
+                'is_public_agency' => $is_public_agency,
                 'job_company' => $job_company,
             ];
 

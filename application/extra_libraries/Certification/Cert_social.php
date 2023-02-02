@@ -159,7 +159,9 @@ class Cert_social extends Certification_base
                 $this->additional_data['meta'] = [
                     'follow_count'          => $all_follower_count,
                     'posts_in_3months'      => $risk_res['postsIn3Months'] ?? '',
-                    'key_word'              => $risk_res['postsWithKeyWords'] ?? ''
+                    'posts_in_1months'       => (int) $risk_res['postsIn1Months'] ?? '', // 一個月內發文數
+                    'key_word'              => $risk_res['postsWithKeyWords'] ?? '',
+                    'followers_grow_rate_in_3month' => (double) $risk_res['followersGrowRateIn3Months'] ?? '', // 三個月內增幅
                 ];
 
                 // 帳號是否存在
