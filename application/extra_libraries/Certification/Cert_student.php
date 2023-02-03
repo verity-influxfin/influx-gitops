@@ -279,6 +279,7 @@ class Cert_student extends Certification_base
             if ($graduate_date <= strtotime(date('Y-m-d', $this->certification['created_at']) . '-6 years'))
             {
                 $this->result->addMessage('已畢業，請申請上班族貸', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+                $this->result->addMessage('畢業時間超過六年：自動退件', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
                 return FALSE;
             }
         }
@@ -286,7 +287,7 @@ class Cert_student extends Certification_base
         // 預計畢業時間
         if ($graduate_date > strtotime(date('Y-m-d', $this->certification['created_at']) . '+6 years'))
         {
-            $this->result->addMessage('預計畢業時間非六年內', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+            $this->result->addMessage('預計畢業時間超過六年：轉人工', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
             return FALSE;
         }
 
@@ -303,17 +304,17 @@ class Cert_student extends Certification_base
         {
             if ($name != $sip_name)
             {
-                $this->result->addMessage("SIP姓名與實名認證資訊不同1.實名認證姓名=\"{$name}\"2.SIP姓名=\"{$sip_name}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                 return FALSE;
             }
             if ($school != $sip_school)
             {
-                $this->result->addMessage("SIP學校與學生認證資訊不同1.學生認證學校=\"{$school}\"2.SIP學校=\"{$sip_school}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                 return FALSE;
             }
             if ($department != $sip_department)
             {
-                $this->result->addMessage("SIP系所與學生認證資訊不同1.學生認證系所=\"{$department}\"2.SIP系所=\"{$sip_department}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
                 return FALSE;
             }
         }
@@ -326,17 +327,17 @@ class Cert_student extends Certification_base
         $ocr_department = $content['ocr_parser']['content']['student']['department'] ?? '';
         if ($name != $ocr_name)
         {
-            $this->result->addMessage("OCR姓名與實名認證資訊不同1.實名認證姓名=\"{$name}\"2.OCR姓名=\"{$ocr_name}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
         if ($school != $ocr_school)
         {
-            $this->result->addMessage("OCR學校與學生認證資訊不同1.學生認證學校=\"{$school}\"2.OCR學校=\"{$ocr_school}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
         if ($department != $ocr_department)
         {
-            $this->result->addMessage("OCR系所與學生認證資訊不同1.學生認證系所=\"{$department}\"2.OCR系所=\"{$ocr_department}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
 
