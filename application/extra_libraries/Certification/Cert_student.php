@@ -283,6 +283,13 @@ class Cert_student extends Certification_base
             }
         }
 
+        // 預計畢業時間
+        if ($graduate_date > strtotime(date('Y-m-d', $this->certification['created_at']) . '+6 years'))
+        {
+            $this->result->addMessage('預計畢業時間非六年內', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+            return FALSE;
+        }
+
         // 判斷實名認證、自填資料與 SIP 資料是否一致
         // 若不一致，改以 OCR 結果比對
         $user_info = $this->dependency_cert_list[CERTIFICATION_IDENTITY]->content ?? []; // 取得實名認證的資料
