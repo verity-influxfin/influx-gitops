@@ -49,13 +49,6 @@ import smeIndex from '../pages/BusinessLoan/smeLoan'
 import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
 import smeg from '../pages/BusinessLoan/smeg'
-import article1 from '../pages/article/article1'
-import newYear2023 from '../pages/2023_new_year/question'
-import campus2022 from '../pages/2022_campus_ambassador/index'
-import campus2022Apply from '../pages/2022_campus_ambassador/applyTemplate'
-import campus2022Group from '../pages/2022_campus_ambassador/group'
-import campus2022Result from '../pages/2022_campus_ambassador/result'
-import campus2022Personal from '../pages/2022_campus_ambassador/personal'
 
 let routers = [
     { path: '*', redirect: '/' },

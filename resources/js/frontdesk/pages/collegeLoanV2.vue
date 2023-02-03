@@ -619,6 +619,7 @@ export default {
     }
   },
   mounted() {
+    AOS.init()
     this.initSchools()
     axios.post(`/getCase`, { status: 10, product_id: 1 }).then((res) => {
       this.collegePreviews = res.data.slice(0, 4);
