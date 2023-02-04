@@ -147,6 +147,16 @@ class Certification extends MY_Admin_Controller {
                     $page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
                     $page_data['content']['sipUniversity'] = isset($sipURL) ? $sipUniversity : "";
 
+                    $page_data['config']['school_system_list'] = $this->config->item('school_system');
+                    $page_data['config']['school_department_list'] = file_get_contents(FRONT_CDN_URL . 'json/school_department.json');
+                    if ( ! empty($page_data['config']['school_department_list']))
+                    {
+                        $page_data['config']['school_department_list'] = json_decode($page_data['config']['school_department_list'], TRUE);
+                        array_walk($page_data['config']['school_department_list'], function (&$item) {
+                            $item = call_user_func_array('array_merge', array_values($item));
+                        });
+                    }
+                    $page_data['cert_identity_name'] = $this->user_model->get_name_by_id($info->user_id);
 				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 					$content = json_decode($info->content);
 					$page_data['report_page'] = '';
@@ -516,6 +526,12 @@ class Certification extends MY_Admin_Controller {
 							]);
 
 						} elseif ($info->certification_id == CERTIFICATION_STUDENT) {
+                            $info = $this->user_certification_model->get($post['id']);
+                            if ((int) ($info->status) !== CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                            {
+                                goto GENERAL_SAVE;
+                            }
+
 							$license_level = 0;
 							$game_work_level = 0;
 							$pro_level = 0;
@@ -532,6 +548,10 @@ class Certification extends MY_Admin_Controller {
 							$content['license_level'] 	= $license_level;
 							$content['game_work_level'] = $game_work_level;
 							$content['pro_level'] 		= $pro_level;
+
+                            $content['admin_edit']['school'] = empty($post['admin_edit']['school']) ?: $post['admin_edit']['school'];
+                            $content['admin_edit']['department'] = empty($post['admin_edit']['department']) ?: $post['admin_edit']['department'];
+                            $content['admin_edit']['system'] = empty($post['admin_edit']['system']) ?: $post['admin_edit']['system'];
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						} elseif ($info->certification_id == CERTIFICATION_CERCREDITJUDICIAL) {
 							$fail = '評估表已失效';
@@ -546,6 +566,7 @@ class Certification extends MY_Admin_Controller {
 								]);
 							}
 						}
+                        GENERAL_SAVE:
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
 						$this->log_usercertification_model->insert(array(

@@ -291,12 +291,15 @@ class Cert_student extends Certification_base
             return FALSE;
         }
 
+        $config_school_system_list = $this->CI->config->item('school_system');
+
         // 判斷實名認證、自填資料與 SIP 資料是否一致
         // 若不一致，改以 OCR 結果比對
         $user_info = $this->dependency_cert_list[CERTIFICATION_IDENTITY]->content ?? []; // 取得實名認證的資料
         $name = $user_info['name'] ?? '';
         $school = $content['school'] ?? '';
         $department = $content['department'] ?? '';
+        $system = $config_school_system_list[$content['system'] ?? ''] ?? '';
         $sip_name = $content['sip_data']['result']['name'] ?? '';
         $sip_school = $content['sip_data']['university'] ?? '';
         $sip_department = $content['sip_data']['result']['department'] ?? '';
@@ -325,6 +328,7 @@ class Cert_student extends Certification_base
         $ocr_name = $content['ocr_parser']['content']['student']['name'] ?? '';
         $ocr_school = $content['ocr_parser']['content']['university']['name'] ?? '';
         $ocr_department = $content['ocr_parser']['content']['student']['department'] ?? '';
+        $ocr_system = $content['ocr_parser']['content']['student']['academic_degree'] ?? '';
         if ($name != $ocr_name)
         {
             $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
@@ -336,6 +340,11 @@ class Cert_student extends Certification_base
             return FALSE;
         }
         if ($department != $ocr_department)
+        {
+            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
+        }
+        if ($system != $ocr_system)
         {
             $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
@@ -369,9 +378,9 @@ class Cert_student extends Certification_base
         $content = $this->content;
         $data = array(
             'student_status' => 1,
-            'school_name' => $content['school'],
-            'school_system' => $content['system'],
-            'school_department' => $content['department'],
+            'school_name' => $content['admin_edit']['school'] ?? $content['school'],
+            'school_system' => $content['admin_edit']['system'] ?? $content['system'],
+            'school_department' => $content['admin_edit']['department'] ?? $content['department'],
             'school_major' => $content['major'],
             'school_email' => $content['email'],
             'school_grade' => $content['grade'],
