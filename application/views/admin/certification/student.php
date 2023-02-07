@@ -448,7 +448,7 @@
                                                 <tr>
                                                     <td><label>系所</label></td>
                                                     <td>
-                                                        <select name="admin_edit[department]" <?= $input_disabled ?> class="form-control" disabled>
+                                                        <select name="admin_edit[department]" <?= $input_disabled ?> class="form-control">
                                                         </select>
                                                     </td>
                                                 </tr>
@@ -613,17 +613,16 @@
             $admin_edit_school.append($('<option></option>').text(key).val(key));
         });
         $admin_edit_school.on('change', function () {
-            let department_disabled = $admin_edit_department.attr('disabled');
-            $admin_edit_department.attr('disabled', true).find('option').remove();
+            let department_disabled = $admin_edit_department.prop('disabled');
+            $admin_edit_department.prop('disabled', true).find('option').remove();
             $admin_edit_department.append($('<option></option>'));
             let this_school_value = $(this).val();
             const department_list = school_department_list[this_school_value];
             $.each(department_list, function (key, value) {
                 $admin_edit_department.append($('<option></option>').text(value).val(value));
             });
-            if (department_disabled === 'disabled') {
-                $admin_edit_department.attr('disabled', false);
-            }
+            console.log(department_disabled)
+            $admin_edit_department.prop('disabled', department_disabled);
         });
         $admin_edit_school.val(school_value).trigger('change');
         $admin_edit_department.val(department_value);
