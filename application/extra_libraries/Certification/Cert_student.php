@@ -54,13 +54,7 @@ class Cert_student extends Certification_base
      */
     public function parse()
     {
-        $parsed_content = array_merge($this->content, $this->_get_ocr_info());
-
-        $sip_data = $this->CI->sip_lib->getDeepData($this->content['school'], $this->content['sip_account']);
-        $parsed_content['sip_data'] = $sip_data['response'] ?? [];
-        $parsed_content['meta']['last_grade'] = $sip_data['response']['result']['latestGrades'] ?? '';
-
-        return $parsed_content;
+        return array_merge($this->content, $this->_get_ocr_info());
     }
 
     /**
@@ -71,8 +65,8 @@ class Cert_student extends Certification_base
     {
         if (empty($this->content['school']) || empty($this->content['sip_account']) || empty($this->content['sip_password']))
         {
-            $this->result->addMessage('SIP填入資訊為空', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return FALSE;
+            // SIP填入資訊為空
+            return TRUE;
         }
 
         $this->CI->load->library('scraper/sip_lib');
@@ -81,8 +75,8 @@ class Cert_student extends Certification_base
         // 判斷 login_log 是否有回應
         if ( ! isset($sip_log['status']))
         {
-            $this->result->addMessage('SIP爬蟲LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return FALSE;
+            // SIP爬蟲LoginLog無回應
+            return TRUE;
         }
 
         // 判斷 login 是否執行完成
@@ -93,93 +87,69 @@ class Cert_student extends Certification_base
                 case SCRAPER_STATUS_NO_CONTENT:
                     $this->CI->sip_lib->requestDeep($this->content['school'], $this->content['sip_account'], $this->content['sip_password']);
                     $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
-                    break;
+                    return FALSE;
                 case SCRAPER_STATUS_CREATED:
                     $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
-                    break;
+                    return FALSE;
                 default:
-                    $this->result->addMessage('SIP爬蟲LoginLog http回應: ' . $sip_log['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    // SIP爬蟲LoginLog http回應：非成功 http response status code
+                    return TRUE;
             }
-            return FALSE;
         }
 
         // 判斷 login 執行完成後的結果
         if ( ! isset($sip_log['response']['status']))
         {
-            $this->result->addMessage('無對應的SIP爬蟲LoginLog status，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return FALSE;
+            // 無對應的SIP爬蟲LoginLog status
+            return TRUE;
         }
         if ($sip_log['response']['status'] != 'finished')
         {
             switch ($sip_log['response']['status'])
             {
                 case 'failure':
-                    $this->result->addMessage('SIP登入執行失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                    break;
+                    // SIP登入執行失敗
+                    return TRUE;
                 case 'university_not_found':
-                    $this->result->addMessage('SIP學校不在清單內，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                    break;
+                    // SIP學校不在清單內
+                    return TRUE;
                 case 'university_not_enabled':
-                    $this->result->addMessage('SIP學校為黑名單，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                    break;
+                    // SIP學校為黑名單
+                    return TRUE;
                 case 'university_not_crawlable':
-                    $this->result->addMessage('SIP學校無法爬取，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                    break;
+                    // SIP學校無法爬取
+                    return TRUE;
                 case 'started':
                 case 'retry':
                 case 'requested':
                     // 爬蟲未跑完
                     $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
-                    break;
+                    return FALSE;
                 default:
-                    $this->result->addMessage('SIP爬蟲LoginLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    return TRUE;
             }
-            return FALSE;
         }
 
         // 判斷 SIP 帳號密碼是否正確
         if ( ! isset($sip_log['response']['isRight']) || ! $sip_log['response']['isRight'])
         {
-            $university_status_response = $this->CI->sip_lib->getUniversityModel($this->content['school']);
-            $university_status = $university_status_response['response']['status'] ?? '';
-
-            $status_mapping = [
-                SCRAPER_SIP_RECAPTCHA => '驗證碼問題',
-                SCRAPER_SIP_NORMALLY => '正常狀態',
-                SCRAPER_SIP_BLOCK => '黑名單學校',
-                SCRAPER_SIP_SERVER_ERROR => 'server問題',
-                SCRAPER_SIP_VPN => 'VPN相關問題',
-                SCRAPER_SIP_CHANGE_PWD => '要求改密碼',
-                SCRAPER_SIP_FILL_QUEST => '問卷問題',
-                SCRAPER_SIP_UNSTABLE => '不穩定 有時有未知異常',
-            ];
-
-            $this->result->addMessage(
-                'SIP登入失敗，學校狀態: ' . ($status_mapping[$university_status] ?? '') . '，請人工進行驗證',
-                CERTIFICATION_STATUS_PENDING_TO_REVIEW,
-                MessageDisplay::Backend
-            );
-
-            return FALSE;
+            // SIP登入失敗
+            return TRUE;
         }
 
         // 判斷 SIP 是否成功登入
         if ( ! isset($sip_log['response']['isLogin']) || ! $sip_log['response']['isLogin'])
         {
             // SIP 帳號密碼判定正確，但登入爬取過程中出現異常
-            $this->result->addMessage(
-                'SIP帳號密碼正確，爬蟲執行失敗，請確認此學校狀態、以及是否為在學中帳號，請人工進行驗證',
-                CERTIFICATION_STATUS_PENDING_TO_REVIEW,
-                MessageDisplay::Backend
-            );
-            return FALSE;
+            // 可能為 1.學校狀態異常 2.帳號非在學中
+            return TRUE;
         }
 
         // 判斷 deep_log 是否有回應
         $deep_log = $this->CI->sip_lib->getDeepLog($this->content['school'], $this->content['sip_account']);
         if ( ! isset($deep_log['status']) || ! isset($deep_log['response']['status']))
         {
-            return FALSE;
+            return TRUE;
         }
 
         // 判斷 deep_log 是否執行完成
@@ -190,11 +160,10 @@ class Cert_student extends Certification_base
                 case SCRAPER_STATUS_NO_CONTENT:
                     $this->CI->sip_lib->requestDeep($this->content['school'], $this->content['sip_account'], $this->content['sip_password']);
                     $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
-                    break;
+                    return FALSE;
                 default:
-                    // 沒動作
+                    return TRUE;
             }
-            return FALSE;
         }
 
         // 判斷 deep_log 執行完成後的結果
@@ -203,17 +172,21 @@ class Cert_student extends Certification_base
             switch ($deep_log['response']['status'])
             {
                 case 'failure':
-                    $this->result->addMessage('SIP爬蟲DeepScraper失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                    break;
+                    // SIP爬蟲DeepScraper失敗
+                    return TRUE;
                 case 'deep scraping':
                 case 'logging in':
                     $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
-                    break;
+                    return FALSE;
                 default:
-                    $this->result->addMessage('SIP爬蟲DeepLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    return TRUE;
             }
-            return FALSE;
         }
+
+        $sip_data = $this->CI->sip_lib->getDeepData($this->content['school'], $this->content['sip_account']);
+        $this->content['sip_data'] = $sip_data['response'] ?? [];
+        $this->content['meta']['last_grade'] = $sip_data['response']['result']['latestGrades'] ?? '';
+
         return TRUE;
     }
 
@@ -236,13 +209,6 @@ class Cert_student extends Certification_base
     {
         if ($this->_chk_ocr_status($content) === FALSE)
         {
-            return FALSE;
-        }
-
-        // 判斷是否有 SIP 資料
-        if ( ! isset($content['sip_data']['result']))
-        {
-            $this->result->addMessage('SIP爬蟲DeepScraper沒有資料，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
 
@@ -381,19 +347,19 @@ class Cert_student extends Certification_base
             'school_name' => $content['admin_edit']['school'] ?? $content['school'],
             'school_system' => $content['admin_edit']['system'] ?? $content['system'],
             'school_department' => $content['admin_edit']['department'] ?? $content['department'],
-            'school_major' => $content['major'],
-            'school_email' => $content['email'],
-            'school_grade' => $content['grade'],
-            'student_id' => $content['student_id'],
-            'student_card_front' => $content['front_image'],
-            'student_card_back' => $content['back_image'],
-            'student_sip_account' => $content['sip_account'],
-            'student_sip_password' => $content['sip_password'],
+            'school_major' => $content['major'] ?? '',
+            'school_email' => $content['email'] ?? '',
+            'school_grade' => $content['grade'] ?? '',
+            'student_id' => $content['student_id'] ?? '',
+            'student_card_front' => $content['front_image'] ?? '',
+            'student_card_back' => $content['back_image'] ?? '',
+            'student_sip_account' => $content['sip_account'] ?? '',
+            'student_sip_password' => $content['sip_password'] ?? '',
             'student_license_level' => $content['license_level'] ?? '',
             'student_game_work_level' => $content['game_work_level'] ?? '',
             'student_pro_level' => $content['pro_level'] ?? '',
         );
-        ! isset($content['graduate_date']) ?: $data['graduate_date'] = $content['graduate_date'];
+        ! isset($content['graduate_date']) ?: $data['graduate_date'] = $content['graduate_date'] ?? '';
         ! isset($content['programming_language']) ?: $data['student_programming_language'] = count(is_array($content['programming_language']) ?: []);
         ! isset($content['transcript_image'][0]) ?: $data['transcript_front'] = $content['transcript_image'][0];
 
