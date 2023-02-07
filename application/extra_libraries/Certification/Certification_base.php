@@ -96,7 +96,7 @@ abstract class Certification_base implements Certification_definition
     /**
      * 取得依賴之徵信項
      */
-    protected function get_dependency_certs($status)
+    public function get_dependency_certs($status)
     {
         $this->dependency_cert_list = [];
         foreach ($this->dependency_cert_id as $cert_id)
