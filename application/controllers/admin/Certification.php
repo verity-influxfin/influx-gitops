@@ -151,10 +151,17 @@ class Certification extends MY_Admin_Controller {
                     $page_data['config']['school_department_list'] = file_get_contents(FRONT_CDN_URL . 'json/school_department.json');
                     if ( ! empty($page_data['config']['school_department_list']))
                     {
-                        $page_data['config']['school_department_list'] = json_decode($page_data['config']['school_department_list'], TRUE);
-                        array_walk($page_data['config']['school_department_list'], function (&$item) {
+                        $tmp = json_decode($page_data['config']['school_department_list'], TRUE);
+                        $page_data['config']['school_department_list'] = array_keys($tmp);
+                        asort($page_data['config']['school_department_list']);
+                        $page_data['config']['school_department_list'] = array_flip($page_data['config']['school_department_list']);
+
+                        array_walk($tmp, function (&$item) {
                             $item = call_user_func_array('array_merge', array_values($item));
+                            asort($item);
                         });
+
+                        $page_data['config']['school_department_list'] = array_replace($page_data['config']['school_department_list'], $tmp);
                     }
                     $page_data['cert_identity_name'] = $this->user_model->get_name_by_id($info->user_id);
 				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
