@@ -611,8 +611,10 @@
                                 <div class="text">服務時間 9:00 AM - 6:00 PM</div>
 
                                 <div class="icon"><img src="/images/alesis-phone.svg"></div>
-                                <div class="text"><a href="tel:+886225079990" target="_blank">02-2507-9990</a></div>
-
+                                <div class="text">
+                                    <a href="tel:+886225079990" target="_blank" class="mr-2">02-2507-9990</a>
+                                    <a href="tel:+886225082897" target="_blank">02-2508-2897</a>
+                                </div>
                                 <div class="icon"><img src="/images/alesis-email.svg"></div>
                                 <div class="text"><a href="mailto:service@influxfin.com" target="_blank">service@influxfin.com</a></div>
 
