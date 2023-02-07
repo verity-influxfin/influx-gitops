@@ -115,6 +115,10 @@ class User_model extends MY_Model
 
     public function get_ids($exclude_ids)
     {
+        if (empty($exclude_ids))
+        {
+            return [];
+        }
         $result_arr = $this->db->select('id')
             ->from('p2p_user.users')
             ->where_not_in('id', $exclude_ids)
