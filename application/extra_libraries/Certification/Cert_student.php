@@ -297,21 +297,25 @@ class Cert_student extends Certification_base
         $ocr_system = $content['ocr_parser']['content']['student']['academic_degree'] ?? '';
         if ($name != $ocr_name)
         {
+            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
         if ($school != $ocr_school)
         {
+            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
         if ($department != $ocr_department)
         {
+            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
         if ($system != $ocr_system)
         {
+            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
