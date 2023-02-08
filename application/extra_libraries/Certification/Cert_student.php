@@ -253,7 +253,7 @@ class Cert_student extends Certification_base
         // 預計畢業時間
         if ($graduate_date > strtotime(date('Y-m-d', $this->certification['created_at']) . '+6 years'))
         {
-            $this->result->addMessage('預計畢業時間超過六年：轉人工', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+            $this->result->addMessage('預計畢業時間超過六年：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
 
