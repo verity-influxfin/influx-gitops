@@ -65,6 +65,9 @@
                 <div class="row">
                     <h3 class="page-header m-3"></h3>
                 </div>
+                <div class="m-2" style="float: right;">
+                    <a class="btn btn-default" href="<?= admin_url("Risk/natural_person_export") ?>" target="_blank" id="export">匯出資料</a>
+                </div>
                 <div class="m-2">
                     <ul class="nav nav-tabs" id="" role="tablist">
                         <li role="presentation" data-product="1">
@@ -122,6 +125,10 @@
             }
             location.href = url.pathname + `?stage=${stage}&product=${product}`
         });
+
+        let $export = $('#export');
+        let export_url_search = new URLSearchParams({'product': product}).toString();
+        $export.attr('href', `${$export.attr('href')}?${export_url_search}`);
 
         drawTable(stage, product);
     });
