@@ -20,7 +20,7 @@ var app = new Vue({
             'format': 'yyyy-mm-dd',
         }).on('change', function () { self.searchform.end_date = this.value });
         setInterval(() => {
-            if (document.cookie.split(';').some((item) => item.includes('fileDownload=true'))) {
+            if (document.cookie.includes('fileDownload=true')) {
                 self.is_waiting_response = false
                 document.cookie = 'fileDownload=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             }
