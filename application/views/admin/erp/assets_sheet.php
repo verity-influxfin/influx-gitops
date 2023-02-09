@@ -46,7 +46,8 @@
                                         <th>產品名稱</th>
                                         <th>債務案號</th>
                                         <th>借款人ID</th>
-                                        <th>核准額度</th>
+                                        <th>貸放金額</th>
+                                        <th>核准金額</th>
                                         <th>核准信評</th>
                                         <th>最新信評</th>
                                         <th>學校/公司</th>
@@ -57,10 +58,16 @@
                                         <th>放款日期</th>
                                         <th>案件狀態</th>
                                         <th>債權案號</th>
-                                        <th>債權 ID</th>
+                                        <th>債權人ID</th>
                                         <th>債權來源</th>
+                                        <th>受讓債權包 ID</th>
+                                        <th>受讓本金</th>
+                                        <th>受讓價金</th>
                                         <th>放款金額</th>
                                         <th>債權狀態</th>
+                                        <th>出讓債權包 ID</th>
+                                        <th>出讓本金</th>
+                                        <th>出讓價金</th>
                                         <th>逾期天數</th>
                                         <th>債權本金餘額</th>
                                         <th>合約成立時間</th>
@@ -69,7 +76,7 @@
                                 <!-- add loading html -->
                                 <tbody v-if="is_waiting_response">
                                     <tr>
-                                        <td colspan="22">
+                                        <td colspan="30">
                                             <div class="text-center">
                                                 <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
                                                 <span class="sr-only">Loading...</span>
@@ -79,7 +86,7 @@
                                 </tbody>
                                 <tbody v-else>
                                     <tr v-if="assets_sheet.length < 1">
-                                        <td colspan="21" class="text-center">沒有資料</td>
+                                        <td colspan="30" class="text-center">沒有資料</td>
                                     </tr>
                                     <template v-else>
                                         <tr v-for="item in assets_sheet" :key="item.target_no">
@@ -87,6 +94,7 @@
                                             <td>{{ item.target_no }}</td>
                                             <td>{{ item.target_user_id }}</td>
                                             <td>{{ amount(item.target_loan_amount) }}</td>
+                                            <td>{{ amount(item.approved_credits_amount) }}</td>
                                             <td>{{ item.approved_credits_level }}</td>
                                             <td>{{ item.latest_credits_level }}</td>
                                             <td>{{ item.school_or_company }}</td>
@@ -98,9 +106,15 @@
                                             <td>{{ item.case_status }}</td>
                                             <td>{{ item.investment_id }}</td>
                                             <td>{{ item.investment_user_id }}</td>
-                                            <td>{{item.investment_source_str}}</td>
+                                            <td>{{ item.investment_source_str }}</td>
+                                            <td>{{ item.investment_in_transfers_id_int }}</td>
+                                            <td>{{ amount(item.investment_in_transfers_principal) }}</td>
+                                            <td>{{ amount(item.investment_in_transfers_amount) }}</td>
                                             <td>{{ amount(item.investment_loan_amount) }}</td>
                                             <td>{{ item.investment_status }}</td>
+                                            <td>{{ item.investment_out_transfers_id_int }}</td>
+                                            <td>{{ amount(item.investment_out_transfers_principal) }}</td>
+                                            <td>{{ amount(item.investment_out_transfers_amount) }}</td>
                                             <td>{{ item.delay_days }}</td>
                                             <td>{{ amount(item.principal_balance) }}</td>
                                             <td>{{ formatTime(item.contract_created_at) }}</td>

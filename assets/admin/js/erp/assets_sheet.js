@@ -72,7 +72,10 @@ var app = new Vue({
             );
         },
         amount: function (value) {
+          if (value) {
             return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+          }
+          return value
         },
         formatTime(value) {
             return moment(value).format('YYYY-MM-DD HH:mm:ss')
