@@ -809,7 +809,7 @@ abstract class Approve_base implements Approve_interface
         }
 
         $this->CI->target_lib->insert_change_log($this->target['id'], $param);
-        $this->target = array_replace($this->target, $param);
+
         return TRUE;
     }
 
@@ -883,7 +883,7 @@ abstract class Approve_base implements Approve_interface
 
         $this->CI->target_model->update($this->target['id'], $param);
         $this->CI->target_lib->insert_change_log($this->target['id'], $param);
-        $this->target = array_replace($this->target, $param);
+
         return TRUE;
     }
 
