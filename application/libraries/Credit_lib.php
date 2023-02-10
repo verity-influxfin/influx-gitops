@@ -657,66 +657,38 @@ class Credit_lib{
         //畢業學校
         if ( ! empty($data['diploma_name']))
         {
-            $get_school_point = $this->get_school_point($data['diploma_name'], $data['diploma_system'], '', $data['diploma_department']);
-            $total += ((int) ($get_school_point['point'] ?? 0)) * 0.6;
-            $school_point_score_history = implode($get_school_point['score_history'] ?? [], ' + ');
-            $this->scoreHistory[] = "( {$school_point_score_history} ) * 0.6";
+            $get_school_point = $this->get_school_point_product_salary_man($data['diploma_name'], $data['diploma_system']);
+            $school_point_m = min($get_school_point['point'], 390);
+            $total += $school_point_m;
+            $this->scoreHistory[] = "原始學歷評分: {$get_school_point['point']}; 調整為: {$school_point_m}; 明細: ";
+            foreach ($get_school_point['score_history'] as $key => $value)
+            {
+                $this->scoreHistory[] = "{$key}. {$value}";
+            }
+        }
+        else
+        {
+            $point = 250;
+            $total += $point;
+            $this->scoreHistory[] = "無提交最高學歷得分: {$point}";
         }
 
-        if (isset($data['job_type']))
+        // 財務評分
+        if ($approvalExtra && ! empty($approvalExtra->getSpecialInfo()))
         {
-            $job_type_point = $data['job_type'] ? 50 : 100;
-            $total += $job_type_point;
-            $this->scoreHistory[] = '職務性質(內/外勤): ' . $job_type_point;
+            $special_info = $approvalExtra->getSpecialInfo();
+            $special_info = array_filter($special_info, function ($value) {
+                return is_numeric($value);
+            });
+            $data = array_replace($data, $special_info);
         }
-
-        if (isset($data['job_salary']))
+        $get_financial_point = $this->get_financial_point_product_salary_man($data);
+        $financial_point_m = min($get_financial_point['point'], 2250);
+        $total += $financial_point_m;
+        $this->scoreHistory[] = "原始財務評分: {$get_financial_point['point']}; 調整為: {$financial_point_m}; 明細: ";
+        foreach ($get_financial_point['score_history'] as $key => $value)
         {
-            $job_salary_point = $this->get_job_salary_point(intval($data['job_salary']));
-            $total += $job_salary_point;
-            $this->scoreHistory[] = '薪資: ' . $job_salary_point;
-        }
-
-        if (isset($data['job_license']) && $data['job_license'])
-        {
-            $job_license_point = 100;
-            $total += $job_license_point;
-            $this->scoreHistory[] = '提供專業證書: ' . $job_license_point;
-        }
-
-        if (isset($data['job_employee']))
-        {
-            $job_employee_point = $this->get_job_employee_point(intval($data['job_employee']));
-            $total += $job_employee_point;
-            $this->scoreHistory[] = '任職公司規模: ' . $job_employee_point;
-        }
-
-        if (isset($data['job_position']))
-        {
-            $job_position_point = $this->get_job_position_point(intval($data['job_position']));
-            $total += $job_position_point;
-            $this->scoreHistory[] = '職位: ' . $job_position_point;
-        }
-
-        if (isset($data['job_seniority']))
-        {
-            $job_seniority_point = $this->get_job_seniority_point(intval($data['job_seniority']), intval($data['job_salary']));
-            $total += $job_seniority_point;
-            $this->scoreHistory[] = '畢業以來的工作期間: ' . $job_seniority_point;
-        }
-
-        if (isset($data['job_company_seniority']))
-        {
-            $job_company_seniority_point = $this->get_job_seniority_point(intval($data['job_company_seniority']), intval($data['job_salary']));
-            $total += $job_company_seniority_point;
-            $this->scoreHistory[] = '此公司工作期間: ' . $job_company_seniority_point;
-        }
-
-        if (isset($data['job_industry']))
-        {
-            $job_industry_point = $this->get_job_industry_point($data['job_industry']);
-            $total += $job_industry_point;
-            $this->scoreHistory[] = '公司類型: ' . $job_industry_point;
+            $this->scoreHistory[] = "{$key}. {$value}";
         }
 
         //聯徵
@@ -741,6 +713,44 @@ class Credit_lib{
             }
         }
 
+        // 社交評分
+        $social_total_score = 0;
+        $social_score_history = [];
+        // IG近1個月內發文次數>10
+        if ( ! empty($data['posts_in_1months']) && $data['posts_in_1months'] > 10)
+        {
+            $social_total_score += (300 * 0.5);
+            $social_score_history[] = 'IG近1個月內發文次數>10: 300 * 0.5';
+        }
+        // 好友數>100且較3個月前增加10%以上
+        $data_follow_count = (int) ($data['follow_count'] ?? 0);
+        $data_followers_grow_rate_in_3month = (double) ($data['followers_grow_rate_in_3month'] ?? 0);
+        if ($data_follow_count > 100 && $data_followers_grow_rate_in_3month >= 0.1 )
+        {
+            $social_total_score += (300 * 0.5);
+            $social_score_history[] = '好友數>100且較3個月前增加10%以上: 300 * 0.5';
+        }
+        $social_total_score = min($social_total_score, 300);
+        $total += $social_total_score;
+        $this->scoreHistory = array_merge($this->scoreHistory, $social_score_history);
+        // 提供社交帳戶認證ID
+        $this->CI->load->library('certification_lib');
+        $cert_social = $this->CI->certification_lib->get_certification_info($user_id, CERTIFICATION_SOCIAL);
+        $cert_social_score = 0;
+        if ( ! empty($cert_social->content['facebook']))
+        {
+            $cert_social_score += 100;
+        }
+        if ( ! empty($cert_social->content['instagram']))
+        {
+            $cert_social_score += 100;
+        }
+        // 每增加一個社交帳戶ID+100、調整係數0.5
+        // 至多150分
+        $cert_social_score = min(($cert_social_score * 0.5), 150);
+        $total += $cert_social_score;
+        $this->scoreHistory[] = '提供社交帳戶認證ID: ' . $cert_social_score;
+
         $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
         if ($approvalExtra)
         {
@@ -750,6 +760,18 @@ class Credit_lib{
                 $total += $extra_point;
                 $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
             }
+        }
+
+        // 總分調整 = 總分 * 性別對應的系數
+        if ($user_info->sex == 'M')
+        {
+            // 男
+            $total *= 0.9;
+            $this->scoreHistory[] = '性別男: 總分 * 0.9';
+        }
+        else
+        {
+            $this->scoreHistory[] = '性別女: 總分 * 1';
         }
 
         $param['points'] = (int) $total;
