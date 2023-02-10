@@ -653,6 +653,8 @@ END:
                 if (isset($cert_governmentauthorities_content))
                 {
                     // 自動寫入「設立(變更)事項登記表」的徵信項
+                    $cert_governmentauthorities_content['compId'] = $insert_user_param['id_number'];
+                    $cert_governmentauthorities_content['compName'] = $insert_user_param['name'];
                     $insert_certification_param[] = [
                         'user_id' => $new_id,
                         'certification_id' => CERTIFICATION_GOVERNMENTAUTHORITIES,
