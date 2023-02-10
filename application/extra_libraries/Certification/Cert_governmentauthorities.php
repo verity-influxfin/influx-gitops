@@ -186,7 +186,7 @@ class Cert_governmentauthorities extends Certification_base
         }
         // 爬蟲資料結果
         $user_info = $this->CI->user_model->get_by(array('id' => $this->certification['user_id']));
-        if ($user_info && ! empty($user_info->id_number))
+        if ($user_info && ! empty($this->content['compId']))
         {
             // 確認爬蟲狀態
             $this->CI->load->library('scraper/Findbiz_lib');
