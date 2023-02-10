@@ -146,7 +146,7 @@ abstract class Approve_base implements Approve_interface
         {
             case TARGET_WAITING_SIGNING:
             case TARGET_ORDER_WAITING_VERIFY:
-                $res = $this->set_target_success($renew);
+                $res = $this->set_target_success($renew, $subloan_status);
                 if ($res === TRUE)
                 {
                     $res = $this->success_notify($subloan_status);
@@ -189,7 +189,7 @@ abstract class Approve_base implements Approve_interface
             // 命中反詐欺
             return TRUE;
         }
-        if ($this->product_config['secondInstance'] === TRUE)
+        if (isset($this->product_config['secondInstance']) && $this->product_config['secondInstance'] === TRUE)
         {
             // 產品設定檔設定需二審
             return TRUE;
@@ -587,6 +587,11 @@ abstract class Approve_base implements Approve_interface
                 $user_cert = $this->CI->certification_lib->get_certification_info($user_id, $key, USER_BORROWER, FALSE, TRUE);
             }
 
+            if ($user_cert === FALSE)
+            {
+                continue;
+            }
+
             if ( ! empty($user_cert) && $user_cert->status == CERTIFICATION_STATUS_SUCCEED)
             {
                 $result[$key] = [
@@ -599,7 +604,7 @@ abstract class Approve_base implements Approve_interface
             {
                 $result[$key] = [
                     'id' => $user_cert->id,
-                    'status' => (int) $user_cert->status,
+                    'status' => CERTIFICATION_STATUS_SUCCEED,
                     'certification_id' => (int) $user_cert->certification_id,
                 ];
             }
@@ -788,11 +793,12 @@ abstract class Approve_base implements Approve_interface
     /**
      * 案件審核成功
      * @param $renew : 是否為人工同意通過
+     * @param bool $subloan_status : 是否為產轉案件
      * @return bool
      */
-    public function set_target_success($renew): bool
+    public function set_target_success($renew, bool $subloan_status): bool
     {
-        $param = $this->get_approve_success_param($renew);
+        $param = $this->get_approve_success_param($renew, $subloan_status);
         if (empty($param))
         {
             return FALSE;
@@ -816,16 +822,17 @@ abstract class Approve_base implements Approve_interface
     /**
      * 取得更新「審核成功案件」的參數
      * @param $renew : 是否為人工同意通過
+     * @param $subloan_status
      * @return array
      */
-    protected function get_approve_success_param($renew): array
+    protected function get_approve_success_param($renew, $subloan_status): array
     {
         $target_data = $this->get_new_target_data();
         $param = [
             'sub_product_id' => $this->target_sub_product_id,
             'loan_amount' => $this->loan_amount,
             'credit_level' => $this->credit['level'],
-            'platform_fee' => $this->platform_fee,
+            'platform_fee' => $this->get_platform_fee($subloan_status),
             'interest_rate' => $this->credit['rate'],
             'status' => TARGET_WAITING_SIGNING,
             'sub_status' => $renew ? TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : TARGET_SUBSTATUS_NORNAL,
@@ -867,6 +874,15 @@ abstract class Approve_base implements Approve_interface
         }
 
         return $param;
+    }
+
+    /**
+     * @param $subloan_status
+     * @return int
+     */
+    protected function get_platform_fee($subloan_status): int
+    {
+        return $this->platform_fee;
     }
 
     /**
