@@ -322,4 +322,11 @@ class User_model extends MY_Model
             ->get()
             ->result_array();
     }
+
+    public function get_name_by_id($id)
+    {
+        $result = $this->db->select('name')->from('p2p_user.users')->where('id', $id)
+            ->get()->first_row('array');
+        return $result['name'] ?? '';
+    }
 }

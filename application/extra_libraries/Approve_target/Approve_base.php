@@ -21,6 +21,10 @@ abstract class Approve_base implements Approve_interface
     protected $loan_amount;
     protected $platform_fee;
 
+    const BROOKESIA_CLEAR = 'clear';
+    const BROOKESIA_SECOND_INSTANCE = 'second_instance';
+    const BROOKESIA_BLOCK = 'block';
+
     public function __construct($target)
     {
         $this->CI = &get_instance();
@@ -96,7 +100,16 @@ abstract class Approve_base implements Approve_interface
         }
 
         // 檢查是否命中反詐欺
-        $match_brookesia = $this->check_brookesia();
+        switch ($this->check_brookesia())
+        {
+            case self::BROOKESIA_BLOCK:
+                goto END;
+            case self::BROOKESIA_CLEAR:
+                break;
+            case self::BROOKESIA_SECOND_INSTANCE:
+            default:
+                $match_brookesia = TRUE;
+        }
         $user_checked = $this->CI->brookesia_lib->is_user_checked($this->target_user_id, $this->target['id']);
         if ($user_checked === FALSE)
         {
@@ -167,6 +180,10 @@ abstract class Approve_base implements Approve_interface
      */
     public function get_need_second_instance(bool $match_brookesia): bool
     {
+        if ($this->result->get_status() === TARGET_FAIL)
+        {
+            return FALSE;
+        }
         if ($match_brookesia === TRUE)
         {
             // 命中反詐欺
@@ -332,31 +349,37 @@ abstract class Approve_base implements Approve_interface
 
     /**
      * 檢查是否命中反詐欺
-     * @return bool
+     * @return string
      */
-    protected function check_brookesia(): bool
+    protected function check_brookesia(): string
     {
-        $match_brookesia = FALSE;
+        $match_brookesia = self::BROOKESIA_CLEAR;
 
         // 檢查黑名單結果，是否需要處置
         $is_user_blocked = $this->CI->black_list_lib->check_user($this->target_user_id, CHECK_APPLY_PRODUCT);
         $is_user_second_instance = $this->CI->black_list_lib->check_user($this->target_user_id, CHECK_SECOND_INSTANCE);
 
-        // 確認黑名單結果是否需轉二審(子系統回應異常、禁止申貸、轉二審)
+        // 確認黑名單結果是否需轉二審
         if (empty($is_user_blocked) || empty($is_user_second_instance))
         {
+            // 子系統回應異常 -> 二審
             $this->CI->black_list_lib->add_block_log(['userId' => $this->target_user_id]);
-            $match_brookesia = TRUE;
+            $match_brookesia = self::BROOKESIA_SECOND_INSTANCE;
         }
         elseif ($is_user_blocked['isUserBlocked'])
         {
+            // 禁止申貸 -> 退件
             $this->CI->black_list_lib->add_block_log($is_user_blocked);
-            $match_brookesia = TRUE;
+            $match_brookesia = self::BROOKESIA_BLOCK;
+            $reason = '命中反詐欺規則' . (empty($is_user_blocked['blockDescription']) ?: "：{$is_user_blocked['blockDescription']}");
+            $this->result->add_msg(TARGET_FAIL, Approve_target_result::TARGET_FAIL_DEFAULT_MSG);
+            $this->result->add_memo(TARGET_FAIL, $reason, Approve_target_result::DISPLAY_BACKEND);
         }
         elseif ($is_user_second_instance['isUserSecondInstance'])
         {
+            // 二審
             $this->CI->black_list_lib->add_block_log($is_user_second_instance);
-            $match_brookesia = TRUE;
+            $match_brookesia = self::BROOKESIA_SECOND_INSTANCE;
         }
         return $match_brookesia;
     }
@@ -537,7 +560,7 @@ abstract class Approve_base implements Approve_interface
         // 取得產品設定的徵信項設定檔
         $cert_config = $this->CI->config->item('certifications');
         $product_cert = $this->product_config_cert;
-        $cert_config = array_filter($cert_config, function ($value) use ($product_cert) {
+        array_filter($cert_config, function ($value) use ($product_cert) {
             return in_array($value, $product_cert);
         }, ARRAY_FILTER_USE_KEY);
 
@@ -792,7 +815,7 @@ abstract class Approve_base implements Approve_interface
         }
 
         $this->CI->target_lib->insert_change_log($this->target['id'], $param);
-        $this->target = array_replace($this->target, $param);
+
         return TRUE;
     }
 
@@ -876,7 +899,7 @@ abstract class Approve_base implements Approve_interface
 
         $this->CI->target_model->update($this->target['id'], $param);
         $this->CI->target_lib->insert_change_log($this->target['id'], $param);
-        $this->target = array_replace($this->target, $param);
+
         return TRUE;
     }
 

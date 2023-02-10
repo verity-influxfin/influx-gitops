@@ -719,25 +719,21 @@ class Credit_lib{
             $this->scoreHistory[] = '公司類型: ' . $job_industry_point;
         }
 
-        // 聯徵
-        if (isset($data['investigation_status']) && ! empty($data['investigation_status']))
-        {
-            if (isset($data['investigation_times']))
-            {
+        //聯徵
+        if (isset($data['investigation_status']) && !empty($data['investigation_status'])) {
+            if (isset($data['investigation_times'])) {
                 $investigation_times_point = $this->get_investigation_times_point(intval($data['investigation_times']));
                 $total += $investigation_times_point;
                 $this->scoreHistory[] = '聯徵查詢次數: ' . $investigation_times_point;
             }
 
-            if (isset($data['investigation_credit_rate']))
-            {
+            if (isset($data['investigation_credit_rate'])) {
                 $investigation_credit_rate_point = $this->get_investigation_rate_point(intval($data['investigation_credit_rate']));
                 $total += $investigation_credit_rate_point;
                 $this->scoreHistory[] = '聯徵信用卡使用率: ' . $investigation_credit_rate_point;
             }
 
-            if (isset($data['investigation_months']))
-            {
+            if (isset($data['investigation_months'])) {
                 $data['investigation_months'] = (int) $data['investigation_months'];
                 $investigation_months_point = $this->get_investigation_months_point($data['investigation_months']);
                 $total += $investigation_months_point;
@@ -758,8 +754,7 @@ class Credit_lib{
 
         $param['points'] = (int) $total;
 
-        if ($mix_credit)
-        {
+        if($mix_credit){
             return $param['points'];
         }
 
@@ -767,35 +762,24 @@ class Credit_lib{
         $credit_amount_list = $this->get_credit_amount_list($product_id, $sub_product_id);
         if ( ! empty($credit_amount_list))
         {
-            foreach ($credit_amount_list as $value)
-            {
-                if ($param['points'] >= $value['start'] && $param['points'] <= $value['end'])
-                {
+            foreach ($credit_amount_list as $value) {
+                if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
                     $param['amount'] = $salary * $value['rate'];
                     break;
                 }
             }
         }
+        else
+        {
+            return FALSE;
+        }
 
         $param['expire_time'] = $expire_time;
 
         // 月薪低於特定值，不能超過特定倍數的額度
-        if ( ! $stage_cer && intval($data['job_salary']) <= $this->product_list[$product_id]['condition_rate']['salary_below'])
-        {
-            $job_salary = intval($data['job_salary']) * $this->product_list[$product_id]['condition_rate']['rate'];
+        if (!$stage_cer && intval($data['job_salary']) <= $this->product_list[$product_id]['condition_rate']['salary_below']) {
+			$job_salary = intval($data['job_salary']) * $this->product_list[$product_id]['condition_rate']['rate'];
             $param['amount'] = intval(min($param['amount'], $job_salary));
-        }
-
-        // 額度調整 = 額度 * 性別對應的系數
-        if ($user_info->sex == 'M')
-        {
-            // 男
-            $param['amount'] *= 0.9;
-            $this->scoreHistory[] = '性別男: 額度 * 0.9';
-        }
-        else
-        {
-            $this->scoreHistory[] = '性別女: 額度 * 1';
         }
 
         // 額度調整 = 額度 * 分期期數對應的系數

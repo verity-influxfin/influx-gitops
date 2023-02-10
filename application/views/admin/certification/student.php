@@ -153,11 +153,11 @@
                             <div class="form-group">
                                 <label>學校名稱</label>
                                 <p id="university"
-                                   class="form-control-static"><?= isset($content['school']) ? $content['school'] : "" ?></p>
+                                   class="form-control-static"><?= $content['admin_edit']['school'] ?? $content['school'] ?? '' ?></p>
                             </div>
                             <div class="form-group">
                                 <label>學制</label>
-                                <p class="form-control-static"><?= isset($school_system[$content['system']]) ? $school_system[$content['system']] : $content['system'] ?></p>
+                                <p class="form-control-static"><?= $school_system[$content['admin_edit']['system'] ?? $content['system'] ?? ''] ?? '' ?></p>
                             </div>
                             <div class="form-group">
                                 <label>學門</label>
@@ -165,7 +165,7 @@
                             </div>
                             <div class="form-group">
                                 <label>系所</label>
-                                <p class="form-control-static"><?= isset($content['department']) ? $content['department'] : "" ?></p>
+                                <p class="form-control-static"><?= $content['admin_edit']['department'] ?? $content['department'] ?? '' ?></p>
                             </div>
                             <div class="form-group">
                                 <label>年級</label>
@@ -420,8 +420,50 @@
                                     }
                                     ?>
                                 </div>
-                                <h4>審核</h4>
                                 <form role="form" method="post" action="/admin/certification/user_certification_edit">
+                                    <h4>審核人員確認</h4>
+                                    <?php
+                                    $admin_edit = $content['admin_edit'] ?? [];
+                                    $input_disabled = $data->status != CERTIFICATION_STATUS_PENDING_TO_REVIEW ? 'disabled' : '';
+                                    ?>
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <table class="admin-edit">
+                                                <tr>
+                                                    <td><label>學校名稱</label></td>
+                                                    <td>
+                                                        <select name="admin_edit[school]" <?= $input_disabled ?> class="form-control">
+                                                            <option value=""></option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label>學制</label></td>
+                                                    <td>
+                                                        <select name="admin_edit[system]" <?= $input_disabled ?> class="form-control">
+                                                            <option value=""></option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label>系所</label></td>
+                                                    <td>
+                                                        <select name="admin_edit[department]" <?= $input_disabled ?> class="form-control">
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label>實名認證姓名</label></td>
+                                                    <td>
+                                                        <input type="text" class="form-control"
+                                                               value="<?= $cert_identity_name ?? '' ?>"
+                                                               disabled>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </fieldset>
+                                    <h4>審核</h4>
                                     <fieldset>
                                         <div class="form-group">
                                             <select id="status" name="status" class="form-control"
@@ -457,15 +499,29 @@
                             <h1>圖片</h1>
                             <fieldset disabled>
                                 <div class="form-group">
-                                    <label>學生證正面照</label><br>
-                                    <a href="<?= $content['front_image'] ?>" data-fancybox="images">
-                                        <img src="<?= $content['front_image'] ?>" style='width:30%;max-width:400px'>
-                                    </a>
+                                    <label for="disabledSelect">學生證正面照</label><br>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <a href="<?= $content['front_image'] ?>" data-fancybox="images">
+                                                    <img src="<?= $content['front_image'] ?>"
+                                                         style='width:100%;max-width:200px'>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <label>OCR辨識結果</label><br/>
+                                                <label>學校名稱：</label><?= $content['ocr_parser']['content']['university']['name'] ?? '' ?><br/>
+                                                <label>學制：</label><?= $content['ocr_parser']['content']['student']['academic_degree'] ?? '' ?><br/>
+                                                <label>系所：</label><?= $content['ocr_parser']['content']['student']['department'] ?? '' ?><br/>
+                                                <label>姓名：</label><?= $content['ocr_parser']['content']['student']['name'] ?? '' ?><br/>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <div class="form-group">
                                     <label>學生證背面照</label><br>
                                     <a href="<?= $content['back_image'] ?>" data-fancybox="images">
-                                        <img src="<?= $content['back_image'] ?>" style='width:30%;max-width:400px'>
+                                        <img src="<?= $content['back_image'] ?>" style='width:100%;max-width:200px'>
                                     </a>
                                 </div>
                                 <?
@@ -475,7 +531,7 @@
                                     echo '<div class="form-group"><label for="disabledSelect">成績單</label><br>';
                                     foreach ($content['transcript_image'] as $key => $value)
                                     {
-                                        echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:30%;max-width:400px"></a>';
+                                        echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:100%;max-width:200px"></a>';
                                     }
                                     echo '</div>';
                                 }
@@ -503,7 +559,7 @@
                                         $arr_pro_certificate = explode(',', $content['pro_certificate']);
                                         foreach ($content['pro_certificate_image'] as $key => $value)
                                         {
-                                            echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:30%;max-width:400px"></a><br>';
+                                            echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:100%;max-width:200px"></a><br>';
                                             echo '圖片說明：' . (isset($arr_pro_certificate[$key]) && ! empty($arr_pro_certificate[$key]) ? $arr_pro_certificate[$key] : '未填寫說明') . "<br><br>";
                                         }
                                         echo '</div><br />';
@@ -514,7 +570,7 @@
                                         $arr_game_work = explode(',', $content['game_work']);
                                         foreach ($content['game_work_image'] as $key => $value)
                                         {
-                                            echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:30%;max-width:400px"></a><br>';
+                                            echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:100%;max-width:200px"></a><br>';
                                             echo '圖片說明：' . (isset($arr_game_work[$key]) && ! empty($arr_game_work[$key]) ? $arr_game_work[$key] : '未填寫說明') . "<br><br>";
                                         }
                                         echo '</div>';
@@ -536,3 +592,39 @@
     <!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+<script>
+    $(document).ready(function () {
+        // 學制
+        const system_list = <?= json_encode($config['school_system_list'] ?? []) ?>;
+        const system_value = '<?= $content['admin_edit']['system'] ?? $content['system'] ?? '' ?>';
+        let $admin_edit_system = $('select[name="admin_edit[system]"]');
+        $.each(system_list, function (key, value) {
+            $admin_edit_system.append($('<option></option>').text(value).val(key));
+        });
+        $admin_edit_system.val(system_value);
+
+        // 學校名稱 + 系所
+        const school_department_list = <?= json_encode($config['school_department_list'] ?? []) ?>;
+        const school_value = '<?= $content['admin_edit']['school'] ?? $content['school'] ?? '' ?>';
+        const department_value = '<?= $content['admin_edit']['department'] ?? $content['department'] ?? '' ?>';
+        let $admin_edit_school = $('select[name="admin_edit[school]"]');
+        let $admin_edit_department = $('select[name="admin_edit[department]"]');
+        $.each(school_department_list, function (key) {
+            $admin_edit_school.append($('<option></option>').text(key).val(key));
+        });
+        $admin_edit_school.on('change', function () {
+            let department_disabled = $admin_edit_department.prop('disabled');
+            $admin_edit_department.prop('disabled', true).find('option').remove();
+            $admin_edit_department.append($('<option></option>'));
+            let this_school_value = $(this).val();
+            const department_list = school_department_list[this_school_value];
+            $.each(department_list, function (key, value) {
+                $admin_edit_department.append($('<option></option>').text(value).val(value));
+            });
+            console.log(department_disabled)
+            $admin_edit_department.prop('disabled', department_disabled);
+        });
+        $admin_edit_school.val(school_value).trigger('change');
+        $admin_edit_department.val(department_value);
+    });
+</script>
