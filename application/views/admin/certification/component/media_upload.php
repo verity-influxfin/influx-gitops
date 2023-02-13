@@ -16,7 +16,7 @@
     let imageFormData = [];
 
     function mediaUploadOnChange(event) {
-        let $submit_btn = $(event.path[1]).children("#mediaUploadBtn");
+        let $submit_btn = $("#mediaUploadBtn");
         $submit_btn.text(`資料處理中`);
         $submit_btn.attr("disabled", "disabled");
         let allFileCount = Object.keys(event.target.files).length;
