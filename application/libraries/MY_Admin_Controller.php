@@ -65,6 +65,10 @@ class MY_Admin_Controller extends CI_Controller{
             { // 無 child menu
                 $item = array_keys($controller_value['menu']);
                 $item = reset($item);
+                if ( ! isset($this->permission_granted[$controller][$item]['action']['granted']))
+                {
+                    continue;
+                }
                 if ( ! ($this->permission_granted[$controller][$item]['action']['granted'] & $this->action_type_list['read']['key'])) continue;
                 $admin_menu[$controller]['parent_url'] = admin_url($this->permission_granted[$controller][$item]['url']);
             }
@@ -72,6 +76,10 @@ class MY_Admin_Controller extends CI_Controller{
             { // 有 child menu
                 foreach ($controller_value['menu'] as $item_key => $item_value)
                 {
+                    if ( ! isset($this->permission_granted[$controller][$item_key]['action']['granted']))
+                    {
+                        continue;
+                    }
                     if ( ! ($this->permission_granted[$controller][$item_key]['action']['granted'] & $this->action_type_list['read']['key'])) continue;
                     $admin_menu[$controller]['sub'][$item_key] = ['name' => $item_value['name']];
                     if ( ! empty($item_value['param']) && is_array($item_value['param']))
