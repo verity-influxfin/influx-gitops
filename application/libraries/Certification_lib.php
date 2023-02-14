@@ -3312,6 +3312,10 @@ class Certification_lib{
 
     public function get_last_status($user_id, $investor = 0, $company = 0, $target = false, $product_info = false, $target_get_failed = FALSE, $target_get_expired = FALSE)
     {
+        if (is_array($target))
+        {
+            $target = json_decode(json_encode($target));
+        }
 		if($user_id){
 			$certification = [];
             $company_source_user_id = false;
