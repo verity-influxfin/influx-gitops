@@ -60,7 +60,7 @@
                                     <tr>
                                         <td><span>公司近01個月投保人數-年月</span></td>
                                         <td><input class="sk-input form-control" type="text"
-                                                   v-model="formData.numOfInsuredYM1" placeholder="格式:YYYMM"></td>
+                                                   v-model="formData.NumOfInsuredYM1" placeholder="格式:YYYMM"></td>
                                     </tr>
                                     <tr>
                                         <td><span>公司近01個月投保人數-人數</span></td>
