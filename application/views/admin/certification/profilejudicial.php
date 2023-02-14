@@ -410,6 +410,14 @@
                                             </select></td>
                                     </tr>
                                     <tr>
+                                        <td><span>公司型態</span></td>
+                                        <td><select v-model="formData.compType" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'41'">41:獨資</option>
+                                                <option :value="'21'">21:中小企業</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>公司產業別</span></td>
                                         <td><select v-model="formData.compDuType" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
@@ -879,6 +887,14 @@
                                             </select></td>
                                     </tr>
                                     <tr>
+                                        <td><span>公司型態</span></td>
+                                        <td><select v-model="formData.compType" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'41'">41:獨資</option>
+                                                <option :value="'21'">21:中小企業</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>公司產業別</span></td>
                                         <td><select v-model="formData.compDuType" class="table-input sk-input form-control">
                                                 <option :value="''"></option>
@@ -1184,6 +1200,7 @@
                     relatedCompCGuiNumber: '',
                     relatedCompCType: '',
                     relatedCompCRelationship: '',
+                    compType: '',
                     compDuType: '',
                     prMobileNo: '',
                     prEmail: '',

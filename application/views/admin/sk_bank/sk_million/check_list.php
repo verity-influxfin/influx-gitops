@@ -146,7 +146,7 @@
                         <tr>
                             <td class="bold-right-border">公司產業別<span style="color: red;">*</span></td>
                             <td colspan="3">
-                                <select name="CompDuType_content" class="table-input" id="CompDuType_content" disabled>
+                                <select name="compDuType_content" class="table-input" id="compDuType_content" disabled>
                                     <option value="" selected></option>
                                     <option value="01">01:水泥</option>
                                     <option value="02">02:食品</option>
@@ -248,7 +248,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('CompDuType_content')" value="Edit">
+                                           onclick="edit_click('compDuType_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2501,12 +2501,12 @@
                                 <div style="color:red;">格式:YYYYMMDD</div>
                             </td>
                             <td colspan="3">
-                                <input id="CompJCICQueryDate_content" name="CompJCICQueryDate_content" type="text" class="table-input" disabled>
+                                <input id="jcCompDataDate_content" name="jcCompDataDate_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('CompJCICQueryDate_content')" value="Edit">
+                                           onclick="edit_click('jcCompDataDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2570,12 +2570,12 @@
                                 <div style="color:red;">格式:YYYYMM</div>
                             </td>
                             <td colspan="3">
-                                <input id="CompJCICDataDate_content" name="CompJCICDataDate_content" type="text" class="table-input" disabled>
+                                <input id="jcCompJ02YM_content" name="jcCompJ02YM_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click('CompJCICDataDate_content')" value="Edit">
+                                           onclick="edit_click('jcCompJ02YM_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3397,7 +3397,7 @@
     let table_type;
     let data_type;
     // 下拉選單列表
-    let select_array = ['CompType_content', 'businessTypeCode_content', 'CompDuType_content', 'bizRegAddrOwner_content', 'isBizAddrEqToBizRegAddr_content', 'BizTaxFileWay_content',
+    let select_array = ['CompType_content', 'businessTypeCode_content', 'compDuType_content', 'compType_content', 'bizRegAddrOwner_content', 'isBizAddrEqToBizRegAddr_content', 'BizTaxFileWay_content',
         'IsPrMarried_content', 'IsPrSpouseGu_content', 'RealPr_content', 'realBizRegAddressOwner_content', 'realBizAddressOwner_content', 'realBizAddrOwner_content', 'OthRealPrRelWithPr_content',
         'GuOneRelWithPr_content', 'GuOneCompany_content', 'GuTwoRelWithPr_content', 'GuTwoCompany_content', 'PrEduLevel_content', 'CompMajorOwnership_content', 'CompMajorSetting_content'];
     // 原始檔案圖片-附件資料表
