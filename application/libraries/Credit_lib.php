@@ -1329,12 +1329,14 @@ class Credit_lib{
         // 公家機關: 250
         // 台灣1000大企業: 前100大得300分、101-500得200分、501-1000得100分
         // 台灣公私立醫院: 醫學中心300分、區域醫院200分、其他100分
+        // 其他機構: 50
 
         $job_company_point_max = max([
             $data['job_company_world_500_point'] ?? 0,
             $data['job_company_public_agency_point'] ?? 0,
             $data['job_company_taiwan_1000_point'] ?? 0,
             $data['job_company_medical_institute_point'] ?? 0,
+            50
         ]);
         $point += $job_company_point_max;
         $score_history[] = '服務機構: ' . $job_company_point_max;
