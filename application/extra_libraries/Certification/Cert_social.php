@@ -308,7 +308,7 @@ class Cert_social extends Certification_base
      */
     public function is_expired(): bool
     {
-        return FALSE;
+        return ! empty($this->certification['expire_time']) && $this->certification['expire_time'] < time();
     }
 
     public function post_verify(): bool

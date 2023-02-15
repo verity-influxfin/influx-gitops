@@ -98,6 +98,7 @@ class Certification_lib{
                     $certification->updated_at 			= intval($certification->updated_at);
                     $certification->content = json_decode($certification->content,true);
                     $certification->remark              = isJson($certification->remark) ? json_decode($certification->remark,true) : $certification->remark;
+                    $certification->expire_time = (int) $certification->expire_time;
                     return $certification;
                 }
 			}
