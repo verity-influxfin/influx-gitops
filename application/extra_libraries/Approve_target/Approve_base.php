@@ -588,7 +588,8 @@ abstract class Approve_base implements Approve_interface
                 $user_cert = $this->CI->certification_lib->get_certification_info($user_id, $key, USER_BORROWER, FALSE, TRUE);
             }
 
-            if ($user_cert === FALSE)
+            if ($user_cert === FALSE ||
+                ($user_cert->certification_id == CERTIFICATION_SOCIAL && $user_cert->expire_time < time()))
             {
                 continue;
             }

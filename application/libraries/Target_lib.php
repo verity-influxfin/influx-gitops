@@ -1810,6 +1810,13 @@ class Target_lib
                                         }
                                     }
                                 }
+
+                                // 社交認證過期，卡案件狀態為待驗證
+                                if ($certification['id'] == CERTIFICATION_SOCIAL && $certification['expire_time'] < time())
+                                {
+                                    $finish = FALSE;
+                                }
+
                                 // 工作認證有專業技能證書進待二審
                                 if($certification['id'] == 10 && isset($certification['content'])){
                                     if(isset($certification['content']['license_image']) || isset($certification['content']['pro_certificate_image']) || isset($certification['content']['game_work_image'])){
