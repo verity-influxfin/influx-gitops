@@ -50,6 +50,19 @@ class Product_student extends Approve_target_credit_base
             $this->result->set_action_cancel();
             return FALSE;
         }
+
+        // 檢查學生認證的「學制」
+        $user_meta_school_system = $this->CI->user_meta_model->as_array()->get_by([
+            'user_id' => $this->target_user_id,
+            'meta_key' => 'school_system'
+        ]);
+        if ( ! empty($user_meta_school_system['meta_value']) && $user_meta_school_system['meta_value'] == 3)
+        {
+            // 若為五專，直接退案
+            $this->result->add_msg(TARGET_FAIL, Approve_target_result::TARGET_FAIL_DEFAULT_MSG);
+            $this->result->add_memo(TARGET_FAIL, '學制為五專', Approve_target_result::DISPLAY_BACKEND);
+            return FALSE;
+        }
         return TRUE;
     }
 

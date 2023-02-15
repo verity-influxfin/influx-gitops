@@ -51,6 +51,7 @@ abstract class Approve_base implements Approve_interface
         $this->CI->load->model('user/judicial_person_model');
         $this->CI->load->model('user/user_bankaccount_model');
         $this->CI->load->model('user/user_certification_model');
+        $this->CI->load->model('user/user_meta_model');
 
         $this->CI->config->load('credit', TRUE);
     }
