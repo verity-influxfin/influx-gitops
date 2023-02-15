@@ -148,7 +148,7 @@ class Certification extends MY_Admin_Controller {
                     $page_data['content']['sipUniversity'] = isset($sipURL) ? $sipUniversity : "";
 
                     $page_data['config']['school_system_list'] = $this->config->item('school_system');
-                    $page_data['config']['school_department_list'] = file_get_contents(FRONT_CDN_URL . 'json/school_department.json');
+                    $page_data['config']['school_department_list'] = file_get_contents(FRONT_CDN_URL . 'json/config_school.json');
                     if ( ! empty($page_data['config']['school_department_list']))
                     {
                         $tmp = json_decode($page_data['config']['school_department_list'], TRUE);
@@ -157,7 +157,7 @@ class Certification extends MY_Admin_Controller {
                         $page_data['config']['school_department_list'] = array_flip($page_data['config']['school_department_list']);
 
                         array_walk($tmp, function (&$item) {
-                            $item = call_user_func_array('array_merge', array_values($item));
+                            $item = call_user_func_array('array_merge', array_values($item['discipline']));
                             asort($item);
                         });
 
