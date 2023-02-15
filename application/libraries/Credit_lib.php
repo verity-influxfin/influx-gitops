@@ -1453,15 +1453,15 @@ class Credit_lib{
      */
 	public function get_job_salary_point($job_salary = 0){
 		$point 	= 0;
-		if($job_salary >= 23000 && $job_salary <= 30000){
+		if($job_salary > 23000 && $job_salary <= 30000){
 			$point = 50;
 		}else if($job_salary > 30000 && $job_salary <= 35000){
 			$point = 100;
-		}else if($job_salary > 35000 && $job_salary < 40000){
+		}else if($job_salary > 35000 && $job_salary <= 40000){
 			$point = 150;
-		}else if($job_salary > 40000 && $job_salary < 45000){
+		}else if($job_salary > 40000 && $job_salary <= 45000){
 			$point = 200;
-		}else if($job_salary >= 45000 && $job_salary < 50000){
+		}else if($job_salary > 45000 && $job_salary <= 50000){
 			$point = 250;
 		}else if($job_salary > 50000){
 			$point = 500;
