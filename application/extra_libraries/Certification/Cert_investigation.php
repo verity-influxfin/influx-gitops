@@ -105,6 +105,7 @@ class Cert_investigation extends Cert_pdf
                 $parsed_content['result'][$group_id] = $this->transform_data;
                 $parsed_content['times'] = $this->transform_data['S1Count'] ?? 0;
                 $parsed_content['credit_rate'] = $this->transform_data['creditCardUseRate'] ?? 0;
+                $parsed_content['has_using_credit_card'] = ($this->transform_data['creditCardCount'] ?? 0) > 0;
                 $parsed_content['months'] = $this->transform_data['creditLogCount'] ?? 0;
                 $parsed_content['printDatetime'] = time();
                 $parsed_content['printDate'] = $printDatetime;
@@ -235,6 +236,7 @@ class Cert_investigation extends Cert_pdf
             'investigation_times' => $this->content['times'] ?? '',
             'investigation_credit_rate' => $this->content['credit_rate'] ?? '',
             'investigation_months' => $this->content['months'] ?? '',
+            'investigation_has_using_credit_card' => ($this->content['has_using_credit_card'] ?? FALSE) === TRUE,
         ];
 
         $rs = $this->CI->certification_lib->user_meta_progress($data, $this->certification);
