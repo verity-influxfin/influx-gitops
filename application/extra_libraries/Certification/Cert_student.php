@@ -246,6 +246,7 @@ class Cert_student extends Certification_base
             {
                 $this->result->addMessage('已畢業，請申請上班族貸', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
                 $this->result->addMessage('畢業時間超過六年：自動退件', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_REVIEW_FAILED);
                 return FALSE;
             }
         }
