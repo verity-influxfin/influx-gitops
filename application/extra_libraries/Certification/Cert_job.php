@@ -177,6 +177,10 @@ class Cert_job extends Cert_pdf
         $this->CI->load->library('verify/data_verify_lib');
         $this->result = $this->CI->data_verify_lib->check_job($this->result, $this->certification['user_id'],
             $this->transform_data, $content);
+        if ($this->result->getStatus() == CERTIFICATION_STATUS_FAILED)
+        {
+            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_REVIEW_FAILED);
+        }
         return TRUE;
     }
 
