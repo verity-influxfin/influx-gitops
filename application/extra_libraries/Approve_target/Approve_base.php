@@ -32,6 +32,7 @@ abstract class Approve_base implements Approve_interface
         $this->result = $this->get_initial_result();
         $this->target = $target;
         $this->script_status = TARGET_SCRIPT_STATUS_APPROVE_TARGET;
+        $this->result->set_status($this->target['status'], $this->target['sub_status']);
 
         $this->CI->load->library('anti_fraud_lib');
         $this->CI->load->library('brookesia/black_list_lib');
@@ -588,9 +589,15 @@ abstract class Approve_base implements Approve_interface
                 $user_cert = $this->CI->certification_lib->get_certification_info($user_id, $key, USER_BORROWER, FALSE, TRUE);
             }
 
-            if ($user_cert === FALSE ||
-                ($user_cert->certification_id == CERTIFICATION_SOCIAL && $user_cert->expire_time < time()))
+            if ($user_cert === FALSE)
             {
+                continue;
+            }
+
+            // 社交認證過期，案件狀態退回一審前 (status=0 && sub_status=0)
+            if ($user_cert->certification_id == CERTIFICATION_SOCIAL && $user_cert->expire_time < time())
+            {
+                $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_NORNAL);
                 continue;
             }
 
@@ -776,12 +783,23 @@ abstract class Approve_base implements Approve_interface
      */
     protected function set_action_cancellation(): bool
     {
-        $res = $this->CI->target_model->update($this->target['id'], ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+        $param = $this->get_action_cancel_param();
+        $res = $this->CI->target_model->update($this->target['id'], $param);
         if ($res)
         {
+            $this->CI->target_lib->insert_change_log($this->target['id'], $param);
             return TRUE;
         }
         return FALSE;
+    }
+
+    protected function get_action_cancel_param(): array
+    {
+        return [
+            'status' => $this->result->get_status(),
+            'sub_status' => $this->result->get_sub_status(),
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+        ];
     }
 
     private function get_new_target_data(): array

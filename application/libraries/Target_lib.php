@@ -1815,6 +1815,10 @@ class Target_lib
                                 if ($certification['id'] == CERTIFICATION_SOCIAL && $certification['expire_time'] < time())
                                 {
                                     $finish = FALSE;
+                                    $param = ['status' => TARGET_WAITING_APPROVE, 'sub_status' => TARGET_SUBSTATUS_NORNAL];
+                                    $this->CI->target_model->update($value->id, $param);
+                                    $this->insert_change_log($target_id, $param);
+                                    break;
                                 }
 
                                 // 工作認證有專業技能證書進待二審

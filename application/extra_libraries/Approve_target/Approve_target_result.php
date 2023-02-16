@@ -89,7 +89,7 @@ class Approve_target_result
     public function set_status($status, $sub_status = NULL)
     {
         $this->status = (int) $status;
-        if ($sub_status)
+        if (is_numeric($sub_status))
         {
             $this->set_sub_status($sub_status);
         }
