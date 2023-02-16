@@ -8,7 +8,7 @@ use CertificationResult\MessageDisplay;
 abstract class Certification_base implements Certification_definition
 {
     protected $certification_id = 0;
-    protected $certification;
+    public $certification;
     public $result;
     public $content;
     public $remark;

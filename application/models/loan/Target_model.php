@@ -1129,4 +1129,31 @@ class Target_model extends MY_Model
 
         return $target['target_no'] ?? '';
     }
+
+    public function get_specific_product_status($product_id, $status_list = [TARGET_WAITING_APPROVE])
+    {
+        $sub_query = $this->db
+            ->select('id')
+            ->select('name')
+            ->select('phone')
+            ->get_compiled_select('p2p_user.users', TRUE);
+
+        return $this->db
+            ->select('t.target_no')
+            ->select('t.user_id')
+            ->select('u.name AS user_name')
+            ->select('u.phone AS user_phone')
+            ->select('t.status')
+            ->select('t.updated_at')
+            ->select('t.product_id')
+            ->select('t.sub_product_id')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query}) u", 'u.id=t.user_id', 'LEFT')
+            ->where('t.product_id', $product_id)
+            ->where_in('t.status', $status_list)
+            ->order_by('t.user_id')
+            ->order_by('t.id')
+            ->get()
+            ->result_array();
+    }
 }

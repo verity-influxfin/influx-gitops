@@ -3092,4 +3092,25 @@ class Target_lib
             'certificate_status' => [TARGET_CERTIFICATE_SUBMITTED, TARGET_CERTIFICATE_RE_SUBMITTING]
         ]);
     }
+
+    public function get_natural_person_export_list($product_id)
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_STUDENT:
+            case PRODUCT_ID_SALARY_MAN:
+                break;
+            default:
+                return [];
+        }
+
+        $this->CI->load->model('loan/target_model');
+        return $this->CI->target_model->get_specific_product_status($product_id, [
+            TARGET_WAITING_APPROVE,
+            TARGET_WAITING_SIGNING,
+            TARGET_WAITING_VERIFY,
+            TARGET_ORDER_WAITING_SIGNING,
+            TARGET_ORDER_WAITING_VERIFY
+        ]);
+    }
 }

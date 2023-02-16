@@ -150,6 +150,8 @@ $config['permission'] = [
         'permission' => [
             'natural_person' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
             'get_natural_person_list' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
+            'natural_person_export' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
+            'export_natural_person_list' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
             'juridical_person' => ['model' => 'Risk', 'submodel' => 'juridical_person', 'action' => 'read'],
             'investor' => ['model' => 'Risk', 'submodel' => 'investor', 'action' => 'read'],
             'credit' => ['model' => 'Risk', 'submodel' => 'credit', 'action' => 'read'],
