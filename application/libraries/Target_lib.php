@@ -1930,11 +1930,11 @@ class Target_lib
                                             $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
                                             if (isset($cert_helper))
                                             {
-                                                $rs = $cert_helper->set_failure(TRUE, IdentityCertificationResult::$ID_CARD_FAILED_MESSAGE);
+                                                $rs = $cert_helper->set_failure(TRUE, IdentityCertificationResult::$RIS_CHECK_FAILED_MESSAGE);
                                             }
                                             else
                                             {
-                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, IdentityCertificationResult::$ID_CARD_FAILED_MESSAGE);
+                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, IdentityCertificationResult::$RIS_CHECK_FAILED_MESSAGE);
                                             }
                                             if ($rs === TRUE)
                                             {
@@ -1946,6 +1946,29 @@ class Target_lib
                                             {
                                                 log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
                                             }
+                                        }
+                                        elseif ($result[0] === FALSE && $result[1] === TRUE)
+                                        {
+                                            $this->CI->load->model('log/log_usercertification_model');
+                                            $this->CI->log_usercertification_model->insert([
+                                                'user_certification_id' => $identity_cert->id,
+                                                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                                                'change_admin' => SYSTEM_ADMIN_ID,
+                                            ]);
+                                            $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+                                            $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
+                                            if ($rs === TRUE)
+                                            {
+                                                $this->CI->user_certification_model->update($identity_cert->id, [
+                                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT
+                                                ]);
+                                            }
+                                            else
+                                            {
+                                                log_message('error', "實名認證 user_certification {$identity_cert->id} 轉人工失敗");
+                                            }
+
+                                            goto UNFINISHED;
                                         }
                                     }
                                 }
@@ -2048,6 +2071,7 @@ class Target_lib
                             }
 
                         } else {
+                            UNFINISHED:
                             //自動取消
                             $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
                             $create_date = date('Y-m-d', $value->created_at);
