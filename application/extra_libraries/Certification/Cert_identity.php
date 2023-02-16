@@ -3,6 +3,7 @@
 namespace Certification;
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use CertificationResult\IdentityCertificationResult;
 use CertificationResult\MessageDisplay;
 
 /**
@@ -104,7 +105,7 @@ class Cert_identity extends Certification_base
         }
         else
         {
-            $this->result->addMessage('OCR無回應，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage(IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE . '，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
         }
 
         return TRUE;
