@@ -19,7 +19,7 @@ class Judicial_yuan_lib
         }
     }
 
-    public function requestJudicialYuanVerdicts($query, $address, $userid)
+    public function requestJudicialYuanVerdicts($query, $address, $userid = 0)
     {   
         if ( ! $query || ! $address)
         {
@@ -40,7 +40,7 @@ class Judicial_yuan_lib
     }
 
     // 用於司法院 instagram 帳號爬蟲
-    public function requestJudicialYuanAllCityVerdicts($query, $userid)
+    public function requestJudicialYuanAllCityVerdicts($query, $userid = 0)
     {   
         if ( ! $query)
         {
