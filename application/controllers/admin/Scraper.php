@@ -400,13 +400,13 @@ class Scraper extends MY_Admin_Controller
 		// ig
 		if (isset($input['ig']))
 		{
-			$result = $this->judicial_yuan_lib->requestJudicialYuanAllCityVerdicts($input['ig']);
+			$result = $this->judicial_yuan_lib->requestJudicialYuanAllCityVerdicts($input['ig'], $input['userid']);
 			echo json_encode($result);
 			die();
 		}
 
         $address = $this->_get_new_domicile($input['address']);
-        $result = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($input['name'], $address);	
+        $result = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($input['name'], $address, $input['userid']);	
         if( ! $result){
             $error = [
                 'response' => [
