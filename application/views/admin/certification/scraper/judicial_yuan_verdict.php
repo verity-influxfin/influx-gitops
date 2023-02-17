@@ -250,6 +250,7 @@
                     if (this.chooseTab === this.info.instagram_username) {
                         return axios.post('/admin/scraper/judicial_yuan_verdicts', {
                             ig: this.chooseTab,
+                            userid: this.userId
                         }).then(({ data }) => {
                             if (data.code == 200) {
                                 if (data.response.status == 200) {
@@ -265,6 +266,7 @@
                         })
                     }
                     axios.post('/admin/scraper/judicial_yuan_verdicts', {
+                        userid: this.userId,
                         name: this.chooseTab,
                         address: this.info.address
                     }).then(({ data }) => {
