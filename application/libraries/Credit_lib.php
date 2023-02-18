@@ -422,7 +422,7 @@ class Credit_lib{
         }
 
         // 畢業學校
-        if ( ! empty($data['diploma_name']))
+        if (isset($data['diploma_name']) && isset($data['diploma_system']))
         {
             $get_school_point = $this->get_school_point_product_salary_man($data['diploma_name'], $data['diploma_system']);
             $school_point_m = min($get_school_point['point'], 390);
@@ -1257,15 +1257,20 @@ class Credit_lib{
      */
     public function get_school_point_product_salary_man(string $school_name = '', int $school_system = 0): array
     {
-        $point = 0;
         $score_history = [];
+        $school_list = $this->CI->config->item('school_points');
+        $school_points_list = array_column($school_list['school_points'], 'points', 'points');
+        $min_points = min($school_points_list);
+        $normal_coef = 0.3;
+        $school_info = [];
+
         if (empty($school_name))
         {
+            $point = $min_points * $normal_coef;
+            $score_history[] = "未命中學校清單得分: {$min_points} * {$normal_coef}";
             return ['score_history' => $score_history, 'point' => $point];
         }
 
-        $school_list = $this->CI->config->item('school_points');
-        $school_info = [];
         foreach ($school_list['school_points'] as $value)
         {
             if (trim($school_name) == $value['name'])
@@ -1277,14 +1282,16 @@ class Credit_lib{
 
         if (empty($school_info))
         {
+            $point = $min_points * $normal_coef;
+            $score_history[] = "未命中學校清單得分: {$school_name} = {$min_points} * {$normal_coef}";
             return ['score_history' => $score_history, 'point' => $point];
         }
 
         // 取得學校得分
         $schoolPoing = $school_info['points'];
 
-        $point = $schoolPoing * 0.3;
-        $score_history[] = "學校得分: {$school_name} = {$schoolPoing} * 0.3";
+        $point = $schoolPoing * $normal_coef;
+        $score_history[] = "學校得分: {$school_name} = {$schoolPoing} * {$normal_coef}";
 
         if ($school_system == 1)
         {
