@@ -166,6 +166,10 @@ abstract class Approve_base implements Approve_interface
                 {
                     $res = $this->set_target_second_instance();
                 }
+                else
+                {
+                    $res = $this->set_target_waiting_approve();
+                }
                 break;
             default:
                 log_message('error', "該狀態 ({$this->target['status']}:{$this->target['sub_status']}) 於 approve target 後，無對應的行為");
@@ -965,6 +969,25 @@ abstract class Approve_base implements Approve_interface
         }
 
         return $param;
+    }
+
+    public function set_target_waiting_approve(): bool
+    {
+        $param = [
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+            'status' => TARGET_WAITING_APPROVE,
+            'sub_status' => $this->result->get_sub_status(),
+        ];
+        if (empty($param))
+        {
+            return FALSE;
+        }
+
+        $this->CI->target_model->update($this->target['id'], $param);
+
+        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+        $this->target = array_replace($this->target, $param);
+        return TRUE;
     }
 
     /**
