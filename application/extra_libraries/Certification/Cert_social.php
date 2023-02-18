@@ -196,7 +196,7 @@ class Cert_social extends Certification_base
                 }
                 else
                 {
-                    $this->result->addMessage('Instagram 帳號不存在', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                    // $this->result->addMessage('Instagram 帳號不存在', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
                     $this->result->addMessage('Instagram 帳號無效，請確認', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
                 }
 
