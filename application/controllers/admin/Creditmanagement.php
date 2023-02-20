@@ -129,6 +129,10 @@ class Creditmanagement extends MY_Admin_Controller
                 $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_taiwan_1000_point', 'meta_value' => $this->inputData['job_company_taiwan_1000_point']]);
             }
         }
+        else
+        {
+            $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_taiwan_1000_point'], ['meta_value' => '']);
+        }
         if (isset($this->inputData['job_company_world_500_point']) && is_numeric($this->inputData['job_company_world_500_point']))
         {
             $this->load->model('loan/target_meta_model');
@@ -141,6 +145,10 @@ class Creditmanagement extends MY_Admin_Controller
             {
                 $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_world_500_point', 'meta_value' => $this->inputData['job_company_world_500_point']]);
             }
+        }
+        else
+        {
+            $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_world_500_point'], ['meta_value' => '']);
         }
         if (isset($this->inputData['job_company_medical_institute_point']) && is_numeric($this->inputData['job_company_medical_institute_point']))
         {
@@ -155,6 +163,10 @@ class Creditmanagement extends MY_Admin_Controller
                 $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_medical_institute_point', 'meta_value' => $this->inputData['job_company_medical_institute_point']]);
             }
         }
+        else
+        {
+            $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_medical_institute_point'], ['meta_value' => '']);
+        }
         if (isset($this->inputData['job_company_public_agency_point']) && is_numeric($this->inputData['job_company_public_agency_point']))
         {
             $this->load->model('loan/target_meta_model');
@@ -167,6 +179,10 @@ class Creditmanagement extends MY_Admin_Controller
             {
                 $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_public_agency_point', 'meta_value' => $this->inputData['job_company_public_agency_point']]);
             }
+        }
+        else
+        {
+            $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_public_agency_point'], ['meta_value' => '']);
         }
 
         $adminId 		= $this->login_info->id;
