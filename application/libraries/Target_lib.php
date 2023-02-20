@@ -1723,6 +1723,10 @@ class Target_lib
                 $ids[] = $value->id;
             }
 
+            if (empty($ids))
+            {
+                return TRUE;
+            }
             $rs = $this->CI->target_model->update_many($ids, ['script_status' => $script]);
             if ($rs) {
                 $product_list = $this->CI->config->item('product_list');
