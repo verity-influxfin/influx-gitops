@@ -116,9 +116,9 @@ class Creditmanagement extends MY_Admin_Controller
             }
         }
         $user_id = $this->target_model->get_user_id_by_id($this->inputData['target_id']);
+        $this->load->model('loan/target_meta_model');
         if (isset($this->inputData['job_company_taiwan_1000_point']) && is_numeric($this->inputData['job_company_taiwan_1000_point']))
         {
-            $this->load->model('loan/target_meta_model');
             $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_taiwan_1000_point']);
             if (isset($rs))
             {
@@ -135,7 +135,6 @@ class Creditmanagement extends MY_Admin_Controller
         }
         if (isset($this->inputData['job_company_world_500_point']) && is_numeric($this->inputData['job_company_world_500_point']))
         {
-            $this->load->model('loan/target_meta_model');
             $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_world_500_point']);
             if (isset($rs))
             {
@@ -152,7 +151,6 @@ class Creditmanagement extends MY_Admin_Controller
         }
         if (isset($this->inputData['job_company_medical_institute_point']) && is_numeric($this->inputData['job_company_medical_institute_point']))
         {
-            $this->load->model('loan/target_meta_model');
             $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_medical_institute_point']);
             if (isset($rs))
             {
@@ -169,7 +167,6 @@ class Creditmanagement extends MY_Admin_Controller
         }
         if (isset($this->inputData['job_company_public_agency_point']) && is_numeric($this->inputData['job_company_public_agency_point']))
         {
-            $this->load->model('loan/target_meta_model');
             $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_public_agency_point']);
             if (isset($rs))
             {
