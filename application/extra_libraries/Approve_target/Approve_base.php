@@ -3,6 +3,7 @@
 namespace Approve_target;
 
 use CertificationResult\IdentityCertificationResult;
+use CertificationResult\SocialCertificationResult;
 use CreditSheet\CreditSheetFactory;
 
 abstract class Approve_base implements Approve_interface
@@ -621,9 +622,12 @@ abstract class Approve_base implements Approve_interface
             }
 
             // 社交認證過期，案件狀態退回一審前 (status=0 && sub_status=0)
+            // 徵信項要改成失敗 (status=2)
             if ($user_cert->certification_id == CERTIFICATION_SOCIAL && $user_cert->expire_time < time())
             {
                 $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_NORNAL);
+                $cert_helper = \Certification\Certification_factory::get_instance_by_id($user_cert->id);
+                $cert_helper->set_failure(TRUE, SocialCertificationResult::$EXPIRED_MESSAGE);
                 continue;
             }
 
