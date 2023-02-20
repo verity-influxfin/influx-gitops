@@ -13,11 +13,13 @@
                         <thead>
                             <tr>
                                 <th>公司名稱</th>
+                                <th>分數</th>
                             </tr>
                         </thead>
                         <tbody id="table-body">
-                        <? foreach($company_list as $value){ ?>
+                        <? foreach($company_list as $key => $value){ ?>
 						    <tr>
+                                <td><?= $key ?></td>
                                 <td><?= $value ?></td>
                             </tr>
 						<? } ?>
