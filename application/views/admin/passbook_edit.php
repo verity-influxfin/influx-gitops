@@ -62,9 +62,9 @@
                                            class="btn btn-default float-right btn-md">本日</a>
                                         <a href="javascript:void(0)" target="_self" onclick="showAll()"
                                            class="btn btn-default float-right btn-md">全部</a></td>
-                                    <td><input type="text" value="<?= $sdate == 'all' ? '' : $sdate ?>" id="sdate"
+                                    <td><input type="text" value="<?= ! isset($sdate) || $sdate == 'all' ? '' : $sdate ?>" id="sdate"
                                                data-toggle="datepicker"/> -
-                                        <input type="text" value="<?= $edate == 'all' ? '' : $edate ?>" id="edate"
+                                        <input type="text" value="<?= ! isset($edate) || $edate == 'all' ? '' : $edate ?>" id="edate"
                                                data-toggle="datepicker"/></td>
                                     <td><a href="javascript:void(0)" onclick="showChang();"
                                            class="btn btn-default float-right btn-md">查詢</a></td>
