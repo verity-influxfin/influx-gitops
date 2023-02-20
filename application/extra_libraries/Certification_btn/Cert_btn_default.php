@@ -60,7 +60,7 @@ class Cert_btn_default extends Certification_btn_base
                 {
                     return '資料未繳交完全';
                 }
-                return '';
+                return '資料更新中';
             case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
             case CERTIFICATION_STATUS_AUTHENTICATED:
                 return '資料更新中';
