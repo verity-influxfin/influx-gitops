@@ -17,7 +17,7 @@ class Cert_btn_default extends Certification_btn_base
                 {
                     return '<a data-sorting="0" target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $this->id) . '"><button type="button" class="btn btn-danger' . $sys_check . ' nhide"><i class="fa fa-exclamation"></i></button></a><span class="sword" style="display:none">' . $status_meaning . '</span>';
                 }
-                return '';
+                return '<a data-sorting="1" target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $this->id) . '"><button type="button" class="btn btn-warning' . $sys_check . ' nhide"><i class="fa fa-refresh"></i></button></a><span class="sword" style="display:none">' . $status_meaning . '</span>';
             case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
             case CERTIFICATION_STATUS_AUTHENTICATED:
                 return '<a data-sorting="1" target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $this->id) . '"><button type="button" class="btn btn-warning' . $sys_check . ' nhide"><i class="fa fa-refresh"></i></button></a><span class="sword" style="display:none">' . $status_meaning . '</span>';
@@ -60,7 +60,7 @@ class Cert_btn_default extends Certification_btn_base
                 {
                     return '資料未繳交完全';
                 }
-                return '';
+                return '資料更新中';
             case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
             case CERTIFICATION_STATUS_AUTHENTICATED:
                 return '資料更新中';
