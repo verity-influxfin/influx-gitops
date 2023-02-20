@@ -631,7 +631,7 @@
                                             </td>
                                             <td>
                                                 <p class="job_company"></p>
-                                                <input type="text" id="job_company_taiwan_1000_point">
+                                                <select id="job_company_taiwan_1000_point"></select>
                                             </td>
                                         </tbody>
                                     </table>
@@ -650,7 +650,7 @@
                                         </td>
                                         <td>
                                             <p class="job_company"></p>
-                                            <input type="text" id="job_company_world_500_point">
+                                            <select id="job_company_world_500_point"></select>
                                         </td>
                                         </tbody>
                                     </table>
@@ -669,7 +669,7 @@
                                         </td>
                                         <td>
                                             <p class="job_company"></p>
-                                            <input type="text" id="job_company_medical_institute_point">
+                                            <select id="job_company_medical_institute_point"></select>
                                         </td>
                                         </tbody>
                                     </table>
@@ -688,7 +688,7 @@
                                         </td>
                                         <td>
                                             <p class="job_company"></p>
-                                            <input type="text" id="job_company_public_agency_point">
+                                            <select id="job_company_public_agency_point"></select>
                                         </td>
                                         </tbody>
                                     </table>
@@ -2117,22 +2117,26 @@
 
         function fillTopSpecialList(specialList) {
 		    let company = specialList?.job_company;
-		    let job_company_taiwan_1000_point = specialList?.job_company_taiwan_1000_point;
-		    let job_company_world_500_point = specialList?.job_company_world_500_point;
-		    let job_company_medical_institute_point = specialList?.job_company_medical_institute_point;
-		    let job_company_public_agency_point = specialList?.job_company_public_agency_point;
             company = company === undefined ? '' : company;
-            job_company_taiwan_1000_point = job_company_taiwan_1000_point === undefined ? '' : job_company_taiwan_1000_point;
-            job_company_world_500_point = job_company_world_500_point === undefined ? '' : job_company_world_500_point;
-            job_company_medical_institute_point = job_company_medical_institute_point === undefined ? '' : job_company_medical_institute_point;
-            job_company_public_agency_point = job_company_public_agency_point === undefined ? '' : job_company_public_agency_point;
-
             $('p.job_company').text(company);
 
-            $('#job_company_taiwan_1000_point').val(job_company_taiwan_1000_point);
-            $('#job_company_world_500_point').val(job_company_world_500_point);
-            $('#job_company_medical_institute_point').val(job_company_medical_institute_point);
-            $('#job_company_public_agency_point').val(job_company_public_agency_point);
+            if (specialList) {
+                $.each(['taiwan_1000', 'world_500', 'medical_institute', 'public_agency'], function (key, item) {
+                    if (specialList[item]['list']) {
+                        let list = specialList[item]['list'];
+                        let point = specialList[item]['point'] ? specialList[item]['point'] : '';
+                        let selector = $(`#job_company_${item}_point`);
+                        selector.append($('<option></option>').text('').val(''));
+                        selector.append($('<option></option>').text('否，0').val('0'));
+                        $.each(list, function (list_key, list_item) {
+                            if (list_key > 0) {
+                                selector.append($('<option></option>').text(`是，${list_item}`).val(list_key));
+                            }
+                        });
+                        selector.val(point);
+                    }
+                });
+            }
         }
 
 		function getCenterTextCell(value, additionalCssClass = "") {

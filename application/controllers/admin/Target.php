@@ -1034,12 +1034,28 @@ class Target extends MY_Admin_Controller {
             ]);
             $user_meta_list = array_column($user_meta_list, 'meta_value', 'meta_key');
 
+            $this->load->config('taiwan_1000');
+            $this->load->config('world_500');
+            $this->load->config('medical_institute');
+            $this->load->config('public_agency');
             $special_list = [
-                'job_company_taiwan_1000_point' => $user_meta_list['job_company_taiwan_1000_point'] ?? '',
-                'job_company_world_500_point' => $user_meta_list['job_company_world_500_point'] ?? '',
-                'job_company_medical_institute_point' => $user_meta_list['job_company_medical_institute_point'] ?? '',
-                'job_company_public_agency_point' => $user_meta_list['job_company_public_agency_point'] ?? '',
                 'job_company' => $job_company,
+                'taiwan_1000' => [
+                    'list' => array_combine($this->config->item('taiwan_1000'), $this->config->item('taiwan_1000')),
+                    'point' => $user_meta_list['job_company_taiwan_1000_point'] ?? '',
+                ],
+                'world_500' => [
+                    'list' => array_combine($this->config->item('world_500'), $this->config->item('world_500')),
+                    'point' => $user_meta_list['job_company_world_500_point'] ?? '',
+                ],
+                'medical_institute' => [
+                    'list' => array_combine($this->config->item('medical_institute'), $this->config->item('medical_institute')),
+                    'point' => $user_meta_list['job_company_medical_institute_point'] ?? ''
+                ],
+                'public_agency' => [
+                    'list' => array_combine($this->config->item('public_agency'), $this->config->item('public_agency')),
+                    'point' => $user_meta_list['job_company_public_agency_point'] ?? '',
+                ],
             ];
 
             $this->load->library('output/loan/target_output', ['data' => $targets]);
