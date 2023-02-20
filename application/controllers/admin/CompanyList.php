@@ -12,7 +12,7 @@ class CompanyList extends MY_Admin_Controller
         $this->config->load('taiwan_1000');
         $data = array(
             'title' => '台灣千大企業清單',
-            'company_list' => array_keys($this->config->item('taiwan_1000'))
+            'company_list' => $this->config->item('taiwan_1000')
         );
         $this->load->view('admin/_header');
         $this->load->view('admin/_title', $this->menu);
@@ -25,7 +25,7 @@ class CompanyList extends MY_Admin_Controller
         $this->config->load('world_500');
         $data = array(
             'title' => '世界500大企業清單',
-            'company_list' => array_keys($this->config->item('world_500'))
+            'company_list' => $this->config->item('world_500')
         );
         $this->load->view('admin/_header');
         $this->load->view('admin/_title', $this->menu);
@@ -38,7 +38,7 @@ class CompanyList extends MY_Admin_Controller
         $this->config->load('medical_institute');
         $data = array(
             'title' => '醫療院所清單',
-            'company_list' => array_keys($this->config->item('medical_institute'))
+            'company_list' => $this->config->item('medical_institute')
         );
         $this->load->view('admin/_header');
         $this->load->view('admin/_title', $this->menu);
@@ -51,7 +51,7 @@ class CompanyList extends MY_Admin_Controller
         $this->config->load('public_agency');
         $data = array(
             'title' => '公家機關清單',
-            'company_list' => array_keys($this->config->item('public_agency'))
+            'company_list' => $this->config->item('public_agency')
         );
         $this->load->view('admin/_header');
         $this->load->view('admin/_title', $this->menu);
