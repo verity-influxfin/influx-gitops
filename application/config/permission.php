@@ -183,6 +183,7 @@ $config['permission'] = [
             'unknown_funds' => ['model' => 'Passbook', 'submodel' => 'unknown_funds', 'action' => 'read'],
             'edit' => ['model' => 'Passbook', 'submodel' => 'index', 'action' => 'update'],
             'display' => ['model' => 'Passbook', 'submodel' => 'index', 'action' => 'read'],
+            'passbook_export' => ['model' => 'Passbook', 'submodel' => 'index', 'action' => 'read'],
             'withdraw_loan' => ['model' => 'Passbook', 'submodel' => 'withdraw_waiting', 'action' => 'read'],
             'unknown_refund' => ['model' => 'Passbook', 'submodel' => 'unknown_funds', 'action' => 'update'],
             'loan_success' => ['model' => 'Passbook', 'submodel' => 'withdraw_waiting', 'action' => 'update'],

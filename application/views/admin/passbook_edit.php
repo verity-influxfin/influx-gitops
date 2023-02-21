@@ -111,6 +111,7 @@
 								<? if(isset($_GET['id']) && $_GET['id']==$virtual_account->id){?>
 								<tr>	
 									<td><button type="button" onclick="withdraw_by_admin();" class="btn btn-default btn-md">後台提領</button></td>
+									<td><a href="<?=admin_url('passbook/passbook_export')."?id=".$virtual_account->id.'&sdate='.$sdate.'&edate='.$edate ?>" target="_blank" class="btn btn-primary float-right" >匯出Excel</a></td>
 								</tr>
 								<? } ?>
 							</table>
