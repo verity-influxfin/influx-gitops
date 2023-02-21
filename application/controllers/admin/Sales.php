@@ -248,11 +248,7 @@ class Sales extends MY_Admin_Controller {
 			}
 		}
 		
-		$target_list	= $this->target_model->get_many_by(array(
-			'status'		=> array(5,10),
-			'loan_date >='	=> $sdate,
-			'loan_date <='	=> $edate,
-		));
+		$target_list	= $this->target_model->get_bonus_report_detail($sdate, $edate);
 
 		if(!empty($target_list)){
 			foreach($target_list as $key => $value){
@@ -293,7 +289,9 @@ class Sales extends MY_Admin_Controller {
 					];
 				}
 				
-				if($value->promote_code=='' || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+				if ($value->promote_code == '')
+                {
+                    // 整理「無邀請碼」
 					$list['platform'][] = array(
 						'id'			=> $value->id,
 						'amount'		=> $value->amount,
@@ -334,12 +332,7 @@ class Sales extends MY_Admin_Controller {
 			$info  = $this->partner_model->get($id);
 			if($info){
 				$name			= $info->company;
-				$target_list	= $this->target_model->order_by('loan_date')->get_many_by(array(
-					'status'		=> array(5,10),
-					'loan_date >='	=> $sdate,
-					'loan_date <='	=> $edate,
-					'promote_code'  => $info->my_promote_code,
-				));
+				$target_list	= $this->target_model->get_bonus_report_detail($sdate, $edate, ['promote_code' => $info->my_promote_code]);
 			}
 		}
 
@@ -347,22 +340,12 @@ class Sales extends MY_Admin_Controller {
 			$info  = $this->admin_model->get($id);
 			if($info){
 				$name			= $info->name;
-				$target_list	= $this->target_model->order_by('loan_date')->get_many_by(array(
-					'status'		=> array(5,10),
-					'loan_date >='	=> $sdate,
-					'loan_date <='	=> $edate,
-					'promote_code'  => $info->my_promote_code,
-				));
+				$target_list	= $this->target_model->get_bonus_report_detail($sdate, $edate, ['promote_code' => $info->my_promote_code]);
 			}
 		}
 		
 		if ($type == 'marketing' && $code) {
-			$target_list = $this->target_model->order_by('loan_date')->get_many_by(array(
-				'status' => array(5,10),
-				'loan_date >=' => $sdate,
-				'loan_date <=' => $edate,
-				'promote_code' => $code,
-			));
+			$target_list = $this->target_model->get_bonus_report_detail($sdate, $edate, ['promote_code' => $code]);
 		}
 
 		if($type=='platform'){
@@ -376,12 +359,9 @@ class Sales extends MY_Admin_Controller {
 				}
 			}
 			
-			$target_list	= $this->target_model->order_by('loan_date')->get_many_by(array(
-				'status'			=> [5,10],
-				'loan_date >='		=> $sdate,
-				'loan_date <='		=> $edate,
-				'promote_code NOT' 	=> array_merge(array_keys($admins_qrcode),array_keys($partner_qrcode)),
-			));
+			$target_list	= $this->target_model->get_bonus_report_detail($sdate, $edate, [
+                'promote_code NOT' => array_merge(array_keys($admins_qrcode),array_keys($partner_qrcode))
+            ]);
 		}
 		
 		if(!empty($target_list)){
