@@ -1824,6 +1824,10 @@ class Target_lib
                                     $this->CI->target_model->update($value->id, $param);
                                     $this->insert_change_log($target_id, $param);
                                     $cert_helper = Certification_factory::get_instance_by_id($certification['certification_id']);
+                                    if ( ! isset($cert_helper))
+                                    {
+                                        break;
+                                    }
                                     $cert_helper->set_failure(TRUE, \CertificationResult\SocialCertificationResult::$EXPIRED_MESSAGE);
                                     break;
                                 }
