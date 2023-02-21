@@ -1112,4 +1112,37 @@ class Target_model extends MY_Model
             ->get()
             ->result_array();
     }
+
+    public function get_bonus_report_detail($sdate, $edate, $user_condition = [])
+    {
+        $this->_database
+            ->select('id')
+            ->select('promote_code');
+        if ( ! empty($user_condition))
+        {
+            $this->_set_where([$user_condition]);
+        }
+        $sub_query = $this->_database->get_compiled_select('p2p_user.users', TRUE);
+
+        $this->db
+            ->select('t.id')
+            ->select('t.user_id')
+            ->select('t.target_no')
+            ->select('t.product_id')
+            ->select('t.loan_amount')
+            ->select('t.amount')
+            ->select('t.platform_fee')
+            ->select('t.loan_date')
+            ->select('t.status')
+            ->select('t.created_at')
+            ->select('u.promote_code')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query}) u", 'u.id=t.user_id')
+            ->where_in('t.status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED])
+            ->where('t.loan_date >=', $sdate)
+            ->where('t.loan_date <=', $edate)
+            ->order_by('t.loan_date');
+
+        return $this->db->get()->result();
+    }
 }

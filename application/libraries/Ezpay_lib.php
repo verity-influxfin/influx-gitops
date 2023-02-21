@@ -93,7 +93,7 @@ class Ezpay_lib
 					'BuyerEmail'		=> $user_info->email,//買受人電子信箱
 					'CarrierType'		=> '2',
 					'CarrierNum'		=> rawurlencode($user_info->phone),//載具編號
-					'PrintFlag'			=> 'Y',//索取紙本發票
+					'PrintFlag'			=> 'N',//索取紙本發票
 					'TaxType'			=> '1',//課稅別
 					'TaxRate'			=> TAX_RATE,//稅率
 					'Amt'				=> $this->total_amt - $this->tax_amt,//銷售額合計
