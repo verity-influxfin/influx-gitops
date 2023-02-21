@@ -12,6 +12,7 @@
         <!-- /.panel-heading -->
         <div class="panel-body">
             <form id="myForm" action="export_natural_person_list" method="post">
+                <input name="stage" value="" hidden>
                 <table class="table table-striped table-bordered table-hover">
                     <tbody>
                     <tr>
@@ -104,8 +105,8 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <button type="submit" class="btn btn-default">產出資料</button>
-                            <span id="loading" style="display: none" disabled>產出中...</span>
+                            <button type="submit" class="btn btn-default" disabled>產出資料</button>
+                            <span id="loading" style="display: none">產出中...</span>
                         </td>
                     </tr>
                     </tbody>
@@ -131,9 +132,11 @@
         const url = new URL(location.href);
         const urlParams = new URLSearchParams(url.search);
         let product = urlParams.get('product') || '';
+        let stage = urlParams.get('stage') || '';
 
         let [product_id, sub_product_id] = product.split(':');
         product_id = product_id | '';
+        $('input[name="stage"]').val(stage);
 
         $(`input[name="product_id"][value="${product_id}"]`).prop('checked', true);
         $('input[name="export_column[]"]').prop('checked', true);
@@ -142,7 +145,7 @@
         $('form button[type=submit]').on('click', function () {
             $(this).css('display', 'none');
             $('span#loading').css('display', 'block');
-        });
+        }).prop('disabled', false);
 
         document.cookie = 'export_natural_person=0';
         window.setInterval(function () {
