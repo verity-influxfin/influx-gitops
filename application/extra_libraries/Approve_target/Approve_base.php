@@ -347,7 +347,14 @@ abstract class Approve_base implements Approve_interface
                             'change_admin' => SYSTEM_ADMIN_ID,
                         ]);
                         $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
-                        $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
+                        if (isset($cert_helper))
+                        {
+                            $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
+                        }
+                        else
+                        {
+                            $rs = FALSE;
+                        }
                         if ($rs === TRUE)
                         {
                             $this->CI->user_certification_model->update($identity_cert->id, [
@@ -627,6 +634,10 @@ abstract class Approve_base implements Approve_interface
             {
                 $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_NORNAL);
                 $cert_helper = \Certification\Certification_factory::get_instance_by_id($user_cert->id);
+                if ( ! isset($cert_helper))
+                {
+                    continue;
+                }
                 $cert_helper->set_failure(TRUE, SocialCertificationResult::$EXPIRED_MESSAGE);
                 continue;
             }
