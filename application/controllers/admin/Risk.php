@@ -143,11 +143,12 @@ class Risk extends MY_Admin_Controller {
                 // 整理出驗證成功的徵信項
                 $tmp_success = $this->certification_lib->filterCertIdsInStatusList($tmp, [CERTIFICATION_STATUS_SUCCEED]);
                 $user_list[$target->user_id]['success_cert'] = $tmp_success;
+                $user_list[$target->user_id]['cert_list'] = $tmp;
             }
 
             if ( ! isset($user_cert_list[$target->user_id][$product_id][$target->sub_product_id]))
             {
-                if ( ! isset($user_list[$target->user_id]['success_cert']))
+                if ( ! isset($user_list[$target->user_id]['success_cert']) || ! isset($user_list[$target->user_id]['cert_list']))
                 {
                     continue;
                 }
@@ -172,7 +173,7 @@ class Risk extends MY_Admin_Controller {
                 $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['btn'] = [];
                 foreach ($this_stage_cert_tmp as $key => $cert)
                 {
-                    $btn_factory = Certification_btn_factory::get_instance($tmp[$cert]);
+                    $btn_factory = Certification_btn_factory::get_instance($user_list[$target->user_id]['cert_list'][$cert]);
 
                     if ($btn_factory)
                     {
@@ -263,9 +264,8 @@ class Risk extends MY_Admin_Controller {
         );
         // 徵信項相關欄位
         $input_cert_id = $input['export_column_cert'] ?? [];
-        $input_cert_id = array_flip($input_cert_id);
         $cert_config = $this->config->item('certifications');
-        $title_cert = array_intersect_key(array_column($cert_config, 'name', 'id'), $input_cert_id);
+        $title_cert = array_intersect_key(array_column($cert_config, 'name', 'id'), array_flip($input_cert_id));
         array_walk($title_cert, function (&$item) {
             $item = ['name' => $item, 'width' => 15];
         });
@@ -283,16 +283,36 @@ class Risk extends MY_Admin_Controller {
         $this->load->library('certification_lib');
         $this->load->library('loanmanager/product_lib');
 
+        $user_list = [];
+        $user_cert_list = [];
         $user_prod_list = [];
         foreach ($target_list as $target)
         {
             // 取得案件、使用者相關資訊
             if (empty($user_prod_list[$target['product_id']][$target['sub_product_id']]))
             {
-                $product_info = $this->product_lib->getProductInfo($input_product_id, $target['sub_product_id']);
-                $user_prod_list[$target['product_id']][$target['sub_product_id']] = $product_info['name'];
+                $product_info = $this->product_lib->get_exact_product($input_product_id, $target['sub_product_id']);
+                $merge_certifications_stage = call_user_func_array('array_merge', $product_info['certifications_stage']);
+                $user_prod_list[$target['product_id']][$target['sub_product_id']] = [
+                    'name' => $product_info['name'],
+                    'stage' => [
+                        [
+                            // 身份驗證階段
+                            'this_stage_cert' => $product_info['certifications_stage'][0] ?? [],
+                            'prev_stage_cert' => []
+                        ], [
+                            // 收件檢核階段
+                            'this_stage_cert' => $merge_certifications_stage,
+                            'prev_stage_cert' => $product_info['certifications_stage'][0] ?? [],
+                        ], [
+                            // 審核中階段
+                            'this_stage_cert' => $merge_certifications_stage,
+                            'prev_stage_cert' => $merge_certifications_stage
+                        ]
+                    ]
+                ];
             }
-            $target['product_name'] = $user_prod_list[$target['product_id']][$target['sub_product_id']];
+            $target['product_name'] = $user_prod_list[$target['product_id']][$target['sub_product_id']]['name'];
             $target['updated_at'] = date('Y-m-d H:i:s', $target['updated_at']);
             $target['target_status'] = $this->target_model->status_list[$target['status']] ?? '';
             $target['user_name'] = mb_substr($target['user_name'], 0, 1);
@@ -302,27 +322,113 @@ class Risk extends MY_Admin_Controller {
             }
 
             // 取得徵信項相關資訊
-            $user_cert = $this->certification_lib->get_last_status($target['user_id'], BORROWER, USER_NOT_COMPANY, $target, FALSE, TRUE, TRUE);
-            $user_cert = array_column($user_cert, 'certification_id', 'id');
-            $user_cert = array_intersect_key($user_cert, $input_cert_id);
-            array_walk($user_cert, function (&$item, $index) {
-                if (empty($item))
+            if (empty($user_list[$target['user_id']]))
+            {
+                $tmp = $this->certification_lib->get_last_status($target['user_id'], BORROWER, USER_NOT_COMPANY, $target, FALSE, TRUE, TRUE);
+                $tmp = array_reduce($tmp, function ($list, $item) {
+                    $list[$item['id']] = [
+                        'id' => $item['certification_id'], // =user_certification.id
+                        'certification_id' => $item['id'], // =user_certification.certification_id
+                        'status' => $item['user_status'],  // =user_certification.status
+                        'sub_status' => $item['user_sub_status'],
+                        'sys_check' => $item['sys_check'], // =user_certification.sys_check
+                        'expire_time' => $item['expire_time']
+                    ];
+                    return $list;
+                }, []);
+                $tmp_success = $this->certification_lib->filterCertIdsInStatusList($tmp, [CERTIFICATION_STATUS_SUCCEED]);
+                $user_list[$target['user_id']] = [
+                    'success_cert' => $tmp_success,
+                    'cert_list' => $tmp,
+                ];
+            }
+            if ( ! isset($user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]))
+            {
+                if ( ! isset($user_list[$target['user_id']]['success_cert']) || ! isset($user_list[$target['user_id']]['cert_list']))
                 {
-                    $item = '';
-                    return;
+                    continue;
                 }
-                $cert_btn = Certification_btn_factory::get_instance(['id' => $item, 'certification_id' => $index]);
-                $item = $cert_btn->get_status_meaning();
-            });
 
-            // 組裝資料
-            $data_rows[] = array_replace(array_intersect_key($target, $input_target_column), $user_cert);
+                foreach ($user_prod_list[$target['product_id']][$target['sub_product_id']]['stage'] as $stage => $stage_cert)
+                {
+                    $this_stage_cert = $stage_cert['this_stage_cert'];
+                    $prev_stage_cert = $stage_cert['prev_stage_cert'];
+                    $this_stage_cert_tmp = $this_stage_cert;
+
+                    if ($target['product_id'] == PRODUCT_ID_STUDENT && $target['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT)
+                    {
+                        $cert_key_tmp = array_search(CERTIFICATION_SOCIAL, $this_stage_cert_tmp);
+                        if ($cert_key_tmp !== FALSE)
+                        {
+                            $this_stage_cert_tmp[$cert_key_tmp] = CERTIFICATION_SOCIAL_INTELLIGENT;
+                        }
+                    }
+
+                    $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['this_success_status'] =
+                        count(array_intersect($this_stage_cert_tmp, $user_list[$target['user_id']]['success_cert'])) == count($this_stage_cert_tmp);
+
+                    $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['prev_success_status'] =
+                        count(array_intersect($prev_stage_cert, $user_list[$target['user_id']]['success_cert'])) == count($prev_stage_cert);
+
+                    // 畫徵信項的狀態按鈕
+                    $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['btn'] = [];
+                    foreach ($this_stage_cert_tmp as $cert)
+                    {
+                        $btn_factory = Certification_btn_factory::get_instance($user_list[$target['user_id']]['cert_list'][$cert]);
+
+                        if ($btn_factory)
+                        {
+                            $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['btn'][$cert] = $btn_factory->get_status_meaning();
+                        }
+                        else
+                        {
+                            $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['btn'][$cert] = '';
+                        }
+                    }
+                }
+            }
+
+            foreach ($user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'] as $stage => $user_stage_value)
+            {
+                if ($stage == 0 )
+                {
+                    if ($user_stage_value['this_success_status'] ||
+                        $target['certificate_status'] == TARGET_CERTIFICATE_SUBMITTED)
+                    {
+                        continue;
+                    }
+                }
+                elseif ($stage == 1)
+                {
+                    if ( ! $user_stage_value['prev_success_status'] ||
+                        $target['certificate_status'] == TARGET_CERTIFICATE_SUBMITTED)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if ( $target['certificate_status'] != TARGET_CERTIFICATE_SUBMITTED)
+                    {
+                        continue;
+                    }
+                }
+
+                // 組裝資料
+                $user_cert = array_intersect_key($user_stage_value['btn'], $title_cert);
+                $data_rows[$stage][] = array_replace(array_intersect_key($target, $input_target_column), $user_cert);
+            }
         }
 
         END:
         setcookie('export_natural_person', TRUE);
         $this->load->library('spreadsheet_lib');
-        $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
+        $sheet_title = ['身份驗證','收件檢核','審核中'];
+        $spreadsheet = NULL;
+        foreach ($sheet_title as $key => $value)
+        {
+            $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows[$key], $spreadsheet, $value);
+        }
         $this->spreadsheet_lib->download('export.xlsx', $spreadsheet);
     }
 

@@ -104,8 +104,8 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <button type="submit" class="btn btn-default">產出資料</button>
-                            <span id="loading" style="display: none" disabled>產出中...</span>
+                            <button type="submit" class="btn btn-default" disabled>產出資料</button>
+                            <span id="loading" style="display: none">產出中...</span>
                         </td>
                     </tr>
                     </tbody>
@@ -142,7 +142,7 @@
         $('form button[type=submit]').on('click', function () {
             $(this).css('display', 'none');
             $('span#loading').css('display', 'block');
-        });
+        }).prop('disabled', false);
 
         document.cookie = 'export_natural_person=0';
         window.setInterval(function () {

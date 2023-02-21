@@ -127,7 +127,7 @@
         });
 
         let $export = $('#export');
-        let export_url_search = new URLSearchParams({'product': product}).toString();
+        let export_url_search = new URLSearchParams({'product': product, 'stage': stage}).toString();
         $export.attr('href', `${$export.attr('href')}?${export_url_search}`);
 
         drawTable(stage, product);

@@ -1062,6 +1062,7 @@ class Target_model extends MY_Model
             ->select('t.updated_at')
             ->select('t.product_id')
             ->select('t.sub_product_id')
+            ->select('t.certificate_status')
             ->from('p2p_loan.targets t')
             ->join("({$sub_query}) u", 'u.id=t.user_id', 'LEFT')
             ->where('t.product_id', $product_id)
