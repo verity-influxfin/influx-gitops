@@ -246,10 +246,6 @@ class Risk extends MY_Admin_Controller {
         {
             goto END;
         }
-        if ( ! isset($input['stage']))
-        {
-            goto END;
-        }
 
         // 產品別
         $input_product_id = $input['product_id'];
@@ -296,30 +292,25 @@ class Risk extends MY_Admin_Controller {
             if (empty($user_prod_list[$target['product_id']][$target['sub_product_id']]))
             {
                 $product_info = $this->product_lib->get_exact_product($input_product_id, $target['sub_product_id']);
-                $user_prod_list[$target['product_id']][$target['sub_product_id']] = ['name' => $product_info['name']];
-                switch ($input['stage'])
-                {
-                    case 0: // 身份驗證階段
-                        $user_prod_list[$target['product_id']][$target['sub_product_id']]['this_stage_cert'] = $product_info['certifications_stage'][0] ?? [];
-                        $user_prod_list[$target['product_id']][$target['sub_product_id']]['prev_stage_cert'] = [];
-                        break;
-                    case 1: // 收件檢核階段
-                        $user_prod_list[$target['product_id']][$target['sub_product_id']]['this_stage_cert'] = array_merge(
-                            $product_info['certifications_stage'][0] ?? [],
-                            $product_info['certifications_stage'][1] ?? []
-                        );
-                        $user_prod_list[$target['product_id']][$target['sub_product_id']]['prev_stage_cert'] = $product_info['certifications_stage'][0] ?? [];
-                        break;
-                    case 2: // 審核中階段
-                        $user_prod_list[$target['product_id']][$target['sub_product_id']]['this_stage_cert'] =
-                        $user_prod_list[$target['product_id']][$target['sub_product_id']]['prev_stage_cert'] =array_merge(
-                            $product_info['certifications_stage'][0] ?? [],
-                            $product_info['certifications_stage'][1] ?? []
-                        );
-                        break;
-                    default:
-                        goto END;
-                }
+                $merge_certifications_stage = call_user_func_array('array_merge', $product_info['certifications_stage']);
+                $user_prod_list[$target['product_id']][$target['sub_product_id']] = [
+                    'name' => $product_info['name'],
+                    'stage' => [
+                        [
+                            // 身份驗證階段
+                            'this_stage_cert' => $product_info['certifications_stage'][0] ?? [],
+                            'prev_stage_cert' => []
+                        ], [
+                            // 收件檢核階段
+                            'this_stage_cert' => $merge_certifications_stage,
+                            'prev_stage_cert' => $product_info['certifications_stage'][0] ?? [],
+                        ], [
+                            // 審核中階段
+                            'this_stage_cert' => $merge_certifications_stage,
+                            'prev_stage_cert' => $merge_certifications_stage
+                        ]
+                    ]
+                ];
             }
             $target['product_name'] = $user_prod_list[$target['product_id']][$target['sub_product_id']]['name'];
             $target['updated_at'] = date('Y-m-d H:i:s', $target['updated_at']);
@@ -353,81 +344,91 @@ class Risk extends MY_Admin_Controller {
             }
             if ( ! isset($user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]))
             {
-                if ( ! isset($user_list[$target['user_id']]['success_cert']) || ! isset($user_list[$target['user_id']]['cert_list']) ||
-                    ! isset($user_prod_list[$target['product_id']][$target['sub_product_id']]['this_stage_cert']) ||
-                    ! isset($user_prod_list[$target['product_id']][$target['sub_product_id']]['prev_stage_cert']))
+                if ( ! isset($user_list[$target['user_id']]['success_cert']) || ! isset($user_list[$target['user_id']]['cert_list']))
                 {
                     continue;
                 }
 
-                $this_stage_cert = $user_prod_list[$target['product_id']][$target['sub_product_id']]['this_stage_cert'];
-                $prev_stage_cert = $user_prod_list[$target['product_id']][$target['sub_product_id']]['prev_stage_cert'];
-                $this_stage_cert_tmp = $this_stage_cert;
-                if ($target['product_id'] == PRODUCT_ID_STUDENT && $target['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT)
+                foreach ($user_prod_list[$target['product_id']][$target['sub_product_id']]['stage'] as $stage => $stage_cert)
                 {
-                    $cert_key_tmp = array_search(CERTIFICATION_SOCIAL, $this_stage_cert_tmp);
-                    if ($cert_key_tmp !== FALSE)
+                    $this_stage_cert = $stage_cert['this_stage_cert'];
+                    $prev_stage_cert = $stage_cert['prev_stage_cert'];
+                    $this_stage_cert_tmp = $this_stage_cert;
+
+                    if ($target['product_id'] == PRODUCT_ID_STUDENT && $target['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT)
                     {
-                        $this_stage_cert_tmp[$cert_key_tmp] = CERTIFICATION_SOCIAL_INTELLIGENT;
+                        $cert_key_tmp = array_search(CERTIFICATION_SOCIAL, $this_stage_cert_tmp);
+                        if ($cert_key_tmp !== FALSE)
+                        {
+                            $this_stage_cert_tmp[$cert_key_tmp] = CERTIFICATION_SOCIAL_INTELLIGENT;
+                        }
+                    }
+
+                    $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['this_success_status'] =
+                        count(array_intersect($this_stage_cert_tmp, $user_list[$target['user_id']]['success_cert'])) == count($this_stage_cert_tmp);
+
+                    $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['prev_success_status'] =
+                        count(array_intersect($prev_stage_cert, $user_list[$target['user_id']]['success_cert'])) == count($prev_stage_cert);
+
+                    // 畫徵信項的狀態按鈕
+                    $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['btn'] = [];
+                    foreach ($this_stage_cert_tmp as $cert)
+                    {
+                        $btn_factory = Certification_btn_factory::get_instance($user_list[$target['user_id']]['cert_list'][$cert]);
+
+                        if ($btn_factory)
+                        {
+                            $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['btn'][$cert] = $btn_factory->get_status_meaning();
+                        }
+                        else
+                        {
+                            $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'][$stage]['btn'][$cert] = '';
+                        }
+                    }
+                }
+            }
+
+            foreach ($user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['stage'] as $stage => $user_stage_value)
+            {
+                if ($stage == 0 )
+                {
+                    if ($user_stage_value['this_success_status'] ||
+                        $target['certificate_status'] == TARGET_CERTIFICATE_SUBMITTED)
+                    {
+                        continue;
+                    }
+                }
+                elseif ($stage == 1)
+                {
+                    if ( ! $user_stage_value['prev_success_status'] ||
+                        $target['certificate_status'] == TARGET_CERTIFICATE_SUBMITTED)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if ( $target['certificate_status'] != TARGET_CERTIFICATE_SUBMITTED)
+                    {
+                        continue;
                     }
                 }
 
-                $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['this_success_status'] =
-                    count(array_intersect($this_stage_cert_tmp, $user_list[$target['user_id']]['success_cert'])) == count($this_stage_cert_tmp);
-
-                $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['prev_success_status'] =
-                    count(array_intersect($prev_stage_cert, $user_list[$target['user_id']]['success_cert'])) == count($prev_stage_cert);
-
-                // 畫徵信項的狀態按鈕
-                $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['btn'] = [];
-                foreach ($this_stage_cert_tmp as $cert)
-                {
-                    $btn_factory = Certification_btn_factory::get_instance($user_list[$target['user_id']]['cert_list'][$cert]);
-
-                    if ($btn_factory)
-                    {
-                        $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['btn'][$cert] = $btn_factory->get_status_meaning();
-                    }
-                    else
-                    {
-                        $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['btn'][$cert] = '';
-                    }
-                }
+                // 組裝資料
+                $user_cert = array_intersect_key($user_stage_value['btn'], $title_cert);
+                $data_rows[$stage][] = array_replace(array_intersect_key($target, $input_target_column), $user_cert);
             }
-
-            if ($input['stage'] == 0 )
-            {
-                if ($user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['this_success_status'] ||
-                    $target['certificate_status'] == TARGET_CERTIFICATE_SUBMITTED)
-                {
-                    continue;
-                }
-            }
-            elseif ($input['stage'] == 1)
-            {
-                if ( ! $user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['prev_success_status'] ||
-                    $target['certificate_status'] == TARGET_CERTIFICATE_SUBMITTED)
-                {
-                    continue;
-                }
-            }
-            else
-            {
-                if ( $target['certificate_status'] != TARGET_CERTIFICATE_SUBMITTED)
-                {
-                    continue;
-                }
-            }
-
-            // 組裝資料
-            $user_cert = array_intersect_key($user_cert_list[$target['user_id']][$target['product_id']][$target['sub_product_id']]['btn'], $title_cert);
-            $data_rows[] = array_replace(array_intersect_key($target, $input_target_column), $user_cert);
         }
 
         END:
         setcookie('export_natural_person', TRUE);
         $this->load->library('spreadsheet_lib');
-        $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
+        $sheet_title = ['身份驗證','收件檢核','審核中'];
+        $spreadsheet = NULL;
+        foreach ($sheet_title as $key => $value)
+        {
+            $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows[$key], $spreadsheet, $value);
+        }
         $this->spreadsheet_lib->download('export.xlsx', $spreadsheet);
     }
 

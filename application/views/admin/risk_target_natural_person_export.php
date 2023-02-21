@@ -12,7 +12,6 @@
         <!-- /.panel-heading -->
         <div class="panel-body">
             <form id="myForm" action="export_natural_person_list" method="post">
-                <input name="stage" value="" hidden>
                 <table class="table table-striped table-bordered table-hover">
                     <tbody>
                     <tr>
@@ -132,11 +131,9 @@
         const url = new URL(location.href);
         const urlParams = new URLSearchParams(url.search);
         let product = urlParams.get('product') || '';
-        let stage = urlParams.get('stage') || '';
 
         let [product_id, sub_product_id] = product.split(':');
         product_id = product_id | '';
-        $('input[name="stage"]').val(stage);
 
         $(`input[name="product_id"][value="${product_id}"]`).prop('checked', true);
         $('input[name="export_column[]"]').prop('checked', true);

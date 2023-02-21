@@ -48,10 +48,21 @@ class Spreadsheet_lib
 	 *     ['target_no' => 'STS2019061700001', 'user_id' => ['value' => '123456', 'rowspan' => 2]]
 	 * ]
 	 */
-	function load($title_rows, $data_rows)
+	function load($title_rows, $data_rows, Spreadsheet $spreadsheet = NULL, $sheet_title = '')
 	{
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        if ( ! isset($spreadsheet))
+        {
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet()->setTitle($sheet_title);
+        }
+        else
+        {
+            $this->initial_row_index();
+            $sheet_count = $spreadsheet->getSheetCount();
+            $new_work_sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $sheet_title);
+            $sheet = $spreadsheet->addSheet($new_work_sheet, $sheet_count);
+        }
+
         $style = $spreadsheet->getDefaultStyle();
         $style->getFont()->setName('微軟正黑體');
 		$style->getFont()->setSize(12);
@@ -63,6 +74,11 @@ class Spreadsheet_lib
 
         return $spreadsheet;
 	}
+
+    private function initial_row_index()
+    {
+        $this->row_index = 1;
+    }
 
     function save($filename, $spreadsheet)
     {
