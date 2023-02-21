@@ -1447,7 +1447,6 @@ class Payment_lib{
 			SOURCE_TRANSFER_FEE,
 			SOURCE_PREPAYMENT_DAMAGE,
 			SOURCE_DAMAGE,
-			SOURCE_PREPAYMENT_ALLOWANCE,
 		);
 
         foreach($mdate as $key => $date) {
@@ -1459,23 +1458,13 @@ class Payment_lib{
             $data = $this->CI->transaction_model->order_by("user_from", "ASC")->get_many_by($where);
             if ($data && !empty($data)) {
                 $tax_list = array();
-                $prepayment = array();
+
                 foreach ($data as $key => $value) {
                     if ($value->source != SOURCE_PREPAYMENT_ALLOWANCE) {
                         if (!isset($tax_list[$value->user_from])) {
                             $tax_list[$value->user_from] = 0;
                         }
                         $tax_list[$value->user_from] += $value->amount;
-                        if ($value->source == SOURCE_PREPAYMENT_DAMAGE) {
-                            $prepayment[$value->target_id] = $value->user_from;
-                        }
-                    }
-                }
-                if (!empty($prepayment)) {
-                    foreach ($data as $key => $value) {
-                        if ($value->source == SOURCE_PREPAYMENT_ALLOWANCE) {
-                            $tax_list[$prepayment[$value->target_id]] -= $value->amount;
-                        }
                     }
                 }
 
