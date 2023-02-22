@@ -636,7 +636,7 @@ $config['credit_amount_2'] = [
 ];
 
 $config['credit_amount_3'] = [
-    ['start' => 3691, 'end' => 4090, 'rate' => 10, 'max_amount' => 500000],
+    ['start' => 3691, 'end' => 9999, 'rate' => 10, 'max_amount' => 500000],
     ['start' => 3331, 'end' => 3690, 'rate' => 9, 'max_amount' => 500000],
     ['start' => 3031, 'end' => 3330, 'rate' => 8, 'max_amount' => 500000],
     ['start' => 2731, 'end' => 3030, 'rate' => 7, 'max_amount' => 500000],
@@ -651,7 +651,7 @@ $config['credit_amount_3'] = [
 ];
 
 $config['credit_amount_3_7'] = [
-    ['start' => 3691, 'end' => 4090, 'rate' => 10, 'max_amount' => 500000],
+    ['start' => 3691, 'end' => 9999, 'rate' => 10, 'max_amount' => 500000],
     ['start' => 3331, 'end' => 3690, 'rate' => 9, 'max_amount' => 500000],
     ['start' => 3031, 'end' => 3330, 'rate' => 8, 'max_amount' => 500000],
     ['start' => 2731, 'end' => 3030, 'rate' => 7, 'max_amount' => 500000],
@@ -666,7 +666,7 @@ $config['credit_amount_3_7'] = [
 ];
 
 $config['credit_amount_3_8'] = [
-    ['start' => 3691, 'end' => 4090, 'rate' => 10, 'max_amount' => 500000],
+    ['start' => 3691, 'end' => 9999, 'rate' => 10, 'max_amount' => 500000],
     ['start' => 3331, 'end' => 3690, 'rate' => 9, 'max_amount' => 500000],
     ['start' => 3031, 'end' => 3330, 'rate' => 8, 'max_amount' => 500000],
     ['start' => 2731, 'end' => 3030, 'rate' => 7, 'max_amount' => 500000],
@@ -681,7 +681,7 @@ $config['credit_amount_3_8'] = [
 ];
 
 $config['credit_amount_3_9'] = [
-    ['start' => 3691, 'end' => 4090, 'rate' => 10, 'max_amount' => 500000],
+    ['start' => 3691, 'end' => 9999, 'rate' => 10, 'max_amount' => 500000],
     ['start' => 3331, 'end' => 3690, 'rate' => 9, 'max_amount' => 500000],
     ['start' => 3031, 'end' => 3330, 'rate' => 8, 'max_amount' => 500000],
     ['start' => 2731, 'end' => 3030, 'rate' => 7, 'max_amount' => 500000],
