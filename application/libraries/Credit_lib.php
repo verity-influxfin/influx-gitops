@@ -435,9 +435,12 @@ class Credit_lib{
         }
         else
         {
-            $point = 250;
-            $total += $point;
-            $this->scoreHistory[] = "無提交最高學歷得分: {$point}";
+            $school_list = $this->CI->config->item('school_points');
+            $school_points_list = array_column($school_list['school_points'], 'points', 'points');
+            $min_points = min($school_points_list);
+            $normal_coef = 0.3;
+            $total += $min_points * $normal_coef;
+            $this->scoreHistory[] = "無提交最高學歷得分: {$min_points} * {$normal_coef}";
         }
 
         // 財務評分
