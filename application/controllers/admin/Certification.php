@@ -712,9 +712,9 @@ class Certification extends MY_Admin_Controller {
 							$content['game_work_level'] = $game_work_level;
 							$content['pro_level'] 		= $pro_level;
 
-                            $content['admin_edit']['school'] = empty($post['admin_edit']['school']) ?: $post['admin_edit']['school'];
-                            $content['admin_edit']['department'] = empty($post['admin_edit']['department']) ?: $post['admin_edit']['department'];
-                            $content['admin_edit']['system'] = empty($post['admin_edit']['system']) ?: $post['admin_edit']['system'];
+                            $content['admin_edit']['school'] = $post['admin_edit']['school'] ?? '';
+                            $content['admin_edit']['department'] = $post['admin_edit']['department'] ?? '';
+                            $content['admin_edit']['system'] = $post['admin_edit']['system'] ?? '';
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						} elseif ($info->certification_id == CERTIFICATION_CERCREDITJUDICIAL) {
 							$fail = '評估表已失效';
