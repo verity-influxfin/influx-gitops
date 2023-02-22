@@ -153,11 +153,11 @@
                             <div class="form-group">
                                 <label>學校名稱</label>
                                 <p id="university"
-                                   class="form-control-static"><?= $content['admin_edit']['school'] ?? $content['school'] ?? '' ?></p>
+                                   class="form-control-static"><?= $content['school'] ?? '' ?></p>
                             </div>
                             <div class="form-group">
                                 <label>學制</label>
-                                <p class="form-control-static"><?= $school_system[$content['admin_edit']['system'] ?? $content['system'] ?? ''] ?? '' ?></p>
+                                <p class="form-control-static"><?= $school_system[$content['system'] ?? ''] ?? '' ?></p>
                             </div>
                             <div class="form-group">
                                 <label>學門</label>
