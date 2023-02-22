@@ -123,10 +123,12 @@
 										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
 											<tr style="background-color:#f5f5f5;">
-												<td colspan="6">交易明細</td>
+												<td colspan="8">交易明細</td>
 											</tr>
 											<tr>
 												<td>交易時間</td>
+												<td>user_from</td>
+												<td>user_to</td>
 												<td>收入</td>
 												<td>支出</td>
 												<td>餘額</td>
@@ -140,6 +142,8 @@
 
 												<tr>
 													<td><?=$value["tx_datetime"] ?></td>
+													<td><?=$value["user_from"] ?></td>
+													<td><?=$value["user_to"] ?></td>
 													<td><?=$value["action"]=="debit"?$value["amount"]:""; ?></td>
 													<td><?=$value["action"]=="credit"?$value["amount"]:""; ?></td>
 													<td><?=$value["bank_amount"] ?></td>
