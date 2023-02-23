@@ -108,8 +108,16 @@ class Passbook_lib{
 
 			if($virtual_passbook){
 				foreach($virtual_passbook as $key => $value){
+					$transaction = $this->CI->transaction_model->get($value->transaction_id);
+					if(empty($transaction)){
+						$transaction = new stdClass();
+						$transaction->user_from = '';
+						$transaction->user_to = '';
+					}
 					$total	+= intval($value->amount);
 					$list[] = array(
+						'user_from' 	=> $transaction->user_from,
+						'user_to' 	    => $transaction->user_to,
 						'amount' 		=> intval($value->amount),
 						'bank_amount'	=> $total,
 						'remark'		=> $value->remark,
