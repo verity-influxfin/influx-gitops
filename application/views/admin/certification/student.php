@@ -165,7 +165,7 @@
                             </div>
                             <div class="form-group">
                                 <label>系所</label>
-                                <p class="form-control-static"><?= $content['admin_edit']['department'] ?? $content['department'] ?? '' ?></p>
+                                <p class="form-control-static"><?= $content['department'] ?? '' ?></p>
                             </div>
                             <div class="form-group">
                                 <label>年級</label>
