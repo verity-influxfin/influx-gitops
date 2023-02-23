@@ -127,13 +127,13 @@
 											</tr>
 											<tr>
 												<td>交易時間</td>
-												<td>user_from</td>
-												<td>user_to</td>
 												<td>收入</td>
 												<td>支出</td>
 												<td>餘額</td>
 												<td>備註</td>
 												<td>案件ID</td>
+												<td>user_from</td>
+												<td>user_to</td>
 											</tr>
 											<? if(!empty($list)){
 												foreach($list as $key => $value){
@@ -142,13 +142,13 @@
 
 												<tr>
 													<td><?=$value["tx_datetime"] ?></td>
-													<td><?=$value["user_from"] ?></td>
-													<td><?=$value["user_to"] ?></td>
 													<td><?=$value["action"]=="debit"?$value["amount"]:""; ?></td>
 													<td><?=$value["action"]=="credit"?$value["amount"]:""; ?></td>
 													<td><?=$value["bank_amount"] ?></td>
 													<td><?=isset($value["remark"]["source"])?$transaction_source[$value["remark"]["source"]]:"" ?></td>
 													<td><?=isset($value["remark"]["target_id"])&&$value["remark"]["target_id"]?$value["remark"]["target_id"]:"" ?></td>
+													<td><?=$value["user_from"] ?></td>
+													<td><?=$value["user_to"] ?></td>
 												</tr>
 											<? }} ?>
 											</tbody>
