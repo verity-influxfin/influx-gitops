@@ -152,15 +152,23 @@ class PersonalCreditSheet extends CreditSheetBase {
      * @param string $opinion: 核可意見
      * @param int $score: 調整分數
      * @param int $adminId: 管理員編號
+     * @param int $fixed_amount
      * @return int
      */
-    public function approve(int $groupId, string $opinion, int $score=0, int $adminId=0): int
+    public function approve(int $groupId, string $opinion, int $score=0, int $adminId=0, int $fixed_amount = 0): int
     {
         $this->CI->load->model('loan/credit_sheet_review_model');
         $responseCode = self::RESPONSE_CODE_OK;
 
         if($score < $this->scoringMin || $score > $this->scoringMax)
             return self::RESPONSE_CODE_INVALID_SCORE;
+
+        $product_list = $this->CI->config->item('product_list');
+        $product_id = $this->CI->credit_sheet_review_model->get_product_by_id($this->creditSheetRecord->id);
+        if ($fixed_amount > 0 && ($fixed_amount < $product_list[$product_id]['loan_range_s'] ?? 0 || $fixed_amount > $product_list[$product_id]['loan_range_e'] ?? 0))
+        {
+            return self::RESPONSE_CODE_INVALID_FIXED_AMOUNT;
+        }
 
         $admin = null;
         if($adminId && (
@@ -182,7 +190,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->credit_sheet_review_model->insert(
                 ['credit_sheet_id' => $this->creditSheetRecord->id,
                     'admin_id' => $adminId, 'name' => $name, 'opinion' => $opinion,
-                    'score' => $score, 'group' => $groupId]);
+                    'score' => $score, 'group' => $groupId, 'fixed_amount' => $fixed_amount]);
         }
 
         if($this->CI->credit_sheet_review_model->trans_status() == FALSE)
@@ -211,7 +219,7 @@ class PersonalCreditSheet extends CreditSheetBase {
         $credit = $this->CI->credit_lib->get_credit($this->user->id, $this->target->product_id, $this->target->sub_product_id, $this->target);
 
         // 取得已審核資訊
-        $reviewedInfoList = $this->CI->credit_sheet_review_model->get_many_by(
+        $reviewedInfoList = $this->CI->credit_sheet_review_model->order_by('group', 'DESC')->get_many_by(
             ['credit_sheet_id' => $this->creditSheetRecord->id]);
 
         $target_meta = $this->CI->target_meta_model->get_by(['target_id' => $this->target->id, 'meta_key' => 'is_top_enterprise']);
@@ -224,6 +232,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
             $this->CI->approvalextra->setSkipInsertion(true);
             $this->CI->approvalextra->setExtraPoints($bonusScore);
+            $this->CI->approvalextra->set_fixed_amount($reviewedInfoList[0]->fixed_amount ?? 0);
             if (isset($is_top_enterprise))
             {
                 $this->CI->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);

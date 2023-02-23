@@ -348,6 +348,28 @@ class Credit_lib{
         // 額度不能「大」於產品的最「大」允許額度
 		$param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
+        // 檢查二審額度調整
+        if (isset($approvalExtra))
+        {
+            $fixed_amount = $approvalExtra->get_fixed_amount();
+            if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE)
+            {
+                goto SKIP_FIXED_AMOUNT;
+            }
+            // 若由二審人員key額度，則該戶信評等級則為上班族貸最低信評：9
+            $param['amount'] = $fixed_amount;
+            $param['level'] = 9;
+            $tmp_remark = json_decode($param['remark'], TRUE);
+            if (isset($tmp_remark['scoreHistory']))
+            {
+                $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
+                $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
+                $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
+            }
+            $param['remark'] = json_encode($tmp_remark);
+        }
+        SKIP_FIXED_AMOUNT:
+
 		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
             return $param;
         }
@@ -405,8 +427,11 @@ class Credit_lib{
         {
             $get_school_point = $this->get_school_point($data['diploma_name'], $data['diploma_system'], '', $data['diploma_department']);
             $total += ((int) ($get_school_point['point'] ?? 0)) * 0.6;
-            $school_point_score_history = implode($get_school_point['score_history'] ?? [], ' + ');
-            $this->scoreHistory[] = "( {$school_point_score_history} ) * 0.6";
+            if ( ! empty($get_school_point['score_history']))
+            {
+                $school_point_score_history = implode(' + ', $get_school_point['score_history']);
+                $this->scoreHistory[] = "( {$school_point_score_history} ) * 0.6";
+            }
         }
 
         if (isset($data['job_type'])) {
@@ -589,6 +614,28 @@ class Credit_lib{
         $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
+
+        // 檢查二審額度調整
+        if (isset($approvalExtra))
+        {
+            $fixed_amount = $approvalExtra->get_fixed_amount();
+            if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE)
+            {
+                goto SKIP_FIXED_AMOUNT;
+            }
+            // 若由二審人員key額度，則該戶信評等級則為上班族貸最低信評：9
+            $param['amount'] = $fixed_amount;
+            $param['level'] = 9;
+            $tmp_remark = json_decode($param['remark'], TRUE);
+            if (isset($tmp_remark['scoreHistory']))
+            {
+                $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
+                $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
+                $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
+            }
+            $param['remark'] = json_encode($tmp_remark);
+        }
+        SKIP_FIXED_AMOUNT:
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
@@ -1247,5 +1294,14 @@ class Credit_lib{
         }
 
         return $loan_range_end;
+    }
+
+    public function is_valid_fixed_amount(int $fixed_amount, int $product_loan_range_s, int $product_loan_range_e): bool
+    {
+        if ($fixed_amount == 0 || $fixed_amount < $product_loan_range_s || $fixed_amount > $product_loan_range_e)
+        {
+            return FALSE;
+        }
+        return TRUE;
     }
 }

@@ -144,7 +144,7 @@ class Anti_fraud_lib{
         $response = json_decode(json_encode($verdict_count), true);
         $verdictSet = [];
         if($response['status']=='200'){
-            foreach ($response['response']['verdict_count'] as $verdict){
+            foreach ($response['response']['verdict_count'] ?? [] as $verdict){
                 $caseList = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsCase(urlencode($user_info->name), urlencode($verdict['type']), 1);
                 if($caseList && isset($caseList['response']['verdicts']['urls'])){
                     foreach ($caseList['response']['verdicts']['urls'] as $case){

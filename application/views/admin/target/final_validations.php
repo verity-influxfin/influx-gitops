@@ -906,7 +906,10 @@
 				<div class="panel-body">
 					<form id="credit-evaluation" method="POST" action="/admin/Target/credits">
 						<div class="col-lg-12 text-center">
+                            分數調整:
 							<input id="credit_test" type="text" name="score" value="0" / disabled>
+                            額度調整:
+                            <input id="credit_test_fixed_amount" type="text" name="credit_test_fixed_amount" value="0" disabled>
 							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
                             <input type="text" name="is_top_enterprise" value="0" hidden>
 							<button class="btn btn-warning need_chk_before_approve" type="submit">額度試算</button>
@@ -974,6 +977,15 @@
 								<span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1"
 										disabled></span>
 							</div>
+                            <div>
+								<span style="width:30%;">
+									<span>額度調整</span>
+									<span class="fixed_amount"></span>
+									<span>：</span>
+								</span>
+                                <span style="width:70%;"><input id="2_fixed_amount" type="number" value="0" min="0" step="1"
+                                                                disabled></span>
+                            </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
 						</div>
@@ -1123,6 +1135,7 @@
 	// 授審表評分意見送出
 	function send_opinion(target_id = '', group_id = '') {
 		let score = $(`#${group_id}_score`).val();
+		let fixed_amount = $(`#credit_test_fixed_amount`).val();
 		let opinion = $(`#${group_id}_opinion`).val();
 		let is_top_enterprise = $('#is_top_enterprise').val();
 		if (group_id && target_id) {
@@ -1132,6 +1145,7 @@
 				data: {
 					'target_id': target_id,
 					'score': score,
+					'fixed_amount': fixed_amount,
 					'opinion': opinion,
 					'group': group_id,
 					'is_top_enterprise': is_top_enterprise,
@@ -1446,11 +1460,19 @@
 				fillTargetMeta(response.response.target_meta);
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
+                fillFixedAmountRange(response.response.credits.product);
 			},
 			error: function (error) {
 				alert('資料載入失敗。請重新整理。');
 			}
 		});
+
+        function fillFixedAmountRange(product_info) {
+            $('#2_fixed_amount').attr({
+                'max': product_info.loan_range_e,
+                'min': product_info.loan_range_s
+            });
+        }
 
 		// 取得案件核貸資料
 		case_aprove_item = get_default_item(caseId);
@@ -1513,6 +1535,7 @@
 							$(`#${list_key}_score`).val(score);
 						})
 						$('#credit_test').val(total_score);
+						$('#credit_test_fixed_amount').val(0);
 						// 顯示更改,核可層級解鎖
 						Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
 							status_html = get_status_icon('success');
@@ -1531,6 +1554,9 @@
 								$(`#${list_key}_opinion_status`).html(status_html);
 								$(`#${list_key}_opinion`).prop('disabled', false);
 								$(`#${list_key}_score`).prop('disabled', false);
+                                if ($(`#${list_key}_fixed_amount`)) {
+                                    $(`#${list_key}_fixed_amount`).prop('disabled', false);
+                                }
 								// $(`#${list_key}_opinion_button`).prop('disabled', false);
 								$(`#${list_key}_opinion_button`).data('disabled', 'false');
 								stop_flag = true;
@@ -1551,6 +1577,10 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
+        $('#2_fixed_amount').change(function () {
+            $('div.opinion_button button.score').prop('disabled', true);
+            $('#credit_test_fixed_amount').val(parseInt($(this).val()));
+        });
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
 			$.ajax({
@@ -2099,10 +2129,18 @@
 			var url = form.attr('action');
 			var points = form.find('input[name="score"]').val();
 			var is_top_enterprise = form.find('input[name="is_top_enterprise"]').val();
+            let fixed_amount = form.find('input[name="credit_test_fixed_amount"]').val();
 			var remark = form.find('input[name="description"]').val();
+
+            if (fixed_amount != 0 && (fixed_amount < parseInt($('#2_fixed_amount').attr('min')) || fixed_amount > parseInt($('#2_fixed_amount').attr('max')))) {
+                alert('額度調整不符合產品設定！');
+                $('#credit-evaluation button').attr('disabled', false);
+                return;
+            }
+
 			$.ajax({
 				type: "GET",
-				url: url + "?id=" + caseId + "&points=" + points + "&is_top_enterprise=" + is_top_enterprise,
+				url: url + "?id=" + caseId + "&points=" + points + "&is_top_enterprise=" + is_top_enterprise + `&fixed_amount=${fixed_amount}`,
 				beforeSend: function () {
 					changeReevaluationLoading(true);
 					clearCreditInfo(true);
@@ -2112,6 +2150,10 @@
 				},
 				success: function (response) {
 					if (response.status.code != 200) {
+                        if (response.status.message) {
+                            alert(response.status.message);
+                            $('#credit-evaluation button').attr('disabled', false);
+                        }
 						return;
 					}
 

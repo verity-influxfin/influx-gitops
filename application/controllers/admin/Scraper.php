@@ -148,7 +148,7 @@ class Scraper extends MY_Admin_Controller
         if ( ! empty($job_content) && isset($job_content[0]->content))
         {
             $job_result = json_decode($job_content[0]->content, TRUE);
-            $businessid = $job_result['tax_id'];
+            $businessid = $job_result['tax_id'] ?? '';
             if ( ! empty($businessid))
             {
                 $biz_status = $this->findbiz_lib->getFindBizStatus($businessid);
