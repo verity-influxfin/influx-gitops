@@ -609,6 +609,7 @@ $config['permission'] = [
           'sofp_spreadsheet' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
           'journal' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'get_journal_data' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'erp_balance_sheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'journal_spreadsheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'balance_sheet' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
           'get_balance_sheet_dict' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],

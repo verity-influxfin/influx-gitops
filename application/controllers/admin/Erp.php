@@ -401,6 +401,21 @@ class ERP extends MY_Admin_Controller
     }
 
     /**
+     * 取得平台分類帳 API 資料
+     * 
+     * @created_at            2022-02-24
+     * @created_at            Allan
+     */
+    public function erp_balance_sheet()
+    {
+        $data = $this->erp_client->request('GET', 'erp_balance_sheet', [
+            'query' => $this->input->get()
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+
+    /**
      * 資產負債表 Excel 下載
      * 
      * @created_at      2021-08-16
