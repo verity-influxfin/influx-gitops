@@ -197,7 +197,7 @@ class Cert_identity extends Certification_base
                 if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
                     || $verdicts_statuses['status'] == 204)
                 {
-                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($name, $domicile);
+                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($name, $domicile, $this->certification['user_id']);
                 }
             }
 

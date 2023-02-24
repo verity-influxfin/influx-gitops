@@ -1879,6 +1879,33 @@ class Target_lib
                             !$stage_cer ? $finish = false : '';
                         }
 
+                        $certifications_status_by_id = array_column($certifications, 'user_status', 'id');
+                        if ($value->product_id == PRODUCT_ID_STUDENT &&
+                            isset($certifications_status_by_id[CERTIFICATION_IDENTITY]) &&
+                            $certifications_status_by_id[CERTIFICATION_IDENTITY] == CERTIFICATION_STATUS_SUCCEED &&
+                            isset($certifications_status_by_id[CERTIFICATION_STUDENT]) &&
+                            $certifications_status_by_id[CERTIFICATION_STUDENT] == CERTIFICATION_STATUS_SUCCEED)
+                        {
+                            // 1. 申請學生貸，且實名認證、學生認證已審核通過
+                            // 2. 通過反詐欺爬蟲（未命中、未被封鎖）
+                            // 符合者，將金融驗證轉為待驗證
+                            $this->load->library('anti_fraud_lib');
+                            $anti_fraud_response = $this->anti_fraud_lib->get_by_user_id($value->user_id);
+                            if ($anti_fraud_response['status'] == 200 && empty($anti_fraud_response['response']['results']))
+                            {
+                                $this->load->model('user/user_bankaccount_model');
+                                $bank_account = $this->user_bankaccount_model->get_by([
+                                    'status' => VIRTUAL_ACCOUNT_STATUS_AVAILABLE,
+                                    'investor' => USER_BORROWER,
+                                    'user_id' => $value->user_id
+                                ]);
+                                if (isset($bank_account->verify) && $bank_account->verify == 0)
+                                {
+                                    $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                                }
+                            }
+                        }
+
                         if ($finish) {
                             // Re-check ID card info in case user's ID card changed.
                             $check_id_card = FALSE;

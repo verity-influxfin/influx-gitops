@@ -26,6 +26,29 @@ class Product_student extends Approve_target_credit_base
         $option_cert = $this->product_config['option_certifications'] ?? [];
         $cer_success_id = []; // 存審核成功的徵信項
 
+        if (isset($user_certs[CERTIFICATION_IDENTITY]) && $user_certs[CERTIFICATION_IDENTITY]['status'] == CERTIFICATION_STATUS_SUCCEED &&
+            isset($user_certs[CERTIFICATION_STUDENT]) && $user_certs[CERTIFICATION_STUDENT]['status'] == CERTIFICATION_STATUS_SUCCEED)
+        {
+            // 1. 申請學生貸，且實名認證、學生認證已審核通過
+            // 2. 通過反詐欺爬蟲（未命中、未被封鎖）
+            // 符合者，將金融驗證轉為待驗證
+            $this->CI->load->library('anti_fraud_lib');
+            $anti_fraud_response = $this->CI->anti_fraud_lib->get_by_user_id($this->target_user_id);
+            if ($anti_fraud_response['status'] == 200 && empty($anti_fraud_response['response']['results']))
+            {
+                $this->CI->load->model('user/user_bankaccount_model');
+                $bank_account = $this->CI->user_bankaccount_model->get_by([
+                    'status' => VIRTUAL_ACCOUNT_STATUS_AVAILABLE,
+                    'investor' => USER_BORROWER,
+                    'user_id' => $this->target_user_id
+                ]);
+                if (isset($bank_account->verify) && $bank_account->verify == 0)
+                {
+                    $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                }
+            }
+        }
+
         foreach ($user_certs as $value)
         {
             if ($value['status'] != CERTIFICATION_STATUS_SUCCEED)
