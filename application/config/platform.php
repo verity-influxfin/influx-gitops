@@ -1943,7 +1943,8 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [18, 35],
-                'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000'
+                'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000',
+                'checkOwner' => FALSE
             ]
         ],
         'status' => 1
