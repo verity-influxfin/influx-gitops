@@ -183,6 +183,7 @@ $config['permission'] = [
             'unknown_funds' => ['model' => 'Passbook', 'submodel' => 'unknown_funds', 'action' => 'read'],
             'edit' => ['model' => 'Passbook', 'submodel' => 'index', 'action' => 'update'],
             'display' => ['model' => 'Passbook', 'submodel' => 'index', 'action' => 'read'],
+            'passbook_export' => ['model' => 'Passbook', 'submodel' => 'index', 'action' => 'read'],
             'withdraw_loan' => ['model' => 'Passbook', 'submodel' => 'withdraw_waiting', 'action' => 'read'],
             'unknown_refund' => ['model' => 'Passbook', 'submodel' => 'unknown_funds', 'action' => 'update'],
             'loan_success' => ['model' => 'Passbook', 'submodel' => 'withdraw_waiting', 'action' => 'update'],
@@ -582,6 +583,53 @@ $config['permission'] = [
             'medical_institute' => ['model' => 'companyList', 'submodel' => 'medical_institute', 'action' => 'read'],
             'public_agency' => ['model' => 'companyList', 'submodel' => 'public_agency', 'action' => 'read'],
         ],
+    ],
+    'Erp' => [
+      'name' => 'ERP 帳務',
+      'menu' => [
+          'assets_sheet' => ['name' => '債權明細表'],
+          'etpr' => ['name' => '本攤表'],
+          'replayment' => ['name' => '本攤表v2'],
+          'soci' => ['name' => '損益表'],
+          'sofp' => ['name' => '資產負債表'],
+          'journal' => ['name' => '日記簿'],
+          'balance_sheet' => ['name' => '開帳表']
+           /*
+          'ledger' => ['name' => '分類帳'],
+          'target_porting' => ['name' => '借款案帳務轉移'],
+           */
+      ],
+      'permission' => [
+          'assets_sheet' => ['model' => 'Erp', 'submodel' => 'assets_sheet', 'action' => 'read'],
+          'get_assets_sheet_data' => ['model' => 'Erp', 'submodel' => 'assets_sheet', 'action' => 'read'],
+          'assets_sheet_spreadsheet' => ['model' => 'Erp', 'submodel' => 'assets_sheet', 'action' => 'read'],
+          'etpr' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'get_etpr_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'etpr_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'replayment' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'get_replayment_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'get_replayment_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'get_stack_replayment_schedule_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'get_stack_replayment_schedule_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+          'soci' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
+          'get_soci_data' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
+          'soci_spreadsheet' => ['model' => 'Erp', 'submodel' => 'soci', 'action' => 'read'],
+          'sofp' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
+          'get_sofp_data' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
+          'sofp_spreadsheet' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
+          'journal' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'get_journal_data' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'journal_spreadsheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'balance_sheet' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
+          'get_balance_sheet_dict' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
+          'get_balance_sheet_diff' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
+           /*
+          'ledger' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
+          'get_ledger_data' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
+          'ledger_spreadsheet' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
+          'target_porting' => ['model' => 'Erp', 'submodel' => 'target_porting', 'action' => 'read'],
+           */
+      ],
     ],
     'Certificationreport' => [
         'permission' => [

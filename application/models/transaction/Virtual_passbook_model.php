@@ -61,7 +61,7 @@ class Virtual_passbook_model extends MY_Model
 
     public function get_list($virtual_account, array $exclude_sources = [], $limit = 0)
     {
-        $this->db->select('vp.*')
+        $this->db->select('vp.*, tra.user_from, tra.user_to')
             ->from('p2p_transaction.virtual_passbook AS vp')
             ->join('p2p_transaction.transactions AS tra', 'vp.transaction_id = tra.id', 'left')
             ->where('vp.virtual_account', $virtual_account)
@@ -77,6 +77,17 @@ class Virtual_passbook_model extends MY_Model
         {
             $this->db->limit($limit);
         }
+        return $this->db->get()->result();
+    }
+
+    public function get_filter_list($virtual_account, $array)
+    {
+        $this->db->select('vp.*, tra.user_from as user_from, tra.user_to as user_to')
+            ->from('p2p_transaction.virtual_passbook AS vp')
+            ->join('p2p_transaction.transactions AS tra', 'vp.transaction_id = tra.id', 'left')
+            ->where('vp.virtual_account', $virtual_account)
+            ->where($array)
+            ->order_by('vp.tx_datetime, vp.created_at', 'asc');
         return $this->db->get()->result();
     }
 
