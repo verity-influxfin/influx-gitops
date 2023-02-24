@@ -3,8 +3,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
+use GuzzleHttp\Client;
+
 class Passbook extends MY_Admin_Controller {
 
+	private $passbook_client;
 	protected $edit_method = array('withdraw_loan','loan_success','loan_failed','unknown_refund','withdraw_by_admin','withdraw_deny');
 
 	public function __construct() {
@@ -13,6 +16,11 @@ class Passbook extends MY_Admin_Controller {
 		$this->load->model('transaction/frozen_amount_model');
 		$this->load->model('transaction/withdraw_model');
 		$this->load->library('passbook_lib');
+
+		$this->passbook_client = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST'),
+            'timeout' => 300,
+        ]);
 
 	}
 
@@ -137,6 +145,28 @@ class Passbook extends MY_Admin_Controller {
 			echo 'ERROR , Account is not exist';
 		}
 	}
+
+	/**
+     * 虛擬帳戶明細表 excel
+     * 
+     * @created_at                   2023-02-21
+     * @created_by                   Howard
+     */
+    public function passbook_export(){
+        // get file from guzzle vitual_passbook/excel
+        $res = $this->passbook_client->request('GET', 'vitual_passbook/excel', [
+            'query' => $this->input->get()
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        setcookie('fileDownload', 'true', 0, '/');
+        echo $data;
+        die();
+    }
 
 	public function withdraw_list(){
 		$page_data 	= array('type'=>'list');
