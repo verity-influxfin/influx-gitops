@@ -429,6 +429,7 @@ defined('PRODUCT_TAB_ENTERPRISE') or define('PRODUCT_TAB_ENTERPRISE', 'enterpris
 defined('PRODUCT_TAB_HOME_LOAN') or define('PRODUCT_TAB_HOME_LOAN', 'home_loan'); // 不動產融資產品類型名稱
 
 // sub-product
+defined('SUB_PRODUCT_GENERAL') or define('SUB_PRODUCT_GENERAL', 0); // 一般貸款
 defined('SUBPRODUCT_INTELLIGENT_STUDENT') or define('SUBPRODUCT_INTELLIGENT_STUDENT', 6); // 3S名校貸
 defined('SUB_PRODUCT_ID_SALARY_MAN_CAR') or define('SUB_PRODUCT_ID_SALARY_MAN_CAR', 7); // 上班族貸(購車)
 defined('SUB_PRODUCT_ID_SALARY_MAN_HOUSE') or define('SUB_PRODUCT_ID_SALARY_MAN_HOUSE', 8); // 上班族貸(購房)
