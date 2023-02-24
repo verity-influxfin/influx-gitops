@@ -1168,7 +1168,7 @@ class Credit_lib{
      */
 	public function get_job_salary_point($job_salary = 0){
 		$point 	= 0;
-		if($job_salary > 23000 && $job_salary <= 30000){
+		if($job_salary >= 23000 && $job_salary <= 30000){
 			$point = 50;
 		}else if($job_salary > 30000 && $job_salary <= 35000){
 			$point = 100;
