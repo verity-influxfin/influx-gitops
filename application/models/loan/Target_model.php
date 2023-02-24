@@ -1105,4 +1105,29 @@ class Target_model extends MY_Model
 
         return $this->db->get()->result();
     }
+
+    public function get_old_user(array $user_ids = [])
+    {
+        $this->db
+            ->select('DISTINCT(user_from)')
+            ->from('p2p_transaction.transactions')
+            ->where('amount >', 0)
+            ->group_start()
+            ->group_start()
+                ->where('status', TRANSACTION_STATUS_TO_BE_PAID)
+                ->where('source', SOURCE_AR_PRINCIPAL)
+                ->group_end()
+                ->group_start('', 'OR')
+                ->where('status', TRANSACTION_STATUS_PAID_OFF)
+                ->where('source', SOURCE_PRINCIPAL)
+                ->where('created_at >', strtotime('-6 months', time()))
+                ->group_end()
+            ->group_end();
+        if ( ! empty($user_ids))
+        {
+            $this->db->where_in('user_from', $user_ids);
+        }
+
+        return $this->db->get()->result_array();
+    }
 }

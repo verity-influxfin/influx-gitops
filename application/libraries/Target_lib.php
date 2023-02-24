@@ -2763,8 +2763,8 @@ class Target_lib
         $temp_remain_amount_list = [];
 
         $targets = $this->CI->target_model->get_targets_detail(['id' => $target_ids]);
-        $user_loaned_count_list = $this->CI->target_model->getUserStatusByTargetId($target_ids);
-        $user_loaned_count_list = array_column($user_loaned_count_list, 'total_count', 'user_id');
+        $user_loaned_count_list = $this->CI->target_model->get_old_user(array_column($targets, 'user_id'));
+        $user_loaned_count_list = array_column($user_loaned_count_list, 'user_from', 'user_from');
 
         $where = ['investor' => USER_BORROWER, 'status' => 1];
         $user_cert_list = $this->CI->user_certification_model->getCertificationsByTargetId($target_ids, $where);
@@ -2784,7 +2784,7 @@ class Target_lib
             }
 
             $target['product_name'] = $product_list[$product_id]['name'] . ($sub_product_id != 0 ? '/' . $sub_product_list[$sub_product_id]['identity'][$product_list[$product_id]['identity']]['name'] : '') . (preg_match('/' . $subloan_list . '/', $target['target_no']) ? '(產品轉換)' : '');
-            $target['user_loyalty_status'] = ($user_loaned_count_list[$user_id] ?? 0) > 0 ? '舊戶':'新戶';
+            $target['user_loyalty_status'] = isset($user_loaned_count_list[$user_id]) ? '舊戶':'新戶';
             $target['user_identity'] = (isset($user_cert_list[$user_id]) && isset($user_cert_list[$user_id][CERTIFICATION_IDENTITY]) ? "是" : "否");
             $target['apply_date'] = date('Y-m-d',$target['created_at']);
             $target['apply_time'] = date('H:i:s',$target['created_at']);

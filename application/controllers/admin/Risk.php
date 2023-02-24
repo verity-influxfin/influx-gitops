@@ -98,8 +98,8 @@ class Risk extends MY_Admin_Controller {
             return TRUE;
         }
 
-        $userStatusList = $this->target_model->getUserStatusByTargetId(array_keys($target_list));
-        $userStatusList = array_column($userStatusList, 'total_count', 'user_id');
+        $userStatusList = $this->target_model->get_old_user(array_column($target_list, 'user_id'));
+        $userStatusList = array_column($userStatusList, 'user_from', 'user_from');
 
         $user_list = [];
         $user_cert_list = [];
@@ -114,7 +114,7 @@ class Risk extends MY_Admin_Controller {
 
             if ( ! isset($user_list[$target->user_id]))
             {
-                if (isset($userStatusList[$target->user_id]) && $userStatusList[$target->user_id] > 0)
+                if (isset($userStatusList[$target->user_id]))
                 {
                     $user_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
                         admin_url('User/display?id=' . $target->user_id) . '" >' .
@@ -427,7 +427,7 @@ class Risk extends MY_Admin_Controller {
         $spreadsheet = NULL;
         foreach ($sheet_title as $key => $value)
         {
-            $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows[$key], $spreadsheet, $value);
+            $spreadsheet = $this->spreadsheet_lib->load_multi_sheet($title_rows, $data_rows[$key], $spreadsheet, $value);
         }
         $this->spreadsheet_lib->download('export.xlsx', $spreadsheet);
     }

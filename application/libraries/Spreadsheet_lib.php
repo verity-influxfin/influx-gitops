@@ -48,8 +48,24 @@ class Spreadsheet_lib
 	 *     ['target_no' => 'STS2019061700001', 'user_id' => ['value' => '123456', 'rowspan' => 2]]
 	 * ]
 	 */
-	function load($title_rows, $data_rows, Spreadsheet $spreadsheet = NULL, $sheet_title = '')
+	function load($title_rows, $data_rows)
 	{
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $style = $spreadsheet->getDefaultStyle();
+        $style->getFont()->setName('微軟正黑體');
+		$style->getFont()->setSize(12);
+		$style->getAlignment()->setWrapText(true);
+		$style->getAlignment()->setVertical(Alignment::VERTICAL_TOP);
+
+        $this->draw_title($sheet, $title_rows, $this->row_index);
+        $this->draw_data($sheet, $title_rows, $data_rows, $this->row_index);
+
+        return $spreadsheet;
+	}
+
+    public function load_multi_sheet($title_rows, $data_rows, Spreadsheet $spreadsheet = NULL, $sheet_title = '')
+    {
         if ( ! isset($spreadsheet))
         {
             $spreadsheet = new Spreadsheet();
@@ -65,15 +81,15 @@ class Spreadsheet_lib
 
         $style = $spreadsheet->getDefaultStyle();
         $style->getFont()->setName('微軟正黑體');
-		$style->getFont()->setSize(12);
-		$style->getAlignment()->setWrapText(true);
-		$style->getAlignment()->setVertical(Alignment::VERTICAL_TOP);
+        $style->getFont()->setSize(12);
+        $style->getAlignment()->setWrapText(true);
+        $style->getAlignment()->setVertical(Alignment::VERTICAL_TOP);
 
         $this->draw_title($sheet, $title_rows, $this->row_index);
         $this->draw_data($sheet, $title_rows, $data_rows, $this->row_index);
 
         return $spreadsheet;
-	}
+    }
 
     private function initial_row_index()
     {
