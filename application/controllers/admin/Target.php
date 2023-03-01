@@ -234,8 +234,6 @@ class Target extends MY_Admin_Controller {
             if(isset($list) && !empty($list)){
                 $this->load->model('user/user_certification_model');
                 $targetIds = array_column($list, 'id');
-                $userLoanedCountList = $this->target_model->get_old_user(array_column($list, 'user_id'));
-                $userLoanedCountList = array_column($userLoanedCountList, 'user_from', 'user_from');
 
                 $where = ['investor' => USER_BORROWER, 'status' => 1];
                 if(isset($input['edate']) && !empty($input['edate']) && strtotime($input['edate']))
@@ -244,6 +242,8 @@ class Target extends MY_Admin_Controller {
 
                 $subloan_list = $this->config->item('subloan_list');
                 foreach($list as $key => $value){
+                    $user_status = $this->target_model->get_old_user([$value->user_id], $value->created_at);
+                    $user_status = array_column($user_status, 'user_from', 'user_from');
 
                     // 撈取可動用額度
                     $this->load->library('credit_lib');
@@ -253,7 +253,7 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$value->target_no.'</td>';
                     $html .= '<td>'.$product_list[$value->product_id]['name'].($value->sub_product_id!=0?'/'.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'').(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
-                    $html .= '<td>'.(isset($userLoanedCountList[$value->user_id]) ? '舊戶' : '新戶') . '</td>';
+                    $html .= '<td>'.(isset($user_status[$value->user_id]) ? '舊戶' : '新戶') . '</td>';
                     $html .= '<td>'.$value->credit_level.'</td>';
                     $html .= '<td>'.(isset($value->company)?$value->company:'').(isset($value->company)&&isset($value->school_name)?' / ':'').(isset($value->school_name)?$value->school_name:'').'</td>';
                     $html .= '<td>'.(isset($value->school_department)?$value->school_department:'').'</td>';
@@ -316,11 +316,6 @@ class Target extends MY_Admin_Controller {
         $list = $this->target_model->get_delayed_report_by_target($input);
 
         $target_ids = array_column($list, 'id');
-        $user_loaned_count = array_column(
-            $this->target_model->get_old_user(array_column($list, 'user_id')),
-            'user_from',
-            'user_from'
-        );
 
         $where = ['investor' => USER_BORROWER, 'status' => 1];
         if (! empty($input['edate']) && strtotime($input['edate']))
@@ -329,7 +324,7 @@ class Target extends MY_Admin_Controller {
         }
         $user_cert_list = $this->user_certification_model->getCertificationsByTargetId($target_ids, $where);
 
-        return array_map(function ($element) use ($user_loaned_count, $user_cert_list, $instalment_list, $repayment_type, $status_list, $delay_list, $product_list) {
+        return array_map(function ($element) use ($user_cert_list, $instalment_list, $repayment_type, $status_list, $delay_list, $product_list) {
             $amortization_table = $this->target_lib->get_amortization_table($element);
             $element['remaining_principal'] = $amortization_table['remaining_principal'];
 
@@ -341,7 +336,13 @@ class Target extends MY_Admin_Controller {
             $element['delay'] = $delay_list[$element['delay']] ?? '';
             $element['status'] = $status_list[$element['status']] ?? '';
             $element['product_name'] = $product_list[$element['product_id']]['name'] ?? '';
-            $element['new_or_old'] = isset($user_loaned_count[$element['user_id']]) ? '舊戶' : '新戶';
+
+            $user_status = array_column(
+                $this->target_model->get_old_user([$element['user_id']], $element['created_at']),
+                'user_from',
+                'user_from'
+            );
+            $element['new_or_old'] = isset($user_status[$element['user_id']]) ? '舊戶' : '新戶';
             $element['finish_cert_identity'] = !empty($user_cert_list[$element['user_id']][CERTIFICATION_IDENTITY]) ? '是' : '否';
             if ( ! empty($element['created_at']))
             {
