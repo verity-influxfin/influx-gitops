@@ -11,6 +11,17 @@ var app = new Vue({
         tab: 'tab1',
         is_waiting_response: false,
     },
+    watch: {
+        tab(n) {
+            if (n === 'tab2') {
+                this.searchform.start_date = moment().subtract(1, 'days').format('YYYY-MM-DD')
+                this.searchform.end_date = moment().subtract(1, 'days').format('YYYY-MM-DD')
+            } else {
+                this.searchform.start_date = ''
+                this.searchform.end_date = moment().format('YYYY-MM-DD')
+            }
+        }
+    },
     mounted() {
         var self = this;
         $('#start_date').datepicker({
