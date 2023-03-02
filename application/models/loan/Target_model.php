@@ -1129,7 +1129,8 @@ class Target_model extends MY_Model
                 ->where('source', SOURCE_PRINCIPAL)
                 ->where('created_at >', strtotime('-6 months', $time_before))
                 ->group_end()
-            ->group_end();
+            ->group_end()
+            ->where('created_at <', $time_before);
         if ( ! empty($user_ids))
         {
             $this->db->where_in('user_from', $user_ids);
