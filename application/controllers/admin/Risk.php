@@ -427,7 +427,7 @@ class Risk extends MY_Admin_Controller {
         $spreadsheet = NULL;
         foreach ($sheet_title as $key => $value)
         {
-            $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows[$key], $spreadsheet, $value);
+            $spreadsheet = $this->spreadsheet_lib->load_multi_sheet($title_rows, $data_rows[$key], $spreadsheet, $value);
         }
         $this->spreadsheet_lib->download('export.xlsx', $spreadsheet);
     }
