@@ -48,7 +48,7 @@ class Spreadsheet_lib
 	 *     ['target_no' => 'STS2019061700001', 'user_id' => ['value' => '123456', 'rowspan' => 2]]
 	 * ]
 	 */
-	function load($title_rows, $data_rows)
+    function load($title_rows, $data_rows)
 	{
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
