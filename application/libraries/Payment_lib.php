@@ -1631,7 +1631,7 @@ class Payment_lib{
                             $item_count[] = 1;
                             $item_unit[] = '筆';
 
-                            if ( ! empty($user_from_company_status_list[$user_id]))
+                            if ( ! empty($user_from_company_status_list[$user_id]) || (string) $user_id === '0')
                             {
                                 $item_tax_amt = $this->CI->financial_lib->get_tax_amount($amount);
                                 $item_price[] = $amount - $item_tax_amt;
