@@ -71,7 +71,7 @@
   .people-bg {
     padding-right: 0;
     display: block;
-    margin: 40px auto 0;
+    margin: 60px auto 0;
   }
 }
 </style>

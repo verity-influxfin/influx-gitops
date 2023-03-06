@@ -5,9 +5,6 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <div class="swiper-slide" v-if="newYearHeader(3)">
-                <newyear-2023-header-3 />
-              </div>
               <div class="swiper-slide">
                 <smegHeader />
               </div>
@@ -25,8 +22,8 @@
                 <div class="row no-gutters mt-4">
                   <div class="col-12">
                     <img
-                      src="@/asset/images/index/header/header-csr-phone.png"
-                      class="w-100 img-fluid"
+                      src="@/asset/images/index/header/header-csr-phone.jpg"
+                      class="img-fluid d-block mx-auto header-shadow"
                     />
                   </div>
                 </div>
@@ -82,8 +79,8 @@
                 <div class="row no-gutters">
                   <div class="col-12">
                     <img
-                      src="@/asset/images/index/header/header-csr.png"
-                      class="w-100 img-fluid"
+                      src="@/asset/images/index/header/header-csr.jpg"
+                      class="w-100 img-fluid header-shadow"
                     />
                   </div>
                 </div>
@@ -1306,6 +1303,10 @@ export default {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+}
+.header-shadow{
+  border-radius: 12px;
+  box-shadow: 0 6px 6px 0 rgb(0 0 0 / 20%);
 }
 .wave {
   position: absolute;
