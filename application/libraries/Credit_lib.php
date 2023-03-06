@@ -140,11 +140,11 @@ class Credit_lib{
 
         $this->CI->config->load('credit', TRUE);
         $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_' . $product_id];
-
+        $user_info = $this->CI->user_model->get($user_id);
 	    if($stage_cer == 0) {
             NORMAL_CREDIT:
             $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
-            $user_info = $this->CI->user_model->get($user_id);
+
             $this->CI->load->model('user/user_certification_model');
 
             $data = [];
@@ -163,7 +163,7 @@ class Credit_lib{
                     $sub_product_id,
                     $product_id
                 );
-
+                $school_point = (int) ($get_school_point['school_point'] ?? 0);
                 $total += (int) ($get_school_point['point'] ?? 0);
                 if ( ! empty($get_school_point['score_history']))
                 {
@@ -297,6 +297,12 @@ class Credit_lib{
         }
 
         SKIP_STAGE_CREDIT:
+        $flag_870_points = FALSE;
+        if (( ! isset($school_point) || $school_point <= 150) && $param['points'] > 870)
+        {
+            $param['points'] = 870;
+            $flag_870_points = TRUE;
+        }
         if($mix_credit){
             return $param['points'];
         }
@@ -348,29 +354,8 @@ class Credit_lib{
         // 額度不能「大」於產品的最「大」允許額度
 		$param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
-        // 檢查二審額度調整
-        if (isset($approvalExtra))
+        if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || ( ! empty($credit['level']) && $credit['level'] == 10))
         {
-            $fixed_amount = $approvalExtra->get_fixed_amount();
-            if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE)
-            {
-                goto SKIP_FIXED_AMOUNT;
-            }
-            // 若由二審人員key額度，則該戶信評等級則為上班族貸最低信評：9
-            $param['amount'] = $fixed_amount;
-            $param['level'] = 9;
-            $tmp_remark = json_decode($param['remark'], TRUE);
-            if (isset($tmp_remark['scoreHistory']))
-            {
-                $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
-                $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
-                $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
-            }
-            $param['remark'] = json_encode($tmp_remark);
-        }
-        SKIP_FIXED_AMOUNT:
-
-		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
             return $param;
         }
         $this->CI->credit_model->update_by(
@@ -382,6 +367,10 @@ class Credit_lib{
             ],
             ['status' => 0]
         );
+        if ($flag_870_points === TRUE)
+        {
+            $this->scoreHistory[] = '學校信評分在150（含）以下，信評分數不能超過870（含）分';
+        }
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
@@ -807,7 +796,7 @@ class Credit_lib{
 				}
             }
 		}
-		return ['score_history' => $score_history, 'point' => $point];
+		return ['score_history' => $score_history, 'point' => $point, 'school_point' => $schoolPoing];
 	}
 
 	public function get_job_salary_point($job_salary = 0){
