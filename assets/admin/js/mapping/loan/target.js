@@ -18,6 +18,7 @@ class Target
 		this.setAmount(target);
 		this.setProduct(target);
 		this.setRepayment(target);
+        this.normal_count = target.normal_count;
 	}
 
 	setStatus(target) {

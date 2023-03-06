@@ -898,10 +898,7 @@ class Target extends MY_Admin_Controller {
 
 			$this->load->library('output/user/Virtual_account_output', ['data' => $virtualAccounts]);
 
-			$targets = $this->target_model->get_many_by([
-				"user_id" => $userId,
-				"status NOT" => [8,9]
-			]);
+			$targets = $this->target_model->get_targets_with_normal_transactions_count($userId);
 
 			foreach ($targets as $otherTarget) {
 				$amortization = $this->target_lib->get_amortization_table($otherTarget);

@@ -1138,4 +1138,34 @@ class Target_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
+    public function get_targets_with_normal_transactions_count($user_id)
+    {
+        $sub_query1 = $this->db
+            ->select('limit_date')
+            ->select('instalment_no')
+            ->select('target_id')
+            ->where('user_from', $user_id)
+            ->where('source', SOURCE_AR_PRINCIPAL)
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
+        $sub_query2 = $this->db
+            ->select('t.target_id')
+            ->select('COUNT(1) AS normal_count')
+            ->join("($sub_query1) a", 'a.instalment_no = t.instalment_no AND a.target_id = t.target_id AND a.limit_date >= t.entering_date')
+            ->where('t.user_from', $user_id)
+            ->where('t.source', SOURCE_PRINCIPAL)
+            ->where('t.status', TRANSACTION_STATUS_PAID_OFF)
+            ->group_by('t.target_id')
+            ->get_compiled_select('p2p_transaction.transactions t', TRUE);
+
+        return $this->db
+            ->select('t.*')
+            ->select('IFNULL(tra.normal_count,0) AS normal_count')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query2}) as tra", 'tra.target_id = t.id', 'LEFT')
+            ->where('t.user_id', $user_id)
+            ->where_not_in('status', [TARGET_CANCEL, TARGET_FAIL])
+            ->get()
+            ->result();
+    }
 }

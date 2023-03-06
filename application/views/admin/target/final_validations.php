@@ -821,7 +821,7 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					歸戶案件總覽（僅顯示申請中/還款中/逾期中）
+					歸戶案件總覽（僅顯示申請中/還款中/逾期中/已結案)
 				</div>
 				<div class="panel-body">
 					<div class="row">
@@ -839,6 +839,7 @@
 											<th width="6%">狀態</th>
 											<th width="10%">有效時間</th>
 											<th width="14%">借款原因</th>
+											<th width="14%">非寬限期還款次數</th>
 											<th width="10%">詳情</th>
 										</tr>
 									</thead>
@@ -2037,12 +2038,15 @@
 					$('<td class="fake-fields center-text">').append(pTag),
 					$('<td class="fake-fields center-text">').append(pTag),
 					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
 					$('<td class="fake-fields center-text">').append(pTag)
 				).appendTo("#targets");
 			}
 		}
 
 		function fillTargets(targets) {
+            let count_finished_target = 0,
+                count_normal_transaction = 0;
 			for (var i = 0; i < targets.length; i++) {
 				let target = targets[i];
 				var backgroundColor = target.status.text == '待核可' ? 'bg-danger' : '';
@@ -2062,9 +2066,23 @@
 					getCenterTextCell(target.status.text, backgroundColor),
 					getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
 					getCenterTextCell(target.reason, backgroundColor),
+					getCenterTextCell(target.normal_count, backgroundColor),
 					getCenterTextCell('<a href="/admin/target/detail?id=' + target.id + '" target="_blank"><button class="btn btn-info">詳情</button></a>', backgroundColor)
 				).appendTo("#targets");
+
+                count_normal_transaction += parseInt(target.normal_count);
+                if (target.status.id === '<?= TARGET_REPAYMENTED?>') {
+                    count_finished_target += 1;
+                }
 			}
+
+            $("<tr>").append(
+                `<td colspan="5"></td>` +
+                `<td style="text-align: right">已結案次數</td>` +
+                `<td style="text-align: center">${count_finished_target}</td>` +
+                `<td colspan="2" style="text-align: right">非寬限期還款總次數</td>` +
+                `<td style="text-align: center">${count_normal_transaction}</td>`
+            ).appendTo("#targets");
 		}
 
         function fillTargetMeta(meta) {
