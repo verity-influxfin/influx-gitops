@@ -26,8 +26,8 @@ class PersonalCreditSheet extends CreditSheetBase {
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
 
     // 可評分範圍
-    protected $scoringMin = -1000;
-    protected $scoringMax = 500;
+    protected $scoringMin;
+    protected $scoringMax;
 
     // 還款中案件
     public $repayableTargets;
@@ -90,6 +90,9 @@ class PersonalCreditSheet extends CreditSheetBase {
 
         $this->cashLoanInfo = $cashLoanInfo;
         $this->cashLoanInfo->setCreditSheet($this);
+
+        $this->scoringMin = $this->get_scoring_min($this->target->product_id);
+        $this->scoringMax = $this->get_scoring_max($this->target->product_id);
     }
 
     /**
@@ -116,10 +119,36 @@ class PersonalCreditSheet extends CreditSheetBase {
         $response['creditLineInfo']['interestTypeList'] = $this->creditLineInfo->getInterestTypeList();
         $response['creditLineInfo']['applyLineTypeList'] = $this->creditLineInfo->getApplyLineTypeList();
         $response['creditLineInfo']['reviewerList'] = $this->creditLineInfo->getReviewerList();
-        $response['creditLineInfo']['scoringMin'] = $this->scoringMin;
-        $response['creditLineInfo']['scoringMax'] = $this->scoringMax;
+        $response['creditLineInfo']['scoringMin'] = $this->get_scoring_min($this->target->product_id);
+        $response['creditLineInfo']['scoringMax'] = $this->get_scoring_max($this->target->product_id);
 
         return $response;
+    }
+
+    private function get_scoring_min($product_id): int
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_STUDENT:
+                return -1500;
+            case PRODUCT_ID_SALARY_MAN:
+                return -1000;
+            default:
+                return 0;
+        }
+    }
+
+    private function get_scoring_max($product_id): int
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_STUDENT:
+                return 2000;
+            case PRODUCT_ID_SALARY_MAN:
+                return 1000;
+            default:
+                return 0;
+        }
     }
 
     /**

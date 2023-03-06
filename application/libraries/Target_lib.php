@@ -340,6 +340,12 @@ class Target_lib
             if ($credit) {
                 $creditSheet = CreditSheetFactory::getInstance($target->id);
                 $interest_rate = $credit['rate'];
+                if ($renew && $target->product_id == PRODUCT_ID_STUDENT)
+                {
+                    // 學生貸：二審人員調整欄位
+                    // 調盩分數後，依據調整後的信評分數給予新的信評等級，並算出新的額度 （上限為15萬）；但利率不變，為調整信評分數前之利率
+                    $interest_rate = $target->interest_rate;
+                }
                 if ($interest_rate) {
                     $used_amount = 0;
                     $other_used_amount = 0;

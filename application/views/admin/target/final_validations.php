@@ -909,8 +909,8 @@
 						<div class="col-lg-12 text-center">
                             分數調整:
 							<input id="credit_test" type="text" name="score" value="0" / disabled>
-                            額度調整:
-                            <input id="credit_test_fixed_amount" type="text" name="credit_test_fixed_amount" value="0" disabled>
+                            <span class="fixed_amount_block">額度調整:</span>
+                            <input id="credit_test_fixed_amount" type="text" name="credit_test_fixed_amount" value="0" disabled class="fixed_amount_block">
 							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
                             <input type="text" name="is_top_enterprise" value="0" hidden>
 							<button class="btn btn-warning need_chk_before_approve" type="submit">額度試算</button>
@@ -978,10 +978,10 @@
 								<span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1"
 										disabled></span>
 							</div>
-                            <div>
+                            <div class="fixed_amount_block">
 								<span style="width:30%;">
 									<span>額度調整</span>
-									<span class="fixed_amount"></span>
+									<span class="amount_range"></span>
 									<span>：</span>
 								</span>
                                 <span style="width:70%;"><input id="2_fixed_amount" type="number" value="0" min="0" step="1"
@@ -1461,19 +1461,15 @@
 				fillTargetMeta(response.response.target_meta);
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
-                fillFixedAmountRange(response.response.credits.product);
+
+                if (response.response.target.product.id === '1') {
+                    $('.fixed_amount_block').css('display', 'none');
+                }
 			},
 			error: function (error) {
 				alert('資料載入失敗。請重新整理。');
 			}
 		});
-
-        function fillFixedAmountRange(product_info) {
-            $('#2_fixed_amount').attr({
-                'max': product_info.loan_range_e,
-                'min': product_info.loan_range_s
-            });
-        }
 
 		// 取得案件核貸資料
 		case_aprove_item = get_default_item(caseId);
@@ -1517,6 +1513,16 @@
                     `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 		}
+
+        if (case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_min") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_max")) {
+            $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
+            $(`#2_fixed_amount`).attr({
+                "max": case_aprove_item.creditLineInfo.fixed_amount_max,
+                "min": case_aprove_item.creditLineInfo.fixed_amount_min,
+                "onblur": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.fixed_amount_min}){value=${case_aprove_item.creditLineInfo.fixed_amount_min}}`
+            });
+        }
 
 		// 取得案件核貸資料
 		case_aprove_data = get_report_data(caseId);
@@ -1578,9 +1584,13 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
-        $('#2_fixed_amount').change(function () {
+        $('#2_fixed_amount').on('blur', function () {
+            let fixed_amount = parseInt($(this).val());
+            if (fixed_amount <= 0) {
+                return;
+            }
             $('div.opinion_button button.score').prop('disabled', true);
-            $('#credit_test_fixed_amount').val(parseInt($(this).val()));
+            $('#credit_test_fixed_amount').val(fixed_amount);
         });
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
