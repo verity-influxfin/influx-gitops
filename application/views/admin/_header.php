@@ -78,6 +78,8 @@
 			$('.fancyframe').fancybox({
 				'type':'iframe',
 			});
+                        
+                        $('a[data-fancybox="images"]').fancybox();
 
             var RotateImage = function (instance) {
                 this.instance = instance;
