@@ -124,7 +124,7 @@
     </div>
     <div class="company-roadmap">
       <div class="roadmap-title">發展歷程</div>
-      <div class="swiper-container  d-md-block d-none">
+      <div class="swiper-container d-md-block d-none">
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper">
           <!-- Slides -->
@@ -151,50 +151,98 @@
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">致力ESG</div>
                 <div>
-                  •2/10運用金融科技攜手知名藝人張鈞甯<br />
-                  &nbsp;&nbsp;透過手機APP線上協助台大兒童醫院募捐
+                  •<span class="color-primary">2/10</span>運用<span
+                    class="color-primary"
+                    >金融科技</span
+                  >攜手知名藝人<span class="color-primary">張鈞甯</span><br />
+                  &nbsp;&nbsp;透過手機APP線上協助<span class="color-primary"
+                    >台大兒童醫院</span
+                  >募捐
                 </div>
                 <div>
-                  •6/30受邀新北市一金二造三區域_金融科<br />
+                  •<span class="color-primary">6/30</span>受邀新北市<span
+                    class="color-primary"
+                    >一金二造三區域</span
+                  >_金融科<br />
                   &nbsp;&nbsp;技業者出席政策規劃，共同打造國際
                   &nbsp;&nbsp;經濟重鎮
                 </div>
                 <div>
-                  •7/30回饋台北大學母校，捐贈1200萬<br />&nbsp;&nbsp;興建教室
+                  •<span class="color-primary">7/30</span
+                  >回饋台北大學母校，捐贈<span class="color-primary"
+                    >1200萬</span
+                  ><br />&nbsp;&nbsp;興建教室
                 </div>
-                <div>•會員數突破10萬人才</div>
+                <div>
+                  •會員數突破<span class="color-primary">10萬人次</span>
+                </div>
               </div>
             </div>
             <div class="roadmap-item item-2">
               <div class="roadmap-item-title">2021</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">創新生態</div>
-                <div>•攜手王道銀行共同行銷信貸產品</div>
-                <div>•會員數突破7萬人次</div>
-                <div>•新光金控創投入資為股東</div>
-                <div>•聯手新光銀行推出全線上中小企業</div>
-                <div>•信保融資平台，實現普惠金融</div>
+                <div>
+                  •攜手<span class="color-primary">王道銀行</span
+                  >共同行銷信貸產品
+                </div>
+                <div>•會員數突破<span class="color-primary">7萬人次</span></div>
+                <div>
+                  •<span class="color-primary">新光金控創投</span>入資為股東
+                </div>
+                <div>
+                  •聯手<span class="color-primary">新光銀行</span>推出<span
+                    class="color-primary"
+                    >全線上中小企業</span
+                  >
+                </div>
+                <div>
+                  •<span class="color-primary">信保融資平台</span>，實現普惠金融
+                </div>
               </div>
             </div>
             <div class="roadmap-item item-3">
               <div class="roadmap-item-title">2020</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">聯盟銀行</div>
-                <div>•聯手上海銀行推廣信貸及數存產品</div>
-                <div>•會員數突破6萬人次</div>
-                <div>•取得個人身分驗證裝置系統專利權</div>
-                <div>•領銜主辦第二屆全國AI金融科技競賽</div>
+                <div>
+                  •聯手<span class="color-primary">上海銀行</span
+                  >推廣信貸及數存產品
+                </div>
+                <div>•會員數突破<span class="color-primary">6萬人次</span></div>
+                <div>
+                  •取得<span class="color-primary"
+                    >個人身分驗證裝置系統專利權</span
+                  >
+                </div>
+                <div>
+                  •領銜主辦<span class="color-primary"
+                    >第二屆全國AI金融科技競賽</span
+                  >
+                </div>
               </div>
             </div>
             <div class="roadmap-item item-4">
               <div class="roadmap-item-title">2019</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">創新金融科技</div>
-                <div>•攜手凱基銀行共同行銷信貸產品</div>
-                <div>•創新上班族、分期超市無人化自動風控</div>
-                <div>•經FTS金融總會評鑑市值破億未來獨角獸</div>
+                <div>
+                  •攜手<span class="color-primary">凱基銀行</span
+                  >共同行銷信貸產品
+                </div>
+                <div>
+                  •創新<span class="color-primary"
+                    >上班族、分期超市無人化自動風控</span
+                  >
+                </div>
+                <div>
+                  •經FTS金融總會評鑑<span class="color-primary">市值破億</span
+                  >未來獨角獸
+                </div>
                 <div>•聯盟六大校五大金融機構主辦</div>
-                <div>•第一屆全國AI金融科技競賽</div>
+                <div>
+                  •<span class="color-primary">第一屆全國AI金融科技競賽</span>
+                </div>
               </div>
             </div>
           </div>
@@ -237,22 +285,37 @@
               <div class="roadmap-item-title">2018</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">系統建構</div>
-                <div>•納入金管會/FTS輔導之新創團隊</div>
                 <div>
-                  •推出全台第一個AI無人化風控審核<br />&nbsp;&nbsp;學生貸產品
+                  •納入<span class="color-primary">金管會/FTS</span
+                  >輔導之新創團隊
                 </div>
-                <div>•推出資金競標媒合系統</div>
-                <div>•首創金融科技債權轉讓系統</div>
-                <div>•受聘高科、東吳、北商大<br />&nbsp;&nbsp;金融科技顧問</div>
+                <div>
+                  •推出<span class="color-primary"
+                    >全台第一個AI無人化風控審核<br />&nbsp;&nbsp;學生貸產品</span
+                  >
+                </div>
+                <div>
+                  •推出<span class="color-primary">資金競標媒合系統</span>
+                </div>
+                <div>
+                  •首創<span class="color-primary">金融科技債權轉讓系統</span>
+                </div>
+                <div>
+                  •受聘<span class="color-primary"
+                    >高科、東吳、北商大<br />&nbsp;&nbsp;金融科技顧問</span
+                  >
+                </div>
               </div>
             </div>
             <div class="roadmap-item item-6">
               <div class="roadmap-item-title">2017</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">普匯啟航</div>
-                <div>•12月公司成立</div>
-                <div>•工研院納入輔導團隊</div>
-                <div>•榮獲亞洲矽谷輔導</div>
+                <div>•<span class="color-primary">12月</span>公司成立</div>
+                <div>
+                  •<span class="color-primary">工研院</span>納入輔導團隊
+                </div>
+                <div>•榮獲<span class="color-primary">亞洲矽谷</span>輔導</div>
               </div>
             </div>
           </div>
@@ -286,18 +349,31 @@
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">致力ESG</div>
                 <div>
-                  •2/10運用金融科技攜手知名藝人張鈞甯<br />
-                  &nbsp;&nbsp;透過手機APP線上協助台大兒童醫院募捐
+                  •<span class="color-primary">2/10</span>
+                  運用
+                  <span class="color-primary">金融科技</span>攜手知名藝人
+                  <span class="color-primary">張鈞甯</span><br />
+                  &nbsp;&nbsp;透過手機APP線上協助
+                  <span class="color-primary">台大兒童醫院</span>募捐
                 </div>
                 <div>
-                  •6/30受邀新北市一金二造三區域_金融科<br />
+                  •<span class="color-primary">6/30</span> 受邀新北市<span
+                    class="color-primary"
+                    >一金二造三區域</span
+                  >_金融科<br />
                   &nbsp;&nbsp;技業者出席政策規劃，共同打造國際
                   &nbsp;&nbsp;經濟重鎮
                 </div>
                 <div>
-                  •7/30回饋台北大學母校，捐贈1200萬<br />&nbsp;&nbsp;興建教室
+                  •<span class="color-primary">7/30</span>
+                  回饋台北大學母校，捐贈<span class="color-primary"
+                    >1200萬</span
+                  >
+                  <br />&nbsp;&nbsp;興建教室
                 </div>
-                <div>•會員數突破10萬人才</div>
+                <div>
+                  •會員數突破<span class="color-primary">10萬人次</span>
+                </div>
               </div>
             </div>
           </div>
@@ -323,11 +399,23 @@
               <div class="roadmap-item-title">2021</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">創新生態</div>
-                <div>•攜手王道銀行共同行銷信貸產品</div>
-                <div>•會員數突破7萬人次</div>
-                <div>•新光金控創投入資為股東</div>
-                <div>•聯手新光銀行推出全線上中小企業</div>
-                <div>•信保融資平台，實現普惠金融</div>
+                <div>
+                  •攜手<span class="color-primary">王道銀行</span
+                  >共同行銷信貸產品
+                </div>
+                <div>•會員數突破<span class="color-primary">7萬人次</span></div>
+                <div>
+                  •<span class="color-primary">新光金控創投</span>入資為股東
+                </div>
+                <div>
+                  •聯手<span class="color-primary">新光銀行</span>推出<span
+                    class="color-primary"
+                    >全線上中小企業</span
+                  >
+                </div>
+                <div>
+                  •<span class="color-primary">信保融資平台</span>，實現普惠金融
+                </div>
               </div>
             </div>
           </div>
@@ -353,10 +441,21 @@
               <div class="roadmap-item-title">2020</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">聯盟銀行</div>
-                <div>•聯手上海銀行推廣信貸及數存產品</div>
-                <div>•會員數突破6萬人次</div>
-                <div>•取得個人身分驗證裝置系統專利權</div>
-                <div>•領銜主辦第二屆全國AI金融科技競賽</div>
+                <div>
+                  •聯手<span class="color-primary">上海銀行</span
+                  >推廣信貸及數存產品
+                </div>
+                <div>•會員數突破<span class="color-primary">6萬人次</span></div>
+                <div>
+                  •取得<span class="color-primary"
+                    >個人身分驗證裝置系統專利權</span
+                  >
+                </div>
+                <div>
+                  •領銜主辦<span class="color-primary"
+                    >第二屆全國AI金融科技競賽</span
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -382,11 +481,23 @@
               <div class="roadmap-item-title">2019</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">創新金融科技</div>
-                <div>•攜手凱基銀行共同行銷信貸產品</div>
-                <div>•創新上班族、分期超市無人化自動風控</div>
-                <div>•經FTS金融總會評鑑市值破億未來獨角獸</div>
+                <div>
+                  •攜手<span class="color-primary">凱基銀行</span
+                  >共同行銷信貸產品
+                </div>
+                <div>
+                  •創新<span class="color-primary"
+                    >上班族、分期超市無人化自動風控</span
+                  >
+                </div>
+                <div>
+                  •經FTS金融總會評鑑<span class="color-primary">市值破億</span
+                  >未來獨角獸
+                </div>
                 <div>•聯盟六大校五大金融機構主辦</div>
-                <div>•第一屆全國AI金融科技競賽</div>
+                <div>
+                  •<span class="color-primary">第一屆全國AI金融科技競賽</span>
+                </div>
               </div>
             </div>
           </div>
@@ -429,13 +540,26 @@
               <div class="roadmap-item-title">2018</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">系統建構</div>
-                <div>•納入金管會/FTS輔導之新創團隊</div>
                 <div>
-                  •推出全台第一個AI無人化風控審核<br />&nbsp;&nbsp;學生貸產品
+                  •納入<span class="color-primary">金管會/FTS</span
+                  >輔導之新創團隊
                 </div>
-                <div>•推出資金競標媒合系統</div>
-                <div>•首創金融科技債權轉讓系統</div>
-                <div>•受聘高科、東吳、北商大<br />&nbsp;&nbsp;金融科技顧問</div>
+                <div>
+                  •推出<span class="color-primary"
+                    >全台第一個AI無人化風控審核<br />&nbsp;&nbsp;學生貸產品</span
+                  >
+                </div>
+                <div>
+                  •推出<span class="color-primary">資金競標媒合系統</span>
+                </div>
+                <div>
+                  •首創<span class="color-primary">金融科技債權轉讓系統</span>
+                </div>
+                <div>
+                  •受聘<span class="color-primary"
+                    >高科、東吳、北商大<br />&nbsp;&nbsp;金融科技顧問</span
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -478,9 +602,11 @@
               <div class="roadmap-item-title">2017</div>
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">普匯啟航</div>
-                <div>•12月公司成立</div>
-                <div>•工研院納入輔導團隊</div>
-                <div>•榮獲亞洲矽谷輔導</div>
+                <div>•<span class="color-primary">12月</span>公司成立</div>
+                <div>
+                  •<span class="color-primary">工研院</span>納入輔導團隊
+                </div>
+                <div>•榮獲<span class="color-primary">亞洲矽谷</span>輔導</div>
               </div>
             </div>
           </div>
@@ -1260,30 +1386,22 @@ export default {
       }
     }
     .company-roadmap {
-      &::before {
-        background-image: url('~images/company/company-roadmap-bg-phone.svg');
-        height: 240px;
-        width: 100%;
-        background-position: left center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        content: '';
-        position: absolute;
-        top: -80px;
-      }
-      background-image: none;
-      background-color: #f3f9fc;
+      background-image: url('~images/company/company-roadmap-bg-phone.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-color: #fff;
+      background-position: left top;
       height: 700px;
       width: 100%;
       margin: 10px auto 30px;
       .roadmap-title {
-        top: 35px;
+        top: 95px;
         left: calc(50% - 56px);
         font-size: 28px;
       }
       .swiper-container {
         position: relative;
-        height: 640px;
+        height: 680px;
         width: auto;
         top: 0;
         left: 0;
@@ -1292,7 +1410,7 @@ export default {
         padding: 0 0 0 30px;
       }
       .svg-path {
-        top: 250px;
+        top: 273px;
         left: -57px;
         z-index: 1;
       }
@@ -1300,7 +1418,7 @@ export default {
         padding: 30px 0;
         gap: 58px;
         &.item-1 {
-          margin-top: 115px;
+          margin-top: 140px;
           margin-left: 15px;
           .roadmap-item-title::before {
             content: '';
@@ -1313,22 +1431,23 @@ export default {
           }
         }
         &.item-2 {
-          margin-top: 153px;
+          margin-top: 181px;
           left: 44px;
         }
         &.item-3 {
           margin-left: 46px;
+          top: 139px;
         }
         &.item-4 {
-          margin-top: 153px;
-          left: 44px;
+          margin-top: 181px;
+          left: 30px;
         }
         &.item-5 {
-          margin-top: 112px;
-          margin-left: 50px;
+          margin-top: 134px;
+          margin-left: 41px;
         }
         &.item-6 {
-          margin-top: 193px;
+          margin-top: 219px;
           left: 64px;
         }
         &-content {
