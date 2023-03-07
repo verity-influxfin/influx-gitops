@@ -672,42 +672,42 @@
               <div class="img-group">
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/j1.jpg"
+                    src="@/asset/images/index/J1.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/j2.jpg"
+                    src="@/asset/images/index/J2.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/j3.jpg"
+                    src="@/asset/images/index/J3.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/j4.jpg"
+                    src="@/asset/images/index/J4.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/j5.jpg"
+                    src="@/asset/images/index/J5.jpg"
                     alt=""
                     class="img-fluid"
                   />
                 </div>
                 <div class="img-item">
                   <img
-                    src="@/asset/images/index/j6.jpg"
+                    src="@/asset/images/index/J6.jpg"
                     alt=""
                     class="img-fluid"
                   />
