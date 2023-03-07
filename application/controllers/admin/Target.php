@@ -151,7 +151,7 @@ class Target extends MY_Admin_Controller {
 		if(!empty($where)||isset($input['status'])&&$input['status']==99){
             isset($input['sdate'])&&$input['sdate']!=''?$where['created_at >=']=strtotime($input['sdate']):'';
             isset($input['edate'])&&$input['edate']!=''?$where['created_at <=']=strtotime($input['edate']):'';
-			$list = $this->target_model->get_many_by($where);
+			$list = $this->target_model->get_list($where);
 			$tmp  = [];
 			if($list){
                 $this->load->model('user/user_meta_model');
@@ -211,6 +211,7 @@ class Target extends MY_Admin_Controller {
                     $this->load->library('credit_lib');
                     $remain_amount = $this->credit_lib->get_remain_amount($value->user_id, $value->product_id, $value->sub_product_id);
                     $list[$key]->remain_amount = $remain_amount['instalment'] == $value->instalment ? $remain_amount['user_available_amount'] : '-';
+                    $list[$key]->review_by = isset($value->credit_sheet_reviewer) ? '人工' : '系統';
                 }
 			}
 		}
