@@ -29,6 +29,10 @@ class PersonalCreditSheet extends CreditSheetBase {
     protected $scoringMin;
     protected $scoringMax;
 
+    // 可調整額度範圍
+    protected $fixed_amount_min;
+    protected $fixed_amount_max;
+
     // 還款中案件
     public $repayableTargets;
 
@@ -93,6 +97,9 @@ class PersonalCreditSheet extends CreditSheetBase {
 
         $this->scoringMin = $this->get_scoring_min($this->target->product_id);
         $this->scoringMax = $this->get_scoring_max($this->target->product_id);
+
+        $this->fixed_amount_min = $this->get_fixed_amount_min($this->target->product_id);
+        $this->fixed_amount_max = $this->get_fixed_amount_max($this->target->product_id);
     }
 
     /**
@@ -121,6 +128,8 @@ class PersonalCreditSheet extends CreditSheetBase {
         $response['creditLineInfo']['reviewerList'] = $this->creditLineInfo->getReviewerList();
         $response['creditLineInfo']['scoringMin'] = $this->get_scoring_min($this->target->product_id);
         $response['creditLineInfo']['scoringMax'] = $this->get_scoring_max($this->target->product_id);
+        $response['creditLineInfo']['fixed_amount_min'] = $this->get_fixed_amount_min($this->target->product_id);
+        $response['creditLineInfo']['fixed_amount_max'] = $this->get_fixed_amount_max($this->target->product_id);
 
         return $response;
     }
@@ -146,6 +155,28 @@ class PersonalCreditSheet extends CreditSheetBase {
                 return 2000;
             case PRODUCT_ID_SALARY_MAN:
                 return 1000;
+            default:
+                return 0;
+        }
+    }
+
+    private function get_fixed_amount_min($product_id): int
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_SALARY_MAN:
+                return 10000;
+            default:
+                return 0;
+        }
+    }
+
+    private function get_fixed_amount_max($product_id): int
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_SALARY_MAN:
+                return 20000;
             default:
                 return 0;
         }
@@ -286,7 +317,7 @@ class PersonalCreditSheet extends CreditSheetBase {
         $remark = (empty($this->target->remark) ? '' : $this->target->remark);
 
         if (isset($estimatedCredit) && $estimatedCredit !== False && isset($credit) &&
-                ($estimatedCredit["amount"] != $credit['amount']
+                ( ! $credit || $estimatedCredit["amount"] != $credit['amount']
                 || $estimatedCredit["points"] != $credit['points']
                 || $estimatedCredit["level"] != $credit['level'])
         ) {

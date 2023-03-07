@@ -1462,8 +1462,17 @@
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
 
-                if (response.response.target.product.id === '1') {
+                if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
                     $('.fixed_amount_block').css('display', 'none');
+                } else if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
+                    let today = new Date();
+                    let new_date = new Date(user.birthday);
+                    let eligible_year = 35;
+                    new_date.setFullYear(new_date.getFullYear() + eligible_year);
+                    if (new_date <= today) {
+                        $('.fixed_amount_block input').prop('disabled', true);
+                        $('#2_fixed_amount').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
+                    }
                 }
 			},
 			error: function (error) {

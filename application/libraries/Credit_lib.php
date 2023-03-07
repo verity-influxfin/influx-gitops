@@ -612,9 +612,11 @@ class Credit_lib{
             {
                 goto SKIP_FIXED_AMOUNT;
             }
-            // 若由二審人員key額度，則該戶信評等級則為上班族貸最低信評：9
+            // 由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
+            $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
             $param['amount'] = $fixed_amount;
             $param['level'] = 9;
+            $param['points'] = $credit_level_config[$param['level']]['start'];
             $tmp_remark = json_decode($param['remark'], TRUE);
             if (isset($tmp_remark['scoreHistory']))
             {
@@ -796,7 +798,7 @@ class Credit_lib{
 				}
             }
 		}
-		return ['score_history' => $score_history, 'point' => $point, 'school_point' => $schoolPoing];
+		return ['score_history' => $score_history, 'point' => $point, 'school_point' => $schoolPoing ?? 0];
 	}
 
 	public function get_job_salary_point($job_salary = 0){
