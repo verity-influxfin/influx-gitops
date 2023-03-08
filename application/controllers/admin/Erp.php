@@ -543,4 +543,45 @@ class ERP extends MY_Admin_Controller
             ]
         );
     }
+    /**
+     * 發票資料查詢 UI
+     * 
+     * @created_at      2023-03-07
+     * @updated_by      Allan
+     */
+    public function receipt(){
+        $this->load->view(
+            'admin/erp/receipt',
+            $data = [
+                'menu'      => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts'   => [
+                    '/assets/admin/js/erp/receipt.js'
+                ]
+            ]
+        );
+    }
+    public function get_receipt()
+    {
+        $data = $this->erp_client->request('GET', 'receipt', [
+            'query' => $this->input->get()
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+    public function receipt_spreadsheet()
+    {
+        $res = $this->erp_client->request('GET', 'receipt/excel', [
+            'query' => $this->input->get()
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        setcookie('fileDownload', 'true', 0, '/');
+        echo $data;
+        die();
+    } 
 }
