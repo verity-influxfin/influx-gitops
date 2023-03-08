@@ -72,6 +72,7 @@ abstract class Approve_base implements Approve_interface
         $subloan_status = (bool) preg_match('/' . $subloan_list . '/', $this->target['target_no']);
 
         // 核可前的行為
+        $this->user_certs = $this->get_user_cert($this->target_user_id, $this->target_product_id, $this->target);
         if ($this->check_before_approve() === FALSE)
         {
             goto END;
@@ -84,7 +85,6 @@ abstract class Approve_base implements Approve_interface
         }
 
         // 檢查使用者提交的徵信項，沒完成不繼續
-        $this->user_certs = $this->get_user_cert($this->target_user_id, $this->target_product_id, $this->target);
         if ($this->check_cert($this->user_certs) === FALSE)
         {
             goto END;
