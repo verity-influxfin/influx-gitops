@@ -413,6 +413,20 @@ class Target_lib
                                     goto FORCE_SECOND_INSTANCE;
                                 }
 
+                                // #2779: 若信評分數0-450，進二審審核
+                                if (isset($credit['points']) && $credit['points'] <= 450)
+                                {
+                                    goto FORCE_SECOND_INSTANCE;
+                                }
+
+                                // #2779: 命中黑名單學校進二審審核
+                                $school_config = $this->CI->config->item('school_points');
+                                $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
+                                if (in_array($info->meta_value, $school_config['lock_school']))
+                                {
+                                    goto FORCE_SECOND_INSTANCE;
+                                }
+
                                 if (
                                     // 命中反詐欺或黑名單，一定要進待二審
                                     ! $matchBrookesia && (

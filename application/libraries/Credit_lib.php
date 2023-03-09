@@ -348,7 +348,8 @@ class Credit_lib{
         // 額度不能「大」於產品的最「大」允許額度
 		$param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
-		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
+		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || ( ! empty($credit['level']) && $credit['level'] == 10))
+        {
             return $param;
         }
         $this->CI->credit_model->update_by(
@@ -940,8 +941,14 @@ class Credit_lib{
                 {
                     $school_points_data = $this->get_school_point($info->meta_value);
                     $school_config = $this->CI->config->item('school_points');
-                    // 黑名單的學校額度是0
-                    if(in_array($info->meta_value,$school_config['lock_school']) || empty($school_points_data['point'])){
+                    // #2779: 命中黑名單學校給予固定信評為10、固定額度3,000元
+                    if (in_array($info->meta_value, $school_config['lock_school']))
+                    {
+                        $data['amount'] = 3000;
+                        $data['level'] = 10;
+                    }
+                    elseif (empty($school_points_data['point']))
+                    {
                         $data['amount'] = 0;
                     }
 				}
