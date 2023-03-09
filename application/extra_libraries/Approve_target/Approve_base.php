@@ -701,7 +701,6 @@ abstract class Approve_base implements Approve_interface
         $this->target_product_id = $this->get_target_product_id();
         $this->target_sub_product_id = $this->get_target_sub_product_id();
         $this->target_user_id = $this->get_target_user_id();
-        $this->user_certs = $this->get_user_cert($this->target_user_id, $this->target_product_id, $this->target);
     }
 
     /**
@@ -759,6 +758,7 @@ abstract class Approve_base implements Approve_interface
 
         // 取得使用者提交的徵信項
         $this->set_product_config_cert();
+        $this->user_certs = $this->get_user_cert($this->target_user_id, $this->target_product_id, $this->target);
         return TRUE;
     }
 
