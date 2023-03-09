@@ -84,6 +84,7 @@ class Risk extends MY_Admin_Controller {
         {
             $main_product_info = $this->product_lib->get_product_info($product_id);
             $sub_product_id = $main_product_info['sub_product'];
+            $sub_product_id[] = SUB_PRODUCT_GENERAL;
         }
         elseif ($product_id == PRODUCT_ID_SALARY_MAN)
         {
@@ -95,6 +96,7 @@ class Risk extends MY_Admin_Controller {
             {
                 $main_product_info = $this->product_lib->get_product_info($product_id);
                 $sub_product_id = array_diff($main_product_info['sub_product'], [STAGE_CER_TARGET]);
+                $sub_product_id[] = SUB_PRODUCT_GENERAL;
             }
         }
         else
