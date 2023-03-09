@@ -72,7 +72,6 @@ abstract class Approve_base implements Approve_interface
         $subloan_status = (bool) preg_match('/' . $subloan_list . '/', $this->target['target_no']);
 
         // 核可前的行為
-        $this->user_certs = $this->get_user_cert($this->target_user_id, $this->target_product_id, $this->target);
         if ($this->check_before_approve() === FALSE)
         {
             goto END;
@@ -702,6 +701,7 @@ abstract class Approve_base implements Approve_interface
         $this->target_product_id = $this->get_target_product_id();
         $this->target_sub_product_id = $this->get_target_sub_product_id();
         $this->target_user_id = $this->get_target_user_id();
+        $this->user_certs = $this->get_user_cert($this->target_user_id, $this->target_product_id, $this->target);
     }
 
     /**
