@@ -72,7 +72,6 @@ abstract class Approve_base implements Approve_interface
         $subloan_status = (bool) preg_match('/' . $subloan_list . '/', $this->target['target_no']);
 
         // 核可前的行為
-        $this->user_certs = $this->get_user_cert($this->target_user_id, $this->target_product_id, $this->target);
         if ($this->check_before_approve() === FALSE)
         {
             goto END;
@@ -737,16 +736,20 @@ abstract class Approve_base implements Approve_interface
      */
     private function check_before_approve(): bool
     {
+        // 取得案件基本資訊
+        $this->target = $this->CI->target_model->as_array()->get($this->target['id']);
+        $this->assign_property();
+
+        // 取得使用者提交的徵信項
+        $this->set_product_config_cert();
+        $this->user_certs = $this->get_user_cert($this->target_user_id, $this->target_product_id, $this->target);
+
         // 檢查案件是否可核可
         if ($this->can_approve() === FALSE)
         {
             $this->result->set_action_cancel();
             return FALSE;
         }
-
-        // 取得案件基本資訊
-        $this->target = $this->CI->target_model->as_array()->get($this->target['id']);
-        $this->assign_property();
 
         // 取得產品設定
         $this->product_config = $this->get_product_config($this->target_product_id, $this->target_sub_product_id);
@@ -756,9 +759,6 @@ abstract class Approve_base implements Approve_interface
             $this->result->set_action_cancel();
             return FALSE;
         }
-
-        // 取得使用者提交的徵信項
-        $this->set_product_config_cert();
         return TRUE;
     }
 
