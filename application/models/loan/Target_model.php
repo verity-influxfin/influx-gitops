@@ -1137,13 +1137,13 @@ class Target_model extends MY_Model
                     SELECT SUM(`amount`) AS `amount`,`user_from`
                     FROM `p2p_transaction`.`transactions`
                     WHERE `user_from` IN ({$user_ids_implode})
-                    AND `created_at` BETWEEN {$time_after} AND {$time_before}
+                    AND `created_at` < {$time_before}
                     AND `source` = 12
                     AND `status` = 2
                     GROUP BY `user_from`
                 ) `tr` ON `tr`.`user_from` = `t`.`user_id`
                 WHERE `t`.`user_id` IN ({$user_ids_implode})
-                AND `t`.`created_at` BETWEEN {$time_after} AND {$time_before}
+                AND `t`.`created_at` < {$time_before}
                 AND `t`.`status` IN (5,10)
                 GROUP BY `t`.`user_id`
             ) `a` 
