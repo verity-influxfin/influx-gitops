@@ -514,7 +514,7 @@ class Qrcode_lib
      * @param bool $merge_subcode: 是否合併 subcode 資訊至主推薦碼
      * @return array
      */
-    public function get_promoted_reward_info(array $where, string $start_date = '', string $end_date = '', int $limit = 0, int $offset = 0, bool $filter_delayed = FALSE, bool $merge_subcode = TRUE): array
+    public function get_promoted_reward_info(array $where, string $start_date = '', string $end_date = '', int $limit = 0, int $offset = 0, bool $filter_delayed = FALSE, bool $merge_subcode = TRUE, bool $get_outputs_before_merge = FALSE): array
     {
         $this->CI->load->library('user_lib');
 
@@ -540,6 +540,13 @@ class Qrcode_lib
             $where = ['id' => array_values($user_qrcode_id_list)];
             $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where,
                 $start_date, $end_date, $limit, $offset, $filter_delayed);
+        }
+        if ($get_outputs_before_merge) {
+            return [
+                $subcode_reward_list,
+                $subcode_list,
+                $main_qrcode_reward_list,
+            ];
         }
 
         if($merge_subcode)
@@ -701,7 +708,16 @@ class Qrcode_lib
 
         $where = ['user_id' => $master_user_id, 'status' => [PROMOTE_STATUS_AVAILABLE],
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
-        $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
+        
+        // $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
+        list($_subcode_reward_list, $_subcode_list, $_main_qrcode_reward_list) = $this->CI->qrcode_lib->get_promoted_reward_info($where, '', '', 0, 0, FALSE, TRUE, TRUE);
+        foreach ($_subcode_reward_list as $_subcode_reward) {
+            $_user_qrcode_id = $_subcode_reward['info']['id'];
+            $_main_qrcode_id = $_subcode_list[$_user_qrcode_id]['master_user_qrcode_id'];
+            $_main_qrcode_reward_list[$_main_qrcode_id] = $this->merge_reward_info($_main_qrcode_reward_list[$_main_qrcode_id], $_subcode_reward);
+        }
+        $user_qrcode = $_main_qrcode_reward_list;
+
         if (!isset($user_qrcode) || empty($user_qrcode))
         {
             throw new \Exception('該推薦碼不存在', PROMOTE_CODE_NOT_EXIST);
@@ -754,7 +770,9 @@ class Qrcode_lib
         $where['status'] = [PROMOTE_STATUS_AVAILABLE];
         $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
-        $user_qrcode_list = $this->CI->qrcode_lib->get_promoted_reward_info($where, $start_time ?? '', $end_time ?? '', 0, 0, FALSE, FALSE);
+        // $user_qrcode_list = $this->CI->qrcode_lib->get_promoted_reward_info($where, $start_time ?? '', $end_time ?? '', 0, 0, FALSE, FALSE);
+        $user_qrcode_list = array_merge($_main_qrcode_reward_list, $_subcode_reward_list);
+
         $user_subcode_list = $this->CI->qrcode_lib->get_subcode_list($master_user_id, [], ['status' => PROMOTE_STATUS_AVAILABLE]);
         $user_subcode_list = array_column($user_subcode_list, NULL, 'user_qrcode_id');
 
