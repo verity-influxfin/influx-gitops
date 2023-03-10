@@ -1145,13 +1145,15 @@ class Target_model extends MY_Model
             ->select('limit_date')
             ->select('instalment_no')
             ->select('target_id')
+            ->select('status')
             ->where('user_from', $user_id)
             ->where('source', SOURCE_AR_PRINCIPAL)
+            ->where('id IN (SELECT MIN(id) FROM p2p_transaction.transactions GROUP BY target_id,instalment_no)')
             ->get_compiled_select('p2p_transaction.transactions', TRUE);
         $sub_query2 = $this->db
             ->select('t.target_id')
             ->select('COUNT(1) AS normal_count')
-            ->join("($sub_query1) a", 'a.instalment_no = t.instalment_no AND a.target_id = t.target_id AND a.limit_date >= t.entering_date')
+            ->join("($sub_query1) a", 'a.instalment_no = t.instalment_no AND a.target_id = t.target_id AND a.limit_date >= t.entering_date and a.status = ' . TRANSACTION_STATUS_PAID_OFF)
             ->where('t.user_from', $user_id)
             ->where('t.source', SOURCE_PRINCIPAL)
             ->where('t.status', TRANSACTION_STATUS_PAID_OFF)
