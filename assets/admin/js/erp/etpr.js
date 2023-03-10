@@ -19,12 +19,6 @@ var app = new Vue({
         $('#end_date').datepicker({
             'format': 'yyyy-mm-dd',
         }).on('change', function () { self.searchform.end_date = this.value });
-        setInterval(() => {
-            if (document.cookie.includes('fileDownload=true')) {
-                self.is_waiting_response = false
-                document.cookie = 'fileDownload=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            }
-        }, 1000);
     },
     methods: {
         doSearch() {
@@ -66,9 +60,20 @@ var app = new Vue({
                 .map(([key, value]) => `${key}=${value}`)
                 .join('&')
             this.is_waiting_response = true
-            $("body").append(
-                `<iframe id="fileDownloadIframe" src="${url}" style="display: none"></iframe>`
-            );
+            axios({
+                url,
+                methods: 'GET',
+                responseType: 'blob'
+            }).then(res => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = res.headers["content-disposition"].split("filename=")[1]
+                document.body.appendChild(link);
+                link.click();
+            }).finally(() => {
+                this.is_waiting_response = false
+            })
         },
         format(value) {
             if (value.toString().includes('-')) {
