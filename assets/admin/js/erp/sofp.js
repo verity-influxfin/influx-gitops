@@ -89,7 +89,8 @@ var app = new Vue({
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = res.headers["content-disposition"].split("filename=")[1]
+                const filename = res.headers["content-disposition"].split("filename=")[1]
+                link.download = filename.slice(1, filename.length - 1)
                 document.body.appendChild(link);
                 link.click();
             }).finally(() => {
