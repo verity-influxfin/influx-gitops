@@ -56,7 +56,14 @@
         <div class="tab-content">
 
             <div class="tab-pane fade show active" id="personal"><div class="row">
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-3 col-md-6"><?php
+                        $controller = 'target';
+                        $method = 'waiting_verify';
+                        if (isset($permission[$controller][$method]['action']['granted']) &&
+                            isset($permission[$controller][$method]['action']['valid']) &&
+                            $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                        )
+                        { ?>
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <div class="row">
@@ -69,7 +76,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="<?=admin_url('Target/waiting_verify') ?>">
+                            <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -77,8 +84,16 @@
                                 </div>
                             </a>
                         </div>
+                        <?php } ?>
                     </div>
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-3 col-md-6"><?php
+                        $controller = 'target';
+                        $method = 'waiting_bidding';
+                        if (isset($permission[$controller][$method]['action']['granted']) &&
+                            isset($permission[$controller][$method]['action']['valid']) &&
+                            $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                        )
+                        { ?>
                         <div class="panel panel-green">
                             <div class="panel-heading">
                                 <div class="row">
@@ -91,7 +106,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="<?=admin_url('Target/waiting_bidding') ?>">
+                            <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -99,8 +114,16 @@
                                 </div>
                             </a>
                         </div>
+                        <?php } ?>
                     </div>
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-3 col-md-6"><?php
+                        $controller = 'transfer';
+                        $method = 'bidding';
+                        if (isset($permission[$controller][$method]['action']['granted']) &&
+                            isset($permission[$controller][$method]['action']['valid']) &&
+                            $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                        )
+                        { ?>
         				<div class="panel panel-yellow">
         					<div class="panel-heading">
         						<div class="row">
@@ -113,7 +136,7 @@
         							</div>
         						</div>
         					</div>
-        					<a href="<?=admin_url('Transfer/bidding') ?>">
+                            <a href="<?= admin_url("{$controller}/{$method}") ?>">
         						<div class="panel-footer">
         							<span class="pull-left">View Details</span>
         							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -121,8 +144,16 @@
         						</div>
         					</a>
         				</div>
+                        <?php } ?>
         			</div>
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-3 col-md-6"><?php
+                        $controller = 'target';
+                        $method = 'repayment_delayed';
+                        if (isset($permission[$controller][$method]['action']['granted']) &&
+                            isset($permission[$controller][$method]['action']['valid']) &&
+                            $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                        )
+                        { ?>
                         <div class="panel panel-red">
                             <div class="panel-heading">
                                 <div class="row">
@@ -135,7 +166,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="<?=admin_url('Target/index?delay=1&status=5') ?>">
+                            <a href="<?= admin_url("{$controller}/{$method}?delay=1&status=5") ?>">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -143,9 +174,17 @@
                                 </div>
                             </a>
                         </div>
+                        <?php } ?>
                     </div>
                     <? if($type != 'judicial'){ ?>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-3 col-md-6"><?php
+                            $controller = 'target';
+                            $method = 'prepayment';
+                            if (isset($permission[$controller][$method]['action']['granted']) &&
+                                isset($permission[$controller][$method]['action']['valid']) &&
+                                $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                            )
+                            { ?>
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -158,7 +197,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="<?=admin_url('Target/prepayment') ?>">
+                                <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                     <div class="panel-footer">
                                         <span class="pull-left">View Details</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -166,10 +205,18 @@
                                     </div>
                                 </a>
                             </div>
+                            <?php } ?>
                         </div>
                     <? } ?>
                     <? if($type != 'judicial'){ ?>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-3 col-md-6"><?php
+                            $controller = 'transfer';
+                            $method = 'waiting_transfer';
+                            if (isset($permission[$controller][$method]['action']['granted']) &&
+                                isset($permission[$controller][$method]['action']['valid']) &&
+                                $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                            )
+                            { ?>
                             <div class="panel panel-green">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -182,7 +229,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="<?=admin_url('Transfer/waiting_transfer') ?>">
+                                <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                     <div class="panel-footer">
                                         <span class="pull-left">View Details</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -190,10 +237,18 @@
                                     </div>
                                 </a>
                             </div>
+                            <?php } ?>
                         </div>
                     <? } ?>
                     <? if($type != 'judicial'){ ?>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-3 col-md-6"><?php
+                            $controller = 'target';
+                            $method = 'waiting_loan';
+                            if (isset($permission[$controller][$method]['action']['granted']) &&
+                                isset($permission[$controller][$method]['action']['valid']) &&
+                                $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                            )
+                            { ?>
                             <div class="panel panel-yellow">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -206,7 +261,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="<?=admin_url('Target/waiting_loan') ?>">
+                                <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                     <div class="panel-footer">
                                         <span class="pull-left">View Details</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -214,10 +269,18 @@
                                     </div>
                                 </a>
                             </div>
+                            <?php } ?>
                         </div>
                     <? } ?>
                     <? if($type != 'judicial'){ ?>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-3 col-md-6"><?php
+                            $controller = 'passbook';
+                            $method = 'withdraw_waiting';
+                            if (isset($permission[$controller][$method]['action']['granted']) &&
+                                isset($permission[$controller][$method]['action']['valid']) &&
+                                $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                            )
+                            { ?>
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -230,7 +293,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="<?=admin_url('Passbook/withdraw_waiting') ?>">
+                                <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                     <div class="panel-footer">
                                         <span class="pull-left">View Details</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -238,10 +301,18 @@
                                     </div>
                                 </a>
                             </div>
+                            <?php } ?>
                         </div>
                     <? } ?>
                     <? if($type != 'judicial'){ ?>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-3 col-md-6"><?php
+                            $controller = 'target';
+                            $method = 'waiting_approve_order_transfer';
+                            if (isset($permission[$controller][$method]['action']['granted']) &&
+                                isset($permission[$controller][$method]['action']['valid']) &&
+                                $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                            )
+                            { ?>
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -254,7 +325,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="<?=admin_url('Target/waiting_approve_order_transfer') ?>">
+                                <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                     <div class="panel-footer">
                                         <span class="pull-left">View Details</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -262,11 +333,19 @@
                                     </div>
                                 </a>
                             </div>
+                            <?php } ?>
                         </div>
                         <div class="col-lg-3 col-md-6"></div>
                     <? } ?>
                     <? if($type == 'judicial'){ ?>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-3 col-md-6"><?php
+                            $controller = 'target';
+                            $method = 'waiting_verify';
+                            if (isset($permission[$controller][$method]['action']['granted']) &&
+                                isset($permission[$controller][$method]['action']['valid']) &&
+                                $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                            )
+                            { ?>
                             <div class="panel panel-yellow">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -279,7 +358,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="<?//=admin_url('Target/index?delay=1&status=5') ?>">
+                                <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                     <div class="panel-footer">
                                         <span class="pull-left">View Details</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -287,10 +366,18 @@
                                     </div>
                                 </a>
                             </div>
+                            <?php } ?>
                         </div>
                     <? } ?>
                     <? if($type != 'judicial'){ ?>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-3 col-md-6"><?php
+                            $controller = 'transfer';
+                            $method = 'waiting_transfer_success';
+                            if (isset($permission[$controller][$method]['action']['granted']) &&
+                                isset($permission[$controller][$method]['action']['valid']) &&
+                                $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                            )
+                            { ?>
                             <div class="panel panel-yellow">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -303,7 +390,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="<?=admin_url('Transfer/waiting_transfer_success') ?>">
+                                <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                     <div class="panel-footer">
                                         <span class="pull-left">View Details</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -311,6 +398,7 @@
                                     </div>
                                 </a>
                             </div>
+                            <?php } ?>
                         </div>
                     <? } ?>
                 </div>
@@ -318,7 +406,14 @@
                     <? if($type != 'judicial'){ ?>
                         <div class="col-lg-3 col-md-6"></div>
                         <div class="col-lg-3 col-md-6"></div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-3 col-md-6"><?php
+                            $controller = 'target';
+                            $method = 'waiting_evaluation';
+                            if (isset($permission[$controller][$method]['action']['granted']) &&
+                                isset($permission[$controller][$method]['action']['valid']) &&
+                                $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                            )
+                            { ?>
                             <div class="panel panel-yellow">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -331,7 +426,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="<?=admin_url('Target/waiting_evaluation') ?>">
+                                <a href="<?= admin_url("{$controller}/{$method}") ?>">
                                     <div class="panel-footer">
                                         <span class="pull-left">View Details</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -339,6 +434,7 @@
                                     </div>
                                 </a>
                             </div>
+                            <?php } ?>
                         </div>
                     <? } ?>
                 </div>
@@ -370,7 +466,14 @@
 
 		<!-- /.row -->
 		<div class="row">
-			<div class="col-lg-6">
+			<div class="col-lg-6"><?php
+                $controller = 'contact';
+                $method = 'index';
+                if (isset($permission[$controller][$method]['action']['granted']) &&
+                    isset($permission[$controller][$method]['action']['valid']) &&
+                    $permission[$controller][$method]['action']['granted'] & $permission[$controller][$method]['action']['valid']
+                )
+                { ?>
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						投訴與建議
@@ -394,7 +497,7 @@
 					</div>
 					<!-- /.panel-body -->
 				</div>
-
+                <?php } ?>
 				<!-- /.panel .chat-panel -->
 			</div>
 
