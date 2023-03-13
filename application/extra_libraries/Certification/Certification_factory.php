@@ -142,6 +142,8 @@ class Certification_factory
                 return new Cert_land_and_building_transaction($certification, $certification_result);
             case CERTIFICATION_SITE_SURVEY_VIDEO:
                 return new Cert_site_survey_video($certification, $certification_result);
+            case CERTIFICATION_SITE_SURVEY_BOOKING:
+                return new Cert_site_survey_booking($certification, $certification_result);
             case CERTIFICATION_SIMPLIFICATIONFINANCIAL: // 財務收支
                 return new Cert_simplificationfinancial($certification, $certification_result);
             case CERTIFICATION_SIMPLIFICATIONJOB: // 工作資料
