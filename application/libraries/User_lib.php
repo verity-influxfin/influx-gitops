@@ -30,7 +30,7 @@ class User_lib {
         'small_enterprise' => [TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED],
     ];
     public $logRewardColumns = [
-        'student', 'salary_man', 'small_enterprise', 'fullMember'
+        'student', 'salary_man', 'small_enterprise', 'fullMember', 'registered'
     ];
 
     public function __construct()
@@ -406,6 +406,11 @@ class User_lib {
             if ( ! isset($list[$userQrcodeId]['fullMemberCount']))
                 $list[$userQrcodeId]['fullMemberCount'] = 0;
 
+            if ( ! isset($list[$userQrcodeId]['registeredCount']))
+            {
+                $list[$userQrcodeId]['registeredCount'] = 0;
+            }
+
             if ( ! isset($list[$userQrcodeId]['downloadedCount']))
                 $list[$userQrcodeId]['downloadedCount'] = 0;
 
@@ -413,6 +418,15 @@ class User_lib {
             {
                 $list[$userQrcodeId]['fullMemberRewardAmount'] = $list[$userQrcodeId]['fullMemberCount'] * intval($settings['reward']['full_member']['amount']);
                 $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['fullMemberRewardAmount'];
+            }
+            if (isset($settings['reward']['registered']['amount']))
+            {
+                $list[$userQrcodeId]['registeredRewardAmount'] = $list[$userQrcodeId]['registeredCount'] * intval($settings['reward']['registered']['amount']);
+                $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['registeredRewardAmount'];
+            }
+            else
+            {
+                $list[$userQrcodeId]['registeredRewardAmount'] = 0;
             }
         }
 
