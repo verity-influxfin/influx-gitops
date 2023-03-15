@@ -38,7 +38,7 @@ class Cert_btn_default extends Certification_btn_base
                 }
                 return '';
             case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
-                if ($this->sub_status == CERTIFICATION_SUBSTATUS_WRONG_FORMAT)
+                if ($this->sub_status == CERTIFICATION_SUBSTATUS_WRONG_FORMAT && $this->cert['certification_id'] != CERTIFICATION_JOB)
                 {
                     return '<a data-sorting="6" target="_blank" href="' . admin_url('certification/user_certification_detail?id=' . $this->id) . '" class="btn btn-outline btn-danger btn-md nhide">格式不符</a><span class="sword" style="display:none">' . $status_meaning . '</span>';
                 }
@@ -81,7 +81,7 @@ class Cert_btn_default extends Certification_btn_base
                 }
                 return '';
             case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
-                if ($this->sub_status == CERTIFICATION_SUBSTATUS_WRONG_FORMAT)
+                if ($this->sub_status == CERTIFICATION_SUBSTATUS_WRONG_FORMAT && $this->cert['certification_id'] != CERTIFICATION_JOB)
                 {
                     return '格式不符';
                 }
