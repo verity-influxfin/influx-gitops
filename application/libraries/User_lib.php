@@ -485,14 +485,31 @@ class User_lib {
 
     /**
      * 結算所有推薦碼的獎勵
+     * @param $year : 年
+     * @param $month : 月
      * @return int
      */
-    public function scriptHandlePromoteReward(): int
+    public function scriptHandlePromoteReward($year = NULL, $month = NULL): int
     {
         $count = 0;
         $this->CI->load->model('user/user_qrcode_model');
-        $startTime = date('Y-m-01 00:00:00', strtotime("-1 month"));
-        $endTime = date('Y-m-01 00:00:00');
+
+        $tmp_timestamp = time();
+        if (empty($year))
+        {
+            $year = date('Y', $tmp_timestamp);
+        }
+        if (empty($month))
+        {
+            $month = date('m', $tmp_timestamp);
+        }
+        if ( ! ($now = strtotime("{$year}-{$month}")))
+        {
+            $now = $tmp_timestamp;
+        }
+
+        $startTime = date('Y-m-01 00:00:00', strtotime("-1 month", $now));
+        $endTime = date('Y-m-01 00:00:00', $now);
         $userQrcodes = $this->CI->user_qrcode_model->getQrcodeRewardInfo(['status' => [PROMOTE_STATUS_AVAILABLE],
             'settlementing' => 0, 'subcode_flag' => 0]);
         foreach ($userQrcodes as $qrcode)

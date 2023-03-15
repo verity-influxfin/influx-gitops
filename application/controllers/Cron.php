@@ -243,11 +243,21 @@ class Cron extends CI_Controller
         $this->load->model('user/user_qrcode_model');
         $this->load->model('user/qrcode_setting_model');
 
+        $date = $this->input->get('date');
+        if (empty($date) || ! ($timestamp = strtotime($date)))
+        {
+            $timestamp = $start_time;
+        }
+        $year = date('Y', $timestamp);
+        $month = date('m', $timestamp);
+        $day = date('d', $timestamp);
+
         // 自動延長一般方案/特約方案的結束時間
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->generalCaseAliasName);
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->appointedCaseAliasName);
 
-        if(date("d") >= 1 && date("d") <= 9) {
+        if ($day >= 1 && $day <= 9)
+        {
             $data = [
                 'script_name'   => 'handle_promote_reward',
                 'num'           => 0,
@@ -256,7 +266,7 @@ class Cron extends CI_Controller
             ];
             $rs = $this->log_script_model->insert($data);
             // 結算獎勵
-            $num = $this->user_lib->scriptHandlePromoteReward();
+            $num = $this->user_lib->scriptHandlePromoteReward($year, $month);
         } else {
             $data = [
                 'script_name'   => 'handle_promote_receipt',
