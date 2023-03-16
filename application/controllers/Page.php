@@ -45,7 +45,15 @@ class Page extends CI_Controller
     // 電子看板 排程功能 預定每天早上 9 點執行
     public function update_eboard_info()
     {
-        $today = (new DateTimeImmutable(date('Y-m-d')));
+        $date = $this->input->get('date');
+        if ($timestamp = strtotime($date))
+        {
+            $today = (new DateTimeImmutable(date('Y-m-d', $timestamp)));
+        }
+        else
+        {
+            $today = (new DateTimeImmutable(date('Y-m-d')));
+        }
 
         // 從 ga 抓官網流量 - 昨天的
         $analytics = $this->_initialize_analytics();
@@ -55,12 +63,20 @@ class Page extends CI_Controller
         $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), Sale_dashboard_model::TARGET_WEB_TRAFFIC, $ga_amounts);
 
         // 更新 iOS 下載量 - 前天的
-        $ios_amounts = $this->_get_ios_sales_summary_data($today->modify('-2 day')->format('Y-m-d'));
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-2 day'), Sale_dashboard_model::TARGET_DOWNLOAD_IOS, $ios_amounts);
+        for ($i = 0; $i < 3; $i++)
+        {
+            $modifier = 2 + $i;
+            $ios_amounts = $this->_get_ios_sales_summary_data($today->modify("-{$modifier}} day")->format('Y-m-d'));
+            $this->sale_dashboard_model->set_amounts_at($today->modify("-{$modifier} day"), Sale_dashboard_model::TARGET_DOWNLOAD_IOS, $ios_amounts);
+        }
 
         // 更新 Android 下載量 - 四天前的才有數據(google 報表更新怎麼比 apple 還慢?)
-        $android_amounts = $this->_get_android_install_report($today->modify('-4 day'));
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-4 day'), Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID, $android_amounts);
+        for ($i = 0; $i < 3; $i++)
+        {
+            $modifier = 4 + $i;
+            $android_amounts = $this->_get_android_install_report($today->modify("-{$modifier}} day"));
+            $this->sale_dashboard_model->set_amounts_at($today->modify("-{$modifier} day"), Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID, $android_amounts);
+        }
 
         // 更新會員與案件資訊
         $this->_update_target_info_at_day($today->modify('-1 day'));
