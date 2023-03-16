@@ -45,7 +45,15 @@ class Page extends CI_Controller
     // 電子看板 排程功能 預定每天早上 9 點執行
     public function update_eboard_info()
     {
-        $today = (new DateTimeImmutable(date('Y-m-d')));
+        $date = $this->input->get('date');
+        if ($timestamp = strtotime($date))
+        {
+            $today = (new DateTimeImmutable(date('Y-m-d', $timestamp)));
+        }
+        else
+        {
+            $today = (new DateTimeImmutable(date('Y-m-d')));
+        }
 
         // 從 ga 抓官網流量 - 昨天的
         $analytics = $this->_initialize_analytics();
