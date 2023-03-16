@@ -199,6 +199,7 @@ class AdminDashboard extends MY_Admin_Controller {
 		$data["bidding_count"] = isset($result) ? count($result) : 0;
 		$data["contact_list"] 	= $contact_list;
 		$data["type"] = $type;
+        $data['permission'] = $this->permission_granted;
 		if($type == 'judicial'){
 			$this->load->view('admin/judicialdashboard',$data);
 		}else{
