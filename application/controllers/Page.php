@@ -66,7 +66,7 @@ class Page extends CI_Controller
         for ($i = 0; $i < 3; $i++)
         {
             $modifier = 2 + $i;
-            $ios_amounts = $this->_get_ios_sales_summary_data($today->modify("-{$modifier}} day")->format('Y-m-d'));
+            $ios_amounts = $this->_get_ios_sales_summary_data($today->modify("-{$modifier} day")->format('Y-m-d'));
             $this->sale_dashboard_model->set_amounts_at($today->modify("-{$modifier} day"), Sale_dashboard_model::TARGET_DOWNLOAD_IOS, $ios_amounts);
         }
 
@@ -74,7 +74,7 @@ class Page extends CI_Controller
         for ($i = 0; $i < 3; $i++)
         {
             $modifier = 4 + $i;
-            $android_amounts = $this->_get_android_install_report($today->modify("-{$modifier}} day"));
+            $android_amounts = $this->_get_android_install_report($today->modify("-{$modifier} day"));
             $this->sale_dashboard_model->set_amounts_at($today->modify("-{$modifier} day"), Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID, $android_amounts);
         }
 
