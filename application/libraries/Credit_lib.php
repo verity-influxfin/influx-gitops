@@ -285,6 +285,7 @@ class Credit_lib{
 
             if ($approvalExtra && $approvalExtra->getExtraPoints()) {
                 $total += $approvalExtra->getExtraPoints();
+                $this->scoreHistory[] = '分數調整 = ' . $approvalExtra->getExtraPoints();
             }
 
             // 學校分數小於等於150分者，其credits.points不得高於870，若高於則以870計
@@ -357,6 +358,7 @@ class Credit_lib{
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || ( ! empty($credit['level']) && $credit['level'] == 10))
         {
+            $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
             return $param;
         }
         $this->CI->credit_model->update_by(
@@ -368,7 +370,7 @@ class Credit_lib{
             ],
             ['status' => 0]
         );
-        if ($flag_870_points === TRUE)
+        if (isset($flag_870_points) && $flag_870_points === TRUE)
         {
             $this->scoreHistory[] = '學校信評分在150（含）以下，信評分數不能超過870（含）分';
         }
