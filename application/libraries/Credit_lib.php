@@ -287,6 +287,13 @@ class Credit_lib{
                 $total += $approvalExtra->getExtraPoints();
             }
 
+            // 學校分數小於等於150分者，其credits.points不得高於870，若高於則以870計
+            $flag_870_points = FALSE;
+            if (( ! isset($school_point) || $school_point <= 150) && $total > 870)
+            {
+                $total = 870;
+                $flag_870_points = TRUE;
+            }
             $param['points'] = intval($total);
             goto SKIP_STAGE_CREDIT;
         }
@@ -297,12 +304,6 @@ class Credit_lib{
         }
 
         SKIP_STAGE_CREDIT:
-        $flag_870_points = FALSE;
-        if (( ! isset($school_point) || $school_point <= 150) && $param['points'] > 870)
-        {
-            $param['points'] = 870;
-            $flag_870_points = TRUE;
-        }
         if($mix_credit){
             return $param['points'];
         }
