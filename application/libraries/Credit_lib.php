@@ -289,11 +289,10 @@ class Credit_lib{
             }
 
             // 學校分數小於等於150分者，其credits.points不得高於870，若高於則以870計
-            $flag_870_points = FALSE;
             if (( ! isset($school_point) || $school_point <= 150) && $total > 870)
             {
                 $total = 870;
-                $flag_870_points = TRUE;
+                $this->scoreHistory[] = '學校信評分在150（含）以下，信評分數不能超過870（含）分';
             }
             $param['points'] = intval($total);
             goto SKIP_STAGE_CREDIT;
@@ -370,10 +369,6 @@ class Credit_lib{
             ],
             ['status' => 0]
         );
-        if (isset($flag_870_points) && $flag_870_points === TRUE)
-        {
-            $this->scoreHistory[] = '學校信評分在150（含）以下，信評分數不能超過870（含）分';
-        }
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
