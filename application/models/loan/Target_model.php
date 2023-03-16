@@ -931,19 +931,6 @@ class Target_model extends MY_Model
     // 統計各種案件數量，針對申貸&成交都可以用
     private function _list_products_at_targets($targets)
     {
-        $subloan_target_ids = [];
-        if ( ! empty($targets))
-        {
-            $this->db->select('new_target_id')
-                ->from('p2p_loan.subloan')
-                ->where_in('new_target_id', array_column($targets, 'id'));
-            $rs = $this->db->get()->result_array();
-            if ( ! empty($rs))
-            {
-                $subloan_target_ids = array_column($rs, 'new_target_id');
-            }
-        }
-
         $result = [
             'SMART_STUDENT' => 0,
             'STUDENT' => 0,
@@ -955,12 +942,6 @@ class Target_model extends MY_Model
 
         foreach ($targets as $target)
         {
-            // 產轉的案件不能計算進來
-            if ( ! empty($subloan_target_ids) && in_array($target['id'], $subloan_target_ids))
-            {
-                continue;
-            }
-
             switch (TRUE)
             {
             case $target['product_id'] == PRODUCT_ID_STUDENT && $target['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT:
