@@ -49,7 +49,11 @@ class Cert_investigation extends Cert_pdf
             // 非 PDF 提交方式
             ($this->content['return_type'] != 1 ||
             // PDF 提交方式時，需要有回信檔案
-            ($this->content['return_type'] == 1 && isset($this->content['mail_file_status']) && $this->content['mail_file_status'] == 1));
+            ($this->content['return_type'] == 1 && isset($this->content['mail_file_status']) && $this->content['mail_file_status'] == 1) ||
+            // 有聯徵的 PDF
+            ! empty($this->content['pdf_file']) ||
+            // 有聯徵的圖片
+            ! empty($this->content['images']));
     }
 
     /**
@@ -69,7 +73,7 @@ class Cert_investigation extends Cert_pdf
             $this->result->addMessage('需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
         }
-        else if (is_pdf($mime))
+        else if (is_pdf($mime) || ! empty($this->content['images']))
         {
             if ( ! $this->verify_fraud_pdf($parsed_content, $url))
             {

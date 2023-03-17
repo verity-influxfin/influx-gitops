@@ -79,7 +79,7 @@ abstract class Cert_pdf extends Certification_base
      */
     protected function verify_fraud_pdf(&$parsed_content, $pdf_url): bool
     {
-        if ( ! isset($parsed_content['pdf_fraud_detect']))
+        if ( ! empty($pdf_url) && ! isset($parsed_content['pdf_fraud_detect']))
         {
             // Check if PDF edited.
             $this->CI->load->helper('user_certification');
