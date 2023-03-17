@@ -451,12 +451,16 @@ $config['permission'] = [
         'name' => '財務作業',
         'menu' => [
             'daily_report' => ['name' => '虛擬帳戶交易明細表'],
+            'daily_report_sheet' => ['name' => '虛擬帳戶交易明細表(new)'],
             'passbook_report' => ['name' => '虛擬帳號餘額明細表'],
             'estatement' => ['name' => '個人對帳單'],
             'index' => ['name' => '收支統計表'],
         ],
         'permission' => [
             'daily_report' => ['model' => 'Account', 'submodel' => 'daily_report', 'action' => 'read'],
+            'daily_report_sheet' => ['model' => 'Account', 'submodel' => 'daily_report_sheet', 'action' => 'read'],
+            'get_daily_report_data' => ['model' => 'Account', 'submodel' => 'daily_report_sheet', 'action' => 'read'],
+            'daily_report_export' => ['model' => 'Account', 'submodel' => 'daily_report_sheet', 'action' => 'read'],
             'passbook_report' => ['model' => 'Account', 'submodel' => 'passbook_report', 'action' => 'read'],
             'estatement' => ['model' => 'Account', 'submodel' => 'estatement', 'action' => 'read'],
             'index' => ['model' => 'Account', 'submodel' => 'index', 'action' => 'read'],
