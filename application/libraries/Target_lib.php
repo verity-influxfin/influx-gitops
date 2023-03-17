@@ -422,7 +422,7 @@ class Target_lib
                                 // #2779: 命中黑名單學校進二審審核
                                 $school_config = $this->CI->config->item('school_points');
                                 $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
-                                if (in_array($info->meta_value, $school_config['lock_school']))
+                                if ( ! $renew && in_array($info->meta_value, $school_config['lock_school']))
                                 {
                                     goto FORCE_SECOND_INSTANCE;
                                 }
