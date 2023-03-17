@@ -19,6 +19,7 @@
             overflow: hidden;
             font-size: 0.9rem;
             width: 400px;
+            height: fit-content;
         }
 
         .單張卡片.單張卡片_媒合成功 {
@@ -64,7 +65,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             /* white-space: nowrap; */
-            height: 70px;
         }
 
         .單張卡片 .分隔線 {
