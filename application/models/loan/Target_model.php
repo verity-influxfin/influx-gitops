@@ -795,6 +795,7 @@ class Target_model extends MY_Model
             ->select('t.certificate_status')
             ->select('t.status')
             ->select('t.updated_at')
+            ->select('t.created_at')
             ->from('p2p_loan.targets t')
             ->join("({$subquery}) AS a", 'a.user_id=t.user_id')
             ->where('t.product_id<', PRODUCT_FOR_JUDICIAL)
