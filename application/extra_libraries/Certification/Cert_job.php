@@ -12,7 +12,7 @@ use CertificationResult\MessageDisplay;
  * Class Investigation
  * @package Certification
  */
-class Cert_job extends Certification_base
+class Cert_job extends Cert_pdf
 {
     /**
      * @var int 該徵信項之代表編號
@@ -63,17 +63,14 @@ class Cert_job extends Certification_base
     {
         $parsed_content = $this->content ?? [];
         $url = $this->content['pdf_file'] ?? '';
-
         $parsed_content = array_merge(
             $parsed_content,
             $this->_get_ocr_marker_info(),
             $this->_get_ocr_parser_info()
         );
         $mime = get_mime_by_extension($url);
-
         $gcis_info = $this->_get_gcis_info($parsed_content);
         $parsed_content['gcis_info'] = $gcis_info;
-
         if (is_image($mime) ||
             // 由圖片組成的 PDF 會將 is_valid_pdf 標記為 0, 需直接轉人工
             (isset($this->content['is_valid_pdf']) && $this->content['is_valid_pdf'] == 0))
@@ -83,6 +80,10 @@ class Cert_job extends Certification_base
         }
         else if (is_pdf($mime))
         {
+            if ( ! $this->verify_fraud_pdf($parsed_content, $url))
+            {
+                return $parsed_content;
+            }
             if ( ! empty($parsed_content['ocr_parser']['content']))
             {
                 $response = $parsed_content['ocr_parser']['content'];
@@ -133,6 +134,9 @@ class Cert_job extends Certification_base
     {
         if ($this->_chk_ocr_status($content) === FALSE)
         {
+            if ( ! $this->check_pdf_fraud_result($content)) {
+                return FALSE;
+            }
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
             return FALSE;
         }
@@ -244,7 +248,11 @@ class Cert_job extends Certification_base
      */
     public function pre_failure($sys_check): bool
     {
-        // 系統過的暫時全部轉人工
+        if (parent::pre_failure($sys_check))
+        {
+            return TRUE;
+        }
+        // 除了 PDF 防偽驗證，系統過的暫時全部轉人工
         if($sys_check == TRUE)
         {
             $this->set_review(TRUE);

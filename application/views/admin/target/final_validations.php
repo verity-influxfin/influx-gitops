@@ -909,10 +909,10 @@
 							<input id="credit_test" type="text" name="score" value="0" / disabled>
 							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
                             <input type="text" name="is_top_enterprise" value="0" hidden>
-							<button class="btn btn-warning" type="submit">額度試算</button>
-							<button class="btn btn-danger" data-url="/admin/Target/verify_failed"
+							<button class="btn btn-warning need_chk_before_approve" type="submit">額度試算</button>
+							<button class="btn btn-danger need_chk_before_approve" data-url="/admin/Target/verify_failed"
 								id="verify_failed">不通過</button>
-							<button class="btn btn-info mr-2" type="button" data-toggle="modal" data-target="#newModal">
+							<button class="btn btn-info mr-2 need_chk_before_approve" type="button" data-toggle="modal" data-target="#newModal">
 								新增至黑名單
 							</button>
 						</div>
@@ -950,7 +950,7 @@
 						</div>
 						<div class="opinion_button">
 							<button id="1_opinion_button" class="btn btn-primary btn-info score"
-								onclick="send_opinion(<?=$_GET['id']?>,1)" disabled>送出</button>
+								onclick="send_opinion(<?=$_GET['id']?>,1)" disabled data-disabled="true">送出</button>
 						</div>
 					</div>
 					<div class="opinion_item">
@@ -979,7 +979,7 @@
 						</div>
 						<div class="opinion_button">
 							<button id="2_opinion_button" class="btn btn-primary btn-info score"
-								onclick="send_opinion(<?=$_GET['id']?>,2)" disabled>送出</button>
+								onclick="send_opinion(<?=$_GET['id']?>,2)" disabled data-disabled="true">送出</button>
 						</div>
 					</div>
 					<div class="opinion_item">
@@ -1008,7 +1008,7 @@
 						</div>
 						<div class="opinion_button">
 							<button id="3_opinion_button" class="btn btn-primary btn-info score"
-								onclick="send_opinion(<?=$_GET['id']?>,3)" disabled>送出</button>
+								onclick="send_opinion(<?=$_GET['id']?>,3)" disabled data-disabled="true">送出</button>
 						</div>
 					</div>
 					<div class="opinion_item">
@@ -1037,7 +1037,7 @@
 						</div>
 						<div class="opinion_button">
 							<button id="4_opinion_button" class="btn btn-primary btn-info score"
-								onclick="send_opinion(<?=$_GET['id']?>,4)" disabled>送出</button>
+								onclick="send_opinion(<?=$_GET['id']?>,4)" disabled data-disabled="true">送出</button>
 						</div>
 					</div>
 				</div>
@@ -1472,22 +1472,26 @@
 			$(`#1_score`).attr({
 				"max": case_aprove_item.creditLineInfo.scoringMax,
 				"min": case_aprove_item.creditLineInfo.scoringMin,
-				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax}){value=${case_aprove_item.creditLineInfo.scoringMax}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 			$(`#2_score`).attr({
 				"max": case_aprove_item.creditLineInfo.scoringMax,
 				"min": case_aprove_item.creditLineInfo.scoringMin,
-				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax}){value=${case_aprove_item.creditLineInfo.scoringMax}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 			$(`#3_score`).attr({
 				"max": case_aprove_item.creditLineInfo.scoringMax,
 				"min": case_aprove_item.creditLineInfo.scoringMin,
-				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax}){value=${case_aprove_item.creditLineInfo.scoringMax}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 			$(`#4_score`).attr({
 				"max": case_aprove_item.creditLineInfo.scoringMax,
 				"min": case_aprove_item.creditLineInfo.scoringMin,
-				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax}){value=${case_aprove_item.creditLineInfo.scoringMax}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 		}
 
@@ -1527,7 +1531,8 @@
 								$(`#${list_key}_opinion_status`).html(status_html);
 								$(`#${list_key}_opinion`).prop('disabled', false);
 								$(`#${list_key}_score`).prop('disabled', false);
-								$(`#${list_key}_opinion_button`).prop('disabled', false);
+								// $(`#${list_key}_opinion_button`).prop('disabled', false);
+								$(`#${list_key}_opinion_button`).data('disabled', 'false');
 								stop_flag = true;
 							}
 						})
@@ -1537,6 +1542,9 @@
 		}
 
 		$("#1_score,#2_score,#3_score,#4_score").change(function () {
+            // 當分數調整後，需再按下「額度試算」下的三個按鈕後，「審批」的送出按鈕才允許點擊
+            $('div.opinion_button button.score').prop('disabled', true);
+
 			let score_vue = 0;
 			for (i = 1; i <= last_mask; i++) {
 				score_vue += parseInt($(`#${i}_score`).val());
@@ -2193,6 +2201,14 @@
 			window.opener.location.reload();
 		}
 
+        // 當按下「額度試算」下的三個按鈕後，「審批」的送出按鈕才允許點擊
+        $('button.need_chk_before_approve').on('click', function () {
+            $.each($('div.opinion_button button.score'), function (key, item) {
+                if ($(item).data('disabled') === 'false') {
+                    $(item).prop('disabled', false);
+                }
+            });
+        });
 	});
 
 	const v = new Vue({
@@ -2290,7 +2306,8 @@
 					table.row.add(t)
 				})
 				table.draw()
-				$('[data-toggle="popover"]').popover({ trigger: 'focus' })
+				$('[data-toggle="popover"]').popover('hide')
+				$('[data-toggle="popover"]').popover()
 			}
 		}
 	})

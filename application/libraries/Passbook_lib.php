@@ -97,9 +97,8 @@ class Passbook_lib{
                 {
                     $this->CI->virtual_passbook_model->limit($limit);
                 }
-                $virtual_passbook = $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at', 'asc')->get_many_by(
-                    array_merge(['virtual_account' => $virtual_account], $where)
-                );
+				$array = array_merge(['virtual_account' => $virtual_account], $where);
+				$virtual_passbook = $this->CI->virtual_passbook_model->get_filter_list($virtual_account, $array);
             }
             else
             {
@@ -110,6 +109,8 @@ class Passbook_lib{
 				foreach($virtual_passbook as $key => $value){
 					$total	+= intval($value->amount);
 					$list[] = array(
+						'user_from' 	=> $value->user_from,
+						'user_to' 	    => $value->user_to,
 						'amount' 		=> intval($value->amount),
 						'bank_amount'	=> $total,
 						'remark'		=> $value->remark,

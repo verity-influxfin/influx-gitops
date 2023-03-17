@@ -62,9 +62,9 @@
                                            class="btn btn-default float-right btn-md">本日</a>
                                         <a href="javascript:void(0)" target="_self" onclick="showAll()"
                                            class="btn btn-default float-right btn-md">全部</a></td>
-                                    <td><input type="text" value="<?= $sdate == 'all' ? '' : $sdate ?>" id="sdate"
+                                    <td><input type="text" value="<?= ! isset($sdate) || $sdate == 'all' ? '' : $sdate ?>" id="sdate"
                                                data-toggle="datepicker"/> -
-                                        <input type="text" value="<?= $edate == 'all' ? '' : $edate ?>" id="edate"
+                                        <input type="text" value="<?= ! isset($edate) || $edate == 'all' ? '' : $edate ?>" id="edate"
                                                data-toggle="datepicker"/></td>
                                     <td><a href="javascript:void(0)" onclick="showChang();"
                                            class="btn btn-default float-right btn-md">查詢</a></td>
@@ -111,6 +111,7 @@
 								<? if(isset($_GET['id']) && $_GET['id']==$virtual_account->id){?>
 								<tr>	
 									<td><button type="button" onclick="withdraw_by_admin();" class="btn btn-default btn-md">後台提領</button></td>
+									<td><a href="<?=admin_url('passbook/passbook_export')."?id=".$virtual_account->id.'&sdate='.$sdate.'&edate='.$edate ?>" target="_blank" class="btn btn-primary float-right" >匯出Excel</a></td>
 								</tr>
 								<? } ?>
 							</table>
@@ -122,7 +123,7 @@
 										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
 											<tr style="background-color:#f5f5f5;">
-												<td colspan="6">交易明細</td>
+												<td colspan="8">交易明細</td>
 											</tr>
 											<tr>
 												<td>交易時間</td>
@@ -131,6 +132,8 @@
 												<td>餘額</td>
 												<td>備註</td>
 												<td>案件ID</td>
+												<td>user_from</td>
+												<td>user_to</td>
 											</tr>
 											<? if(!empty($list)){
 												foreach($list as $key => $value){
@@ -144,6 +147,8 @@
 													<td><?=$value["bank_amount"] ?></td>
 													<td><?=isset($value["remark"]["source"])?$transaction_source[$value["remark"]["source"]]:"" ?></td>
 													<td><?=isset($value["remark"]["target_id"])&&$value["remark"]["target_id"]?$value["remark"]["target_id"]:"" ?></td>
+													<td><?=$value["user_from"] ?></td>
+													<td><?=$value["user_to"] ?></td>
 												</tr>
 											<? }} ?>
 											</tbody>

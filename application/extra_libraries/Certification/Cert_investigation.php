@@ -11,7 +11,7 @@ use CertificationResult\MessageDisplay;
  * Class Investigation
  * @package Certification
  */
-class Cert_investigation extends Certification_base
+class Cert_investigation extends Cert_pdf
 {
     /**
      * @var int 該徵信項之代表編號
@@ -71,6 +71,10 @@ class Cert_investigation extends Certification_base
         }
         else if (is_pdf($mime))
         {
+            if ( ! $this->verify_fraud_pdf($parsed_content, $url))
+            {
+                return $parsed_content;
+            }
             $parsed_content = array_merge(
                 $parsed_content,
                 $this->_get_ocr_parser_info()
@@ -147,6 +151,9 @@ class Cert_investigation extends Certification_base
     {
         if ($this->_chk_ocr_status($content) === FALSE)
         {
+            if ( ! $this->check_pdf_fraud_result($content)) {
+                return FALSE;
+            }
             $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
             return FALSE;
         }
@@ -241,7 +248,11 @@ class Cert_investigation extends Certification_base
      * @return bool
      */
     public function pre_failure($sys_check): bool {
-        // 系統過的暫時全部轉人工
+        if (parent::pre_failure($sys_check))
+        {
+            return TRUE;
+        }
+        // 除了 PDF 防偽驗證，系統過的暫時全部轉人工
         if($sys_check == TRUE)
         {
             $this->set_review(TRUE);
@@ -277,7 +288,6 @@ class Cert_investigation extends Certification_base
     public function post_review($sys_check): bool {
         return TRUE;
     }
-
 
     /**
      * OCR 解析結果

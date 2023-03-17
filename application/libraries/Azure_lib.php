@@ -50,7 +50,12 @@ class Azure_lib
         	return [];
         $file = @file_get_contents($url);
         if(!$file)
-        	return [];
+        {
+            $this->log_event('detect', $user_id, $cer_id, [], [
+                'origin_url' =>  $url,
+            ]);
+            return [];
+        }
 
         $s3_url=$this->CI->s3_upload->public_image_by_data($file, $bucket);
         $data= [

@@ -5,16 +5,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Payment_lib{
     private $charity_virtual_account = [];
 
+    // Associative array, key: payment_model.bank_id + payment_model.acc_name, value: payment_model.virtual_account
+    private $remit_whitelist = [];  // Will be set up in constructor
+
 	public function __construct()
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/payment_model');
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->library('Transaction_lib');
-
         $this->CI->load->model('user/charity_institution_model');
+        $this->CI->load->model('user/virtual_account_model');
+
         $charity_institution_info = $this->CI->charity_institution_model->get_many_by(['status' => 1]);
         $this->charity_virtual_account = array_column($charity_institution_info, 'virtual_account', 'id');
+        $this->remit_whitelist['0500407普匯租賃股份有限公司'] = $this->CI->virtual_account_model->get_valid_investor_account(LEASING_USERID);
     }
 	public function script_get_taishin_info($data){
 		$insert_param = array();
@@ -191,6 +196,7 @@ class Payment_lib{
 		if (!empty($value->virtual_account)) {
 			$bank_code 		= $bank_account = "";
 			$bank 			= bankaccount_substr($value->bank_acc);
+            $raw_bank_id = $value->bank_id;
 			$value->bank_id = substr($value->bank_id, 0, 3);
 
 			if ($bank['bank_code'] == $value->bank_id) {
@@ -219,6 +225,13 @@ class Payment_lib{
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				} else {
+                    $key = $raw_bank_id . $value->acc_name;
+                    if ( ! empty($raw_bank_id) && ! empty($value->acc_name) && isset($this->remit_whitelist[$key]) && $this->remit_whitelist[$key] == $value->virtual_account)
+                    {
+                        $this->CI->transaction_lib->recharge($value->id);
+                        return TRUE;
+                    }
+
                     $isTaishinVirtualCode = substr($value->virtual_account, 0, 5) == TAISHIN_VIRTUAL_CODE ? true : false;
 					if (!investor_virtual_account($value->virtual_account) || $isTaishinVirtualCode) {
 						$this->CI->transaction_lib->recharge($value->id);
@@ -1466,6 +1479,13 @@ class Payment_lib{
                     }
                 }
 
+                // 取得 user_from 是否為法人
+                $user_from_list = array_keys($tax_list);
+                $this->CI->load->model('user/user_model');
+                $user_from_company_status_list = call_user_func_array('array_column', [
+                    $this->CI->user_model->get_company_status_by_ids($user_from_list), 'company_status', 'id'
+                ]);
+
                 if (!empty($tax_list)) {
                     foreach ($tax_list as $user_id => $amount) {
                         if ( ! $user_id) continue;
@@ -1477,7 +1497,16 @@ class Payment_lib{
                         if (!$today) {
                             $tax = $this->CI->financial_lib->get_tax_amount($amount);
                             $this->CI->ezpay_lib->set_amt($tax, $amount);
-                            $this->CI->ezpay_lib->set_item('influx', '平台服務費', 1, '筆', $amount);
+
+                            if ( ! empty($user_from_company_status_list[$user_id]))
+                            {
+                                $this->CI->ezpay_lib->set_item('influx', '平台服務費', 1, '筆', ($amount - $tax));
+                            }
+                            else
+                            {
+                                $this->CI->ezpay_lib->set_item('influx', '平台服務費', 1, '筆', $amount);
+                            }
+
                             $tax_info = $this->CI->ezpay_lib->send($user_id);
                             if ($tax_info) {
                                 $this->CI->receipt_model->insert(array(
@@ -1557,6 +1586,14 @@ class Payment_lib{
                 }
                 $tax_list[$value->user_from][$value->source] += $value->amount;
             }
+
+            // 取得 user_from 是否為法人
+            $user_from_list = array_keys($tax_list);
+            $this->CI->load->model('user/user_model');
+            $user_from_company_status_list = call_user_func_array('array_column', [
+                $this->CI->user_model->get_company_status_by_ids($user_from_list), 'company_status', 'id'
+            ]);
+
             if ( ! empty($tax_list))
             {
                 foreach ($tax_list as $user_id => $tax)
@@ -1581,6 +1618,14 @@ class Payment_lib{
                             $item_name[] = $receipt_item_name[$source];
                             $item_count[] = 1;
                             $item_unit[] = '筆';
+
+                            if ( ! empty($user_from_company_status_list[$user_id]))
+                            {
+                                $item_tax_amt = $this->CI->financial_lib->get_tax_amount($amount);
+                                $item_price[] = $amount - $item_tax_amt;
+                                $total_amt += $amount;
+                                continue;
+                            }
                             $item_price[] = $amount;
                             $total_amt += $amount;
                         }

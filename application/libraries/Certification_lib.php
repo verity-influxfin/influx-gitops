@@ -703,6 +703,9 @@ class Certification_lib{
         // 僅保留 勾稽戶役政 API
         $verify_result = $this->verify_id_card_info($info->id, $content, $msg, $ocr);
 
+        // 確認有無配偶
+        $content['hasSpouse'] = ! empty($ocr['spouse']);
+
         $remark['error'] = $msg;
         $remark['OCR']   = $ocr;
         $return_data['remark'] = $remark;
@@ -720,7 +723,6 @@ class Certification_lib{
      */
     public function verify_id_card_info($user_certification_id, array &$identity_content, &$error_message, $ocr_info=[]): array
     {
-        $re_verify = ! $ocr_info;
         $risVerified = false;
         $risVerificationFailed = true;
         if ( ! isset($identity_content['id_number']) || ! isset($identity_content['name']) || ! isset($identity_content['birthday']))
@@ -761,7 +763,8 @@ class Certification_lib{
         $result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId, $resultUserId);
 
         $current_time = (new DateTime())->format('Y-m-d H:i:s.u');
-        if ($re_verify && isset($identity_content['id_card_api']))
+        $re_verify = isset($identity_content['id_card_api']);
+        if ($re_verify)
         {
             // Put current data into history log.
             if ( ! isset($identity_content['id_card_api_history']))
@@ -2070,7 +2073,7 @@ class Certification_lib{
                 if($count){
                     $this->CI->load->library('s3_upload');
                     $url = $this->CI->s3_upload->image_by_data($image_data, basename($url), $user_id, 'id_card', 'rotate');
-                    return array('count' => $count,'url' => $url);
+                    return array('count' => $count, 'url' => $url, 'system' => $system);
                 }
             }
 		}
@@ -3309,6 +3312,10 @@ class Certification_lib{
 
     public function get_last_status($user_id, $investor = 0, $company = 0, $target = false, $product_info = false, $target_get_failed = FALSE, $target_get_expired = FALSE)
     {
+        if (is_array($target))
+        {
+            $target = json_decode(json_encode($target));
+        }
 		if($user_id){
 			$certification = [];
             $company_source_user_id = false;
@@ -3695,21 +3702,23 @@ class Certification_lib{
     {
         if ($url) {
             $msg = '';
-            $remark = [];
+            $remark = ['memo' => []];
             $identity_cer = $this->get_certification_info($user_id, CERTIFICATION_IDENTITY, BORROWER);
-            $student_cer = $this->get_certification_info($user_id, CERTIFICATION_STUDENT, BORROWER);
-            $diploma_cer = $this->get_certification_info($user_id, CERTIFICATION_DIPLOMA, BORROWER);
+            // $student_cer = $this->get_certification_info($user_id, CERTIFICATION_STUDENT, BORROWER);
+            // $diploma_cer = $this->get_certification_info($user_id, CERTIFICATION_DIPLOMA, BORROWER);
             if ($identity_cer && $identity_cer->status == CERTIFICATION_STATUS_SUCCEED
-                && (isset($student_cer->content['school']) && !preg_match('/\(自填\)/', $student_cer->content['school']))
-                && (isset($diploma_cer->content['school']) && !preg_match('/\(自填\)/', $diploma_cer->content['school']))
+                // && (isset($student_cer->content['school']) && !preg_match('/\(自填\)/', $student_cer->content['school']))
+                // && (isset($diploma_cer->content['school']) && !preg_match('/\(自填\)/', $diploma_cer->content['school']))
             ) {
                 $cer_id = $identity_cer->id;
                 $this->CI->load->library('Azure_lib');
                 $identity_cer_face = $this->CI->azure_lib->detect($identity_cer->content['person_image'], $user_id, $cer_id);
                 $signing_face = $this->CI->azure_lib->detect($url, $user_id, $cer_id);
                 $signing_face_count = count($signing_face);
+                $remark['memo']['first_count'] = $signing_face_count;
                 if ($signing_face_count == 0) {
                     $rotate = $this->face_rotate($url, $user_id);
+                    $remark['memo']['first_rotate'] = $rotate;
                     if ($rotate) {
                         $identity_cer->content['person_image'] = $rotate['url'];
                         $signing_face_count = $rotate['count'];
@@ -3725,8 +3734,10 @@ class Certification_lib{
                         $identity_cer_token = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image'], $user_id, $cer_id);
                         $signing_face_token = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image'], $user_id, $cer_id);
                         $signing_face_count = $signing_face_token && is_array($signing_face_token) ? count($signing_face_token) : 0;
+                        $remark['memo']['second_count'] = $signing_face_count;
                         if ($signing_face_count == 0) {
                             $rotate = $this->face_rotate($identity_cer->content['person_image'], $user_id, $cer_id, 'faceplusplus');
+                            $remark['memo']['second_rotate'] = $rotate;
                             if ($rotate) {
                                 $identity_cer->content['person_image'] = $rotate['url'];
                                 $signing_face_count = $rotate['count'];

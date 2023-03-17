@@ -30,6 +30,14 @@ class Risk extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 
+    public function natural_person_export()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/risk_target_natural_person_export');
+        $this->load->view('admin/_footer');
+    }
+
     public function get_natural_person_list()
     {
         // 取得$_GET的產品ID和子產品ID
@@ -225,6 +233,97 @@ class Risk extends MY_Admin_Controller {
 
         echo json_encode($result);
         return TRUE;
+    }
+
+    public function export_natural_person_list()
+    {
+        $data_rows = [];
+        $title_rows = [];
+
+        $input = $this->input->post(NULL, TRUE);
+        if (empty($input['product_id']) || (empty($input['export_column']) && empty($input['export_column_cert'])))
+        {
+            goto END;
+        }
+
+        // 產品別
+        $input_product_id = $input['product_id'];
+        // 案件相關欄位
+        $input_target_column = $input['export_column'] ?? [];
+        $input_target_column = array_flip($input_target_column);
+        $title_target = array_intersect_key([
+            'target_no' => ['name' => '案號', 'width' => 20],
+            'user_id' => ['name' => '會員編號'],
+            'user_name' => ['name' => '姓名'],
+            'user_phone' => ['name' => '電話', 'datatype' => \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING, 'width' => 12],
+            'product_name' => ['name' => '產品名稱', 'width' => 20],
+            'target_status' => ['name' => '狀態'],
+            'updated_at' => ['name' => '最後更新時間', 'width' => 20]
+        ], $input_target_column
+        );
+        // 徵信項相關欄位
+        $input_cert_id = $input['export_column_cert'] ?? [];
+        $input_cert_id = array_flip($input_cert_id);
+        $cert_config = $this->config->item('certifications');
+        $title_cert = array_intersect_key(array_column($cert_config, 'name', 'id'), $input_cert_id);
+        array_walk($title_cert, function (&$item) {
+            $item = ['name' => $item, 'width' => 15];
+        });
+
+        $title_rows = array_replace($title_target, $title_cert);
+
+        $this->load->library('target_lib');
+        $target_list = $this->target_lib->get_natural_person_export_list($input_product_id);
+
+        if (empty($target_list))
+        {
+            goto END;
+        }
+
+        $this->load->library('certification_lib');
+        $this->load->library('loanmanager/product_lib');
+
+        $user_prod_list = [];
+        foreach ($target_list as $target)
+        {
+            // 取得案件、使用者相關資訊
+            if (empty($user_prod_list[$target['product_id']][$target['sub_product_id']]))
+            {
+                $product_info = $this->product_lib->getProductInfo($input_product_id, $target['sub_product_id']);
+                $user_prod_list[$target['product_id']][$target['sub_product_id']] = $product_info['name'];
+            }
+            $target['product_name'] = $user_prod_list[$target['product_id']][$target['sub_product_id']];
+            $target['updated_at'] = date('Y-m-d H:i:s', $target['updated_at']);
+            $target['target_status'] = $this->target_model->status_list[$target['status']] ?? '';
+            $target['user_name'] = mb_substr($target['user_name'], 0, 1);
+            if ( ! empty($target['user_name']))
+            {
+                $target['user_name'] .= '○○';
+            }
+
+            // 取得徵信項相關資訊
+            $user_cert = $this->certification_lib->get_last_status($target['user_id'], BORROWER, USER_NOT_COMPANY, $target, FALSE, TRUE, TRUE);
+            $user_cert = array_column($user_cert, 'certification_id', 'id');
+            $user_cert = array_intersect_key($user_cert, $input_cert_id);
+            array_walk($user_cert, function (&$item, $index) {
+                if (empty($item))
+                {
+                    $item = '';
+                    return;
+                }
+                $cert_btn = Certification_btn_factory::get_instance(['id' => $item, 'certification_id' => $index]);
+                $item = $cert_btn->get_status_meaning();
+            });
+
+            // 組裝資料
+            $data_rows[] = array_replace(array_intersect_key($target, $input_target_column), $user_cert);
+        }
+
+        END:
+        setcookie('export_natural_person', TRUE);
+        $this->load->library('spreadsheet_lib');
+        $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
+        $this->spreadsheet_lib->download('export.xlsx', $spreadsheet);
     }
 
 	public function index(){
@@ -469,7 +568,14 @@ class Risk extends MY_Admin_Controller {
 						}
 					}
 
-					!isset($cer_list[$value->user_id]) ? $cer_list[$value->user_id] = $this->certification_lib->get_last_status($value->user_id, BORROWER, 1, $value) : '';
+                    if ( ! isset($cer_list[$value->user_id]))
+                    {
+                        $cer_list[$value->user_id] = $this->certification_lib->get_last_status($value->user_id, BORROWER, 1, $value, FALSE, FALSE, TRUE);
+                    }
+                    else
+                    {
+                        $cer_list[$value->user_id] = array_replace($cer_list[$value->user_id], $this->certification_lib->get_last_status($value->user_id, BORROWER, 1, $value, FALSE, FALSE, TRUE));
+                    }
 					$value->certification = $cer_list[$value->user_id];
 					if(isset($list[$key]->certification[3]['certification_id'])){
 						$bank_account 	= $this->user_bankaccount_model->get_by(array(

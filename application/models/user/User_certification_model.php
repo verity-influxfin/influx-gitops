@@ -98,7 +98,7 @@ class User_certification_model extends MY_Model
                     ->select(['user_id','certification_id','content'])
         			->from('p2p_user.user_certification')
         			->where_in('user_id', $userIdList)
-                    ->where_in('certification_id',['1','10','11','12','500','501','1002','1003','1007','1017','1018'])
+                    ->where_in('certification_id',['1','10','11','12','500','501','1002','1003','1007','1017','1018', CERTIFICATION_PASSBOOKCASHFLOW])
                     ->where_not_in('status', ['2'])
                     ->where('content !=', '')
                     ->group_by(['user_id','certification_id'])->get();
@@ -158,6 +158,7 @@ class User_certification_model extends MY_Model
             ->where('remark !=', '')
             ->where('status', 1)
             ->where('certification_id', 1)
+            ->order_by('created_at', 'DESC')
             ->limit($limit, $offset)
             ->get();
 
@@ -174,6 +175,7 @@ class User_certification_model extends MY_Model
             ->where('status', 1)
             ->where('investor', USER_BORROWER)
             ->where('certification_id', 1)
+            ->order_by('created_at', 'DESC')
             ->limit($limit, $offset)
             ->get();
 

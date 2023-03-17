@@ -846,7 +846,7 @@ class Transfer extends REST_Controller {
      *       "error": "203"
      *     }
 	 *
-     * @apiError 208 未滿20歲
+     * @apiError 208 未滿18歲
      * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
@@ -1657,7 +1657,7 @@ class Transfer extends REST_Controller {
 			$this->response(['result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD]);
 		}
 
-        if (get_age($this->user_info->birthday) < 20 && ! $is_company)
+        if (get_age($this->user_info->birthday) < 18 && ! $is_company)
         {
             $this->response(['result' => 'ERROR', 'error' => UNDER_AGE]);
         }

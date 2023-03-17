@@ -119,8 +119,8 @@
                             </form>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片</h1>
-                            <fieldset disabled>
+                            <h1>圖片/文件</h1>
+                            <fieldset>
                                 <div class="form-group">
                                     <label>損益表</label><br>
                                     <? isset($content['income_statement_image']) && !is_array($content['income_statement_image']) ? $content['income_statement_image'] = array($content['income_statement_image']) : '';
@@ -131,8 +131,28 @@
                                             </a>
                                         <? }
                                     }?>
+                                    <hr/>
+                                    <label>其它</label><br>
+                                    <?php
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
+                                            </a>
+                                        <?php }
+                                    } ?>
                                 </div>
                             </fieldset>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page']; ?>
+                                </div>
+                            <?php } ?>
                         </div>
                       </div>
                       <!-- admin form end -->

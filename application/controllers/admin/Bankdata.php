@@ -33,8 +33,9 @@ class Bankdata extends MY_Admin_Controller
     public function report()
     {
         $input = $this->input->get(NULL, TRUE);
-        $target_id = isset($input['target_id']) ? $input['target_id'] : '';
-		$table_type = isset($input['table_type']) ? $input['table_type'] : '';
+        $target_id = $input['target_id'] ?? '';
+        $table_type = $input['table_type'] ?? '';
+        $bank = $input['bank'] ?? '';
 
 		if(!$target_id || !$table_type){
 			echo '參數不正確'.'參數：target_id = '.$target_id.' , table_type = '.$table_type;exit;
@@ -59,7 +60,7 @@ class Bankdata extends MY_Admin_Controller
 			if($table_type == 'check'){
 				$this->load->library('mapping/sk_bank/check_list');
 				// 取得交易序號相關資料
-				$msg_no_info = $this->getMappingMsgNo($target_id);
+				$msg_no_info = $this->getMappingMsgNo($target_id, $bank);
                 // 有上筆送出資料時
 				if($msg_no_info){
 					$response['msg_no'] = isset($msg_no_info['data']['send_log']['msg_no']) ? $msg_no_info['data']['send_log']['msg_no'] : '';
@@ -97,7 +98,7 @@ class Bankdata extends MY_Admin_Controller
                 // 新光收件檢核表儲存資料
                 $this->load->model('skbank/LoanTargetMappingMsgNo_model');
                 $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
-    			$skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$target_id,'type'=>'text','content !='=>'']);
+    			$skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$target_id,'type'=>'text','content !='=>'','bank'=>$bank]);
 
                 if($skbank_save_info){
                     if(isset($skbank_save_info->content)){
@@ -164,12 +165,21 @@ class Bankdata extends MY_Admin_Controller
                                     $data = array_reduce($data, 'array_merge', array());
                                     $response = array_merge($response,$data);
                                 }
+                                elseif (is_array($content) && ! empty($content))
+                                {
+                                    $data = array_map(function ($key, $values) {
+                                        $key = $key . '_content';
+                                        return [$key => $values];
+                                    }, array_keys($content), $content);
+                                    $data = array_reduce($data, 'array_merge', array());
+                                    $response = array_merge($response, $data);
+                                }
                             }
                         }
                     }
 				}
 				// 附件檢核表
-				$meragre_array = $this->check_list->get_raw_data($target_info);
+				$meragre_array = $this->check_list->get_raw_data($target_info, $bank);
 				$response = array_merge($response,$meragre_array);
 			}
 		}else{
@@ -186,23 +196,29 @@ class Bankdata extends MY_Admin_Controller
 	 * @param  string $data_type      [送出資料類型]
 	 * @return array $msg_no          [新光交易編號]
 	 */
-	public function getMappingMsgNo($target_id=''){
-		$input = $this->input->get(NULL, TRUE);
-        $target_id = isset($input['target_id']) ? $input['target_id'] : $target_id;
-		$action_user = isset($this->login_info->id) ? $this->login_info->id : '';
-		$action = isset($input['action']) ? $input['action'] : '';
-		$data_type = isset($input['data_type']) ? $input['data_type'] : 'text';
+    public function getMappingMsgNo($target_id = '', $bank_num = MAPPING_MSG_NO_BANK_NUM_SKBANK)
+    {
+        $input = $this->input->get(NULL, TRUE);
+        $target_id = $input['target_id'] ?? $target_id;
+        $action_user = $this->login_info->id ?? '';
+        $action = $input['action'] ?? '';
+        $data_type = $input['data_type'] ?? 'text';
+        if (isset($input['bank']))
+        {
+            $bank_num = $input['bank'];
+        }
 
 		$this->load->library('mapping/sk_bank/msgno');
-		$response = $this->msgno->getSKBankInfoByTargetId($target_id, $data_type);
+		$response = $this->msgno->getSKBankInfoByTargetId($target_id, $data_type, $bank_num);
 
 		if($action == 'send'){
 			$this->load->model('skbank/LoanTargetMappingMsgNo_model');
 			$data = [
 				'target_id' => $target_id,
-				'msg_no' => isset($response['data']['msg_no']) ? $response['data']['msg_no'] : '',
+				'msg_no' => $response['data']['msg_no'] ?? '',
 				'action_user_id' => $action_user,
 				'type' => $data_type,
+				'bank' => $bank_num,
 				'date' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],0,8) : '',
 				'serial_number' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],8) : '',
 
@@ -226,8 +242,11 @@ class Bankdata extends MY_Admin_Controller
         $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no'=>$input['msg_no'],'type'=>$input['data_type']]);
 
         if($mapping_info){
-            $mapping_info = $this->LoanTargetMappingMsgNo_model->update($mapping_info->id,['content'=>$request_data]);
+            $this->LoanTargetMappingMsgNo_model->update($mapping_info->id,['content'=>$request_data]);
         }
-        // print_r($input);exit;
+
+        $this->load->library('output/json_output');
+        $this->json_output->setStatusCode(200)->setResponse(['result'=>'success'])->send();
+
     }
 }

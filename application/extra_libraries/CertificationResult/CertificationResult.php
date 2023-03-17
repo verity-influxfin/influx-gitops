@@ -123,7 +123,7 @@ class CertificationResult implements CertificationResultInterface
         return json_encode(
                 ['msgList' => $this->msgList, 'manualStatus' => $this->manualStatus,
                     'resubmitExpirationMonth' => $this->resubmitExpirationMonth, 'banResubmit' => $this->banResubmit],
-                $pretty_print ? JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT : JSON_UNESCAPED_SLASHES
+                $pretty_print ? JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT : JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
             );
     }
 
