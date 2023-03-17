@@ -122,8 +122,8 @@ class Cert_investigation extends Cert_pdf
      * @return bool
      */
     public function check_before_verify(): bool {
-        // 紙本寄送直接進人工
-        if(isset($this->content['return_type']) && $this->content['return_type'] == 0)
+        // 紙本寄送且未由人工上傳 pdf 檔案或是圖片者，直接進人工
+        if(isset($this->content['return_type']) && $this->content['return_type'] == 0 && empty($this->content['pdf_file']) && empty($this->content['images']))
         {
             $this->result->addMessage('需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW);
             return FALSE;
