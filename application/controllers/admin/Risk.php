@@ -131,7 +131,9 @@ class Risk extends MY_Admin_Controller {
 
             if ( ! isset($user_list[$target->user_id]))
             {
-                if (isset($userStatusList[$target->user_id]) && $userStatusList[$target->user_id] > 0)
+                $user_status = $this->target_model->get_old_user([$target->user_id], $target->created_at);
+                $user_status = array_column($user_status, 'user_from', 'user_from');
+                if (isset($user_status[$target->user_id]))
                 {
                     $user_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
                         admin_url('User/display?id=' . $target->user_id) . '" >' .

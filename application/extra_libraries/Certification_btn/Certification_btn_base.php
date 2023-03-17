@@ -15,6 +15,7 @@ abstract class Certification_btn_base
     protected $sys_check;
     protected $is_expired;
     protected $is_submitted;
+    protected $cert;
 
     public function __construct(array $certification)
     {
@@ -28,6 +29,7 @@ abstract class Certification_btn_base
         $this->sys_check = ! isset($cert->certification['sys_check']) ? 0 : (int) $cert->certification['sys_check'];
         $this->is_expired = isset($cert) && $cert->is_expired();
         $this->is_submitted = isset($cert) && $cert->is_submitted();
+        $this->cert = isset($cert) ? $cert->certification : [];
     }
 
     abstract public function draw(): string;
