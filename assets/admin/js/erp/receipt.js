@@ -73,11 +73,5 @@ var app = new Vue({
                 this.is_waiting_response = false
             })
         },
-        format(value) {
-            if (value.toString().includes('-')) {
-                return value
-            }
-            return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
-        },
     }
 })

@@ -74,7 +74,7 @@
                                     </tr>
                                     <template v-else>
                                         <tr v-for="(item,index) in a_sheet.tableData" :key="index">
-                                            <td v-for="(value,key) in item" :key="key">{{ format(value) }}</td>
+                                            <td v-for="(value,key) in item" :key="key">{{ value }}</td>
                                         </tr>
                                     </template>
                                 </tbody>
@@ -102,7 +102,7 @@
                                     </tr>
                                     <template v-else>
                                         <tr v-for="(item,index) in b_sheet.tableData" :key="index">
-                                            <td v-for="(value,key) in item" :key="key">{{ format(value) }}</td>
+                                            <td v-for="(value,key) in item" :key="key">{{ value }}</td>
                                         </tr>
                                     </template>
                                 </tbody>
