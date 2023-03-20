@@ -1281,7 +1281,7 @@ class Credit_lib{
 
 	public function get_investigation_times_point($times = 0){
 		$point 	= 0;
-		if($times > 0 && $times <= 3){
+		if($times >= 0 && $times <= 3){
 			$point = 300;
 		}else if($times > 3 && $times <= 6){
 			$point = 200;
