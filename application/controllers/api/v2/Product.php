@@ -1086,7 +1086,7 @@ class Product extends REST_Controller {
      *       'error': '206'
      *     }
      *
-     * @apiError 208 未滿20歲或大於35歲
+     * @apiError 208 未滿18歲或大於35歲
      * @apiErrorExample {Object} 208
      *     {
      *       'result': 'ERROR',
@@ -1597,7 +1597,8 @@ class Product extends REST_Controller {
                                 $content_array_data = [];
                             }
                         }
-                        $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
+                        $option_cert_ids = $product['option_certifications'] ?? [];
+                        $value['optional'] = in_array($value['id'], $option_cert_ids); // 是否選填 (true/false)
                         $value['type'] = 'certification';
                         $value['completeness'] = ceil($value['user_status'] == 1?$completeness_level:0);
 						$value['certification_content'] = $content_array_data;
@@ -1992,9 +1993,11 @@ class Product extends REST_Controller {
                     'status' => [0, 1]
                 ]);
 				$this->load->library('Sendemail');
+                $notification_subject = "【投資標的】您的投資利率已提高";
                 foreach ($investments as $inv_key => $inv_val) {
                     $this->target_lib->cancel_investment($target, $inv_val, $user_id);
-					$this->sendemail->change_interest_rate($inv_val, $target->interest_rate, $new_rate);
+                    $rate_increased_notification = $this->rate_increased_notification_content($inv_val->created_at, $target->interest_rate, $new_rate);
+					$this->sendemail->change_interest_rate($inv_val, $target->interest_rate, $new_rate, $notification_subject, $rate_increased_notification);
                 }
                 $target->status = 2;
                 $this->load->library('Contract_lib');
@@ -2007,6 +2010,24 @@ class Product extends REST_Controller {
                     'launch_times' => $launch_times,
                 ];
                 $this->target_lib->target_verify_success($target, 0, $params, $user_id);
+
+                // Notify rate increased by app.
+                $user_ids_to_exclude = [];
+                $this->load->library('notification_lib');
+                foreach ($investments as $investment)
+                {
+                    $user_ids_to_exclude[] = $investment->user_id;
+                    $rate_increased_notification = $this->rate_increased_notification_content(
+                        $investment->created_at, $target->interest_rate, $new_rate, TRUE
+                    );
+                    $this->notification_lib->notify_rate_increased(
+                        [$investment->user_id], $target->interest_rate, $new_rate, $notification_subject, $rate_increased_notification
+                    );
+                }
+                $this->notification_lib->notify_rate_increased(
+                    $this->user_model->get_ids($user_ids_to_exclude), $target->interest_rate, $new_rate
+                );
+
                 $this->response(array('result' => 'SUCCESS'));
             }
             $this->target_model->update($target->id, ['script_status' => 0]);
@@ -2802,7 +2823,7 @@ class Product extends REST_Controller {
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
             'status' => $sub_product['status'],
-            'allow_age_range' => $sub_product['allow_age_range'] ?? [20, 55],
+            'allow_age_range' => $sub_product['allow_age_range'] ?? [18, 55],
             'apply_range_s' => $sub_product['apply_range_s'] ?? null,
             'apply_range_e' => $sub_product['apply_range_e'] ?? null,
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,
@@ -3005,6 +3026,24 @@ class Product extends REST_Controller {
         } else {
             $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
         }
+    }
+
+    private function rate_increased_notification_content($invest_time, $old_rate, $new_rate, $for_app_notification=FALSE): string
+    {
+        $old_rate = rtrim(strval($old_rate), '0');
+        $old_rate = rtrim($old_rate, '.');
+        $message = "親愛的投資人請注意：
+			您的投資標的有一項重大變更！
+			您於" .  date("m月d日", $invest_time) . "投資的債權，剛剛自主提升利率由
+			".$old_rate."% → ".$new_rate."%。
+			同樣的項目，更高的潛在收益！
+			請登錄普匯APP 下標搶佔先手";
+        if ($for_app_notification)
+        {
+            $message = preg_replace('/\s/', '', $message);
+            $message = preg_replace('/親愛的投資人請注意：/', '', $message);
+        }
+        return $message;
     }
 
     // 消費貸款申請
@@ -3307,6 +3346,7 @@ class Product extends REST_Controller {
                 $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
             }
         }
+        log_message('debug', "[Product/type1_signing][user_bankaccount][verify] {$bank_account->verify}");
 
         $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
         if (in_array($product['id'], $allow_fast_verify_product)
@@ -3321,7 +3361,7 @@ class Product extends REST_Controller {
             if ($faceDetect) {
                 $this->load->library('certification_lib');
                 $faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $param['person_image']);
-                if ($faceDetect_res['error'] == '') {
+                if (isset($faceDetect_res['error']) && $faceDetect_res['error'] == '') {
                     $target->status = TARGET_WAITING_VERIFY;
                     $targetData->autoVerifyLog[] = [
                         'faceDetect' => $faceDetect_res,

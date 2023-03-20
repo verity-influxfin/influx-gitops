@@ -142,6 +142,7 @@ class Credit_lib{
         $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_' . $product_id];
 
 	    if($stage_cer == 0) {
+            NORMAL_CREDIT:
             $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
             $user_info = $this->CI->user_model->get($user_id);
             $this->CI->load->model('user/user_certification_model');
@@ -154,7 +155,7 @@ class Credit_lib{
             // 學校
             if (isset($data['school_name']) && ! empty($data['school_name']))
             {
-                $total += $this->get_school_point(
+                $get_school_point = $this->get_school_point(
                     $data['school_name'],
                     $data['school_system'],
                     $data['school_major'],
@@ -162,6 +163,15 @@ class Credit_lib{
                     $sub_product_id,
                     $product_id
                 );
+
+                $total += (int) ($get_school_point['point'] ?? 0);
+                if ( ! empty($get_school_point['score_history']))
+                {
+                    foreach ($get_school_point['score_history'] as $history_val)
+                    {
+                        $this->scoreHistory[] = $history_val;
+                    }
+                }
             }
 
             // 近一學期成績
@@ -278,12 +288,15 @@ class Credit_lib{
             }
 
             $param['points'] = intval($total);
-
+            goto SKIP_STAGE_CREDIT;
         }
         if(in_array($stage_cer,[1,2])){
+            // todo: 暫時繞過階段上架的評分方式
+            goto NORMAL_CREDIT;
             $param['points'] = $total = 100;
         }
 
+        SKIP_STAGE_CREDIT:
         if($mix_credit){
             return $param['points'];
         }
@@ -388,8 +401,12 @@ class Credit_lib{
         }
 
         //畢業學校
-        if (isset($data['diploma_name']) && !empty($data['diploma_name'])) {
-            $total += intval($this->get_school_point($data['diploma_name'], $data['diploma_system'], '', $data['diploma_department'])) * 0.6;
+        if ( ! empty($data['diploma_name']))
+        {
+            $get_school_point = $this->get_school_point($data['diploma_name'], $data['diploma_system'], '', $data['diploma_department']);
+            $total += ((int) ($get_school_point['point'] ?? 0)) * 0.6;
+            $school_point_score_history = implode($get_school_point['score_history'] ?? [], ' + ');
+            $this->scoreHistory[] = "( {$school_point_score_history} ) * 0.6";
         }
 
         if (isset($data['job_type'])) {
@@ -464,11 +481,13 @@ class Credit_lib{
 
         if ($stage_cer)
         {
+            goto SKIP_STAGE_CREDIT;
             $tmp_msg = '--- 原始風控計算: ' . $total;
             $total = min($total, $this->credit['credit_level_3'][10]['end']);
             $this->scoreHistory[] = "{$tmp_msg}; 因階段上架調整為: {$total} ---";
         }
 
+        SKIP_STAGE_CREDIT:
         $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
         $is_top_enterprise = 0;
         if ($approvalExtra) {
@@ -675,6 +694,7 @@ class Credit_lib{
     public function get_school_point($school_name = '', $school_system = 0, $school_major = '', $school_department = FALSE, $sub_product_id = 0, $product_id = 0)
     {
 		$point = 0;
+        $score_history = [];
 		if(!empty($school_name)){
 			$school_list = $this->CI->config->item('school_points');
 			$school_info = [];
@@ -694,7 +714,7 @@ class Credit_lib{
                     if (empty($school_info['intelligent_points']))
                     {
                         $schoolPoing = 0;
-                        $this->scoreHistory[] = '此申貸案為名校貸，但系統無設定對應的名校分數';
+                        $score_history[] = '此申貸案為名校貸，但系統無設定對應的名校分數';
                     }
                     else
                     {
@@ -708,16 +728,16 @@ class Credit_lib{
                 }
 
                 $point = $schoolPoing;
-                $this->scoreHistory[] = '學校得分:'.$school_name.' = '.$schoolPoing;
+                $score_history[] = '學校得分: '.$school_name.' = '.$schoolPoing;
                 if($school_system == 0){
                     $point += 100;
-                    $this->scoreHistory[] = '學制:學士 = 100';
+                    $score_history[] = '學制: 學士 = 100';
                 }else if($school_system==1){
                     $point += 400;
-                    $this->scoreHistory[] = '學制:碩士 = 400';
+                    $score_history[] = '學制: 碩士 = 400';
                 }else if($school_system==2){
                     $point += 500;
-                    $this->scoreHistory[] = '學制:博士 = 500';
+                    $score_history[] = '學制: 博士 = 500';
                 }
 
 				if($school_department) {
@@ -727,12 +747,12 @@ class Credit_lib{
 						if (isset($school_data[$school_name]['score'][$school_department])) {
 							$schoolDepartmentPoint = $school_data[$school_name]['score'][$school_department];
 							$point += $schoolDepartmentPoint;
-							$this->scoreHistory[] = '大學科系加分:' . $school_department . ' = ' . $schoolDepartmentPoint;
+							$score_history[] = '大學科系加分: ' . $school_department . ' = ' . $schoolDepartmentPoint;
 						} else {
 							asort($school_data[$school_name]['score']);
 							foreach ($school_data[$school_name]['score'] as $s) {
 								$point += $s;
-								$this->scoreHistory[] = '大學科系加分:' . $school_department . '(不在列表取該校科系最低加分) = ' . $schoolDepartmentPoint;
+								$score_history[] = '大學科系加分: ' . $school_department . '(不在列表取該校科系最低加分) = ' . $schoolDepartmentPoint;
 								break;
 							}
 						}
@@ -740,7 +760,7 @@ class Credit_lib{
 				}
             }
 		}
-		return $point;
+		return ['score_history' => $score_history, 'point' => $point];
 	}
 
 	public function get_job_salary_point($job_salary = 0){
@@ -921,7 +941,7 @@ class Credit_lib{
                     $school_points_data = $this->get_school_point($info->meta_value);
                     $school_config = $this->CI->config->item('school_points');
                     // 黑名單的學校額度是0
-                    if(in_array($info->meta_value,$school_config['lock_school']) || !$school_points_data){
+                    if(in_array($info->meta_value,$school_config['lock_school']) || empty($school_points_data['point'])){
                         $data['amount'] = 0;
                     }
 				}

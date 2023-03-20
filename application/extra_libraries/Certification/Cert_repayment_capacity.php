@@ -112,40 +112,22 @@ class Cert_repayment_capacity extends Certification_base
         }
         else if (is_pdf($mime))
         {
-            $text = '';
-            $parser = new \Smalot\PdfParser\Parser();
-            try
-            {
-                $pdf = $parser->parseFile($url);
-                $text = $pdf->getText();
-                $this->CI->load->library('joint_credit_lib');
-                $response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
-            }
-            catch (\Exception $e)
-            {
-                $response = FALSE;
-            }
-
-            if ( ! $response || strpos($text, '綜合信用報告') === FALSE)
+            if ( ! isset($this->investigation_content['result']) || ! $this->investigation_content['result'])
             {
                 $this->result->addMessage('待人工驗證：聯徵PDF解析失敗', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                return $parsed_content;
             }
-            else
+            $this->CI->load->library('mapping/user/Certification_data');
+            $this->transform_data = $this->CI->certification_data->transform_joint_credit_to_repayment_capacity($this->investigation_content);
+            $parsed_content = array_merge($parsed_content, $this->transform_data);
+
+            // 負債比計算，投保薪資不能為0
+            if ( ! empty($parsed_content['monthly_repayment']) && is_numeric($parsed_content['monthly_repayment']))
             {
-                // 資料轉 result
-                $this->CI->load->library('mapping/user/Certification_data');
-                $this->transform_data = $this->CI->certification_data->transform_joint_credit_to_repayment_capacity($response);
-
-                $parsed_content = array_merge($parsed_content, $this->transform_data);
-
-                // 負債比計算，投保薪資不能為0
-                if ( ! empty($parsed_content['monthly_repayment']) && is_numeric($parsed_content['monthly_repayment']))
-                {
-                    $parsed_content['debt_to_equity_ratio'] = round(
-                        $this->transform_data['totalMonthlyPayment'] / $parsed_content['monthly_repayment'] * 100,
-                        2
-                    );
-                }
+                $parsed_content['debt_to_equity_ratio'] = round(
+                    $this->transform_data['totalMonthlyPayment'] / $parsed_content['monthly_repayment'] * 100,
+                    2
+                );
             }
         }
         return $parsed_content;

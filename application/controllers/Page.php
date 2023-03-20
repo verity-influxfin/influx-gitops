@@ -11,7 +11,12 @@ class Page extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        if ( ! app_access())
+        {
+            show_404();
+        }
         $this->load->model('user/user_model');
+        $this->load->model('user/user_meta_model');
         $this->load->model('user/sale_dashboard_model');
         $this->load->model('loan/target_model');
     }
@@ -100,6 +105,11 @@ class Page extends CI_Controller
         $this->load->view('eboard_page');
     }
 
+    public function good_case()
+    {
+        $this->load->view('good_case_page');
+    }
+
     public function get_eboard_data()
     {
         $retval = [];
@@ -167,6 +177,193 @@ class Page extends CI_Controller
                     'platform_statistic' => $this->_get_platform_statistic(),
                 ],
             ]));
+    }
+
+    public function get_good_case()
+    {
+        // from application/controllers/api/v2/Website.php list_get()
+        $list = [];
+        $where = [
+            'status' => [3, 4, 5, 10],
+            'created_at >=' => strtotime('-30 days'),
+        ];
+        $orderby = 'created_at';
+        $sort = 'desc';
+        $filters = $this->input->get('filters');
+        if($filters['start_date'] && $filters['end_date']){
+            $where['created_at >='] = strtotime($filters['start_date']);
+            $where['created_at <='] = strtotime($filters['end_date']);
+        }
+        if($filters['target_no']){
+            $where['target_no like'] = '%'.$filters['target_no'].'%';
+        }
+        if($filters['order_by']){
+            $orderby = $filters['order_by'];
+        }
+        $this->target_model->order_by($orderby,$sort);
+        
+        $this->target_model->limit(1000);
+        $target_list  = $this->target_model->get_many_by($where);
+        $product_list = $this->config->item('product_list');
+        $user_meta = new stdClass();
+
+        if(!empty($target_list)){
+            foreach($target_list as $key => $value){
+                $user_info 	= $this->user_model->get($value->user_id);
+                $user		= [];
+                if($user_info){
+                    $product = $product_list[$value->product_id];
+                    $sub_product_id = $value->sub_product_id;
+                    $product_name = $product['name'];
+                    if($this->is_sub_product($product,$sub_product_id)){
+                        $product = $this->trans_sub_product($product,$sub_product_id);
+                        $product_name = $product['name'];
+                    }
+
+                    $age = get_age($user_info->birthday);
+                    if ($product_list[$value->product_id]['identity'] == 1) {
+                        $user_meta = $this->user_meta_model->get_by(['user_id' => $value->user_id, 'meta_key' => 'school_name']);
+                        if (is_object($user_meta)) {
+                            $user_meta->meta_value = preg_replace('/\(自填\)/', '', $user_meta->meta_value);
+                        } else {
+                            $user_meta = new stdClass();
+                            $user_meta->meta_value = '未提供學校資訊';
+                        }
+                    } elseif ($product_list[$value->product_id]['identity'] == 2) {
+                        $meta_info = $this->user_meta_model->get_many_by([
+                            'user_id' => $value->user_id,
+                            'meta_key' => ['job_company', 'diploma_name']
+                        ]);
+                        if ($meta_info) {
+                            $job_company = ($meta_info[0]->meta_key == 'job_company'
+                                ? $meta_info[0]->meta_value
+                                : (isset($meta_info[1]) >= 2
+                                    ? $meta_info[1]->meta_value
+                                    : false));
+                            $diploma_name = $meta_info[0]->meta_key == 'diploma_name'
+                                ? $meta_info[0]->meta_value
+                                : (isset($meta_info[1]) >= 2
+                                    ? $meta_info[1]->meta_value
+                                    : false);
+                            $user_meta->meta_value = $job_company ? $job_company : $diploma_name;
+                        } else {
+                            $user_meta = new stdClass();
+                            $user_meta->meta_value = '未提供相關資訊';
+                        }
+                    }
+
+                    $user = array(
+                        'sex' 			=> $user_info->sex,
+                        'age'			=> $age,
+                        'company_name'	=> $user_meta?$user_meta->meta_value:'',
+                    );
+
+                    $targetDatas = [];
+                    $targetData = json_decode($value->target_data);
+                    if($product['visul_id'] == 'DS2P1'){
+                        $targetDatas = [
+                            'brand' => $targetData->brand,
+                            'name' => $targetData->name,
+                            'selected_image' => $targetData->selected_image,
+                            'purchase_time' => $targetData->purchase_time,
+                            'factory_time' => $targetData->factory_time,
+                            'product_description' => $targetData->product_description,
+                        ];
+                        foreach ($product['targetData'] as $skey => $svalue) {
+                            if(in_array($skey,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                                if(isset($targetData->$key) && !empty($targetData->$key)){
+                                    $pic_array = [];
+                                    foreach ($targetData->$key as $svalue){
+                                        preg_match('/\/image.+/', $svalue,$matches);
+                                        $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
+                                    }
+                                    $targetDatas[$key] = $pic_array;
+                                }
+                                else{
+                                    $targetDatas[$key] = '';
+                                }
+                            }
+                        }
+                        $user = array(
+                            'sex' 			=> '',
+                            'age'			=> '',
+                            'company_name'	=> '',
+                        );
+                    }
+                }
+
+                $reason = $value->reason;
+                $json_reason = json_decode($reason);
+                if(isset($json_reason->reason)){
+                    $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                }
+
+                $param = [
+                    'id' 				=> intval($value->id),
+                    'target_no' 		=> $value->target_no,
+                    'product_name' => $product_name,
+                    'product_id' 		=> intval($value->product_id),
+                    'sub_product_id' => intval($value->sub_product_id),
+                    'credit_level' 		=> intval($value->credit_level),
+                    'user_id' 			=> intval($value->user_id),
+                    'user' 				=> $user,
+                    'loan_amount' 		=> intval($value->loan_amount),
+                    'interest_rate' 	=> floatval($value->interest_rate),
+                    'instalment' 		=> intval($value->instalment),
+                    'repayment' 		=> intval($value->repayment),
+                    'expire_time' 		=> intval($value->expire_time),
+                    'invested' 			=> intval($value->invested),
+                    'reason' 			=> $reason,
+                    'targetDatas' => $targetDatas,
+                    'isTargetOpaque' => $sub_product_id==9999?true:false,
+                    'status' 			=> intval($value->status),
+                    'sub_status' 		=> intval($value->sub_status),
+                    'created_at' 		=> intval($value->created_at),
+                ];
+
+                isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $value->interest_rate ? $param['is_rate_increase'] = true : '';
+
+                $list[] = $param;
+            }
+        }
+        echo json_encode($list);
+        die();
+    }
+
+    private function sub_product_profile($product,$sub_product){
+        return array(
+            'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
+            'type' => $product['type'],
+            'identity' => $product['identity'],
+            'name' => $sub_product['name'],
+            'description' => $sub_product['description'],
+            'loan_range_s' => $sub_product['loan_range_s'],
+            'loan_range_e' => $sub_product['loan_range_e'],
+            'interest_rate_s' => $sub_product['interest_rate_s'],
+            'interest_rate_e' => $sub_product['interest_rate_e'],
+            'charge_platform' => $sub_product['charge_platform'],
+            'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
+            'instalment' => $sub_product['instalment'],
+            'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
+            'dealer' => $sub_product['dealer'],
+            'multi_target' => $sub_product['multi_target'],
+            'status' => $sub_product['status'],
+        );
+    }
+
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+    }
+
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        $product = $this->sub_product_profile($product,$sub_product_data);
+        return $product;
     }
 
     private function _get_deals(DateTimeInterface $date)

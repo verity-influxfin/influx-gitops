@@ -636,27 +636,15 @@ class Target_model extends MY_Model
      */
     public function get_total_loan_amount()
     {
-        $subquery_investment = $this->db
+        $query = $this->db
             ->select_sum('loan_amount')
             ->where_in('status', [
                 INVESTMENT_STATUS_REPAYING,
                 INVESTMENT_STATUS_PAID_OFF
             ])
-            ->get_compiled_select('`p2p_loan`.`investments`', TRUE);
+            ->get('`p2p_loan`.`investments`')->row_array();
 
-        $subquery_transfer = $this->db
-            ->select_sum('amount')
-            ->where('status', 10)
-            ->get_compiled_select('`p2p_loan`.`transfers`', TRUE);
-
-        $result = $this->db
-            ->select('(`r1`.`loan_amount` + `r2`.`amount`) AS total_loan_amount')
-            ->from("({$subquery_investment}) `r1`")
-            ->from("({$subquery_transfer}) `r2`")
-            ->get()
-            ->first_row('array');
-
-        return (int) ($result['total_loan_amount'] ?? 0);
+        return (int) ($query['loan_amount'] ?? 0);
     }
 
     /**
@@ -665,8 +653,11 @@ class Target_model extends MY_Model
      */
     public function get_transaction_count()
     {
+        // investment 3, 10 包含正常放款及受讓債權
+        // transfer 10 代表成功出讓債權
+        // target 5, 10 代表成功借款
         $result = $this->db
-            ->select('((((`r1`.`c` + (`r2`.`c` * 2)) + `r3`.`c`) + `r4`.`c`) + (`r5`.`c` * 2)) AS transaction_count')
+            ->select('(`r1`.`c` + `r2`.`c` + `r3`.`c` + `r4`.`c` + `r5`.`c`) AS transaction_count')
             ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_REPAYING . ' ) `r1`')
             ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_PAID_OFF . ' ) `r2`')
             ->from('(SELECT COUNT(1) as c FROM p2p_loan.transfers WHERE `status` = 10 ) `r3`')
@@ -1035,4 +1026,82 @@ class Target_model extends MY_Model
         return $rs->get()->result_array();
     }
 
+    /**
+     * 依使用者 id 取得二審案件資料
+     * @param $user_id : 使用者id
+     * @return mixed
+     */
+    public function get_second_instance_targets_by_user($user_id)
+    {
+        return $this->db
+            ->select(['id', 'target_data'])
+            ->from('p2p_loan.targets')
+            ->where('user_id', $user_id)
+            ->where('status', TARGET_WAITING_APPROVE)
+            ->where('sub_status', TARGET_SUBSTATUS_SECOND_INSTANCE)
+            ->where('product_id <', PRODUCT_FOR_JUDICIAL)
+            ->where('script_status', 0)
+            ->get()
+            ->result_array();
+    }
+
+    public function get_specific_product_status($product_id, $status_list = [TARGET_WAITING_APPROVE])
+    {
+        $sub_query = $this->db
+            ->select('id')
+            ->select('name')
+            ->select('phone')
+            ->get_compiled_select('p2p_user.users', TRUE);
+
+        return $this->db
+            ->select('t.target_no')
+            ->select('t.user_id')
+            ->select('u.name AS user_name')
+            ->select('u.phone AS user_phone')
+            ->select('t.status')
+            ->select('t.updated_at')
+            ->select('t.product_id')
+            ->select('t.sub_product_id')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query}) u", 'u.id=t.user_id', 'LEFT')
+            ->where('t.product_id', $product_id)
+            ->where_in('t.status', $status_list)
+            ->order_by('t.user_id')
+            ->order_by('t.id')
+            ->get()
+            ->result_array();
+    }
+
+    public function get_bonus_report_detail($sdate, $edate, $user_condition = [])
+    {
+        $this->_database
+            ->select('id')
+            ->select('promote_code');
+        if ( ! empty($user_condition))
+        {
+            $this->_set_where([$user_condition]);
+        }
+        $sub_query = $this->_database->get_compiled_select('p2p_user.users', TRUE);
+
+        $this->db
+            ->select('t.id')
+            ->select('t.user_id')
+            ->select('t.target_no')
+            ->select('t.product_id')
+            ->select('t.loan_amount')
+            ->select('t.amount')
+            ->select('t.platform_fee')
+            ->select('t.loan_date')
+            ->select('t.status')
+            ->select('t.created_at')
+            ->select('u.promote_code')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query}) u", 'u.id=t.user_id')
+            ->where_in('t.status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED])
+            ->where('t.loan_date >=', $sdate)
+            ->where('t.loan_date <=', $edate)
+            ->order_by('t.loan_date');
+
+        return $this->db->get()->result();
+    }
 }

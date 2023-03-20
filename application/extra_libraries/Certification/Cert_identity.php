@@ -12,6 +12,8 @@ use CertificationResult\MessageDisplay;
  */
 class Cert_identity extends Certification_base
 {
+    public static $ID_CARD_FAILED_MESSAGE = '身分證資訊驗證失敗';
+
     /**
      * @var int 該徵信項之代表編號
      */
@@ -88,7 +90,7 @@ class Cert_identity extends Certification_base
             {
                 $this->remark['failed_type_list'] = [REALNAME_IMAGE_TYPE_FRONT, REALNAME_IMAGE_TYPE_BACK, REALNAME_IMAGE_TYPE_PERSON];
                 $this->result->addMessage(
-                    '親愛的會員您好，為確保資料真實性，請至我的>資料中心>實名認證，更新您的訊息，謝謝。',
+                    '親愛的會員您好，為確保資料真實性，請您提重新提供實名認證資料，更新您的訊息，謝謝。',
                     CERTIFICATION_STATUS_FAILED,
                     MessageDisplay::Client
                 );
@@ -319,5 +321,12 @@ class Cert_identity extends Certification_base
     public function is_expired(): bool
     {
         return FALSE;
+    }
+
+    public function is_submit_to_review(): bool
+    {
+        // 實名認證不管案件「送出狀態(user_certification.certificate_status)」為何，永遠視為「已送件」
+        // 意即，此徵信項不受「一件送出」邏輯影響，失敗及失敗、成功即成功...
+        return TRUE;
     }
 }

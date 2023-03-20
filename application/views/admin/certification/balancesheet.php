@@ -88,7 +88,7 @@
                             </form>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片</h1>
+                            <h1>圖片/文件</h1>
                             <fieldset>
                                 <div class="form-group">
                                     <label>財稅簽資料表(資產負債表)</label><br>
@@ -98,8 +98,28 @@
                                             <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
                                         </a>
                                     <? } ?>
+                                    <hr/>
+                                    <label>其它</label><br>
+                                    <?php
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
+                                            </a>
+                                        <?php }
+                                    } ?>
                                 </div>
                             </fieldset>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page']; ?>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

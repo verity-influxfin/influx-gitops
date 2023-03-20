@@ -353,7 +353,7 @@
             $("#skbank_img_send_btn").text("資料處理中");
             $.ajax({
                 type: "GET",
-                url: "/admin/target/skbank_image_get" + "?target_id=" + caseId,
+                url: "/admin/target/skbank_file_get" + "?target_id=" + caseId,
                 success: function (response) {
                   if(response.status.code == 200){
                       let case_no = $('#skbankCaseNo').text();
@@ -444,7 +444,7 @@
         function getMappingMsgNo(target_id,action,data_type,result){
       	  $.ajax({
                 type: "GET",
-                url: `/admin/bankdata/waiting_reinspection/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
+                url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
                 success: function (response) {
                     response = response.response;
                     result(response);
@@ -790,13 +790,24 @@
                     <? } ?>
                     <div class="targetAction">
                         <? if($active){ ?>
-                        <button id="manual_handling" class="btn btn-primary btn-warning" onclick="">轉人工</button>
-                        <button id="closeWindow" class="btn btn-primary btn-danger" onclick="">關閉視窗</button>
+                        <div class="mb-2">
+                            <button id="manual_handling" class="btn btn-primary btn-warning" onclick="">轉人工</button>
+                            <button id="closeWindow" class="btn btn-primary btn-danger" onclick="">關閉視窗</button>
+                        </div>
                         <? } ?>
                         <? if($targetInfo->product_id == 1002){ ?>
-                            <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">收件檢核表送出</button>
-                            <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">圖片送出</button>
-                            <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">通過</button>
+                            <div>
+                                <div>
+                                    <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">新光 收件檢核表送出</button>
+                                    <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">新光 圖片送出</button>
+                                    <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">新光 通過</button>
+                                </div>
+                                <div class="mt-2">
+                                    <button id="kgibank_text_send_btn" class="btn btn-primary btn-info" onclick="">凱基 收件檢核表送出</button>
+                                    <button id="kgibank_img_send_btn" class="btn btn-primary btn-info" onclick="">凱基 圖片送出</button>
+                                    <button id="kgibank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">凱基 通過</button>
+                                </div>
+                            </div>
                         <? } ?>
                     </div>
                 </div>

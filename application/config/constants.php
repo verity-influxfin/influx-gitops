@@ -102,7 +102,7 @@ defined('INVALID_EMAIL_FORMAT')  		OR define('INVALID_EMAIL_FORMAT'		, 204); //E
 defined('NOT_INVERTOR')  				OR define('NOT_INVERTOR'				, 205); //請登入出借端
 defined('FACE_ERROR')  					OR define('FACE_ERROR'					, 206); //人臉辨識錯誤
 defined('IS_INVERTOR')  				OR define('IS_INVERTOR'					, 207); //請登入借款端
-defined('UNDER_AGE')  					OR define('UNDER_AGE'					, 208); //未滿20歲
+defined('UNDER_AGE')  					OR define('UNDER_AGE'					, 208); //未滿18歲
 defined('NO_TRANSACTION_PASSWORD')  	OR define('NO_TRANSACTION_PASSWORD'		, 209); //未設置交易密碼
 defined('TRANSACTION_PASSWORD_ERROR')  	OR define('TRANSACTION_PASSWORD_ERROR'	, 210); //交易密碼錯誤
 defined('NOT_ENOUGH_FUNDS')  			OR define('NOT_ENOUGH_FUNDS'			, 211); //可用餘額不足
@@ -186,6 +186,8 @@ defined('CERTIFICATION_STUDENTEMAIL_EXIST') OR define('CERTIFICATION_STUDENTEMAI
 defined('MAIL_EXIST') OR define('MAIL_EXIST', 512);
 
 defined('CERTIFICATION_NOT_EXIST') 	OR define('CERTIFICATION_NOT_EXIST'	, 513); // 該認證資料不存在
+defined('CERTIFICATION_NO_IG_AUTH_CODE') 	OR define('CERTIFICATION_NO_IG_AUTH_CODE'	, 514); // IG 沒有給 Authorization Code
+defined('CERTIFICATION_NO_IG_ACCESS_TOKEN') 	OR define('CERTIFICATION_NO_IG_ACCESS_TOKEN'	, 515); // IG 沒有給 Access Token
 
 //Certification
 defined('CERTIFICATION_IDENTITY')        OR define('CERTIFICATION_IDENTITY'            , 1);
@@ -207,6 +209,7 @@ defined('CERTIFICATION_SOCIAL_INTELLIGENT') or define('CERTIFICATION_SOCIAL_INTE
 
 defined('CERTIFICATION_SIMPLIFICATIONFINANCIAL') or define('CERTIFICATION_SIMPLIFICATIONFINANCIAL', 500);
 defined('CERTIFICATION_SIMPLIFICATIONJOB') or define('CERTIFICATION_SIMPLIFICATIONJOB', 501);
+defined('CERTIFICATION_PASSBOOKCASHFLOW_2') or define('CERTIFICATION_PASSBOOKCASHFLOW_2', 502);
 
 defined('CERTIFICATION_BUSINESSTAX') or define('CERTIFICATION_BUSINESSTAX', 1000);
 defined('CERTIFICATION_BALANCESHEET') or define('CERTIFICATION_BALANCESHEET', 1001);
@@ -262,8 +265,19 @@ defined('CERTIFICATION_SUBSTATUS_REVIEW_FAILED') OR define('CERTIFICATION_SUBSTA
 // 資料非近一個月申請
 defined('CERTIFICATION_SUBSTATUS_NOT_ONE_MONTH') OR define('CERTIFICATION_SUBSTATUS_NOT_ONE_MONTH', 4);
 
-// HTTP status code for custom error
-defined('CUSTOM_HTTP_ERROR_CODE') 	OR define('CUSTOM_HTTP_ERROR_CODE'	, 587);
+// 已送出審核
+defined('CERTIFICATION_CERTIFICATE_STATUS_SENT') OR define('CERTIFICATION_CERTIFICATE_STATUS_SENT', 1);
+
+
+// HTTP status code
+
+// Success
+defined('HTTP_STATUS_OK') 	OR define('HTTP_STATUS_OK'	, 200);
+// Created
+defined('HTTP_STATUS_CREATED') 	OR define('HTTP_STATUS_CREATED'	, 201);
+// For custom error
+defined('HTTP_STATUS_CUSTOM_ERROR') 	OR define('HTTP_STATUS_CUSTOM_ERROR'	, 587);
+
 
 // 通知類型
 defined('NOTIFICATION_TYPE_NONE') OR define('NOTIFICATION_TYPE_NONE', 0);
@@ -311,6 +325,8 @@ defined('TARGET_SUBSTATUS_WAITING_ASSOCIATES') OR define('TARGET_SUBSTATUS_WAITI
 defined('TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL') OR define('TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL', 12);//案件轉內部核可
 defined('TARGET_SUBSTATUS_LAW_DEBT_COLLECTION') OR define('TARGET_SUBSTATUS_LAW_DEBT_COLLECTION', 13);//
 
+defined('TARGET_SCRIPT_STATUS_NOT_IN_USE') or define('TARGET_SCRIPT_STATUS_NOT_IN_USE', 0);  // Not in use by any script(跑批)
+
 // Target certificate_status
 defined('TARGET_CERTIFICATE_DEFAULT') OR define('TARGET_CERTIFICATE_DEFAULT', 0); // 預設，尚未一鍵送出
 defined('TARGET_CERTIFICATE_SUBMITTED') OR define('TARGET_CERTIFICATE_SUBMITTED', 1); // 已一鍵送出，信用評估中
@@ -357,7 +373,7 @@ defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO'	, getenv(
 defined('URL_ADMIN')             	OR define('URL_ADMIN'				, '/admin/');
 defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN'		, getenv('ENV_COOKIES_LOGIN_ADMIN')); //Use in Admin Login Cookies
 defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE'			, 1800); //Use in Login Cookies
-
+defined('SYSTEM_ADMIN_ID') or define('SYSTEM_ADMIN_ID', 0);
 
 defined('MOBILE_PHONE_VENDOR') or define('MOBILE_PHONE_VENDOR', 0); //手機商
 defined('FOREX_CAR_DEALER') or define('FOREX_CAR_DEALER', 2); //外匯車商
@@ -375,6 +391,8 @@ defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000
 defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002); //普匯微企e秒貸(新光)
 
 defined('PRODUCT_FOR_JUDICIAL') or define('PRODUCT_FOR_JUDICIAL', 1000); //法人產品ID範圍
+defined('PRODUCT_TAB_INDIVIDUAL') or define('PRODUCT_TAB_INDIVIDUAL', 'individual'); // 個金產品類型名稱
+defined('PRODUCT_TAB_ENTERPRISE') or define('PRODUCT_TAB_ENTERPRISE', 'enterprise'); // 企金產品類型名稱
 
 // sub-product
 defined('SUBPRODUCT_INTELLIGENT_STUDENT') or define('SUBPRODUCT_INTELLIGENT_STUDENT', 6); // 3S名校貸
@@ -770,4 +788,12 @@ defined('COMPANY_CATEGORY_NAME_LISTED') or define('COMPANY_CATEGORY_NAME_LISTED'
 // mata name
 defined('TARGET_META_COMPANY_CATEGORY_NUMBER') or define('TARGET_META_COMPANY_CATEGORY_NUMBER', 'company_category_number'); // 就職公司代號 meta name
 
+// target loan mapping msg_no bank
+defined('MAPPING_MSG_NO_NO_BANK') or define('MAPPING_MSG_NO_NO_BANK', 0);
+defined('MAPPING_MSG_NO_BANK_NUM_SKBANK') or define('MAPPING_MSG_NO_BANK_NUM_SKBANK', 1);
+defined('MAPPING_MSG_NO_BANK_NUM_KGIBANK') or define('MAPPING_MSG_NO_BANK_NUM_KGIBANK', 2);
 
+// 企業營業登記項目「前兩碼」識別之產業別
+defined('INDUSTRY_CODE_MANUFACTURING') or define('INDUSTRY_CODE_MANUFACTURING', 1);
+defined('INDUSTRY_CODE_MERCHANDISING_SECTOR') or define('INDUSTRY_CODE_MERCHANDISING_SECTOR', 2);
+defined('INDUSTRY_CODE_SERVICE') or define('INDUSTRY_CODE_SERVICE', 3);

@@ -51,6 +51,9 @@
                                             <a href="#Pr" role="tab" data-toggle="tab" aria-expanded="true">負責人</a>
                                         </li>
                                         <li role="presentation">
+                                            <a href="#OthRealPr" role="tab" data-toggle="tab" aria-expanded="false">實際負責人</a>
+                                        </li>
+                                        <li role="presentation">
                                             <a href="#Spouse" role="tab" data-toggle="tab" aria-expanded="false">配偶</a>
                                         </li>
                                         <li role="presentation">
@@ -92,6 +95,35 @@
                                         </table>
                                     </form>
                                 </div>
+                                <div class="table-responsive" id="OthRealPr">
+                                    <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                        <table class="table table-striped table-bordered table-hover dataTable">
+                                            <tbody>
+                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
+                                                <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                <tr><td><span>實際負責人-姓名</span></td><td><input class="sk-input" type="text" name="OthRealPrName"></td></tr>
+                                                <tr><td><span>實際負責人-身分證字號</span></td><td><input class="sk-input" type="text" name="OthRealPrId"></td></tr>
+                                                <tr><td><span>實際負責人-出生日期</span></td><td><input class="sk-input" type="text" name="OthRealPrBirth"></td></tr>
+                                                <tr><td><span>實際負責人-從事本行業年度</span></td><td><input class="sk-input" type="text" name="OthRealPrStartYear" placeholder="格式:YYYY"></td></tr>
+                                                <tr><td><span>實際負責人-擔任本公司職務</span></td><td><input class="sk-input" type="text" name="OthRealPrTitle"></td></tr>
+                                                <tr><td><span>實際負責人-持股比率%</span></td><td><input class="sk-input" type="text" name="OthRealPrSHRatio"></td></tr>
+                                                <tr><td><span>實際負責人-與借戶負責人之關係</span></td><td>
+                                                        <select name="OthRealPrRelWithPr" class="table-input sk-input">
+                                                            <option value="A">A:配偶</option>
+                                                            <option value="B">B:血親</option>
+                                                            <option value="C">C:姻親</option>
+                                                            <option value="D">D:股東</option>
+                                                            <option value="E">E:朋友</option>
+                                                            <option value="F">F:本人</option>
+                                                            <option value="G">G:其他</option>
+                                                            <option value="H">H:與經營有關之借戶職員</option>
+                                                        </select>
+                                                    </td></tr>
+                                                <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
                                 <div class="table-responsive" id="Spouse">
                                     <form role="form" action="/admin/certification/sendSkbank" method="post">
                                         <table class="table table-striped table-bordered table-hover dataTable">
@@ -107,25 +139,10 @@
                                                 <tr><td><span>配偶連絡行動電話</span></td><td><input class="sk-input" type="text" name="SpouseMobileNo"></td></tr>
                                                 <tr><td><span>配偶是否擔任本案保證人</span></td><td>
                                                     <select name="IsPrSpouseGu" class="table-input sk-input">
-                                                        <option value="A">1:是</option>
-                                                        <option value="B">2:否</option>
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select>
                                                 </td></tr>
-                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</span></td><td>
-                                                    <select name="OthRealPrRelWithPr" class="table-input sk-input">
-                                                        <option value="A">A:配偶</option>
-                                                        <option value="B">B:血親</option>
-                                                        <option value="C">C:姻親</option>
-                                                        <option value="D">D:股東</option>
-                                                        <option value="E">E:朋友</option>
-                                                        <option value="F">F:本人</option>
-                                                        <option value="G">G:其他</option>
-                                                        <option value="H">H:與經營有關之借戶職員</option>
-                                                    </select>
-                                                </td></tr>
-                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_從事本行業年度</span></td><td><input class="sk-input" type="text" name="OthRealPrStartYear" placeholder="格式:YYYY"></td></tr>
-                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_擔任本公司職務</span></td><td><input class="sk-input" type="text" name="OthRealPrTitle"></td></tr>
-                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_持股比率%</span></td><td><input class="sk-input" type="text" name="OthRealPrSHRatio"></td></tr>
                                                 <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                             </tbody>
                                         </table>
@@ -166,21 +183,6 @@
                                                         <option value="H">H:與經營有關之借戶職員</option>
                                                     </select>
                                                 </td></tr>
-                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</span></td><td>
-                                                    <select name="OthRealPrRelWithPr" class="table-input sk-input">
-                                                        <option value="A">A:配偶</option>
-                                                        <option value="B">B:血親</option>
-                                                        <option value="C">C:姻親</option>
-                                                        <option value="D">D:股東</option>
-                                                        <option value="E">E:朋友</option>
-                                                        <option value="F">F:本人</option>
-                                                        <option value="G">G:其他</option>
-                                                        <option value="H">H:與經營有關之借戶職員</option>
-                                                    </select>
-                                                </td></tr>
-                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_從事本行業年度</span></td><td><input class="sk-input" type="text" name="OthRealPrStartYear" placeholder="格式:YYYY"></td></tr>
-                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_擔任本公司職務</span></td><td><input class="sk-input" type="text" name="OthRealPrTitle"></td></tr>
-                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_持股比率%</span></td><td><input class="sk-input" type="text" name="OthRealPrSHRatio"></td></tr>
                                                 <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                             </tbody>
                                         </table>
@@ -293,8 +295,6 @@ $(document).ready(function() {
         success: function (response) {
             if(response.status.code == 200 && response.response != ''){
                 Object.keys(response.response).forEach(function(key) {
-                    console.log(key);
-                    console.log(response.response[key]);
                     if($(`[name='${key}']`).length){
                         if($(`[name='${key}']`).is("input")){
                             $(`[name='${key}']`).val(response.response[key]);
@@ -305,8 +305,6 @@ $(document).ready(function() {
                         }
                     }
                 })
-            }else{
-                console.log(response);
             }
         },
         error: function(error) {

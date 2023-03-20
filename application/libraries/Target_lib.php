@@ -1,6 +1,8 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+
+use Certification\Cert_identity;
 use CreditSheet\CreditSheetFactory;
 
 class Target_lib
@@ -324,12 +326,12 @@ class Target_lib
                 if(isset($product['checkOwner']) && $product['checkOwner'] == true){
                     $mix_credit = $this->get_associates_user_data($target->id, 'all', [0 ,1], true);
                     foreach ($mix_credit as $value) {
-                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true, $target->instalment);
+                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true, $target->instalment, $target);
                     }
                     $total_point = array_sum($credit_score);
                     $rs = $this->CI->credit_lib->approve_associates_credit($target, $total_point);
                 }else{
-                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit, false, $target->instalment);
+                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit, false, $target->instalment, $target);
                 }
                 if ($rs) {
                     $credit = $this->CI->credit_lib->get_credit($user_id, $product_id, $sub_product_id, $target);
@@ -360,7 +362,7 @@ class Target_lib
                                 "source" => SOURCE_PRINCIPAL,
                                 "user_from" => $user_id,
                                 "target_id" => $value->id,
-                                "status" => TARGET_WAITING_VERIFY
+                                "status" => TRANSACTION_STATUS_PAID_OFF
                             ));
                             //扣除已還款金額
                             foreach ($pay_back_transactions as $key2 => $value2) {
@@ -1689,7 +1691,7 @@ class Target_lib
     //審核額度
     public function script_approve_target()
     {
-
+        $this->CI->load->library('loanmanager/product_lib');
         $this->CI->load->library('Certification_lib');
         $targets = $this->CI->target_model->get_many_by([
             'status' => [TARGET_WAITING_APPROVE, TARGET_ORDER_WAITING_VERIFY],
@@ -1714,7 +1716,11 @@ class Target_lib
                 foreach ($list as $product_id => $targets) {
                     foreach ($targets as $target_id => $value) {
                     	if(!array_key_exists($value->product_id, $product_list))
-                    		continue;
+                        {
+                            $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+                            continue;
+                        }
+
                         $failedCertificationList = [];
                         $pendingCertificationCount = 0;
                         $stage_cer = 0;
@@ -1723,11 +1729,10 @@ class Target_lib
                         if ($this->is_sub_product($product, $sub_product_id)) {
                             $product = $this->trans_sub_product($product, $sub_product_id);
                         }
-
-                        $product_certification = $product['certifications'];
+                        $product_certification = $this->CI->product_lib->get_product_certs_by_product_id($value->product_id, $value->sub_product_id, []);
                         $finish = true;
 
-                        if ($value->product_id == 1002)
+                        if (($product['check_associates_certs'] ?? FALSE))
                         {
                             // 普匯微企e秒貸歸戶
 							// to do : 任務控制程式過件須確認不會有其他非法人產品進來
@@ -1761,12 +1766,13 @@ class Target_lib
                         }
 
                         $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
-                        $company = $value->product_id >= 1000 ? 1 : 0;
 
+                        $company = $value->product_id >= 1000 ? 1 : 0;
                         $certifications = $this->CI->certification_lib->get_status($value->user_id, BORROWER, $company, false, $value, FALSE, TRUE);
 
                         $finish_stage_cer = [];
                         $cer = [];
+                        $cer_success_id = []; // 存已成功的徵信項 certification_id
                         $matchBrookesia = false;        // 反詐欺狀態
                         $second_instance_check = false; // 進待二審
 
@@ -1797,58 +1803,25 @@ class Target_lib
                                         $second_instance_check = true;
                                     }
                                 }
-                                $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
+                                if ($certification['user_status'] == CERTIFICATION_STATUS_SUCCEED)
+                                {
+                                    $cer[] = $certification['certification_id'];
+                                    $cer_success_id[] = $certification['id'];
+                                }
                             }
                         }
-                        // 法人產品自然人認證徵信完成判斷
-                        // TODO: 認證徵信個金企金待系統整合
-                        if ($finish && in_array($value->product_id, [PRODUCT_SK_MILLION_SMEG]))
+
+                        // 檢查系統自動過件，必要的徵信項
+                        $required_certification = array_diff($product_certification, $product['option_certifications']);
+                        if ( ! empty(array_diff($required_certification, $cer_success_id)))
                         {
-                            // 歸案之自然人資料
-                            $associates_list = $this->CI->target_associate_model->get_many_by([
-                                'status' => ASSOCIATES_STATUS_APPROVED,
-                                'target_id' => $value->id
-                            ]);
-                            if ( ! empty($associates_list))
-                            {
-                                $user_id_list = array_column($associates_list, 'user_id', 'character');
-                                // 有尚未註冊之自然人
-                                if(count(array_filter($user_id_list)) != count($user_id_list)){
-                                    $finish = FALSE;
-                                }
-                                else
-                                {
-                                    $associates_certifications_config = $this->CI->config->item('associates_certifications');
-                                    if (isset($associates_certifications_config[$value->product_id]))
-                                    {
-                                        $this->CI->load->model('user/user_certification_model');
-                                        $associates_certifications = $associates_certifications_config[$value->product_id];
-                                        foreach ($associates_list as $associates_info)
-                                        {
-                                            if (isset($associates_certifications[$associates_info->character]))
-                                            {
-                                                $associates_certifications_list = $this->CI->user_certification_model->get_many_by([
-                                                    'investor' => BORROWER,
-                                                    'status' => CERTIFICATION_STATUS_SUCCEED,
-                                                    'user_id' => $associates_info->user_id,
-                                                    'certification_id' => $associates_certifications[$associates_info->character]
-                                                ]);
-                                                // 確認認證徵信是否完成
-                                                if (count($associates_certifications[$associates_info->character])
-                                                    != count(json_decode(json_encode($associates_certifications_list), TRUE)))
-                                                {
-                                                    $finish = FALSE;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                $finish = FALSE;
-                            }
+                            $finish = FALSE;
+                        }
+
+                        // 法人產品需確認自然關係人認證徵信是否完成
+                        if ($finish && ($product['check_associates_certs'] ?? FALSE))
+                        {
+                            $finish = $this->CI->certification_lib->associate_certs_are_succeed($value);
                         }
 
                         if ($finish && $wait_associates) {
@@ -1872,11 +1845,101 @@ class Target_lib
                         }
 
                         if ($finish) {
+                            // Re-check ID card info in case user's ID card changed.
+                            $check_id_card = FALSE;
+                            if ($value->certificate_status == TARGET_CERTIFICATE_SUBMITTED)
+                            {
+                                $this->CI->load->model('user/user_certification_model');
+                                $identity_cert = $this->CI->user_certification_model->get_by([
+                                    'investor' => BORROWER,
+                                    'status' => CERTIFICATION_STATUS_SUCCEED,
+                                    'user_id' => $value->user_id,
+                                    'certification_id' => CERTIFICATION_IDENTITY
+                                ]);
+                                if ($identity_cert)
+                                {
+                                    // Avoid checking for the same target too many times.
+                                    $this->CI->load->model('log/log_integration_model');
+                                    $api_verify_log = $this->CI->log_integration_model->order_by('created_at', 'DESC')->get_by([
+                                        'user_certification_id' => $identity_cert->id
+                                    ]);
+                                    if ( ! empty($api_verify_log))
+                                    {
+                                        $current_time = date('Y-m-d H:i:s');
+                                        $one_day_ago = date("Y-m-d H:i:s", strtotime($current_time.' -1 day'));
+                                        if ($api_verify_log->created_at < $one_day_ago)
+                                        {
+                                            $check_id_card = TRUE;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $check_id_card = TRUE;
+                                    }
+
+                                    if ($check_id_card)
+                                    {
+                                        $identity_content = json_decode($identity_cert->content, TRUE);
+                                        $remark = json_decode($identity_cert->remark, TRUE);
+                                        $err_msg = $remark['error'] ?? '';
+                                        $result = $this->CI->certification_lib->verify_id_card_info(
+                                            $identity_cert->id, $identity_content, $err_msg, $remark['OCR'] ?? []
+                                        );
+
+                                        // Update user_certification.
+                                        $to_update = ['content' => json_encode($identity_content, JSON_INVALID_UTF8_IGNORE)];
+                                        if ($err_msg)
+                                        {
+                                            $remark['error'] = $err_msg;
+                                            $to_update['remark'] = json_encode($remark, JSON_INVALID_UTF8_IGNORE);
+                                        }
+                                        $this->CI->user_certification_model->update($identity_cert->id, $to_update);
+
+                                        if ($result[0] && $result[1])  // Existed id card info is wrong.
+                                        {
+                                            $this->CI->load->model('log/log_usercertification_model');
+                                            $this->CI->log_usercertification_model->insert([
+                                                'user_certification_id'	=> $identity_cert->id,
+                                                'status'				=> CERTIFICATION_STATUS_FAILED,
+                                                'change_admin'			=> SYSTEM_ADMIN_ID,
+                                            ]);
+                                            $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+                                            if (isset($cert_helper))
+                                            {
+                                                $rs = $cert_helper->set_failure(TRUE, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                            }
+                                            else
+                                            {
+                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                            }
+                                            if ($rs === TRUE)
+                                            {
+                                                $this->CI->user_certification_model->update($identity_cert->id, [
+                                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT
+                                                ]);
+                                            }
+                                            else
+                                            {
+                                                log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             // 判斷是否符合產品申貸年齡限制
                             $this->CI->load->library('loanmanager/product_lib');
                             if ($this->CI->product_lib->need_chk_allow_age($value->product_id) === TRUE)
                             {
-                                $user_info = $this->CI->user_model->get($value->user_id);
+                                if ($company)
+                                { // 若為法人戶，改取負責人的生日來計算
+                                    $this->CI->load->library('judicialperson_lib');
+                                    $user_info = $this->CI->judicialperson_lib->getNaturalPerson($value->user_id);
+                                }
+                                else
+                                {
+                                    $user_info = $this->CI->user_model->get($value->user_id);
+                                }
                                 $age = get_age($user_info->birthday);
                                 if ($this->CI->product_lib->is_age_available($age, $value->product_id, $value->sub_product_id) === FALSE)
                                 {
@@ -1914,11 +1977,11 @@ class Target_lib
 
                             // 所有徵信項完成後，確認是否需要觸發反詐欺
                             $this->CI->load->library('brookesia/brookesia_lib');
-                            $user_checked = $this->CI->brookesia_lib->is_user_checked($value->user_id);
+                            $user_checked = $this->CI->brookesia_lib->is_user_checked($value->user_id, $target_id);
 
                             if (!$user_checked)
                             {
-                                $this->CI->brookesia_lib->userCheckAllRules($value->user_id);
+                                $this->CI->brookesia_lib->userCheckAllRules($value->user_id, $target_id);
                             }
                             else
                             {
@@ -1948,7 +2011,14 @@ class Target_lib
                                     }
 
                                     $this->CI->target_model->update($value->id, $param);
+                                    $creditSheet = CreditSheetFactory::getInstance($value->id);
+                                    $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
                                 }else{
+                                    if ( ! $company && $value->certificate_status != TARGET_CERTIFICATE_SUBMITTED)
+                                    {
+                                        $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+                                        continue;
+                                    }
                                     $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia, $second_instance_check);
                                 }
                             }
@@ -2213,7 +2283,7 @@ class Target_lib
         }
     }
 
-    public function insert_change_log($target_id, $update_param, $user_id = 0, $admin_id = 0)
+    public function insert_change_log($target_id, $update_param, $user_id = 0, $admin_id = SYSTEM_ADMIN_ID)
     {
         if ($target_id) {
             $this->CI->load->model('log/Log_targetschange_model');
@@ -2297,7 +2367,8 @@ class Target_lib
             'status' => $sub_product['status'],
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,
             'available_company_categories' => $sub_product['available_company_categories'] ?? null,
-            'default_reason' => $sub_product['default_reason'] ?? ''
+            'default_reason' => $sub_product['default_reason'] ?? '',
+            'check_associates_certs' => $sub_product['check_associates_certs'] ?? FALSE
         );
     }
 
@@ -2316,13 +2387,33 @@ class Target_lib
         return $stage_cer;
     }
 
-    public function get_associates($user_id){
+    /**
+     * @param $user_id : 使用者id
+     * @param array $status : 案件保證人狀態
+     * @return mixed
+     */
+    public function get_associates($user_id, array $status = [ASSOCIATES_STATUS_WAITTING_APPROVE, ASSOCIATES_STATUS_APPROVED])
+    {
         $this->CI->load->model('loan/target_associate_model');
         $params = [
             "user_id" => $user_id,
-            "status" => [0, 1],
+            "status" => $status,
         ];
         return $this->CI->target_associate_model->get_many_by($params);
+    }
+
+    /**
+     * 檢查是否為企金案件的保證人
+     * @param $user_id : 使用者id
+     * @return bool
+     */
+    public function is_associate($user_id): bool
+    {
+        return empty($this->get_associates($user_id, [
+            ASSOCIATES_STATUS_WAITTING_APPROVE,
+            ASSOCIATES_STATUS_APPROVED,
+            ASSOCIATES_STATUS_CERTIFICATION_CHECKED
+        ]));
     }
 
     public function get_associates_target_list($user_id, $target_id = false ,$self = false, $status = [TARGET_WAITING_APPROVE, TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_BANK_VERIFY, TARGET_BANK_GUARANTEE]){
@@ -2377,9 +2468,26 @@ class Target_lib
         return $rs;
     }
 
+    public function get_associates_data($target_id, $character = false, $status = [0, 1]){
+        $this->CI->load->model('loan/target_associate_model');
+
+        $params = [
+            "target_id" => $target_id,
+            "status" => $status
+        ];
+        if($character != 'all')
+        {
+            $params['character'] = (int)$character;
+        }
+
+        return $this->CI->target_associate_model->as_array()->get_many_by($params);
+    }
+
     public function get_associates_list($target_id, $status = [0, 1], $product, $self_user_id, $self_certification)
     {
         $this->CI->load->model('loan/target_associate_model');
+        $this->CI->load->library('loanmanager/product_lib');
+
         $get_associates_list = $this->CI->target_associate_model->get_many_by([
             'target_id' => $target_id,
             'status <=' => 1,
@@ -2404,6 +2512,7 @@ class Target_lib
                 foreach ($get_associates_list as $key => $value) {
                     $self = $self_user_id == $value->user_id;
                     $certification = $self ? $self_certification : [];
+                    $certification_id_list = array_column($certification, 'certification_id');
                     $user_id = $self ? $self_user_id : '';
                     $temp['character'] == '' && $self ? $temp['character'] = $value->character : '' ;
                     if(is_null($value->user_id)){
@@ -2419,9 +2528,12 @@ class Target_lib
                         $phone = $user_info->phone;
                         $certification_list = $this->CI->certification_lib->get_status($value->user_id, $this->CI->user_info->investor, $this->CI->user_info->company);
                         foreach ($certification_list as $ckey => $cvalue) {
-                            if (in_array($ckey, $product['certifications']) && $ckey <= 1000) {
+                            if (in_array($ckey, $product['certifications']) && $ckey <= 1000 &&
+                                ! in_array($cvalue['certification_id'], $certification_id_list))
+                            {
                                 $cvalue['optional'] = false;
                                 $certification[] = $cvalue;
+                                $certification_id_list[] = $cvalue['certification_id'];
                             }
                         }
                     }
@@ -2632,7 +2744,7 @@ class Target_lib
 
         return TRUE;
     }
-    
+
     /**
      * 取得案件相關的詳細資訊
      * @param array $target_ids
@@ -2684,7 +2796,7 @@ class Target_lib
 
         return $targets;
     }
-    
+
     /**
      * 取得產品設定結構
      * @param $product_id
@@ -2781,5 +2893,184 @@ class Target_lib
         }
 
         return $target_meta;
+    }
+
+    /**
+     * @param $target
+     * @param $admin_id
+     * @param $remark
+     * @return bool TRUE if successfully rejected, FALSE if doing nothing
+     */
+    public function reject($target, $admin_id, string $remark = ''): bool
+    {
+        if ( ! $target || ! in_array($target->status,array(
+                TARGET_WAITING_APPROVE,
+                TARGET_WAITING_SIGNING,
+                TARGET_WAITING_VERIFY,
+                TARGET_ORDER_WAITING_VERIFY,
+                TARGET_ORDER_WAITING_SHIP,
+                TARGET_BANK_FAIL
+            )))
+        {
+            return FALSE;
+        }
+        if($target->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+            $this->CI->load->library('Subloan_lib');
+            $this->CI->subloan_lib->subloan_verify_failed($target,$admin_id,$remark);
+        }else{
+            $this->target_verify_failed($target,$admin_id,$remark);
+        }
+        return TRUE;
+    }
+
+    public function get_enterprise_product_ids(): array
+    {
+        return [PRODUCT_FOREX_CAR_VEHICLE, PRODUCT_SK_MILLION_SMEG];
+    }
+
+    public function get_individual_product_ids(): array
+    {
+        return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
+    }
+
+    public function get_product_id_by_tab($tabname): array
+    {
+        switch ($tabname)
+        {
+            case PRODUCT_TAB_ENTERPRISE:
+                return $this->get_enterprise_product_ids();
+            case PRODUCT_TAB_INDIVIDUAL:
+            default:
+                return $this->get_individual_product_ids();
+        }
+    }
+
+    /**
+     * 取得下期還款資料
+     * @param $target
+     * @return array
+     */
+    public function get_repayment_schedule($target): array
+    {
+        $repayment_list = [];
+        if (isset($target))
+        {
+            switch ($target->product_id)
+            {
+                case PRODUCT_SK_MILLION_SMEG:
+                    $today = get_entering_date();
+                    for ($i = 1; $i <= $target->instalment; $i++)
+                    {
+                        $repayment_date = date('Y-m-d', strtotime($target->loan_date . '+' . $i . 'month'));
+                        if ($repayment_date >= $today)
+                        {
+                            // TODO: amount 待定
+                            $tmp = ['instalment' => $i, 'date' => $repayment_date, 'amount' => 0];
+                            $repayment_list[] = $tmp;
+                        }
+                    }
+                    break;
+                default:
+                    $this->CI->load->model('transaction/transaction_model');
+                    $repayment_schedule = $this->CI->transaction_model->get_repayment_schedule($target->id);
+                    if ( ! empty($repayment_schedule))
+                    {
+                        foreach ($repayment_schedule as $repayment)
+                        {
+                            $tmp =  ['instalment' => (int) $repayment['instalment_no'],
+                                'date' => $repayment['limit_date'], 'amount' => (int) $repayment['amount']];
+                            $repayment_list[] = $tmp;
+                        }
+                    }
+                    break;
+            }
+        }
+        return $repayment_list;
+    }
+
+    /**
+     * 取得案件最後一期還款日期
+     * @param $target
+     * @return string
+     */
+    public function get_pay_off_date($target): string
+    {
+        $pay_off_date = '';
+        if (isset($target))
+        {
+            switch ($target->product_id)
+            {
+                case PRODUCT_SK_MILLION_SMEG:
+                    $pay_off_date = date('Y-m-d', strtotime($target->loan_date . '+' . $target->instalment . 'month'));
+                    break;
+                default:
+                    $this->CI->load->model('transaction/transaction_model');
+                    $rs = $this->CI->transaction_model->order_by('limit_date', 'DESC')->get_by(['target_id' => $target->id,
+                        'source' => [SOURCE_AR_PRINCIPAL],
+                        'status' => [TRANSACTION_STATUS_TO_BE_PAID, TRANSACTION_STATUS_PAID_OFF]]);
+                    if (isset($rs))
+                    {
+                        $pay_off_date = $rs->limit_date;
+                    }
+                    break;
+            }
+        }
+        return $pay_off_date;
+    }
+
+    /**
+     * @param int $character : 角色 (對應常數 ASSOCIATES_CHARACTER_*)
+     * @return string
+     */
+    public function get_product_1002_character_meaning(int $character): string
+    {
+        switch ($character)
+        {
+            case ASSOCIATES_CHARACTER_REAL_OWNER:
+                return '負責人實際負責人';
+            case ASSOCIATES_CHARACTER_SPOUSE:
+                return '配偶';
+            case ASSOCIATES_CHARACTER_GUARANTOR_A:
+            case ASSOCIATES_CHARACTER_GUARANTOR_B:
+                return '負責人保證人';
+            default:
+                return '負責人配偶/保證人';
+        }
+    }
+
+    /**
+     * 確認是否有待核可案件已一鍵送出
+     * @param $user_id
+     * @return bool
+     */
+    public function exist_approving_target_submitted($user_id): bool
+    {
+        $this->CI->load->model('loan/target_model');
+        return $this->CI->target_model->chk_exist_by_status([
+            'user_id' => $user_id,
+            'status' => TARGET_WAITING_APPROVE,
+            'certificate_status' => [TARGET_CERTIFICATE_SUBMITTED, TARGET_CERTIFICATE_RE_SUBMITTING]
+        ]);
+    }
+
+    public function get_natural_person_export_list($product_id)
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_STUDENT:
+            case PRODUCT_ID_SALARY_MAN:
+                break;
+            default:
+                return [];
+        }
+
+        $this->CI->load->model('loan/target_model');
+        return $this->CI->target_model->get_specific_product_status($product_id, [
+            TARGET_WAITING_APPROVE,
+            TARGET_WAITING_SIGNING,
+            TARGET_WAITING_VERIFY,
+            TARGET_ORDER_WAITING_SIGNING,
+            TARGET_ORDER_WAITING_VERIFY
+        ]);
     }
 }

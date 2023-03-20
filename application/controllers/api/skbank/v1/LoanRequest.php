@@ -1,4 +1,7 @@
 <?php
+
+use Adapter\Adapter_factory;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(APPPATH.'/libraries/REST_Controller.php');
 
@@ -310,6 +313,29 @@ END:
                 }
             }
 
+            // 丟到 adapter 去轉換成銀行要的 key-value
+            $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+            $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no' => $inputArr['MsgNo'], 'type' => 'text']);
+            if($mapping_info)
+            {
+                $adapter = Adapter_factory::getInstance($mapping_info->bank);
+                $inputArr = $adapter->convert_text($inputArr);
+                $requestContent = ['converted_data' => $inputArr['Data']];
+                $chk_required_column = $adapter->check_required_column($inputArr);
+                if ( ! isset($chk_required_column['success']) || $chk_required_column['success'] !== TRUE)
+                {
+                    $result['error'] = $chk_required_column['error'];
+                    goto END;
+                }
+
+                $chk_date_format = $adapter->check_date_format($inputArr);
+                if ( ! isset($chk_date_format['success']) || $chk_date_format['success'] !== TRUE)
+                {
+                    $result['error'] = $chk_date_format['error'];
+                    goto END;
+                }
+            }
+
             $dataJsonStr = json_encode($inputArr["Data"]);
             // extra check data
             if (!isset($inputArr["Data"])) {
@@ -377,7 +403,7 @@ END:
 
             $skbankRequestUrl = $this->skbankRequestUrl;
             $postJsonData = json_encode($encryptedRequest);
-            $sendResult = curl_get($skbankRequestUrl, $postJsonData, $headers);
+            $sendResult = curl_get($skbankRequestUrl, $postJsonData, $headers, NULL, TRUE);
             $responseResult = json_decode($sendResult, true);
 
             // log request
@@ -386,6 +412,11 @@ END:
                 'encrypted'     => $encryptedRequest,
                 'output_header' => $headers
             ];
+
+            if ( ! empty($responseResult['curl_getinfo']))
+            {
+                $requestContent['curl_getinfo'] = $responseResult['curl_getinfo'];
+            }
 
             $responseContent = json_decode($sendResult);
 

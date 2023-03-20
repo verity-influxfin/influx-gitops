@@ -138,8 +138,8 @@
                             </form>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片</h1>
-                            <fieldset disabled>
+                            <h1>圖片/文件</h1>
+                            <fieldset >
                                 <div class="form-group">
                                     <label>法人聯徵資料</label><br>
                                     <? isset($content['legal_person_mq_image']) && !is_array($content['legal_person_mq_image']) ? $content['legal_person_mq_image'] = array($content['legal_person_mq_image']) : [];
@@ -158,13 +158,59 @@
                                             </a>
                                         <? }
                                     }?>
+                                    <hr/>
+                                    <label>收執聯資料</label><br>
+                                    <?php
+                                    if ( ! empty($content['receipt_postal_image']) && is_array($content['receipt_postal_image']))
+                                    { // 郵局申請
+                                        foreach ($content['receipt_postal_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                    }
+                                    if ( ! empty($content['receipt_jcic_image']) && is_array($content['receipt_jcic_image']))
+                                    { // 聯徵中心申請
+                                        foreach ($content['receipt_jcic_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                    } ?>
+                                    <hr/>
+                                    <label>其它</label><br>
+                                    <?php
+                                    if ( ! empty($content['other_image']) && is_array($content['other_image']))
+                                    {
+                                        foreach ($content['other_image'] as $key => $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" data-fancybox="images">
+                                                <img src="<?= $value ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <?php }
+                                        echo "<br/>";
+                                    }
+                                    if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                    {
+                                        $index = 0;
+                                        foreach ($content['pdf'] as $value)
+                                        { ?>
+                                            <a href="<?= $value ?>" class="btn btn-info">
+                                                檔案<?= ++$index; ?>
+                                            </a>
+                                        <?php }
+                                    } ?>
                                 </div>
                             </fieldset>
-                            <? if( ($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12) && isset($ocr['upload_page']) ){ ?>
-							<div class="form-group" style="background:#f5f5f5;border-style:double;">
-							  <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
-							</div>
-							<? } ?>
+                            <?php if ( ! empty($ocr['upload_page']))
+                            {
+                                ?>
+                                <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                    <?= $ocr['upload_page']; ?>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

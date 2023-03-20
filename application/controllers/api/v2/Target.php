@@ -680,8 +680,9 @@ class Target extends REST_Controller {
                         } elseif ($value == 3){
                             $description = '已驗證個人金融帳號';
                         } elseif ($value == 4){
-                            $ig = isset($contents->instagram) ? $contents->instagram : $contents->info;
-                            $description .= 'FB：已綁定<br>Instagram' . '<br>貼文：' . (isset($ig->counts) ? $ig->counts->media : '') . '<br>追蹤者：' . (isset($ig->counts) ? $ig->counts->followed_by : '') . '<br>追蹤中：' . (isset($ig->counts) ? $ig->counts->follows : '') ;
+                            $ig = $contents->instagram ?? NULL;
+                            $ig_info = $ig->info ?? NULL;
+                            $description .= 'FB：已綁定<br>Instagram' . '<br>貼文：' . ($ig_info->allPostCount ?? '') . '<br>追蹤者：' . ($ig_info->allFollowerCount ?? '') . '<br>追蹤中：' . ($ig_info->allFollowingCount ?? '') ;
                         } elseif ($value == 5){
                             $description = '已輸入父母作為緊急聯絡人';
                         } elseif ($value == 6){
@@ -696,8 +697,17 @@ class Target extends REST_Controller {
                         } elseif ($value == 9){
                             if(isset($contents->result)){
                                 $info = reset($contents->result);
+
+                                // 負債比
+                                $repayment_cert = $cur_cer[CERTIFICATION_REPAYMENT_CAPACITY] ?? NULL;
+                                $debt_ratio = NULL;
+                                if ($repayment_cert)
+                                {
+                                    $debt_ratio = json_decode($repayment_cert->content ?? '[]', TRUE)['debt_to_equity_ratio'] ?? NULL;
+                                }
+                                
                                 if(isset($info)) {
-                                    $description = "負債比：" . (isset($info->debt_to_equity_ratio) ? $info->debt_to_equity_ratio . "%" : '') .
+                                    $description = "負債比：" . ($debt_ratio ? $debt_ratio . "%" : '') .
                                         "<br>延遲繳款紀錄：" . ($info->creditCardHasDelay ?? '') .
                                         "<br>信用卡使用率：" . (isset($info->creditCardUseRate) ? $info->creditCardUseRate . "%" : '') .
                                         "<br>預借現金：" . ($info->cashAdvanced ?? '');
@@ -1101,7 +1111,7 @@ class Target extends REST_Controller {
      *       "error": "203"
      *     }
 	 *
-     * @apiError 208 未滿20歲
+     * @apiError 208 未滿18歲
      * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
@@ -1555,7 +1565,7 @@ class Target extends REST_Controller {
      *       "error": "203"
      *     }
 	 *
-     * @apiError 208 未滿20歲
+     * @apiError 208 未滿18歲
      * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
@@ -2227,7 +2237,7 @@ class Target extends REST_Controller {
 
 
 
-		if(get_age($this->user_info->birthday) < 20 && !$Judicialperson){
+		if(get_age($this->user_info->birthday) < 18 && !$Judicialperson){
 			$this->response(['result' => 'ERROR','error' => UNDER_AGE ]);
 		}
 	}

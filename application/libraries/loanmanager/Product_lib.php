@@ -135,6 +135,8 @@ class Product_lib
     {
         return [
             'DS2P1', // 在庫車融資
+            'J2', // 普匯微企e秒貸
+            'LJ2P1',
         ];
     }
 
@@ -148,10 +150,56 @@ class Product_lib
     public function is_age_available(int $age, int $product_id, int $sub_product_id = 0): bool
     {
         $product = $this->get_exact_product($product_id, $sub_product_id);
-        if ($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55))
+        if ($age < ($product['allow_age_range'][0] ?? 18) || $age > ($product['allow_age_range'][1] ?? 55))
         {
             return FALSE;
         }
         return TRUE;
+    }
+
+    /**
+     * 透過傳入產品結構取得產品所需之徵信項
+     * @param $product: 產品結構物件
+     * @param array $associate_list: 自然關係人編號列表
+     * @return array
+     */
+    public function get_product_certs_by_product($product, array $associate_list=[]): array
+    {
+        return $this->_get_product_certs($product, $associate_list);
+    }
+
+    /**
+     * 透過傳入產品編號取得產品所需之徵信項
+     * @param $product_id
+     * @param $sub_product_id
+     * @param array $associate_list: 自然關係人編號列表
+     * @return array
+     */
+    public function get_product_certs_by_product_id($product_id, $sub_product_id, array $associate_list=[]): array
+    {
+        $product = $this->getProductInfo($product_id, $sub_product_id);
+        return $this->_get_product_certs($product, $associate_list);
+    }
+
+    /**
+     * 取得產品所需之徵信項
+     * @param $product: 產品結構物件
+     * @param array $associate_list: 自然關係人編號列表
+     * @return array
+     */
+    private function _get_product_certs($product, $associate_list): array
+    {
+        $product_certs = $product['certifications'] ?? [];
+        if (($product['check_associates_certs'] ?? FALSE))
+        {
+            $associates_certifications_config = $this->CI->config->item('associates_certifications');
+            $associates_certifications = $associates_certifications_config[$product['id']];
+            foreach ($associate_list as $associate_char)
+            {
+                $product_certs = array_merge($product_certs, $associates_certifications[$associate_char]);
+            }
+            $product_certs = array_unique($product_certs);
+        }
+        return $product_certs;
     }
 }

@@ -7,6 +7,7 @@
 	.popover-content {
 		padding: 10px;
 		white-space: pre-line;
+        overflow-wrap: break-word;
 	}
 
 	.panel-heading {
@@ -436,7 +437,7 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
-<script src="https://unpkg.com/axios@1.0.0/dist/axios.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/assets/admin/js/vue-components.js"></script>
 <script>
 	const apiUrl = "/api/v2/anti_fraud"
@@ -733,7 +734,8 @@
 					table.row.add(t)
 				})
 				table.draw()
-				$('[data-toggle="popover"]').popover({ trigger: 'focus' })
+                $('.popover').popover('hide')
+				$('[data-toggle="popover"]').popover()
 			},
 			"riskTreeSelect.node1"() {
 				this.riskTreeSelect.node2 = {}

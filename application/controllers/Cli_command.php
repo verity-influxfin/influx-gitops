@@ -9,6 +9,10 @@ class Cli_command extends CI_Controller
         {
             show_404();
         }
+        if ( ! app_access())
+        {
+            show_404();
+        }
     }
 
     public function is_ocr_connected_success()

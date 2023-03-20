@@ -228,7 +228,7 @@ $config['product_list'] = [
         'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
-        'allow_age_range' => [20, 35],
+        'allow_age_range' => [18, 35],
         'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000',
         'checkOwner' => FALSE
     ],
@@ -282,7 +282,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
-        'allow_age_range' => [20, 35],
+        'allow_age_range' => [18, 35],
         'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
         'checkOwner' => false,
     ],
@@ -294,7 +294,7 @@ $config['product_list'] = [
         'alias' => 'FGN',
         'name' => '上班族貸',
         'loan_range_s' => 30000,
-        'loan_range_e' => 300000,
+        'loan_range_e' => 500000,
         'interest_rate_s' => 5.5,
         'interest_rate_e' => 16,
         'condition_rate' => [
@@ -357,8 +357,8 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
-        'allow_age_range' => [20, 45],
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
+        'allow_age_range' => [18, 45],
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿18歲的工作人士均可申請</span>',
         'checkOwner' => false,
     ],
     4 => [
@@ -420,7 +420,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
-        'allow_age_range' => [20, 45],
+        'allow_age_range' => [18, 45],
         'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
         'checkOwner' => false,
     ],
@@ -821,7 +821,6 @@ $config['product_list'] = [
         ],
         // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
-            CERTIFICATION_JUDICIALGUARANTEE
         ],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
@@ -860,7 +859,7 @@ $config['product_list'] = [
         'hiddenSubProduct' => true,
         'description' => '',
         'checkOwner' => true,
-        'allow_age_range' => [20, 55],
+        'allow_age_range' => [18, 55],
     ],
 ];
 
@@ -1197,7 +1196,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 35],
+                'allow_age_range' => [18, 35],
                 'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
                 'checkOwner' => false,
             ],
@@ -1254,7 +1253,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 45],
+                'allow_age_range' => [18, 45],
                 'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
                 'checkOwner' => false,
             ]
@@ -1532,7 +1531,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 35],
+                'allow_age_range' => [18, 35],
                 'description' => '須提供有效學生證<br>可申請額度<br>6,000-180,000',
                 'checkOwner' => FALSE,
             ]
@@ -1547,9 +1546,9 @@ $config['sub_product_list'] = [
                 'name' => '上班族貸(購車)',
                 'product_id' => '3:7',
                 'loan_range_s' => 30000,
-                'loan_range_e' => 300000,
+                'loan_range_e' => 500000,
                 'apply_range_s' => 30000,
-                'apply_range_e' => 300000,
+                'apply_range_e' => 500000,
                 'interest_rate_s' => 5.5,
                 'interest_rate_e' => 16,
                 'condition_rate' => [
@@ -1621,7 +1620,7 @@ $config['sub_product_list'] = [
                 'multi_target' => 0,
                 'hiddenMainProduct' => false,
                 'hiddenSubProduct' => false,
-                'allow_age_range' => [20, 45],
+                'allow_age_range' => [18, 45],
                 'description' => '*須提供購車合約上傳',
                 'checkOwner' => false,
             ]
@@ -1636,7 +1635,7 @@ $config['sub_product_list'] = [
                 'name' => '上班族貸(購房)',
                 'product_id' => '3:8',
                 'loan_range_s' => 30000,
-                'loan_range_e' => 300000,
+                'loan_range_e' => 500000,
                 'apply_range_s' => 30000,
                 'apply_range_e' => 2000000,
                 'interest_rate_s' => 5.5,
@@ -1710,7 +1709,7 @@ $config['sub_product_list'] = [
                 'multi_target' => 0,
                 'hiddenMainProduct' => false,
                 'hiddenSubProduct' => false,
-                'allow_age_range' => [20, 45],
+                'allow_age_range' => [18, 45],
                 'description' => '*須提供購屋合約上傳',
                 'checkOwner' => false,
             ]
@@ -1725,7 +1724,7 @@ $config['sub_product_list'] = [
                 'name' => '上班族貸(裝修)',
                 'product_id' => '3:9',
                 'loan_range_s' => 30000,
-                'loan_range_e' => 300000,
+                'loan_range_e' => 500000,
                 'apply_range_s' => 30000,
                 'apply_range_e' => 1000000,
                 'interest_rate_s' => 5.5,
@@ -1799,7 +1798,7 @@ $config['sub_product_list'] = [
                 'multi_target' => 0,
                 'hiddenMainProduct' => false,
                 'hiddenSubProduct' => false,
-                'allow_age_range' => [20, 45],
+                'allow_age_range' => [18, 45],
                 'description' => '*須提供裝潢合約上傳',
                 'checkOwner' => false,
             ]
@@ -1853,7 +1852,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 35],
+                'allow_age_range' => [18, 35],
                 'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000'
             ]
         ],
@@ -1867,7 +1866,7 @@ $config['sub_product_list'] = [
                 'name' => '上班族貸',
                 'product_id' => '3:0',
                 'loan_range_s' => 30000,
-                'loan_range_e' => 300000,
+                'loan_range_e' => 500000,
                 'interest_rate_s' => 5.5,
                 'interest_rate_e' => 16,
                 'charge_platform' => 4,
@@ -1892,7 +1891,8 @@ $config['sub_product_list'] = [
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
+                    CERTIFICATION_REPAYMENT_CAPACITY,
+                    CERTIFICATION_DIPLOMA
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
@@ -1921,7 +1921,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 45],
+                'allow_age_range' => [18, 45],
                 'description' => '*毋須提供相關佐證',
                 'checkOwner' => false,
             ]
@@ -1969,7 +1969,7 @@ $config['sub_product_list'] = [
                 'hiddenMainProduct' => false,
                 'description' => '',
                 'checkOwner' => true,
-                'allow_age_range' => [20, 55],
+                'allow_age_range' => [18, 55],
                 'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000'
             ]
         ],
@@ -2023,7 +2023,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 35],
+                'allow_age_range' => [18, 35],
                 'description' => '可申請額度<br>3000-12,000',
                 'checkOwner' => false,
             ],
@@ -2082,7 +2082,7 @@ $config['sub_product_list'] = [
                 'status' => 0,
                 'dealer' => [],
                 'multi_target' => 0,
-                'allow_age_range' => [20, 45],
+                'allow_age_range' => [18, 45],
                 'description' => '可申請額度<br>30,000-300,000',
                 'checkOwner' => false,
             ],
@@ -2234,6 +2234,7 @@ $config['certifications'] = [
 
     500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務收支', 'status' => 1, 'description' => '提供個人財務收支資料', 'optional' => []],
     501 => ['id' => CERTIFICATION_SIMPLIFICATIONJOB, 'alias' => 'simplificationjob', 'name' => '工作資料', 'status' => 1, 'description' => '提供簡易工作資料', 'optional' => []],
+    502 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW_2, 'alias' => 'passbookcashflow2', 'name' => '近六個月往來存摺封面及內頁', 'status' => 1, 'description' => '提供近六個月往來存摺封面及內頁', 'optional' => []],
 
     1000 => ['id' => CERTIFICATION_BUSINESSTAX, 'alias' => 'businesstax', 'name' => '銷售額與稅額申報書(401表)', 'status' => 1, 'description' => '提供銷售額與稅額申報書(401表)', 'optional' => []],
     1001 => ['id' => CERTIFICATION_BALANCESHEET, 'alias' => 'balancesheet', 'name' => '資產負債表', 'status' => 1, 'description' => '提供資產負債表', 'optional' => []],
