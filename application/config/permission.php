@@ -482,12 +482,16 @@ $config['permission'] = [
         'menu' => [
             'legal_doc' => ['name' => '法訴文件管理'],
             'deduct' => ['name' => '法催扣款'],
+            'virtual_account_status' => ['name' => '虛擬帳號狀態查詢'],
         ],
         'permission' => [
             'legal_doc' => ['model' => 'PostLoan', 'submodel' => 'legal_doc', 'action' => 'read'],
             'deduct' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'read'],
+            'virtual_account_status' => ['model' => 'PostLoan', 'submodel' => 'virtual_account_status', 'action' => 'read'],
             'get_deduct_list' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'read'],
             'add_deduct_info' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'create'],
+            'get_virtual_account_status' => ['model' => 'PostLoan', 'submodel' => 'virtual_account_status', 'action' => 'read'],
+            'post_virtual_account_status' => ['model' => 'PostLoan', 'submodel' => 'virtual_account_status', 'action' => 'read'],
             'update_deduct_info' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'update'],
             'save_status' => ['model' => 'PostLoan', 'submodel' => 'legal_doc', 'action' => 'update'],
             'legal_doc_status' => ['model' => 'PostLoan', 'submodel' => 'legal_doc', 'action' => 'read'],

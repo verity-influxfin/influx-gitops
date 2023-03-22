@@ -7,7 +7,6 @@ use Symfony\Component\HttpClient\HttpClient;
 class PostLoan extends MY_Admin_Controller {
 
 	protected $edit_method = array('legal_doc');
-
 	private $task_list = array(
 		'legalConfirmLetter' => '存證信函',
 	);
@@ -405,6 +404,59 @@ class PostLoan extends MY_Admin_Controller {
         }, $data);
 
         echo json_encode($data);
+    }
+
+    // 虛擬帳號狀態查詢
+    public function virtual_account_status()
+    {
+        $this->load->view('admin/virtual_account_status.php',$data = [
+          'menu'      => $this->menu,
+          'use_vuejs' => TRUE,
+          'scripts'   => [
+              '/assets/admin/js/postloan/virtual_account_status.js'
+          ]
+        ]);
+    }
+
+    public function get_virtual_account_status()
+    {
+        $httpClient = HttpClient::create();
+        $data = $httpClient->request(
+            'GET',
+            getenv('ENV_POST_LOAN_HOST') . '/virtual_account_status',
+            [
+                'query' => $this->input->get()
+            ],
+            [
+                'headers' => ['timeout' => 2.5]
+            ]
+        )->getContent();
+        echo $data;
+        die();
+    }
+
+    public function post_virtual_account_status()
+    {
+        $post = json_decode($this->input->raw_input_stream, TRUE);
+        $httpClient = HttpClient::create();
+        $data = $httpClient->request(
+            'PUT',
+            getenv('ENV_POST_LOAN_HOST') . '/virtual_account_status',
+            [
+                'query' => [
+                    'user_id_int' => $post['user_id_int'],
+                    'admin_id_int' => $this->login_info->id
+                ],
+                'json' => [
+                    'status_int' => $post['status_int']
+                ]
+            ],
+            [
+                'headers' => ['timeout' => 2.5],
+            ]
+        )->getContent();
+        echo $data;
+        die();
     }
 
     // 新增法催扣繳紀錄
