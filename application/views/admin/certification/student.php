@@ -592,6 +592,7 @@
     <!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     $(document).ready(function () {
         // 學制
@@ -604,27 +605,38 @@
         $admin_edit_system.val(system_value);
 
         // 學校名稱 + 系所
-        const school_department_list = <?= json_encode($config['school_department_list'] ?? []) ?>;
         const school_value = '<?= $content['admin_edit']['school'] ?? $content['school'] ?? '' ?>';
         const department_value = '<?= $content['admin_edit']['department'] ?? $content['department'] ?? '' ?>';
         let $admin_edit_school = $('select[name="admin_edit[school]"]');
         let $admin_edit_department = $('select[name="admin_edit[department]"]');
-        $.each(school_department_list, function (key) {
-            $admin_edit_school.append($('<option></option>').text(key).val(key));
+        var school_department_list;
+        axios({
+            method: 'get',
+            url: '/api/v2/website/department'
+        }).then(resp => {
+            school_department_list  = resp.data.data.list;
+            console.log(school_department_list)
+            if (!school_department_list) {
+                return;
+            }
+            $.each(school_department_list, function (key, value) {
+                $admin_edit_school.append($('<option></option>').text(key).val(key));
+            });
+            $admin_edit_school.val(school_value).trigger('change');
+            $admin_edit_department.val(department_value);
         });
         $admin_edit_school.on('change', function () {
             let department_disabled = $admin_edit_department.prop('disabled');
             $admin_edit_department.prop('disabled', true).find('option').remove();
             $admin_edit_department.append($('<option></option>'));
             let this_school_value = $(this).val();
-            const department_list = school_department_list[this_school_value];
-            $.each(department_list, function (key, value) {
-                $admin_edit_department.append($('<option></option>').text(value).val(value));
-            });
-            console.log(department_disabled)
+            const discipline_list = school_department_list[this_school_value].discipline;
+            $.each(discipline_list, function (discipline, department_list) {
+                $.each(department_list, function (key, value) {
+                    $admin_edit_department.append($('<option></option>').text(value).val(value));
+                });
+            })
             $admin_edit_department.prop('disabled', department_disabled);
         });
-        $admin_edit_school.val(school_value).trigger('change');
-        $admin_edit_department.val(department_value);
     });
 </script>
