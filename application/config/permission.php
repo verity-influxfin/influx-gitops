@@ -451,12 +451,16 @@ $config['permission'] = [
         'name' => '財務作業',
         'menu' => [
             'daily_report' => ['name' => '虛擬帳戶交易明細表'],
+            'daily_report_sheet' => ['name' => '虛擬帳戶交易明細表(new)'],
             'passbook_report' => ['name' => '虛擬帳號餘額明細表'],
             'estatement' => ['name' => '個人對帳單'],
             'index' => ['name' => '收支統計表'],
         ],
         'permission' => [
             'daily_report' => ['model' => 'Account', 'submodel' => 'daily_report', 'action' => 'read'],
+            'daily_report_sheet' => ['model' => 'Account', 'submodel' => 'daily_report_sheet', 'action' => 'read'],
+            'get_daily_report_data' => ['model' => 'Account', 'submodel' => 'daily_report_sheet', 'action' => 'read'],
+            'daily_report_export' => ['model' => 'Account', 'submodel' => 'daily_report_sheet', 'action' => 'read'],
             'passbook_report' => ['model' => 'Account', 'submodel' => 'passbook_report', 'action' => 'read'],
             'estatement' => ['model' => 'Account', 'submodel' => 'estatement', 'action' => 'read'],
             'index' => ['model' => 'Account', 'submodel' => 'index', 'action' => 'read'],
@@ -596,7 +600,8 @@ $config['permission'] = [
           'soci' => ['name' => '損益表'],
           'sofp' => ['name' => '資產負債表'],
           'journal' => ['name' => '日記簿'],
-          'balance_sheet' => ['name' => '開帳表']
+          'balance_sheet' => ['name' => '開帳表'],
+          'receipt' => ['name' => '發票資料查詢']
            /*
           'ledger' => ['name' => '分類帳'],
           'target_porting' => ['name' => '借款案帳務轉移'],
@@ -622,10 +627,14 @@ $config['permission'] = [
           'sofp_spreadsheet' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
           'journal' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'get_journal_data' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'erp_balance_sheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'journal_spreadsheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'balance_sheet' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
           'get_balance_sheet_dict' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
           'get_balance_sheet_diff' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
+          'receipt' => ['model' => 'Erp', 'submodel' => 'receipt', 'action' => 'read'],
+          'get_receipt' => ['model' => 'Erp', 'submodel' => 'receipt', 'action' => 'read'],
+          'receipt_spreadsheet' => ['model' => 'Erp', 'submodel' => 'receipt', 'action' => 'read'],
            /*
           'ledger' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
           'get_ledger_data' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],

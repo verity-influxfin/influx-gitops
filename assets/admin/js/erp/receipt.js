@@ -2,35 +2,19 @@ var app = new Vue({
     el: '#page-wrapper',
     data: {
         searchform: {
-            start_date: '',
-            end_date: moment().format('YYYY-MM-DD'),
-            user_id_int: '',
-        },
-        table_data: {
-            start_date: '',
-            end_date: '',
-            total: 0,
-            revenues: {
-                subtotal: 0,
-                subjectGroup_list: [],
-            },
-            expenses: {
-                subtotal: 0,
-                subjectGroup_list: [],
-            },
-            user_id_int: 0,
+            start_date: moment().subtract('1', 'days').format('YYYY-MM-DD'),
+            end_date: moment().subtract('1', 'days').format('YYYY-MM-DD'),
+            form_intEnum: 0,
         },
         is_waiting_response: false,
-    },
-    computed: {
-        table_has_data: function () {
-            return this.has_revenues || this.has_expense;
+        tab: 'tab1',
+        a_sheet: {
+            column: [],
+            tableData: []
         },
-        has_revenues: function () {
-            return this.table_data.revenues.subjectGroup_list.length > 0
-        },
-        has_expense: function () {
-            return this.table_data.expenses.subjectGroup_list.length > 0
+        b_sheet: {
+            column: [],
+            tableData: []
         }
     },
     mounted() {
@@ -38,24 +22,25 @@ var app = new Vue({
         $('#start_date').datepicker({
             'format': 'yyyy-mm-dd',
         }).on('change', function () { self.searchform.start_date = this.value });
+
         $('#end_date').datepicker({
             'format': 'yyyy-mm-dd',
         }).on('change', function () { self.searchform.end_date = this.value });
     },
     methods: {
-        getListTitle(obj) {
-            return obj.subject_list[0].name.split(' - ')[0]
-        },
         doSearch() {
-            this.is_waiting_response = true
-            const { start_date, end_date, user_id_int } = this.searchform
-            const string = Object.entries({ start_date, end_date, user_id_int })
+            const { start_date, end_date, form_intEnum } = this.searchform
+            const string = Object.entries({ start_date, end_date, form_intEnum })
                 .filter(([key, value]) => value !== '')
                 .map(([key, value]) => `${key}=${value}`)
                 .join('&')
-            // axios get get_assets_sheet_data
-            axios.get('/admin/erp/get_soci_data?' + string).then(({ data }) => {
-                this.table_data = data
+            // axios get_receipt
+            this.is_waiting_response = true
+            axios.get('/admin/erp/get_receipt?' + string).then(({ data }) => {
+                this.a_sheet.column = data.a_sheet.column_name_list
+                this.a_sheet.tableData = data.a_sheet.table_str_mat
+                this.b_sheet.column = data.b_sheet.column_name_list
+                this.b_sheet.tableData = data.b_sheet.table_str_mat
             }).catch((error) => {
                 alert('子系統錯誤或無回應: ' + error)
             }).finally(() => {
@@ -64,10 +49,10 @@ var app = new Vue({
         },
         downloadExcel() {
             $("#fileDownloadIframe").remove();
-            let url = '/admin/erp/soci_spreadsheet?'
+            let url = '/admin/erp/receipt_spreadsheet?'
             // build params form searchform
-            const { start_date, end_date, user_id_int } = this.searchform
-            url += Object.entries({ start_date, end_date, user_id_int })
+            const { start_date, end_date, form_intEnum } = this.searchform
+            url += Object.entries({ start_date, end_date, form_intEnum })
                 .filter(([key, value]) => value !== '')
                 .map(([key, value]) => `${key}=${value}`)
                 .join('&')
@@ -88,8 +73,5 @@ var app = new Vue({
                 this.is_waiting_response = false
             })
         },
-        amount: function (value) {
-            return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
-        }
     }
 })
