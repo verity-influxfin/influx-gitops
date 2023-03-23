@@ -4,10 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 use Symfony\Component\HttpClient\HttpClient;
 
+use function PHPSTORM_META\type;
+
 class PostLoan extends MY_Admin_Controller {
 
 	protected $edit_method = array('legal_doc');
-
 	private $task_list = array(
 		'legalConfirmLetter' => '存證信函',
 	);
@@ -405,6 +406,131 @@ class PostLoan extends MY_Admin_Controller {
         }, $data);
 
         echo json_encode($data);
+    }
+
+    // 虛擬帳號狀態查詢
+    public function virtual_account_status()
+    {
+        $this->load->view('admin/virtual_account_status.php',$data = [
+          'menu'      => $this->menu,
+          'use_vuejs' => TRUE,
+          'scripts'   => [
+              '/assets/admin/js/postloan/virtual_account_status.js'
+          ]
+        ]);
+    }
+
+    // 協議清償表狀態查詢
+    public function repayment_agreement()
+    {
+        $this->load->view('admin/repayment_agreement.php',$data = [
+          'menu'      => $this->menu,
+          'use_vuejs' => TRUE,
+          'scripts'   => [
+              '/assets/admin/js/postloan/repayment_agreement.js'
+          ]
+        ]);
+    }
+
+    public function get_virtual_account_status()
+    {
+        $httpClient = HttpClient::create();
+        $data = $httpClient->request(
+            'GET',
+            getenv('ENV_POST_LOAN_HOST') . '/virtual_account_status',
+            [
+                'query' => $this->input->get()
+            ],
+            [
+                'headers' => ['timeout' => 2.5]
+            ]
+        )->getContent();
+        echo $data;
+        die();
+    }
+
+    public function post_virtual_account_status()
+    {
+        $post = json_decode($this->input->raw_input_stream, TRUE);
+        $httpClient = HttpClient::create();
+        $data = $httpClient->request(
+            'PUT',
+            getenv('ENV_POST_LOAN_HOST') . '/virtual_account_status',
+            [
+                'query' => [
+                    'user_id_int' => $post['user_id_int'],
+                    'admin_id_int' => $this->login_info->id
+                ],
+                'json' => [
+                    'status_int' => $post['status_int']
+                ]
+            ],
+            [
+                'headers' => ['timeout' => 2.5],
+            ]
+        )->getContent();
+        echo $data;
+        die();
+    }
+
+    public function get_repayment_agreement()
+    {
+        $httpClient = HttpClient::create();
+        $data = $httpClient->request(
+            'GET',
+            getenv('ENV_POST_LOAN_HOST') . '/repayment_agreement',
+            [
+                'query' => $this->input->get()
+            ],
+            [
+                'headers' => ['timeout' => 2.5]
+            ]
+        )->getContent();
+        echo $data;
+        die();
+    }
+
+    public function repayment_agreement_sheet()
+    {
+        // get file from /repayment_agreement/excel
+        $httpClient = HttpClient::create();
+        $res = $httpClient->request(
+            'GET',
+            getenv('ENV_POST_LOAN_HOST') . '/repayment_agreement/excel',
+            [
+                'query' => $this->input->get()
+            ],
+            [
+                'headers' => ['timeout' => 2.5]
+            ]
+        );
+        $des = $res->getHeaders()['content-disposition'][0];
+        $data = $res->getContent();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        echo $data;
+        die();
+    }
+
+    public function repayment_agreement_confirm()
+    {
+        $get = $this->input->get();
+        $get['admin_id_int'] = $this->login_info->id;
+        $httpClient = HttpClient::create();
+        $data = $httpClient->request(
+            'POST',
+            getenv('ENV_POST_LOAN_HOST') . '/repayment_agreement/confirm',
+            [
+                'query' => $get,
+            ],
+            [
+                'headers' => ['timeout' => 2.5],
+            ]
+        )->getContent();
+        echo $data;
+        die();
     }
 
     // 新增法催扣繳紀錄

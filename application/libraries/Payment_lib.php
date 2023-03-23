@@ -1441,42 +1441,32 @@ class Payment_lib{
 
 		$script  	= 9;
 		$count 		= 0;
-		$source		= array(
-			SOURCE_FEES,
-			SOURCE_SUBLOAN_FEE,
-			SOURCE_TRANSFER_FEE,
-			SOURCE_PREPAYMENT_DAMAGE,
-			SOURCE_DAMAGE,
-			SOURCE_PREPAYMENT_ALLOWANCE,
-		);
+
+        $receipt_item_name = [
+            SOURCE_FEES => '平台服務費',
+            SOURCE_SUBLOAN_FEE => '產品轉換服務費',
+            SOURCE_TRANSFER_FEE => '債權轉讓服務費',
+            SOURCE_PREPAYMENT_DAMAGE => '提前還款違約金',
+            SOURCE_DAMAGE => '違約金',
+        ];
 
         foreach($mdate as $key => $date) {
             $where = array(
                 "entering_date" => $date,
-                "source" => $source,
+                "source" => array_keys($receipt_item_name),
                 "status <>" => 0
             );
             $data = $this->CI->transaction_model->order_by("user_from", "ASC")->get_many_by($where);
             if ($data && !empty($data)) {
                 $tax_list = array();
-                $prepayment = array();
-                foreach ($data as $key => $value) {
-                    if ($value->source != SOURCE_PREPAYMENT_ALLOWANCE) {
-                        if (!isset($tax_list[$value->user_from])) {
-                            $tax_list[$value->user_from] = 0;
-                        }
-                        $tax_list[$value->user_from] += $value->amount;
-                        if ($value->source == SOURCE_PREPAYMENT_DAMAGE) {
-                            $prepayment[$value->target_id] = $value->user_from;
-                        }
+
+                foreach ($data as $value)
+                {
+                    if ( ! isset($tax_list[$value->user_from][$value->source]))
+                    {
+                        $tax_list[$value->user_from][$value->source] = 0;
                     }
-                }
-                if (!empty($prepayment)) {
-                    foreach ($data as $key => $value) {
-                        if ($value->source == SOURCE_PREPAYMENT_ALLOWANCE) {
-                            $tax_list[$prepayment[$value->target_id]] -= $value->amount;
-                        }
-                    }
+                    $tax_list[$value->user_from][$value->source] += $value->amount;
                 }
 
                 // 取得 user_from 是否為法人
@@ -1487,7 +1477,8 @@ class Payment_lib{
                 ]);
 
                 if (!empty($tax_list)) {
-                    foreach ($tax_list as $user_id => $amount) {
+                    foreach ($tax_list as $user_id => $tax)
+                    {
                         if ( ! $user_id) continue;
                         $today = $this->CI->receipt_model->get_by(array(
                             "entering_date" => $date,
@@ -1495,18 +1486,39 @@ class Payment_lib{
                         ));
 
                         if (!$today) {
-                            $tax = $this->CI->financial_lib->get_tax_amount($amount);
-                            $this->CI->ezpay_lib->set_amt($tax, $amount);
 
-                            if ( ! empty($user_from_company_status_list[$user_id]))
+                            // 發票金額
+                            $total_amt = 0;
+
+                            $item_name = [];
+                            $item_count = [];
+                            $item_unit = [];
+                            $item_price = [];
+                            foreach ($tax as $source => $amount)
                             {
-                                $this->CI->ezpay_lib->set_item('influx', '平台服務費', 1, '筆', ($amount - $tax));
-                            }
-                            else
-                            {
-                                $this->CI->ezpay_lib->set_item('influx', '平台服務費', 1, '筆', $amount);
+                                if (empty($receipt_item_name[$source]))
+                                {
+                                    continue;
+                                }
+                                $item_name[] = $receipt_item_name[$source];
+                                $item_count[] = 1;
+                                $item_unit[] = '筆';
+
+                                if ( ! empty($user_from_company_status_list[$user_id]) || (string) $user_id === '0')
+                                {
+                                    $item_tax_amt = $this->CI->financial_lib->get_tax_amount($amount);
+                                    $item_price[] = $amount - $item_tax_amt;
+                                    $total_amt += $amount;
+                                    continue;
+                                }
+                                $item_price[] = $amount;
+                                $total_amt += $amount;
                             }
 
+                            // 稅額
+                            $tax_amt = $this->CI->financial_lib->get_tax_amount($total_amt);
+                            $this->CI->ezpay_lib->set_amt($tax_amt, $total_amt);
+                            $this->CI->ezpay_lib->set_item('influx', $item_name, $item_count, $item_unit, $item_price);
                             $tax_info = $this->CI->ezpay_lib->send($user_id);
                             if ($tax_info) {
                                 $this->CI->receipt_model->insert(array(
@@ -1619,7 +1631,7 @@ class Payment_lib{
                             $item_count[] = 1;
                             $item_unit[] = '筆';
 
-                            if ( ! empty($user_from_company_status_list[$user_id]))
+                            if ( ! empty($user_from_company_status_list[$user_id]) || (string) $user_id === '0')
                             {
                                 $item_tax_amt = $this->CI->financial_lib->get_tax_amount($amount);
                                 $item_price[] = $amount - $item_tax_amt;
