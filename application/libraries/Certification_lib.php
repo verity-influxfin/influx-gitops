@@ -1407,6 +1407,11 @@ class Certification_lib{
 	}
 
     public function judicialguarantee_verify($info = array(), $url=null){
+        $cert = Certification_factory::get_instance_by_id($info->id);
+        if (isset($cert))
+        {
+            return $cert->verify();
+        }
         if($info && $info->certification_id == CERTIFICATION_JUDICIALGUARANTEE && $info->status == 0){
             $info->content = isset($info->content) ? json_decode($info->content,true) : [];
             $this->CI->load->library('Judicialperson_lib');
