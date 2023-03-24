@@ -636,10 +636,7 @@
                     $admin_edit_department.append($('<option></option>').text(value).val(value));
                 });
             })
-            console.log(department_disabled)
             $admin_edit_department.prop('disabled', department_disabled);
         });
-        $admin_edit_school.val(school_value).trigger('change');
-        $admin_edit_department.val(department_value);
     });
 </script>
