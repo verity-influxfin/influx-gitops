@@ -14,6 +14,7 @@ import lenderTerms from '../pages/lenderTerms';
 import transferTerms from '../pages/transferTerms';
 import recruiting from '../pages/recruitingv2';
 import recruitingInfoFrom from '../pages/recruiting/infoForm';
+import recruitingQaFrom from '../pages/recruiting/qaForm';
 import campusPartner from '../pages/campusPartner';
 import clubCooperation from '../pages/clubCooperation';
 import firmCooperation from '../pages/firmCooperation';
@@ -140,6 +141,7 @@ let routers = [
     { path: '/invest-report', component: investReport },
     { path: '/recruiting', component: recruiting },
     { path: '/recruiting/info-form', component: recruitingInfoFrom },
+    { path: '/recruiting/qa-form', component: recruitingQaFrom },
     { path: '/campuspartner', component: campusPartner },
     { path: '/clubcooperation', component: clubCooperation },
     { path: '/firmcooperation', component: firmCooperation },
