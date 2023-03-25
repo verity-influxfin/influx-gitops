@@ -1118,6 +1118,7 @@ class Product extends REST_Controller {
 
             if($product){
                 $method = 'type'.$product['type'].'_signing';
+                log_message('debug', "-- Before $method: " . time() . ' --');
                 if(method_exists($this, $method)){
                     $this->$method($param,$product,$input,$target);
                 }
@@ -3450,7 +3451,9 @@ class Product extends REST_Controller {
 
         //上傳檔案欄位
         if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
+            log_message('debug', '-- Before upload person image: '. time() . ' --');
             $image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'signing_target');
+            log_message('debug', '-- After upload person image: '. time() . ' --');
             if($image){
                 $param['person_image'] = $image;
             }else{
@@ -3494,7 +3497,9 @@ class Product extends REST_Controller {
                 : true;
             if ($faceDetect) {
                 $this->load->library('certification_lib');
+                log_message('debug', '-- Before verify signing face: ' . time() . ' --');
                 $faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $param['person_image']);
+                log_message('debug', '-- After verify signing face: ' . time() . ' --');
                 if (isset($faceDetect_res['error']) && $faceDetect_res['error'] == '') {
                     $target->status = TARGET_WAITING_VERIFY;
                     $targetData->autoVerifyLog[] = [
