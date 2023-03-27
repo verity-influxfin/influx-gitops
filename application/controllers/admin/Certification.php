@@ -1004,6 +1004,10 @@ class Certification extends MY_Admin_Controller {
 						'user_id' => $info->user_id,
 						'status' => TARGET_WAITING_VERIFY,
 					]);
+                    if (empty($target))
+                    {
+                        goto END;
+                    }
 					$product_list = $this->config->item('product_list');
 					$product = $product_list[$target->product_id];
 					$sub_product_id = $target->sub_product_id;
@@ -1045,6 +1049,7 @@ class Certification extends MY_Admin_Controller {
 						}
 					}
 				}
+                END:
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();
