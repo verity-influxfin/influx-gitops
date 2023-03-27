@@ -8,7 +8,17 @@
             <h1 class="page-header">ERP 帳務 - 日記簿</h1>
         </div>
     </div>
-    <div class="row">
+    <div>
+        <ul class="nav nav-tabs" id="myTabs" role="tablist">
+            <li role="presentation" class="active">
+                <a role="tab" data-toggle="tab" aria-controls="test1" aria-expanded="true" @click="tab='tab1'">個人</a>
+            </li>
+            <li role="presentation">
+                <a role="tab" data-toggle="tab" aria-controls="test2" aria-expanded="false" @click="tab='tab2'">平台</a>
+            </li>
+        </ul>
+    </div>
+    <div class="row" v-show="tab == 'tab1'">
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
@@ -83,6 +93,74 @@
                                             <td colspan="8"></td>
                                         </tr>
                                     </template>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" v-show="tab == 'tab2'">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <form class="form-inline" ref="search-form" @submit.prevent="doErpSearch">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="sr-only" for="start_date">開始日期</label>
+                                    <input type="text" class="form-control" id="start_date" name="start_date" v-model="searchform.start_date" placeholder="開始日期">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="end_date">結束日期</label>
+                                    <input type="text" class="form-control" id="end_date" name="end_date" v-model="searchform.end_date" placeholder="結束日期">
+                                </div>
+                                <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
+                                    <i class="fa fa-search"></i> 搜尋
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>會計科目</th>
+                                    <th>會計科目名稱</th>
+                                    <th>客戶＼供商</th>
+                                    <th>摘要</th>
+                                    <th>借＼貸</th>
+                                    <th class="amount">借方金額</th>
+                                    <th class="amount">貸方金額</th>
+                                </tr>
+                            </thead>
+                            <tbody v-if="is_waiting_response">
+                                <tr>
+                                    <td colspan="22">
+                                        <div class="text-center">
+                                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else>
+                                <tr class="active" v-if="erp_balance_data.length < 1">
+                                    <td colspan="20" class="text-center">沒有資料</td>
+                                </tr>
+                                <template v-if="erp_balance_data.length > 0">
+                                    <tr v-for="item in erp_balance_data">
+                                        <td>{{ item.subject_code_str }}</td>
+                                        <td>{{ item.subject_name_str }}</td>
+                                        <td>{{ item.customer_name_str }}</td>
+                                        <td>{{ item.summary_str }}</td>
+                                        <td>{{ item.role_str }}</td>
+                                        <td class="amount">{{ amount(item.borrower_amount_int_str) }}</td>
+                                        <td class="amount">{{ amount(item.lender_amount_int_str) }}</td>
+                                    </tr>
                                 </template>
                             </tbody>
                         </table>
