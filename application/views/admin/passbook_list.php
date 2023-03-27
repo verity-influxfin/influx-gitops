@@ -90,7 +90,7 @@
                                             <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a href="<?=admin_url('passbook/detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
-                                            <td><a href="<?=admin_url('passbook/passbook_export')."?id=".$value->id ?>" target="_blank"  class="btn btn-default">匯出全部明細</a></td>
+                                            <td><a href="<?=admin_url('passbook/passbook_export')."?id=".$value->id.'&sdate=all&edate=all' ?>" target="_blank"  class="btn btn-default">匯出全部明細</a></td>
                                         </tr>                                        
 									<?php 
 										}}

@@ -72,7 +72,6 @@ class ERP extends MY_Admin_Controller
         header('content-type: application/octet-stream');
         header('content-disposition:' . $des);
         header('content-length: ' . strlen($data));
-        setcookie('fileDownload', 'true', 0, '/');
         echo $data;
         die();
     }
@@ -138,7 +137,6 @@ class ERP extends MY_Admin_Controller
         header('content-type: application/octet-stream');
         header('content-disposition:' . $des);
         header('content-length: ' . strlen($data));
-        setcookie('fileDownload', 'true', 0, '/');
         echo $data;
         die();
     }
@@ -213,7 +211,6 @@ class ERP extends MY_Admin_Controller
         header('content-type: application/octet-stream');
         header('content-disposition:' . $des);
         header('content-length: ' . strlen($data));
-        setcookie('fileDownload', 'true', 0, '/');
         echo $data;
         die();
     }
@@ -250,7 +247,6 @@ class ERP extends MY_Admin_Controller
       header('content-type: application/octet-stream');
       header('content-disposition:' . $des);
       header('content-length: ' . strlen($data));
-      setcookie('fileDownload', 'true', 0, '/');
       echo $data;
       die();
     }
@@ -311,7 +307,6 @@ class ERP extends MY_Admin_Controller
         header('content-type: application/octet-stream');
         header('content-disposition:' . $des);
         header('content-length: ' . strlen($data));
-        setcookie('fileDownload', 'true', 0, '/');
         echo $data;
         die();
     }
@@ -364,7 +359,6 @@ class ERP extends MY_Admin_Controller
         header('content-type: application/octet-stream');
         header('content-disposition:' . $des);
         header('content-length: ' . strlen($data));
-        setcookie('fileDownload', 'true', 0, '/');
         echo $data;
         die();
     }
@@ -401,6 +395,21 @@ class ERP extends MY_Admin_Controller
     }
 
     /**
+     * 取得平台分類帳 API 資料
+     * 
+     * @created_at            2022-02-24
+     * @created_at            Allan
+     */
+    public function erp_balance_sheet()
+    {
+        $data = $this->erp_client->request('GET', 'erp_balance_sheet', [
+            'query' => $this->input->get()
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+
+    /**z
      * 資產負債表 Excel 下載
      * 
      * @created_at      2021-08-16
@@ -528,4 +537,45 @@ class ERP extends MY_Admin_Controller
             ]
         );
     }
+    
+    /**
+     * 發票資料查詢 UI
+     * 
+     * @created_at      2023-03-07
+     * @updated_by      Allan
+     */
+    public function receipt(){
+        $this->load->view(
+            'admin/erp/receipt',
+            $data = [
+                'menu'      => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts'   => [
+                    '/assets/admin/js/erp/receipt.js'
+                ]
+            ]
+        );
+    }
+    public function get_receipt()
+    {
+        $data = $this->erp_client->request('GET', 'receipt', [
+            'query' => $this->input->get()
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+    public function receipt_spreadsheet()
+    {
+        $res = $this->erp_client->request('GET', 'receipt/excel', [
+            'query' => $this->input->get()
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        echo $data;
+        die();
+    } 
 }
