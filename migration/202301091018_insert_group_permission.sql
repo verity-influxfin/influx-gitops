@@ -1,0 +1,9 @@
+INSERT INTO `p2p_admin`.`group_permission` (`group_id`, `model_key`, `submodel_key`, `action_type`) VALUES ('1', 'companyList', 'world_500', '15');
+INSERT INTO `p2p_admin`.`group_permission` (`group_id`, `model_key`, `submodel_key`, `action_type`) VALUES ('1', 'companyList', 'medical_institute', '15');
+INSERT INTO `p2p_admin`.`group_permission` (`group_id`, `model_key`, `submodel_key`, `action_type`) VALUES ('1', 'companyList', 'public_agency', '15');
+INSERT INTO `p2p_admin`.`group_permission` (`group_id`, `model_key`, `submodel_key`, `action_type`) VALUES ('4', 'companyList', 'world_500', '15');
+INSERT INTO `p2p_admin`.`group_permission` (`group_id`, `model_key`, `submodel_key`, `action_type`) VALUES ('4', 'companyList', 'medical_institute', '15');
+INSERT INTO `p2p_admin`.`group_permission` (`group_id`, `model_key`, `submodel_key`, `action_type`) VALUES ('4', 'companyList', 'public_agency', '15');
+INSERT INTO `p2p_admin`.`group_permission` (`group_id`, `model_key`, `submodel_key`, `action_type`) VALUES ('5', 'companyList', 'world_500', '15');
+INSERT INTO `p2p_admin`.`group_permission` (`group_id`, `model_key`, `submodel_key`, `action_type`) VALUES ('5', 'companyList', 'medical_institute', '15');
+INSERT INTO `p2p_admin`.`group_permission` (`group_id`, `model_key`, `submodel_key`, `action_type`) VALUES ('5', 'companyList', 'public_agency', '15');

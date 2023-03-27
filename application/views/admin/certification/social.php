@@ -72,6 +72,8 @@
                                                         <tr hidden><td><span>徵提資料ID</span></td><td><input class="meta-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                                         <tr><td><span>被追蹤數</span></td><td><input class="meta-input" type="text" name="follow_count" placeholder=""></td></tr>
                                                         <tr><td><span>近3個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_3months" placeholder=""></td></tr>
+                                                        <tr><td><span>近1個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_1months" placeholder=""></td></tr>
+                                                        <tr><td><span>近3個月內粉絲數增幅</span></td><td><input class="meta-input" type="text" name="followers_grow_rate_in_3month" placeholder=""></td></tr>
                                                         <tr><td><span>發文關鍵字</span></td><td><input class="meta-input" type="text" name="key_word" placeholder=""></td></tr>
                                                         <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                                     </tbody>
@@ -258,6 +260,8 @@
                                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="meta-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                                             <tr><td><span>被追蹤數</span></td><td><input class="meta-input" type="text" name="follow_count" placeholder=""></td></tr>
                                                             <tr><td><span>近3個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_3months" placeholder=""></td></tr>
+                                                            <tr><td><span>近1個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_1months" placeholder=""></td></tr>
+                                                            <tr><td><span>近3個月內粉絲數增幅</span></td><td><input class="meta-input" type="text" name="followers_grow_rate_in_3month" placeholder=""></td></tr>
                                                             <tr><td><span>發文關鍵字</span></td><td><input class="meta-input" type="text" name="key_word" placeholder=""></td></tr>
                                                             <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                                         </tbody>

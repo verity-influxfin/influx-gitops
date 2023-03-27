@@ -173,4 +173,21 @@ class Anti_fraud_lib{
 
         return $data;
     }
+
+    public function get_by_user_id($user_id)
+    {
+        $port = '9453';
+        $ip = getenv('GRACULA_IP');
+        $url = "http://{$ip}:{$port}/brookesia/api/v1.0/result/userId?userId={$user_id}";
+
+        $result = curl_get($url);
+        $response = json_decode($result, TRUE);
+
+        if (json_last_error() !== JSON_ERROR_NONE)
+        {
+            return [];
+        }
+
+        return $response;
+    }
 }

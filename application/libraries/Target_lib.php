@@ -2,7 +2,10 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use Approve_target\Approve_factory;
 use Certification\Cert_identity;
+use Certification\Certification_factory;
+use CertificationResult\IdentityCertificationResult;
 use CreditSheet\CreditSheetFactory;
 
 class Target_lib
@@ -1711,10 +1714,25 @@ class Target_lib
         $allow_stage_cer = [1, 3];
         if ($targets && !empty($targets)) {
             foreach ($targets as $key => $value) {
+                // todo: 只放學生貸進新架構，剩餘的等之後開發好再說
+                if ($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0)
+                {
+                    $approve_factory = new Approve_factory();
+                    $approve_instance = $approve_factory->get_instance_by_model_data($value);
+                    if ($approve_instance->approve(FALSE) === TRUE)
+                    {
+                        $count++;
+                    }
+                    continue;
+                }
                 $list[$value->product_id][$value->id] = $value;
                 $ids[] = $value->id;
             }
 
+            if (empty($ids))
+            {
+                return TRUE;
+            }
             $rs = $this->CI->target_model->update_many($ids, ['script_status' => $script]);
             if ($rs) {
                 $product_list = $this->CI->config->item('product_list');
@@ -1803,6 +1821,23 @@ class Target_lib
                                         }
                                     }
                                 }
+
+                                // 社交認證過期，卡案件狀態為待驗證
+                                if ($certification['id'] == CERTIFICATION_SOCIAL && $certification['expire_time'] < time())
+                                {
+                                    $finish = FALSE;
+                                    $param = ['status' => TARGET_WAITING_APPROVE, 'sub_status' => TARGET_SUBSTATUS_NORNAL];
+                                    $this->CI->target_model->update($value->id, $param);
+                                    $this->insert_change_log($target_id, $param);
+                                    $cert_helper = Certification_factory::get_instance_by_id($certification['certification_id']);
+                                    if ( ! isset($cert_helper))
+                                    {
+                                        break;
+                                    }
+                                    $cert_helper->set_failure(TRUE, \CertificationResult\SocialCertificationResult::$EXPIRED_MESSAGE);
+                                    break;
+                                }
+
                                 // 工作認證有專業技能證書進待二審
                                 if($certification['id'] == 10 && isset($certification['content'])){
                                     if(isset($certification['content']['license_image']) || isset($certification['content']['pro_certificate_image']) || isset($certification['content']['game_work_image'])){
@@ -1848,6 +1883,42 @@ class Target_lib
                         if (count($finish_stage_cer) != 0) {
                             $stage_cer = $this->stageCerLevel($finish_stage_cer);
                             !$stage_cer ? $finish = false : '';
+                        }
+
+                        $certifications_status_by_id = array_column($certifications, 'user_status', 'id');
+                        if ($value->product_id == PRODUCT_ID_STUDENT &&
+                            isset($certifications_status_by_id[CERTIFICATION_IDENTITY]) &&
+                            $certifications_status_by_id[CERTIFICATION_IDENTITY] == CERTIFICATION_STATUS_SUCCEED &&
+                            isset($certifications_status_by_id[CERTIFICATION_STUDENT]) &&
+                            $certifications_status_by_id[CERTIFICATION_STUDENT] == CERTIFICATION_STATUS_SUCCEED)
+                        {
+                            // 1. 申請學生貸，且實名認證、學生認證已審核通過
+                            // 2. 通過反詐欺爬蟲（未命中、未被封鎖）
+                            // 符合者，將金融驗證轉為待驗證
+                            $this->CI->load->library('anti_fraud_lib');
+                            $anti_fraud_response = $this->anti_fraud_lib->get_by_user_id($value->user_id);
+                            if ($anti_fraud_response['status'] == 200 && empty($anti_fraud_response['response']['results']))
+                            {
+                                $this->CI->load->model('user/user_bankaccount_model');
+                                $bank_account = $this->CI->user_bankaccount_model->get_by([
+                                    'status' => VIRTUAL_ACCOUNT_STATUS_AVAILABLE,
+                                    'investor' => USER_BORROWER,
+                                    'user_id' => $value->user_id
+                                ]);
+                                if (isset($bank_account->verify) && $bank_account->verify == 0)
+                                {
+                                    $cert_debit_card = $this->CI->user_certification_model->get($bank_account->user_certification_id);
+                                    if ( ! empty($cert_debit_card))
+                                    {
+                                        $new_content = json_encode(array_merge(
+                                            json_decode($cert_debit_card['content'], TRUE),
+                                            ['in_advance' => TRUE]
+                                        ));
+                                        $this->CI->user_certification_model->update($cert_debit_card->id, ['content' => $new_content]);
+                                        $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                                    }
+                                }
+                            }
                         }
 
                         if ($finish) {
@@ -1912,11 +1983,11 @@ class Target_lib
                                             $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
                                             if (isset($cert_helper))
                                             {
-                                                $rs = $cert_helper->set_failure(TRUE, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                                $rs = $cert_helper->set_failure(TRUE, IdentityCertificationResult::$RIS_CHECK_FAILED_MESSAGE);
                                             }
                                             else
                                             {
-                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, Cert_identity::$ID_CARD_FAILED_MESSAGE);
+                                                $rs = $this->CI->certification_lib->set_failed($identity_cert->id, IdentityCertificationResult::$RIS_CHECK_FAILED_MESSAGE);
                                             }
                                             if ($rs === TRUE)
                                             {
@@ -1928,6 +1999,29 @@ class Target_lib
                                             {
                                                 log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
                                             }
+                                        }
+                                        elseif ($result[0] === FALSE && $result[1] === TRUE)
+                                        {
+                                            $this->CI->load->model('log/log_usercertification_model');
+                                            $this->CI->log_usercertification_model->insert([
+                                                'user_certification_id' => $identity_cert->id,
+                                                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                                                'change_admin' => SYSTEM_ADMIN_ID,
+                                            ]);
+                                            $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+                                            $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
+                                            if ($rs === TRUE)
+                                            {
+                                                $this->CI->user_certification_model->update($identity_cert->id, [
+                                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT
+                                                ]);
+                                            }
+                                            else
+                                            {
+                                                log_message('error', "實名認證 user_certification {$identity_cert->id} 轉人工失敗");
+                                            }
+
+                                            goto UNFINISHED;
                                         }
                                     }
                                 }
@@ -2030,6 +2124,7 @@ class Target_lib
                             }
 
                         } else {
+                            UNFINISHED:
                             //自動取消
                             $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
                             $create_date = date('Y-m-d', $value->created_at);

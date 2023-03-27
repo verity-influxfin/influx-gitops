@@ -623,19 +623,73 @@
                                             <th class="center-text" width="60%">項目內容</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="special-select-table">
-                                            <td>是否為千大企業
+                                        <tbody class="special-select-table" id="taiwan-1000-table">
+                                            <td>是否為台灣千大企業
                                                 <a target="_blank" href="<?=admin_url('companyList/index') ?>" >
                                                     (前往列表)
                                                 </a>
                                             </td>
                                             <td>
-                                                <p id="job_company"></p>
-                                                <select id="is_top_enterprise" >
-                                                    <option value="0">否</option>
-                                                    <option value="1">是</option>
-                                                </select>
+                                                <p class="job_company"></p>
+                                                <select id="job_company_taiwan_1000_point"></select>
                                             </td>
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">項目名稱</th>
+                                            <th class="center-text" width="60%">項目內容</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="special-select-table" id="world-500-table">
+                                        <td>是否為世界500大企業
+                                            <a target="_blank" href="<?=admin_url('companyList/world_500') ?>" >
+                                                (前往列表)
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <p class="job_company"></p>
+                                            <select id="job_company_world_500_point"></select>
+                                        </td>
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">項目名稱</th>
+                                            <th class="center-text" width="60%">項目內容</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="special-select-table" id="medical-institute-table">
+                                        <td>是否為醫療院所
+                                            <a target="_blank" href="<?=admin_url('companyList/medical_institute') ?>" >
+                                                (前往列表)
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <p class="job_company"></p>
+                                            <select id="job_company_medical_institute_point"></select>
+                                        </td>
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">項目名稱</th>
+                                            <th class="center-text" width="60%">項目內容</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="special-select-table" id="public-agency-table">
+                                        <td>是否為公家機關
+                                            <a target="_blank" href="<?=admin_url('companyList/public_agency') ?>" >
+                                                (前往列表)
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <p class="job_company"></p>
+                                            <select id="job_company_public_agency_point"></select>
+                                        </td>
                                         </tbody>
                                     </table>
                                 </div>
@@ -912,7 +966,6 @@
                             <span class="fixed_amount_block">額度調整:</span>
                             <input id="credit_test_fixed_amount" type="text" name="credit_test_fixed_amount" value="0" disabled class="fixed_amount_block">
 							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
-                            <input type="text" name="is_top_enterprise" value="0" hidden>
 							<button class="btn btn-warning need_chk_before_approve" type="submit">額度試算</button>
 							<button class="btn btn-danger need_chk_before_approve" data-url="/admin/Target/verify_failed"
 								id="verify_failed">不通過</button>
@@ -1138,7 +1191,10 @@
 		let score = $(`#${group_id}_score`).val();
 		let fixed_amount = $(`#credit_test_fixed_amount`).val();
 		let opinion = $(`#${group_id}_opinion`).val();
-		let is_top_enterprise = $('#is_top_enterprise').val();
+		let job_company_taiwan_1000_point = $('#job_company_taiwan_1000_point').val();
+		let job_company_world_500_point = $('#job_company_world_500_point').val();
+		let job_company_medical_institute_point = $('#job_company_medical_institute_point').val();
+		let job_company_public_agency_point = $('#job_company_public_agency_point').val();
 		if (group_id && target_id) {
 			$.ajax({
 				type: "POST",
@@ -1149,7 +1205,10 @@
 					'fixed_amount': fixed_amount,
 					'opinion': opinion,
 					'group': group_id,
-					'is_top_enterprise': is_top_enterprise,
+					'job_company_taiwan_1000_point': job_company_taiwan_1000_point,
+					'job_company_world_500_point': job_company_world_500_point,
+					'job_company_medical_institute_point': job_company_medical_institute_point,
+					'job_company_public_agency_point': job_company_public_agency_point,
 					'type': 'person',
 				},
 				async: false,
@@ -1347,10 +1406,6 @@
 		$('#newModal').modal('hide')
 		location.reload()
         })
-
-        $('#is_top_enterprise').change(function() {
-            $('input[name=is_top_enterprise]').val($(this).val());
-        });
 
 		var urlString = window.location.href;
 		var url = new URL(urlString);
@@ -2129,14 +2184,26 @@
 
         function fillTopSpecialList(specialList) {
 		    let company = specialList?.job_company;
-		    let is_top_enterprise = specialList?.is_top_enterprise;
             company = company === undefined ? '' : company;
-            is_top_enterprise = is_top_enterprise === undefined ? 0 : is_top_enterprise;
+            $('p.job_company').text(company);
 
-            $('#job_company').text(company);
-            $('#is_top_enterprise').find("option:selected").removeAttr('selected');
-            $('#is_top_enterprise').find("option[value="+is_top_enterprise+"]").attr('selected', 'selected');
-            $('input[name=is_top_enterprise]').val(is_top_enterprise);
+            if (specialList) {
+                $.each(['taiwan_1000', 'world_500', 'medical_institute', 'public_agency'], function (key, item) {
+                    if (specialList[item]['list']) {
+                        let list = specialList[item]['list'];
+                        let point = specialList[item]['point'] ? specialList[item]['point'] : '';
+                        let selector = $(`#job_company_${item}_point`);
+                        selector.append($('<option></option>').text('').val(''));
+                        selector.append($('<option></option>').text('否，0').val('0'));
+                        $.each(list, function (list_key, list_item) {
+                            if (list_key > 0) {
+                                selector.append($('<option></option>').text(`是，${list_item}`).val(list_key));
+                            }
+                        });
+                        selector.val(point);
+                    }
+                });
+            }
         }
 
 		function getCenterTextCell(value, additionalCssClass = "") {
@@ -2163,9 +2230,12 @@
 			}
 
 			var form = $(this);
-			var url = form.attr('action');
+
 			var points = form.find('input[name="score"]').val();
-			var is_top_enterprise = form.find('input[name="is_top_enterprise"]').val();
+			let job_company_taiwan_1000_point = $('#job_company_taiwan_1000_point').val();
+			let job_company_world_500_point = $('#job_company_world_500_point').val();
+			let job_company_medical_institute_point = $('#job_company_medical_institute_point').val();
+			let job_company_public_agency_point = $('#job_company_public_agency_point').val();
             let fixed_amount = form.find('input[name="credit_test_fixed_amount"]').val();
 			var remark = form.find('input[name="description"]').val();
 
@@ -2175,9 +2245,21 @@
                 return;
             }
 
+
+            let url = new URL(location.href);
+            url.pathname = form.attr('action');
+            url.search = new URLSearchParams({
+                'id': caseId,
+                'points': points,
+                'job_company_taiwan_1000_point': job_company_taiwan_1000_point,
+                'job_company_world_500_point': job_company_world_500_point,
+                'job_company_medical_institute_point': job_company_medical_institute_point,
+                'job_company_public_agency_point': job_company_public_agency_point
+            });
+
 			$.ajax({
 				type: "GET",
-				url: url + "?id=" + caseId + "&points=" + points + "&is_top_enterprise=" + is_top_enterprise + `&fixed_amount=${fixed_amount}`,
+				url: url.href,
 				beforeSend: function () {
 					changeReevaluationLoading(true);
 					clearCreditInfo(true);

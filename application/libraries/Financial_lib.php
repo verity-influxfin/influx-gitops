@@ -422,11 +422,11 @@ class Financial_lib{
 		return 0;
 	}
 
-    public function get_platform_fee($price = 0, $platform_fees = PLATFORM_FEES)
+    public function get_platform_fee($price = 0, $platform_fees = PLATFORM_FEES, $config_platform_fees_min = PLATFORM_FEES_MIN)
     {
         if ($price) {
             $platform_fee = intval(round($price / 100 * $platform_fees, 0));
-            return $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
+            return max($platform_fee, $config_platform_fees_min);
         }
         return 0;
     }

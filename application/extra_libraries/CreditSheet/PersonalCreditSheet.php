@@ -282,8 +282,17 @@ class PersonalCreditSheet extends CreditSheetBase {
         $reviewedInfoList = $this->CI->credit_sheet_review_model->order_by('group', 'DESC')->get_many_by(
             ['credit_sheet_id' => $this->creditSheetRecord->id]);
 
-        $target_meta = $this->CI->target_meta_model->get_by(['target_id' => $this->target->id, 'meta_key' => 'is_top_enterprise']);
-        $is_top_enterprise = $target_meta->meta_value ?? NULL;
+        $target_meta = $this->CI->target_meta_model->as_array()->get_many_by(['target_id' => $this->target->id, 'meta_key' => [
+            'job_company_taiwan_1000_point',
+            'job_company_world_500_point',
+            'job_company_medical_institute_point',
+            'job_company_public_agency_point',
+        ]]);
+        $target_meta = array_column($target_meta, 'meta_value', 'meta_key');
+        $job_company_taiwan_1000_point = $target_meta['job_company_taiwan_1000_point'] ?? 0;
+        $job_company_world_500_point = $target_meta['job_company_world_500_point'] ?? 0;
+        $job_company_medical_institute_point = $target_meta['job_company_medical_institute_point'] ?? 0;
+        $job_company_public_agency_point = $target_meta['job_company_public_agency_point'] ?? 0;
 
         // 上班族階段上架 或 非階段上架之其他產品
         if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
@@ -293,10 +302,12 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->approvalextra->setSkipInsertion(true);
             $this->CI->approvalextra->setExtraPoints($bonusScore);
             $this->CI->approvalextra->set_fixed_amount($reviewedInfoList[0]->fixed_amount ?? 0);
-            if (isset($is_top_enterprise))
-            {
-                $this->CI->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);
-            }
+            $this->CI->approvalextra->setSpecialInfo([
+                'job_company_taiwan_1000_point' => $job_company_taiwan_1000_point,
+                'job_company_world_500_point' => $job_company_world_500_point,
+                'job_company_medical_institute_point' => $job_company_medical_institute_point,
+                'job_company_public_agency_point' => $job_company_public_agency_point,
+            ]);
 
             // 上班族階段上架
             $level = false;

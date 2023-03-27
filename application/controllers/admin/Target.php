@@ -254,7 +254,7 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$value->target_no.'</td>';
                     $html .= '<td>'.$product_list[$value->product_id]['name'].($value->sub_product_id!=0?'/'.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'').(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
-                    $html .= '<td>'.(isset($user_status[$value->user_id]) ? '舊戶' : '新戶') . '</td>';
+                    $html .= '<td>' . (isset($user_status[$value->user_id]) ? '舊戶' : '新戶') . '</td>';
                     $html .= '<td>'.$value->credit_level.'</td>';
                     $html .= '<td>'.(isset($value->company)?$value->company:'').(isset($value->company)&&isset($value->school_name)?' / ':'').(isset($value->school_name)?$value->school_name:'').'</td>';
                     $html .= '<td>'.(isset($value->school_department)?$value->school_department:'').'</td>';
@@ -705,7 +705,6 @@ class Target extends MY_Admin_Controller {
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
         $fixed_amount = isset($get['fixed_amount']) ? (int) $get['fixed_amount'] : 0;
-		$is_top_enterprise = $get["is_top_enterprise"] ?? 0;
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -730,8 +729,25 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
-		$this->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);
         $this->approvalextra->set_fixed_amount($fixed_amount);
+        $special_info_ary = [
+            'job_company_taiwan_1000_point' => '',
+            'job_company_world_500_point' => '',
+            'job_company_medical_institute_point' => '',
+            'job_company_public_agency_point' => '',
+        ];
+        foreach ($special_info_ary as $key => $value)
+        {
+            if (isset($get[$key]) && is_numeric($get[$key]))
+            {
+                $special_info_ary[$key] = $get[$key];
+            }
+            else
+            {
+                unset($special_info_ary[$key]);
+            }
+        }
+		$this->approvalextra->setSpecialInfo($special_info_ary);
 
         $level = false;
         if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
@@ -742,7 +758,7 @@ class Target extends MY_Admin_Controller {
                 : false;
             $level = $certificationStatus ? 3 : 4 ;
         }
-        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment);
+        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment, $target);
         $credit["amount"] = $newCredits["amount"];
         $credit["points"] = $newCredits["points"];
         $credit["level"] = $newCredits["level"];
@@ -760,6 +776,86 @@ class Target extends MY_Admin_Controller {
 		];
 		$this->json_output->setStatusCode(200)->setResponse($response)->send();
 	}
+
+	public function evaluation_approval()
+	{
+		$post = $this->input->post(NULL, TRUE);
+        $newCredits = false;
+
+		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
+		$points = isset($post["points"]) ? intval($post["points"]) : 0;
+		$remark = isset($post["reason"]) ? strval($post["reason"]) : false;
+
+        if ($points > 400) $points = 400;
+        if ($points < -400) $points = -400;
+
+		$this->load->library('output/json_output');
+
+		$target = $this->target_model->get($targetId);
+		if (!$target) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		if ($target->status !=0 && $target->sub_status != 9) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		$userId = $target->user_id;
+		$credit = $this->credit_model->get_by([
+            'user_id' => $userId,
+            'product_id' => $target->product_id,
+            'sub_product_id'=> $target->sub_product_id,
+            'status' => 1
+        ]);
+
+		if($target->sub_product_id != STAGE_CER_TARGET || $target->product_id == 3){
+            $this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
+            $this->approvalextra->setSkipInsertion(true);
+            $this->approvalextra->setExtraPoints($points);
+
+            $level = false;
+            if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
+                $this->load->library('Certification_lib');
+                $certification = $this->certification_lib->get_certification_info($userId, 8, 0);
+                $certificationStatus = isset($certification) && $certification
+                    ? ($certification->status == 1 ? true : false)
+                    : false;
+                $level = $certificationStatus ? 3 : 4 ;
+            }
+            $this->load->library('credit_lib');
+            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment, $target);
+        }
+
+        $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);
+
+		if ($newCredits &&
+            ($newCredits["amount"] != $credit->amount
+			|| $newCredits["points"] != $credit->points
+			|| $newCredits["level"] != $credit->level)
+		) {
+            $this->credit_model->update_by(
+                [
+                    'user_id' => $userId,
+                    'product_id' => $target->product_id,
+                    'sub_product_id'=> $target->sub_product_id,
+                    'status' => 1,
+                ],
+                ['status'=> 0]
+            );
+			$this->credit_model->insert($newCredits);
+		}
+
+		if($target->sub_product_id == STAGE_CER_TARGET && $target->product_id == 1){
+            $param['status'] = 1;
+            $param['sub_status'] = 10;
+            $param['remark'] = $remark;
+            $this->target_model->update($target->id,$param);
+        }
+        else{
+            $this->target_lib->approve_target($target,$remark,true);
+        }
+        $this->json_output->setStatusCode(200)->send();
+    }
 
 	public function final_validations()
 	{
@@ -935,25 +1031,38 @@ class Target extends MY_Admin_Controller {
             $meta_list_by_key = array_column($userMeta, NULL, 'meta_key');
             $meta_info = $meta_list_by_key['job_company'] ?? new stdclass();
             $job_company = $meta_info->meta_value ?? '';
-            if (isset($target_meta['is_top_enterprise']))
-            {
-                $is_top_enterprise = $target_meta['is_top_enterprise'];
-            }
-            else if ( ! empty($job_company))
-            {
-                $this->config->load('top_enterprise');
-                $top_enterprise_list = $this->config->item("top_enterprise");
-                $m_array = preg_grep('/' . mb_substr($job_company, 0, 4) . '.*/', $top_enterprise_list);
-                $is_top_enterprise = ! empty($m_array) ? 1 : 0;
-            }
-            else
-            {
-                $is_top_enterprise = 0;
-            }
 
+            $this->load->model('user/user_meta_model');
+            $user_meta_list = $this->user_meta_model->as_array()->get_many_by([
+                'user_id' => $userId,
+                'meta_key' => [
+                    'job_company_taiwan_1000_point', 'job_company_world_500_point', 'job_company_medical_institute_point', 'job_company_public_agency_point'
+                ],
+            ]);
+            $user_meta_list = array_column($user_meta_list, 'meta_value', 'meta_key');
+
+            $this->load->config('taiwan_1000');
+            $this->load->config('world_500');
+            $this->load->config('medical_institute');
+            $this->load->config('public_agency');
             $special_list = [
-                'is_top_enterprise' => $is_top_enterprise,
                 'job_company' => $job_company,
+                'taiwan_1000' => [
+                    'list' => array_combine($this->config->item('taiwan_1000'), $this->config->item('taiwan_1000')),
+                    'point' => $user_meta_list['job_company_taiwan_1000_point'] ?? '',
+                ],
+                'world_500' => [
+                    'list' => array_combine($this->config->item('world_500'), $this->config->item('world_500')),
+                    'point' => $user_meta_list['job_company_world_500_point'] ?? '',
+                ],
+                'medical_institute' => [
+                    'list' => array_combine($this->config->item('medical_institute'), $this->config->item('medical_institute')),
+                    'point' => $user_meta_list['job_company_medical_institute_point'] ?? ''
+                ],
+                'public_agency' => [
+                    'list' => array_combine($this->config->item('public_agency'), $this->config->item('public_agency')),
+                    'point' => $user_meta_list['job_company_public_agency_point'] ?? '',
+                ],
             ];
 
             $this->load->library('output/loan/target_output', ['data' => $targets]);
