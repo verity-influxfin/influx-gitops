@@ -79,6 +79,7 @@ class Cert_social extends Certification_base
         if (! isset($this->certification['user_id']))
         {
             $this->result->addMessage('此認證項缺少user_id', CERTIFICATION_STATUS_FAILED, MessageDisplay::Debug);
+            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
             return FALSE;
         }
         // todo: 因FB政策問題，導致FB授權認證無法完成，故先註解起來，待申訴成功再打開
@@ -86,11 +87,13 @@ class Cert_social extends Certification_base
         //        if (! isset($content['facebook']['access_token']))
         //        {
         //            $this->result->addMessage('FB帳號未綁定', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+        //            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
         //            return FALSE;
         //        }
         if (! isset($content['instagram']['username']))
         {
             $this->result->addMessage('未提供Instagram帳號', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
             return FALSE;
         }
         // todo: 因FB政策問題，導致FB授權認證無法完成，故先註解起來，待申訴成功再打開
@@ -98,22 +101,26 @@ class Cert_social extends Certification_base
         //        if(! isset($content['facebook']['email']))
         //        {
         //            $this->result->addMessage('FB帳號缺少email', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+        //            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
         //            return FALSE;
         //        }
         //        if (! isset($content['facebook']['name']))
         //        {
         //            $this->result->addMessage('FB帳號缺少姓名', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+        //            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
         //            return FALSE;
         //        }
         $ig_username = $content['instagram']['username'];
         if (! $ig_username)
         {
             $this->result->addMessage('IG帳號不可為空', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
             return FALSE;
         }
         if (mb_strlen($ig_username, mb_detect_encoding($ig_username)) != strlen($ig_username))
         {
             $this->result->addMessage('IG帳號不可包含中文', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
+            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
             return FALSE;
         }
         return TRUE;
@@ -159,7 +166,9 @@ class Cert_social extends Certification_base
                 $this->additional_data['meta'] = [
                     'follow_count'          => $all_follower_count,
                     'posts_in_3months'      => $risk_res['postsIn3Months'] ?? '',
-                    'key_word'              => $risk_res['postsWithKeyWords'] ?? ''
+                    'posts_in_1months'       => (int) $risk_res['postsIn1Months'] ?? '', // 一個月內發文數
+                    'key_word'              => $risk_res['postsWithKeyWords'] ?? '',
+                    'followers_grow_rate_in_3month' => (double) $risk_res['followersGrowRateIn3Months'] ?? '', // 三個月內增幅
                 ];
 
                 // 帳號是否存在
@@ -187,7 +196,7 @@ class Cert_social extends Certification_base
                 }
                 else
                 {
-                    $this->result->addMessage('Instagram 帳號不存在', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
+                    // $this->result->addMessage('Instagram 帳號不存在', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
                     $this->result->addMessage('Instagram 帳號無效，請確認', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
                 }
 
@@ -306,7 +315,7 @@ class Cert_social extends Certification_base
      */
     public function is_expired(): bool
     {
-        return FALSE;
+        return ! empty($this->certification['expire_time']) && $this->certification['expire_time'] < time();
     }
 
     public function post_verify(): bool

@@ -348,9 +348,6 @@ class Data_verify_lib{
 		 */
 		public function check_job($verifiedResult, $user_id='', $data=[], $content=[]){
 
-//			$this->CI->config->load('top_enterprise');
-//			$top_enterprise = $this->CI->config->item("top_enterprise");
-
 			if($data['total_count'] < 3 || $data['this_company_count'] < 3 ) {
 				$verifiedResult->addMessage('總工作年資或現任公司年資沒有超過 3 個月', 3, MessageDisplay::Backend);
 			}
