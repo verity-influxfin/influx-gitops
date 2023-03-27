@@ -3,6 +3,7 @@
 namespace Certification;
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use CertificationResult\IdentityCertificationResult;
 use CertificationResult\MessageDisplay;
 
 /**
@@ -12,8 +13,6 @@ use CertificationResult\MessageDisplay;
  */
 class Cert_identity extends Certification_base
 {
-    public static $ID_CARD_FAILED_MESSAGE = '身分證資訊驗證失敗';
-
     /**
      * @var int 該徵信項之代表編號
      */
@@ -106,7 +105,7 @@ class Cert_identity extends Certification_base
         }
         else
         {
-            $this->result->addMessage('OCR無回應，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage(IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE . '，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
         }
 
         return TRUE;
@@ -180,8 +179,7 @@ class Cert_identity extends Certification_base
         ];
 
         // 取得地址
-        $info = $this->CI->user_model->get($this->certification['user_id']);
-        $address = isset($info->address) ? $info->address : '';
+        $address = $content['address'] ?? '';
         preg_match('/([\x{4e00}-\x{9fa5}]{2})(縣|市)/u', str_replace('台', '臺', $address), $matches);
         $domicile = ! empty($matches) ? $matches[1] : '';
 
@@ -193,12 +191,13 @@ class Cert_identity extends Certification_base
             }
 
             $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name, $domicile);
+            log_msg('debug', "user_id={$this->certification['user_id']}; verdicts_status=" . $verdicts_statuses['status'] ?? '');
             if(isset($verdicts_statuses['status']))
             {
                 if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
                     || $verdicts_statuses['status'] == 204)
                 {
-                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($name, $domicile);
+                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($name, $domicile, $this->certification['user_id']);
                 }
             }
 

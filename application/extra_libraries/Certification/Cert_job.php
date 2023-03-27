@@ -177,6 +177,10 @@ class Cert_job extends Cert_pdf
         $this->CI->load->library('verify/data_verify_lib');
         $this->result = $this->CI->data_verify_lib->check_job($this->result, $this->certification['user_id'],
             $this->transform_data, $content);
+        if ($this->result->getStatus() == CERTIFICATION_STATUS_FAILED)
+        {
+            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_REVIEW_FAILED);
+        }
         return TRUE;
     }
 
@@ -231,10 +235,16 @@ class Cert_job extends Cert_pdf
             'job_license' => $this->content['license_status'] ?? '',
             'job_pro_level' => $this->content['pro_level'] ?? '',
             'game_work_level' => $this->content['game_work_level'] ?? '',
+            'job_programming_language' => $this->content['programming_language'] ?? '',
+            'job_title' => $this->content['job_title'] ?? '',
+            'job_has_license' => $this->content['job_has_license'] ?? 0,
         ];
 
-        $data['job_programming_language'] = $this->content['programming_language'] ?? '';
-        $data['job_title'] = $this->content['job_title'] ?? '';
+        $this->CI->load->library('credit_lib');
+        $data['job_company_world_500_point'] = $this->CI->credit_lib->get_job_company_in_world_500($data['job_company']);
+        $data['job_company_taiwan_1000_point'] = $this->CI->credit_lib->get_job_company_in_taiwan_1000($data['job_company']);
+        $data['job_company_public_agency_point'] = $this->CI->credit_lib->get_job_company_in_public_agency($data['job_company']);
+        $data['job_company_medical_institute_point'] = $this->CI->credit_lib->get_job_company_in_medical_institute($data['job_company']);
 
         $this->CI->certification_lib->user_meta_progress($data, $this->certification);
 

@@ -695,4 +695,105 @@ class Transaction_model extends MY_Model
 
         return $this->db->query($sql)->result_array();
     }
+
+    /**
+     * 取得案件每一期的「入帳日(entering_date)」與「還款期限(limit_date)」
+     * @param $user_id
+     * @return mixed
+     */
+    public function get_repayment_date($user_id)
+    {
+        $sub_query1 = $this->db
+            ->select('id')
+            ->from('p2p_loan.targets')
+            ->where('user_id', $user_id)
+            ->where_in('status', [TARGET_REPAYMENTED, TARGET_REPAYMENTING])
+            ->get_compiled_select();
+
+        $sub_query2 = $this->db->distinct()
+            ->select('target_id')
+            ->select('instalment_no')
+            ->select('limit_date')
+            ->from('p2p_transaction.transactions')
+            ->where('source', SOURCE_AR_PRINCIPAL)
+            ->get_compiled_select();
+
+        return $this->db->distinct()
+            ->select('t.entering_date')
+            ->select('t.target_id')
+            ->select('a.limit_date')
+            ->from('p2p_transaction.transactions t')
+            ->join("({$sub_query2}) a", 'a.target_id=t.target_id AND a.instalment_no=t.instalment_no')
+            ->where("t.target_id IN ({$sub_query1})")
+            ->where('t.source', SOURCE_PRINCIPAL)
+            ->where('t.status', TRANSACTION_STATUS_PAID_OFF)
+            ->get()
+            ->result_array();
+    }
+
+    /**
+     * 取得提前還款的案件清單
+     * @param $user_id
+     * @return mixed
+     */
+    public function get_prepayment_target($user_id)
+    {
+        $sub_query1 = $this->db
+            ->select('id')
+            ->from('p2p_loan.targets')
+            ->where('user_id', $user_id)
+            ->where_in('status', [TARGET_REPAYMENTED])
+            ->get_compiled_select();
+
+        return $this->db->distinct()
+            ->select('target_id')
+            ->from('p2p_loan.prepayment')
+            ->where("target_id IN ({$sub_query1})")
+            ->get()
+            ->result_array();
+    }
+
+    /**
+     * 取得正常結案的案件列表
+     * @param $user_id
+     * @return mixed
+     */
+    public function get_normal_repayment($user_id)
+    {
+        $sub_query1 = $this->db
+            ->select('t.id')
+            ->from('p2p_loan.targets t')
+            ->join('p2p_transaction.transactions tr', 'tr.target_id=t.id AND tr.source=' . SOURCE_DELAYINTEREST)
+            ->where('t.user_id', $user_id)
+            ->where('t.status', TARGET_REPAYMENTED)
+            ->get_compiled_select();
+
+        return $this->db
+            ->select('t2.id')
+            ->from('p2p_loan.targets t2')
+            ->where('t2.user_id', $user_id)
+            ->where('t2.status', TARGET_REPAYMENTED)
+            ->where("t2.id NOT IN ({$sub_query1})")
+            ->get()
+            ->result_array();
+    }
+
+    /**
+     * 取得不同產品的總還款本金與利息
+     * @param $user_id
+     * @return mixed
+     */
+    public function get_repayment_amount($user_id)
+    {
+        return $this->db
+            ->select('SUM(tr.amount) AS total_amount')
+            ->select('t.product_id')
+            ->from('p2p_transaction.transactions tr')
+            ->join('p2p_loan.targets t', 't.id=tr.target_id')
+            ->where('tr.user_from', $user_id)
+            ->where_in('tr.source', [SOURCE_PRINCIPAL, SOURCE_INTEREST])
+            ->group_by('t.product_id')
+            ->get()
+            ->result_array('array');
+    }
 }
