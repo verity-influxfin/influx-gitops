@@ -118,7 +118,7 @@ class Passbook extends MY_Admin_Controller {
     public function display(){
         $get                =	 $this->input->get(NULL, TRUE);
         $account            =    isset($get['virtual_account'])?$get['virtual_account']:'';
-        $virtual_accoun     =    $this->virtual_account_model->get_by(array('virtual_account'=>$account));
+        $virtual_account     =    $this->virtual_account_model->get_by(array('virtual_account'=>$account));
         $sdate              =    ! empty($get['sdate']) ? $get['sdate'] : 'all';
         $edate              =    ! empty($get['edate']) ? $get['edate'] : 'all';
         if($virtual_account){
