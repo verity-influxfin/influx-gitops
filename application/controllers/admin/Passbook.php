@@ -115,36 +115,38 @@ class Passbook extends MY_Admin_Controller {
 	// 	}
 	// }
 
-	public function display(){
-		$get 				=	 $this->input->get(NULL, TRUE);
-		$account 			= isset($get['virtual_account'])?$get['virtual_account']:'';
-		$virtual_account 	= $this->virtual_account_model->get_by(array('virtual_account'=>$account));
-		if($account==PLATFORM_VIRTUAL_ACCOUNT){
-			$virtual_account = new stdClass();
-			$virtual_account->id = PLATFORM_VIRTUAL_ACCOUNT;
-			$virtual_account->virtual_account = PLATFORM_VIRTUAL_ACCOUNT;
-			$virtual_account->user_id 		= 0;
-			$virtual_account->investor 		= 0;
-		}
-		if($virtual_account){
-			$list 				= $this->passbook_lib->get_passbook_list($account);
-			$frozen_list 		= $this->frozen_amount_model->order_by('tx_datetime','ASC')->get_many_by(array('virtual_account'=>$account));
-			$frozen_type 		= $this->frozen_amount_model->type_list;
-			$page_data['list'] 					= $list;
-			$page_data['virtual_account'] 		= $virtual_account;
-			$page_data['user_info'] 			= $this->user_model->get($virtual_account->user_id);
-			$page_data['frozen_list'] 			= $frozen_list;
-			$page_data['frozen_status'] 		= $this->frozen_amount_model->status_list;
-			$page_data['frozen_type'] 			= $this->frozen_amount_model->type_list;
-			$page_data['transaction_source'] 	= $this->config->item('transaction_source');
-			$page_data['investor_list'] 		= $this->virtual_account_model->investor_list;
-			$this->load->view('admin/_header');
-			$this->load->view('admin/passbook_edit',$page_data);
-			$this->load->view('admin/_footer');
-		}else{
-			echo 'ERROR , Account is not exist';
-		}
-	}
+    public function display(){
+        $get                =	 $this->input->get(NULL, TRUE);
+        $account            =    isset($get['virtual_account'])?$get['virtual_account']:'';
+        $virtual_accoun     =    $this->virtual_account_model->get_by(array('virtual_account'=>$account));
+        $sdate              =    ! empty($get['sdate']) ? $get['sdate'] : 'all';
+        $edate              =    ! empty($get['edate']) ? $get['edate'] : 'all';
+        if($virtual_account){
+            $data = $this->passbook_client->request('GET', 'vitual_passbook', [
+                    'query' => array(
+                    'id' => $virtual_account->id,
+                    "sdate" => $sdate,
+                    "edate" => $edate
+                )
+            ])->getBody()->getContents();
+
+            $data       = json_decode($data, true);
+            $page_data 	= array(
+                "type"  => "list",
+                "sdate" => $sdate,
+                "edate" => $edate
+            );
+            $page_data['list']                  = $data[0];
+            $page_data['virtual_account']       = $data[2];
+            $page_data['frozen_list']           = $data[1];
+            $page_data['investor_list']         = $this->virtual_account_model->investor_list;
+            $this->load->view('admin/_header');
+            $this->load->view('admin/passbook_edit',$page_data);
+            $this->load->view('admin/_footer');
+        }else{
+            echo 'ERROR , Account is not exist';
+        }
+    }
 
     /**
      * 虛擬帳戶明細表

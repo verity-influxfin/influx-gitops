@@ -22,6 +22,7 @@
             const searchParams = url.searchParams;
             url.search = new URLSearchParams({
                 id: searchParams.get('id'),
+                virtual_account: searchParams.get('virtual_account'),
                 sdate: searchDate || $("#sdate").val(),
                 edate: searchDate || $("#edate").val()
             });
