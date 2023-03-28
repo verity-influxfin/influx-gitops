@@ -1896,7 +1896,7 @@ class Target_lib
                             // 2. 通過反詐欺爬蟲（未命中、未被封鎖）
                             // 符合者，將金融驗證轉為待驗證
                             $this->CI->load->library('anti_fraud_lib');
-                            $anti_fraud_response = $this->anti_fraud_lib->get_by_user_id($value->user_id);
+                            $anti_fraud_response = $this->CI->anti_fraud_lib->get_by_user_id($value->user_id);
                             if ($anti_fraud_response['status'] == 200 && empty($anti_fraud_response['response']['results']))
                             {
                                 $this->CI->load->model('user/user_bankaccount_model');

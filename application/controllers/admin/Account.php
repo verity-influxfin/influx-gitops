@@ -3,6 +3,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
+use GuzzleHttp\Client;
+
 class Account extends MY_Admin_Controller {
 
 	protected $edit_method = array();
@@ -15,6 +17,11 @@ class Account extends MY_Admin_Controller {
 		$this->load->model('user/virtual_account_model');
 		$this->load->model('user/user_estatement_model');
         $this->load->library('Transfer_lib');
+
+        $this->daily_report_client = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST'),
+            'timeout' => 300,
+        ]);
 	}
 
 	public function index(){
@@ -745,6 +752,57 @@ class Account extends MY_Admin_Controller {
 			$this->load->view('admin/_footer');
 		}
 	}
+
+    /**
+     * 日報表 資料
+     * 
+     * @created_at                   2023-03-17
+     * @created_by                   Howard
+     */
+    public function daily_report_sheet(){
+
+        $data = $this->daily_report_client->request('GET', 'daily_report', [
+            'query' => $this->input->get()
+        ])->getBody()->getContents();
+
+        $get 		= $this->input->get(NULL, TRUE);
+        $sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:get_entering_date();
+        $edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:get_entering_date();
+
+        $page_data 	= array(
+            "type" 	=> "list",
+            "sdate"	=> $sdate,
+            "edate"	=> $edate
+        );
+        $page_data['list'] = json_decode($data, true);
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/account_daily_report_new',$page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    /**
+     * 日報表 excel
+     * 
+     * @created_at                   2023-03-16
+     * @created_by                   Howard
+     */
+    public function daily_report_export(){
+        // get file from guzzle daily_report/excel
+        $res = $this->daily_report_client->request('GET', 'daily_report/excel', [
+            'query' => $this->input->get()
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        setcookie('fileDownload', 'true', 0, '/');
+        echo $data;
+        die();
+    }
 
     /**
      * 匯出「虛擬帳戶交易明細表」-excel格式
