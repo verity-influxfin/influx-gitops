@@ -499,9 +499,14 @@ abstract class Approve_base implements Approve_interface
         {
             $amount_unit = $this->get_loan_amount_unit();
 
-            // 檢查個人最高歸戶剩餘額度
-            $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
-            if ($user_current_credit_amount < $amount_unit)
+            // 取得個人最高歸戶剩餘額度
+            $user_current_max_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
+            // 取得同產品同期間的剩餘額度
+            $user_current_credit_amount = $this->credit['amount'] - $used_amount;
+            // 上述兩剩餘額度取小
+            $user_current_remain_amount = min($user_current_max_credit_amount, $user_current_credit_amount);
+
+            if ($user_current_remain_amount < $amount_unit)
             {
                 // 可用額度低於 $amount_unit ->失敗
                 $this->result->add_msg(TARGET_FAIL, Approve_target_result::TARGET_FAIL_DEFAULT_MSG);
@@ -510,8 +515,8 @@ abstract class Approve_base implements Approve_interface
             }
 
             // 檢查申貸額度
-            $loan_amount = ($this->target['amount'] > $this->credit['amount'])
-                ? $this->credit['amount']
+            $loan_amount = ($this->target['amount'] > $user_current_remain_amount)
+                ? $user_current_remain_amount
                 : $this->target['amount'];
 
             // 金額取整
