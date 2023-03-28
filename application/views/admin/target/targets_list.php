@@ -140,6 +140,8 @@
                                             <th>申請日期</th>
                                             <th>核准日期</th>
                                             <th>邀請碼</th>
+                                            <th class="for_all_target">審核人員</th>
+                                            <th class="for_all_target">姓名</th>
                                             <th style="width: 280px;">備註</th>
                                             <th>Detail</th>
                                         </tr>
@@ -183,6 +185,8 @@
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                             <td><?=isset($value->credit->created_at)?date("Y-m-d H:i:s",$value->credit->created_at):'' ?></td>
                                             <td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
+                                            <td class="for_all_target"><?= $value->review_by ?? '' ?></td>
+                                            <td class="for_all_target"><?= $value->credit_sheet_reviewer ?? '' ?></td>
                                             <td><?=isset($value->remark)?nl2br($value->remark):'' ?></td>
 											<td><a href="<?=admin_url('target/detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>
@@ -201,3 +205,12 @@
             </div>
         </div>
         <!-- /#page-wrapper -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        let url = new URL(location.href);
+        let match = url.pathname.split("/");
+        if (match[3] !== 'index') {
+            $('.for_all_target').css('display', 'none');
+        }
+    });
+</script>

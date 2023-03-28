@@ -154,7 +154,10 @@ class JobCredit
             'total_job' : '總工作年資',
             'job' : '工作',
             'salary' : '月薪',
-            'top_company' : '是否為千大企業之員工',
+            'taiwan_1000' : '是否為台灣千大企業之員工',
+            'world_500' : '是否為世界500大企業之員工',
+            'medical_institute' : '是否為醫療院所之員工',
+            'public_agency' : '是否為公家機關之員工',
             'great_job' : '是否為優良職業認定',
             'high_salary' : '是否為高收入族群',
         };

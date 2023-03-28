@@ -51,100 +51,136 @@ class Passbook extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 
-	public function edit(){
-		$get 	= $this->input->get(NULL, TRUE);
-		$id 	= isset($get['id'])?$get['id']:'';
-        $exclude_sources = [];
-		$virtual_accounts = [PLATFORM_VIRTUAL_ACCOUNT,PLATFORM_TAISHIN_VIRTUAL_ACCOUNT];
-		if(in_array($id,$virtual_accounts)){
-			$virtual_account = new stdClass();
-			$virtual_account->id = $id;
-			$virtual_account->virtual_account = $id;
-			$virtual_account->user_id 		= 0;
-			$virtual_account->investor 		= 0;
-		}else{
-			$virtual_account 	= $this->virtual_account_model->get($id);
-		}
+	// public function edit(){
+	// 	$get 	= $this->input->get(NULL, TRUE);
+	// 	$id 	= isset($get['id'])?$get['id']:'';
+    //     $exclude_sources = [];
+	// 	$virtual_accounts = [PLATFORM_VIRTUAL_ACCOUNT,PLATFORM_TAISHIN_VIRTUAL_ACCOUNT];
+	// 	if(in_array($id,$virtual_accounts)){
+	// 		$virtual_account = new stdClass();
+	// 		$virtual_account->id = $id;
+	// 		$virtual_account->virtual_account = $id;
+	// 		$virtual_account->user_id 		= 0;
+	// 		$virtual_account->investor 		= 0;
+	// 	}else{
+	// 		$virtual_account 	= $this->virtual_account_model->get($id);
+	// 	}
 
-		if($virtual_account){
+	// 	if($virtual_account){
 
+    //         $sdate = ! empty($get['sdate']) ? $get['sdate'] : get_entering_date();
+    //         $edate = ! empty($get['edate']) ? $get['edate'] : get_entering_date();
+
+    //         $page_data = [
+    //             'sdate' => $sdate,
+    //             'edate' => $edate
+    //         ];
+    //         $this->load->model('transaction/virtual_passbook_model');
+    //         if ($sdate !== 'all' && $edate !== 'all')
+    //         {
+    //             $where = [
+    //                 'tx_datetime >=' => $sdate,
+    //                 'tx_datetime <' => date('Y-m-d', strtotime($edate . '+1 day'))
+    //             ];
+    //             $init_bank_amount = $this->virtual_passbook_model->get_sum_amount([
+    //                 'tx_datetime <' => $sdate,
+    //                 'virtual_account' => $virtual_account->virtual_account
+    //             ]);
+    //         }
+    //         else
+    //         {
+    //             $where = [];
+    //             $init_bank_amount = 0;
+    //         }
+    //         $list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account, FALSE, $exclude_sources, $where, $init_bank_amount);
+    //         $frozen_list = $this->frozen_amount_model->order_by('tx_datetime', 'ASC')->get_many_by(array_merge(
+    //             array('virtual_account' => $virtual_account->virtual_account),
+    //             $where
+    //         ));
+	// 		$frozen_type 		= $this->frozen_amount_model->type_list;
+	// 		$page_data['list'] 					= $list;
+	// 		$page_data['virtual_account'] 		= $virtual_account;
+	// 		$page_data['user_info'] 			= $this->user_model->get($virtual_account->user_id);
+	// 		$page_data['frozen_list'] 			= $frozen_list;
+	// 		$page_data['frozen_status'] 		= $this->frozen_amount_model->status_list;
+	// 		$page_data['frozen_type'] 			= $this->frozen_amount_model->type_list;
+	// 		$page_data['transaction_source'] 	= $this->config->item('transaction_source');
+	// 		$page_data['investor_list'] 		= $this->virtual_account_model->investor_list;
+	// 		$this->load->view('admin/_header');
+	// 		$this->load->view('admin/_title',$this->menu);
+	// 		$this->load->view('admin/passbook_edit',$page_data);
+	// 		$this->load->view('admin/_footer');
+	// 	}else{
+	// 		alert('ERROR , id is not exist',admin_url('passbook/index'));
+	// 	}
+	// }
+
+    public function display(){
+        $get                =	 $this->input->get(NULL, TRUE);
+        $account            =    isset($get['virtual_account'])?$get['virtual_account']:'';
+        $virtual_account     =    $this->virtual_account_model->get_by(array('virtual_account'=>$account));
+        $sdate              =    ! empty($get['sdate']) ? $get['sdate'] : 'all';
+        $edate              =    ! empty($get['edate']) ? $get['edate'] : 'all';
+        if($virtual_account){
+            $data = $this->passbook_client->request('GET', 'vitual_passbook', [
+                    'query' => array(
+                    'id' => $virtual_account->id,
+                    "sdate" => $sdate,
+                    "edate" => $edate
+                )
+            ])->getBody()->getContents();
+
+            $data       = json_decode($data, true);
+            $page_data 	= array(
+                "type"  => "list",
+                "sdate" => $sdate,
+                "edate" => $edate
+            );
+            $page_data['list']                  = $data[0];
+            $page_data['virtual_account']       = $data[2];
+            $page_data['frozen_list']           = $data[1];
+            $page_data['investor_list']         = $this->virtual_account_model->investor_list;
+            $this->load->view('admin/_header');
+            $this->load->view('admin/passbook_edit',$page_data);
+            $this->load->view('admin/_footer');
+        }else{
+            echo 'ERROR , Account is not exist';
+        }
+    }
+
+    /**
+     * 虛擬帳戶明細表
+     * 
+     * @created_at                   2023-03-24
+     * @created_by                   Howard
+     */
+    public function edit(){
+        $data = $this->passbook_client->request('GET', 'vitual_passbook', [
+            'query' => $this->input->get()
+        ])->getBody()->getContents();
+
+        $get 		= $this->input->get(NULL, TRUE);
+        $data       = json_decode($data, true);
+        if($data[2]['id']){
             $sdate = ! empty($get['sdate']) ? $get['sdate'] : get_entering_date();
             $edate = ! empty($get['edate']) ? $get['edate'] : get_entering_date();
-
-            $page_data = [
-                'sdate' => $sdate,
-                'edate' => $edate
-            ];
-            $this->load->model('transaction/virtual_passbook_model');
-            if ($sdate !== 'all' && $edate !== 'all')
-            {
-                $where = [
-                    'tx_datetime >=' => $sdate,
-                    'tx_datetime <' => date('Y-m-d', strtotime($edate . '+1 day'))
-                ];
-                $init_bank_amount = $this->virtual_passbook_model->get_sum_amount([
-                    'tx_datetime <' => $sdate,
-                    'virtual_account' => $virtual_account->virtual_account
-                ]);
-            }
-            else
-            {
-                $where = [];
-                $init_bank_amount = 0;
-            }
-            $list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account, FALSE, $exclude_sources, $where, $init_bank_amount);
-            $frozen_list = $this->frozen_amount_model->order_by('tx_datetime', 'ASC')->get_many_by(array_merge(
-                array('virtual_account' => $virtual_account->virtual_account),
-                $where
-            ));
-			$frozen_type 		= $this->frozen_amount_model->type_list;
-			$page_data['list'] 					= $list;
-			$page_data['virtual_account'] 		= $virtual_account;
-			$page_data['user_info'] 			= $this->user_model->get($virtual_account->user_id);
-			$page_data['frozen_list'] 			= $frozen_list;
-			$page_data['frozen_status'] 		= $this->frozen_amount_model->status_list;
-			$page_data['frozen_type'] 			= $this->frozen_amount_model->type_list;
-			$page_data['transaction_source'] 	= $this->config->item('transaction_source');
-			$page_data['investor_list'] 		= $this->virtual_account_model->investor_list;
-			$this->load->view('admin/_header');
-			$this->load->view('admin/_title',$this->menu);
-			$this->load->view('admin/passbook_edit',$page_data);
-			$this->load->view('admin/_footer');
-		}else{
-			alert('ERROR , id is not exist',admin_url('passbook/index'));
-		}
-	}
-
-	public function display(){
-		$get 				=	 $this->input->get(NULL, TRUE);
-		$account 			= isset($get['virtual_account'])?$get['virtual_account']:'';
-		$virtual_account 	= $this->virtual_account_model->get_by(array('virtual_account'=>$account));
-		if($account==PLATFORM_VIRTUAL_ACCOUNT){
-			$virtual_account = new stdClass();
-			$virtual_account->id = PLATFORM_VIRTUAL_ACCOUNT;
-			$virtual_account->virtual_account = PLATFORM_VIRTUAL_ACCOUNT;
-			$virtual_account->user_id 		= 0;
-			$virtual_account->investor 		= 0;
-		}
-		if($virtual_account){
-			$list 				= $this->passbook_lib->get_passbook_list($account);
-			$frozen_list 		= $this->frozen_amount_model->order_by('tx_datetime','ASC')->get_many_by(array('virtual_account'=>$account));
-			$frozen_type 		= $this->frozen_amount_model->type_list;
-			$page_data['list'] 					= $list;
-			$page_data['virtual_account'] 		= $virtual_account;
-			$page_data['user_info'] 			= $this->user_model->get($virtual_account->user_id);
-			$page_data['frozen_list'] 			= $frozen_list;
-			$page_data['frozen_status'] 		= $this->frozen_amount_model->status_list;
-			$page_data['frozen_type'] 			= $this->frozen_amount_model->type_list;
-			$page_data['transaction_source'] 	= $this->config->item('transaction_source');
-			$page_data['investor_list'] 		= $this->virtual_account_model->investor_list;
-			$this->load->view('admin/_header');
-			$this->load->view('admin/passbook_edit',$page_data);
-			$this->load->view('admin/_footer');
-		}else{
-			echo 'ERROR , Account is not exist';
-		}
-	}
+            $page_data 	= array(
+                "type" 	=> "list",
+                "sdate"	=> $sdate,
+                "edate"	=> $edate
+            );
+            $page_data['list']                  = $data[0];
+            $page_data['virtual_account']       = $data[2];
+            $page_data['frozen_list']           = $data[1];
+            $page_data['investor_list']         = $this->virtual_account_model->investor_list;
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title',$this->menu);
+            $this->load->view('admin/passbook_edit',$page_data);
+            $this->load->view('admin/_footer');
+        }else{
+            alert('ERROR , id is not exist',admin_url('passbook/index'));
+        }
+    }
 
 	/**
      * 虛擬帳戶明細表 excel

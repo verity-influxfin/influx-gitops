@@ -931,19 +931,6 @@ class Target_model extends MY_Model
     // 統計各種案件數量，針對申貸&成交都可以用
     private function _list_products_at_targets($targets)
     {
-        $subloan_target_ids = [];
-        if ( ! empty($targets))
-        {
-            $this->db->select('new_target_id')
-                ->from('p2p_loan.subloan')
-                ->where_in('new_target_id', array_column($targets, 'id'));
-            $rs = $this->db->get()->result_array();
-            if ( ! empty($rs))
-            {
-                $subloan_target_ids = array_column($rs, 'new_target_id');
-            }
-        }
-
         $result = [
             'SMART_STUDENT' => 0,
             'STUDENT' => 0,
@@ -955,12 +942,6 @@ class Target_model extends MY_Model
 
         foreach ($targets as $target)
         {
-            // 產轉的案件不能計算進來
-            if ( ! empty($subloan_target_ids) && in_array($target['id'], $subloan_target_ids))
-            {
-                continue;
-            }
-
             switch (TRUE)
             {
             case $target['product_id'] == PRODUCT_ID_STUDENT && $target['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT:
@@ -987,6 +968,7 @@ class Target_model extends MY_Model
     public function chk_exist_by_status($condition): bool
     {
         $this->_database
+            ->select('1')
             ->from('`p2p_loan`.`targets`');
         if ( ! empty($condition))
         {
@@ -1043,6 +1025,46 @@ class Target_model extends MY_Model
             ->where('script_status', 0)
             ->get()
             ->result_array();
+    }
+
+    /**
+     * @param $target_id
+     * @param $update_param
+     * @param $where_param
+     * @return int
+     */
+    public function get_affected_after_update($target_id, $update_param, $where_param): int
+    {
+        if (empty($update_param))
+        {
+            return 0;
+        }
+
+        if ( ! empty($where_param))
+        {
+            $this->_set_where([0 => $where_param]);
+        }
+
+        foreach ($update_param as $key => $value)
+        {
+            $this->_database->set($key, $value);
+        }
+
+        $this->_database
+            ->where('id', $target_id)
+            ->update('p2p_loan.targets');
+
+        return $this->_database->affected_rows();
+    }
+
+    public function get_user_id_by_id($id)
+    {
+        return $this->db
+            ->select('user_id')
+            ->from('p2p_loan.targets')
+            ->where('id', $id)
+            ->get()
+            ->first_row('array');
     }
 
     public function get_specific_product_status($product_id, $status_list = [TARGET_WAITING_APPROVE])
@@ -1104,5 +1126,104 @@ class Target_model extends MY_Model
             ->order_by('t.loan_date');
 
         return $this->db->get()->result();
+    }
+
+    public function get_old_user(array $user_ids = [], $time_before = '')
+    {
+        if ((string) (int) $time_before !== $time_before ||
+            $time_before > PHP_INT_MAX ||
+            $time_before < ~PHP_INT_MAX)
+        {
+            $time_before = time();
+        }
+        $time_before -= 1;
+        $time_after = strtotime('-6 months', $time_before);
+
+        // 1. 基準時間前六個月內有已還本金
+        // 2. 基準時間前六個月內尚有本金餘額
+        $user_ids_implode = implode(',', $user_ids);
+        return $this->db->query("
+            SELECT `user_from`
+            FROM `p2p_transaction`.`transactions`
+            WHERE `amount` > 0
+            AND `status` = 2
+            AND `source` = 12
+            AND `created_at` BETWEEN {$time_after} AND {$time_before}
+            AND `user_from` IN ({$user_ids_implode})
+            UNION
+            SELECT `a`.`user_id` AS `user_from`
+            FROM (
+                SELECT `t`.`user_id`,SUM(`t`.`loan_amount`) AS `loan_amount`,IFNULL(`tr`.`amount`,0) AS `amount`
+                FROM `p2p_loan`.`targets` `t` 
+                LEFT JOIN (
+                    SELECT SUM(`amount`) AS `amount`,`user_from`
+                    FROM `p2p_transaction`.`transactions`
+                    WHERE `user_from` IN ({$user_ids_implode})
+                    AND `created_at` < {$time_before}
+                    AND `source` = 12
+                    AND `status` = 2
+                    GROUP BY `user_from`
+                ) `tr` ON `tr`.`user_from` = `t`.`user_id`
+                WHERE `t`.`user_id` IN ({$user_ids_implode})
+                AND `t`.`created_at` < {$time_before}
+                AND `t`.`status` IN (5,10)
+                GROUP BY `t`.`user_id`
+            ) `a` 
+            WHERE `a`.`loan_amount` > `a`.`amount`
+        ")->result_array();
+    }
+
+    public function get_targets_with_normal_transactions_count($user_id)
+    {
+        $sub_query1 = $this->db
+            ->select('limit_date')
+            ->select('instalment_no')
+            ->select('target_id')
+            ->select('status')
+            ->where('user_from', $user_id)
+            ->where('source', SOURCE_AR_PRINCIPAL)
+            ->where('id IN (SELECT MIN(id) FROM p2p_transaction.transactions GROUP BY target_id,instalment_no)')
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
+        $sub_query2 = $this->db
+            ->select('t.target_id')
+            ->select('COUNT(1) AS normal_count')
+            ->join("($sub_query1) a", 'a.instalment_no = t.instalment_no AND a.target_id = t.target_id AND a.limit_date >= t.entering_date and a.status = ' . TRANSACTION_STATUS_PAID_OFF)
+            ->where('t.user_from', $user_id)
+            ->where('t.source', SOURCE_PRINCIPAL)
+            ->where('t.status', TRANSACTION_STATUS_PAID_OFF)
+            ->group_by('t.target_id')
+            ->get_compiled_select('p2p_transaction.transactions t', TRUE);
+
+        return $this->db
+            ->select('t.*')
+            ->select('IFNULL(tra.normal_count,0) AS normal_count')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query2}) as tra", 'tra.target_id = t.id', 'LEFT')
+            ->where('t.user_id', $user_id)
+            ->where_not_in('status', [TARGET_CANCEL, TARGET_FAIL])
+            ->get()
+            ->result();
+    }
+
+    public function get_list($target_condition = [])
+    {
+        $sub_query = $this->db->select('csr.name')
+            ->select('cs.target_id')
+            ->from('p2p_loan.credit_sheet_review csr')
+            ->from('p2p_loan.credit_sheet cs')
+            ->where('cs.id = csr.credit_sheet_id')
+            ->where('csr.id IN (SELECT MAX(id) FROM p2p_loan.credit_sheet_review GROUP BY credit_sheet_id)')
+            ->where('csr.admin_id <>', SYSTEM_ADMIN_ID)
+            ->get_compiled_select(NULL, TRUE);
+
+        $this->_database->select('t.*')
+            ->select('a.name AS credit_sheet_reviewer')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query}) a", 'a.target_id = t.id', 'LEFT');
+        if ( ! empty($target_condition))
+        {
+            $this->_set_where([$target_condition]);
+        }
+        return $this->_database->get()->result();
     }
 }

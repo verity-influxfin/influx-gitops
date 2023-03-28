@@ -623,19 +623,73 @@
                                             <th class="center-text" width="60%">項目內容</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="special-select-table">
-                                            <td>是否為千大企業
+                                        <tbody class="special-select-table" id="taiwan-1000-table">
+                                            <td>是否為台灣千大企業
                                                 <a target="_blank" href="<?=admin_url('companyList/index') ?>" >
                                                     (前往列表)
                                                 </a>
                                             </td>
                                             <td>
-                                                <p id="job_company"></p>
-                                                <select id="is_top_enterprise" >
-                                                    <option value="0">否</option>
-                                                    <option value="1">是</option>
-                                                </select>
+                                                <p class="job_company"></p>
+                                                <select id="job_company_taiwan_1000_point"></select>
                                             </td>
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">項目名稱</th>
+                                            <th class="center-text" width="60%">項目內容</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="special-select-table" id="world-500-table">
+                                        <td>是否為世界500大企業
+                                            <a target="_blank" href="<?=admin_url('companyList/world_500') ?>" >
+                                                (前往列表)
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <p class="job_company"></p>
+                                            <select id="job_company_world_500_point"></select>
+                                        </td>
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">項目名稱</th>
+                                            <th class="center-text" width="60%">項目內容</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="special-select-table" id="medical-institute-table">
+                                        <td>是否為醫療院所
+                                            <a target="_blank" href="<?=admin_url('companyList/medical_institute') ?>" >
+                                                (前往列表)
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <p class="job_company"></p>
+                                            <select id="job_company_medical_institute_point"></select>
+                                        </td>
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr class="odd list">
+                                            <th class="center-text" width="40%">項目名稱</th>
+                                            <th class="center-text" width="60%">項目內容</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="special-select-table" id="public-agency-table">
+                                        <td>是否為公家機關
+                                            <a target="_blank" href="<?=admin_url('companyList/public_agency') ?>" >
+                                                (前往列表)
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <p class="job_company"></p>
+                                            <select id="job_company_public_agency_point"></select>
+                                        </td>
                                         </tbody>
                                     </table>
                                 </div>
@@ -821,7 +875,7 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					歸戶案件總覽（僅顯示申請中/還款中/逾期中）
+					歸戶案件總覽（僅顯示申請中/還款中/逾期中/已結案)
 				</div>
 				<div class="panel-body">
 					<div class="row">
@@ -839,6 +893,7 @@
 											<th width="6%">狀態</th>
 											<th width="10%">有效時間</th>
 											<th width="14%">借款原因</th>
+											<th width="14%">非寬限期還款次數</th>
 											<th width="10%">詳情</th>
 										</tr>
 									</thead>
@@ -906,9 +961,11 @@
 				<div class="panel-body">
 					<form id="credit-evaluation" method="POST" action="/admin/Target/credits">
 						<div class="col-lg-12 text-center">
+                            分數調整:
 							<input id="credit_test" type="text" name="score" value="0" / disabled>
+                            <span class="fixed_amount_block">額度調整:</span>
+                            <input id="credit_test_fixed_amount" type="text" name="credit_test_fixed_amount" value="0" disabled class="fixed_amount_block">
 							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
-                            <input type="text" name="is_top_enterprise" value="0" hidden>
 							<button class="btn btn-warning need_chk_before_approve" type="submit">額度試算</button>
 							<button class="btn btn-danger need_chk_before_approve" data-url="/admin/Target/verify_failed"
 								id="verify_failed">不通過</button>
@@ -974,6 +1031,15 @@
 								<span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1"
 										disabled></span>
 							</div>
+                            <div class="fixed_amount_block">
+								<span style="width:30%;">
+									<span>額度調整</span>
+									<span class="amount_range"></span>
+									<span>：</span>
+								</span>
+                                <span style="width:70%;"><input id="2_fixed_amount" type="number" value="0" min="0" step="1"
+                                                                disabled></span>
+                            </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
 						</div>
@@ -1123,8 +1189,12 @@
 	// 授審表評分意見送出
 	function send_opinion(target_id = '', group_id = '') {
 		let score = $(`#${group_id}_score`).val();
+		let fixed_amount = $(`#credit_test_fixed_amount`).val();
 		let opinion = $(`#${group_id}_opinion`).val();
-		let is_top_enterprise = $('#is_top_enterprise').val();
+		let job_company_taiwan_1000_point = $('#job_company_taiwan_1000_point').val();
+		let job_company_world_500_point = $('#job_company_world_500_point').val();
+		let job_company_medical_institute_point = $('#job_company_medical_institute_point').val();
+		let job_company_public_agency_point = $('#job_company_public_agency_point').val();
 		if (group_id && target_id) {
 			$.ajax({
 				type: "POST",
@@ -1132,9 +1202,13 @@
 				data: {
 					'target_id': target_id,
 					'score': score,
+					'fixed_amount': fixed_amount,
 					'opinion': opinion,
 					'group': group_id,
-					'is_top_enterprise': is_top_enterprise,
+					'job_company_taiwan_1000_point': job_company_taiwan_1000_point,
+					'job_company_world_500_point': job_company_world_500_point,
+					'job_company_medical_institute_point': job_company_medical_institute_point,
+					'job_company_public_agency_point': job_company_public_agency_point,
 					'type': 'person',
 				},
 				async: false,
@@ -1333,10 +1407,6 @@
 		location.reload()
         })
 
-        $('#is_top_enterprise').change(function() {
-            $('input[name=is_top_enterprise]').val($(this).val());
-        });
-
 		var urlString = window.location.href;
 		var url = new URL(urlString);
 		var caseId = url.searchParams.get("id");
@@ -1446,6 +1516,19 @@
 				fillTargetMeta(response.response.target_meta);
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
+
+                if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
+                    $('.fixed_amount_block').css('display', 'none');
+                } else if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
+                    let today = new Date();
+                    let new_date = new Date(user.birthday);
+                    let eligible_year = 35;
+                    new_date.setFullYear(new_date.getFullYear() + eligible_year);
+                    if (new_date <= today) {
+                        $('.fixed_amount_block input').prop('disabled', true);
+                        $('#2_fixed_amount').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
+                    }
+                }
 			},
 			error: function (error) {
 				alert('資料載入失敗。請重新整理。');
@@ -1495,6 +1578,16 @@
 			});
 		}
 
+        if (case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_min") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_max")) {
+            $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
+            $(`#2_fixed_amount`).attr({
+                "max": case_aprove_item.creditLineInfo.fixed_amount_max,
+                "min": case_aprove_item.creditLineInfo.fixed_amount_min,
+                "onblur": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.fixed_amount_min}){value=${case_aprove_item.creditLineInfo.fixed_amount_min}}`
+            });
+        }
+
 		// 取得案件核貸資料
 		case_aprove_data = get_report_data(caseId);
 		if (case_aprove_data) {
@@ -1513,6 +1606,7 @@
 							$(`#${list_key}_score`).val(score);
 						})
 						$('#credit_test').val(total_score);
+						$('#credit_test_fixed_amount').val(0);
 						// 顯示更改,核可層級解鎖
 						Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
 							status_html = get_status_icon('success');
@@ -1531,6 +1625,9 @@
 								$(`#${list_key}_opinion_status`).html(status_html);
 								$(`#${list_key}_opinion`).prop('disabled', false);
 								$(`#${list_key}_score`).prop('disabled', false);
+                                if ($(`#${list_key}_fixed_amount`)) {
+                                    $(`#${list_key}_fixed_amount`).prop('disabled', false);
+                                }
 								// $(`#${list_key}_opinion_button`).prop('disabled', false);
 								$(`#${list_key}_opinion_button`).data('disabled', 'false');
 								stop_flag = true;
@@ -1551,6 +1648,14 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
+        $('#2_fixed_amount').on('blur', function () {
+            let fixed_amount = parseInt($(this).val());
+            if (fixed_amount <= 0) {
+                return;
+            }
+            $('div.opinion_button button.score').prop('disabled', true);
+            $('#credit_test_fixed_amount').val(fixed_amount);
+        });
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
 			$.ajax({
@@ -2007,12 +2112,15 @@
 					$('<td class="fake-fields center-text">').append(pTag),
 					$('<td class="fake-fields center-text">').append(pTag),
 					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
 					$('<td class="fake-fields center-text">').append(pTag)
 				).appendTo("#targets");
 			}
 		}
 
 		function fillTargets(targets) {
+            let count_finished_target = 0,
+                count_normal_transaction = 0;
 			for (var i = 0; i < targets.length; i++) {
 				let target = targets[i];
 				var backgroundColor = target.status.text == '待核可' ? 'bg-danger' : '';
@@ -2032,9 +2140,23 @@
 					getCenterTextCell(target.status.text, backgroundColor),
 					getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
 					getCenterTextCell(target.reason, backgroundColor),
+					getCenterTextCell(target.normal_count, backgroundColor),
 					getCenterTextCell('<a href="/admin/target/detail?id=' + target.id + '" target="_blank"><button class="btn btn-info">詳情</button></a>', backgroundColor)
 				).appendTo("#targets");
+
+                count_normal_transaction += parseInt(target.normal_count);
+                if (target.status.id === '<?= TARGET_REPAYMENTED?>') {
+                    count_finished_target += 1;
+                }
 			}
+
+            $("<tr>").append(
+                `<td colspan="5"></td>` +
+                `<td style="text-align: right">已結案次數</td>` +
+                `<td style="text-align: center">${count_finished_target}</td>` +
+                `<td colspan="2" style="text-align: right">非寬限期還款總次數</td>` +
+                `<td style="text-align: center">${count_normal_transaction}</td>`
+            ).appendTo("#targets");
 		}
 
         function fillTargetMeta(meta) {
@@ -2062,14 +2184,26 @@
 
         function fillTopSpecialList(specialList) {
 		    let company = specialList?.job_company;
-		    let is_top_enterprise = specialList?.is_top_enterprise;
             company = company === undefined ? '' : company;
-            is_top_enterprise = is_top_enterprise === undefined ? 0 : is_top_enterprise;
+            $('p.job_company').text(company);
 
-            $('#job_company').text(company);
-            $('#is_top_enterprise').find("option:selected").removeAttr('selected');
-            $('#is_top_enterprise').find("option[value="+is_top_enterprise+"]").attr('selected', 'selected');
-            $('input[name=is_top_enterprise]').val(is_top_enterprise);
+            if (specialList) {
+                $.each(['taiwan_1000', 'world_500', 'medical_institute', 'public_agency'], function (key, item) {
+                    if (specialList[item]['list']) {
+                        let list = specialList[item]['list'];
+                        let point = specialList[item]['point'] ? specialList[item]['point'] : '';
+                        let selector = $(`#job_company_${item}_point`);
+                        selector.append($('<option></option>').text('').val(''));
+                        selector.append($('<option></option>').text('否，0').val('0'));
+                        $.each(list, function (list_key, list_item) {
+                            if (list_key > 0) {
+                                selector.append($('<option></option>').text(`是，${list_item}`).val(list_key));
+                            }
+                        });
+                        selector.val(point);
+                    }
+                });
+            }
         }
 
 		function getCenterTextCell(value, additionalCssClass = "") {
@@ -2096,13 +2230,36 @@
 			}
 
 			var form = $(this);
-			var url = form.attr('action');
+
 			var points = form.find('input[name="score"]').val();
-			var is_top_enterprise = form.find('input[name="is_top_enterprise"]').val();
+			let job_company_taiwan_1000_point = $('#job_company_taiwan_1000_point').val();
+			let job_company_world_500_point = $('#job_company_world_500_point').val();
+			let job_company_medical_institute_point = $('#job_company_medical_institute_point').val();
+			let job_company_public_agency_point = $('#job_company_public_agency_point').val();
+            let fixed_amount = form.find('input[name="credit_test_fixed_amount"]').val();
 			var remark = form.find('input[name="description"]').val();
+
+            if (fixed_amount != 0 && (fixed_amount < parseInt($('#2_fixed_amount').attr('min')) || fixed_amount > parseInt($('#2_fixed_amount').attr('max')))) {
+                alert('額度調整不符合產品設定！');
+                $('#credit-evaluation button').attr('disabled', false);
+                return;
+            }
+
+
+            let url = new URL(location.href);
+            url.pathname = form.attr('action');
+            url.search = new URLSearchParams({
+                'id': caseId,
+                'points': points,
+                'job_company_taiwan_1000_point': job_company_taiwan_1000_point,
+                'job_company_world_500_point': job_company_world_500_point,
+                'job_company_medical_institute_point': job_company_medical_institute_point,
+                'job_company_public_agency_point': job_company_public_agency_point
+            });
+
 			$.ajax({
 				type: "GET",
-				url: url + "?id=" + caseId + "&points=" + points + "&is_top_enterprise=" + is_top_enterprise,
+				url: url.href,
 				beforeSend: function () {
 					changeReevaluationLoading(true);
 					clearCreditInfo(true);
@@ -2112,6 +2269,10 @@
 				},
 				success: function (response) {
 					if (response.status.code != 200) {
+                        if (response.status.message) {
+                            alert(response.status.message);
+                            $('#credit-evaluation button').attr('disabled', false);
+                        }
 						return;
 					}
 

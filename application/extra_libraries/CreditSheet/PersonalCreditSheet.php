@@ -26,8 +26,12 @@ class PersonalCreditSheet extends CreditSheetBase {
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
 
     // 可評分範圍
-    protected $scoringMin = -1000;
-    protected $scoringMax = 500;
+    protected $scoringMin;
+    protected $scoringMax;
+
+    // 可調整額度範圍
+    protected $fixed_amount_min;
+    protected $fixed_amount_max;
 
     // 還款中案件
     public $repayableTargets;
@@ -90,6 +94,12 @@ class PersonalCreditSheet extends CreditSheetBase {
 
         $this->cashLoanInfo = $cashLoanInfo;
         $this->cashLoanInfo->setCreditSheet($this);
+
+        $this->scoringMin = $this->get_scoring_min($this->target->product_id);
+        $this->scoringMax = $this->get_scoring_max($this->target->product_id);
+
+        $this->fixed_amount_min = $this->get_fixed_amount_min($this->target->product_id);
+        $this->fixed_amount_max = $this->get_fixed_amount_max($this->target->product_id);
     }
 
     /**
@@ -116,10 +126,60 @@ class PersonalCreditSheet extends CreditSheetBase {
         $response['creditLineInfo']['interestTypeList'] = $this->creditLineInfo->getInterestTypeList();
         $response['creditLineInfo']['applyLineTypeList'] = $this->creditLineInfo->getApplyLineTypeList();
         $response['creditLineInfo']['reviewerList'] = $this->creditLineInfo->getReviewerList();
-        $response['creditLineInfo']['scoringMin'] = $this->scoringMin;
-        $response['creditLineInfo']['scoringMax'] = $this->scoringMax;
+        $response['creditLineInfo']['scoringMin'] = $this->get_scoring_min($this->target->product_id);
+        $response['creditLineInfo']['scoringMax'] = $this->get_scoring_max($this->target->product_id);
+        $response['creditLineInfo']['fixed_amount_min'] = $this->get_fixed_amount_min($this->target->product_id);
+        $response['creditLineInfo']['fixed_amount_max'] = $this->get_fixed_amount_max($this->target->product_id);
 
         return $response;
+    }
+
+    private function get_scoring_min($product_id): int
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_STUDENT:
+                return -1500;
+            case PRODUCT_ID_SALARY_MAN:
+                return -1000;
+            default:
+                return 0;
+        }
+    }
+
+    private function get_scoring_max($product_id): int
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_STUDENT:
+                return 2000;
+            case PRODUCT_ID_SALARY_MAN:
+                return 1000;
+            default:
+                return 0;
+        }
+    }
+
+    private function get_fixed_amount_min($product_id): int
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_SALARY_MAN:
+                return 10000;
+            default:
+                return 0;
+        }
+    }
+
+    private function get_fixed_amount_max($product_id): int
+    {
+        switch ($product_id)
+        {
+            case PRODUCT_ID_SALARY_MAN:
+                return 20000;
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -152,15 +212,23 @@ class PersonalCreditSheet extends CreditSheetBase {
      * @param string $opinion: 核可意見
      * @param int $score: 調整分數
      * @param int $adminId: 管理員編號
+     * @param int $fixed_amount
      * @return int
      */
-    public function approve(int $groupId, string $opinion, int $score=0, int $adminId=0): int
+    public function approve(int $groupId, string $opinion, int $score=0, int $adminId=0, int $fixed_amount = 0): int
     {
         $this->CI->load->model('loan/credit_sheet_review_model');
         $responseCode = self::RESPONSE_CODE_OK;
 
         if($score < $this->scoringMin || $score > $this->scoringMax)
             return self::RESPONSE_CODE_INVALID_SCORE;
+
+        $product_list = $this->CI->config->item('product_list');
+        $product_id = $this->CI->credit_sheet_review_model->get_product_by_id($this->creditSheetRecord->id);
+        if ($fixed_amount > 0 && ($fixed_amount < $product_list[$product_id]['loan_range_s'] ?? 0 || $fixed_amount > $product_list[$product_id]['loan_range_e'] ?? 0))
+        {
+            return self::RESPONSE_CODE_INVALID_FIXED_AMOUNT;
+        }
 
         $admin = null;
         if($adminId && (
@@ -182,7 +250,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->credit_sheet_review_model->insert(
                 ['credit_sheet_id' => $this->creditSheetRecord->id,
                     'admin_id' => $adminId, 'name' => $name, 'opinion' => $opinion,
-                    'score' => $score, 'group' => $groupId]);
+                    'score' => $score, 'group' => $groupId, 'fixed_amount' => $fixed_amount]);
         }
 
         if($this->CI->credit_sheet_review_model->trans_status() == FALSE)
@@ -211,11 +279,20 @@ class PersonalCreditSheet extends CreditSheetBase {
         $credit = $this->CI->credit_lib->get_credit($this->user->id, $this->target->product_id, $this->target->sub_product_id, $this->target);
 
         // 取得已審核資訊
-        $reviewedInfoList = $this->CI->credit_sheet_review_model->get_many_by(
+        $reviewedInfoList = $this->CI->credit_sheet_review_model->order_by('group', 'DESC')->get_many_by(
             ['credit_sheet_id' => $this->creditSheetRecord->id]);
 
-        $target_meta = $this->CI->target_meta_model->get_by(['target_id' => $this->target->id, 'meta_key' => 'is_top_enterprise']);
-        $is_top_enterprise = $target_meta->meta_value ?? NULL;
+        $target_meta = $this->CI->target_meta_model->as_array()->get_many_by(['target_id' => $this->target->id, 'meta_key' => [
+            'job_company_taiwan_1000_point',
+            'job_company_world_500_point',
+            'job_company_medical_institute_point',
+            'job_company_public_agency_point',
+        ]]);
+        $target_meta = array_column($target_meta, 'meta_value', 'meta_key');
+        $job_company_taiwan_1000_point = $target_meta['job_company_taiwan_1000_point'] ?? 0;
+        $job_company_world_500_point = $target_meta['job_company_world_500_point'] ?? 0;
+        $job_company_medical_institute_point = $target_meta['job_company_medical_institute_point'] ?? 0;
+        $job_company_public_agency_point = $target_meta['job_company_public_agency_point'] ?? 0;
 
         // 上班族階段上架 或 非階段上架之其他產品
         if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
@@ -224,10 +301,13 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
             $this->CI->approvalextra->setSkipInsertion(true);
             $this->CI->approvalextra->setExtraPoints($bonusScore);
-            if (isset($is_top_enterprise))
-            {
-                $this->CI->approvalextra->setSpecialInfo(['is_top_enterprise' => $is_top_enterprise]);
-            }
+            $this->CI->approvalextra->set_fixed_amount($reviewedInfoList[0]->fixed_amount ?? 0);
+            $this->CI->approvalextra->setSpecialInfo([
+                'job_company_taiwan_1000_point' => $job_company_taiwan_1000_point,
+                'job_company_world_500_point' => $job_company_world_500_point,
+                'job_company_medical_institute_point' => $job_company_medical_institute_point,
+                'job_company_public_agency_point' => $job_company_public_agency_point,
+            ]);
 
             // 上班族階段上架
             $level = false;
@@ -248,7 +328,7 @@ class PersonalCreditSheet extends CreditSheetBase {
         $remark = (empty($this->target->remark) ? '' : $this->target->remark);
 
         if (isset($estimatedCredit) && $estimatedCredit !== False && isset($credit) &&
-                ($estimatedCredit["amount"] != $credit['amount']
+                ( ! $credit || $estimatedCredit["amount"] != $credit['amount']
                 || $estimatedCredit["points"] != $credit['points']
                 || $estimatedCredit["level"] != $credit['level'])
         ) {

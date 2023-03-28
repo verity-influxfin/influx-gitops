@@ -144,7 +144,7 @@ class Anti_fraud_lib{
         $response = json_decode(json_encode($verdict_count), true);
         $verdictSet = [];
         if($response['status']=='200'){
-            foreach ($response['response']['verdict_count'] as $verdict){
+            foreach ($response['response']['verdict_count'] ?? [] as $verdict){
                 $caseList = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsCase(urlencode($user_info->name), urlencode($verdict['type']), 1);
                 if($caseList && isset($caseList['response']['verdicts']['urls'])){
                     foreach ($caseList['response']['verdicts']['urls'] as $case){
@@ -172,5 +172,22 @@ class Anti_fraud_lib{
         ];
 
         return $data;
+    }
+
+    public function get_by_user_id($user_id)
+    {
+        $port = '9453';
+        $ip = getenv('GRACULA_IP');
+        $url = "http://{$ip}:{$port}/brookesia/api/v1.0/result/userId?userId={$user_id}";
+
+        $result = curl_get($url);
+        $response = json_decode($result, TRUE);
+
+        if (json_last_error() !== JSON_ERROR_NONE)
+        {
+            return [];
+        }
+
+        return $response;
     }
 }

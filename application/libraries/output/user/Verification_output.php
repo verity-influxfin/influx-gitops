@@ -52,17 +52,26 @@ class Verification_output
 
 	public function map($verification, $withSensitiveInfo = false)
 	{
+        $cert_helper = \Certification\Certification_factory::get_instance_by_id($verification['id']);
+        if (isset($cert_helper))
+        {
+            $expired = $cert_helper->is_expired();
+        }
+        else
+        {
+            $expired = $verification["expire_time"] < time()
+                && ! in_array(
+                    $verification["certification_id"],
+                    [CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL]
+                );
+        }
 		$output = [
 			"id" => $verification["id"],
 			"name" => $verification["name"],
 			"description" => $verification["description"],
 			"status" => isset($this->statusMapping[$verification["user_status"]]) ? $this->statusMapping[$verification["user_status"]] : self::NOT_FOUND,
 			"expired_at" => $verification["expire_time"],
-			"expired" => $verification["expire_time"] < time()
-						 && !in_array(
-						 	$verification["certification_id"],
-							[CERTIFICATION_IDENTITY,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL]
-						 )
+			"expired" => $expired,
 		];
 
 		return $output;

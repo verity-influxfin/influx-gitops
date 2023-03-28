@@ -19,6 +19,7 @@
             overflow: hidden;
             font-size: 0.9rem;
             width: 400px;
+            height: fit-content;
         }
 
         .單張卡片.單張卡片_媒合成功 {
@@ -63,7 +64,7 @@
             font-size: 0.9rem;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+            /* white-space: nowrap; */
         }
 
         .單張卡片 .分隔線 {
@@ -312,6 +313,9 @@
             
             const setWidth = (invested,loan_amount) => {
                 // 0 ~ 97%
+                if (invested > loan_amount) {
+                    invested = loan_amount
+                }
                 return (invested/loan_amount*97)+'%'
             }
 

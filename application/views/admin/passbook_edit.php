@@ -5,7 +5,7 @@
 			var amount = parseInt(x);
 			if(amount>31){
 				$.ajax({
-					url: '<?=admin_url('passbook/withdraw_by_admin?id='.$virtual_account->id)?>&amount='+amount,
+                    url: '<?=admin_url('passbook/withdraw_by_admin?id='.$virtual_account['id']??'')?>&amount='+amount,
 					type: 'GET',
 					success: function(response) {
 						alert(response);
@@ -22,6 +22,7 @@
             const searchParams = url.searchParams;
             url.search = new URLSearchParams({
                 id: searchParams.get('id'),
+                virtual_account: searchParams.get('virtual_account'),
                 sdate: searchDate || $("#sdate").val(),
                 edate: searchDate || $("#edate").val()
             });
@@ -85,7 +86,7 @@
                             </table>
                             <hr/>
 							<table>
-								<? if ($virtual_account->virtual_account == PLATFORM_VIRTUAL_ACCOUNT){?>
+                                <? if ($virtual_account['virtual_account'] == PLATFORM_VIRTUAL_ACCOUNT){?>
 								<tr>
 									<td>虛擬帳戶：：</td>
 									<td><?=PLATFORM_VIRTUAL_ACCOUNT ?></td>	
@@ -93,25 +94,25 @@
 								<tr>
 									<td>戶名：</td>
 									<td>平台虛擬帳號</td>
-									<td><?=isset($virtual_account->investor)?$investor_list[$virtual_account->investor]:'' ?></td>
+                                    <td><?=isset($virtual_account['investor'])?$investor_list[$virtual_account['investor']]:'' ?></td>
 								</tr>
 								<? }else{ ?>
 								<tr>
 									<td>虛擬帳戶：：</td>
-									<td><?=isset($virtual_account->virtual_account)?$virtual_account->virtual_account:'' ?></td>
+                                    <td><?=isset($virtual_account['virtual_account'])?$virtual_account['virtual_account']:'' ?></td>
 									<td></td><td></td>
 								</tr>
 								<tr>	
 									<td>戶名：</td>
-									<td><?=isset($user_info->name)?$user_info->name:'' ?></td>
-									<td>會員ID:<?=isset($virtual_account->user_id)?$virtual_account->user_id:'' ?></td>
-									<td><?=isset($virtual_account->investor)?$investor_list[$virtual_account->investor]:'' ?></td>
+                                    <td><?=isset($virtual_account['name'])?$virtual_account['name']:'' ?></td>
+                                    <td>會員ID:<?=isset($virtual_account['user_id'])?$virtual_account['user_id']:'' ?></td>
+                                    <td><?=isset($virtual_account['investor'])?$investor_list[$virtual_account['investor']]:'' ?></td>
 								</tr>
 								<? } ?>
-								<? if(isset($_GET['id']) && $_GET['id']==$virtual_account->id){?>
+                                <? if(isset($_GET['id']) && $_GET['id']==$virtual_account['id']){?>
 								<tr>	
 									<td><button type="button" onclick="withdraw_by_admin();" class="btn btn-default btn-md">後台提領</button></td>
-									<td><a href="<?=admin_url('passbook/passbook_export')."?id=".$virtual_account->id.'&sdate='.$sdate.'&edate='.$edate ?>" target="_blank" class="btn btn-primary float-right" >匯出Excel</a></td>
+                                    <td><a href="<?=admin_url('passbook/passbook_export')."?id=".$virtual_account['id'].'&sdate='.$sdate.'&edate='.$edate ?>" target="_blank" class="btn btn-primary float-right" >匯出Excel</a></td>
 								</tr>
 								<? } ?>
 							</table>
@@ -137,16 +138,15 @@
 											</tr>
 											<? if(!empty($list)){
 												foreach($list as $key => $value){
-													$value["remark"] = json_decode($value["remark"],TRUE);
 											?>
 
 												<tr>
 													<td><?=$value["tx_datetime"] ?></td>
-													<td><?=$value["action"]=="debit"?$value["amount"]:""; ?></td>
-													<td><?=$value["action"]=="credit"?$value["amount"]:""; ?></td>
+                                                    <td><?=$value["debit_ammont"] ?></td>
+                                                    <td><?=$value["credit_amount"] ?></td>
 													<td><?=$value["bank_amount"] ?></td>
-													<td><?=isset($value["remark"]["source"])?$transaction_source[$value["remark"]["source"]]:"" ?></td>
-													<td><?=isset($value["remark"]["target_id"])&&$value["remark"]["target_id"]?$value["remark"]["target_id"]:"" ?></td>
+                                                    <td><?=$value["remark"] ?></td>
+                                                    <td><?=$value["target_id"] ?></td>
 													<td><?=$value["user_from"] ?></td>
 													<td><?=$value["user_to"] ?></td>
 												</tr>
@@ -173,11 +173,11 @@
 												foreach($frozen_list as $key => $value){
 											?>
 												<tr>
-													<td><?=$value->tx_datetime ?></td>
-													<td><?=$value->id ?></td>
-													<td><?=$value->amount ?></td>
-													<td style="color:<?=$value->status?"red":"green";?>"><?=$frozen_status[$value->status] ?></td>
-													<td><?=$frozen_type[$value->type] ?></td>
+                                                    <td><?=$value["tx_datetime"] ?></td>
+                                                    <td><?=$value["id"] ?></td>
+                                                    <td><?=$value["amount"] ?></td>
+                                                    <td style="color:<?=$value["status"]=="凍結中"?"red":"green";?>"><?=$value["status"] ?></td>
+                                                    <td><?=$value["type"] ?></td>
 												</tr>
 											<? }} ?>
 											</tbody>

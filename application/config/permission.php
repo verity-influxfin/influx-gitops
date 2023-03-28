@@ -267,6 +267,7 @@ $config['permission'] = [
             'sendskbank' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'getskbank' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'save_meta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'save_job_meta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'getmeta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'job_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'joint_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
@@ -451,12 +452,16 @@ $config['permission'] = [
         'name' => '財務作業',
         'menu' => [
             'daily_report' => ['name' => '虛擬帳戶交易明細表'],
+            'daily_report_sheet' => ['name' => '虛擬帳戶交易明細表(new)'],
             'passbook_report' => ['name' => '虛擬帳號餘額明細表'],
             'estatement' => ['name' => '個人對帳單'],
             'index' => ['name' => '收支統計表'],
         ],
         'permission' => [
             'daily_report' => ['model' => 'Account', 'submodel' => 'daily_report', 'action' => 'read'],
+            'daily_report_sheet' => ['model' => 'Account', 'submodel' => 'daily_report_sheet', 'action' => 'read'],
+            'get_daily_report_data' => ['model' => 'Account', 'submodel' => 'daily_report_sheet', 'action' => 'read'],
+            'daily_report_export' => ['model' => 'Account', 'submodel' => 'daily_report_sheet', 'action' => 'read'],
             'passbook_report' => ['model' => 'Account', 'submodel' => 'passbook_report', 'action' => 'read'],
             'estatement' => ['model' => 'Account', 'submodel' => 'estatement', 'action' => 'read'],
             'index' => ['model' => 'Account', 'submodel' => 'index', 'action' => 'read'],
@@ -482,12 +487,22 @@ $config['permission'] = [
         'menu' => [
             'legal_doc' => ['name' => '法訴文件管理'],
             'deduct' => ['name' => '法催扣款'],
+            'virtual_account_status' => ['name' => '虛擬帳號狀態查詢'],
+            'repayment_agreement' => ['name' => '清償協議表'],
         ],
         'permission' => [
             'legal_doc' => ['model' => 'PostLoan', 'submodel' => 'legal_doc', 'action' => 'read'],
             'deduct' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'read'],
+            'virtual_account_status' => ['model' => 'PostLoan', 'submodel' => 'virtual_account_status', 'action' => 'read'],
+            'repayment_agreement' => ['model' => 'PostLoan', 'submodel' => 'repayment_agreement', 'action' => 'read'],
             'get_deduct_list' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'read'],
             'add_deduct_info' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'create'],
+            'get_virtual_account_status' => ['model' => 'PostLoan', 'submodel' => 'virtual_account_status', 'action' => 'read'],
+            'post_virtual_account_status' => ['model' => 'PostLoan', 'submodel' => 'virtual_account_status', 'action' => 'read'],
+            'get_repayment_agreement' => ['model' => 'PostLoan', 'submodel' => 'virtual_account_status', 'action' => 'read'],
+            'replayment_agreement_sheet' => ['model' => 'PostLoan', 'submodel' => 'repayment_agreement', 'action' => 'read'],
+            'repayment_agreement_confirm' => ['model' => 'PostLoan', 'submodel' => 'repayment_agreement', 'action' => 'read'],
+            'confirm_replayment_agreement' => ['model' => 'PostLoan', 'submodel' => 'repayment_agreement', 'action' => 'read'],
             'update_deduct_info' => ['model' => 'PostLoan', 'submodel' => 'deduct', 'action' => 'update'],
             'save_status' => ['model' => 'PostLoan', 'submodel' => 'legal_doc', 'action' => 'update'],
             'legal_doc_status' => ['model' => 'PostLoan', 'submodel' => 'legal_doc', 'action' => 'read'],
@@ -569,12 +584,18 @@ $config['permission'] = [
         ],
     ],
     'companyList' => [
-        'name' => '千大企業清單',
+        'name' => '優質企業',
         'menu' => [
-            'index' => ['name' => '千大企業清單'],
+            'index' => ['name' => '台灣千大企業'],
+            'world_500' => ['name' => '世界500大企業'],
+            'medical_institute' => ['name' => '醫療院所'],
+            'public_agency' => ['name' => '公家機關'],
         ],
         'permission' => [
-            'index' => ['model' => 'companyList', 'submodel' => 'index', 'action' => 'read']
+            'index' => ['model' => 'companyList', 'submodel' => 'index', 'action' => 'read'],
+            'world_500' => ['model' => 'companyList', 'submodel' => 'world_500', 'action' => 'read'],
+            'medical_institute' => ['model' => 'companyList', 'submodel' => 'medical_institute', 'action' => 'read'],
+            'public_agency' => ['model' => 'companyList', 'submodel' => 'public_agency', 'action' => 'read'],
         ],
     ],
     'Erp' => [
@@ -586,7 +607,8 @@ $config['permission'] = [
           'soci' => ['name' => '損益表'],
           'sofp' => ['name' => '資產負債表'],
           'journal' => ['name' => '日記簿'],
-          'balance_sheet' => ['name' => '開帳表']
+          'balance_sheet' => ['name' => '開帳表'],
+          'receipt' => ['name' => '發票資料查詢']
            /*
           'ledger' => ['name' => '分類帳'],
           'target_porting' => ['name' => '借款案帳務轉移'],
@@ -612,10 +634,14 @@ $config['permission'] = [
           'sofp_spreadsheet' => ['model' => 'Erp', 'submodel' => 'sofp', 'action' => 'read'],
           'journal' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'get_journal_data' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
+          'erp_balance_sheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'journal_spreadsheet' => ['model' => 'Erp', 'submodel' => 'journal', 'action' => 'read'],
           'balance_sheet' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
           'get_balance_sheet_dict' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
           'get_balance_sheet_diff' => ['model' => 'Erp', 'submodel' => 'balance_sheet', 'action' => 'read'],
+          'receipt' => ['model' => 'Erp', 'submodel' => 'receipt', 'action' => 'read'],
+          'get_receipt' => ['model' => 'Erp', 'submodel' => 'receipt', 'action' => 'read'],
+          'receipt_spreadsheet' => ['model' => 'Erp', 'submodel' => 'receipt', 'action' => 'read'],
            /*
           'ledger' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
           'get_ledger_data' => ['model' => 'Erp', 'submodel' => 'ledger', 'action' => 'read'],
