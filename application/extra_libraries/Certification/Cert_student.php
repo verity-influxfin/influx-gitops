@@ -296,6 +296,12 @@ class Cert_student extends Certification_base
         $ocr_school = $content['ocr_parser']['content']['university']['name'] ?? '';
         $ocr_department = $content['ocr_parser']['content']['student']['department'] ?? '';
         $ocr_system = $content['ocr_parser']['content']['student']['academic_degree'] ?? '';
+        // 子系統提供之OCR學制辨識結果若為「四技」或「二技」
+        // 後台須將OCR辨識結果當作「大學」（*非將辨識結果改為「大學」*）
+        if ($ocr_system == '四技' || $ocr_system == '二技')
+        {
+            $ocr_system = $config_school_system_list[0] ?? '';
+        }
         if ($name != $ocr_name)
         {
             $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
