@@ -3,7 +3,7 @@
     <div class="text-center mb-3">
       <img src="@/asset/images/logo_puhey.png" style="width: 142px" />
     </div>
-    <form class="form-content">
+    <form class="form-content" onsubmit="return false">
       <div class="form-title">Google面試問題</div>
       <div class="form-subtitle">
         歡迎參加普匯金融科技線上面試，請完成以下問答加速面試了解
@@ -20,7 +20,7 @@
         </div>
         <div class="col-6">
           <div class="form-group row">
-            <label class="col-form-label">*年齡</label>
+            <label class="col-form-label">*年齡：</label>
             <div class="col">
               <input type="text" class="form-control" v-model="formData.age" />
             </div>
@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="text-center">
-        <button type="submit" class="btn btn-next">送出</button>
+        <button class="btn btn-next" @click="onSubmit()">送出</button>
       </div>
     </form>
   </div>
@@ -120,6 +120,17 @@ export default {
       }
       reader.readAsDataURL(this.portraitFile)
     },
+    onSubmit() {
+      console.log(this.formData);
+      axios.post('/uploadGoogleQA', this.formData).then((res) => {
+        console.log(res.data);
+        if (res.data == 'Success') {
+          this.$router.push('/recruiting');
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
   },
 }
 </script>

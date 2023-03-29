@@ -1,0 +1,26 @@
+version: "3"
+services:
+  app:
+    build: .
+    container_name: web_app
+    ports:
+      - 8888:80
+    env_file:
+      - .env
+    volumes:
+      - ./:/var/www/html
+
+  mysql:
+    image: mysql:5.7
+    container_name: web_db
+    ports:
+      - 3308:3306
+    environment:
+      - "MYSQL_ROOT_PASSWORD=/;p0.lo9"
+      - "MYSQL_DATABASE=influx_web"
+      - "MYSQL_USER=influxfin"
+      - "MYSQL_PASSWORD=T38o4vf5xB5w21cC"
+    volumes:
+      - ../website_data/mysql:/var/lib/mysql
+      - ./dump.sql:/dump.sql
+

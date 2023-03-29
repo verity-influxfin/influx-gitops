@@ -3,7 +3,7 @@
     <div class="text-center mb-3">
       <img src="@/asset/images/logo_puhey.png" style="width: 142px" />
     </div>
-    <form class="form-content">
+    <form class="form-content" onsubmit="return false">
       <div class="form-title">應徵人員履歷資料表</div>
       <div class="row no-gutters">
         <div class="col-6">
@@ -277,7 +277,7 @@
         </div>
       </div>
       <div class="text-center">
-        <button type="submit" class="btn btn-next">下一步</button>
+        <button class="btn btn-next" @click="onClickNextStep()">下一步</button>
       </div>
     </form>
   </div>
@@ -346,6 +346,19 @@ export default {
       }
       reader.readAsDataURL(this.portraitFile)
     },
+    onClickNextStep() {
+      let formData = new FormData()
+      formData.append('image', this.portraitFile)
+      formData.append('data', JSON.stringify(this.formData))
+
+      axios.post('/uploadJobApplication', formData).then((res) => {
+        if (res.data == 'Success') {
+          this.$router.push('/recruiting/qa-form');
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
   },
 }
 </script>

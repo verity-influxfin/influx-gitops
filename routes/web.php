@@ -238,6 +238,10 @@ Route::post('/uploadBannerImg', 'Backendcontroller@uploadBannerImg');
 
 Route::get('/bakGetCampusData', 'Backendcontroller@getCampusData');
 
+Route::post('/uploadJobApplication', 'Backendcontroller@uploadJobApplication');
+
+Route::post('/uploadGoogleQA', 'Backendcontroller@uploadGoogleQA');
+
 Route::get('/getMemberFile', function (Request $request) {
     $inputs = $request->all();
 

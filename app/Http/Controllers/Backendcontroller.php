@@ -910,4 +910,83 @@ class Backendcontroller extends BaseController
             return response()->json($e, 400);
         }
     }
+
+    /**
+     * 普匯徵才
+     *
+     * @param      \Illuminate\Http\Request  $request  The request
+     *
+     * @return     Response                  API 回應
+     */
+    public function uploadJobApplication(Request $request)
+    {
+        $inputs = $request->all();
+        $data = json_decode($inputs['data'], true);
+
+        try {
+            if ($request->hasFile('image')) {
+                $profileImg = $request->file('image');
+                if ($profileImg->isValid()) {
+                    $filename = $profileImg->getClientOriginalName();
+                    $profileImg->move('upload/partner', "$filename");
+                }
+            }
+
+            DB::table('job_application')->insert([
+                'job_position' => isset($data['appliedPosition']) ? $data['appliedPosition'] : '', 
+                'name' => isset($data['name']) ? $data['name'] : '', 
+                'blood_type' => isset($data['bloodType']) ? $data['bloodType'] : null, 
+                'height' => isset($data['weight']) ? $data['weight'] : null, 
+                'weight' => isset($data['height']) ? $data['height'] : null, 
+                'birthday' => isset($data['birthDate']) ? date($data['birthDate'], strtotime('+8 hours')) : null, 
+                'marriage' => isset($data['maritalStatus']) ? $data['maritalStatus'] : null, 
+                'id_number' => isset($data['idNumber']) ? $data['idNumber'] : null, 
+                'hobby' => isset($data['hobbies']) ? $data['hobbies'] : null, 
+                'address' => isset($data['registeredAddress']) ? $data['registeredAddress'] : '', 
+                'mailing_address' => isset($data['mailingAddress']) ? $data['mailingAddress'] : '', 
+                'phone' => isset($data['homePhone']) ? $data['homePhone'] : null, 
+                'mobile_phone' => isset($data['mobilePhone']) ? $data['mobilePhone'] : null, 
+                'email' => isset($data['email']) ? $data['email'] : null, 
+                'education' => isset($data['highestEducation']) ? $data['highestEducation'] : null, 
+                'expertise' => isset($data['expertise']) ? $data['expertise'] : null, 
+                'work_experiences' => isset($data['workExperiences']) ? json_encode($data['workExperiences']) : null, 
+                'wrote_person' => isset($data['submitterName']) ? $data['submitterName'] : null, 
+                'wrote_date' => isset($data['submissionDate']) ? date($data['submissionDate'], strtotime('+8 hours')) : null, 
+                'created_at' => date('Y-m-d H:i:s', strtotime('+8 hours')),
+                'updated_at' => date('Y-m-d H:i:s', strtotime('+8 hours')),
+                'img_url' => isset($filename) ? '/upload/partner'.$filename : ''
+            ]);
+
+            return response()->json('Success', 200);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    /**
+     * 普匯徵才面試問題
+     *
+     * @param      \Illuminate\Http\Request  $request  The request
+     *
+     * @return     Response                  API 回應
+     */
+    public function uploadGoogleQA(Request $request)
+    {
+        $inputs = $request->all();
+
+        try {
+            DB::table('google_qa')->insert([
+                'job_position' => isset($inputs['appliedPosition']) ? $inputs['appliedPosition'] : '', 
+                'name' => isset($inputs['name']) ? $inputs['name'] : '', 
+                'age' => isset($inputs['age']) ? $inputs['age'] : '', 
+                'question' => isset($inputs['questions']) ? json_encode($inputs['questions']) : '', 
+                'created_at' => date('Y-m-d H:i:s', strtotime('+8 hours')),
+                'updated_at' => date('Y-m-d H:i:s', strtotime('+8 hours')),
+            ]);
+
+            return response()->json('Success', 200);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
 }
