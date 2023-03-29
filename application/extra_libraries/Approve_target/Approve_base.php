@@ -117,6 +117,7 @@ abstract class Approve_base implements Approve_interface
         {
             $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
             $this->result->set_action_cancel();
+            log_message('error', "[approve_target] action cancel: \$user_checked = FALSE");
             goto END;
         }
 
@@ -336,6 +337,7 @@ abstract class Approve_base implements Approve_interface
                             log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
                         }
                         $this->result->set_action_cancel();
+                        log_message('error', "[approve_target] action cancel: verify_id_card_info() = [{$result[0]},{$result[1]}]");
                         return FALSE;
                     }
                     elseif ($result[0] === FALSE && $result[1] === TRUE)
@@ -365,6 +367,7 @@ abstract class Approve_base implements Approve_interface
                             log_message('error', "實名認證 user_certification {$identity_cert->id} 轉人工失敗");
                         }
                         $this->result->set_action_cancel();
+                        log_message('error', "[approve_target] action cancel: verify_id_card_info() = [{$result[0]},{$result[1]}]");
                         return FALSE;
                     }
                     else
@@ -379,6 +382,7 @@ abstract class Approve_base implements Approve_interface
             }
         }
         $this->result->set_action_cancel();
+        log_message('error', "[approve_target] action cancel: is_submitted() = FALSE");
         return FALSE;
     }
 
@@ -430,6 +434,7 @@ abstract class Approve_base implements Approve_interface
         {
             // 算不出或找不到信用額度->失敗
             $this->result->set_action_cancel();
+            log_message('error', "[approve_target] action cancel: check_credit() has empty credit");
             return FALSE;
         }
 
@@ -580,6 +585,7 @@ abstract class Approve_base implements Approve_interface
             if ( ! $rs)
             {
                 $this->result->set_action_cancel();
+                log_message('error', "[approve_target] action cancel: get_user_credit() !\$rs");
                 return [];
             }
 
@@ -753,6 +759,7 @@ abstract class Approve_base implements Approve_interface
         if ($this->can_approve() === FALSE)
         {
             $this->result->set_action_cancel();
+            log_message('error', "[approve_target] action cancel: can_approve() = FALSE");
             return FALSE;
         }
 
