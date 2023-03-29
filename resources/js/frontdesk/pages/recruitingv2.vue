@@ -239,7 +239,7 @@ $color__background--primary: #f3f9fc;
   // position: absolute;
   position: relative;
   top: 78%;
-  left: 20%;
+  left: 17%;
   padding: 9px 30px;
   font-style: normal;
   font-weight: 500;
