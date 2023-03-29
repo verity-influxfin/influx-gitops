@@ -1,6 +1,23 @@
 <template>
   <main class="recruiting">
-    <section class="banner"></section>
+    <section class="banner">
+      <button
+        target="_blank"
+        class="btn-interview"
+        @click="goInfoPage()"
+      >
+        填寫面試資料表
+      </button>
+      <div v-if="showLoginModal" id="askLoginModal" class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" @click="closeModal()">✕</button>
+          <span class="em-1">提醒您</span><br/><br/>
+          <span class="dot"></span>
+          <span class="em-2">成為普匯會員，才能進行填寫</span><br/>
+          <span class="em-3">( 點選網頁右上角，進行會員註冊 )</span>
+        </div>
+      </div>
+    </section>
     <section class="intro">
       <h1 class="h1">挑戰自我 超越自我</h1>
       <div class="block-content">
@@ -190,9 +207,26 @@
 
 <script>
 export default {
+  data() {
+    return {
+      showLoginModal: false
+    }
+  },
   created() {
     $('title').text(`徵才服務 - inFlux普匯金融科技`);
   },
+  methods: {
+    goInfoPage() {
+      if (sessionStorage.length === 0 || sessionStorage.flag === 'logout') {
+        this.showLoginModal = true;
+      } else {
+        this.$router.push('/recruiting/info-form');
+      }
+    },
+    closeModal() {
+      this.showLoginModal = false;
+    }
+  }
 }
 </script>
 
@@ -200,6 +234,61 @@ export default {
 $color--primary: #036eb7;
 $color__text--primary: #023d64;
 $color__background--primary: #f3f9fc;
+
+.btn-interview {
+  // position: absolute;
+  position: relative;
+  top: 78%;
+  left: 17%;
+  padding: 9px 30px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1.4;
+  color: #ffffff;
+  background: #F29500;
+  border-color: #F29500;
+  border-radius: 15px;
+}
+
+#askLoginModal {
+  position: fixed;
+  width: 320px;
+  height: 180px;
+  margin: 15% 40%;
+  padding: 0px 0.5rem;
+  
+  .modal-body {
+    text-align: center;
+
+    .dot {
+      margin-right: 5px;
+      height: 10px;
+      width: 10px;
+      background-color: #F29600;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .em-1 {
+      color: #036EB7;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 35px;
+    }
+    .em-2 {
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 26px;
+    }
+    .em-3 {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 23px;
+      color: #707070;
+    }
+  }
+}
+
 .btn-link {
   padding: 9px 40px;
   font-style: normal;
