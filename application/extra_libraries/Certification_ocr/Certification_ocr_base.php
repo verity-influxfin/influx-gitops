@@ -191,8 +191,9 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
      */
     protected function insert_log($res_status, $res_body)
     {
+        $res_body_ary = json_decode($res_body, TRUE);
         $this->CI->log_certification_ocr_model->insert([
-            'task_path' => $this->task_path,
+            'task_path' => $res_body_ary['api_url_path'] ?? $this->task_path,
             'user_certification_id' => $this->certification['id'],
             'status_code' => $res_status,
             'response' => (string) $res_body,
