@@ -34,6 +34,7 @@ class Product_student extends Approve_target_credit_base
                 if ( ! in_array($value['certification_id'], $option_cert))
                 {
                     $this->result->set_action_cancel();
+                    log_message('error', "[approve_target] action cancel: 必填項({$value['certification_id']})未通過 (user {$this->target_user_id})");
                     return FALSE;
                 }
             }
@@ -48,6 +49,8 @@ class Product_student extends Approve_target_credit_base
         if ( ! empty(array_diff($required_cert, $cer_success_id)))
         {
             $this->result->set_action_cancel();
+            $tmp_required_cert_diff = array_diff($required_cert, $cer_success_id);
+            log_message('error', "[approve_target] action cancel: 必填項(" . implode('/', $tmp_required_cert_diff) . ")未通過 (user {$this->target_user_id})");
             return FALSE;
         }
 
