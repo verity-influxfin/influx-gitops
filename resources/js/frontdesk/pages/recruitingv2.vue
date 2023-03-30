@@ -2,6 +2,7 @@
   <main class="recruiting">
     <section class="banner">
       <button
+        v-if="showFormButton"
         target="_blank"
         class="btn-interview"
         @click="goInfoPage()"
@@ -209,11 +210,24 @@
 export default {
   data() {
     return {
-      showLoginModal: false
+      showLoginModal: false,
+      showFormButton: false
     }
   },
   created() {
     $('title').text(`徵才服務 - inFlux普匯金融科技`);
+  },
+  mounted() {
+    // 當圖片loaded 做相關處理
+    // var image = document.createElement('img');
+    // image.src = this.getBgUrl(document.getElementById('banner'));
+    // image.onload = function () {
+    //   alert('loaded')
+    // };
+
+    setTimeout(() => {
+      this.showFormButton = true;
+    }, 1000);
   },
   methods: {
     goInfoPage() {
@@ -225,6 +239,20 @@ export default {
     },
     closeModal() {
       this.showLoginModal = false;
+    },
+    getBgUrl(el) {
+        var bg = "";
+        if (el.currentStyle) { // IE
+            bg = el.currentStyle.backgroundImage;
+        } else if (document.defaultView && document.defaultView.getComputedStyle) { // Firefox
+            bg = document.defaultView.getComputedStyle(el, "").backgroundImage;
+        } else { // try and get inline style
+            bg = el.style.backgroundImage;
+        }
+        return bg.replace(/url\(['"]?(.*?)['"]?\)/i, "$1");
+    },
+    showButton() {
+      this.showFormButton = true
     }
   }
 }
