@@ -53,7 +53,6 @@ import smeConsult from '../pages/BusinessLoan/sme/consult'
 import smeg from '../pages/BusinessLoan/smeg'
 
 let routers = [
-    { path: '/%E3%80%90%E6%99%AE%E5%8C%', redirect: '/' },
     { path: '*', redirect: '/' },
     { path: '/', component: index, },
     { path: '/borrow', component: borrow },
