@@ -131,6 +131,7 @@ abstract class Approve_base implements Approve_interface
         if ($this->result->action_is_cancel())
         {
             $this->set_action_cancellation();
+            log_message('error', "[approve_target] END: action cancelled already! (target {$this->target['id']})");
             return FALSE;
         }
 
