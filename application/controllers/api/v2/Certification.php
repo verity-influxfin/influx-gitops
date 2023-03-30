@@ -1827,23 +1827,13 @@ class Certification extends REST_Controller {
 				'content'			=> json_encode($content),
 			);
 
-            $param['sys_check'] = 1;
-            // 有傳圖片的話轉人工，沒有自動過件
-            if($should_check == true){
-                $param['status'] = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
-            }
+            $insert = $this->user_certification_model->insert($param);
+            if ($insert)
+            {
+                $info = $this->user_certification_model->get($insert);
+                $cert = Certification_factory::get_instance_by_model_resource($info);
+                $cert->set_success(TRUE);
 
-			$insert = $this->user_certification_model->insert($param);
-			if($insert){
-                // 有傳圖片的話轉人工，沒有自動過件
-                if($should_check == false){
-                    $info = $this->user_certification_model->order_by('certification_id', 'DESC')->get_by([
-                        'certification_id' => $certification_id,
-                        'user_id' => $user_id
-                    ]);
-                    $cert = Certification_factory::get_instance_by_model_resource($info);
-                    $cert->set_success(TRUE);
-                }
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));

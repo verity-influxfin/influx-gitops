@@ -88,8 +88,6 @@ class Cert_financialworker extends Certification_base
      */
     public function review_data($content): bool
     {
-        // 直接轉人工
-        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
         return TRUE;
     }
 
