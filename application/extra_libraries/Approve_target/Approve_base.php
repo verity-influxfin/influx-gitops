@@ -33,7 +33,6 @@ abstract class Approve_base implements Approve_interface
         $this->result = $this->get_initial_result();
         $this->target = $target;
         $this->script_status = TARGET_SCRIPT_STATUS_APPROVE_TARGET;
-        $this->result->set_status($this->target['status'], $this->target['sub_status']);
 
         $this->CI->load->library('anti_fraud_lib');
         $this->CI->load->library('brookesia/black_list_lib');
@@ -117,7 +116,6 @@ abstract class Approve_base implements Approve_interface
         {
             $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
             $this->result->set_action_cancel();
-            log_message('error', "[approve_target] action cancel: \$user_checked = FALSE (user {$this->target_user_id},target{$this->target['id']})");
             goto END;
         }
 
@@ -131,7 +129,6 @@ abstract class Approve_base implements Approve_interface
         if ($this->result->action_is_cancel())
         {
             $this->set_action_cancellation();
-            log_message('error', "[approve_target] END: action cancelled already! (target {$this->target['id']})");
             return FALSE;
         }
 
@@ -338,7 +335,6 @@ abstract class Approve_base implements Approve_interface
                             log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
                         }
                         $this->result->set_action_cancel();
-                        log_message('error', "[approve_target] action cancel: verify_id_card_info() = [{$result[0]},{$result[1]}] (cert {$identity_cert->id})");
                         return FALSE;
                     }
                     elseif ($result[0] === FALSE && $result[1] === TRUE)
@@ -368,7 +364,6 @@ abstract class Approve_base implements Approve_interface
                             log_message('error', "實名認證 user_certification {$identity_cert->id} 轉人工失敗");
                         }
                         $this->result->set_action_cancel();
-                        log_message('error', "[approve_target] action cancel: verify_id_card_info() = [{$result[0]},{$result[1]}] (cert {$identity_cert->id})");
                         return FALSE;
                     }
                     else
@@ -383,7 +378,6 @@ abstract class Approve_base implements Approve_interface
             }
         }
         $this->result->set_action_cancel();
-        log_message('error', "[approve_target] action cancel: is_submitted() = FALSE (target {$this->target['id']})");
         return FALSE;
     }
 
@@ -435,7 +429,6 @@ abstract class Approve_base implements Approve_interface
         {
             // 算不出或找不到信用額度->失敗
             $this->result->set_action_cancel();
-            log_message('error', "[approve_target] action cancel: check_credit() has empty credit (target {$this->target['id']})");
             return FALSE;
         }
 
@@ -586,7 +579,6 @@ abstract class Approve_base implements Approve_interface
             if ( ! $rs)
             {
                 $this->result->set_action_cancel();
-                log_message('error', "[approve_target] action cancel: get_user_credit() !\$rs (target {$this->target['id']})");
                 return [];
             }
 
@@ -760,7 +752,6 @@ abstract class Approve_base implements Approve_interface
         if ($this->can_approve() === FALSE)
         {
             $this->result->set_action_cancel();
-            log_message('error', "[approve_target] action cancel: can_approve() = FALSE (target {$this->target['id']})");
             return FALSE;
         }
 
