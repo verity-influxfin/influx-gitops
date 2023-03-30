@@ -33,7 +33,6 @@ abstract class Approve_base implements Approve_interface
         $this->result = $this->get_initial_result();
         $this->target = $target;
         $this->script_status = TARGET_SCRIPT_STATUS_APPROVE_TARGET;
-        $this->result->set_status($this->target['status'], $this->target['sub_status']);
 
         $this->CI->load->library('anti_fraud_lib');
         $this->CI->load->library('brookesia/black_list_lib');
