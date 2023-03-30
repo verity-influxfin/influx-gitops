@@ -20,16 +20,6 @@ class Approve_target_order_base extends Approve_base
     }
 
     /**
-     * 取得 property $result 的初始值
-     * @return Approve_target_result
-     */
-    public function get_initial_result(): Approve_target_result
-    {
-        // status=待審批 (分期)
-        return new Approve_target_result(TARGET_ORDER_WAITING_SHIP, TARGET_SUBSTATUS_NORNAL);
-    }
-
-    /**
      * 檢查使用者提交的徵信項
      * @param $user_certs
      * @return bool
