@@ -120,7 +120,7 @@
                 </button>
               </div>
               <div class="col-auto">
-                <button class="btn btn-upload-secondary" @click="onClickFile">
+                <button class="btn btn-upload-secondary" @click="onRemoveFile">
                   重新修改
                 </button>
               </div>
@@ -332,6 +332,10 @@ export default {
     onClickFile() {
       this.$refs.fileUpload.click()
     },
+    onRemoveFile() {
+      this.portraitFile = null
+      this.portraitPreview = null
+    },
     onChooseFile() {
       this.portraitFile = null
       this.portraitPreview = null
@@ -347,6 +351,10 @@ export default {
       reader.readAsDataURL(this.portraitFile)
     },
     onClickNextStep() {
+      if (this.formData.appliedPosition == '' || this.formData.name == '' || this.formData.registeredAddress == '' || this.formData.mailingAddress == '') {
+        alert('必填欄位 : 應徵職位、姓名、戶籍地址和通訊地址')
+        return
+      }
       let formData = new FormData()
       formData.append('image', this.portraitFile)
       formData.append('data', JSON.stringify(this.formData))
@@ -420,7 +428,7 @@ export default {
     font-size: 14px;
     line-height: 20px;
     color: #ffffff;
-    background: rgba(112, 112, 112, 0.5);;
+    background: #036eb7;
     border-radius: 6px;
   }
 }

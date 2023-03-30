@@ -4,7 +4,7 @@
       <img src="@/asset/images/logo_puhey.png" style="width: 142px" />
     </div>
     <form class="form-content" onsubmit="return false">
-      <div class="form-title">Google面試問題</div>
+      <div class="form-title">面試問題</div>
       <div class="form-subtitle">
         歡迎參加普匯金融科技線上面試，請完成以下問答加速面試了解
       </div>
@@ -121,7 +121,10 @@ export default {
       reader.readAsDataURL(this.portraitFile)
     },
     onSubmit() {
-      console.log(this.formData);
+      if (this.formData.appliedPosition == '' || this.formData.name == '' || this.formData.age == '') {
+        alert('必填欄位 : 姓名、年齡和應徵職位')
+        return
+      }
       axios.post('/uploadGoogleQA', this.formData).then((res) => {
         console.log(res.data);
         if (res.data == 'Success') {
@@ -202,7 +205,7 @@ export default {
     font-size: 14px;
     line-height: 20px;
     color: #ffffff;
-    background: rgba(112, 112, 112, 0.5);
+    background: #036eb7;
     border-radius: 6px;
   }
 }

@@ -232,8 +232,9 @@ export default () => {
                     location.reload()
                     return
                   }
-                  if (this.$route.path == '/recruiting') {
-                    location.reload();
+                  if (this.$router.currentRoute.path == '/recruiting') {
+                    location.reload()
+                    return
                   }
                   if (investor === '1') {
                     this.$router.push('investnotification');
