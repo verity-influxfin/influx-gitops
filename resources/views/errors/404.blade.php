@@ -21,5 +21,8 @@
     <a href="{{ asset('') }}"><< back</a>
 </div>
 </body>
+<script>
+    window.location.href = "/";
+</script>
 
 </html>
