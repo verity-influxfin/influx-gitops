@@ -140,7 +140,7 @@ abstract class Approve_base implements Approve_interface
             {
                 $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_SECOND_INSTANCE);
             }
-            else
+            elseif ( ! empty($this->loan_amount) && ! empty($this->platform_fee) && ! empty($this->credit))
             {
                 $this->result->set_status(TARGET_WAITING_SIGNING);
             }
