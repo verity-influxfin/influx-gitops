@@ -26,13 +26,13 @@ class GoogleQAController extends AdminController
     {
         $grid = new Grid(new GoogleQA());
 
-        $grid->column('id', __('Id'));
-        $grid->column('job_position', __('Job position'));
-        $grid->column('name', __('Name'));
-        $grid->column('age', __('Age'));
-        $grid->column('question', __('Question'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('id', '編號');
+        $grid->column('job_position', '應徵職位');
+        $grid->column('name', '姓名');
+        $grid->column('age', '年齡');
+        $grid->column('question', 'QA');
+        $grid->column('created_at', '創建時間');
+        $grid->column('updated_at', '更新時間');
 
         return $grid;
     }
@@ -47,13 +47,13 @@ class GoogleQAController extends AdminController
     {
         $show = new Show(GoogleQA::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('job_position', __('Job position'));
-        $show->field('name', __('Name'));
-        $show->field('age', __('Age'));
-        $show->field('question', __('Question'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('id', '編號');
+        $show->field('job_position', '應徵職位');
+        $show->field('name', '姓名');
+        $show->field('age', '年齡');
+        $show->field('question', 'QA');
+        $show->field('created_at', '創建時間');
+        $show->field('updated_at', '更新時間');
 
         return $show;
     }
@@ -67,10 +67,10 @@ class GoogleQAController extends AdminController
     {
         $form = new Form(new GoogleQA());
 
-        $form->text('job_position', __('Job position'));
-        $form->text('name', __('Name'));
-        $form->text('age', __('Age'));
-        $form->text('question', __('Question'));
+        $form->text('job_position', '應徵職位');
+        $form->text('name', '姓名');
+        $form->text('age', '年齡');
+        $form->text('question', 'QA');
 
         return $form;
     }

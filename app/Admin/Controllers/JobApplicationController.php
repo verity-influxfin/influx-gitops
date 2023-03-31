@@ -26,29 +26,29 @@ class JobApplicationController extends AdminController
     {
         $grid = new Grid(new JobApplication());
 
-        $grid->column('id', __('Id'));
-        $grid->column('job_position', __('Job position'));
-        $grid->column('name', __('Name'));
-        $grid->column('blood_type', __('Blood type'));
-        $grid->column('height', __('Height'));
-        $grid->column('weight', __('Weight'));
-        $grid->column('birthday', __('Birthday'));
-        $grid->column('marriage', __('Marriage'));
-        $grid->column('id_number', __('Id number'));
-        $grid->column('hobby', __('Hobby'));
-        $grid->column('address', __('Address'));
-        $grid->column('mailing_address', __('Mailing address'));
-        $grid->column('phone', __('Phone'));
-        $grid->column('mobile_phone', __('Mobile phone'));
-        $grid->column('email', __('Email'));
-        $grid->column('education', __('Education'));
-        $grid->column('expertise', __('Expertise'));
-        $grid->column('work_experiences', __('Work experiences'));
-        $grid->column('wrote_person', __('Wrote person'));
-        $grid->column('wrote_date', __('Wrote date'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
-        $grid->column('img_url', __('Img url'));
+        $grid->column('id', '編號');
+        $grid->column('job_position', '應徵職位');
+        $grid->column('name', '姓名');
+        $grid->column('blood_type', '血型');
+        $grid->column('height', '身高');
+        $grid->column('weight', '體重');
+        $grid->column('birthday', '生日');
+        $grid->column('marriage', '婚姻狀況');
+        $grid->column('id_number', '身份證字號');
+        $grid->column('hobby', '興趣、嗜好');
+        $grid->column('address', '戶籍地址');
+        $grid->column('mailing_address', '通訊地址');
+        $grid->column('phone', '住家電話');
+        $grid->column('mobile_phone', '行動電話');
+        $grid->column('email', '電子信箱');
+        $grid->column('education', '最高學歷');
+        $grid->column('expertise', '專長');
+        $grid->column('work_experiences', '工作經歷');
+        $grid->column('wrote_person', '填表人');
+        $grid->column('wrote_date', '填表日期');
+        $grid->column('created_at', '創建時間');
+        $grid->column('updated_at', '更新時間');
+        $grid->column('img_url', '圖片路徑');
 
         return $grid;
     }
@@ -63,29 +63,29 @@ class JobApplicationController extends AdminController
     {
         $show = new Show(JobApplication::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('job_position', __('Job position'));
-        $show->field('name', __('Name'));
-        $show->field('blood_type', __('Blood type'));
-        $show->field('height', __('Height'));
-        $show->field('weight', __('Weight'));
-        $show->field('birthday', __('Birthday'));
-        $show->field('marriage', __('Marriage'));
-        $show->field('id_number', __('Id number'));
-        $show->field('hobby', __('Hobby'));
-        $show->field('address', __('Address'));
-        $show->field('mailing_address', __('Mailing address'));
-        $show->field('phone', __('Phone'));
-        $show->field('mobile_phone', __('Mobile phone'));
-        $show->field('email', __('Email'));
-        $show->field('education', __('Education'));
-        $show->field('expertise', __('Expertise'));
-        $show->field('work_experiences', __('Work experiences'));
-        $show->field('wrote_person', __('Wrote person'));
-        $show->field('wrote_date', __('Wrote date'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-        $show->field('img_url', __('Img url'));
+        $show->field('id', '編號');
+        $show->field('job_position', '應徵職位');
+        $show->field('name', '姓名');
+        $show->field('blood_type', '血型');
+        $show->field('height', '身高');
+        $show->field('weight', '體重');
+        $show->field('birthday', '生日');
+        $show->field('marriage', '婚姻狀況');
+        $show->field('id_number', '身份證字號');
+        $show->field('hobby', '興趣、嗜好');
+        $show->field('address', '戶籍地址');
+        $show->field('mailing_address', '通訊地址');
+        $show->field('phone', '住家電話');
+        $show->field('mobile_phone', '行動電話');
+        $show->field('email', '電子信箱');
+        $show->field('education', '最高學歷');
+        $show->field('expertise', '專長');
+        $show->field('work_experiences', '工作經歷');
+        $show->field('wrote_person', '填表人');
+        $show->field('wrote_date', '填表日期');
+        $show->field('created_at', '創建時間');
+        $show->field('updated_at', '更新時間');
+        $show->field('img_url', '圖片路徑');
 
         return $show;
     }
@@ -99,26 +99,26 @@ class JobApplicationController extends AdminController
     {
         $form = new Form(new JobApplication());
 
-        $form->text('job_position', __('Job position'));
-        $form->text('name', __('Name'));
-        $form->text('blood_type', __('Blood type'));
-        $form->number('height', __('Height'));
-        $form->number('weight', __('Weight'));
-        $form->datetime('birthday', __('Birthday'))->default(date('Y-m-d H:i:s'));
-        $form->text('marriage', __('Marriage'));
-        $form->text('id_number', __('Id number'));
-        $form->text('hobby', __('Hobby'));
-        $form->text('address', __('Address'));
-        $form->text('mailing_address', __('Mailing address'));
-        $form->mobile('phone', __('Phone'));
-        $form->text('mobile_phone', __('Mobile phone'));
-        $form->email('email', __('Email'));
-        $form->text('education', __('Education'));
-        $form->text('expertise', __('Expertise'));
-        $form->text('work_experiences', __('Work experiences'));
-        $form->text('wrote_person', __('Wrote person'));
-        $form->datetime('wrote_date', __('Wrote date'))->default(date('Y-m-d H:i:s'));
-        $form->text('img_url', __('Img url'));
+        $form->text('job_position', '應徵職位');
+        $form->text('name', '姓名');
+        $form->text('blood_type', '血型');
+        $form->number('height', '身高');
+        $form->number('weight', '體重');
+        $form->datetime('birthday', '生日')->default(date('Y-m-d H:i:s'));
+        $form->text('marriage', '婚姻狀況');
+        $form->text('id_number', '身份證字號');
+        $form->text('hobby', '興趣、嗜好');
+        $form->text('address', '戶籍地址');
+        $form->text('mailing_address', '通訊地址');
+        $form->mobile('phone', '住家電話');
+        $form->text('mobile_phone', '行動電話');
+        $form->email('email', '電子信箱');
+        $form->text('education', '最高學歷');
+        $form->text('expertise', '專長');
+        $form->text('work_experiences', '工作經歷');
+        $form->text('wrote_person', '填表人');
+        $form->datetime('wrote_date', '填表日期')->default(date('Y-m-d H:i:s'));
+        $form->text('img_url', '圖片路徑');
 
         return $form;
     }
