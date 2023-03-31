@@ -30,4 +30,5 @@ Route::group([
     $router->resource('cooperation', CooperationController::class);
     $router->resource('route_meta', RouteMetaController::class);
     $router->resource('job-applications', JobApplicationController::class);
+    $router->resource('google-q-as', GoogleQAController::class);
 });
