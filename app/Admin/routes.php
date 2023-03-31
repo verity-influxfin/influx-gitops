@@ -29,4 +29,5 @@ Route::group([
     $router->resource('borrow_report', BorrowReportController::class);
     $router->resource('cooperation', CooperationController::class);
     $router->resource('route_meta', RouteMetaController::class);
+    $router->resource('job-applications', JobApplicationController::class);
 });
