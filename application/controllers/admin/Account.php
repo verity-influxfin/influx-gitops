@@ -760,19 +760,20 @@ class Account extends MY_Admin_Controller {
      * @created_by                   Howard
      */
     public function daily_report_sheet(){
-
+        $get        = $this->input->get(NULL, TRUE);
+        $sdate      = isset($get['sdate'])&&$get['sdate']?$get['sdate']:get_entering_date();
+        $edate      = isset($get['edate'])&&$get['edate']?$get['edate']:get_entering_date();
         $data = $this->daily_report_client->request('GET', 'daily_report', [
-            'query' => $this->input->get()
+                'query' => array(
+                'sdate' => $sdate,
+                'edate' => $edate
+            )
         ])->getBody()->getContents();
 
-        $get 		= $this->input->get(NULL, TRUE);
-        $sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:get_entering_date();
-        $edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:get_entering_date();
-
         $page_data 	= array(
-            "type" 	=> "list",
-            "sdate"	=> $sdate,
-            "edate"	=> $edate
+            'type' 	=> 'list',
+            'sdate'	=> $sdate,
+            'edate'	=> $edate
         );
         $page_data['list'] = json_decode($data, true);
 
