@@ -813,11 +813,21 @@ abstract class Approve_base implements Approve_interface
      */
     protected function update_target_script_status(): int
     {
-        return $this->CI->target_model->get_affected_after_update($this->target['id'], [
-            'script_status' => $this->script_status,
-        ], [
+        $param = [
             'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
-        ]);
+        ];
+
+        $res = $this->CI->target_model->get_affected_after_update($this->target['id'], [
+            'script_status' => $this->script_status,
+        ], $param);
+
+        if ( ! $res)
+        {
+            return 0;
+        }
+        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+
+        return $res;
     }
 
     /**
@@ -1030,12 +1040,20 @@ abstract class Approve_base implements Approve_interface
             return FALSE;
         }
 
-        $this->CI->target_model->update($this->target['id'], $param);
+        $res = $this->CI->target_model->update_by([
+            'id' => $this->target['id'],
+            'status' => TARGET_WAITING_APPROVE
+        ], $param);
+
+        if ( ! $res)
+        {
+            return FALSE;
+        }
+        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
 
         $credit_sheet = CreditSheetFactory::getInstance($this->target['id']);
         $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
 
-        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
         $this->target = array_replace($this->target, $param);
         return TRUE;
     }
