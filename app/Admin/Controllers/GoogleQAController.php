@@ -30,7 +30,15 @@ class GoogleQAController extends AdminController
         $grid->column('job_position', '應徵職位');
         $grid->column('name', '姓名');
         $grid->column('age', '年齡');
-        $grid->column('question', 'QA');
+        $grid->column('question', 'QA')->display(function($questions) {
+            $q_string = '';
+            $questions = json_decode($questions);
+            foreach ($questions as $question) {
+                $q_string = $q_string . $question->{'q'} . ' => ' . $question->{'a'} . '<br>';
+            }
+
+            return $q_string;
+        });
         $grid->column('created_at', '創建時間');
         $grid->column('updated_at', '更新時間');
 

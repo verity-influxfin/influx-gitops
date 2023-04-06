@@ -43,7 +43,28 @@ class JobApplicationController extends AdminController
         $grid->column('email', '電子信箱');
         $grid->column('education', '最高學歷');
         $grid->column('expertise', '專長');
-        $grid->column('work_experiences', '工作經歷');
+        $grid->column('work_experiences', '工作經歷')->display(function($work_experiences) {
+            $we_string = '';
+            $work_experiences = json_decode($work_experiences);
+            foreach ($work_experiences as $experience) {
+                foreach($experience as $key => $val) {
+                    if ($val == '' || $val == null) {
+                        continue;
+                    }
+                    
+                    if ($key == 'companyName') {
+                        $we_string = $we_string . '公司名稱 : ' . $val . '<br>';
+                    }
+                    if ($key == 'jobDescription') {
+                        $we_string = $we_string . '工作內容 : ' . $val . '<br>';
+                    }
+                    if ($key == 'yearsOfExperience') {
+                        $we_string = $we_string . '經歷年資 : ' . $val . '<br>----------<br>';
+                    }
+                }
+            }
+            return $we_string;
+        });
         $grid->column('wrote_person', '填表人');
         $grid->column('wrote_date', '填表日期');
         $grid->column('created_at', '創建時間');
