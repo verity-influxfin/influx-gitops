@@ -30,10 +30,9 @@ abstract class Approve_base implements Approve_interface
     {
         $this->CI = &get_instance();
 
-        $this->result = $this->get_initial_result();
         $this->target = $target;
+        $this->result = $this->get_initial_result($this->target['status'], $this->target['sub_status']);
         $this->script_status = TARGET_SCRIPT_STATUS_APPROVE_TARGET;
-        $this->result->set_status($this->target['status'], $this->target['sub_status']);
 
         $this->CI->load->library('anti_fraud_lib');
         $this->CI->load->library('brookesia/black_list_lib');
@@ -140,6 +139,10 @@ abstract class Approve_base implements Approve_interface
             if ($need_second_instance === TRUE)
             {
                 $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_SECOND_INSTANCE);
+            }
+            elseif ( ! empty($this->loan_amount) && ! empty($this->platform_fee) && ! empty($this->credit))
+            {
+                $this->result->set_status(TARGET_WAITING_SIGNING);
             }
         }
 
@@ -810,18 +813,33 @@ abstract class Approve_base implements Approve_interface
      */
     protected function update_target_script_status(): int
     {
-        return $this->CI->target_model->get_affected_after_update($this->target['id'], [
-            'script_status' => $this->script_status,
-        ], [
+        $param = [
             'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
-        ]);
+        ];
+
+        $res = $this->CI->target_model->get_affected_after_update($this->target['id'], [
+            'script_status' => $this->script_status,
+        ], $param);
+
+        if ( ! $res)
+        {
+            return 0;
+        }
+        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+
+        return $res;
     }
 
     /**
      * 取得 property $result 的初始值
+     * @param $status
+     * @param $sub_status
      * @return Approve_target_result
      */
-    abstract public function get_initial_result(): Approve_target_result;
+    public function get_initial_result($status, $sub_status): Approve_target_result
+    {
+        return new Approve_target_result($status, $sub_status);
+    }
 
     /**
      * 取消該次該案的跑批流程
@@ -1022,12 +1040,20 @@ abstract class Approve_base implements Approve_interface
             return FALSE;
         }
 
-        $this->CI->target_model->update($this->target['id'], $param);
+        $res = $this->CI->target_model->update_by([
+            'id' => $this->target['id'],
+            'status' => TARGET_WAITING_APPROVE
+        ], $param);
+
+        if ( ! $res)
+        {
+            return FALSE;
+        }
+        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
 
         $credit_sheet = CreditSheetFactory::getInstance($this->target['id']);
         $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
 
-        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
         $this->target = array_replace($this->target, $param);
         return TRUE;
     }

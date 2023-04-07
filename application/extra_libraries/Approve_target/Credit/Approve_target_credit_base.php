@@ -18,14 +18,4 @@ abstract class Approve_target_credit_base extends Approve_base
     {
         return $this->target['status'] == TARGET_WAITING_APPROVE;
     }
-
-    /**
-     * 取得 property $result 的初始值
-     * @return Approve_target_result
-     */
-    public function get_initial_result(): Approve_target_result
-    {
-        // status=待簽約
-        return new Approve_target_result(TARGET_WAITING_SIGNING, TARGET_SUBSTATUS_NORNAL);
-    }
 }

@@ -449,9 +449,11 @@ class Cert_investigation extends Ocr_parser_base
             return $this->return_failure($get_file['msg']);
         }
 
-        return $this->return_success([
-            'pdf_url' => $get_file['data']['pdf_url'],
-        ]);
+        if ($get_file['data']['type'] == 'img')
+        {
+            $this->task_path = '/ocr/joint_credit_img_v1_report';
+        }
+        return $this->return_success($get_file['data']['data']);
     }
 
     /**
@@ -463,16 +465,20 @@ class Cert_investigation extends Ocr_parser_base
         $cert = Certification_factory::get_instance_by_model_resource($this->certification);
         if (empty($cert))
         {
-            return $this->return_failure('Cannot find pdf file.');
+            return $this->return_failure('Cannot find pdf file or images.');
         }
         if ($cert->is_submitted() === FALSE)
         {
-            return $this->return_failure('Pdf file not submitted yet!');
+            return $this->return_failure('Pdf file or images not submitted yet!');
         }
-        if (empty($this->content['pdf_file']))
+        if ( ! empty($this->content['pdf_file']))
         {
-            return $this->return_failure('Empty pdf file!');
+            return $this->return_success(['type' => 'pdf', 'data' => ['pdf_url' => $this->content['pdf_file']]]);
         }
-        return $this->return_success(['pdf_url' => $this->content['pdf_file']]);
+        elseif ( ! empty($this->content['images']))
+        {
+            return $this->return_success(['type' => 'img', 'data' => ['url_list' => $this->content['images']]]);
+        }
+        return $this->return_failure('Empty pdf file or images!');
     }
 }

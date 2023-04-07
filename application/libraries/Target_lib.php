@@ -1816,8 +1816,11 @@ class Target_lib
 
                         foreach ($certifications as $key => $certification) {
                             if ($finish && in_array($certification['id'], $product_certification)) {
-
-                                if ($certification['user_status'] != '1') {
+                                $cert_helper = Certification_factory::get_instance_by_id($certification['certification_id']);
+                                if ($certification['user_status'] != '1' ||
+                                    (isset($cert_helper) && ($cert_helper->is_succeed() === FALSE || $cert_helper->is_expired() === TRUE))
+                                )
+                                {
 
                                     // 還款力計算若驗證不通過，會進入待二審
                                     if ($certification['id'] == CERTIFICATION_REPAYMENT_CAPACITY)
@@ -1831,6 +1834,17 @@ class Target_lib
                                         // 普匯微企e秒貸對保不驗證
                                         // 加入產品非必要項目不驗證結構
                                         if(!isset($product_list[$value->product_id]['option_certifications']) || !in_array($certification['id'],$product_list[$value->product_id]['option_certifications'])){
+
+                                            $param = ['status' => TARGET_WAITING_APPROVE, 'sub_status' => TARGET_SUBSTATUS_NORNAL];
+                                            $res = $this->CI->target_model->update_by([
+                                                'id' => $value->id,
+                                                'status' => TARGET_WAITING_APPROVE
+                                            ], $param);
+                                            if ($res)
+                                            {
+                                                $this->insert_change_log($value->id, $param);
+                                            }
+
                                             $finish = false;
                                         }
                                     }
