@@ -4,6 +4,7 @@ namespace Approve_target\Credit;
 
 use Approve_target\Approve_target_result;
 use Approve_target\Trait_check_product\Check_applicant_age;
+use Certification\Certification_factory;
 
 /**
  * 核可 信用貸款
@@ -28,12 +29,15 @@ class Product_student extends Approve_target_credit_base
 
         foreach ($user_certs as $value)
         {
-            if ($value['status'] != CERTIFICATION_STATUS_SUCCEED)
+            $cert_helper = Certification_factory::get_instance_by_id($value['id']);
+            // 非成功或過期
+            if ($cert_helper->is_succeed() === FALSE || $cert_helper->is_expired() === TRUE)
             {
                 // 非為選填項
                 if ( ! in_array($value['certification_id'], $option_cert))
                 {
                     $this->result->set_action_cancel();
+                    $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_NORNAL);
                     return FALSE;
                 }
             }
