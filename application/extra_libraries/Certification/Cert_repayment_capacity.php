@@ -139,7 +139,7 @@ class Cert_repayment_capacity extends Certification_base
      */
     public function check_before_verify(): bool
     {
-        return TRUE;
+        return $this->result->getStatus() === CERTIFICATION_STATUS_SUCCEED;
     }
 
     /**

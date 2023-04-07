@@ -302,28 +302,36 @@ class Cert_student extends Certification_base
         {
             $ocr_system = $config_school_system_list[0] ?? '';
         }
+        $ocr_flag = TRUE;
+        $ocr_not_match_column = [];
         if ($name != $ocr_name)
         {
-            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return FALSE;
+            $ocr_not_match_column[] = '姓名';
+            $ocr_flag = FALSE;
         }
         if ($school != $ocr_school)
         {
-            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return FALSE;
+            $ocr_not_match_column[] = '學校';
+            $ocr_flag = FALSE;
         }
         if ($department != $ocr_department)
         {
-            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return FALSE;
+            $ocr_not_match_column[] = '科系';
+            $ocr_flag = FALSE;
         }
         if ($system != $ocr_system)
         {
+            $ocr_not_match_column[] = '學制';
+            $ocr_flag = FALSE;
+        }
+        if ($ocr_flag === FALSE)
+        {
             $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage('OCR資訊與使用者資訊不符' . (
+                empty($ocr_not_match_column)
+                    ? ''
+                    : ('（' . implode('、', $ocr_not_match_column) . '）')
+                ) . '：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
 
