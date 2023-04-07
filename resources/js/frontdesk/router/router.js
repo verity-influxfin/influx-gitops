@@ -5,6 +5,7 @@ import news from "../pages/news";
 import ntu from "../pages/ntu"
 import charitableStatus from "../pages/charitableStatus"
 import blog from "../pages/blog";
+import blogV2 from "../pages/blogV2";
 import vlog from "../pages/vlog";
 import videoPage from '../pages/videoPage';
 import userTerms from '../pages/userTerms';
@@ -69,7 +70,7 @@ let routers = [
     { path: '/transfer', component: transfer },
     { path: '/company', component: company },
     { path: '/news', component: news },
-    { path: '/blog', component: blog },
+    { path: '/blog', component: blogV2 },
     { path: '/vlog', component: vlog },
     { path: '/invest', component: invest },
     { path: '/videopage', component: videoPage },
@@ -150,7 +151,7 @@ let routers = [
     { path: '/event', component: event },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
-    {path:'/charitable',component:ntu},
+    { path: '/charitable',component:ntu},
     { path: '/charitable-status', component: charitableStatus},
     { path: '/search',name:'search', component: search },
 ];

@@ -189,7 +189,7 @@ export default {
 @import "../asset/scss/bootstrap/mixins/_breakpoints";
 
 .blog-wrapper {
-  padding: 30px;
+//   padding: 30px;
   overflow: hidden;
   position: relative;
 

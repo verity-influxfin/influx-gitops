@@ -102,10 +102,12 @@ class KnowledgeArticleController extends Controller
                     'off'    => '否',
                 ]);
                 $filter->equal('type','文章類型')->radio([
-                    ''   => '全部',
-                    'article' => '小學堂',
-                    'video'=>'小學堂影音',
-                    'investtonic'=>'投資理財大補帖'
+                    ''   => '全文章',
+                    'fintech' => '金融科技', 
+                    'influx' => '普匯金融', 
+                    'invest' => '投資理財', 
+                    'digital' => '數位生活', 
+                    'news' => '時事焦點'
                 ]);
 		});
 		$grid->actions(function ($actions) {
@@ -123,7 +125,7 @@ class KnowledgeArticleController extends Controller
 		});*/
         $grid->column('post_title', '標題');
 		$grid->column('media_link', '圖片連結')->image('/', 400, 400);
-        $grid->column('type', '文章類型')->using(['article' => '小學堂','video'=>'小學堂影音','investtonic'=>'投資理財大補帖']);
+        $grid->column('type', '文章類型')->using(['fintech' => '金融科技', 'influx' => '普匯金融', 'invest' => '投資理財', 'digital' => '數位生活', 'news' => '時事焦點']);
         $grid->column('isActive', '是否呈現')->using(['on' => '是','off'=>'否']);
         $grid->column('created_at', '創建日期')->sortable();
         $grid->column('release_time', '發布日期')->sortable();
@@ -183,7 +185,7 @@ class KnowledgeArticleController extends Controller
 
 		});
         $form->text('post_title', '文章標題')->required();
-        $form->select('type', '文章類型')->options(['article' => '小學堂','video'=>'小學堂影音','investtonic'=>'投資理財大補帖'])->required()->default('article');
+        $form->select('type', '文章類型')->options(['fintech' => '金融科技', 'influx' => '普匯金融', 'invest' => '投資理財', 'digital' => '數位生活', 'news' => '時事焦點'])->required()->default('article');
         $form->image('media_link', '圖片')->required()->move('/upload/article')->rules('max:8192',['max'=>'圖片檔案大小不能超過8MB']);
         $form->text('media_alt', '圖片alt')->placeholder('請輸入圖片alt文字');
         $form->text('path', '小學堂自定義網址')->placeholder('請輸入小學堂自定義網址')->help('如：/articlepage/test-page 則填入 test-page')->creationRules(['unique:knowledge_article'])->updateRules(['unique:knowledge_article,path,{{id}}']);
