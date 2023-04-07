@@ -90,7 +90,7 @@ class Cert_repayment_capacity extends Certification_base
         }
 
         // 紙本寄送直接進人工
-        if ( ! isset($this->investigation_content['return_type']) || $this->investigation_content['return_type'] != 1)
+        if ( ! isset($this->investigation_content['return_type']) || ! in_array($this->investigation_content['return_type'], [1, 2]))
         {
             $this->result->addMessage('待人工驗證：聯徵為紙本寄送', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return $parsed_content;
