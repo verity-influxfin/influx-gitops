@@ -1044,6 +1044,10 @@ abstract class Approve_base implements Approve_interface
         $credit_sheet_approve_res = $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
         if ($credit_sheet_approve_res !== $credit_sheet::RESPONSE_CODE_OK)
         {
+            // 避免已處理的案件 script_status 卡在 4
+            $res = $this->CI->target_model->update_by([
+                'id' => $this->target['id']
+            ], ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
             return FALSE;
         }
 
