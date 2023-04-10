@@ -439,6 +439,8 @@
             </div>
         </div>
         <div class="content-wrapper">
+            <section class="banner">
+            </section>
             @if ($type == 'knowledge')
             <div class="knowledge-wrapper container">
                 <div class="row">
@@ -476,6 +478,9 @@
                                 <span v-if="copied">網址複製成功 !</span>
                             </div>
                         </div>
+                        <div class="advertise">
+                            
+                        </div>
                         <div class="row mt-3 no-gutters">
                             <button @click="returnToBlog" class="btn login-btn"><i class="mr-2 fa fa-arrow-left"></i>返回列表</button>
                         </div>
@@ -489,7 +494,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col latest-article">
-                                        <h3 class="section-title">最新文章</h3>
+                                        <h3 class="section-title">熱門文章</h3>
                                         @foreach ($latestArticles as $latestArticle)
                                         <div class="list-group list-group-flush">
                                             @if (!empty($latestArticle->path))
@@ -770,5 +775,14 @@
 <script src="/js/manifest.js"></script> -->
 <script src="/js/vendor.js"></script>
 <script type="text/javascript" src="{{ mix('js/articlepage.js') }}"></script>
+
+<style>
+    .banner {
+        background-image: url('/images/lil_school_banner.png');
+        height: 40vw;
+        background-size: cover;
+        background-position: center;
+    }
+</style>
 
 </html>
