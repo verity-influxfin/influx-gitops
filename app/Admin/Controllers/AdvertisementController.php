@@ -26,11 +26,11 @@ class AdvertisementController extends AdminController
     {
         $grid = new Grid(new Advertisement());
 
-        $grid->column('id', __('Id'));
-        $grid->column('img_url', __('Img url'));
-        $grid->column('type', __('Type'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('id', '編號');
+        $grid->column('img_url', '圖片路徑');
+        $grid->column('type', '類別')->using(['student' => '學生貸', 'office' => '上班族貸', 'enterprise' => '企業貸', 'invest' => '投資', 'house' => '房貸']);
+        $grid->column('created_at', '創建時間');
+        $grid->column('updated_at', '更新時間');
 
         return $grid;
     }
@@ -45,11 +45,11 @@ class AdvertisementController extends AdminController
     {
         $show = new Show(Advertisement::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('img_url', __('Img url'));
-        $show->field('type', __('Type'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('id', '編號');
+        $show->field('img_url', '圖片路徑');
+        $show->field('type', '類別');
+        $show->field('created_at', '創建時間');
+        $show->field('updated_at', '更新時間');
 
         return $show;
     }
@@ -63,8 +63,8 @@ class AdvertisementController extends AdminController
     {
         $form = new Form(new Advertisement());
 
-        $form->text('img_url', __('Img url'));
-        $form->text('type', __('Type'));
+        $form->select('type', '文章類型')->options(['student' => '學生貸', 'office' => '上班族貸', 'enterprise' => '企業貸', 'invest' => '投資', 'house' => '房貸'])->required()->default('student');
+        $form->image('img_url', '圖片')->required()->move('/upload/advertisement');
 
         return $form;
     }

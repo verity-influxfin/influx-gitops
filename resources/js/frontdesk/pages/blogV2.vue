@@ -17,20 +17,20 @@
                 </button>
                 <button
                     class="article-type-tab"
-                    @click="category = 'article'"  
-                    :class="{ active: category === 'article' }"
+                    @click="category = 'fintech'"  
+                    :class="{ active: category === 'fintech' }"
                 >
                     金融科技
                 </button>
-                <!-- fintech -->
+                <!-- article -->
                 <button
                     class="article-type-tab"
-                    @click="category = 'video'"
-                    :class="{ active: category === 'video' }"
+                    @click="category = 'influx'"
+                    :class="{ active: category === 'influx' }"
                 >
                     普匯金融
                 </button>
-                <!-- influx -->
+                <!-- video -->
                 <button
                     class="article-type-tab"
                     @click="category = 'invest'"

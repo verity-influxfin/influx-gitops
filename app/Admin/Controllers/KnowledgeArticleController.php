@@ -185,7 +185,7 @@ class KnowledgeArticleController extends Controller
 
 		});
         $form->text('post_title', '文章標題')->required();
-        $form->select('type', '文章類型')->options(['fintech' => '金融科技', 'influx' => '普匯金融', 'invest' => '投資理財', 'digital' => '數位生活', 'news' => '時事焦點'])->required()->default('article');
+        $form->select('type', '文章類型')->options(['fintech' => '金融科技', 'influx' => '普匯金融', 'invest' => '投資理財', 'digital' => '數位生活', 'news' => '時事焦點'])->required()->default('fintech');
         $form->image('media_link', '圖片')->required()->move('/upload/article')->rules('max:8192',['max'=>'圖片檔案大小不能超過8MB']);
         $form->text('media_alt', '圖片alt')->placeholder('請輸入圖片alt文字');
         $form->text('path', '小學堂自定義網址')->placeholder('請輸入小學堂自定義網址')->help('如：/articlepage/test-page 則填入 test-page')->creationRules(['unique:knowledge_article'])->updateRules(['unique:knowledge_article,path,{{id}}']);
