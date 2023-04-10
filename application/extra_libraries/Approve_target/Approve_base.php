@@ -1040,6 +1040,13 @@ abstract class Approve_base implements Approve_interface
             return FALSE;
         }
 
+        $credit_sheet = CreditSheetFactory::getInstance($this->target['id']);
+        $credit_sheet_approve_res = $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
+        if ($credit_sheet_approve_res !== $credit_sheet::RESPONSE_CODE_OK)
+        {
+            return FALSE;
+        }
+
         $res = $this->CI->target_model->update_by([
             'id' => $this->target['id'],
             'status' => TARGET_WAITING_APPROVE
@@ -1050,10 +1057,6 @@ abstract class Approve_base implements Approve_interface
             return FALSE;
         }
         $this->CI->target_lib->insert_change_log($this->target['id'], $param);
-
-        $credit_sheet = CreditSheetFactory::getInstance($this->target['id']);
-        $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
-
         $this->target = array_replace($this->target, $param);
         return TRUE;
     }
