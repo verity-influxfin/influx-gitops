@@ -118,6 +118,11 @@ class Cert_identity extends Certification_base
      */
     public function review_data($content): bool
     {
+        if (empty($this->remark['OCR']['birthday']) || empty($this->content['birthday']) || $this->remark['OCR']['birthday'] != $this->content['birthday'])
+        {
+            $this->result->addMessage('OCR資訊與使用者資訊不符（生日）需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            return FALSE;
+        }
         return TRUE;
     }
 
