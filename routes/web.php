@@ -344,6 +344,7 @@ Route::get('/campaign/{name}/{path?}', function (string $name, string $path = 'i
 Route::get('/articlepage/{path?}', function (Request $request, $path = '') {
     $ArticleController = (new App\Http\Controllers\KnowledgeArticleController);
     $latestArticles = $ArticleController->get_knowledge_articles();
+    $advInfo = $ArticleController->get_advertisement_info();
     if(!empty($path)){
         // 自定義網址轉換
         $article = $ArticleController->get_knowledge_article_by_path($path);
@@ -357,7 +358,8 @@ Route::get('/articlepage/{path?}', function (Request $request, $path = '') {
             'type' => 'knowledge',
             'article' => $article,
             'latestArticles' => $latestArticles,
-            'meta_data' => $meta_data
+            'meta_data' => $meta_data,
+            'adv' => $advInfo
         ]);
     }
     $input = $request->all();
@@ -377,7 +379,8 @@ Route::get('/articlepage/{path?}', function (Request $request, $path = '') {
             'type' => $type,
             'article' => $article,
             'latestArticles' => $latestArticles,
-            'meta_data' => $meta_data
+            'meta_data' => $meta_data,
+            'adv' => $advInfo
         ]);
     } else if ($type == 'news') {
         //get news
@@ -393,6 +396,7 @@ Route::get('/articlepage/{path?}', function (Request $request, $path = '') {
             'article' => $news,
             'meta_data' => $meta_data,
             'latestArticles' => $latestArticles,
+            'adv' => $advInfo
         ]);
     } else {
         return redirect('/');

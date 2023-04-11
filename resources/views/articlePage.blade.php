@@ -439,6 +439,8 @@
             </div>
         </div>
         <div class="content-wrapper">
+            <section class="banner">
+            </section>
             @if ($type == 'knowledge')
             <div class="knowledge-wrapper container">
                 <div class="row">
@@ -476,6 +478,30 @@
                                 <span v-if="copied">網址複製成功 !</span>
                             </div>
                         </div>
+                        <!-- <section class="advertise" style="display: flex; justify-content: center;">
+                            <img class="cover" src=" /{{ $adv->img_url }}" style="margin: 30px 0;"/>
+                        </section>
+                        <section class="adv_btn" style="display: flex; justify-content: center;">
+                            <button 
+                                style="
+                                    background: #F29500; 
+                                    border-radius: 12px;
+                                    border-color: #F29500; 
+                                    height: 50px;
+                                    width: 700px;
+                                "
+                            > 
+                                @if ($adv->type == 'student')
+                                <a href="/collegeLoan" style="color: white; font-weight: 600; font-size: 26px;">立即了解更多</a> 
+                                @elseif ($adv->type == 'office')
+                                <a href="/workLoan" style="color: white; font-weight: 600; font-size: 26px;">立即了解更多</a> 
+                                @elseif ($adv->type == 'enterprise')
+                                <a href="/business-loan/smeg" style="color: white; font-weight: 600; font-size: 26px;">立即了解更多</a>
+                                @elseif ($adv->type == 'invest')
+                                <a href="/investment" style="color: white; font-weight: 600; font-size: 26px;">立即了解更多</a>
+                                @endif
+                            </button>
+                        </section> -->
                         <div class="row mt-3 no-gutters">
                             <button @click="returnToBlog" class="btn login-btn"><i class="mr-2 fa fa-arrow-left"></i>返回列表</button>
                         </div>
@@ -489,7 +515,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col latest-article">
-                                        <h3 class="section-title">最新文章</h3>
+                                        <h3 class="section-title">熱門文章</h3>
                                         @foreach ($latestArticles as $latestArticle)
                                         <div class="list-group list-group-flush">
                                             @if (!empty($latestArticle->path))
@@ -770,5 +796,14 @@
 <script src="/js/manifest.js"></script> -->
 <script src="/js/vendor.js"></script>
 <script type="text/javascript" src="{{ mix('js/articlepage.js') }}"></script>
+
+<style>
+    .banner {
+        background-image: url('/images/lil_school_banner.png');
+        height: 40vw;
+        background-size: cover;
+        background-position: center;
+    }
+</style>
 
 </html>
