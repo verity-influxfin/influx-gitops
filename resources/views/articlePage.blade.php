@@ -478,7 +478,7 @@
                                 <span v-if="copied">網址複製成功 !</span>
                             </div>
                         </div>
-                        <section class="advertise" style="display: flex; justify-content: center;">
+                        <!-- <section class="advertise" style="display: flex; justify-content: center;">
                             <img class="cover" src=" /{{ $adv->img_url }}" style="margin: 30px 0;"/>
                         </section>
                         <section class="adv_btn" style="display: flex; justify-content: center;">
@@ -501,7 +501,7 @@
                                 <a href="/investment" style="color: white; font-weight: 600; font-size: 26px;">立即了解更多</a>
                                 @endif
                             </button>
-                        </section>
+                        </section> -->
                         <div class="row mt-3 no-gutters">
                             <button @click="returnToBlog" class="btn login-btn"><i class="mr-2 fa fa-arrow-left"></i>返回列表</button>
                         </div>
