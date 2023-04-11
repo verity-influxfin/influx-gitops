@@ -223,7 +223,7 @@ abstract class Approve_base implements Approve_interface
      * 依不同產品檢查是否需進二審
      * @return bool
      */
-    protected function check_need_second_instance_by_product(): bool
+    public function check_need_second_instance_by_product(): bool
     {
         return FALSE;
     }
@@ -1097,7 +1097,8 @@ abstract class Approve_base implements Approve_interface
             'status' => TARGET_WAITING_APPROVE,
             'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE,
             'target_data' => json_encode($target_data),
-            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+            'memo' => json_encode($this->result->get_all_memo(TARGET_WAITING_APPROVE))
         ];
     }
 

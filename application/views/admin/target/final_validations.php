@@ -875,7 +875,7 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					歸戶案件總覽（僅顯示申請中/還款中/逾期中）
+					歸戶案件總覽（僅顯示申請中/還款中/逾期中/已結案)
 				</div>
 				<div class="panel-body">
 					<div class="row">
@@ -893,6 +893,7 @@
 											<th width="6%">狀態</th>
 											<th width="10%">有效時間</th>
 											<th width="14%">借款原因</th>
+											<th width="14%">非寬限期還款次數</th>
 											<th width="10%">詳情</th>
 										</tr>
 									</thead>
@@ -960,7 +961,10 @@
 				<div class="panel-body">
 					<form id="credit-evaluation" method="POST" action="/admin/Target/credits">
 						<div class="col-lg-12 text-center">
+                            分數調整:
 							<input id="credit_test" type="text" name="score" value="0" / disabled>
+                            <span class="fixed_amount_block">額度調整:</span>
+                            <input id="credit_test_fixed_amount" type="text" name="credit_test_fixed_amount" value="0" disabled class="fixed_amount_block">
 							<input type="text" name="description" value="經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務" hidden>
 							<button class="btn btn-warning need_chk_before_approve" type="submit">額度試算</button>
 							<button class="btn btn-danger need_chk_before_approve" data-url="/admin/Target/verify_failed"
@@ -1027,6 +1031,15 @@
 								<span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1"
 										disabled></span>
 							</div>
+                            <div class="fixed_amount_block">
+								<span style="width:30%;">
+									<span>額度調整</span>
+									<span class="amount_range"></span>
+									<span>：</span>
+								</span>
+                                <span style="width:70%;"><input id="2_fixed_amount" type="number" value="0" min="0" step="1"
+                                                                disabled></span>
+                            </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
 						</div>
@@ -1176,6 +1189,7 @@
 	// 授審表評分意見送出
 	function send_opinion(target_id = '', group_id = '') {
 		let score = $(`#${group_id}_score`).val();
+		let fixed_amount = $(`#credit_test_fixed_amount`).val();
 		let opinion = $(`#${group_id}_opinion`).val();
 		let job_company_taiwan_1000_point = $('#job_company_taiwan_1000_point').val();
 		let job_company_world_500_point = $('#job_company_world_500_point').val();
@@ -1188,6 +1202,7 @@
 				data: {
 					'target_id': target_id,
 					'score': score,
+					'fixed_amount': fixed_amount,
 					'opinion': opinion,
 					'group': group_id,
 					'job_company_taiwan_1000_point': job_company_taiwan_1000_point,
@@ -1501,6 +1516,19 @@
 				fillTargetMeta(response.response.target_meta);
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
+
+                if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
+                    $('.fixed_amount_block').css('display', 'none');
+                } else if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
+                    let today = new Date();
+                    let new_date = new Date(user.birthday);
+                    let eligible_year = 35;
+                    new_date.setFullYear(new_date.getFullYear() + eligible_year);
+                    if (new_date <= today) {
+                        $('.fixed_amount_block input').prop('disabled', true);
+                        $('#2_fixed_amount').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
+                    }
+                }
 			},
 			error: function (error) {
 				alert('資料載入失敗。請重新整理。');
@@ -1550,6 +1578,16 @@
 			});
 		}
 
+        if (case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_min") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_max")) {
+            $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
+            $(`#2_fixed_amount`).attr({
+                "max": case_aprove_item.creditLineInfo.fixed_amount_max,
+                "min": case_aprove_item.creditLineInfo.fixed_amount_min,
+                "onblur": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
+                    `else if(value<=${case_aprove_item.creditLineInfo.fixed_amount_min}){value=${case_aprove_item.creditLineInfo.fixed_amount_min}}`
+            });
+        }
+
 		// 取得案件核貸資料
 		case_aprove_data = get_report_data(caseId);
 		if (case_aprove_data) {
@@ -1568,6 +1606,7 @@
 							$(`#${list_key}_score`).val(score);
 						})
 						$('#credit_test').val(total_score);
+						$('#credit_test_fixed_amount').val(0);
 						// 顯示更改,核可層級解鎖
 						Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
 							status_html = get_status_icon('success');
@@ -1586,6 +1625,9 @@
 								$(`#${list_key}_opinion_status`).html(status_html);
 								$(`#${list_key}_opinion`).prop('disabled', false);
 								$(`#${list_key}_score`).prop('disabled', false);
+                                if ($(`#${list_key}_fixed_amount`)) {
+                                    $(`#${list_key}_fixed_amount`).prop('disabled', false);
+                                }
 								// $(`#${list_key}_opinion_button`).prop('disabled', false);
 								$(`#${list_key}_opinion_button`).data('disabled', 'false');
 								stop_flag = true;
@@ -1606,6 +1648,14 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
+        $('#2_fixed_amount').on('blur', function () {
+            let fixed_amount = parseInt($(this).val());
+            if (fixed_amount <= 0) {
+                return;
+            }
+            $('div.opinion_button button.score').prop('disabled', true);
+            $('#credit_test_fixed_amount').val(fixed_amount);
+        });
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
 			$.ajax({
@@ -2062,12 +2112,15 @@
 					$('<td class="fake-fields center-text">').append(pTag),
 					$('<td class="fake-fields center-text">').append(pTag),
 					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
 					$('<td class="fake-fields center-text">').append(pTag)
 				).appendTo("#targets");
 			}
 		}
 
 		function fillTargets(targets) {
+            let count_finished_target = 0,
+                count_normal_transaction = 0;
 			for (var i = 0; i < targets.length; i++) {
 				let target = targets[i];
 				var backgroundColor = target.status.text == '待核可' ? 'bg-danger' : '';
@@ -2087,9 +2140,23 @@
 					getCenterTextCell(target.status.text, backgroundColor),
 					getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
 					getCenterTextCell(target.reason, backgroundColor),
+					getCenterTextCell(target.normal_count, backgroundColor),
 					getCenterTextCell('<a href="/admin/target/detail?id=' + target.id + '" target="_blank"><button class="btn btn-info">詳情</button></a>', backgroundColor)
 				).appendTo("#targets");
+
+                count_normal_transaction += parseInt(target.normal_count);
+                if (target.status.id === '<?= TARGET_REPAYMENTED?>') {
+                    count_finished_target += 1;
+                }
 			}
+
+            $("<tr>").append(
+                `<td colspan="5"></td>` +
+                `<td style="text-align: right">已結案次數</td>` +
+                `<td style="text-align: center">${count_finished_target}</td>` +
+                `<td colspan="2" style="text-align: right">非寬限期還款總次數</td>` +
+                `<td style="text-align: center">${count_normal_transaction}</td>`
+            ).appendTo("#targets");
 		}
 
         function fillTargetMeta(meta) {
@@ -2169,7 +2236,15 @@
 			let job_company_world_500_point = $('#job_company_world_500_point').val();
 			let job_company_medical_institute_point = $('#job_company_medical_institute_point').val();
 			let job_company_public_agency_point = $('#job_company_public_agency_point').val();
+            let fixed_amount = form.find('input[name="credit_test_fixed_amount"]').val();
 			var remark = form.find('input[name="description"]').val();
+
+            if (fixed_amount != 0 && (fixed_amount < parseInt($('#2_fixed_amount').attr('min')) || fixed_amount > parseInt($('#2_fixed_amount').attr('max')))) {
+                alert('額度調整不符合產品設定！');
+                $('#credit-evaluation button').attr('disabled', false);
+                return;
+            }
+
 
             let url = new URL(location.href);
             url.pathname = form.attr('action');
@@ -2194,6 +2269,10 @@
 				},
 				success: function (response) {
 					if (response.status.code != 200) {
+                        if (response.status.message) {
+                            alert(response.status.message);
+                            $('#credit-evaluation button').attr('disabled', false);
+                        }
 						return;
 					}
 

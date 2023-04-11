@@ -162,4 +162,22 @@ class Product_student extends Approve_target_credit_base
         }
         return $result;
     }
+
+    /**
+     * 依不同產品檢查是否需進二審
+     * @return bool
+     */
+    public function check_need_second_instance_by_product(): bool
+    {
+        $school_config = $this->CI->config->item('school_points');
+        $info = $this->CI->user_meta_model->get_by(['user_id' => $this->target_user_id, 'meta_key' => 'school_name']);
+
+        if (in_array($info->meta_value, $school_config['lock_school']))
+        {
+            $this->result->add_memo(TARGET_WAITING_APPROVE, "{$info->meta_value}為黑名單學校", Approve_target_result::DISPLAY_BACKEND);
+            return TRUE;
+        }
+
+        return FALSE;
+    }
 }

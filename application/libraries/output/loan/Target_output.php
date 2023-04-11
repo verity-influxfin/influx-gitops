@@ -89,6 +89,7 @@ class Target_output
 			'image' => $target->person_image,
 			'expire_at' => $target->expire_time,
 			'loan_at' => $target->loan_date,
+            'normal_count' => $target->normal_count ?? 0,
 		];
 
 		if(!empty($target->productTargetData)){
