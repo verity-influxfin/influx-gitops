@@ -334,7 +334,7 @@ class Cert_social_intelligent extends Certification_base
         }
 
         $certification_info = $this->CI->user_certification_model->get($this->certification['id']);
-        $content = json_decode($certification_info->content ?? '');
+        $content = json_decode($certification_info->content ?? '', TRUE) ?? [];
         $result = $this->CI->user_certification_model->update($this->certification['id'], [
             'content' => json_encode(array_replace_recursive($content, $this->additional_data), JSON_INVALID_UTF8_IGNORE)
         ]);

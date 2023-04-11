@@ -30,18 +30,20 @@ class Credit_sheet_review_model extends MY_Model
         return $data;
     }
 
-    public function get_product_by_id($credit_sheet_review_id)
+    public function has_info_by_target_id($target_id, $group = NULL)
     {
-        $result = $this->db->select('t.product_id')
+        $this->db
+            ->select('1')
             ->from('p2p_loan.credit_sheet_review csr')
-            ->from('p2p_loan.credit_sheet cs')
-            ->from('p2p_loan.targets t')
-            ->where('csr.credit_sheet_id=cs.id')
-            ->where('cs.target_id=t.id')
-            ->where('csr.id', $credit_sheet_review_id)
-            ->get()
-            ->first_row('array');
+            ->join('p2p_loan.credit_sheet cs', 'cs.id = csr.credit_sheet_id AND cs.target_id = ' . $target_id);
 
-        return $result['product_id'];
+        if (isset($group))
+        {
+            $this->db->where('group', $group);
+        }
+
+        $result = $this->db->get()->first_row('array');
+
+        return ! empty($result);
     }
 }
