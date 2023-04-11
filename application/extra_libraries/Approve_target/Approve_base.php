@@ -47,6 +47,7 @@ abstract class Approve_base implements Approve_interface
 
         $this->CI->load->model('log/log_integration_model');
         $this->CI->load->model('log/log_usercertification_model');
+        $this->CI->load->model('loan/credit_sheet_review_model');
         $this->CI->load->model('loan/target_associate_model');
         $this->CI->load->model('transaction/order_model');
         $this->CI->load->model('user/judicial_person_model');
@@ -767,6 +768,21 @@ abstract class Approve_base implements Approve_interface
             $this->result->set_action_cancel();
             return FALSE;
         }
+
+        // 檢查是否有二審通過的 credit sheet review，但案件卻還卡在二審
+        $credit_sheet_review = $this->CI->credit_sheet_review_model->has_info_by_target_id($this->target['id'], 2);
+        if ($credit_sheet_review && $this->target['status'] == TARGET_WAITING_APPROVE && $this->target['sub_status'] == TARGET_SUBSTATUS_SECOND_INSTANCE)
+        {
+            $param = [
+                'status' => TARGET_WAITING_SIGNING,
+                'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET,
+                'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
+            ];
+            $this->CI->target_model->update($this->target['id'], $param);
+            $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+            return FALSE;
+        }
+
         return TRUE;
     }
 
@@ -814,12 +830,12 @@ abstract class Approve_base implements Approve_interface
     protected function update_target_script_status(): int
     {
         $param = [
-            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
+            'script_status' => $this->script_status,
         ];
 
-        $res = $this->CI->target_model->get_affected_after_update($this->target['id'], [
-            'script_status' => $this->script_status,
-        ], $param);
+        $res = $this->CI->target_model->get_affected_after_update($this->target['id'], $param, [
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
+        ]);
 
         if ( ! $res)
         {
