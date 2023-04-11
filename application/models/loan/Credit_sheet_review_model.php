@@ -33,7 +33,7 @@ class Credit_sheet_review_model extends MY_Model
     public function has_info_by_target_id($target_id, $group = NULL)
     {
         $this->db
-            ->select('csr.1')
+            ->select('1')
             ->from('p2p_loan.credit_sheet_review csr')
             ->join('p2p_loan.credit_sheet cs', 'cs.id = csr.credit_sheet_id AND cs.target_id = ' . $target_id);
 
