@@ -411,6 +411,7 @@ class Target_lib
                                     'interest_rate' => $interest_rate,
                                     'status' => 0,
                                 ];
+                                $approve_target_result = new \Approve_target\Approve_target_result($target->status, $target->sub_status);
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
 
                                 // todo: 暫時將「學生貸」、「上班族貸」轉二審
@@ -431,8 +432,9 @@ class Target_lib
                                 // #2779: 命中黑名單學校進二審審核
                                 $school_config = $this->CI->config->item('school_points');
                                 $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
-                                if ( ! $renew && in_array($info->meta_value, $school_config['lock_school']))
+                                if ( ! $renew && in_array($info->meta_value, $school_config['lock_school']) && in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
                                 {
+                                    $approve_target_result->add_memo(TARGET_WAITING_APPROVE, "{$info->meta_value}為黑名單學校", $approve_target_result::DISPLAY_BACKEND);
                                     goto FORCE_SECOND_INSTANCE;
                                 }
 
@@ -495,7 +497,9 @@ class Target_lib
                                     $tempData = $targetData;
                                 }
                                 $param['target_data'] = json_encode($tempData);
-
+                                $temp_new_memo = $approve_target_result->get_all_memo($param['status']);
+                                $temp_old_memo = json_decode($target->memo ?? '', TRUE) ?? [];
+                                $param['memo'] = json_encode(array_merge_recursive($temp_old_memo, $temp_new_memo), JSON_PRETTY_PRINT);
                                 $rs = $this->CI->target_model->update($target->id, $param);
 
                                 if(!$renew) {

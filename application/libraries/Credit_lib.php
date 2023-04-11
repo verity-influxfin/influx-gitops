@@ -986,6 +986,11 @@ class Credit_lib{
 					}
 				}
             }
+
+            if (in_array($school_name, $school_list['lock_school']))
+            {
+                $score_history[] = "(WARNING: {$school_name}為黑名單學校)";
+            }
 		}
 		return ['score_history' => $score_history, 'point' => $point, 'school_point' => $schoolPoing ?? 0];
 	}
@@ -1401,8 +1406,38 @@ class Credit_lib{
                     // #2779: 命中黑名單學校給予固定信評為10、固定額度3,000元
                     if (in_array($info->meta_value, $school_config['lock_school']))
                     {
-                        $data['amount'] = 3000;
+                        $this->CI->config->load('credit', TRUE);
+                        $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
+                        $credit_amount_config = $this->CI->config->item('credit')['credit_amount_' . $product_id];
+
                         $data['level'] = 10;
+                        $level_max_points = $credit_level_config[$data['level']]['end'];
+
+                        $left = 0;
+                        $right = count($credit_amount_config);
+
+                        $amount = 0;
+                        while ($left < $right)
+                        {
+                            $tmp = (int) (($left + $right) / 2);
+                            if ($credit_amount_config[$tmp]['start'] > $level_max_points)
+                            {
+                                $left = $tmp;
+                                continue;
+                            }
+
+                            if ($credit_amount_config[$tmp]['end'] < $level_max_points)
+                            {
+                                $right = $tmp;
+                                continue;
+                            }
+
+                            $amount = $credit_amount_config[$tmp]['amount'];
+                            break;
+                        }
+
+                        $data['amount'] = $amount;
+                        $data['rate'] = $this->get_rate($data['level'], $target->instalment, $product_id, $sub_product_id, $target);
                     }
                     elseif (empty($school_points_data['point']))
                     {
