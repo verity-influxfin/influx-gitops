@@ -338,7 +338,7 @@ $config['credit_amount_1'] = [
     ['start' => 491, 'end' => 510, 'amount' => 14400],
     ['start' => 471, 'end' => 490, 'amount' => 13200],
     ['start' => 451, 'end' => 470, 'amount' => 12000],
-    ['start' => 0, 'end' => 450, 'amount' => 0],
+    ['start' => 0, 'end' => 450, 'amount' => 3000],
 ];
 
 // 額度對照表-名校貸

@@ -151,7 +151,7 @@ class Target extends MY_Admin_Controller {
 		if(!empty($where)||isset($input['status'])&&$input['status']==99){
             isset($input['sdate'])&&$input['sdate']!=''?$where['created_at >=']=strtotime($input['sdate']):'';
             isset($input['edate'])&&$input['edate']!=''?$where['created_at <=']=strtotime($input['edate']):'';
-			$list = $this->target_model->get_many_by($where);
+			$list = $this->target_model->get_list($where);
 			$tmp  = [];
 			if($list){
                 $this->load->model('user/user_meta_model');
@@ -211,6 +211,7 @@ class Target extends MY_Admin_Controller {
                     $this->load->library('credit_lib');
                     $remain_amount = $this->credit_lib->get_remain_amount($value->user_id, $value->product_id, $value->sub_product_id);
                     $list[$key]->remain_amount = $remain_amount['instalment'] == $value->instalment ? $remain_amount['user_available_amount'] : '-';
+                    $list[$key]->review_by = isset($value->credit_sheet_reviewer) ? '人工' : '系統';
                 }
 			}
 		}
@@ -703,6 +704,7 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
+        $fixed_amount = isset($get['fixed_amount']) ? (int) $get['fixed_amount'] : 0;
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -717,9 +719,17 @@ class Target extends MY_Admin_Controller {
 		$credit = $this->credit_lib->get_credit($target->user_id, $target->product_id, $target->sub_product_id);
 		$credit["product_id"] = $target->product_id;
 
+        $product_list = $this->config->item('product_list');
+        if ($fixed_amount > 0 && ($fixed_amount < $product_list[$target->product_id]['loan_range_s'] || $fixed_amount > $product_list[$target->product_id]['loan_range_e']))
+        {
+            $this->json_output->setStatusMessage('額度調整不符合產品設定');
+            $this->json_output->setStatusCode(400)->send();
+        }
+
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
+        $this->approvalextra->set_fixed_amount($fixed_amount);
         $special_info_ary = [
             'job_company_taiwan_1000_point' => '',
             'job_company_world_500_point' => '',
@@ -754,7 +764,6 @@ class Target extends MY_Admin_Controller {
         $credit["level"] = $newCredits["level"];
         $credit["expire_time"] = $newCredits["expire_time"];
 
-        $product_list = $this->config->item('product_list');
         $product = $product_list[$target->product_id];
         if($this->is_sub_product($product,$target->sub_product_id)){
             $credit['sub_product_id'] = $target->sub_product_id;
@@ -986,10 +995,7 @@ class Target extends MY_Admin_Controller {
 
 			$this->load->library('output/user/Virtual_account_output', ['data' => $virtualAccounts]);
 
-			$targets = $this->target_model->get_many_by([
-				"user_id" => $userId,
-				"status NOT" => [8,9]
-			]);
+			$targets = $this->target_model->get_targets_with_normal_transactions_count($userId);
 
 			foreach ($targets as $otherTarget) {
 				$amortization = $this->target_lib->get_amortization_table($otherTarget);
