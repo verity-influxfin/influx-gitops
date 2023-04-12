@@ -446,7 +446,7 @@
                 <div class="row">
                     <div class="col-12 col-lg-9 mb-3">
                         <article class="article">
-                            <h1 class="title">{{ $article->post_title }}</h1>
+                            <h1 class="title post_title">{{ $article->post_title }}</h1>
                             <div class="info">
                                 <span class="date">{{ $article->post_date }}</span>
                             </div>
@@ -463,6 +463,28 @@
                                 {!! $article->post_content !!}
                             </div>
                         </article>
+                        <section class="advertise" style="display: flex; justify-content: center;">
+                            <img class="cover adv_img" src=" /{{ $adv->img_url }}"/>
+                        </section>
+                        <section class="adv_sec"  style="margin: 30px 0;">
+                            @if ($adv->type == 'student')    
+                            <button class="adv_btn" id="stduent_loan_btn">
+                                立即了解更多
+                            </button>
+                            @elseif ($adv->type == 'office')
+                            <button class="adv_btn" id="office_loan_btn">
+                                立即了解更多
+                            </button>
+                            @elseif ($adv->type == 'enterprise')
+                            <button class="adv_btn" id="enterprise_loan_btn">
+                                立即了解更多
+                            </button>
+                            @elseif ($adv->type == 'invest')
+                            <button class="adv_btn" id="invest_btn">
+                                立即了解更多
+                            </button>
+                            @endif
+                        </section>
                         <div class="row share">
                             <div class="col">
                                 <span class="title">分享：</span>
@@ -478,31 +500,7 @@
                                 <span v-if="copied">網址複製成功 !</span>
                             </div>
                         </div>
-                        <section class="advertise" style="display: flex; justify-content: center;">
-                            <img class="cover" src=" /{{ $adv->img_url }}" style="margin: 30px 0;"/>
-                        </section>
-                        <section class="adv_btn" style="display: flex; justify-content: center;">
-                            <button 
-                                style="
-                                    background: #F29500; 
-                                    border-radius: 12px;
-                                    border-color: #F29500; 
-                                    height: 50px;
-                                    width: 700px;
-                                "
-                            > 
-                                @if ($adv->type == 'student')
-                                <a href="/collegeLoan" style="color: white; font-weight: 600; font-size: 26px;">立即了解更多</a> 
-                                @elseif ($adv->type == 'office')
-                                <a href="/workLoan" style="color: white; font-weight: 600; font-size: 26px;">立即了解更多</a> 
-                                @elseif ($adv->type == 'enterprise')
-                                <a href="/business-loan/smeg" style="color: white; font-weight: 600; font-size: 26px;">立即了解更多</a>
-                                @elseif ($adv->type == 'invest')
-                                <a href="/investment" style="color: white; font-weight: 600; font-size: 26px;">立即了解更多</a>
-                                @endif
-                            </button>
-                        </section>
-                        <div class="row mt-3 no-gutters">
+                        <div class="row mt-4 no-gutters">
                             <button @click="returnToBlog" class="btn login-btn"><i class="mr-2 fa fa-arrow-left"></i>返回列表</button>
                         </div>
                     </div>
@@ -797,13 +795,90 @@
 <script src="/js/vendor.js"></script>
 <script type="text/javascript" src="{{ mix('js/articlepage.js') }}"></script>
 
+<script>
+    $( document ).ready(function() {
+        $("#stduent_loan_btn").on("click", function() {
+            location.href = '/collegeLoan'
+        })
+        $('#office_loan_btn').on('click', function() {
+            location.href = '/workLoan'
+        })
+        $('#enterprise_loan_btn').on('click', function() {
+            location.href = '/business-loan/smeg'
+        })
+        $('#invest_btn').on('click', function() {
+            location.href = '/investment'
+        })
+    });
+</script>
+    
+</script>
 <style>
+.banner {
+    background-image: url('/images/lil_school_banner.png');
+    height: 40vw;
+    background-size: cover;
+    background-position: center;
+}
+
+.adv_sec {
+    display: flex; 
+    justify-content: center;
+}
+
+.adv_btn {
+    background: #F29500; 
+    border-radius: 12px;
+    border-color: #F29500; 
+    height: 50px;
+    width: 700px;
+    color: white; 
+    font-weight: 600; 
+    font-size: 26px;
+}
+
+@media only screen and (max-width: 768px) {
     .banner {
-        background-image: url('/images/lil_school_banner.png');
-        height: 40vw;
-        background-size: cover;
+        background-image: url('/images/lil_school_banner_mobile.png');
+        height: 220vw;
         background-position: center;
     }
+
+    .post_title {
+        font-weight: 600 !important;
+        font-size: 20px !important;
+        line-height: 1.2;
+        letter-spacing: 0.04em;
+    }
+    
+    .knowledge-wrapper .article .info .date {
+        font-weight: 350;
+        font-size: 16px;
+        line-height: 23px;
+        letter-spacing: 0.04em;
+    }
+
+    .knowledge-wrapper .article .content p {
+        font-weight: 350;
+        font-size: 14px;
+    }
+
+    .adv_img {
+        width: 100%;
+    }
+
+    .adv_btn {
+        background: #F29500; 
+        border-radius: 12px;
+        border-color: #F29500; 
+        height: 35px;
+        width: 700px;
+        color: white; 
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 23px;
+    }
+}
 </style>
 
 </html>

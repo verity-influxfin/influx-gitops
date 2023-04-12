@@ -300,6 +300,7 @@ export default {
 
     .pagination {
         justify-content: center;
+        margin-bottom: 30px;
     }
 
     .paginationjs {
@@ -346,6 +347,89 @@ export default {
         &-next, &-next > a {
             border-radius: 0 10px 10px 0 !important;
         }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .h1 {
+        text-align: center;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 28px;
+        line-height: 1.4;
+        
+    }
+    .h2 {
+        text-align: center;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 1.4;
+    }
+
+    .blog-wrapper {
+        overflow: hidden;
+        position: relative;
+
+        .banner {
+            background-image: url('~images/blog/lil_school_banner_mobile.png');
+            height: 220vw;
+            // background-size: cover;
+            background-position: center;
+        }
+
+        .intro {
+            margin: 38px 0 25px;
+        }
+
+        .article-type-tabs {
+            margin-top: 12px;
+            justify-content: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .article-type-tab {
+            &.active {
+                color: #f29500;
+            }
+
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 1.4;
+            letter-spacing: 0.04em;
+            color: #fff;
+            background: #023D64;
+            border-radius: 60px;
+            width: 100px;
+            cursor: pointer;
+        }
+
+        .article-pr-grid {
+            display: block;
+            height: auto;
+        
+            .article-pr-title {
+                font-weight: 500;
+                font-size: 20px;
+                line-height: 29px;
+                letter-spacing: 0.04em;
+            }
+
+            .article-pr-type {
+                margin: 8px 0 8px;
+            }
+
+            .article-pr-text {
+                font-weight: 350;
+                font-size: 14px;
+                line-height: 20px;
+                letter-spacing: 0.04em;
+            }
+        }
+
     }
 }
 </style>
