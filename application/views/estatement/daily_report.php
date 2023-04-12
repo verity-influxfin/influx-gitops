@@ -27,8 +27,8 @@
 				<th width="60" rowspan="2">本金金額</th>
 				<th width="60" rowspan="2">利息金額</th>
 				<th width="60" rowspan="2">平台服務費</th>
-                <th width="50" rowspan="2">債權轉讓手續費</th>
-                <th width="50" rowspan="2">轉換產品手續費</th>
+				<th width="50" rowspan="2">債權轉讓手續費</th>
+				<th width="50" rowspan="2">轉換產品手續費</th>
 				<th width="50" rowspan="2">違約金</th>
 				<th width="60" rowspan="2">提還補貼金</th>
 				<th width="50" rowspan="2">延滯息</th>
@@ -55,8 +55,8 @@
 				"principal"			=> 0,
 				"interest"			=> 0,
 				"platform_fee"		=> 0,
-                "transfer_fee"      => 0,
-                "subloan_fee"       => 0,
+				"transfer_fee"      => 0,
+				"subloan_fee"       => 0,
 				"damages"			=> 0,
 				"allowance"			=> 0,
 				"delay_interest"	=> 0,
@@ -71,8 +71,8 @@
 					$sum["principal"]	+= isset($value["principal"])&&$value["principal"]?$value["principal"]:0;
 					$sum["interest"]	+= isset($value["interest"])&&$value["interest"]?$value["interest"]:0;
 					$sum["platform_fee"]+= isset($value["platform_fee"])&&$value["platform_fee"]?$value["platform_fee"]:0;
-                    $sum["transfer_fee"]+= isset($value["transfer_fee"])&&$value["transfer_fee"]?$value["transfer_fee"]:0;
-                    $sum["subloan_fee"] += isset($value["subloan_fee"])&&$value["subloan_fee"]?$value["subloan_fee"]:0;
+					$sum["transfer_fee"]+= isset($value["transfer_fee"])&&$value["transfer_fee"]?$value["transfer_fee"]:0;
+					$sum["subloan_fee"] += isset($value["subloan_fee"])&&$value["subloan_fee"]?$value["subloan_fee"]:0;
 					$sum["damages"]		+= isset($value["damages"])&&$value["damages"]?$value["damages"]:0;
 					$sum["allowance"]	+= isset($value["allowance"])&&$value["allowance"]?$value["allowance"]:0;
 					$sum["delay_interest"]	+= isset($value["delay_interest"])&&$value["delay_interest"]?$value["delay_interest"]:0;
@@ -95,8 +95,8 @@
 				<td class="num"><?=isset($value["principal"])&&$value["principal"]?number_format($value["principal"]):"" ?></td>
 				<td class="num"><?=isset($value["interest"])&&$value["interest"]?number_format($value["interest"]):"" ?></td>
 				<td class="num"><?=isset($value["platform_fee"])&&$value["platform_fee"]?number_format($value["platform_fee"]):"" ?></td>
-                <td class="num"><?=isset($value["transfer_fee"])&&$value["transfer_fee"]?number_format($value["transfer_fee"]):"" ?></td>
-                <td class="num"><?=isset($value["subloan_fee"])&&$value["subloan_fee"]?number_format($value["subloan_fee"]):"" ?></td>
+				<td class="num"><?=isset($value["transfer_fee"])&&$value["transfer_fee"]?number_format($value["transfer_fee"]):"" ?></td>
+				<td class="num"><?=isset($value["subloan_fee"])&&$value["subloan_fee"]?number_format($value["subloan_fee"]):"" ?></td>
 				<td class="num"><?=isset($value["damages"])&&$value["damages"]?number_format($value["damages"]):"" ?></td>
 				<td class="num"><?=isset($value["allowance"])&&$value["allowance"]?number_format($value["allowance"]):"" ?></td>
 				<td class="num"><?=isset($value["delay_interest"])&&$value["delay_interest"]?number_format($value["delay_interest"]):"" ?></td>
@@ -111,8 +111,8 @@
 							$sum["principal"]	+= isset($v["principal"])&&$v["principal"]?$v["principal"]:0;
 							$sum["interest"]	+= isset($v["interest"])&&$v["interest"]?$v["interest"]:0;
 							$sum["platform_fee"]+= isset($v["platform_fee"])&&$v["platform_fee"]?$v["platform_fee"]:0;
-                            $sum["transfer_fee"]+= isset($v["transfer_fee"])&&$v["transfer_fee"]?$v["transfer_fee"]:0;
-                            $sum["subloan_fee"] += isset($v["subloan_fee"])&&$v["subloan_fee"]?$v["subloan_fee"]:0;
+							$sum["transfer_fee"]+= isset($v["transfer_fee"])&&$v["transfer_fee"]?$v["transfer_fee"]:0;
+							$sum["subloan_fee"] += isset($v["subloan_fee"])&&$v["subloan_fee"]?$v["subloan_fee"]:0;
 							$sum["damages"]		+= isset($v["damages"])&&$v["damages"]?$v["damages"]:0;
 							$sum["allowance"]	+= isset($v["allowance"])&&$v["allowance"]?$v["allowance"]:0;
 							$sum["delay_interest"]	+= isset($v["delay_interest"])&&$v["delay_interest"]?$v["delay_interest"]:0;
@@ -131,8 +131,8 @@
 					<td class="num"><?=isset($v["principal"])&&$v["principal"]?number_format($v["principal"]):"" ?></td>
 					<td class="num"><?=isset($v["interest"])&&$v["interest"]?number_format($v["interest"]):"" ?></td>
 					<td class="num"><?=isset($v["platform_fee"])&&$v["platform_fee"]?number_format($v["platform_fee"]):"" ?></td>
-                    <td class="num"><?=isset($v["transfer_fee"])&&$v["transfer_fee"]?number_format($v["transfer_fee"]):"" ?></td>
-                    <td class="num"><?=isset($v["subloan_fee"])&&$v["subloan_fee"]?number_format($v["subloan_fee"]):"" ?></td>
+					<td class="num"><?=isset($v["transfer_fee"])&&$v["transfer_fee"]?number_format($v["transfer_fee"]):"" ?></td>
+					<td class="num"><?=isset($v["subloan_fee"])&&$v["subloan_fee"]?number_format($v["subloan_fee"]):"" ?></td>
 					<td class="num"><?=isset($v["damages"])&&$v["damages"]?number_format($v["damages"]):"" ?></td>
 					<td class="num"><?=isset($v["allowance"])&&$v["allowance"]?number_format($v["allowance"]):"" ?></td>
 					<td class="num"><?=isset($v["delay_interest"])&&$v["delay_interest"]?number_format($v["delay_interest"]):"" ?></td>
@@ -160,8 +160,8 @@
 				<td class="num"><?=isset($sum["principal"])?number_format($sum["principal"]):"" ?></td>
 				<td class="num"><?=isset($sum["interest"])?number_format($sum["interest"]):"" ?></td>
 				<td class="num"><?=isset($sum["platform_fee"])?number_format($sum["platform_fee"]):"" ?></td>
-                <td class="num"><?=isset($sum["transfer_fee"])?number_format($sum["transfer_fee"]):"" ?></td>
-                <td class="num"><?=isset($sum["subloan_fee"])?number_format($sum["subloan_fee"]):"" ?></td>
+				<td class="num"><?=isset($sum["transfer_fee"])?number_format($sum["transfer_fee"]):"" ?></td>
+				<td class="num"><?=isset($sum["subloan_fee"])?number_format($sum["subloan_fee"]):"" ?></td>
 				<td class="num"><?=isset($sum["damages"])?number_format($sum["damages"]):"" ?></td>
 				<td class="num"><?=isset($sum["allowance"])?number_format($sum["allowance"]):"" ?></td>
 				<td class="num"><?=isset($sum["delay_interest"])?number_format($sum["delay_interest"]):"" ?></td>
