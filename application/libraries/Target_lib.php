@@ -497,9 +497,20 @@ class Target_lib
                                     $tempData = $targetData;
                                 }
                                 $param['target_data'] = json_encode($tempData);
+
+                                if ($param['status'] == TARGET_WAITING_APPROVE)
+                                {
+                                    $tmp_target_info = $this->CI->target_model->as_array()->get($target->id);
+                                    if ($tmp_target_info['status'] == TARGET_WAITING_SIGNING)
+                                    {
+                                        return FALSE;
+                                    }
+                                }
+
                                 $temp_new_memo = $approve_target_result->get_all_memo($param['status']);
                                 $temp_old_memo = json_decode($target->memo ?? '', TRUE) ?? [];
                                 $param['memo'] = json_encode(array_merge_recursive($temp_old_memo, $temp_new_memo), JSON_PRETTY_PRINT);
+
                                 $rs = $this->CI->target_model->update($target->id, $param);
 
                                 if(!$renew) {
