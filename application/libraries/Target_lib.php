@@ -476,6 +476,14 @@ class Target_lib
                                 }
                                 $param['target_data'] = json_encode($tempData);
 
+                                if ($param['status'] == TARGET_WAITING_APPROVE)
+                                {
+                                    $tmp_target_info = $this->CI->target_model->as_array()->get($target->id);
+                                    if ($tmp_target_info['status'] == TARGET_WAITING_SIGNING)
+                                    {
+                                        return FALSE;
+                                    }
+                                }
                                 $rs = $this->CI->target_model->update($target->id, $param);
 
                                 if(!$renew) {
