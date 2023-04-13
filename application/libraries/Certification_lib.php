@@ -3746,8 +3746,8 @@ class Certification_lib{
                             }
                         }
                         if ($signing_face_count == 2) {
-                            $answer[] = $this->CI->faceplusplus_lib->token_compare($identity_cer_token[0], $signing_face_token[0], $user_id, $cer_id);
-                            $answer[] = $this->CI->faceplusplus_lib->token_compare($identity_cer_token[1], $signing_face_token[1], $user_id, $cer_id);
+                            $answer[] = $this->CI->faceplusplus_lib->token_compare($identity_cer_token[0][0], $signing_face_token[0][0], $user_id, $cer_id);
+                            $answer[] = $this->CI->faceplusplus_lib->token_compare($identity_cer_token[1][0], $signing_face_token[1][0], $user_id, $cer_id);
                             sort($answer);
                             $remark['faceplus'] = $answer;
                             if ($answer[0] < 90 || $answer[1] < 90) {
