@@ -397,7 +397,7 @@ export default {
 
             font-style: normal;
             font-weight: 400;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.4;
             letter-spacing: 0.04em;
             color: #fff;
