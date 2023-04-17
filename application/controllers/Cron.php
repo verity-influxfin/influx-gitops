@@ -970,4 +970,37 @@ class Cron extends CI_Controller
         ]);
         die('1');
     }
+
+    // 提領放款，自動轉出放款匯款單
+    public function auto_withdraw()
+    {
+        $start_time = time();
+
+        // 提領待放款清單
+        $this->load->model('transaction/withdraw_model');
+        $withdraw_list = $this->withdraw_model->get_auto_withdraw_list();
+
+        // 轉出放款匯款單
+        $count = 0;
+        if ( ! empty($withdraw_list))
+        {
+            $withdraw_ids = array_column($withdraw_list, 'id');
+            $this->load->library('payment_lib');
+            $response = $this->payment_lib->withdraw_txt($withdraw_ids, SYSTEM_ADMIN_ID);
+            if ($response)
+            {
+                $count = count($withdraw_ids);
+            }
+        }
+
+        $end_time = time();
+        $data = [
+            'script_name' => 'auto_withdraw',
+            'num' => $count,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
 }

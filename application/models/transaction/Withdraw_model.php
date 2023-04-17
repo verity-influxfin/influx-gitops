@@ -41,4 +41,28 @@ class Withdraw_model extends MY_Model
         return $data;
     }
 
+    public function get_auto_withdraw_list()
+    {
+        $sql = '
+            SELECT `w`.`id` FROM `p2p_transaction`.`withdraw` `w`
+            WHERE `w`.`status` = ' . WITHDRAW_STATUS_WAITING . '
+            AND `w`.`frozen_id` > 0
+            AND (`w`.`investor` = ' . USER_BORROWER . '
+                AND `w`.`user_id` NOT IN (
+                    SELECT DISTINCT `t`.`user_id` FROM `p2p_loan`.`targets` `t`
+                    WHERE `t`.`status` = ' . TARGET_REPAYMENTING . '
+                    AND (
+                        `t`.`delay_days` > 0 OR
+                        `t`.`id` IN (
+                            SELECT `s`.`new_target_id` FROM `p2p_loan`.`subloan` `s`
+                            WHERE `s`.`status` NOT IN (' . SUBLOAN_STATUS_CANCELED . ',' . SUBLOAN_STATUS_FAILED . ')
+                        )
+                    )
+                )
+                OR `w`.`investor` = ' . USER_INVESTOR . '
+            )
+        ';
+
+        return $this->db->query($sql)->result_array();
+    }
 }
