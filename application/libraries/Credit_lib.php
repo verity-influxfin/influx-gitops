@@ -1437,7 +1437,10 @@ class Credit_lib{
                         }
 
                         $data['amount'] = $amount;
-                        $data['rate'] = $this->get_rate($data['level'], $target->instalment, $product_id, $sub_product_id, $target);
+                        if ($target)
+                        {
+                            $data['rate'] = $this->get_rate($data['level'], $target->instalment, $product_id, $sub_product_id, $target);
+                        }
                     }
                     elseif (empty($school_points_data['point']))
                     {
