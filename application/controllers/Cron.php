@@ -1003,4 +1003,37 @@ class Cron extends CI_Controller
         $this->log_script_model->insert($data);
         die('1');
     }
+
+    // 借款放款，轉出放款匯款單
+    public function auto_loan()
+    {
+        $start_time = time();
+
+        // 借款待放款清單
+        $this->load->model('loan/target_model');
+        $loan_list = $this->target_model->get_auto_loan_list();
+
+        // 轉出放款匯款單
+        $count = 0;
+        if ( ! empty($loan_list))
+        {
+            $loan_ids = array_column($loan_list, 'id');
+            $this->load->library('payment_lib');
+            $response = $this->payment_lib->loan_txt($loan_ids, SYSTEM_ADMIN_ID);
+            if ($response)
+            {
+                $count = count($loan_ids);
+            }
+        }
+
+        $end_time = time();
+        $data = [
+            'script_name' => 'auto_loan',
+            'num' => $count,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
 }
