@@ -485,6 +485,7 @@
                             </button>
                             @endif
                         </section>
+                        
                         <div class="row share">
                             <div class="col">
                                 <span class="title">分享：</span>
