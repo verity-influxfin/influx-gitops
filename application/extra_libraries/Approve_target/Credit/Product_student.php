@@ -178,6 +178,12 @@ class Product_student extends Approve_target_credit_base
             return TRUE;
         }
 
+        // 信評等級是10，要轉二審
+        if ($this->credit['level'] == 10)
+        {
+            return TRUE;
+        }
+
         return FALSE;
     }
 }
