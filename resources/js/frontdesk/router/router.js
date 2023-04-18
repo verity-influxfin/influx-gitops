@@ -70,7 +70,7 @@ let routers = [
     { path: '/transfer', component: transfer },
     { path: '/company', component: company },
     { path: '/news', component: news },
-    { path: '/blog', component: blogV2 },
+    { path: '/blog', component: blog },
     { path: '/vlog', component: vlog },
     { path: '/invest', component: invest },
     { path: '/videopage', component: videoPage },
