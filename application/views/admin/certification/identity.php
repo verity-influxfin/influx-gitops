@@ -364,6 +364,13 @@
                                         }
                                         echo '</p>';
                                     }
+
+                                    if ( ! empty($remark['verify_result']))
+                                    {
+                                        array_map(function ($message) {
+                                            echo "<br/><p style=\"color:red;\" class=\"form-control-static\">{$message}</p>";
+                                        }, $remark['verify_result']);
+                                    }
                                 }
                                 ?>
                             </div>

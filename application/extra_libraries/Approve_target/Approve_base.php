@@ -3,6 +3,7 @@
 namespace Approve_target;
 
 use CertificationResult\IdentityCertificationResult;
+use CertificationResult\MessageDisplay;
 use CertificationResult\SocialCertificationResult;
 use CreditSheet\CreditSheetFactory;
 
@@ -352,6 +353,13 @@ abstract class Approve_base implements Approve_interface
                         $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
                         if (isset($cert_helper))
                         {
+                            $cert_helper->result->addMessage(IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE . '，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                            $cert_helper->remark['verify_result'] = $cert_helper->result->getAllMessage(MessageDisplay::Backend);
+                            $cert_helper->remark['verify_result_json'] = $cert_helper->result->jsonDump();
+                            $this->CI->user_certification_model->update($identity_cert->id, [
+                                'remark' => json_encode($cert_helper->remark, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE),
+                            ]);
+
                             $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
                         }
                         else

@@ -6,6 +6,7 @@ use Approve_target\Approve_factory;
 use Certification\Cert_identity;
 use Certification\Certification_factory;
 use CertificationResult\IdentityCertificationResult;
+use CertificationResult\MessageDisplay;
 use CreditSheet\CreditSheetFactory;
 
 class Target_lib
@@ -2025,11 +2026,18 @@ class Target_lib
                                                 'change_admin' => SYSTEM_ADMIN_ID,
                                             ]);
                                             $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+
+                                            $cert_helper->result->addMessage(IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE . '，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                                            $remark = $cert_helper->remark;
+                                            $remark['verify_result'] = $cert_helper->result->getAllMessage(MessageDisplay::Backend);
+                                            $remark['verify_result_json'] = $cert_helper->result->jsonDump();
+
                                             $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
                                             if ($rs === TRUE)
                                             {
                                                 $this->CI->user_certification_model->update($identity_cert->id, [
-                                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT
+                                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT,
+                                                    'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE),
                                                 ]);
                                             }
                                             else
@@ -2409,7 +2417,7 @@ class Target_lib
                 'change_user' => $user_id,
                 'change_admin' => $admin_id
             ];
-            $fields = ['interest_rate', 'delay', 'status', 'loan_status', 'sub_status'];
+            $fields = ['interest_rate', 'delay', 'status', 'loan_status', 'sub_status', 'script_status'];
             foreach ($fields as $field) {
                 if (isset($update_param[$field])) {
                     $param[$field] = $update_param[$field];
