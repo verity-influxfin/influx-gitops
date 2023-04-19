@@ -1016,7 +1016,7 @@
 							<button type="button" class="btn btn-secondary btn-circle"><i
 									class="fa fa-minus"></i></button>
 						</div>
-						<div class="opinion_info">
+						<div class="opinion_info" id="opinion_info_2">
 							<div>
 								<span style="width:30%;display:flex;align-items:center;">二審意見：</span>
 								<span style="width:70%;"><textarea id="2_opinion" type="text" placeholder="請輸入..."
@@ -1873,6 +1873,13 @@
 
 		function fillCurrentTargetInfo(target) {
 			$("#applicant-signing-target-image").prepend('<img src="' + target.image + '" style="width: 30%;"></img>');
+            if (target.memo_backend) {
+                let $addition_memo = $("<div></div>");
+                $.each(target.memo_backend, function(key, item) {
+                    $addition_memo.append(`<span style="color: red">* ${item}</span><br/>`);
+                })
+                $('#opinion_info_2').append($addition_memo);
+            }
 		}
 
 		function fillCurrentTargetData(targetData, productTargetData, creditTargetData) {

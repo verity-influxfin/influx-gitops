@@ -1406,41 +1406,7 @@ class Credit_lib{
                     // #2779: 命中黑名單學校給予固定信評為10、固定額度3,000元
                     if (in_array($info->meta_value, $school_config['lock_school']))
                     {
-                        $this->CI->config->load('credit', TRUE);
-                        $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
-                        $credit_amount_config = $this->CI->config->item('credit')['credit_amount_' . $product_id];
-
-                        $data['level'] = 10;
-                        $level_max_points = $credit_level_config[$data['level']]['end'];
-
-                        $left = 0;
-                        $right = count($credit_amount_config);
-
-                        $amount = 0;
-                        while ($left < $right)
-                        {
-                            $tmp = (int) (($left + $right) / 2);
-                            if ($credit_amount_config[$tmp]['start'] > $level_max_points)
-                            {
-                                $left = $tmp;
-                                continue;
-                            }
-
-                            if ($credit_amount_config[$tmp]['end'] < $level_max_points)
-                            {
-                                $right = $tmp;
-                                continue;
-                            }
-
-                            $amount = $credit_amount_config[$tmp]['amount'];
-                            break;
-                        }
-
-                        $data['amount'] = $amount;
-                        if ($target)
-                        {
-                            $data['rate'] = $this->get_rate($data['level'], $target->instalment, $product_id, $sub_product_id, $target);
-                        }
+                        $this->get_lock_school_amount($product_id, $sub_product_id, $data, $target);
                     }
                     elseif (empty($school_points_data['point']))
                     {
@@ -1452,6 +1418,47 @@ class Credit_lib{
 		}
 		return false;
 	}
+
+    public function get_lock_school_amount($product_id, $sub_product_id, &$data, $target = FALSE)
+    {
+        $this->CI->config->load('credit', TRUE);
+        $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
+        $credit_amount_config = $this->CI->config->item('credit')['credit_amount_' . $product_id];
+
+        $data['level'] = 10;
+        $level_max_points = $credit_level_config[$data['level']]['end'];
+
+        $left = 0;
+        $right = count($credit_amount_config);
+
+        $amount = $points = 0;
+        while ($left < $right)
+        {
+            $tmp = (int) (($left + $right) / 2);
+            if ($credit_amount_config[$tmp]['start'] > $level_max_points)
+            {
+                $left = $tmp;
+                continue;
+            }
+
+            if ($credit_amount_config[$tmp]['end'] < $level_max_points)
+            {
+                $right = $tmp;
+                continue;
+            }
+
+            $amount = $credit_amount_config[$tmp]['amount'];
+            $points = min($credit_amount_config[$tmp]['end'], $data['points']);
+            break;
+        }
+
+        $data['amount'] = $amount;
+        $data['points'] = $points;
+        if ($target)
+        {
+            $data['rate'] = $this->get_rate($data['level'], $target->instalment, $product_id, $sub_product_id, $target);
+        }
+    }
 
     public function get_credit_level($points = 0, $product_id = 0, $sub_product_id = 0, $stage_cer = FALSE)
     {

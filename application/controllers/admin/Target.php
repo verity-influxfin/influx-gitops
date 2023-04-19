@@ -759,6 +759,9 @@ class Target extends MY_Admin_Controller {
             $level = $certificationStatus ? 3 : 4 ;
         }
         $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment, $target);
+
+        $this->credit_lib->get_lock_school_amount($target->product_id, $target->sub_product_id, $newCredits);
+
         $credit["amount"] = $newCredits["amount"];
         $credit["points"] = $newCredits["points"];
         $credit["level"] = $newCredits["level"];

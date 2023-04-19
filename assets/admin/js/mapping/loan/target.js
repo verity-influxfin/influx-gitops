@@ -19,6 +19,7 @@ class Target
 		this.setProduct(target);
 		this.setRepayment(target);
         this.normal_count = target.normal_count;
+        this.memo_backend = target.memo_backend;
 	}
 
 	setStatus(target) {
