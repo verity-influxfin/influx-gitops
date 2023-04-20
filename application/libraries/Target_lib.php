@@ -509,8 +509,7 @@ class Target_lib
                                 }
 
                                 $temp_new_memo = $approve_target_result->get_all_memo($param['status']);
-                                $temp_old_memo = json_decode($target->memo ?? '', TRUE) ?? [];
-                                $param['memo'] = json_encode(array_merge_recursive($temp_old_memo, $temp_new_memo), JSON_PRETTY_PRINT);
+                                $param['memo'] = json_encode($temp_new_memo, JSON_PRETTY_PRINT);
 
                                 $rs = $this->CI->target_model->update($target->id, $param);
 
