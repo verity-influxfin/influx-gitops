@@ -129,7 +129,7 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label">*戶籍地址：</label>
+        <label class="col-form-label">戶籍地址：</label>
         <div class="col">
           <input
             type="text"
@@ -163,7 +163,7 @@
         </div>
         <div class="col-6">
           <div class="form-group row">
-            <label class="col-form-label">行動電話：</label>
+            <label class="col-form-label">*行動電話：</label>
             <div class="col">
               <input
                 type="text"
@@ -351,8 +351,8 @@ export default {
       reader.readAsDataURL(this.portraitFile)
     },
     onClickNextStep() {
-      if (this.formData.appliedPosition == '' || this.formData.name == '' || this.formData.registeredAddress == '' || this.formData.mailingAddress == '') {
-        alert('必填欄位 : 應徵職位、姓名、戶籍地址和通訊地址')
+      if (this.formData.appliedPosition == '' || this.formData.name == '' || this.formData.mailingAddress == '' || this.formData.mobilePhone == '') {
+        alert('必填欄位 : 應徵職位、姓名、通訊地址與手機')
         return
       }
       let formData = new FormData()
