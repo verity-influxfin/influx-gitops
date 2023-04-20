@@ -8,6 +8,8 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
+// use App\Admin\Actions\Post\SendJobApplicationEmail;
+
 class JobApplicationController extends AdminController
 {
     /**
@@ -70,6 +72,10 @@ class JobApplicationController extends AdminController
         $grid->column('created_at', '創建時間');
         $grid->column('updated_at', '更新時間');
         $grid->column('img_url', '圖片路徑');
+
+        // $grid->actions(function ($actions) {
+        //     $actions->add(new SendJobApplicationEmail);
+        // });
 
         return $grid;
     }
