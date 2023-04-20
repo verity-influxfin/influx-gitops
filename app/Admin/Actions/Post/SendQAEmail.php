@@ -49,7 +49,7 @@ class SendQAEmail extends RowAction
     {
         $supervisor = [
             'Yuan@influxfin.com' => '林柏元 - 設計類',
-            'Nobroux@influxfin.com' => '許雲輔 - 系統開發部',
+            'Nabroux@influxfin.com' => '許雲輔 - 系統開發部',
             'Timlee@influxfin.com' => '李奕伽 - 法務類',
             'tammy@influxfin.com' => '曲素玉 - 財務類',
             'mori@influxfin.com' => '林丹楓 - All',
