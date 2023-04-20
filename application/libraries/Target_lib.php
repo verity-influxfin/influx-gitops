@@ -416,6 +416,7 @@ class Target_lib
 
                                 // todo: 暫時將「學生貸」、「上班族貸」轉二審
                                 if ( ! $subloan_status &&
+                                    ! $renew &&
                                     in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_STUDENT]) &&
                                     $target->status == TARGET_WAITING_APPROVE &&
                                     $target->sub_status == TARGET_SUBSTATUS_NORNAL)
@@ -424,7 +425,7 @@ class Target_lib
                                 }
 
                                 // #2779: 若信評分數0-450，進二審審核
-                                if (isset($credit['points']) && $credit['points'] <= 450)
+                                if (isset($credit['points']) && $credit['points'] <= 450 && ! $renew)
                                 {
                                     goto FORCE_SECOND_INSTANCE;
                                 }
