@@ -4,7 +4,6 @@ import company from "../pages/companyV2";
 import news from "../pages/news";
 import ntu from "../pages/ntu"
 import charitableStatus from "../pages/charitableStatus"
-import blog from "../pages/blog";
 import blogV2 from "../pages/blogV2";
 import vlog from "../pages/vlog";
 import videoPage from '../pages/videoPage';
@@ -70,7 +69,7 @@ let routers = [
     { path: '/transfer', component: transfer },
     { path: '/company', component: company },
     { path: '/news', component: news },
-    { path: '/blog', component: blog },
+    { path: '/blog', component: blogV2 },
     { path: '/vlog', component: vlog },
     { path: '/invest', component: invest },
     { path: '/videopage', component: videoPage },
