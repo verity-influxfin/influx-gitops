@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use App\Admin\Actions\Post\SendQAEmail;
 
 class GoogleQAController extends AdminController
 {
@@ -41,6 +42,10 @@ class GoogleQAController extends AdminController
         });
         $grid->column('created_at', '創建時間');
         $grid->column('updated_at', '更新時間');
+
+        $grid->actions(function ($actions) {
+            $actions->add(new SendQAEmail);
+        });
 
         return $grid;
     }
