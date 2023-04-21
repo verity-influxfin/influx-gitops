@@ -194,6 +194,10 @@ abstract class Approve_base implements Approve_interface
         {
             return FALSE;
         }
+        if ($this->check_need_second_instance_by_product() === TRUE)
+        {
+            return TRUE;
+        }
         if ($match_brookesia === TRUE)
         {
             // 命中反詐欺
@@ -207,7 +211,7 @@ abstract class Approve_base implements Approve_interface
 
         // todo: 如果後台二審審核通過也要共用這個架構，再想辦法
 
-        return $this->check_need_second_instance_by_product();
+        return FALSE;
     }
 
     /**
