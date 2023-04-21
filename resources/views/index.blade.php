@@ -317,16 +317,19 @@
                                 </div>
                             </div>
                             <div class="function-item">
-                                <a href="/blog" class="function-title">小學堂</a>
+                                <div class="function-title">小學堂</div>
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content article">
                                             <div class="function-list-items">
-                                                <div class="link-title">普匯小學堂 最新文章</div>
+                                                <div class="link-title">普匯小學堂</div>
+                                                <div class="link-item">
+                                                    <a class="link-text" href="/blog">小學堂文章</a>
+                                                </div>
                                                 <div class="link-item">
                                                     <a class="link-text" href="/vlog?q=share">小學堂影音</a>
                                                 </div>
-                                                @foreach ($latestArticles as $latestArticle)
+                                                <!-- @foreach ($latestArticles as $latestArticle)
                                                 <div class="link-item">
                                                 @if (!empty($latestArticle->path))
                                                     <a class="link-text" href="/articlepage/{{$latestArticle->path}}">
@@ -336,7 +339,7 @@
                                                         {{ $latestArticle->post_title }}
                                                     </a>
                                                 </div>
-                                                @endforeach
+                                                @endforeach -->
                                             </div>
                                         </div>
                                     </div>

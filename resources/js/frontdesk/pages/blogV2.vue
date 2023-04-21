@@ -250,7 +250,7 @@ export default {
         .article-pr-img {
             grid-area: 1 / 1 / 6 / 2;
             .img-fluid {
-                aspect-ratio: 3 / 2;
+                // aspect-ratio: 3 / 2;
                 max-height: 240px;
             }
         }
