@@ -38,7 +38,7 @@ class Credit_sheet_review_model extends MY_Model
             ->from('p2p_loan.targets t')
             ->where('csr.credit_sheet_id=cs.id')
             ->where('cs.target_id=t.id')
-            ->where('csr.id', $credit_sheet_review_id)
+            ->where('cs.id', $credit_sheet_review_id)
             ->get()
             ->first_row('array');
 

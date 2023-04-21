@@ -759,8 +759,16 @@ class Target extends MY_Admin_Controller {
             $level = $certificationStatus ? 3 : 4 ;
         }
         $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment, $target);
-
-        $this->credit_lib->get_lock_school_amount($target->product_id, $target->sub_product_id, $newCredits);
+        $this->load->model('user/user_meta_model');
+        $info = $this->user_meta_model->get_by(['user_id' => $target->user_id, 'meta_key' => 'school_name']);
+        if (isset($info->meta_value) && in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
+        {
+            $school_config = $this->config->item('school_points');
+            if (in_array($info->meta_value, $school_config['lock_school']))
+            {
+                $this->credit_lib->get_lock_school_amount($target->product_id, $target->sub_product_id, $newCredits);
+            }
+        }
 
         $credit["amount"] = $newCredits["amount"];
         $credit["points"] = $newCredits["points"];

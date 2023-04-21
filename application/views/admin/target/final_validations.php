@@ -2261,7 +2261,8 @@
                 'job_company_taiwan_1000_point': job_company_taiwan_1000_point,
                 'job_company_world_500_point': job_company_world_500_point,
                 'job_company_medical_institute_point': job_company_medical_institute_point,
-                'job_company_public_agency_point': job_company_public_agency_point
+                'job_company_public_agency_point': job_company_public_agency_point,
+                'fixed_amount': fixed_amount
             });
 
 			$.ajax({
