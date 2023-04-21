@@ -304,20 +304,33 @@ class Cert_student extends Certification_base
         $sip_name = $content['sip_data']['result']['name'] ?? '';
         $sip_school = $content['sip_data']['university'] ?? '';
         $sip_department = $content['sip_data']['result']['department'] ?? '';
+        $sip_flag = TRUE;
+        $sip_not_match_column = [];
         if ( ! empty($content['sip_data']))
         {
             if ($name != $sip_name)
             {
-                $this->result->addMessage('SIP名字資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                $sip_not_match_column[] = '姓名';
+                $sip_flag = FALSE;
             }
             if ($school != $sip_school)
             {
-                $this->result->addMessage('SIP學校資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                $sip_not_match_column[] = '學校';
+                $sip_flag = FALSE;
             }
             if ($department != $sip_department)
             {
-                $this->result->addMessage('SIP科系資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                $sip_not_match_column[] = '科系';
+                $sip_flag = FALSE;
             }
+        }
+        if ($sip_flag === FALSE)
+        {
+            $this->result->addMessage('SIP資訊與使用者資訊不符' . (
+                empty($sip_not_match_column)
+                    ? ''
+                    : ('（' . implode('、', $sip_not_match_column) . '）')
+                ), CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
         }
         if ($name == $sip_name && $school == $sip_school && $department == $sip_department)
         {
