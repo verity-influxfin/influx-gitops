@@ -310,17 +310,17 @@ class Cert_student extends Certification_base
         {
             if ($name != $sip_name)
             {
-                $sip_not_match_column[] = '姓名';
+                $sip_not_match_column[] = "1.實名認證姓名=\"{$name}\"2.SIP姓名=\"{$sip_name}\"";
                 $sip_flag = FALSE;
             }
             if ($school != $sip_school)
             {
-                $sip_not_match_column[] = '學校';
+                $sip_not_match_column[] = "1.實名認證學校=\"{$school}\"2.SIP學校=\"{$sip_school}\"";
                 $sip_flag = FALSE;
             }
             if ($department != $sip_department)
             {
-                $sip_not_match_column[] = '科系';
+                $sip_not_match_column[] = "1.實名認證科系=\"{$department}\"2.SIP科系=\"{$sip_department}\"";
                 $sip_flag = FALSE;
             }
         }
