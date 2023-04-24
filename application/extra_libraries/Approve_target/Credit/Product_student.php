@@ -38,6 +38,7 @@ class Product_student extends Approve_target_credit_base
                 {
                     $this->result->set_action_cancel();
                     $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_NORNAL);
+                    $this->result->add_memo($this->result->get_status(), "必填徵信項({$value['certification_id']})未審核成功，案件尚無法核可", Approve_target_result::DISPLAY_BACKEND);
                     return FALSE;
                 }
             }
@@ -52,6 +53,7 @@ class Product_student extends Approve_target_credit_base
         if ( ! empty(array_diff($required_cert, $cer_success_id)))
         {
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '必填徵信項未全數成功(' . implode(',', array_diff($required_cert, $cer_success_id)) . ')，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
         }
 
