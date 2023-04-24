@@ -43,6 +43,7 @@ abstract class Approve_base implements Approve_interface
         $this->CI->load->library('credit_lib');
         $this->CI->load->library('loanmanager/product_lib');
         $this->CI->load->library('judicialperson_lib');
+        $this->CI->load->library('target_lib');
         $this->CI->load->library('user_bankaccount_lib');
         $this->CI->load->library('verify/data_verify_lib');
 
@@ -69,8 +70,7 @@ abstract class Approve_base implements Approve_interface
         $match_brookesia = FALSE;
 
         // 檢查是否為產轉
-        $subloan_list = $this->CI->config->item('subloan_list');
-        $subloan_status = (bool) preg_match('/' . $subloan_list . '/', $this->target['target_no']);
+        $subloan_status = $this->CI->target_lib->is_sub_loan($this->target['target_no']);
 
         // 核可前的行為
         if ($this->check_before_approve() === FALSE)

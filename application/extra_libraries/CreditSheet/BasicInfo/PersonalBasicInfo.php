@@ -164,6 +164,7 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
     public function getCreditCategory(): int
     {
         $this->CI->load->model('loan/credit_model');
+        $this->CI->load->library('target_lib');
         $credit = $this->CI->credit_model->order_by('created_at', 'DESC')->get_by(
                 ['user_id' => $this->creditSheet->user->id, 'status' => 1, 'expire_time > ' => time()]);
 
@@ -172,7 +173,9 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
 
         if(!isset($credit) || empty($creditSheetRecord) || $this->creditSheet->target->product_id != $credit->product_id ) {
             return self::CREDIT_CATEGORY_NEW_TARGET;
-        }else if($this->creditSheet->target->sub_status == TARGET_SUBSTATUS_SUBLOAN_TARGET) {
+        }
+        else if ($this->CI->target_lib->is_sub_loan($this->creditSheet->target->target_no))
+        {
             return self::CREDIT_CATEGORY_SUBLOAN;
         }else if(count($this->creditSheet->repayableTargets) || !empty($credit)) {
             return self::CREDIT_CATEGORY_INCREMENTAL_LOAN;
