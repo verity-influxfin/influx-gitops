@@ -3040,7 +3040,8 @@ class Target_lib
         {
             return FALSE;
         }
-        if($target->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+        if ($this->is_sub_loan($target->target_no))
+        {
             $this->CI->load->library('Subloan_lib');
             $this->CI->subloan_lib->subloan_verify_failed($target,$admin_id,$remark);
         }else{
@@ -3198,5 +3199,16 @@ class Target_lib
             TARGET_ORDER_WAITING_SIGNING,
             TARGET_ORDER_WAITING_VERIFY
         ]);
+    }
+
+    /**
+     * 檢查是否為產轉案件
+     * @param $target_no
+     * @return bool
+     */
+    public function is_sub_loan($target_no): bool
+    {
+        $subloan_list = $this->CI->config->item('subloan_list');
+        return (bool) preg_match('/' . $subloan_list . '/', $target_no);
     }
 }

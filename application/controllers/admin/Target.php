@@ -579,7 +579,8 @@ class Target extends MY_Admin_Controller {
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && in_array($info->status,array(TARGET_WAITING_VERIFY,TARGET_ORDER_WAITING_SHIP))){
-				if($info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+                if ($this->target_lib->is_sub_loan($info->target_no))
+                {
 					$this->load->library('subloan_lib');
 					$this->subloan_lib->subloan_verify_success($info,$this->login_info->id);
 				}if($info->status == TARGET_ORDER_WAITING_SHIP && $info->sub_status == TARGET_SUBSTATUS_NORNAL){
@@ -1249,7 +1250,8 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==TARGET_WAITING_LOAN && $info->loan_status==2 && $info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+            $this->load->library('target_lib');
+			if($info && $info->status==TARGET_WAITING_LOAN && $info->loan_status==2 && $this->target_lib->is_sub_loan($info->target_no)){
                 $this->load->library('subloan_lib');
 				$rs = $this->subloan_lib->rollback_success_target($info,$this->login_info->id);
 				if($rs){
@@ -1737,7 +1739,8 @@ class Target extends MY_Admin_Controller {
         if($id){
             $info = $this->target_model->get($id);
             if($info && in_array($info->status,array(TARGET_WAITING_BIDDING))){
-                if($info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+                if ($this->target_lib->is_sub_loan($info->target_no))
+                {
                     $this->load->library('subloan_lib');
                     $this->subloan_lib->subloan_cancel_bidding($info,$this->login_info->id,$remark);
                 }else{
