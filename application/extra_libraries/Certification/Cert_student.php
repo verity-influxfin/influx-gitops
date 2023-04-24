@@ -330,7 +330,7 @@ class Cert_student extends Certification_base
                 empty($sip_not_match_column)
                     ? ''
                     : ('（' . implode('、', $sip_not_match_column) . '）')
-                ), CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                ) . '：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
         }
         if ($name == $sip_name && $school == $sip_school && $department == $sip_department)
         {
