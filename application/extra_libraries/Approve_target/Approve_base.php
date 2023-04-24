@@ -118,6 +118,7 @@ abstract class Approve_base implements Approve_interface
         {
             $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             goto END;
         }
 
@@ -341,6 +342,7 @@ abstract class Approve_base implements Approve_interface
                             log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
                         }
                         $this->result->set_action_cancel();
+                        $this->result->add_memo($this->result->get_status(), '實名認證被退件，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
                         return FALSE;
                     }
                     elseif ($result[0] === FALSE && $result[1] === TRUE)
@@ -377,6 +379,7 @@ abstract class Approve_base implements Approve_interface
                             log_message('error', "實名認證 user_certification {$identity_cert->id} 轉人工失敗");
                         }
                         $this->result->set_action_cancel();
+                        $this->result->add_memo($this->result->get_status(), '實名認證轉人工，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
                         return FALSE;
                     }
                     else
@@ -391,6 +394,7 @@ abstract class Approve_base implements Approve_interface
             }
         }
         $this->result->set_action_cancel();
+        $this->result->add_memo($this->result->get_status(), '未送出審核，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
         return FALSE;
     }
 
@@ -442,6 +446,7 @@ abstract class Approve_base implements Approve_interface
         {
             // 算不出或找不到信用額度->失敗
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '無信用額度，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
         }
 
@@ -592,6 +597,7 @@ abstract class Approve_base implements Approve_interface
             if ( ! $rs)
             {
                 $this->result->set_action_cancel();
+                $this->result->add_memo($this->result->get_status(), '無核可信用額度，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
                 return [];
             }
 
@@ -765,6 +771,7 @@ abstract class Approve_base implements Approve_interface
         if ($this->can_approve() === FALSE)
         {
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '未送出審核、或被其他排程處理中，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
         }
 
@@ -774,6 +781,7 @@ abstract class Approve_base implements Approve_interface
         {
             log_message('error', "Approve target 查無產品設定檔 ({$this->target_product_id}:{$this->target_sub_product_id})");
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '查無產品設定檔，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
         }
 
@@ -883,10 +891,12 @@ abstract class Approve_base implements Approve_interface
 
     protected function get_action_cancel_param(): array
     {
+        $status = $this->result->get_status();
         return [
-            'status' => $this->result->get_status(),
+            'status' => $status,
             'sub_status' => $this->result->get_sub_status(),
             'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+            'memo' => json_encode($this->result->get_all_memo($status)),
         ];
     }
 
