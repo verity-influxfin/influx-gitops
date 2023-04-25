@@ -410,6 +410,7 @@ class Target_lib
 
                                 // todo: 暫時將「學生貸」、「上班族貸」轉二審
                                 if ( ! $subloan_status &&
+                                    ! $renew &&
                                     in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_STUDENT]) &&
                                     $target->status == TARGET_WAITING_APPROVE &&
                                     $target->sub_status == TARGET_SUBSTATUS_NORNAL)

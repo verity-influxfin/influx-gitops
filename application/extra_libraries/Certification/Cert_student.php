@@ -66,7 +66,7 @@ class Cert_student extends Certification_base
         if (empty($this->content['school']) || empty($this->content['sip_account']) || empty($this->content['sip_password']))
         {
             // SIP填入資訊為空
-            $this->result->addMessage('SIP填入資訊為空', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage('SIP填入資訊為空', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
             return TRUE;
         }
 
@@ -77,7 +77,7 @@ class Cert_student extends Certification_base
         if ( ! isset($sip_log['status']))
         {
             // SIP爬蟲LoginLog無回應
-            $this->result->addMessage('SIP爬蟲LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage('SIP爬蟲LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
             return TRUE;
         }
 
@@ -95,7 +95,7 @@ class Cert_student extends Certification_base
                     return FALSE;
                 default:
                     // SIP爬蟲LoginLog http回應：非成功 http response status code
-                    $this->result->addMessage('SIP爬蟲LoginLog http回應: ' . $sip_log['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    $this->result->addMessage('SIP爬蟲LoginLog http回應: ' . $sip_log['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
             }
         }
@@ -104,7 +104,7 @@ class Cert_student extends Certification_base
         if ( ! isset($sip_log['response']['status']))
         {
             // 無對應的SIP爬蟲LoginLog status
-            $this->result->addMessage('無對應的SIP爬蟲LoginLog status，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->addMessage('無對應的SIP爬蟲LoginLog status，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
             return TRUE;
         }
         if ($sip_log['response']['status'] != 'finished')
@@ -113,19 +113,19 @@ class Cert_student extends Certification_base
             {
                 case 'failure':
                     // SIP登入執行失敗
-                    $this->result->addMessage('SIP登入執行失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    $this->result->addMessage('SIP登入執行失敗', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'university_not_found':
                     // SIP學校不在清單內
-                    $this->result->addMessage('SIP學校不在清單內，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    $this->result->addMessage('SIP學校不在清單內', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'university_not_enabled':
                     // SIP學校為黑名單
-                    $this->result->addMessage('SIP學校為黑名單，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    $this->result->addMessage('SIP學校為黑名單', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'university_not_crawlable':
                     // SIP學校無法爬取
-                    $this->result->addMessage('SIP學校無法爬取，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    $this->result->addMessage('SIP學校無法爬取', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'started':
                 case 'retry':
@@ -134,7 +134,7 @@ class Cert_student extends Certification_base
                     $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
                     return FALSE;
                 default:
-                    $this->result->addMessage('SIP爬蟲LoginLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    $this->result->addMessage('SIP爬蟲LoginLog status回應: ' . $sip_log['response']['status'], CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
             }
         }
@@ -157,8 +157,8 @@ class Cert_student extends Certification_base
             ];
             // SIP登入失敗
             $this->result->addMessage(
-                'SIP登入失敗，學校狀態: ' . ($status_mapping[$university_status] ?? '') . '，請人工進行驗證',
-                CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                'SIP登入失敗，學校狀態: ' . ($status_mapping[$university_status] ?? ''),
+                CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
                 MessageDisplay::Backend
             );
             return TRUE;
@@ -170,8 +170,8 @@ class Cert_student extends Certification_base
             // SIP 帳號密碼判定正確，但登入爬取過程中出現異常
             // 可能為 1.學校狀態異常 2.帳號非在學中
             $this->result->addMessage(
-                'SIP帳號密碼正確，爬蟲執行失敗，請確認此學校狀態、以及是否為在學中帳號，請人工進行驗證',
-                CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                'SIP帳號密碼正確，爬蟲執行失敗，請確認此學校狀態、以及是否為在學中帳號',
+                CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
                 MessageDisplay::Backend
             );
             return TRUE;
@@ -205,14 +205,14 @@ class Cert_student extends Certification_base
             {
                 case 'failure':
                     // SIP爬蟲DeepScraper失敗
-                    $this->result->addMessage('SIP爬蟲DeepScraper失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    $this->result->addMessage('SIP爬蟲DeepScraper失敗', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'deep scraping':
                 case 'logging in':
                     $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
                     return FALSE;
                 default:
-                    $this->result->addMessage('SIP爬蟲DeepLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                    $this->result->addMessage('SIP爬蟲DeepLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
             }
         }
@@ -330,7 +330,7 @@ class Cert_student extends Certification_base
                 empty($sip_not_match_column)
                     ? ''
                     : ('（' . implode('、', $sip_not_match_column) . '）')
-                ), CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                ), CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
         }
         if ($name == $sip_name && $school == $sip_school && $department == $sip_department)
         {

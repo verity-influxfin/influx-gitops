@@ -953,7 +953,7 @@ abstract class Approve_base implements Approve_interface
             'platform_fee' => $this->get_platform_fee($subloan_status),
             'interest_rate' => $this->credit['rate'],
             'status' => TARGET_WAITING_SIGNING,
-            'sub_status' => $renew ? TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : TARGET_SUBSTATUS_NORNAL,
+            'sub_status' => $renew ? TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : $this->result->get_sub_status(),
             'target_data' => json_encode($target_data),
             'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
         ];
