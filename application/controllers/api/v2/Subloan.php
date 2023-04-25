@@ -318,7 +318,7 @@ class Subloan extends REST_Controller {
 			}
 
             $this->load->library('target_lib');
-            if ( ! in_array($target->sub_status, [TARGET_SUBSTATUS_NORNAL, TARGET_SUBSTATUS_SUBLOAN_TARGET, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET]) ||
+            if ( ! in_array($target->sub_status, [TARGET_SUBSTATUS_NORNAL, TARGET_SUBSTATUS_SUBLOAN_TARGET, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET]) &&
                 $this->target_lib->is_sub_loan($target->target_no) === FALSE
             )
             {
