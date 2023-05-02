@@ -789,13 +789,8 @@ abstract class Approve_base implements Approve_interface
         $credit_sheet_review = $this->CI->credit_sheet_review_model->has_info_by_target_id($this->target['id'], 2);
         if ($credit_sheet_review && $this->target['status'] == TARGET_WAITING_APPROVE && $this->target['sub_status'] == TARGET_SUBSTATUS_SECOND_INSTANCE)
         {
-            $param = [
-                'status' => TARGET_WAITING_SIGNING,
-                'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET,
-                'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
-            ];
-            $this->CI->target_model->update($this->target['id'], $param);
-            $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+            $this->result->set_action_cancel();
+            $this->result->set_status(TARGET_WAITING_SIGNING, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET);
             return FALSE;
         }
 
