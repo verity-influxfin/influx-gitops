@@ -978,19 +978,26 @@ class Cron extends CI_Controller
 
         // 提領待放款清單
         $this->load->model('transaction/withdraw_model');
-        $withdraw_list = $this->withdraw_model->get_auto_withdraw_list();
+        $withdraw_list = $this->withdraw_model->get_all_withdraw_list();
+        $valid_withdraw_list = $this->withdraw_model->get_auto_withdraw_list();
 
         // 轉出放款匯款單
         $count = 0;
-        if ( ! empty($withdraw_list))
+        if ( ! empty($valid_withdraw_list))
         {
-            $withdraw_ids = array_column($withdraw_list, 'id');
+            $valid_withdraw_ids = array_column($valid_withdraw_list, 'id');
             $this->load->library('payment_lib');
-            $response = $this->payment_lib->withdraw_txt($withdraw_ids, SYSTEM_ADMIN_ID);
+            $response = $this->payment_lib->withdraw_txt($valid_withdraw_ids, SYSTEM_ADMIN_ID);
             if ($response)
             {
-                $count = count($withdraw_ids);
+                $count = count($valid_withdraw_ids);
             }
+        }
+        if ( ! empty($withdraw_list))
+        {
+            $remain_withdraw_ids = array_diff(array_column($withdraw_list, 'id'), ($valid_withdraw_ids ?? []));
+            $this->load->library('withdraw_lib');
+            $this->withdraw_lib->withdraw_deny($remain_withdraw_ids);
         }
 
         $end_time = time();

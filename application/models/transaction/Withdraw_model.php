@@ -65,4 +65,26 @@ class Withdraw_model extends MY_Model
 
         return $this->db->query($sql)->result_array();
     }
+
+    public function get_all_withdraw_list()
+    {
+        return $this->db
+            ->select('id')
+            ->from('p2p_transaction.withdraw')
+            ->where('status', WITHDRAW_STATUS_WAITING)
+            ->where('frozen_id >', 0)
+            ->get()
+            ->result_array();
+    }
+
+    public function get_frozen_id_list(array $withdraw_ids)
+    {
+        return $this->db
+            ->select('frozen_id')
+            ->from('p2p_transaction.withdraw')
+            ->where_in('id', $withdraw_ids)
+            ->where('frozen_id >', 0)
+            ->get()
+            ->result_array();
+    }
 }
