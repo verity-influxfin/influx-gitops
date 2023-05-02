@@ -123,7 +123,7 @@
 											<td><?=isset($value->sys_check)?$sys_check_list[$value->sys_check]:"" ?></td>
                                             <td>
                                                 <button class="btn btn-danger"
-                                                        onclick="withdraw_deny(<?php echo $value->id ?? '' ?>)">逾期退回
+                                                        onclick="withdraw_deny(<?php echo $value->id ?? '' ?>)">退回提領
                                                 </button>
                                             </td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
