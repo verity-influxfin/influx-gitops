@@ -207,6 +207,7 @@
 
 	function app_access()
 	{
+		return true;
 		$CI 	=& get_instance();
 		$list 	= $CI->config->item('access_ip_list');
 		foreach($list as $ip){

@@ -8,7 +8,7 @@ var app = new Vue({
         },
         table_data: [],
         erp_balance_data: [],
-        tab: 'tab1',
+        tab: 'tab2',
         is_waiting_response: false,
     },
     watch: {
