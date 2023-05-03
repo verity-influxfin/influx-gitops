@@ -226,6 +226,14 @@ class Target_lib
             $param = [
                 'status' => 8,
             ];
+
+            $target_detail = $this->CI->target_model->get($target->id);
+            $subloan_status = $this->CI->target_lib->is_sub_loan($target_detail->target_no);
+            if ($subloan_status === TRUE && $target_detail->sub_status == TARGET_SUBSTATUS_WAITING_SUBLOAN)
+            {
+                $param['sub_status'] = TARGET_SUBSTATUS_NORNAL;
+            }
+
             $this->CI->target_model->update($target->id, $param);
             $this->insert_change_log($target->id, $param, $user_id);
             return true;
