@@ -157,13 +157,15 @@
                                             <td><?=isset($value->platform_fee)&&$value->platform_fee?$value->platform_fee:'' ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount-$value->platform_fee:'' ?></td>
                                             <td>
-												<?=isset($loan_list[$value->loan_status])?(time()>=$value->expire_time&&$value->sub_status==8?'已過期':$loan_list[$value->loan_status]):'' ?>
+                                                <?= isset($loan_list[$value->loan_status]) ? (time() >= $value->expire_time && $value->sub_loan_status === TRUE ? '已過期' : $loan_list[$value->loan_status]) : '' ?>
 												<? if($value->loan_status==3){
 												    $disabled = (!in_array($value->sys_check, [20, 21]) ? ' disabled' : '');
 													echo '<button class="btn btn-success" onclick="success('.$value->id.')"'.$disabled.'>成功</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')"'.$disabled.'>失敗重發</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="rollback('.$value->id.')"'.$disabled.'>整案退回</button>';
-												}else if($value->loan_status==2 && $value->sub_status==8){
+                                                }
+                                                else if ($value->loan_status == 2 && $value->sub_loan_status === TRUE)
+                                                {
 													if(time()<=$value->expire_time){
 														echo '<button class="btn btn-success" onclick="subloan_success('.$value->id.')">轉換產品放款</button>&nbsp;';
 													}

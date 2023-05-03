@@ -1170,6 +1170,7 @@ class Target extends MY_Admin_Controller {
 						'verify'	=> 1,
 					));
 					if($bank_account){
+                        $value->sub_loan_status = $this->target_lib->is_sub_loan($value->target_no);
 						$waiting_list[] = $value;
 					}
 				}
