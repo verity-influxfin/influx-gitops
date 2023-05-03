@@ -1837,6 +1837,7 @@ class Target extends MY_Admin_Controller {
 					'total_payment'			=> $amortization_table['total']['total_payment'],
 					'remaining_principal'	=> $value->loan_amount,
 				];
+                $list[$key]->sub_loan_status = $this->target_lib->is_sub_loan($value->target_no);
 			}
 
 			$this->load->model('user/user_meta_model');
