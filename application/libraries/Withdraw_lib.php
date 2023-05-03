@@ -20,15 +20,15 @@ class Withdraw_lib
         $this->CI->withdraw_model->trans_begin();
         $this->CI->frozen_amount_model->trans_begin();
 
-        $result = $this->CI->withdraw_model->update_by([
+        $result = $this->CI->withdraw_model->get_affected_after_update([
+            'status' => WITHDRAW_STATUS_CANCELED
+        ], [
             'id' => $withdraw_ids,
             'status' => WITHDRAW_STATUS_WAITING,
             'frozen_id >' => 0
-        ], [
-            'status' => WITHDRAW_STATUS_CANCELED
         ]);
 
-        if ( ! $result)
+        if ($result === 0)
         {
             $this->CI->withdraw_model->trans_rollback();
             $this->CI->frozen_amount_model->trans_rollback();
@@ -44,13 +44,13 @@ class Withdraw_lib
             return FALSE;
         }
 
-        $result = $this->CI->frozen_amount_model->update_by([
-            'id' => $frozen_ids
-        ], [
+        $result = $this->CI->frozen_amount_model->get_affected_after_update([
             'status' => 0
+        ], [
+            'id' => $frozen_ids
         ]);
 
-        if ( ! $result)
+        if ($result === 0)
         {
             $this->CI->withdraw_model->trans_rollback();
             $this->CI->frozen_amount_model->trans_rollback();

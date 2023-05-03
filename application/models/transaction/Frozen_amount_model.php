@@ -35,4 +35,27 @@ class Frozen_amount_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+
+    public function get_affected_after_update($update_param, $where_param): int
+    {
+        if (empty($update_param))
+        {
+            return 0;
+        }
+
+        if ( ! empty($where_param))
+        {
+            $this->_set_where([0 => $where_param]);
+        }
+
+        foreach ($update_param as $key => $value)
+        {
+            $this->_database->set($key, $value);
+        }
+
+        $this->_database
+            ->update('p2p_transaction.frozen_amount');
+
+        return $this->_database->affected_rows();
+    }
 }
