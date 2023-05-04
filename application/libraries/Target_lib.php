@@ -751,7 +751,8 @@ class Target_lib
                 } else {
                     if ($target->expire_time < time()) {
                         //流標
-                        if ($target->sub_status == 8) {
+                        if ($this->is_sub_loan($target->target_no) === TRUE)
+                        {
                             $this->CI->subloan_lib->renew_subloan($target);
                         } elseif ($target->sub_product_id == STAGE_CER_TARGET) {
                             $param = [
@@ -827,7 +828,8 @@ class Target_lib
                 }
             } else {
                 if ($target->expire_time < time()) {
-                    if ($target->sub_status == 8) {
+                    if ($this->is_sub_loan($target->target_no) === TRUE)
+                    {
                         $this->CI->subloan_lib->renew_subloan($target);
                     } elseif ($target->sub_product_id == STAGE_CER_TARGET) {
                         $param = [

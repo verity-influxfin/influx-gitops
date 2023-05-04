@@ -72,6 +72,7 @@ class Cron extends CI_Controller
         $this->load->model('loan/target_model');
         $this->load->library('subloan_lib');
         $this->load->library('Notification_lib');
+        $this->load->library('target_lib');
 
         $get 	= $this->input->get(NULL, TRUE);
         $target_ids = isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):null;
@@ -84,7 +85,8 @@ class Cron extends CI_Controller
             if($value->interest_rate > 16) {
                 // 待出借(待上架)
                 if ($value->status == 3) {
-                    if ($value->sub_status == 8) {
+                    if ($this->target_lib->is_sub_loan($value->target_no) === TRUE)
+                    {
                         $this->subloan_lib->subloan_cancel_bidding($value, 0, null);
                     } else {
                         $this->target_lib->target_cancel_bidding($value, 0, null);

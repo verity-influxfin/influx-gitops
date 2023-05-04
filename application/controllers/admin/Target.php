@@ -1227,7 +1227,9 @@ class Target extends MY_Admin_Controller {
             $sqlResult = $this->db->query($targetSql);
             $info = $sqlResult->row();
 
-			if ($info && $info->status == 4 && $info->loan_status == 2 && $info->sub_status == 8) {
+            $this->load->library('target_lib');
+            if ($info && $info->status == 4 && $info->loan_status == 2 && $this->target_lib->is_sub_loan($info->target_no) === TRUE)
+            {
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->subloan_success($id, $this->login_info->id);
 				if ($rs) {
