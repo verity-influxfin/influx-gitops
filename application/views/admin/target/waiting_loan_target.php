@@ -142,7 +142,7 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
-												<? if($value->loan_status==2){ ?>
+                                                <?php if ($value->loan_status == 2 && $value->sub_loan_status === FALSE) { ?>
 												<input class="targets" type="checkbox" data-targetno="<?=isset($value->target_no)?$value->target_no:'' ?>" value="<?=isset($value->id)?$value->id:'' ?>" />
 												<? } ?>
 												&nbsp;<?=isset($value->target_no)?$value->target_no:'' ?>

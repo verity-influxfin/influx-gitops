@@ -406,8 +406,12 @@ class Payment_lib{
 			if($targets){
 				$content 	= "";
 				$ids 		= array();
+                $this->CI->load->library('target_lib');
 				foreach($targets as $key => $value){
-					if($value->status==4 && in_array($value->sub_status, [0, 10]) && $value->loan_status==2){
+					if($value->status==4 && in_array($value->sub_status, [0, 10]) && $value->loan_status==2
+                        && $this->CI->target_lib->is_sub_loan($value->target_no) === FALSE
+                    )
+                    {
 						$user_info = $this->CI->user_model->get($value->user_id);
 						if($user_info){
 							$bankaccount 	= $this->CI->user_bankaccount_model->get_by(array(
@@ -419,7 +423,7 @@ class Payment_lib{
 							if($bankaccount){
 								$target_update_param = array("loan_status"=>3);
 								$this->CI->target_model->update($value->id,$target_update_param);
-								$this->CI->load->library('target_lib');
+
 								$this->CI->target_lib->insert_change_log($value->id,$target_update_param,0,$admin_id);
 								$amount = intval($value->loan_amount) - intval($value->platform_fee);
 								$ids[] 	= $value->id;
