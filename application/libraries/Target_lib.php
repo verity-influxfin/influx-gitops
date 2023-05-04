@@ -190,7 +190,8 @@ class Target_lib
                 }
             }
 
-            if ($target->sub_status == 8) {
+            if ($this->is_sub_loan($target->target_no) === TRUE)
+            {
                 $this->CI->load->library('Subloan_lib');
                 $this->CI->subloan_lib->subloan_success_return($target, $admin_id);
             }
