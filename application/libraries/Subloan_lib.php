@@ -223,7 +223,6 @@ class Subloan_lib{
 						'loan_amount' 	=> 0,
 						'status'	 	=> '9',
 						'remark'		=> $new_target->remark.','.$remark,
-                        'sub_status' => TARGET_SUBSTATUS_NORNAL,
 					);
 					
 					$this->CI->target_lib->insert_change_log($subloan->target_id,array('sub_status'=>0),0,$admin_id);
