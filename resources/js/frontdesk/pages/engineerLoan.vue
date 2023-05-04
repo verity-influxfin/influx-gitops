@@ -17,12 +17,12 @@
         <div class="c-t">
           <div class="item r j">
             <div class="i-cnt">
-              <div class="t-c"><h3>借款額度高達30萬</h3></div>
+              <div class="t-c"><h3>借款額度高達50萬</h3></div>
               <div class="ccc"></div>
               <p>擴大額度，下載APP申請，24hr資金輕鬆到手！</p>
             </div>
             <div class="img">
-              <img src="../asset/images/30min.svg" class="img-fluid" />
+              <img src="../asset/images/50minn.svg" class="img-fluid" />
             </div>
           </div>
           <div class="item r">
@@ -32,7 +32,7 @@
               <p>在忙碌的上課、工作之餘，普匯讓您還款無負擔！</p>
             </div>
             <div class="img">
-              <img src="../asset/images/5min.svg" class="img-fluid" />
+              <img src="../asset/images/5minn.svg" class="img-fluid" />
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@
         <div class="c-t">
           <div class="item">
             <div class="img">
-              <img src="../asset/images/10min.svg" class="img-fluid" />
+              <img src="../asset/images/10minn.svg" class="img-fluid" />
             </div>
             <div class="i-cnt">
               <div class="t-c"><h3>超快速10分鐘審核過件</h3></div>
@@ -60,7 +60,7 @@
     </div>
     <credit
       :creditList="creditList"
-      amount="300000"
+      amount="500000"
       license="最高額度會根據您的申請身分而有所不同"
     />
     <experience :experiences="experiences" title="用戶回饋" />
@@ -124,6 +124,7 @@ export default {
       axios
         .post(`${location.origin}/getBannerData`, { filter: "engineer" })
         .then((res) => {
+          res.data[0]['desc'] = res.data[0]['desc'].replace('30', '50');
           this.bannerData = res.data;
         });
     },
@@ -136,6 +137,10 @@ export default {
     },
     getQaData() {
       axios.post(`${location.origin}/getQaData`, { filter: "engineer" }).then((res) => {
+        console.log(res.data)
+        res.data[0]['content'] = res.data[0]['content'].replaceAll('20', '18')
+        res.data[1]['content'] = res.data[1]['content'].replace('20', '50')
+        res.data[2]['content'] = res.data[2]['content'].replace('12', '15').replace('20', '50')
         this.qaData = res.data;
       });
     },
