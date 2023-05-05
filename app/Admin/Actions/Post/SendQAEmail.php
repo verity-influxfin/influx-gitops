@@ -34,7 +34,7 @@ class SendQAEmail extends RowAction
             'smtp_server' => 'internal'
         ];
 
-        $endpoint = 'http://13.113.103.77:9452/cartero/api/by-email';
+        $endpoint = env('MAIL_SENDER_SERVER') . '/cartero/api/by-email';
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $endpoint.'?'.http_build_query($params));
         curl_setopt($curl, CURLOPT_POST, true);
@@ -42,7 +42,7 @@ class SendQAEmail extends RowAction
         $resp = curl_exec($curl);
         curl_close($curl);
 
-        return $this->response()->success('成功發送')->refresh();
+        return $this->response()->success('發送成功')->refresh();
     }
 
     public function form()
