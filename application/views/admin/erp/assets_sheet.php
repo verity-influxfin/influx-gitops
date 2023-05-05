@@ -46,6 +46,7 @@
                                         <th>產品名稱</th>
                                         <th>債務案號</th>
                                         <th>借款人ID</th>
+                                        <th>申貸金額</th>
                                         <th>貸放金額</th>
                                         <th>核准金額</th>
                                         <th>核准信評</th>
@@ -93,6 +94,7 @@
                                             <td>{{ item.product_name }}</td>
                                             <td>{{ item.target_no }}</td>
                                             <td>{{ item.target_user_id }}</td>
+                                            <td>{{ item.target_amount }}</td>
                                             <td>{{ amount(item.target_loan_amount) }}</td>
                                             <td>{{ amount(item.approved_credits_amount) }}</td>
                                             <td>{{ item.approved_credits_level }}</td>

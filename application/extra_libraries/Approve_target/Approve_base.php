@@ -51,6 +51,7 @@ abstract class Approve_base implements Approve_interface
         $this->CI->load->model('log/log_usercertification_model');
         $this->CI->load->model('loan/credit_sheet_review_model');
         $this->CI->load->model('loan/target_associate_model');
+        $this->CI->load->model('loan/subloan_model');
         $this->CI->load->model('transaction/order_model');
         $this->CI->load->model('user/judicial_person_model');
         $this->CI->load->model('user/user_bankaccount_model');
@@ -161,7 +162,7 @@ abstract class Approve_base implements Approve_interface
                 }
                 break;
             case TARGET_FAIL:
-                $res = $this->set_target_failure();
+                $res = $this->set_target_failure($subloan_status);
                 if ($res === TRUE)
                 {
                     $res = $this->failure_notify($subloan_status);
@@ -789,13 +790,8 @@ abstract class Approve_base implements Approve_interface
         $credit_sheet_review = $this->CI->credit_sheet_review_model->has_info_by_target_id($this->target['id'], 2);
         if ($credit_sheet_review && $this->target['status'] == TARGET_WAITING_APPROVE && $this->target['sub_status'] == TARGET_SUBSTATUS_SECOND_INSTANCE)
         {
-            $param = [
-                'status' => TARGET_WAITING_SIGNING,
-                'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET,
-                'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
-            ];
-            $this->CI->target_model->update($this->target['id'], $param);
-            $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+            $this->result->set_action_cancel();
+            $this->result->set_status(TARGET_WAITING_SIGNING, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET);
             return FALSE;
         }
 
@@ -1005,9 +1001,10 @@ abstract class Approve_base implements Approve_interface
 
     /**
      * 案件審核失敗
+     * @param $subloan_status
      * @return bool
      */
-    public function set_target_failure(): bool
+    public function set_target_failure($subloan_status): bool
     {
         $param = $this->get_approve_failure_param();
         if (empty($param))
@@ -1017,6 +1014,23 @@ abstract class Approve_base implements Approve_interface
 
         $this->CI->target_model->update($this->target['id'], $param);
         $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+
+        if ($subloan_status === TRUE)
+        {
+            $subloan = $this->CI->subloan_model->get_by(array(
+                'status' => [0, 1],
+                'new_target_id' => $this->target['id'],
+            ));
+            if ( ! empty($subloan))
+            {
+                $result = $this->CI->subloan_model->update($subloan->id, array('status' => 9));
+                if ($result)
+                {
+                    $this->CI->target_lib->insert_change_log($subloan->target_id, array('sub_status' => TARGET_SUBSTATUS_NORNAL), 0, SYSTEM_ADMIN_ID);
+                    $this->CI->target_model->update($subloan->target_id, array('sub_status' => TARGET_SUBSTATUS_NORNAL));
+                }
+            }
+        }
 
         return TRUE;
     }
