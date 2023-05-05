@@ -27,18 +27,21 @@ class SendQAEmail extends RowAction
             $q_string
         ";
         
-        $params = [
+        $jsonData = json_encode([
             'email' => $request->get('supervisor'),
             'title' => '應試者履歷',
             'content' => $content,
             'smtp_server' => 'internal'
-        ];
+        ]);
 
         $endpoint = env('MAIL_SENDER_SERVER') . '/cartero/api/by-email';
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $endpoint.'?'.http_build_query($params));
+        $curl = curl_init($endpoint);
         curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonData);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($jsonData)
+        ));
         $resp = curl_exec($curl);
         curl_close($curl);
 
