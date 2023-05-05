@@ -1170,6 +1170,7 @@ class Target extends MY_Admin_Controller {
 						'verify'	=> 1,
 					));
 					if($bank_account){
+                        $value->sub_loan_status = $this->target_lib->is_sub_loan($value->target_no);
 						$waiting_list[] = $value;
 					}
 				}
@@ -1226,7 +1227,9 @@ class Target extends MY_Admin_Controller {
             $sqlResult = $this->db->query($targetSql);
             $info = $sqlResult->row();
 
-			if ($info && $info->status == 4 && $info->loan_status == 2 && $info->sub_status == 8) {
+            $this->load->library('target_lib');
+            if ($info && $info->status == 4 && $info->loan_status == 2 && $this->target_lib->is_sub_loan($info->target_no) === TRUE)
+            {
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->subloan_success($id, $this->login_info->id);
 				if ($rs) {
@@ -1836,6 +1839,7 @@ class Target extends MY_Admin_Controller {
 					'total_payment'			=> $amortization_table['total']['total_payment'],
 					'remaining_principal'	=> $value->loan_amount,
 				];
+                $list[$key]->sub_loan_status = $this->target_lib->is_sub_loan($value->target_no);
 			}
 
 			$this->load->model('user/user_meta_model');
