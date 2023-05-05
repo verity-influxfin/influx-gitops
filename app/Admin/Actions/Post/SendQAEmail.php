@@ -27,27 +27,31 @@ class SendQAEmail extends RowAction
             $q_string
         ";
         
-        $params = [
+        $jsonData = json_encode([
             'email' => $request->get('supervisor'),
             'title' => '應試者履歷',
             'content' => $content,
             'smtp_server' => 'internal'
-        ];
+        ]);
 
         $endpoint = env('MAIL_SENDER_SERVER') . '/cartero/api/by-email';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $endpoint.'?'.http_build_query($params));
         curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $resp = curl_exec($curl);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonData);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($jsonData)
+        ));
+        $response = curl_exec($curl);
         curl_close($curl);
 
-        return $this->response()->success('發送成功')->refresh();
+        return $this->response()->success($response)->refresh();
     }
 
     public function form()
     {
         $supervisor = [
+            'derekhwang33@gmail.com' => '純 - 設計類',
             'Yuan@influxfin.com' => '林柏元 - 設計類',
             'Nabroux@influxfin.com' => '許雲輔 - 系統開發部',
             'Timlee@influxfin.com' => '李奕伽 - 法務類',
