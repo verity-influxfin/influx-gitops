@@ -23,7 +23,7 @@ interface Approve_interface
      * 案件審核失敗
      * @return bool
      */
-    public function set_target_failure(): bool;
+    public function set_target_failure(bool $subloan_status): bool;
 
     /**
      * 審核成功的通知

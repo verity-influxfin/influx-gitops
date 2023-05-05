@@ -1036,7 +1036,9 @@ class Transaction_lib{
 		$transaction 	= array();
 		if($target_id){
 			$target 	= $this->CI->target_model->get($target_id);
-			if( $target && $target->status == 4 && $target->loan_status == 2 && $target->sub_status == 8){
+            $this->CI->load->library('target_lib');
+            if ($target && $target->status == 4 && $target->loan_status == 2 && $this->CI->target_lib->is_sub_loan($target->target_no) === TRUE)
+            {
 				$this->CI->load->model('loan/subloan_model');
 				$subloan	= $this->CI->subloan_model->get_by(array(
 					'status'		=> 2,

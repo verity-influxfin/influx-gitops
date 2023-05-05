@@ -119,7 +119,16 @@
                                                     }
                                                 ?>
 											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
+                                                <?php
+                                                if ($value->sub_loan_status === TRUE)
+                                                {
+                                                    echo '(' . $sub_list[TARGET_SUBSTATUS_SUBLOAN_TARGET] . ')';
+                                                }
+                                                else
+                                                {
+                                                ?>
 											<?=$value->sub_status!= 0 ?'('.$sub_list[$value->sub_status].')':"" ?>
+                                                <?php } ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><?=isset($value->credit)?date("Y-m-d H:i:s",$value->credit->created_at):"" ?></td>

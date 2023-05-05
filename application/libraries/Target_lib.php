@@ -190,7 +190,8 @@ class Target_lib
                 }
             }
 
-            if ($target->sub_status == 8) {
+            if ($this->is_sub_loan($target->target_no) === TRUE)
+            {
                 $this->CI->load->library('Subloan_lib');
                 $this->CI->subloan_lib->subloan_success_return($target, $admin_id);
             }
@@ -226,6 +227,14 @@ class Target_lib
             $param = [
                 'status' => 8,
             ];
+
+            $target_detail = $this->CI->target_model->get($target->id);
+            $subloan_status = $this->CI->target_lib->is_sub_loan($target_detail->target_no);
+            if ($subloan_status === TRUE && $target_detail->sub_status == TARGET_SUBSTATUS_WAITING_SUBLOAN)
+            {
+                $param['sub_status'] = TARGET_SUBSTATUS_NORNAL;
+            }
+
             $this->CI->target_model->update($target->id, $param);
             $this->insert_change_log($target->id, $param, $user_id);
             return true;
@@ -742,7 +751,8 @@ class Target_lib
                 } else {
                     if ($target->expire_time < time()) {
                         //流標
-                        if ($target->sub_status == 8) {
+                        if ($this->is_sub_loan($target->target_no) === TRUE)
+                        {
                             $this->CI->subloan_lib->renew_subloan($target);
                         } elseif ($target->sub_product_id == STAGE_CER_TARGET) {
                             $param = [
@@ -818,7 +828,8 @@ class Target_lib
                 }
             } else {
                 if ($target->expire_time < time()) {
-                    if ($target->sub_status == 8) {
+                    if ($this->is_sub_loan($target->target_no) === TRUE)
+                    {
                         $this->CI->subloan_lib->renew_subloan($target);
                     } elseif ($target->sub_product_id == STAGE_CER_TARGET) {
                         $param = [
