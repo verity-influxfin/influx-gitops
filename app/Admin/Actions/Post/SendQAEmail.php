@@ -34,7 +34,7 @@ class SendQAEmail extends RowAction
             'smtp_server' => 'internal'
         ];
 
-        $endpoint = 'http://13.113.103.77:9452/cartero/api/by-email';
+        $endpoint = 'http://54.249.154.167:9452/cartero/api/by-email';
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $endpoint.'?'.http_build_query($params));
         curl_setopt($curl, CURLOPT_POST, true);
