@@ -160,7 +160,8 @@ class Subloan extends REST_Controller {
 			}
 
             $this->load->library('target_lib');
-            if ( ! in_array($target->sub_status, [0, 8]) && $this->target_lib->is_sub_loan($target->target_no) === FALSE)
+            // APM 要求調整 target.sub_status IN (8,9,10)
+            if ( ! in_array($target->sub_status, [0, 8, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET]) && $this->target_lib->is_sub_loan($target->target_no) === FALSE)
             {
                 $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
             }
