@@ -42,7 +42,7 @@ class SendQAEmail extends RowAction
             'Content-Type: application/json',
             'Content-Length: ' . strlen($jsonData)
         ));
-        $response = curl_exec($curl);
+        $resp = curl_exec($curl);
         curl_close($curl);
 
         return $this->response()->success('發送成功')->refresh();
@@ -51,7 +51,6 @@ class SendQAEmail extends RowAction
     public function form()
     {
         $supervisor = [
-            'derekhwang33@gmail.com' => '純 - 設計類',
             'Yuan@influxfin.com' => '林柏元 - 設計類',
             'Nabroux@influxfin.com' => '許雲輔 - 系統開發部',
             'Timlee@influxfin.com' => '李奕伽 - 法務類',
