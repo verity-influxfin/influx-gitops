@@ -35,7 +35,7 @@ class SendQAEmail extends RowAction
         ]);
 
         $endpoint = env('MAIL_SENDER_SERVER') . '/cartero/api/by-email';
-        $curl = curl_init();
+        $curl = curl_init($endpoint);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonData);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
@@ -45,7 +45,7 @@ class SendQAEmail extends RowAction
         $response = curl_exec($curl);
         curl_close($curl);
 
-        return $this->response()->success($response)->refresh();
+        return $this->response()->success('發送成功')->refresh();
     }
 
     public function form()
