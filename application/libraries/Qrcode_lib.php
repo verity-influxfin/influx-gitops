@@ -799,6 +799,7 @@ class Qrcode_lib
                 $list[$date][$user_qrcode_id] = $categoryInitList;
                 $list[$date][$user_qrcode_id]['collaboration'] = $collaboratorInitList;
                 $list[$date][$user_qrcode_id]['full_member_count'] = 0;
+                $list[$date][$user_qrcode_id]['registered_count'] = 0;
                 $list[$date][$user_qrcode_id]['subcode_id'] = (int) $user_subcode_list[$user_qrcode_id]['id'];
                 $list[$date][$user_qrcode_id]['alias'] = $user_subcode_list[$user_qrcode_id]['alias'];
                 $list[$date][$user_qrcode_id]['registered_id'] = $user_subcode_list[$user_qrcode_id]['registered_id'];
