@@ -47,20 +47,19 @@ class Withdraw_model extends MY_Model
             SELECT `w`.`id` FROM `p2p_transaction`.`withdraw` `w`
             WHERE `w`.`status` = ' . WITHDRAW_STATUS_WAITING . '
             AND `w`.`frozen_id` > 0
-            AND (`w`.`investor` = ' . USER_BORROWER . '
-                AND `w`.`user_id` NOT IN (
-                    SELECT DISTINCT `t`.`user_id` FROM `p2p_loan`.`targets` `t`
-                    WHERE `t`.`status` = ' . TARGET_REPAYMENTING . '
-                    AND (
-                        `t`.`delay_days` > 0 OR
-                        `t`.`id` IN (
-                            SELECT `s`.`new_target_id` FROM `p2p_loan`.`subloan` `s`
-                            WHERE `s`.`status` NOT IN (' . SUBLOAN_STATUS_CANCELED . ',' . SUBLOAN_STATUS_FAILED . ')
-                        )
-                    )
-                )
-                OR `w`.`investor` = ' . USER_INVESTOR . '
-            )
+            AND `w`.`investor` = ' . USER_INVESTOR . '
+            UNION
+            SELECT `w`.`id` FROM `p2p_transaction`.`withdraw` w
+            JOIN (
+                SELECT MIN(`t`.`limit_date`) AS `limit_date`,`t`.`user_from`
+                FROM `p2p_transaction`.`transactions` `t` 
+                WHERE `t`.`status` = '. TRANSACTION_STATUS_TO_BE_PAID . ' 
+                AND `t`.`source` IN (' . SOURCE_AR_PRINCIPAL. ','.SOURCE_AR_INTEREST.')
+                GROUP BY `t`.`user_from`
+            ) `a` ON `a`.user_from = `w`.`user_id` AND UNIX_TIMESTAMP(`a`.`limit_date`) > `w`.`created_at` 
+            WHERE `w`.`status` = ' . WITHDRAW_STATUS_WAITING . '
+            AND `w`.`frozen_id` > 0
+            AND `w`.`investor` = ' . USER_BORROWER . '
         ';
 
         return $this->db->query($sql)->result_array();
