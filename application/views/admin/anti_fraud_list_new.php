@@ -2,11 +2,7 @@
 	.text-left {
 		text-align: left;
 	}
-	.popover-content {
-		padding: 10px;
-		white-space: pre-line;
-        overflow-wrap: break-word;
-	}
+
 </style>
 <div id="page-wrapper">
 	<div>
@@ -34,41 +30,29 @@
 								{{ item.typeId }} - {{ item.description }}
 							</h5>
 						</button>
-						<div :id="'collapse-'+index" class="panel-collapse collapse" role="tabpanel"
+						<div :id="'collapse-'+index" class="panel-collapse in" role="tabpanel"
 							aria-labelledby="headingOne">
 							<div class="panel-body">
 								<table class="table">
 									<thead>
 										<tr>
-											<th>子規則代碼</th>
 											<th>子規則詳情</th>
-											<th>風險等級</th>
 											<th>執行狀態</th>
 											<th>啟用中</th>
-											<th>子規則資訊</th>
+											<th>借款總戶數</th>
+											<th>命中人數</th>
+											<th title='命中人數/借款總戶數'>命中率</th>
+											<th>命中且曾逾期人數</th>
+											<th title='命中且曾逾期人數/命中人數'>命中該規則之違約率</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr v-for="rule in item.rules">
-											<td title="">
-												<button type="button" class="btn btn-default" data-container="body"
-													data-toggle="popover" data-placement="right"
-													:data-content="rule.id">
-													<span class="glyphicon glyphicon-info-sign"
-														aria-hidden="true"></span>
-												</button>
-											</td>
-											<td>{{rule.description}}</td>
-											<td>{{rule.risk}}</td>
+											<td width="550px">{{rule.description}}</td>
 											<td>{{rule.block}}</td>
 											<td>{{rule.enabled === true ? '是' : '否'}}</td>
-											<td>
-												<button type="button" class="btn btn-default" data-container="body"
-													data-toggle="popover" data-placement="right"
-													:data-content="rule.info">
-													<span class="glyphicon glyphicon-info-sign"
-														aria-hidden="true"></span>
-												</button>
+											<td v-for="value in rule.info">
+												{{value}}
 											</td>
 										</tr>
 									<tbody>
