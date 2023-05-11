@@ -27,4 +27,12 @@ class AntiFraud extends MY_Admin_Controller
         $this->load->view('admin/anti_fraud_list');
         $this->load->view('admin/_footer');
     }
+    
+    public function list_new()
+    {
+        $this->load->view('admin/_header', $data=['use_vuejs'=>TRUE]);
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/anti_fraud_list_new');
+        $this->load->view('admin/_footer');
+    }
 }
