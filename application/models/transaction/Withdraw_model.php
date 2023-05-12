@@ -60,6 +60,15 @@ class Withdraw_model extends MY_Model
             WHERE `w`.`status` = ' . WITHDRAW_STATUS_WAITING . '
             AND `w`.`frozen_id` > 0
             AND `w`.`investor` = ' . USER_BORROWER . '
+            AND `w`.`user_id` NOT IN (
+                SELECT DISTINCT `t`.`user_id` FROM `p2p_loan`.`targets` `t`
+                WHERE `t`.`status` = ' . TARGET_REPAYMENTING . '
+                AND (`t`.`id` IN (
+                        SELECT `s`.`new_target_id` FROM `p2p_loan`.`subloan` `s`
+                        WHERE `s`.`status` NOT IN (' . SUBLOAN_STATUS_CANCELED . ',' . SUBLOAN_STATUS_FAILED . ')
+                    )
+                ) 
+            )
         ';
 
         return $this->db->query($sql)->result_array();
