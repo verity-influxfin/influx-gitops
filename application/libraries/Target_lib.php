@@ -6,6 +6,7 @@ use Approve_target\Approve_factory;
 use Certification\Cert_identity;
 use Certification\Certification_factory;
 use CertificationResult\IdentityCertificationResult;
+use CertificationResult\MessageDisplay;
 use CreditSheet\CreditSheetFactory;
 
 class Target_lib
@@ -189,7 +190,8 @@ class Target_lib
                 }
             }
 
-            if ($target->sub_status == 8) {
+            if ($this->is_sub_loan($target->target_no) === TRUE)
+            {
                 $this->CI->load->library('Subloan_lib');
                 $this->CI->subloan_lib->subloan_success_return($target, $admin_id);
             }
@@ -225,6 +227,14 @@ class Target_lib
             $param = [
                 'status' => 8,
             ];
+
+            $target_detail = $this->CI->target_model->get($target->id);
+            $subloan_status = $this->CI->target_lib->is_sub_loan($target_detail->target_no);
+            if ($subloan_status === TRUE && $target_detail->sub_status == TARGET_SUBSTATUS_WAITING_SUBLOAN)
+            {
+                $param['sub_status'] = TARGET_SUBSTATUS_NORNAL;
+            }
+
             $this->CI->target_model->update($target->id, $param);
             $this->insert_change_log($target->id, $param, $user_id);
             return true;
@@ -767,7 +777,8 @@ class Target_lib
                 } else {
                     if ($target->expire_time < time()) {
                         //流標
-                        if ($target->sub_status == 8) {
+                        if ($this->is_sub_loan($target->target_no) === TRUE)
+                        {
                             $this->CI->subloan_lib->renew_subloan($target);
                         } elseif ($target->sub_product_id == STAGE_CER_TARGET) {
                             $param = [
@@ -843,7 +854,8 @@ class Target_lib
                 }
             } else {
                 if ($target->expire_time < time()) {
-                    if ($target->sub_status == 8) {
+                    if ($this->is_sub_loan($target->target_no) === TRUE)
+                    {
                         $this->CI->subloan_lib->renew_subloan($target);
                     } elseif ($target->sub_product_id == STAGE_CER_TARGET) {
                         $param = [
@@ -2052,11 +2064,18 @@ class Target_lib
                                                 'change_admin' => SYSTEM_ADMIN_ID,
                                             ]);
                                             $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+
+                                            $cert_helper->result->addMessage(IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE . '，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                                            $remark = $cert_helper->remark;
+                                            $remark['verify_result'] = $cert_helper->result->getAllMessage(MessageDisplay::Backend);
+                                            $remark['verify_result_json'] = $cert_helper->result->jsonDump();
+
                                             $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
                                             if ($rs === TRUE)
                                             {
                                                 $this->CI->user_certification_model->update($identity_cert->id, [
-                                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT
+                                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT,
+                                                    'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE),
                                                 ]);
                                             }
                                             else
@@ -2436,7 +2455,7 @@ class Target_lib
                 'change_user' => $user_id,
                 'change_admin' => $admin_id
             ];
-            $fields = ['interest_rate', 'delay', 'status', 'loan_status', 'sub_status'];
+            $fields = ['interest_rate', 'delay', 'status', 'loan_status', 'sub_status', 'script_status'];
             foreach ($fields as $field) {
                 if (isset($update_param[$field])) {
                     $param[$field] = $update_param[$field];
@@ -3059,7 +3078,8 @@ class Target_lib
         {
             return FALSE;
         }
-        if($target->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+        if ($this->is_sub_loan($target->target_no))
+        {
             $this->CI->load->library('Subloan_lib');
             $this->CI->subloan_lib->subloan_verify_failed($target,$admin_id,$remark);
         }else{
@@ -3217,5 +3237,16 @@ class Target_lib
             TARGET_ORDER_WAITING_SIGNING,
             TARGET_ORDER_WAITING_VERIFY
         ]);
+    }
+
+    /**
+     * 檢查是否為產轉案件
+     * @param $target_no
+     * @return bool
+     */
+    public function is_sub_loan($target_no): bool
+    {
+        $subloan_list = $this->CI->config->item('subloan_list');
+        return (bool) preg_match('/' . $subloan_list . '/', $target_no);
     }
 }

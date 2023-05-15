@@ -24,10 +24,12 @@ $config['permission'] = [
         'menu' => [
             'index' => ['name' => '反詐欺管理指標'],
             'list' => ['name' => '反詐欺規則總覽'],
+            'list_new' => ['name' => '反詐欺統計資訊'],
         ],
         'permission' => [
             'index' => ['model' => 'AntiFraud', 'submodel' => 'index', 'action' => 'read'],
             'list' => ['model' => 'AntiFraud', 'submodel' => 'list', 'action' => 'read'],
+            'list_new' => ['model' => 'AntiFraud', 'submodel' => 'list_new', 'action' => 'read'],
         ],
     ],
     'Target' => [

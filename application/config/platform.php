@@ -1157,7 +1157,7 @@ $config['sub_product_list'] = [
                 'name' => '學生工程師貸',
                 'product_id' => '1:1',
                 'loan_range_s' => 5000,
-                'loan_range_e' => 120000,
+                'loan_range_e' => 150000,
                 'interest_rate_s' => 5,
                 'interest_rate_e' => 20,
                 'charge_platform' => PLATFORM_FEES,
@@ -1197,7 +1197,7 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [18, 35],
-                'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
+                'description' => '須提供有效學生證<br>可申請額度<br>5,000-150,000',
                 'checkOwner' => false,
             ],
             2 => [
@@ -1205,7 +1205,7 @@ $config['sub_product_list'] = [
                 'name' => '上班族工程師貸',
                 'product_id' => '3:1',
                 'loan_range_s' => 10000,
-                'loan_range_e' => 200000,
+                'loan_range_e' => 500000,
                 'interest_rate_s' => 5,
                 'interest_rate_e' => 20,
                 'charge_platform' => 4,
@@ -1254,7 +1254,7 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [18, 45],
-                'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
+                'description' => '須提供工作證明<br>可申請額度<br>10,000-500,000',
                 'checkOwner' => false,
             ]
         ],
@@ -2540,8 +2540,6 @@ $config['allow_changeRate_product'] = [1, 3];
 
 $config['social_patten'] = '全球|財經|數位|兩岸';
 
-$config['no_prepayment_allowance'] = [1000];
-
 $config['allow_aiBidding_product'] = [1, 2, 3, 4];
 
 # 推播的相關設定
@@ -2579,7 +2577,8 @@ $config['notification'] = [
     ]
 ];
 
-$config['no_prepayment_allowance'] = [PRODUCT_FOREX_CAR_VEHICLE];
+// 會發放提前還款補償金的產品
+$config['has_prepayment_allowance'] = [];
 
 $config['externalCooperation'] = [PRODUCT_SK_MILLION_SMEG];
 
