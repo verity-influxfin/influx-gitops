@@ -65,7 +65,7 @@
                                     <h1>圖片</h1>
 									<fieldset disabled>
 										<div class="form-group">
-											<label for="disabledSelect">存摺內頁照</label><br>
+											<label for="disabledSelect">近6個月封面及內頁存摺</label><br>
                                             <?
                                             if(isset($content['passbook_image'])){
                                                 foreach ($content['passbook_image'] as $key => $value) {

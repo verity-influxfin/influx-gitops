@@ -92,6 +92,7 @@ interface CreditSheetDefinition
     public const RESPONSE_CODE_REPEATED_APPROVAL = 3;
     public const RESPONSE_CODE_INVALID_ACTION = 4;
     public const RESPONSE_CODE_INVALID_SCORE = 5;
+    public const RESPONSE_CODE_INVALID_FIXED_AMOUNT = 6;
     public const RESPONSE_CODE_LIST = [
         self::RESPONSE_CODE_OK => "已完成",
         self::RESPONSE_CODE_NO_PERMISSION => "沒有操作權限",
@@ -99,6 +100,7 @@ interface CreditSheetDefinition
         self::RESPONSE_CODE_REPEATED_APPROVAL => "無法重複審核",
         self::RESPONSE_CODE_INVALID_ACTION => "無效的操作",
         self::RESPONSE_CODE_INVALID_SCORE => "加分分數不在可允許的範圍",
+        self::RESPONSE_CODE_INVALID_FIXED_AMOUNT => '額度調整不符合產品設定'
     ];
 
 }

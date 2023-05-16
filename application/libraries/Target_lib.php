@@ -353,6 +353,12 @@ class Target_lib
             if ($credit) {
                 $creditSheet = CreditSheetFactory::getInstance($target->id);
                 $interest_rate = $credit['rate'];
+                if ($renew && $target->product_id == PRODUCT_ID_STUDENT)
+                {
+                    // 學生貸：二審人員調整欄位
+                    // 調盩分數後，依據調整後的信評分數給予新的信評等級，並算出新的額度 （上限為15萬）；但利率不變，為調整信評分數前之利率
+                    $interest_rate = $target->interest_rate;
+                }
                 if ($interest_rate) {
                     $used_amount = 0;
                     $other_used_amount = 0;
@@ -415,6 +421,7 @@ class Target_lib
                                     'interest_rate' => $interest_rate,
                                     'status' => 0,
                                 ];
+                                $approve_target_result = new \Approve_target\Approve_target_result($target->status, $target->sub_status);
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
 
                                 // todo: 暫時將「學生貸」、「上班族貸」轉二審
@@ -424,6 +431,21 @@ class Target_lib
                                     $target->status == TARGET_WAITING_APPROVE &&
                                     $target->sub_status == TARGET_SUBSTATUS_NORNAL)
                                 {
+                                    goto FORCE_SECOND_INSTANCE;
+                                }
+
+                                // #2779: 若信評分數0-450，進二審審核
+                                if (isset($credit['points']) && $credit['points'] <= 450 && ! $renew)
+                                {
+                                    goto FORCE_SECOND_INSTANCE;
+                                }
+
+                                // #2779: 命中黑名單學校進二審審核
+                                $school_config = $this->CI->config->item('school_points');
+                                $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
+                                if ( ! $renew && in_array($info->meta_value, $school_config['lock_school']) && in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
+                                {
+                                    $approve_target_result->add_memo(TARGET_WAITING_APPROVE, "{$info->meta_value}為黑名單學校", $approve_target_result::DISPLAY_BACKEND);
                                     goto FORCE_SECOND_INSTANCE;
                                 }
 
@@ -495,6 +517,10 @@ class Target_lib
                                         return FALSE;
                                     }
                                 }
+
+                                $temp_new_memo = $approve_target_result->get_all_memo($param['status']);
+                                $param['memo'] = json_encode($temp_new_memo, JSON_PRETTY_PRINT);
+
                                 $rs = $this->CI->target_model->update($target->id, $param);
 
                                 if(!$renew) {
