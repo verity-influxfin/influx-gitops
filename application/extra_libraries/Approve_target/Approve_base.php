@@ -197,6 +197,10 @@ abstract class Approve_base implements Approve_interface
         {
             return FALSE;
         }
+        if ($this->check_need_second_instance_by_product() === TRUE)
+        {
+            return TRUE;
+        }
         if ($match_brookesia === TRUE)
         {
             // 命中反詐欺
@@ -210,7 +214,7 @@ abstract class Approve_base implements Approve_interface
 
         // todo: 如果後台二審審核通過也要共用這個架構，再想辦法
 
-        return $this->check_need_second_instance_by_product();
+        return FALSE;
     }
 
     /**
@@ -226,7 +230,7 @@ abstract class Approve_base implements Approve_interface
      * 依不同產品檢查是否需進二審
      * @return bool
      */
-    protected function check_need_second_instance_by_product(): bool
+    public function check_need_second_instance_by_product(): bool
     {
         return FALSE;
     }
@@ -1129,7 +1133,8 @@ abstract class Approve_base implements Approve_interface
             'status' => TARGET_WAITING_APPROVE,
             'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE,
             'target_data' => json_encode($target_data),
-            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+            'memo' => json_encode($this->result->get_all_memo(TARGET_WAITING_APPROVE))
         ];
     }
 

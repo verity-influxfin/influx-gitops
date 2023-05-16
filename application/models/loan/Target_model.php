@@ -1172,4 +1172,58 @@ class Target_model extends MY_Model
             WHERE `a`.`loan_amount` > `a`.`amount`
         ")->result_array();
     }
+
+    public function get_targets_with_normal_transactions_count($user_id)
+    {
+        $sub_query1 = $this->db
+            ->select('limit_date')
+            ->select('instalment_no')
+            ->select('target_id')
+            ->select('status')
+            ->where('user_from', $user_id)
+            ->where('source', SOURCE_AR_PRINCIPAL)
+            ->where('id IN (SELECT MIN(id) FROM p2p_transaction.transactions GROUP BY target_id,instalment_no)')
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
+        $sub_query2 = $this->db
+            ->select('t.target_id')
+            ->select('COUNT(1) AS normal_count')
+            ->join("($sub_query1) a", 'a.instalment_no = t.instalment_no AND a.target_id = t.target_id AND a.limit_date >= t.entering_date and a.status = ' . TRANSACTION_STATUS_PAID_OFF)
+            ->where('t.user_from', $user_id)
+            ->where('t.source', SOURCE_PRINCIPAL)
+            ->where('t.status', TRANSACTION_STATUS_PAID_OFF)
+            ->group_by('t.target_id')
+            ->get_compiled_select('p2p_transaction.transactions t', TRUE);
+
+        return $this->db
+            ->select('t.*')
+            ->select('IFNULL(tra.normal_count,0) AS normal_count')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query2}) as tra", 'tra.target_id = t.id', 'LEFT')
+            ->where('t.user_id', $user_id)
+            ->where_not_in('status', [TARGET_CANCEL, TARGET_FAIL])
+            ->get()
+            ->result();
+    }
+
+    public function get_list($target_condition = [])
+    {
+        $sub_query = $this->db->select('csr.name')
+            ->select('cs.target_id')
+            ->from('p2p_loan.credit_sheet_review csr')
+            ->from('p2p_loan.credit_sheet cs')
+            ->where('cs.id = csr.credit_sheet_id')
+            ->where('csr.id IN (SELECT MAX(id) FROM p2p_loan.credit_sheet_review GROUP BY credit_sheet_id)')
+            ->where('csr.admin_id <>', SYSTEM_ADMIN_ID)
+            ->get_compiled_select(NULL, TRUE);
+
+        $this->_database->select('t.*')
+            ->select('a.name AS credit_sheet_reviewer')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query}) a", 'a.target_id = t.id', 'LEFT');
+        if ( ! empty($target_condition))
+        {
+            $this->_set_where([$target_condition]);
+        }
+        return $this->_database->get()->result();
+    }
 }

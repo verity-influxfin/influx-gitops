@@ -141,11 +141,11 @@ class Credit_lib{
 
         $this->CI->config->load('credit', TRUE);
         $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_' . $product_id];
-
+        $user_info = $this->CI->user_model->get($user_id);
 	    if($stage_cer == 0) {
             NORMAL_CREDIT:
             $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
-            $user_info = $this->CI->user_model->get($user_id);
+
             $this->CI->load->model('user/user_certification_model');
 
             $data = [];
@@ -164,7 +164,7 @@ class Credit_lib{
                     $sub_product_id,
                     $product_id
                 );
-
+                $school_point = (int) ($get_school_point['school_point'] ?? 0);
                 $total += (int) ($get_school_point['point'] ?? 0);
                 if ( ! empty($get_school_point['score_history']))
                 {
@@ -286,8 +286,15 @@ class Credit_lib{
 
             if ($approvalExtra && $approvalExtra->getExtraPoints()) {
                 $total += $approvalExtra->getExtraPoints();
+                $this->scoreHistory[] = '分數調整 = ' . $approvalExtra->getExtraPoints();
             }
 
+            // 學校分數小於等於150分者，其credits.points不得高於870，若高於則以870計
+            if (( ! isset($school_point) || $school_point <= 150) && $total > 870)
+            {
+                $total = 870;
+                $this->scoreHistory[] = '學校信評分在150（含）以下，信評分數不能超過870（含）分';
+            }
             $param['points'] = intval($total);
             goto SKIP_STAGE_CREDIT;
         }
@@ -347,9 +354,11 @@ class Credit_lib{
         $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
 
         // 額度不能「大」於產品的最「大」允許額度
-		$param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
+		    $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
-		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
+        if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || ( ! empty($credit['level']) && $credit['level'] == 10))
+        {
+            $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
             return $param;
         }
         $this->CI->credit_model->update_by(
@@ -595,6 +604,30 @@ class Credit_lib{
         $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
+
+        // 檢查二審額度調整
+        if (isset($approvalExtra))
+        {
+            $fixed_amount = $approvalExtra->get_fixed_amount();
+            if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE)
+            {
+                goto SKIP_FIXED_AMOUNT;
+            }
+            // 由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
+            $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
+            $param['amount'] = $fixed_amount;
+            $param['level'] = 9;
+            $param['points'] = $credit_level_config[$param['level']]['start'];
+            $tmp_remark = json_decode($param['remark'], TRUE);
+            if (isset($tmp_remark['scoreHistory']))
+            {
+                $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
+                $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
+                $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
+            }
+            $param['remark'] = json_encode($tmp_remark);
+        }
+        SKIP_FIXED_AMOUNT:
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
@@ -953,8 +986,13 @@ class Credit_lib{
 					}
 				}
             }
+
+            if (in_array($school_name, $school_list['lock_school']))
+            {
+                $score_history[] = "(WARNING: {$school_name}為黑名單學校)";
+            }
 		}
-		return ['score_history' => $score_history, 'point' => $point];
+		return ['score_history' => $score_history, 'point' => $point, 'school_point' => $schoolPoing ?? 0];
 	}
 
     /**
@@ -1365,8 +1403,13 @@ class Credit_lib{
                 {
                     $school_points_data = $this->get_school_point($info->meta_value);
                     $school_config = $this->CI->config->item('school_points');
-                    // 黑名單的學校額度是0
-                    if(in_array($info->meta_value,$school_config['lock_school']) || empty($school_points_data['point'])){
+                    // #2779: 命中黑名單學校給予固定信評為10、固定額度3,000元
+                    if (in_array($info->meta_value, $school_config['lock_school']))
+                    {
+                        $this->get_lock_school_amount($product_id, $sub_product_id, $data, $target);
+                    }
+                    elseif (empty($school_points_data['point']))
+                    {
                         $data['amount'] = 0;
                     }
 				}
@@ -1375,6 +1418,47 @@ class Credit_lib{
 		}
 		return false;
 	}
+
+    public function get_lock_school_amount($product_id, $sub_product_id, &$data, $target = FALSE)
+    {
+        $this->CI->config->load('credit', TRUE);
+        $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
+        $credit_amount_config = $this->CI->config->item('credit')['credit_amount_' . $product_id];
+
+        $data['level'] = 10;
+        $level_max_points = $credit_level_config[$data['level']]['end'];
+
+        $left = 0;
+        $right = count($credit_amount_config);
+
+        $amount = $points = 0;
+        while ($left < $right)
+        {
+            $tmp = (int) (($left + $right) / 2);
+            if ($credit_amount_config[$tmp]['start'] > $level_max_points)
+            {
+                $left = $tmp;
+                continue;
+            }
+
+            if ($credit_amount_config[$tmp]['end'] < $level_max_points)
+            {
+                $right = $tmp;
+                continue;
+            }
+
+            $amount = $credit_amount_config[$tmp]['amount'];
+            $points = min($credit_amount_config[$tmp]['end'], $data['points']);
+            break;
+        }
+
+        $data['amount'] = $amount;
+        $data['points'] = $points;
+        if ($target)
+        {
+            $data['rate'] = $this->get_rate($data['level'], $target->instalment, $product_id, $sub_product_id, $target);
+        }
+    }
 
     public function get_credit_level($points = 0, $product_id = 0, $sub_product_id = 0, $stage_cer = FALSE)
     {
@@ -1775,5 +1859,14 @@ class Credit_lib{
         }
 
         return $result;
+    }
+
+    public function is_valid_fixed_amount(int $fixed_amount, int $product_loan_range_s, int $product_loan_range_e): bool
+    {
+        if ($fixed_amount == 0 || $fixed_amount < $product_loan_range_s || $fixed_amount > $product_loan_range_e)
+        {
+            return FALSE;
+        }
+        return TRUE;
     }
 }
