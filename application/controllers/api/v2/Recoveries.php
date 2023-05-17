@@ -1191,7 +1191,12 @@ class Recoveries extends REST_Controller
             $this->response(array('result' => 'ERROR', 'error' => TRANSACTION_PASSWORD_ERROR));
         }
 
-        $withdraw = $this->transaction_lib->withdraw($user_id, intval($input['amount']));
+        $input['amount'] = (int) $input['amount'];
+        if ($this->transaction_lib->check_minimum_withdraw_amount($input['amount']) === FALSE)
+        {
+            $this->response(['result' => 'ERROR', 'error' => LOW_WITHDRAW_AMOUNT]);
+        }
+        $withdraw = $this->transaction_lib->withdraw($user_id, $input['amount']);
         if ($withdraw) {
             $this->response(array('result' => 'SUCCESS'));
         } else {
