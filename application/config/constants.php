@@ -122,6 +122,7 @@ defined('NOT_INCORPORATION') or define('NOT_INCORPORATION', 223); //公司不是
 defined('NO_RESPONSIBLE_USER_BIND') or define('NO_RESPONSIBLE_USER_BIND', 224); //法人帳號沒有綁定自然人帳號
 defined('NO_RESPONSIBLE_IDENTITY') or define('NO_RESPONSIBLE_IDENTITY', 225); // 法人沒有通過負責人實名 by news
 defined('PROMOTE_CODE_NOT_EXIST') or define('PROMOTE_CODE_NOT_EXIST', 226); // 該推薦碼不存在
+defined('LOW_WITHDRAW_AMOUNT') or define('LOW_WITHDRAW_AMOUNT', 227); // 提領金額過低
 
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301);
@@ -447,6 +448,7 @@ defined('BANK_COST_ACCOUNT') 		OR define('BANK_COST_ACCOUNT'		, '00000000000000'
 defined('LENDING_URL') 				OR define('LENDING_URL'				, getenv('ENV_LENDING_URL'));
 defined('BORROW_URL') 				OR define('BORROW_URL'				, getenv('ENV_BORROW_URL'));
 defined('CREDIT_EMAIL') 			OR define('CREDIT_EMAIL'		, getenv('ENV_CREDIT_EMAIL'));
+defined('MINIMUM_WITHDRAW_AMOUNT') or define('MINIMUM_WITHDRAW_AMOUNT', 32); // 最低提領金額
 
 //SOURCE
 defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//代收
