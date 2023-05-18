@@ -48,6 +48,8 @@ class Frozen_amount_model extends MY_Model
             $this->_set_where([0 => $where_param]);
         }
 
+        $update_param['updated_ip'] = get_ip();
+        $update_param['updated_at'] = time();
         foreach ($update_param as $key => $value)
         {
             $this->_database->set($key, $value);

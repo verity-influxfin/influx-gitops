@@ -115,6 +115,8 @@ class Withdraw_model extends MY_Model
             $this->_set_where([0 => $where_param]);
         }
 
+        $update_param['updated_at'] = time();
+        $update_param['updated_ip'] = get_ip();
         foreach ($update_param as $key => $value)
         {
             $this->_database->set($key, $value);
