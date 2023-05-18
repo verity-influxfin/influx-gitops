@@ -148,6 +148,11 @@ abstract class Approve_base implements Approve_interface
             {
                 $this->result->set_status(TARGET_WAITING_SIGNING);
             }
+            else
+            {
+                $status = $this->result->get_status();
+                $this->result->add_memo($status, "因無credit/platform_fee/loan_amount，案件維持status={$status}", Approve_target_result::DISPLAY_DEBUG);
+            }
         }
 
         $status = $this->result->get_status();
@@ -1068,9 +1073,11 @@ abstract class Approve_base implements Approve_interface
             'status' => TARGET_WAITING_APPROVE,
             'sub_status' => $this->result->get_sub_status(),
         ];
-        if (empty($param))
+
+        $memo = $this->result->get_all_memo(TARGET_WAITING_APPROVE);
+        if ( ! empty($memo))
         {
-            return FALSE;
+            $param['memo'] = json_encode($memo, JSON_PRETTY_PRINT);
         }
 
         $this->CI->target_model->update($this->target['id'], $param);
