@@ -155,6 +155,10 @@ abstract class Approve_base implements Approve_interface
             }
         }
 
+        if ($subloan_status === TRUE)
+        {
+            $this->result->set_status(TARGET_WAITING_SIGNING);
+        }
         $status = $this->result->get_status();
         switch ($status)
         {
