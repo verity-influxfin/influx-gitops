@@ -354,12 +354,12 @@ export default {
     display: flex;
 
     .ic {
-      background-image: url("../asset/images/register-foto.jpg");
-      background-size: contain;
-      // background-image: url("../asset/images/4058371.png");
+      // background-image: url("../asset/images/register-foto.jpg");
+      // background-size: contain;
+      background-image: url("../asset/images/4058371.png");
       background-position: center;
       background-repeat: no-repeat;
-      // background-size: cover;
+      background-size: cover;
       width: 50%;
       position: relative;
 
