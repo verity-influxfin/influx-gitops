@@ -1075,6 +1075,12 @@ class Target_model extends MY_Model
             ->select('phone')
             ->get_compiled_select('p2p_user.users', TRUE);
 
+        $sub_query2 = $this->db
+            ->select('user_from')
+            ->where('source', SOURCE_AR_DELAYINTEREST)
+            ->group_by('user_from')
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
+
         return $this->db
             ->select('t.target_no')
             ->select('t.user_id')
@@ -1085,8 +1091,10 @@ class Target_model extends MY_Model
             ->select('t.product_id')
             ->select('t.sub_product_id')
             ->select('t.certificate_status')
+            ->select('IF(tr.user_from IS NULL, 0, 1) AS has_delayed')
             ->from('p2p_loan.targets t')
             ->join("({$sub_query}) u", 'u.id=t.user_id', 'LEFT')
+            ->join("({$sub_query2}) tr", 'tr.user_from=t.user_id', 'LEFT')
             ->where('t.product_id', $product_id)
             ->where_in('t.status', $status_list)
             ->order_by('t.user_id')
