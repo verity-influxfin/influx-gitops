@@ -46,7 +46,7 @@ class Withdraw_model extends MY_Model
         $sql = '
             SELECT `a`.`id`
             FROM (
-                SELECT `w`.`id`, `w`.`created_at` as `limit_date`, `w`.`created_at` 
+                SELECT `w`.`id`, NULL as `limit_date`, `w`.`created_at` 
                 FROM `p2p_transaction`.`withdraw` `w`
                 WHERE `w`.`status` = ' . WITHDRAW_STATUS_WAITING . '
                 AND `w`.`frozen_id` > 0
@@ -60,7 +60,7 @@ class Withdraw_model extends MY_Model
                     WHERE `t`.`status` = ' . TRANSACTION_STATUS_TO_BE_PAID . ' 
                     AND `t`.`source` IN (' . SOURCE_AR_PRINCIPAL . ',' . SOURCE_AR_INTEREST . ')
                     GROUP BY `t`.`user_from`
-                ) `a` ON `a`.user_from = `w`.`user_id` AND UNIX_TIMESTAMP(`a`.`limit_date`) > `w`.`created_at` 
+                ) `a` ON `a`.user_from = `w`.`user_id` 
                 WHERE `w`.`status` = ' . WITHDRAW_STATUS_WAITING . '
                 AND `w`.`frozen_id` > 0
                 AND `w`.`investor` = ' . USER_BORROWER . '
@@ -75,7 +75,7 @@ class Withdraw_model extends MY_Model
                 )
             ) `a`
             WHERE `a`.`limit_date` IS NULL
-            OR `a`.`limit_date` >= `a`.`created_at`
+            OR `a`.`limit_date` > `a`.`created_at`
         ';
 
         return $this->db->query($sql)->result_array();
