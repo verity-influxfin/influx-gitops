@@ -119,7 +119,7 @@ abstract class Approve_base implements Approve_interface
         {
             $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
             $this->result->set_action_cancel();
-            $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
+            $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_DEBUG);
             goto END;
         }
 
