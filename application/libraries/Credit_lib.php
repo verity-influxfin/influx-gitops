@@ -1396,6 +1396,13 @@ class Credit_lib{
                     // 期數不同的評分要重新跑
                     if($target->instalment != $rs->instalment)
                         return FALSE;
+
+                    $this->CI->load->library('target_lib');
+                    if ($this->CI->target_lib->is_sub_loan($target->target_no) === TRUE &&
+                        $target->product_id === PRODUCT_ID_STUDENT)
+                    {
+                        return $data;
+                    }
                 }
 
                 $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
