@@ -1189,7 +1189,8 @@ class Target_model extends MY_Model
             ->where('loan_status', 2)
             ->get()
             ->result_array();
-
+    }
+    
     public function get_targets_with_normal_transactions_count($user_id)
     {
         $sub_query1 = $this->db
