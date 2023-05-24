@@ -972,4 +972,77 @@ class Cron extends CI_Controller
         ]);
         die('1');
     }
+
+    // 提領放款，自動轉出放款匯款單
+    public function auto_withdraw()
+    {
+        $start_time = time();
+
+        // 提領待放款清單
+        $this->load->model('transaction/withdraw_model');
+        $withdraw_list = $this->withdraw_model->get_all_withdraw_list();
+        $valid_withdraw_list = $this->withdraw_model->get_auto_withdraw_list();
+
+        // 轉出放款匯款單
+        $count = 0;
+        if ( ! empty($valid_withdraw_list))
+        {
+            $valid_withdraw_ids = array_column($valid_withdraw_list, 'id');
+            $this->load->library('payment_lib');
+            $response = $this->payment_lib->withdraw_txt($valid_withdraw_ids, SYSTEM_ADMIN_ID);
+            if ($response)
+            {
+                $count = count($valid_withdraw_ids);
+            }
+        }
+        if ( ! empty($withdraw_list))
+        {
+            $remain_withdraw_ids = array_diff(array_column($withdraw_list, 'id'), ($valid_withdraw_ids ?? []));
+            $this->load->library('withdraw_lib');
+            $this->withdraw_lib->withdraw_deny($remain_withdraw_ids);
+        }
+
+        $end_time = time();
+        $data = [
+            'script_name' => 'auto_withdraw',
+            'num' => $count,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
+
+    // 借款放款，轉出放款匯款單
+    public function auto_loan()
+    {
+        $start_time = time();
+
+        // 借款待放款清單
+        $this->load->model('loan/target_model');
+        $loan_list = $this->target_model->get_auto_loan_list();
+
+        // 轉出放款匯款單
+        $count = 0;
+        if ( ! empty($loan_list))
+        {
+            $loan_ids = array_column($loan_list, 'id');
+            $this->load->library('payment_lib');
+            $response = $this->payment_lib->loan_txt($loan_ids, SYSTEM_ADMIN_ID);
+            if ($response)
+            {
+                $count = count($loan_ids);
+            }
+        }
+
+        $end_time = time();
+        $data = [
+            'script_name' => 'auto_loan',
+            'num' => $count,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
 }

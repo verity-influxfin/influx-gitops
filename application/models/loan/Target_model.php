@@ -1181,6 +1181,15 @@ class Target_model extends MY_Model
         ")->result_array();
     }
 
+    public function get_auto_loan_list()
+    {
+        return $this->db->select('id')
+            ->from('p2p_loan.targets')
+            ->where('status', TARGET_WAITING_LOAN)
+            ->where('loan_status', 2)
+            ->get()
+            ->result_array();
+
     public function get_targets_with_normal_transactions_count($user_id)
     {
         $sub_query1 = $this->db
