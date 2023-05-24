@@ -464,7 +464,7 @@
                             </div>
                         </article>
                         <section class="advertise" style="display: flex; justify-content: center;">
-                            <img class="cover adv_img" src=" /{{ $adv->img_url }}"/>
+                            <img class="cover adv_img" src=" /{{ $adv->img_url }}" style="max-width: 100%;"/>
                         </section>
                         <section class="adv_sec"  style="margin: 30px 0;">
                             @if ($adv->type == 'student')    
