@@ -119,7 +119,7 @@ abstract class Approve_base implements Approve_interface
         {
             $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
             $this->result->set_action_cancel();
-            $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
+            $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_DEBUG);
             goto END;
         }
 
@@ -148,9 +148,19 @@ abstract class Approve_base implements Approve_interface
             {
                 $this->result->set_status(TARGET_WAITING_SIGNING);
             }
+            else
+            {
+                $status = $this->result->get_status();
+                $this->result->add_memo($status, "因無credit/platform_fee/loan_amount，案件維持status={$status}", Approve_target_result::DISPLAY_DEBUG);
+            }
         }
 
         $status = $this->result->get_status();
+        if ($subloan_status === TRUE && $status === TARGET_WAITING_APPROVE)
+        {
+            $status = TARGET_WAITING_SIGNING;
+        }
+
         switch ($status)
         {
             case TARGET_WAITING_SIGNING:
@@ -197,6 +207,10 @@ abstract class Approve_base implements Approve_interface
         {
             return FALSE;
         }
+        if ($this->check_need_second_instance_by_product() === TRUE)
+        {
+            return TRUE;
+        }
         if ($match_brookesia === TRUE)
         {
             // 命中反詐欺
@@ -210,7 +224,7 @@ abstract class Approve_base implements Approve_interface
 
         // todo: 如果後台二審審核通過也要共用這個架構，再想辦法
 
-        return $this->check_need_second_instance_by_product();
+        return FALSE;
     }
 
     /**
@@ -226,7 +240,7 @@ abstract class Approve_base implements Approve_interface
      * 依不同產品檢查是否需進二審
      * @return bool
      */
-    protected function check_need_second_instance_by_product(): bool
+    public function check_need_second_instance_by_product(): bool
     {
         return FALSE;
     }
@@ -1064,9 +1078,11 @@ abstract class Approve_base implements Approve_interface
             'status' => TARGET_WAITING_APPROVE,
             'sub_status' => $this->result->get_sub_status(),
         ];
-        if (empty($param))
+
+        $memo = $this->result->get_all_memo(TARGET_WAITING_APPROVE);
+        if ( ! empty($memo))
         {
-            return FALSE;
+            $param['memo'] = json_encode($memo, JSON_PRETTY_PRINT);
         }
 
         $this->CI->target_model->update($this->target['id'], $param);
@@ -1129,7 +1145,8 @@ abstract class Approve_base implements Approve_interface
             'status' => TARGET_WAITING_APPROVE,
             'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE,
             'target_data' => json_encode($target_data),
-            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+            'memo' => json_encode($this->result->get_all_memo(TARGET_WAITING_APPROVE))
         ];
     }
 

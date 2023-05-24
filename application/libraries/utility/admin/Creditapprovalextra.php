@@ -15,6 +15,10 @@ class Creditapprovalextra
      * @var array
      */
     private $specialInfo;
+    /**
+     * @var int
+     */
+    protected $fixed_amount;
 
     /**
 	 * @return int
@@ -62,5 +66,15 @@ class Creditapprovalextra
     public function getSpecialInfo(): array
     {
         return $this->specialInfo;
+    }
+
+    public function set_fixed_amount(int $amount): void
+    {
+        $this->fixed_amount = $amount;
+    }
+
+    public function get_fixed_amount(): int
+    {
+        return $this->fixed_amount ?? 0;
     }
 }

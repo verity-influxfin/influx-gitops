@@ -196,7 +196,8 @@ class Transaction_lib{
 
 	//提領
 	public function withdraw($user_id,$amount=0,$investor=1){
-		if($user_id && $amount > 31 ){
+        if ($user_id && $this->check_minimum_withdraw_amount($amount))
+        {
 			$virtual_account = $this->CI->virtual_account_model->get_by([
 				'status'	=> 1,
 				'investor'	=> $investor,
@@ -1414,5 +1415,16 @@ class Transaction_lib{
         }
 
         return FALSE;
+    }
+
+    /**
+     * 檢查提領金額是否符合最低限制
+     * @param $amount
+     * @return bool
+     */
+    public function check_minimum_withdraw_amount($amount): bool
+    {
+        $amount = (int) $amount;
+        return $amount >= MINIMUM_WITHDRAW_AMOUNT;
     }
 }

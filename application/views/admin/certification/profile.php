@@ -70,9 +70,9 @@
                                             <tbody>
                                                 <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>負責人現居地址-郵遞區號</span></td><td><input class="sk-input" type="text" name="PrCurAddrZip"></td></tr>
+                                                <tr><td><span>負責人現居地址-郵遞區號</span></td><td><input class="sk-input zipcode" type="text" name="PrCurAddrZip"></td></tr>
                                                 <tr><td><span>負責人現居地址-郵遞區號名稱</span></td><td><input class="sk-input" type="text" name="PrCurAddrZipName"></td></tr>
-                                                <tr><td><span>負責人現居地址-非郵遞地址資料</span></td><td><input class="sk-input" type="text" name="PrCurlAddress"></td></tr>
+                                                <tr><td><span>負責人現居地址-非郵遞地址資料</span></td><td><input class="sk-input address" type="text" name="PrCurlAddress"></td></tr>
                                                 <tr><td><span>負責人連絡電話-區碼</span></td><td><input class="sk-input" type="text" name="PrTelAreaCode"></td></tr>
                                                 <tr><td><span>負責人連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="PrTelNo"></td></tr>
                                                 <tr><td><span>負責人連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="PrTelExt"></td></tr>
@@ -130,9 +130,9 @@
                                             <tbody>
                                                 <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>配偶現居地址-郵遞區號</span></td><td><input class="sk-input" type="text" name="SpouseCurAddrZip"></td></tr>
+                                                <tr><td><span>配偶現居地址-郵遞區號</span></td><td><input class="sk-input zipcode" type="text" name="SpouseCurAddrZip"></td></tr>
                                                 <tr><td><span>配偶現居地址-郵遞區號名稱</span></td><td><input class="sk-input" type="text" name="SpouseCurAddrZipName"></td></tr>
-                                                <tr><td><span>配偶現居地址-非郵遞地址資料</span></td><td><input class="sk-input" type="text" name="SpouseCurlAddress"></td></tr>
+                                                <tr><td><span>配偶現居地址-非郵遞地址資料</span></td><td><input class="sk-input address" type="text" name="SpouseCurlAddress"></td></tr>
                                                 <tr><td><span>配偶連絡電話-區碼</span></td><td><input class="sk-input" type="text" name="SpouseTelAreaCode"></td></tr>
                                                 <tr><td><span>配偶連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="SpouseTelNo"></td></tr>
                                                 <tr><td><span>配偶連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="SpouseTelExt"></td></tr>
@@ -154,9 +154,9 @@
                                             <tbody>
                                                 <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>保證人甲現居地址-郵遞區號</span></td><td><input class="sk-input" type="text" name="GuOneCurAddrZip"></td></tr>
+                                                <tr><td><span>保證人甲現居地址-郵遞區號</span></td><td><input class="sk-input zipcode" type="text" name="GuOneCurAddrZip"></td></tr>
                                                 <tr><td><span>保證人甲現居地址-郵遞區號名稱</span></td><td><input class="sk-input" type="text" name="GuOneCurAddrZipName"></td></tr>
-                                                <tr><td><span>保證人甲現居地址-非郵遞地址資料</span></td><td><input class="sk-input" type="text" name="GuOneCurlAddress"></td></tr>
+                                                <tr><td><span>保證人甲現居地址-非郵遞地址資料</span></td><td><input class="sk-input address" type="text" name="GuOneCurlAddress"></td></tr>
                                                 <tr><td><span>保證人甲連絡電話-區碼</span></td><td><input class="sk-input" type="text" name="GuOneTelAreaCode"></td></tr>
                                                 <tr><td><span>保證人甲連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="GuOneTelNo"></td></tr>
                                                 <tr><td><span>保證人甲連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="GuOneTelExt"></td></tr>
@@ -194,9 +194,9 @@
                                             <tbody>
                                                 <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>保證人乙現居地址-郵遞區號</span></td><td><input class="sk-input" type="text" name="GuTwoCurAddrZip"></td></tr>
+                                                <tr><td><span>保證人乙現居地址-郵遞區號</span></td><td><input class="sk-input zipcode" type="text" name="GuTwoCurAddrZip"></td></tr>
                                                 <tr><td><span>保證人乙現居地址-郵遞區號名稱</span></td><td><input class="sk-input" type="text" name="GuTwoCurAddrZipName"></td></tr>
-                                                <tr><td><span>保證人乙現居地址-非郵遞地址資料</span></td><td><input class="sk-input" type="text" name="GuTwoCurlAddress"></td></tr>
+                                                <tr><td><span>保證人乙現居地址-非郵遞地址資料</span></td><td><input class="sk-input address" type="text" name="GuTwoCurlAddress"></td></tr>
                                                 <tr><td><span>保證人乙連絡電話-區碼</span></td><td><input class="sk-input" type="text" name="GuTwoTelAreaCode"></td></tr>
                                                 <tr><td><span>保證人乙連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="GuTwoTelNo"></td></tr>
                                                 <tr><td><span>保證人乙連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="GuTwoTelExt"></td></tr>
@@ -305,6 +305,12 @@ $(document).ready(function() {
                         }
                     }
                 })
+
+                $.each($("input.address"), function (key, item) {
+                    if ($(item).val()) {
+                        $(item).trigger("change");
+                    }
+                })
             }
         },
         error: function(error) {
@@ -317,5 +323,16 @@ $(document).ready(function() {
         $(show_id).show()
     })
     $( "#skbank_form_tab :first-child :first-child" ).trigger( "click" );
+
+    $(".address").on("change", function () {
+        let address = $(this);
+        $.ajax({
+            type: 'GET',
+            url: `https://zip5.5432.tw/zip5json.py?adrs=${address.val()}`,
+            success: function (response) {
+                address.parents(".dataTable").find("input.zipcode").val(response.zipcode.substring(0, 3));
+            }
+        });
+    });
 });
 </script>
