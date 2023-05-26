@@ -32,6 +32,15 @@ $config['permission'] = [
             'list_new' => ['model' => 'AntiFraud', 'submodel' => 'list_new', 'action' => 'read'],
         ],
     ],
+    'BillOfCollection' => [
+        'name' => '託收票據明細表',
+        'menu' => [
+            'index' => ['name' => '託收票據明細表'],
+        ],
+        'permission' => [
+            'index' => ['model' => 'BillOfCollection', 'submodel' => 'index', 'action' => 'read'],
+        ],
+    ],
     'Target' => [
         'name' => '借款管理',
         'menu' => [
