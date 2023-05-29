@@ -6,7 +6,7 @@
             <h1 class="page-header">託收票據明細表</h1>
         </div>
         <div class="col-md-6">
-            <button class="headerButton" id="exportExcel">匯出excel</button>
+            <button class="headerButton" id="exportExcel" @click="exportExcel()">匯出excel</button>
             <button class="headerButton" id="addCheck" @click="addCheck()">新增託收票據</button>
             
         </div>
@@ -255,19 +255,21 @@
                     </div>
                     <div class="col-md-4">
                         <label>付款銀行：</label>
-                        <input
-                            type="text" 
-                            class="insertInput" 
-                            v-model="upsertData.payment_bank"
-                        >
+                        <select class="insertSelect" v-model="upsertData.payment_bank" @change="selectPaymentBank()">
+                            <option value="">請選擇</option>
+                            <template v-for="(value, key, index) in bankArr">
+                                <option :value="key">{{ value.bank_name }}</option>
+                            </template>
+                        </select>
                     </div>
                     <div class="col-md-4">
                         <label>付款分行：</label>
-                        <input
-                            type="text" 
-                            class="insertInput" 
-                            v-model="upsertData.payment_branch"
-                        >
+                        <select class="insertSelect" v-model="upsertData.payment_branch">
+                            <option value="">請選擇</option>
+                            <template v-for="(value, key, index) in paymentBranchArr">
+                                <option :value="key">{{ value }}</option>
+                            </template>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -328,19 +330,21 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label>託收銀行：</label>
-                        <input
-                            type="text" 
-                            class="insertInput" 
-                            v-model="upsertData.collection_bank"
-                        >
+                        <select class="insertSelect" v-model="upsertData.collection_bank" @change="selectCollectBank()">
+                            <option value="">請選擇</option>
+                            <template v-for="(value, key, index) in bankArr">
+                                <option :value="key">{{ value.bank_name }}</option>
+                            </template>
+                        </select>
                     </div>
                     <div class="col-md-4">
                         <label>託收分行：</label>
-                        <input
-                            type="text" 
-                            class="insertInput" 
-                            v-model="upsertData.collection_branch"
-                        >
+                        <select class="insertSelect" v-model="upsertData.collection_branch">
+                            <option value="">請選擇</option>
+                            <template v-for="(value, key, index) in collectBranchArr">
+                                <option :value="key">{{ value }}</option>
+                            </template>
+                        </select>
                     </div>
                     <div class="col-md-4">
                         <label>託收日：</label>
@@ -416,7 +420,7 @@
         <div class="modal-content">
             <span class="close">X</span>
             <template v-for="item in detailData">
-                <template v-if="item.review_status == 0">
+                <template v-if="item.review_status == 0 && isSupervisor">
                     <div class="row mb-3" style="display: flex;">
                         <h3 style="width: 20%;">審核票據資訊</h3>
                         <button 
@@ -467,7 +471,7 @@
                             </div>
                             <div class="row">
                                 <label class="left-label">付款銀行</label>
-                                <label class="right-label">{{ item.content.payment_bank }}</label>
+                                <label class="right-label">{{ bankArr[item.content.payment_bank]['bank_name'] }}</label>
                             </div>
                             <div class="row">
                                 <label class="left-label">發票人帳號</label>
@@ -527,7 +531,7 @@
                             </div>
                             <div class="row">
                                 <label class="left-label">託收銀行</label>
-                                <label class="right-label">{{ item.content.collection_bank }}</label>
+                                <label class="right-label">{{ bankArr[item.content.collection_bank]['bank_name'] }}</label>
                             </div>
                             <div class="row">
                                 <label class="left-label">託收日</label>
@@ -730,7 +734,7 @@
                             </td>
                             <td>
                                 <input 
-                                    type="text" 
+                                    type="" 
                                     value="null" 
                                     v-model="searchData.user_id"    
                                 />
@@ -741,7 +745,7 @@
                             <td>
                                 <input 
                                     type="text" 
-                                    value="null" 
+                                    value="" 
                                     v-model="searchData.cheque_drawer"
                                 />
                             </td>
@@ -751,7 +755,7 @@
                             <td>
                                 <input 
                                     type="text" 
-                                    value="null" 
+                                    value="" 
                                     v-model="searchData.cheque_no"
                                 />
                             </td>
@@ -764,7 +768,7 @@
                                 <input
                                     type="date" 
                                     v-model="sdate"
-                                    value="null"
+                                    value=""
                                     min="2023-01-01" 
                                     max="2030-12-31"
                                     placeholder="不指定區間"
@@ -777,7 +781,7 @@
                                 <input
                                     type="date" 
                                     v-model="edate"
-                                    value="null"
+                                    value=""
                                     min="2023-01-01" 
                                     max="2030-12-31"
                                     placeholder="不指定區間"
@@ -790,7 +794,7 @@
                             </td>
                             <td>
                                 <select v-model="searchData.date_expire">
-                                    <option value="null">請選擇</option>
+                                    <option value="">請選擇</option>
                                     <option value="1">是</option>
                                     <option value="0">否</option>
                                 </select>
@@ -800,7 +804,7 @@
                             </td>
                             <td>
                                 <select v-model="searchData.cash_status">
-                                    <option value="null">請選擇</option>
+                                    <option value="">請選擇</option>
                                     <option value="1">是</option>
                                     <option value="0">否</option>
                                 </select>
@@ -810,7 +814,7 @@
                             </td>
                             <td>
                                 <select v-model="searchData.status">
-                                    <option value="null">請選擇</option>
+                                    <option value="">請選擇</option>
                                     <option value="0">標記刪除</option>
                                     <option value="1">正常（託收中）</option>
                                     <option value="2">已領回</option>
@@ -877,7 +881,7 @@
                                     <td>{{ item.cheque_drawer }}</td>
                                     <td>{{ item.user_id }}</td>
                                     <td>{{ item.target_no }}</td>
-                                    <td>{{ item.payment_bank }}</td>
+                                    <td>{{ bankArr[item.payment_bank]['bank_name'] }}</td>
                                     <td>{{ item.drawer_bankaccout }}</td>
                                     <td>{{ item.cheque_no }}</td>
                                     <td>{{ item.cheque_amount }}</td>
@@ -938,14 +942,40 @@
                         </table>
                     </div>
                 </div>
+                <nav style="text-align: center;">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <button 
+                                type="button" 
+                                class="page-link" 
+                                v-if="page != 1"
+                                @click="changePage('previous', page)"
+                            > 上一頁 </button>
+                        </li>
+                        <li class="page-item">
+                            <button 
+                                type="button" 
+                                class="page-link" 
+                                v-for="pageNumber in totalPages"
+                                @click="changePage('this', pageNumber)"
+                            > {{ pageNumber }} </button>
+                        </li>
+                        <li class="page-item">
+                            <button 
+                                type="button" 
+                                class="page-link" 
+                                v-if="page < totalPages"
+                                @click="changePage('next', page)"
+                            > 下一頁 </button>
+                        </li>
+                    </ul>
+                </nav>  
             </div>
         </div>
     </div>
 </div>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="/assets/admin/js/vue-components.js"></script>
 <script>
 var loginData = '<?php print_r(json_encode($login_info))?>';
 var loginInfo = JSON.parse(loginData);
@@ -1021,52 +1051,107 @@ const v = new Vue({
                 date_expire: null,
                 cash_status: null,
                 status: null
-            }
+            },
+            bankArr: {},
+            paymentBranchArr: {},
+            collectBranchArr: {},
+            page: 1,
+            pageSize: 10,
+            total: 0
+        }
+    },
+    computed: {
+        isSupervisor() {
+            // 1: 執行長, 10: 財務主管
+            return ['1', '10'].includes(loginInfo.group_id);
+        },
+        totalPages() {
+            return Math.ceil(this.total / this.pageSize);
         }
     },
     mounted() {
-        this.getCheque()
+        this.getCheque();
+        this.getBankArr();
     },
     methods: {
         getCheque() {
             let data = {};
-            axios.post(`${erp_host}/user_cheque`, data)
+            axios.post(`${erp_host}/user_cheque?page=${this.page}&page_size=${this.pageSize}`, data)
             .then((res) => {
                 this.tableData = res.data; 
+                
+                // 移除回傳tableData內的 { total: x }
+                for (let i = 0; i < this.tableData.length; i++) {
+                    for (let [key, val] of Object.entries(this.tableData[i])) {
+                        if (key == 'total') {
+                            this.total = val
+                            let index = this.tableData.indexOf(this.tableData[i])
+                            if (index > -1) { 
+                                this.tableData.splice(index, 1); 
+                            }
+                        }
+                    }
+                }
             })
             .catch((err) => {
                 console.log(err);
             })
         },
         goSearch() {
+            if (this.sdate == '' || this.edate == '') {
+                this.sdate = null;
+                this.edate = null;
+            }
+            for (let [key, val] of Object.entries(this.searchData)) {
+                if (val == '') {
+                    this.searchData[key] = null;
+                }
+            }
+            
             if (this.sdate != null && this.edate != null) {
-                axios.post(`${erp_host}/user_cheque?sdate=${this.sdate}&edate=${this.edate}`, this.searchData)
+                axios.post(`${erp_host}/user_cheque?sdate=${this.sdate}&edate=${this.edate}&page=${this.page}&page_size=${this.pageSize}`, this.searchData)
                 .then((res) => {
                     this.tableData = res.data;
+
+                    // 移除回傳tableData內的 { total: x }
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        for (let [key, val] of Object.entries(this.tableData[i])) {
+                            if (key == 'total') {
+                                this.total = val
+                                let index = this.tableData.indexOf(this.tableData[i])
+                                if (index > -1) { 
+                                    this.tableData.splice(index, 1); 
+                                }
+                            }
+                        }
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
                 })
             } else {
-                axios.post(`${erp_host}/user_cheque`, this.searchData)
+                axios.post(`${erp_host}/user_cheque?page=${this.page}&page_size=${this.pageSize}`, this.searchData)
                 .then((res) => {
                     this.tableData = res.data;
+
+                    // 移除回傳tableData內的 { total: x }
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        for (let [key, val] of Object.entries(this.tableData[i])) {
+                            if (key == 'total') {
+                                this.total = val
+                                let index = this.tableData.indexOf(this.tableData[i])
+                                if (index > -1) { 
+                                    this.tableData.splice(index, 1); 
+                                }
+                            }
+                        }
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
                 })
             }
 
-            this.sdate = null;
-            this.edate = null;
-            this.searchData = {
-                user_id: null,
-                cheque_no: null,
-                cheque_drawer: null,
-                date_expire: null,
-                cash_status: null,
-                status: null
-            };
         },
         uploadFile() {
             this.image = this.$refs.file.files[0];
@@ -1091,6 +1176,7 @@ const v = new Vue({
 
                 axios.post(`${erp_host}/user_cheque/insert`, formData, { headers })
                 .then((res) => {
+                    alert('新增票據成功');
                     document.location.reload();
                 })
                 .catch((err) => {
@@ -1114,7 +1200,7 @@ const v = new Vue({
             this.upsertData['admin_id'] = loginInfo.id;
             this.upsertData['cheque_id'] = check_id;
             var ipInfo;
-            $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+            $.getJSON(`https://api.db-ip.com/v2/free/self`, function(data) {
                 ipInfo = data;
             });
             setTimeout(() => {
@@ -1128,6 +1214,7 @@ const v = new Vue({
 
                 axios.put(`${erp_host}/user_cheque/edit`, formData, { headers })
                 .then((res) => {
+                    alert('編輯票據成功');
                     document.location.reload();
                 })
                 .catch((err) => {
@@ -1145,6 +1232,11 @@ const v = new Vue({
                     this.upsertData = this.tableData[i];
                 }
             }
+
+            try { this.paymentBranchArr = this.bankArr[this.upsertData.payment_bank]['branch']; }
+            catch (err) { this.paymentBranchArr = {}; }
+            try { this.collectBranchArr = this.bankArr[this.upsertData.collection_bank]['branch']; } 
+            catch (err) { this.collectBranchArr = {}; }
         },
         deleteForm(item) {
             const formData = new FormData();
@@ -1154,7 +1246,7 @@ const v = new Vue({
             item['status'] = 0;
             item['edit_status'] = 0;
             var ipInfo;
-            $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+            $.getJSON(`https://api.db-ip.com/v2/free/self`, function(data) {
                 ipInfo = data;
             });
             setTimeout(() => {
@@ -1234,10 +1326,70 @@ const v = new Vue({
         approveModify(modifyCheck, isApprove) {
             axios.put(`${erp_host}/user_cheque/review?cheque_id=${modifyCheck.cheque_id}&review=${isApprove}`)
             .then((res) => {
+                alert('審核成功');
                 document.location.reload();
             }).catch((err) => {
                 console.log(err);
             });
+        },
+        getBankArr() {
+            axios.get(`${erp_host}/banks`)
+            .then((res) => {
+                this.bankArr = res.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        selectPaymentBank() {
+            try {
+                this.paymentBranchArr = this.bankArr[this.upsertData.payment_bank]['branch'];
+            } catch (err) {
+                this.paymentBranchArr = {};                
+            }
+        },
+        selectCollectBank() {
+            try {
+                this.collectBranchArr = this.bankArr[this.upsertData.collection_bank]['branch'];
+            } catch (err) {
+                this.collectBranchArr = {};                
+            }
+        },
+        changePage(type, current_page) {
+            if (type == 'previous') { this.page--; }
+            else if (type == 'next') { this.page++; }
+            else { this.page = current_page; }
+            this.goSearch();
+        },exportExcel() {
+            if (this.sdate != null && this.edate != null) {
+                axios.post(`${erp_host}/user_cheque/excel?sdate=${this.sdate}&edate=${this.edate}`, this.searchData, { responseType: 'blob' })
+                .then((res) => {
+                    const url = window.URL.createObjectURL(new Blob([res.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', '託收票據.xlsx'); 
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+            } else {
+                axios.post(`${erp_host}/user_cheque/excel`, this.searchData, { responseType: 'blob' })
+                .then((res) => {
+                    const url = window.URL.createObjectURL(new Blob([res.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', '託收票據.xlsx'); 
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+            }
         }
     },
 });
@@ -1330,10 +1482,10 @@ body { font-family: Arial, Helvetica, sans-serif; }
 }
 .modal-content {
     background-color: #fefefe;
-    margin: 0 120px;
+    margin: 0 100px;
     padding: 20px;
     border: 1px solid #888;
-    width: 70%;
+    width: 75%;
 }
 .modal-card {
     border: solid;
@@ -1413,6 +1565,13 @@ body { font-family: Arial, Helvetica, sans-serif; }
 }
 #table_detail .hidden_row {
     display: none;
+}
+
+button.page-link {
+    display: inline-block;
+    font-size: 20px;
+    color: #036FB7;
+    font-weight: 500;
 }
 
 </style>
