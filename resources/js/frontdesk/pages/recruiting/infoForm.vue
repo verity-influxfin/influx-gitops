@@ -6,7 +6,7 @@
     <form class="form-content" onsubmit="return false">
       <div class="form-title">應徵人員履歷資料表</div>
       <div class="row no-gutters">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <div class="form-group row">
             <label class="col-form-label">*應徵職位：</label>
             <div class="col">
@@ -94,7 +94,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <div class="portrait-upload">
             <div>
               <input
@@ -149,7 +149,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <div class="form-group row">
             <label class="col-form-label">住家電話：</label>
             <div class="col">
@@ -161,7 +161,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <div class="form-group row">
             <label class="col-form-label">*行動電話：</label>
             <div class="col">
@@ -175,7 +175,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <div class="form-group row">
             <label class="col-form-label">電子信箱：</label>
             <div class="col">
@@ -212,7 +212,12 @@
       <div class="divider"></div>
       <div class="form-subtitle">工作經歷：</div>
       <div class="row" v-for="(item,index) in formData.workExperiences" :key="index">
-        <div class="col-4">
+        <div class="col-12 col-md-1">
+          <div class="form-group row">
+            <label class="col-form-label">{{ index + 1 }}.</label>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
           <div class="form-group row">
             <label class="col-form-label">公司名稱：</label>
             <div class="col">
@@ -224,7 +229,7 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-md-4">
           <div class="form-group row">
             <label class="col-form-label">工作內容：</label>
             <div class="col">
@@ -236,7 +241,7 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-md-3">
           <div class="form-group row">
             <label class="col-form-label">經歷年資：</label>
             <div class="col">
@@ -468,6 +473,18 @@ export default {
     color: #ffffff;
     background: #f29600;
     border-radius: 6px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .form-content {
+    padding: 0 !important;
+  }  
+
+  .portrait-upload {
+    margin: 0 0 20px 0 !important;
+    height: 300px;
+    width: 300px;
   }
 }
 </style>

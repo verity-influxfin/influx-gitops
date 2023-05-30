@@ -10,7 +10,7 @@
       </div>
       <div class="divider"></div>
       <div class="row no-gutters">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <div class="form-group row">
             <label class="col-form-label">*姓名：</label>
             <div class="col">
@@ -18,7 +18,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <div class="form-group row">
             <label class="col-form-label">*年齡：</label>
             <div class="col">
@@ -65,35 +65,35 @@ export default {
         age: '', // 年齡
         questions: [
           {
-            q: 'Q1：專業強項技能？',
+            q: 'Q1：曾經經歷最失敗的工作經驗？您如何克服？',
             a: ''
           },
           {
-            q: 'Q2：形容自己的人格特質？',
+            q: 'Q2：為何離職(想離職)？',
             a: ''
           },
           {
-            q: 'Q3：對此職務工作的理解？',
+            q: 'Q3：普匯金融科技與傳統金融最大差異有？',
             a: ''
           },
           {
-            q: 'Q4：曾經經歷最失敗的工作經驗？您如何克服？',
+            q: 'Q4：就本公司的這項職缺, 您覺得最大的難度與挑戰是甚麼？',
             a: ''
           },
           {
-            q: 'Q5：對於普匯金融科技官網列舉3個特色及3個優化空間？',
+            q: 'Q5：想要加入普匯的原因是？',
             a: ''
           },
           {
-            q: 'Q6：認為自己對公司向心力表現有哪些？',
+            q: 'Q6：普匯小學堂中最有印象的一篇文章？',
             a: ''
           },
           {
-            q: 'Q7：如獲錄取，可報到時間？',
+            q: 'Q7：請簡介影響您最深的一本書或一個人, 為什麼？',
             a: ''
           },
           {
-            q: 'Q8：為何想投入金融科技產業？平時如何增進此部分的技能？',
+            q: 'Q8：影響您選擇工作的三大因素是？',
             a: ''
           },
         ]
@@ -128,6 +128,7 @@ export default {
       axios.post('/uploadGoogleQA', this.formData).then((res) => {
         console.log(res.data);
         if (res.data == 'Success') {
+          alert('填寫成功');
           this.$router.push('/recruiting');
         }
       }).catch((error) => {
@@ -246,5 +247,11 @@ export default {
     background: #f29600;
     border-radius: 6px;
   }
+}
+
+@media only screen and (max-width: 768px) {
+  .form-content {
+    padding: 0 !important;
+  }  
 }
 </style>
