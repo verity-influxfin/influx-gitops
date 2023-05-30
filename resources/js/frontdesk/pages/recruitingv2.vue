@@ -496,4 +496,10 @@ $color__background--primary: #f3f9fc;
     padding: 80px 0;
   }
 }
+
+@media only screen and (max-width: 768px) {
+  #askLoginModal {
+    margin: 15% 12% !important;
+  }
+}
 </style>
