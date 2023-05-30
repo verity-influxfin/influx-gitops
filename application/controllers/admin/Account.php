@@ -1115,4 +1115,12 @@ TEMP;
         $sum['else'] += (int) $data_rows['else'];
         return $sum;
     }
+
+	public function cheque_table()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/bill_of_collection');
+        $this->load->view('admin/_footer');
+    }
 }
