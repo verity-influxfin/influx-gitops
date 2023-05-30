@@ -1033,9 +1033,6 @@ const v = new Vue({
                 outstanding_reason: '',
                 retrieve_date: null,
                 retrieve_reason: '',
-                collection_bank: '',
-                collection_branch: '',
-                collection_date: '',
                 stop_tracking: null,
                 endtrack_reason: ''
             },
@@ -1171,7 +1168,9 @@ const v = new Vue({
                 this.upsertData['updated_ip'] = ipInfo.ipAddress;
 
                 formData.append('data', JSON.stringify(this.upsertData));
-                formData.append('file', this.image);
+                if (this.image != null) {
+                    formData.append('file', this.image);
+                }
                 const headers = { 'Content-Type': 'multipart/form-data' };
 
                 axios.post(`${p2p_orm_host}/user_cheque/insert`, formData, { headers })
