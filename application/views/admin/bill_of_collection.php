@@ -979,7 +979,7 @@
 <script>
 var loginData = '<?php print_r(json_encode($login_info))?>';
 var loginInfo = JSON.parse(loginData);
-var erp_host = '<?php print_r(getenv('ENV_ERP_HOST'))?>';
+var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
 
 $(document).ready(function () {
     var modal = document.getElementById('upsertModal');
@@ -1076,7 +1076,7 @@ const v = new Vue({
     methods: {
         getCheque() {
             let data = {};
-            axios.post(`${erp_host}/user_cheque?page=${this.page}&page_size=${this.pageSize}`, data)
+            axios.post(`${p2p_orm_host}/user_cheque?page=${this.page}&page_size=${this.pageSize}`, data)
             .then((res) => {
                 this.tableData = res.data; 
                 
@@ -1109,7 +1109,7 @@ const v = new Vue({
             }
             
             if (this.sdate != null && this.edate != null) {
-                axios.post(`${erp_host}/user_cheque?sdate=${this.sdate}&edate=${this.edate}&page=${this.page}&page_size=${this.pageSize}`, this.searchData)
+                axios.post(`${p2p_orm_host}/user_cheque?sdate=${this.sdate}&edate=${this.edate}&page=${this.page}&page_size=${this.pageSize}`, this.searchData)
                 .then((res) => {
                     this.tableData = res.data;
 
@@ -1130,7 +1130,7 @@ const v = new Vue({
                     console.log(err);
                 })
             } else {
-                axios.post(`${erp_host}/user_cheque?page=${this.page}&page_size=${this.pageSize}`, this.searchData)
+                axios.post(`${p2p_orm_host}/user_cheque?page=${this.page}&page_size=${this.pageSize}`, this.searchData)
                 .then((res) => {
                     this.tableData = res.data;
 
@@ -1174,7 +1174,7 @@ const v = new Vue({
                 formData.append('file', this.image);
                 const headers = { 'Content-Type': 'multipart/form-data' };
 
-                axios.post(`${erp_host}/user_cheque/insert`, formData, { headers })
+                axios.post(`${p2p_orm_host}/user_cheque/insert`, formData, { headers })
                 .then((res) => {
                     alert('新增票據成功');
                     document.location.reload();
@@ -1212,7 +1212,7 @@ const v = new Vue({
                 }
                 const headers = { 'Content-Type': 'multipart/form-data' };
 
-                axios.put(`${erp_host}/user_cheque/edit`, formData, { headers })
+                axios.put(`${p2p_orm_host}/user_cheque/edit`, formData, { headers })
                 .then((res) => {
                     alert('編輯票據成功');
                     document.location.reload();
@@ -1254,7 +1254,7 @@ const v = new Vue({
 
                 formData.append('data', JSON.stringify(item));
                 const headers = { 'Content-Type': 'multipart/form-data' };
-                axios.put(`${erp_host}/user_cheque/edit`, formData, { headers })
+                axios.put(`${p2p_orm_host}/user_cheque/edit`, formData, { headers })
                 .then((res) => {
                     document.location.reload();
                 })
@@ -1267,7 +1267,7 @@ const v = new Vue({
             let modal = document.getElementById('detailModal');
             modal.style.display = 'block';
 
-            axios.get(`${erp_host}/user_cheque/detail`, { params: { cheque_id: check_id } })
+            axios.get(`${p2p_orm_host}/user_cheque/detail`, { params: { cheque_id: check_id } })
             .then((res) => {
                 this.detailData = res.data;
                 for (i = 0; i < this.detailData.length; i ++) {
@@ -1324,7 +1324,7 @@ const v = new Vue({
             modal.style.display = 'none';
         },
         approveModify(modifyCheck, isApprove) {
-            axios.put(`${erp_host}/user_cheque/review?cheque_id=${modifyCheck.cheque_id}&review=${isApprove}`)
+            axios.put(`${p2p_orm_host}/user_cheque/review?cheque_id=${modifyCheck.cheque_id}&review=${isApprove}`)
             .then((res) => {
                 alert('審核成功');
                 document.location.reload();
@@ -1333,7 +1333,7 @@ const v = new Vue({
             });
         },
         getBankArr() {
-            axios.get(`${erp_host}/banks`)
+            axios.get(`${p2p_orm_host}/banks`)
             .then((res) => {
                 this.bankArr = res.data;
             })
@@ -1362,7 +1362,7 @@ const v = new Vue({
             this.goSearch();
         },exportExcel() {
             if (this.sdate != null && this.edate != null) {
-                axios.post(`${erp_host}/user_cheque/excel?sdate=${this.sdate}&edate=${this.edate}`, this.searchData, { responseType: 'blob' })
+                axios.post(`${p2p_orm_host}/user_cheque/excel?sdate=${this.sdate}&edate=${this.edate}`, this.searchData, { responseType: 'blob' })
                 .then((res) => {
                     const url = window.URL.createObjectURL(new Blob([res.data]));
                     const link = document.createElement('a');
@@ -1376,7 +1376,7 @@ const v = new Vue({
                     console.log(err);
                 })
             } else {
-                axios.post(`${erp_host}/user_cheque/excel`, this.searchData, { responseType: 'blob' })
+                axios.post(`${p2p_orm_host}/user_cheque/excel`, this.searchData, { responseType: 'blob' })
                 .then((res) => {
                     const url = window.URL.createObjectURL(new Blob([res.data]));
                     const link = document.createElement('a');
