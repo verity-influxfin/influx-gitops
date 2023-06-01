@@ -51,7 +51,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12" style="text-align: center;">
-                            <label>交易日期 : {{ sdate }} ~ {{ edate }}</label>
+                            <label>交易日期 : {{ sdate }} 00:00:00 ~ {{ edate }} 23:59:59</label>
                         </div>
                     </div>
 
@@ -246,7 +246,6 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
-console.log(p2p_orm_host);
 
 const v = new Vue({
     el: '#page-wrapper',
