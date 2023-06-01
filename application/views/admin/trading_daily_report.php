@@ -245,6 +245,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
 
 const v = new Vue({
     el: '#page-wrapper',
@@ -252,7 +253,63 @@ const v = new Vue({
         return {
             sdate: null,
             edate: null,
-            tradingData: {},
+            tradingData: {
+                recharge: {
+                    count: 0,
+                    amount: 0
+                },
+                lending: {
+                    count: 0,
+                    amount: 0
+                },
+                payment: {
+                    count: 0,
+                    amount: 0
+                },
+                prepayment: {
+                    count: 0,
+                    amount: 0
+                },
+                delay_payment: {
+                    count: 0,
+                    amount: 0
+                },
+                withdraw: {
+                    count: 0,
+                    amount: 0
+                },
+                subloan: {
+                    count: 0,
+                    amount: 0
+                },
+                tansfer: {
+                    count: 0,
+                    amount: 0
+                },
+                promote_reward: {
+                    count: 0,
+                    amount: 0
+                },
+                verify_fee: {
+                    count: 0,
+                    amount: 0
+                },
+                platform_fee: 0,
+                subloan_fee: 0,
+                transfer_fee: 0,
+                prepayment_fee: 0,
+                damage: 0,
+                law_fee: 0,
+                passbook_amount: 0,
+                unknown_funds: 0,
+                virtual_balance: 0,
+                bank_balance: 0,
+                secondary_journal: 0,
+                total_promote_reward: 0,
+                promote_reward_info: [],
+                info: '備註:'
+                    
+            },
             bank_balance: 0,
             secondary_journal: 0
         }
@@ -271,29 +328,9 @@ const v = new Vue({
             return this.sumSystemAccounts - this.sumBankAccounts;
         }
     },
-    created() {
-        const date = new Date();
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-
-        this.sdate = `${year}-${month}-${day}`;
-        this.edate = `${year}-${month}-${day + 1}`;
-
-        this.getDailyTrading();
-    },
     methods: {
-        getDailyTrading() {
-            axios.get(`http://127.0.0.1:8000/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
-            .then((res) => {
-                this.tradingData = res.data;
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        },
         goSearch() {
-            axios.get(`http://127.0.0.1:8000/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
+            axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
             .then((res) => {
                 this.tradingData = res.data;
             })
@@ -305,7 +342,7 @@ const v = new Vue({
             if (['', 0, null].includes(this.bank_balance)) {
                 alert('銀行帳戶初期餘額，為必填欄位。')
             } else {
-                axios.get(`http://127.0.0.1:8000/daily_financial_report/excel?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
+                axios.get(`${p2p_orm_host}/daily_financial_report/excel?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
                 .then((res) => {
                     const url = window.URL.createObjectURL(new Blob([res.data]));
                     const link = document.createElement('a');
