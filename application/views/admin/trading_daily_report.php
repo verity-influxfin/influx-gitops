@@ -51,7 +51,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12" style="text-align: center;">
-                            <label>交易日期 : {{ sdate }} ~ {{ edate }}</label>
+                            <label>交易日期 : {{ sdate }} 00:00:00 ~ {{ edate }} 23:59:59</label>
                         </div>
                     </div>
 
@@ -246,7 +246,6 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
-console.log(p2p_orm_host);
 
 const v = new Vue({
     el: '#page-wrapper',
@@ -331,17 +330,23 @@ const v = new Vue({
     },
     methods: {
         goSearch() {
-            axios.get(`${p2p_orm_host}/daily_financial_report/?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
-            .then((res) => {
-                this.tradingData = res.data;
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+            if (['', 0, null].includes(this.sdate) || ['', 0, null].includes(this.edate)) {
+                alert('開始與結束時間為必選欄位');
+            } else {
+                axios.get(`${p2p_orm_host}/daily_financial_report/?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
+                .then((res) => {
+                    this.tradingData = res.data;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            }
         },
         exportExcel() {
             if (['', 0, null].includes(this.bank_balance)) {
                 alert('銀行帳戶初期餘額，為必填欄位。')
+            } else if (['', 0, null].includes(this.sdate) || ['', 0, null].includes(this.edate)) {
+                alert('開始與結束時間為必選欄位');
             } else {
                 axios.get(`${p2p_orm_host}/daily_financial_report/excel?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
                 .then((res) => {
