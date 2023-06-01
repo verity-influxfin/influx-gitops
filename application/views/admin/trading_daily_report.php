@@ -246,6 +246,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
+console.log(p2p_orm_host);
 
 const v = new Vue({
     el: '#page-wrapper',
@@ -330,7 +331,7 @@ const v = new Vue({
     },
     methods: {
         goSearch() {
-            axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
+            axios.get(`${p2p_orm_host}/daily_financial_report/?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
             .then((res) => {
                 this.tradingData = res.data;
             })
