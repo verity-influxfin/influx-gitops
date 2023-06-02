@@ -82,7 +82,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-12" style="text-align: end;">
-                        <button class="cancelBtn">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button @click="submitEditForm(upsertData.id)" class="submitBtn">送出</button>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-12" style="text-align: end;">
-                        <button class="cancelBtn">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button @click="submitEditForm(upsertData.id)" class="submitBtn">送出</button>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-12" style="text-align: end;">
-                        <button class="cancelBtn">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button @click="submitEditForm(upsertData.id)" class="submitBtn">送出</button>
                     </div>
                 </div>
@@ -211,7 +211,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-12" style="text-align: end;">
-                        <button class="cancelBtn">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button @click="submitEditForm(upsertData.id)" class="submitBtn">送出</button>
                     </div>
                 </div>
@@ -403,7 +403,7 @@
                         <img v-if="!editImage" :src="upsertData.image">
                     </div>
                     <div class="col-md-6" style="text-align: end;">
-                        <button class="cancelBtn" @click="cancelForm">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button v-if="!isUpsert" class="submitBtn" @click="submitForm()">送出</button>
                         <button v-else class="submitBtn" @click="submitEditForm(upsertData.id)">送出</button>
                     </div>
