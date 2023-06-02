@@ -1204,7 +1204,6 @@ class Target_model extends MY_Model
             ->get_compiled_select('p2p_transaction.transactions', TRUE);
         $sub_query2 = $this->db
             ->select('t.target_id')
-            ->select('COUNT(1) AS normal_count')
             ->join("($sub_query1) a", 'a.instalment_no = t.instalment_no AND a.target_id = t.target_id AND a.limit_date >= t.entering_date and a.status = ' . TRANSACTION_STATUS_PAID_OFF)
             ->where('t.user_from', $user_id)
             ->where('t.source', SOURCE_PRINCIPAL)
