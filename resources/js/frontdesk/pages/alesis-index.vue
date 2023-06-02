@@ -5,6 +5,21 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <a
+                class="swiper-slide"
+                href="https://www.accupass.com/event/2305220851151825102540"
+                target="_blank"
+              >
+                <div class="row no-gutters">
+                  <div class="col-12">
+                    <img
+                      src="@/asset/images/index/header/ai-forum-banner-mobile.png"
+                      class="img-fluid d-block mx-auto header-shadow"
+                      style="width: 93%; margin-top: 25px;"
+                    />
+                  </div>
+                </div>
+              </a>
               <div class="swiper-slide">
                 <smegHeader />
               </div>
@@ -28,7 +43,7 @@
                   </div>
                 </div>
               </a>
-              <a
+              <!-- <a
                 class="swiper-slide"
                 href="https://www.influxfin.com/articlepage?q=news-8200"
                 target="_blank"
@@ -52,13 +67,19 @@
                     />
                   </div>
                 </div>
-              </a>
+              </a> -->
+            </div>
+          </div>
+        </div>
+        <div class="d-sm-flex d-none">
+          <div class="swiper sw-headers">
+            <div class="swiper-wrapper">
               <a
                 class="swiper-slide"
                 href="https://www.accupass.com/event/2305220851151825102540"
                 target="_blank"
               >
-                <div class="row no-gutters mt-4">
+                <div class="row no-gutters">
                   <div class="col-12">
                     <img
                       src="@/asset/images/index/header/ai-forum-banner.png"
@@ -67,12 +88,6 @@
                   </div>
                 </div>
               </a>
-            </div>
-          </div>
-        </div>
-        <div class="d-sm-flex d-none">
-          <div class="swiper sw-headers">
-            <div class="swiper-wrapper">
               <div class="swiper-slide" v-if="newYearHeader(3)">
                 <newyear-2023-header-3 />
               </div>
@@ -87,20 +102,6 @@
               </div>
               <a
                 class="swiper-slide"
-                href="https://www.accupass.com/event/2305220851151825102540"
-                target="_blank"
-              >
-                <div class="row no-gutters mt-4">
-                  <div class="col-12">
-                    <img
-                      src="@/asset/images/index/header/ai-forum-banner.png"
-                      class="img-fluid d-block mx-auto header-shadow"
-                    />
-                  </div>
-                </div>
-              </a>
-              <a
-                class="swiper-slide"
                 href="https://www.influxfin.com/articlepage?q=news-8202"
                 target="_blank"
               >
@@ -113,7 +114,7 @@
                   </div>
                 </div>
               </a>
-              <a
+              <!-- <a
                 class="swiper-slide"
                 href="https://www.influxfin.com/articlepage?q=news-8200"
                 target="_blank"
@@ -136,7 +137,7 @@
                     />
                   </div>
                 </div>
-              </a>
+              </a> -->
             </div>
           </div>
         </div>
@@ -2337,6 +2338,9 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .index-intro .intro-content .intro-products {
+    margin-top: 160px !important;
+  }
   .block-content {
     margin: 0 auto;
   }
