@@ -1210,15 +1210,17 @@ class Target_model extends MY_Model
             ->where('t.source', SOURCE_PRINCIPAL)
             ->where('t.status', TRANSACTION_STATUS_PAID_OFF)
             ->group_by('t.target_id')
+            ->group_by('t.instalment_no')
             ->get_compiled_select('p2p_transaction.transactions t', TRUE);
 
         return $this->db
             ->select('t.*')
-            ->select('IFNULL(tra.normal_count,0) AS normal_count')
+            ->select('count(target_id) AS normal_count')
             ->from('p2p_loan.targets t')
             ->join("({$sub_query2}) as tra", 'tra.target_id = t.id', 'LEFT')
             ->where('t.user_id', $user_id)
             ->where_not_in('status', [TARGET_CANCEL, TARGET_FAIL])
+            ->group_by('target_no')
             ->get()
             ->result();
     }
