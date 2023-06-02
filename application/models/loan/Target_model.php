@@ -1220,6 +1220,7 @@ class Target_model extends MY_Model
             ->where('t.user_id', $user_id)
             ->where_not_in('status', [TARGET_CANCEL, TARGET_FAIL])
             ->group_by('target_no')
+            ->order_by('status', 'ASC')
             ->get()
             ->result();
     }
