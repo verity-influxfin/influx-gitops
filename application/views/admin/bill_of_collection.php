@@ -868,84 +868,82 @@
                             </thead>
                             <tbody>
                                 <tr v-for="item in tableData" :key="item.id">
-                                    <template v-if="item.status != 0">
-                                        <template v-if="item.review_status == 1">
-                                            <td>
-                                                <button 
-                                                    class="editBtn"
-                                                    @click="editForm(item.id)"
-                                                >編輯</button>
-                                                <button 
-                                                    class="deleteBtn"
-                                                    @click="deleteForm(item)"
-                                                >刪除</button>
-                                            </td>
-                                        </template>
-                                        <template v-else>
-                                            <td>主管審核中</td>
-                                        </template>
+                                    <template v-if="item.review_status == 1">
                                         <td>
                                             <button 
                                                 class="editBtn"
-                                                @click="detailForm(item.id)"
-                                            >Detail</button>
+                                                @click="editForm(item.id)"
+                                            >編輯</button>
+                                            <button 
+                                                class="deleteBtn"
+                                                @click="deleteForm(item)"
+                                            >刪除</button>
                                         </td>
-                                        <td>{{ item.id }}</td>
-                                        <td>{{ item.cheque_drawer }}</td>
-                                        <td>{{ item.user_id }}</td>
-                                        <td>{{ item.target_no }}</td>
-                                        <td v-if="item.payment_bank">{{ bankArr[item.payment_bank]['bank_name'] }}</td>
-                                        <td v-else></td>
-                                        <td>{{ item.drawer_bankaccout }}</td>
-                                        <td>{{ item.cheque_no }}</td>
-                                        <td>{{ item.cheque_amount }}</td>
-                                        <td>{{ item.cheque_due_date }}</td>
-                                        <template v-if="item.is_nonnegotiable == 1">
-                                            <td>是</td>
-                                        </template>
-                                        <template v-else>
-                                            <td>否</td>
-                                        </template>
-                                        <template v-if="item.is_personal == 1">
-                                            <td>是</td>
-                                        </template>
-                                        <template v-else>
-                                            <td>否</td>
-                                        </template>
-                                        <template v-if="item.cash_status == 0">
-                                            <td>確認中</td>
-                                        </template>
-                                        <template v-else-if="item.cash_status == 1">
-                                            <td>兌現成功</td>
-                                        </template>
-                                        <template v-else>
-                                            <td>兌現失敗</td>
-                                        </template>
-                                        <td>{{ item.outstanding_reason }}</td>
-                                        <td>{{ item.posting_date }}</td>
-                                        <td>{{ item.collection_date }}</td>
-                                        <td>{{ item.payee_id }}</td>
-                                        <td>{{ item.payee }}</td>
-                                        <td>{{ item.retrieve_date }}</td>
-                                        <td>{{ item.retrieve_reason }}</td>
-                                        <template v-if="item.status == 0">
-                                            <td>標記刪除</td>
-                                        </template>
-                                        <template v-else-if="item.status == 1">
-                                            <td>正常(託收中)</td>
-                                        </template>
-                                        <template v-else-if="item.status == 2">
-                                            <td>已領回</td>
-                                        </template>
-                                        <template v-else-if="item.status == 3">
-                                            <td>未託收</td>
-                                        </template>
-                                        <template v-else>
-                                            <td>已結束</td>
-                                        </template>
-                                        <td>{{ item.admin }}</td>
-                                        <td>{{ item.remark }}</td>
                                     </template>
+                                    <template v-else>
+                                        <td>主管審核中</td>
+                                    </template>
+                                    <td>
+                                        <button 
+                                            class="editBtn"
+                                            @click="detailForm(item.id)"
+                                        >Detail</button>
+                                    </td>
+                                    <td>{{ item.id }}</td>
+                                    <td>{{ item.cheque_drawer }}</td>
+                                    <td>{{ item.user_id }}</td>
+                                    <td>{{ item.target_no }}</td>
+                                    <td v-if="item.payment_bank">{{ bankArr[item.payment_bank]['bank_name'] }}</td>
+                                    <td v-else></td>
+                                    <td>{{ item.drawer_bankaccout }}</td>
+                                    <td>{{ item.cheque_no }}</td>
+                                    <td>{{ item.cheque_amount }}</td>
+                                    <td>{{ item.cheque_due_date }}</td>
+                                    <template v-if="item.is_nonnegotiable == 1">
+                                        <td>是</td>
+                                    </template>
+                                    <template v-else>
+                                        <td>否</td>
+                                    </template>
+                                    <template v-if="item.is_personal == 1">
+                                        <td>是</td>
+                                    </template>
+                                    <template v-else>
+                                        <td>否</td>
+                                    </template>
+                                    <template v-if="item.cash_status == 0">
+                                        <td>確認中</td>
+                                    </template>
+                                    <template v-else-if="item.cash_status == 1">
+                                        <td>兌現成功</td>
+                                    </template>
+                                    <template v-else>
+                                        <td>兌現失敗</td>
+                                    </template>
+                                    <td>{{ item.outstanding_reason }}</td>
+                                    <td>{{ item.posting_date }}</td>
+                                    <td>{{ item.collection_date }}</td>
+                                    <td>{{ item.payee_id }}</td>
+                                    <td>{{ item.payee }}</td>
+                                    <td>{{ item.retrieve_date }}</td>
+                                    <td>{{ item.retrieve_reason }}</td>
+                                    <template v-if="item.status == 0">
+                                        <td>標記刪除</td>
+                                    </template>
+                                    <template v-else-if="item.status == 1">
+                                        <td>正常(託收中)</td>
+                                    </template>
+                                    <template v-else-if="item.status == 2">
+                                        <td>已領回</td>
+                                    </template>
+                                    <template v-else-if="item.status == 3">
+                                        <td>未託收</td>
+                                    </template>
+                                    <template v-else>
+                                        <td>已結束</td>
+                                    </template>
+                                    <td>{{ item.admin }}</td>
+                                    <td>{{ item.remark }}</td>
                                 </tr>
                             </tbody>
                         </table>
