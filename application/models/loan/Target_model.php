@@ -1236,7 +1236,7 @@ class Target_model extends MY_Model
             ->where('csr.admin_id <>', SYSTEM_ADMIN_ID)
             ->get_compiled_select(NULL, TRUE);
 
-        $this->_database->select('t.*')
+        $this->_database->select('distinct t.*')
             ->select('a.name AS credit_sheet_reviewer')
             ->from('p2p_loan.targets t')
             ->join("({$sub_query}) a", 'a.target_id = t.id', 'LEFT');
