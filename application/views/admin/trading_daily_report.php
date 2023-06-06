@@ -316,16 +316,16 @@ const v = new Vue({
     },
     computed: {
         sumSecondary() {
-            return this.tradingData.platform_fee + this.tradingData.subloan_fee + this.tradingData.transfer_fee + this.tradingData.prepayment_fee + this.tradingData.damage + this.tradingData.law_fee;
+            return parseInt(this.tradingData.platform_fee) + parseInt(this.tradingData.subloan_fee) + parseInt(this.tradingData.transfer_fee) + parseInt(this.tradingData.prepayment_fee) + parseInt(this.tradingData.damage) + parseInt(this.tradingData.law_fee);
         },
         sumSystemAccounts() {
-            return this.tradingData.passbook_amount + this.tradingData.unknown_funds + this.tradingData.virtual_balance + this.secondary_journal;
+            return parseInt(this.tradingData.passbook_amount) + parseInt(this.tradingData.unknown_funds) + parseInt(this.tradingData.virtual_balance) + parseInt(this.secondary_journal);
         },
         sumBankAccounts() {
-            return this.bank_balance;
+            return parseInt(this.bank_balance);
         },
         accountsDifferent() {
-            return this.sumSystemAccounts - this.sumBankAccounts;
+            return parseInt(this.sumSystemAccounts) - parseInt(this.sumBankAccounts);
         }
     },
     methods: {
