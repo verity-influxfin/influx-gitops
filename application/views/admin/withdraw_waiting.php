@@ -77,6 +77,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="javascript:void(0)" target="_blank" onclick="toloan();" class="btn btn-primary float-right" >轉出放款匯款單</a>
+							</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -104,7 +107,10 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
-                                                <?=isset($value->id)?$value->id:"" ?>
+                                                <? if($value->status==0){ ?>
+												<input class="withdraws" type="checkbox" value="<?=isset($value->id)?$value->id:"" ?>" />
+												<? } ?>
+												&nbsp;<?=isset($value->id)?$value->id:"" ?>
 											</td>
                                             <td>
 											<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.$value->virtual_account) ?>" >
