@@ -15,7 +15,7 @@
                     <img
                       src="@/asset/images/index/header/ai-forum-banner-mobile.png"
                       class="img-fluid d-block mx-auto header-shadow"
-                      style="width: 93%; margin-top: 25px;"
+                      style="margin: 25px;"
                     />
                   </div>
                 </div>
@@ -608,7 +608,7 @@
                   <div class="card-title">獲得多家銀行搶先合作</div>
                   <div class="card-divider"></div>
                   <div class="card-text">
-                    我們提供使用者最簡單便利安全的金融科技體驗，快速成長10萬會員，榮獲網路評價最佳年輕化金融借貸平台，分別獲得凱基、上海、王道及新光銀行搶先合作，更於2021年破天荒與新光銀行攜手共推全台灣第一全線上無人化「中小微企業信保融資」業務。
+                    我們提供使用者最簡單便利安全的金融科技體驗，快速成長10萬會員，榮獲網路評價最佳年輕化金融借貸平台，分別獲得凱基、王道及新光銀行搶先合作，更於2021年破天荒與新光銀行攜手共推全台灣第一全線上無人化「中小微企業信保融資」業務。
                   </div>
                 </div>
               </div>
