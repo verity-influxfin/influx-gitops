@@ -27,6 +27,7 @@ $config['school_major_point']= array(
     '藝術學門(設計學門)' => 200,
     '林業學門' => 100,
     '漁業學門' => 100,
+    '運算碩士學程' => 100,
 );
 
 $config['lock_school'] = array(
@@ -4519,6 +4520,10 @@ $config['department_points'] = array (
         3 => '創意產業設計研究所',
         4 => '工業設計學系',
       ),
+      '運算碩士學程' =>
+      array(
+        0 => '智慧運算碩士學位學程',
+      )
     ),
     'score' =>
     array (
