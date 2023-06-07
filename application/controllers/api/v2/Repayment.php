@@ -378,7 +378,7 @@ class Repayment extends REST_Controller {
 		$user_id 			= $this->user_info->id;
 		$targets 			= $this->target_model->get_many_by([
 			'user_id'	=> $user_id,
-			'status'	=> [5,10]
+            'status' => [TARGET_REPAYMENTING, TARGET_REPAYMENTED, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED]
 		]);
 		$list				= [];
 		if(!empty($targets)){
@@ -390,37 +390,21 @@ class Repayment extends REST_Controller {
                     $product = $this->trans_sub_product($product,$sub_product_id);
                     $product_name = $product['name'];
                 }
-				$next_repayment = [
-					'date' 			=> '',
-					'instalment'	=> '',
-					'amount'		=> 0,
-				];
 
-				if($value->status==5){
-					$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by([
-						'target_id'	=> $value->id,
-						'status'	=> 1,
-						'source' 	=> [
-							SOURCE_AR_PRINCIPAL,
-							SOURCE_AR_INTEREST,
-							SOURCE_AR_DAMAGE,
-							SOURCE_AR_DELAYINTEREST
-						],
-					]);
+                $this->load->library('target_lib');
+                $repayment_schedule = $this->target_lib->get_repayment_schedule($value);
+                if ( ! empty($repayment_schedule))
+                {
+                    $next_repayment = $repayment_schedule[array_key_first($repayment_schedule)];
+                }
+                else
+                {
+                    $next_repayment = ['instalment' => '', 'date' => '', 'amount' => 0];
+                }
 
-					if($transaction){
-						$first 							= current($transaction);
-						$next_repayment['date'] 		= $first->limit_date;
-						$next_repayment['instalment']  	= intval($first->instalment_no);
-						foreach($transaction as $k => $v){
-							if($v->limit_date == $next_repayment['date']){
-								$next_repayment['amount'] += $v->amount;
-							}
-						}
-					}
-				}
+                $pay_off_at = $this->target_lib->get_pay_off_date($value);
 
-				$list[] = [
+                $list[] = [
 					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
                     'product_name' => $product_name,
@@ -438,7 +422,9 @@ class Repayment extends REST_Controller {
 					'sub_status' 		=> intval($value->sub_status),
 					'created_at' 		=> intval($value->created_at),
 					'next_repayment' 	=> $next_repayment,
+					'pay_off_at' 	    => $pay_off_at,
 				];
+
 			}
 		}
 		$this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
