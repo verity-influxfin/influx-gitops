@@ -960,6 +960,7 @@ class Qrcode_lib
         $main_info['totalLoanedAmount'] = ($main_info['totalLoanedAmount'] ?? 0) + $info['totalLoanedAmount'];
         $main_info['downloadedCount'] = ($main_info['downloadedCount'] ?? 0) + $info['downloadedCount'];
         $main_info['fullMemberRewardAmount'] = ($main_info['fullMemberRewardAmount'] ?? 0) + $info['fullMemberRewardAmount'];
+        $main_info['registeredRewardAmount'] = ($main_info['registeredRewardAmount'] ?? 0) + $info['registeredRewardAmount'];
         return $main_info;
     }
 
@@ -1075,6 +1076,7 @@ class Qrcode_lib
                 $list[$date][$user_qrcode_id] = $categoryInitList;
                 $list[$date][$user_qrcode_id]['collaboration'] = $collaboratorInitList;
                 $list[$date][$user_qrcode_id]['full_member_count'] = 0;
+                $list[$date][$user_qrcode_id]['registered_count'] = 0;
                 $list[$date][$user_qrcode_id]['subcode_id'] = (int) $user_subcode_list[$user_qrcode_id]['id'];
                 $list[$date][$user_qrcode_id]['alias'] = $user_subcode_list[$user_qrcode_id]['alias'];
                 $list[$date][$user_qrcode_id]['registered_id'] = $user_subcode_list[$user_qrcode_id]['registered_id'];
@@ -1122,6 +1124,13 @@ class Qrcode_lib
             {
                 $formattedMonth = date("Y-m", strtotime($value['created_at']));
                 $list[$formattedMonth][$user_qrcode_id]['full_member_count'] += 1;
+            }
+
+            // 註冊
+            foreach ($user_qrcode['registered'] as $value)
+            {
+                $formattedMonth = date('Y-m', strtotime($value['created_at']));
+                $list[$formattedMonth][$user_qrcode_id]['registered_count'] += 1;
             }
         }
 

@@ -145,7 +145,7 @@ $config['school_points'] = array(
     ['name' =>'南臺科技大學', 'points' =>150, 'national' => 0, 'master_points'=>100],
     ['name' =>'弘光科技大學', 'points' =>150, 'national' => 0 , 'master_points'=>100],
     ['name' =>'台南應用科技大學', 'points' =>150, 'national' => 0 , 'master_points'=>100],
-    ['name' =>'僑光科技大學', 'points' =>450, 'national' => 0 , 'master_points'=>100],
+    ['name' =>'僑光科技大學', 'points' =>150, 'national' => 0 , 'master_points'=>100],
     ['name' =>'逢甲大學', 'points' =>250, 'national' => 0 , 'master_points'=>300],
     ['name' =>'中國文化大學', 'points' =>250, 'national' => 0 , 'master_points'=>200],
     ['name' =>'國立聯合大學', 'points' =>200, 'national' => 1 , 'master_points'=>200],

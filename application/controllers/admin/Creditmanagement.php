@@ -184,7 +184,7 @@ class Creditmanagement extends MY_Admin_Controller
 
         $adminId 		= $this->login_info->id;
         $rs = $this->creditSheet->approve(intval($this->inputData['group']), $this->inputData['opinion'],
-            intval($this->inputData['score']), $adminId);
+            intval($this->inputData['score']), $adminId, (int) $this->inputData['fixed_amount']);
 
         $this->json_output->setStatusCode(200)->setResponse(['responseCode' => intval($rs),
             'msg' => $this->creditSheet::RESPONSE_CODE_LIST[$rs]])->send();

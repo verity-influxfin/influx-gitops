@@ -72,6 +72,7 @@ class Cron extends CI_Controller
         $this->load->model('loan/target_model');
         $this->load->library('subloan_lib');
         $this->load->library('Notification_lib');
+        $this->load->library('target_lib');
 
         $get 	= $this->input->get(NULL, TRUE);
         $target_ids = isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):null;
@@ -84,7 +85,8 @@ class Cron extends CI_Controller
             if($value->interest_rate > 16) {
                 // 待出借(待上架)
                 if ($value->status == 3) {
-                    if ($value->sub_status == 8) {
+                    if ($this->target_lib->is_sub_loan($value->target_no) === TRUE)
+                    {
                         $this->subloan_lib->subloan_cancel_bidding($value, 0, null);
                     } else {
                         $this->target_lib->target_cancel_bidding($value, 0, null);
@@ -243,11 +245,21 @@ class Cron extends CI_Controller
         $this->load->model('user/user_qrcode_model');
         $this->load->model('user/qrcode_setting_model');
 
+        $date = $this->input->get('date');
+        if (empty($date) || ! ($timestamp = strtotime($date)))
+        {
+            $timestamp = $start_time;
+        }
+        $year = date('Y', $timestamp);
+        $month = date('m', $timestamp);
+        $day = date('d', $timestamp);
+
         // 自動延長一般方案/特約方案的結束時間
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->generalCaseAliasName);
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->appointedCaseAliasName);
 
-        if(date("d") >= 1 && date("d") <= 9) {
+        if ($day >= 1 && $day <= 9)
+        {
             $data = [
                 'script_name'   => 'handle_promote_reward',
                 'num'           => 0,
@@ -256,7 +268,7 @@ class Cron extends CI_Controller
             ];
             $rs = $this->log_script_model->insert($data);
             // 結算獎勵
-            $num = $this->user_lib->scriptHandlePromoteReward();
+            $num = $this->user_lib->scriptHandlePromoteReward($year, $month);
         } else {
             $data = [
                 'script_name'   => 'handle_promote_receipt',
@@ -964,6 +976,79 @@ class Cron extends CI_Controller
             'start_time' => $start_time,
             'end_time' => time()
         ]);
+        die('1');
+    }
+
+    // 提領放款，自動轉出放款匯款單
+    public function auto_withdraw()
+    {
+        $start_time = time();
+
+        // 提領待放款清單
+        $this->load->model('transaction/withdraw_model');
+        $withdraw_list = $this->withdraw_model->get_all_withdraw_list();
+        $valid_withdraw_list = $this->withdraw_model->get_auto_withdraw_list();
+
+        // 轉出放款匯款單
+        $count = 0;
+        if ( ! empty($valid_withdraw_list))
+        {
+            $valid_withdraw_ids = array_column($valid_withdraw_list, 'id');
+            $this->load->library('payment_lib');
+            $response = $this->payment_lib->withdraw_txt($valid_withdraw_ids, SYSTEM_ADMIN_ID);
+            if ($response)
+            {
+                $count = count($valid_withdraw_ids);
+            }
+        }
+        if ( ! empty($withdraw_list))
+        {
+            $remain_withdraw_ids = array_diff(array_column($withdraw_list, 'id'), ($valid_withdraw_ids ?? []));
+            $this->load->library('withdraw_lib');
+            $this->withdraw_lib->withdraw_deny($remain_withdraw_ids);
+        }
+
+        $end_time = time();
+        $data = [
+            'script_name' => 'auto_withdraw',
+            'num' => $count,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
+
+    // 借款放款，轉出放款匯款單
+    public function auto_loan()
+    {
+        $start_time = time();
+
+        // 借款待放款清單
+        $this->load->model('loan/target_model');
+        $loan_list = $this->target_model->get_auto_loan_list();
+
+        // 轉出放款匯款單
+        $count = 0;
+        if ( ! empty($loan_list))
+        {
+            $loan_ids = array_column($loan_list, 'id');
+            $this->load->library('payment_lib');
+            $response = $this->payment_lib->loan_txt($loan_ids, SYSTEM_ADMIN_ID);
+            if ($response)
+            {
+                $count = count($loan_ids);
+            }
+        }
+
+        $end_time = time();
+        $data = [
+            'script_name' => 'auto_loan',
+            'num' => $count,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
         die('1');
     }
 }

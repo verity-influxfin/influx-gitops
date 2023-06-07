@@ -9706,8 +9706,15 @@ define({
                             "group": "Parameter",
                             "type": "Integer",
                             "optional": false,
-                            "field": "id",
-                            "description": "<p>上傳後的image id</p>"
+                            "field": "front_id",
+                            "description": "<p>學生證正面上傳後的image id</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Integer",
+                            "optional": false,
+                            "field": "back_id",
+                            "description": "<p>學生證背面上傳後的image id</p>"
                         }
                     ]
                 }
@@ -9799,8 +9806,15 @@ define({
                             "group": "Parameter",
                             "type": "Integer",
                             "optional": false,
-                            "field": "id",
-                            "description": "<p>上傳後的image id</p>"
+                            "field": "front_id",
+                            "description": "<p>學生證正面上傳後的image id</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Integer",
+                            "optional": false,
+                            "field": "back_id",
+                            "description": "<p>學生證背面上傳後的image id</p>"
                         }
                     ]
                 }
@@ -30804,6 +30818,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "227",
+                            "description": "<p>提領金額過低</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "200",
                             "description": "<p>參數錯誤</p>"
                         },
@@ -30851,6 +30871,11 @@ define({
                     {
                         "title": "211",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"211\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "227",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"227\"\n}",
                         "type": "Object"
                     },
                     {
@@ -34751,6 +34776,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "227",
+                            "description": "<p>提領金額過低</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "200",
                             "description": "<p>參數錯誤</p>"
                         },
@@ -34798,6 +34829,11 @@ define({
                     {
                         "title": "211",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"211\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "227",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"227\"\n}",
                         "type": "Object"
                     },
                     {

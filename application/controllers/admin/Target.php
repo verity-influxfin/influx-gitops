@@ -151,7 +151,7 @@ class Target extends MY_Admin_Controller {
 		if(!empty($where)||isset($input['status'])&&$input['status']==99){
             isset($input['sdate'])&&$input['sdate']!=''?$where['created_at >=']=strtotime($input['sdate']):'';
             isset($input['edate'])&&$input['edate']!=''?$where['created_at <=']=strtotime($input['edate']):'';
-			$list = $this->target_model->get_many_by($where);
+			$list = $this->target_model->get_list($where);
 			$tmp  = [];
 			if($list){
                 $this->load->model('user/user_meta_model');
@@ -211,6 +211,7 @@ class Target extends MY_Admin_Controller {
                     $this->load->library('credit_lib');
                     $remain_amount = $this->credit_lib->get_remain_amount($value->user_id, $value->product_id, $value->sub_product_id);
                     $list[$key]->remain_amount = $remain_amount['instalment'] == $value->instalment ? $remain_amount['user_available_amount'] : '-';
+                    $list[$key]->review_by = isset($value->credit_sheet_reviewer) ? '人工' : '系統';
                 }
 			}
 		}
@@ -579,7 +580,8 @@ class Target extends MY_Admin_Controller {
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && in_array($info->status,array(TARGET_WAITING_VERIFY,TARGET_ORDER_WAITING_SHIP))){
-				if($info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+                if ($this->target_lib->is_sub_loan($info->target_no))
+                {
 					$this->load->library('subloan_lib');
 					$this->subloan_lib->subloan_verify_success($info,$this->login_info->id);
 				}if($info->status == TARGET_ORDER_WAITING_SHIP && $info->sub_status == TARGET_SUBSTATUS_NORNAL){
@@ -715,6 +717,7 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
+        $fixed_amount = isset($get['fixed_amount']) ? (int) $get['fixed_amount'] : 0;
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -729,9 +732,17 @@ class Target extends MY_Admin_Controller {
 		$credit = $this->credit_lib->get_credit($target->user_id, $target->product_id, $target->sub_product_id);
 		$credit["product_id"] = $target->product_id;
 
+        $product_list = $this->config->item('product_list');
+        if ($fixed_amount > 0 && ($fixed_amount < $product_list[$target->product_id]['loan_range_s'] || $fixed_amount > $product_list[$target->product_id]['loan_range_e']))
+        {
+            $this->json_output->setStatusMessage('額度調整不符合產品設定');
+            $this->json_output->setStatusCode(400)->send();
+        }
+
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
+        $this->approvalextra->set_fixed_amount($fixed_amount);
         $special_info_ary = [
             'job_company_taiwan_1000_point' => '',
             'job_company_world_500_point' => '',
@@ -761,12 +772,22 @@ class Target extends MY_Admin_Controller {
             $level = $certificationStatus ? 3 : 4 ;
         }
         $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment, $target);
-        $credit["amount"] = $newCredits["amount"];
+        $this->load->model('user/user_meta_model');
+        $info = $this->user_meta_model->get_by(['user_id' => $target->user_id, 'meta_key' => 'school_name']);
+        if (isset($info->meta_value) && in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
+        {
+            $school_config = $this->config->item('school_points');
+            if (in_array($info->meta_value, $school_config['lock_school']))
+            {
+                $this->credit_lib->get_lock_school_amount($target->product_id, $target->sub_product_id, $newCredits);
+            }
+        }
+
+        $credit["amount"] = (int) $newCredits["amount"];
         $credit["points"] = $newCredits["points"];
         $credit["level"] = $newCredits["level"];
         $credit["expire_time"] = $newCredits["expire_time"];
 
-        $product_list = $this->config->item('product_list');
         $product = $product_list[$target->product_id];
         if($this->is_sub_product($product,$target->sub_product_id)){
             $credit['sub_product_id'] = $target->sub_product_id;
@@ -998,10 +1019,7 @@ class Target extends MY_Admin_Controller {
 
 			$this->load->library('output/user/Virtual_account_output', ['data' => $virtualAccounts]);
 
-			$targets = $this->target_model->get_many_by([
-				"user_id" => $userId,
-				"status NOT" => [8,9]
-			]);
+			$targets = $this->target_model->get_targets_with_normal_transactions_count($userId);
 
 			foreach ($targets as $otherTarget) {
 				$amortization = $this->target_lib->get_amortization_table($otherTarget);
@@ -1181,6 +1199,7 @@ class Target extends MY_Admin_Controller {
 						'verify'	=> 1,
 					));
 					if($bank_account){
+                        $value->sub_loan_status = $this->target_lib->is_sub_loan($value->target_no);
 						$waiting_list[] = $value;
 					}
 				}
@@ -1237,7 +1256,9 @@ class Target extends MY_Admin_Controller {
             $sqlResult = $this->db->query($targetSql);
             $info = $sqlResult->row();
 
-			if ($info && $info->status == 4 && $info->loan_status == 2 && $info->sub_status == 8) {
+            $this->load->library('target_lib');
+            if ($info && $info->status == 4 && $info->loan_status == 2 && $this->target_lib->is_sub_loan($info->target_no) === TRUE)
+            {
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->subloan_success($id, $this->login_info->id);
 				if ($rs) {
@@ -1261,7 +1282,8 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==TARGET_WAITING_LOAN && $info->loan_status==2 && $info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+            $this->load->library('target_lib');
+			if($info && $info->status==TARGET_WAITING_LOAN && $info->loan_status==2 && $this->target_lib->is_sub_loan($info->target_no)){
                 $this->load->library('subloan_lib');
 				$rs = $this->subloan_lib->rollback_success_target($info,$this->login_info->id);
 				if($rs){
@@ -1777,7 +1799,8 @@ class Target extends MY_Admin_Controller {
         if($id){
             $info = $this->target_model->get($id);
             if($info && in_array($info->status,array(TARGET_WAITING_BIDDING))){
-                if($info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
+                if ($this->target_lib->is_sub_loan($info->target_no))
+                {
                     $this->load->library('subloan_lib');
                     $this->subloan_lib->subloan_cancel_bidding($info,$this->login_info->id,$remark);
                 }else{
@@ -1900,6 +1923,7 @@ class Target extends MY_Admin_Controller {
 					'total_payment'			=> $amortization_table['total']['total_payment'],
 					'remaining_principal'	=> $value->loan_amount,
 				];
+                $list[$key]->sub_loan_status = $this->target_lib->is_sub_loan($value->target_no);
 			}
 
 			$this->load->model('user/user_meta_model');

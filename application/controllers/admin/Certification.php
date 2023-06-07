@@ -300,7 +300,7 @@ class Certification extends MY_Admin_Controller {
                 ];
                 // 可上傳 PDF 的徵信項
                 $cert_can_upload_pdf = [
-                    CERTIFICATION_INVESTIGATIONA11,
+                    CERTIFICATION_INVESTIGATION, CERTIFICATION_INVESTIGATIONA11,
                     CERTIFICATION_SIMPLIFICATIONJOB, CERTIFICATION_PASSBOOKCASHFLOW_2,
                     CERTIFICATION_BUSINESSTAX, CERTIFICATION_BALANCESHEET, CERTIFICATION_INCOMESTATEMENT, CERTIFICATION_INVESTIGATIONJUDICIAL, CERTIFICATION_PASSBOOKCASHFLOW, CERTIFICATION_GOVERNMENTAUTHORITIES, CERTIFICATION_EMPLOYEEINSURANCELIST, CERTIFICATION_PROFILEJUDICIAL, CERTIFICATION_JUDICIALGUARANTEE,
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS
@@ -312,9 +312,25 @@ class Certification extends MY_Admin_Controller {
                 if (in_array($info->certification_id, $cert_can_upload_image))
                 {
                     // 上傳檔案功能
+
+                    if ($info->certification_id == CERTIFICATION_INVESTIGATION && (in_array($info->status, [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_PENDING_TO_REVIEW])))
+                    {
+                        $input_config_pdf['data'] = ['upload_location' => 'Certification/media_upload', 'file_type' => '.pdf', 'is_multiple' => 0, 'extra_info' => ['user_certification_id' => $info->id, 'user_id' => $info->user_id, 'certification_id' => $info->certification_id]];
+                        $input_config_img['data'] = ['upload_location' => 'Certification/media_upload', 'file_type' => 'image/*,.heic,.heif', 'is_multiple' => 1, 'extra_info' => ['user_certification_id' => $info->id, 'user_id' => $info->user_id, 'certification_id' => $info->certification_id]];
+                        if (empty($certification_content['pdf_file']) && empty($certification_content['images']))
+                        {
+                            $page_data['ocr']['upload_page']['pdf_file'] = $this->load->view('admin/certification/component/media_upload', $input_config_pdf, TRUE);
+                            $page_data['ocr']['upload_page']['images'] = $this->load->view('admin/certification/component/media_upload', $input_config_img, TRUE);
+                        }
+                    }
+                    elseif ($info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE || $info->status == CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                    {
+                        $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*,.heic,.heif','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
+
                     if ($this->_can_upload_by_cert_status($info->status))
                     {
                         $file_type = [];
+
                         if (in_array($info->certification_id, $cert_can_upload_pdf))
                         {
                             $file_type[] = '.pdf';
@@ -1677,15 +1693,26 @@ class Certification extends MY_Admin_Controller {
                         $certification_content[$image_name] = array_merge($certification_content[$image_name], $media['image']);
                     }
 
-                    if (isset($certification_content['pdf']))
-                    {
-                        $certification_content['pdf'] = array_merge($certification_content['pdf'], $media['pdf']);
-                    }
-                    else
-                    {
-                        $certification_content['pdf'] = $media['pdf'];
-                    }
+                    $this->_get_pdf_name_by_cert_id($media['pdf'], $certification_content, $post['certification_id'] ?? '');
 
+					$certification_content['group_id'] = $group_id;
+                    $param = ['content' => json_encode($certification_content)];
+                    $post['certification_id'] != CERTIFICATION_INVESTIGATION ?: $param['status'] = CERTIFICATION_STATUS_PENDING_TO_VALIDATE;
+					$res = $this->user_certification_model->update($post['user_certification_id'], $param);
+					// 觸發上傳檔案 ocr
+					// $this->load->library('ocr/report_scan_lib');
+					// to do : 可能會有聯徵之外的檔案從後台上傳並觸發
+					// if($post['user_id']){
+					// 	if($post['certification_id'] == 1003){
+					// 		$ocr_type = 'company';
+					// 	}else{
+					// 		$ocr_type = 'person';
+					// 	}
+					// 	// print_r($media);exit;
+					// 	$this->load->model('log/log_image_model');
+				    //     $imageLogs = $this->log_image_model->getUrlByGroupID($group_id);
+					// 	$this->report_scan_lib->requestForScan('credit_investigation', $imageLogs, $post['user_id'], $ocr_type);
+					// }
                     if (isset($certification_content['video']))
                     {
                         $certification_content['video'] = array_merge($certification_content['video'], $media['video']);
@@ -1726,7 +1753,7 @@ class Certification extends MY_Admin_Controller {
         switch ($cert_id)
         {
             case CERTIFICATION_INVESTIGATION: // 聯合徵信報告
-                return 'postal_image';
+                return 'images';
             case CERTIFICATION_INVESTIGATIONA11: // 聯合徵信報告+A11
                 return 'person_mq_image';
             case CERTIFICATION_SIMPLIFICATIONFINANCIAL: // 財務收支
@@ -1757,6 +1784,25 @@ class Certification extends MY_Admin_Controller {
                 return 'image_url';
             default:
                 return 'backend_upload';
+        }
+    }
+
+    private function _get_pdf_name_by_cert_id($media_pdf, &$cert_content, $cert_id)
+    {
+        switch ($cert_id)
+        {
+            case CERTIFICATION_INVESTIGATION:
+                $cert_content['pdf_file'] = $media_pdf[0] ?? '';
+                break;
+            default:
+                if (isset($cert_content['pdf']) && is_array($cert_content['pdf']))
+                {
+                    $cert_content['pdf'] = array_merge($cert_content['pdf'], $media_pdf);
+                }
+                else
+                {
+                    $cert_content['pdf'] = $media_pdf;
+                }
         }
     }
 

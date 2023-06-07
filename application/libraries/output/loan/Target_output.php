@@ -56,6 +56,7 @@ class Target_output
         if(isset($json_reason->reason)){
             $reason = $json_reason->reason.' - '.$json_reason->reason_description;
         }
+        $memo_ary = json_decode($target->memo, TRUE);
 		$output = [
 			'id' => $target->id,
 			'number' => $target->target_no,
@@ -89,6 +90,8 @@ class Target_output
 			'image' => $target->person_image,
 			'expire_at' => $target->expire_time,
 			'loan_at' => $target->loan_date,
+            'normal_count' => $target->normal_count ?? 0,
+            'memo_backend' => $memo_ary['msg'][\Approve_target\Approve_target_result::DISPLAY_BACKEND] ?? [],
 		];
 
 		if(!empty($target->productTargetData)){

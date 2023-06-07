@@ -1120,6 +1120,12 @@ class Target_model extends MY_Model
             ->select('phone')
             ->get_compiled_select('p2p_user.users', TRUE);
 
+        $sub_query2 = $this->db
+            ->select('user_from')
+            ->where('source', SOURCE_AR_DELAYINTEREST)
+            ->group_by('user_from')
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
+
         return $this->db
             ->select('t.target_no')
             ->select('t.user_id')
@@ -1130,8 +1136,10 @@ class Target_model extends MY_Model
             ->select('t.product_id')
             ->select('t.sub_product_id')
             ->select('t.certificate_status')
+            ->select('IF(tr.user_from IS NULL, 0, 1) AS has_delayed')
             ->from('p2p_loan.targets t')
             ->join("({$sub_query}) u", 'u.id=t.user_id', 'LEFT')
+            ->join("({$sub_query2}) tr", 'tr.user_from=t.user_id', 'LEFT')
             ->where('t.product_id', $product_id)
             ->where_in('t.status', $status_list)
             ->order_by('t.user_id')
@@ -1216,5 +1224,73 @@ class Target_model extends MY_Model
             ) `a` 
             WHERE `a`.`loan_amount` > `a`.`amount`
         ")->result_array();
+    }
+
+    public function get_auto_loan_list()
+    {
+        return $this->db->select('id')
+            ->from('p2p_loan.targets')
+            ->where('status', TARGET_WAITING_LOAN)
+            ->where('loan_status', 2)
+            ->get()
+            ->result_array();
+    }
+    
+    public function get_targets_with_normal_transactions_count($user_id)
+    {
+        $sub_query1 = $this->db
+            ->select('limit_date')
+            ->select('instalment_no')
+            ->select('target_id')
+            ->select('status')
+            ->where('user_from', $user_id)
+            ->where('source', SOURCE_AR_PRINCIPAL)
+            ->where('id IN (SELECT MIN(id) FROM p2p_transaction.transactions GROUP BY target_id,instalment_no)')
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
+        $sub_query2 = $this->db
+            ->select('t.target_id')
+            ->join("($sub_query1) a", 'a.instalment_no = t.instalment_no AND a.target_id = t.target_id AND a.limit_date >= t.entering_date and a.status = ' . TRANSACTION_STATUS_PAID_OFF)
+            ->where('t.user_from', $user_id)
+            ->where('t.source', SOURCE_PRINCIPAL)
+            ->where('t.status', TRANSACTION_STATUS_PAID_OFF)
+            ->group_by('t.target_id')
+            ->group_by('t.instalment_no')
+            ->get_compiled_select('p2p_transaction.transactions t', TRUE);
+
+        return $this->db
+            ->select('t.*')
+            ->select('count(target_id) AS normal_count')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query2}) as tra", 'tra.target_id = t.id', 'LEFT')
+            ->where('t.user_id', $user_id)
+            ->where_not_in('status', [TARGET_CANCEL, TARGET_FAIL])
+            ->group_by('target_no')
+            ->order_by('status', 'ASC')
+            ->get()
+            ->result();
+    }
+
+    public function get_list($target_condition = [])
+    {
+        $sub_query = $this->db->select('csr.name')
+            ->select('cs.target_id')
+            ->from('p2p_loan.credit_sheet_review csr')
+            ->from('p2p_loan.credit_sheet cs')
+            ->where('cs.id = csr.credit_sheet_id')
+            ->where('csr.id IN (SELECT MAX(id) FROM p2p_loan.credit_sheet_review GROUP BY credit_sheet_id)')
+            ->where('csr.admin_id <>', SYSTEM_ADMIN_ID)
+            ->get_compiled_select(NULL, TRUE);
+
+        $this->_database
+            ->distinct()
+            ->select('t.*')
+            ->select('a.name AS credit_sheet_reviewer')
+            ->from('p2p_loan.targets t')
+            ->join("({$sub_query}) a", 'a.target_id = t.id', 'LEFT');
+        if ( ! empty($target_condition))
+        {
+            $this->_set_where([$target_condition]);
+        }
+        return $this->_database->get()->result();
     }
 }

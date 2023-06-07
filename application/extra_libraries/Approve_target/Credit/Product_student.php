@@ -4,6 +4,7 @@ namespace Approve_target\Credit;
 
 use Approve_target\Approve_target_result;
 use Approve_target\Trait_check_product\Check_applicant_age;
+use Certification\Certification_factory;
 
 /**
  * 核可 信用貸款
@@ -28,12 +29,16 @@ class Product_student extends Approve_target_credit_base
 
         foreach ($user_certs as $value)
         {
-            if ($value['status'] != CERTIFICATION_STATUS_SUCCEED)
+            $cert_helper = Certification_factory::get_instance_by_id($value['id']);
+            // 非成功或過期
+            if ($cert_helper->is_succeed() === FALSE || $cert_helper->is_expired() === TRUE)
             {
                 // 非為選填項
                 if ( ! in_array($value['certification_id'], $option_cert))
                 {
                     $this->result->set_action_cancel();
+                    $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_NORNAL);
+                    $this->result->add_memo($this->result->get_status(), "必填徵信項({$value['certification_id']})未審核成功，案件尚無法核可", Approve_target_result::DISPLAY_BACKEND);
                     return FALSE;
                 }
             }
@@ -48,6 +53,7 @@ class Product_student extends Approve_target_credit_base
         if ( ! empty(array_diff($required_cert, $cer_success_id)))
         {
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '必填徵信項未全數成功(' . implode(',', array_diff($required_cert, $cer_success_id)) . ')，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
         }
 
@@ -157,5 +163,29 @@ class Product_student extends Approve_target_credit_base
             }
         }
         return $result;
+    }
+
+    /**
+     * 依不同產品檢查是否需進二審
+     * @return bool
+     */
+    public function check_need_second_instance_by_product(): bool
+    {
+        $school_config = $this->CI->config->item('school_points');
+        $info = $this->CI->user_meta_model->get_by(['user_id' => $this->target_user_id, 'meta_key' => 'school_name']);
+
+        if (in_array($info->meta_value, $school_config['lock_school']))
+        {
+            $this->result->add_memo(TARGET_WAITING_APPROVE, "{$info->meta_value}為黑名單學校", Approve_target_result::DISPLAY_BACKEND);
+            return TRUE;
+        }
+
+        // 信評等級是10，要轉二審
+        if ($this->credit['level'] == 10)
+        {
+            return TRUE;
+        }
+
+        return FALSE;
     }
 }

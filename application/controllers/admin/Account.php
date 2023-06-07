@@ -760,26 +760,57 @@ class Account extends MY_Admin_Controller {
      * @created_by                   Howard
      */
     public function daily_report_sheet(){
-
+        $get        = $this->input->get(NULL, TRUE);
+        $display    = isset($get['display'])&&$get['display']?$get['display']:"";
+        $sdate      = isset($get['sdate'])&&$get['sdate']?$get['sdate']:get_entering_date();
+        $edate      = isset($get['edate'])&&$get['edate']?$get['edate']:get_entering_date();
         $data = $this->daily_report_client->request('GET', 'daily_report', [
-            'query' => $this->input->get()
+                'query' => array(
+                'sdate' => $sdate,
+                'edate' => $edate
+            )
         ])->getBody()->getContents();
 
-        $get 		= $this->input->get(NULL, TRUE);
-        $sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:get_entering_date();
-        $edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:get_entering_date();
-
         $page_data 	= array(
-            "type" 	=> "list",
-            "sdate"	=> $sdate,
-            "edate"	=> $edate
+            'type' 	=> 'list',
+            'sdate'	=> $sdate,
+            'edate'	=> $edate
         );
         $page_data['list'] = json_decode($data, true);
 
-        $this->load->view('admin/_header');
-        $this->load->view('admin/_title',$this->menu);
-        $this->load->view('admin/account_daily_report_new',$page_data);
-        $this->load->view('admin/_footer');
+        if($display=="pdf"){
+            $html = $this->load->view('estatement/daily_report',$page_data,TRUE);
+            $pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $permissions  = array(
+                'print',
+                'modify',
+                'copy',
+                'annot-forms',
+                'fill-forms',
+                'extract',
+                'assemble',
+                'print-high'
+            );
+            // $pdf->SetProtection($permissions , $password , PDF_OWNER_PASSWORD, 0, null);
+            $pdf->SetCreator(GMAIL_SMTP_NAME);
+            $pdf->SetAuthor(GMAIL_SMTP_NAME);
+            $pdf->SetTitle('日報表-'.date("Y-m-d"));
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            $pdf->setFontSubsetting(true);
+            $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+            $pdf->SetFont('msungstdlight', '', 8);
+            $pdf->AddPage('L', 'A3');
+            $pdf->writeHTML($html, 1, 0, true, true, '');
+            $files = $pdf->Output("daily report_".date("Y-m-d").'.pdf',"D");
+        }
+        else{
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title',$this->menu);
+            $this->load->view('admin/account_daily_report_new',$page_data);
+            $this->load->view('admin/_footer');
+        }
     }
 
     /**

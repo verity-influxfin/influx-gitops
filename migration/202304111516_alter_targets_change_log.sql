@@ -1,0 +1,1 @@
+ALTER TABLE `p2p_log`.`targets_change_log` ADD `script_status` int NULL AFTER `sub_status`;

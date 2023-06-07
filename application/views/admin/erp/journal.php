@@ -10,15 +10,15 @@
     </div>
     <div>
         <ul class="nav nav-tabs" id="myTabs" role="tablist">
-            <li role="presentation" class="active">
+            <!-- <li role="presentation" class="active">
                 <a role="tab" data-toggle="tab" aria-controls="test1" aria-expanded="true" @click="tab='tab1'">個人</a>
-            </li>
+            </li> -->
             <li role="presentation">
                 <a role="tab" data-toggle="tab" aria-controls="test2" aria-expanded="false" @click="tab='tab2'">平台</a>
             </li>
         </ul>
     </div>
-    <div class="row" v-show="tab == 'tab1'">
+    <!-- <div class="row" v-show="tab == 'tab1'">
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
@@ -100,7 +100,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="row" v-show="tab == 'tab2'">
         <div class="col-lg-12">
             <div class="panel panel-default">

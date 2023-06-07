@@ -3225,7 +3225,7 @@ END:
 
         // 建立各產品的初始化資料結構
         $categoryInitList = array_combine(array_keys($this->user_lib->rewardCategories), array_fill(0, count($this->user_lib->rewardCategories), ['detail' => [], 'count' => 0, 'rewardAmount' => 0]));
-        $initList = array_merge_recursive(['registered' => [], 'registeredCount' => 0, 'fullMember' => [], 'fullMemberCount' => 0, 'fullMemberRewardAmount' => 0], $categoryInitList);
+        $initList = array_merge_recursive(['registered' => [], 'registeredCount' => 0, 'registeredRewardAmount' => 0, 'fullMember' => [], 'fullMemberCount' => 0, 'fullMemberRewardAmount' => 0], $categoryInitList);
         $initList = array_merge_recursive($initList, ['collaboration' => $collaboratorInitList]);
 
         $user_qrcode = $this->user_qrcode_model->get_by($where);
@@ -3379,11 +3379,14 @@ END:
 
                 // 處理註冊會員
                 $keys = array_flip(['user_id', 'created_at']);
+                $reward_registered_amount = (int) ($settings['reward']['registered']['amount'] ?? 0);
                 foreach ($userQrcode['registered'] as $value)
                 {
                     $formattedMonth = date("Y-m", strtotime($value['created_at']));
                     $list[$formattedMonth]['registered'][] = array_intersect_key($value, $keys);
                     $list[$formattedMonth]['registeredCount'] += 1;
+                    $list[$formattedMonth]['registeredRewardAmount'] += $reward_registered_amount;
+                    $data['total_reward_amount'] += $reward_registered_amount;
                 }
 
                 $data['promote_code'] = $userQrcodeInfo['promote_code'];

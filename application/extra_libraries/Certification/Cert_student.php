@@ -66,6 +66,7 @@ class Cert_student extends Certification_base
         if (empty($this->content['school']) || empty($this->content['sip_account']) || empty($this->content['sip_password']))
         {
             // SIP填入資訊為空
+            $this->result->addMessage('SIP填入資訊為空', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
             return TRUE;
         }
 
@@ -76,6 +77,7 @@ class Cert_student extends Certification_base
         if ( ! isset($sip_log['status']))
         {
             // SIP爬蟲LoginLog無回應
+            $this->result->addMessage('SIP爬蟲LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
             return TRUE;
         }
 
@@ -93,6 +95,7 @@ class Cert_student extends Certification_base
                     return FALSE;
                 default:
                     // SIP爬蟲LoginLog http回應：非成功 http response status code
+                    $this->result->addMessage('SIP爬蟲LoginLog http回應: ' . $sip_log['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
             }
         }
@@ -101,6 +104,7 @@ class Cert_student extends Certification_base
         if ( ! isset($sip_log['response']['status']))
         {
             // 無對應的SIP爬蟲LoginLog status
+            $this->result->addMessage('無對應的SIP爬蟲LoginLog status，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
             return TRUE;
         }
         if ($sip_log['response']['status'] != 'finished')
@@ -109,15 +113,19 @@ class Cert_student extends Certification_base
             {
                 case 'failure':
                     // SIP登入執行失敗
+                    $this->result->addMessage('SIP登入執行失敗', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'university_not_found':
                     // SIP學校不在清單內
+                    $this->result->addMessage('SIP學校不在清單內', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'university_not_enabled':
                     // SIP學校為黑名單
+                    $this->result->addMessage('SIP學校為黑名單', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'university_not_crawlable':
                     // SIP學校無法爬取
+                    $this->result->addMessage('SIP學校無法爬取', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'started':
                 case 'retry':
@@ -126,6 +134,7 @@ class Cert_student extends Certification_base
                     $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
                     return FALSE;
                 default:
+                    $this->result->addMessage('SIP爬蟲LoginLog status回應: ' . $sip_log['response']['status'], CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
             }
         }
@@ -133,7 +142,25 @@ class Cert_student extends Certification_base
         // 判斷 SIP 帳號密碼是否正確
         if ( ! isset($sip_log['response']['isRight']) || ! $sip_log['response']['isRight'])
         {
+            $university_status_response = $this->CI->sip_lib->getUniversityModel($this->content['school']);
+            $university_status = $university_status_response['response']['status'] ?? '';
+
+            $status_mapping = [
+                SCRAPER_SIP_RECAPTCHA => '驗證碼問題',
+                SCRAPER_SIP_NORMALLY => '正常狀態',
+                SCRAPER_SIP_BLOCK => '黑名單學校',
+                SCRAPER_SIP_SERVER_ERROR => 'server問題',
+                SCRAPER_SIP_VPN => 'VPN相關問題',
+                SCRAPER_SIP_CHANGE_PWD => '要求改密碼',
+                SCRAPER_SIP_FILL_QUEST => '問卷問題',
+                SCRAPER_SIP_UNSTABLE => '不穩定 有時有未知異常',
+            ];
             // SIP登入失敗
+            $this->result->addMessage(
+                'SIP登入失敗，學校狀態: ' . ($status_mapping[$university_status] ?? ''),
+                CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+                MessageDisplay::Backend
+            );
             return TRUE;
         }
 
@@ -142,6 +169,11 @@ class Cert_student extends Certification_base
         {
             // SIP 帳號密碼判定正確，但登入爬取過程中出現異常
             // 可能為 1.學校狀態異常 2.帳號非在學中
+            $this->result->addMessage(
+                'SIP帳號密碼正確，爬蟲執行失敗，請確認此學校狀態、以及是否為在學中帳號',
+                CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+                MessageDisplay::Backend
+            );
             return TRUE;
         }
 
@@ -173,12 +205,14 @@ class Cert_student extends Certification_base
             {
                 case 'failure':
                     // SIP爬蟲DeepScraper失敗
+                    $this->result->addMessage('SIP爬蟲DeepScraper失敗', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
                 case 'deep scraping':
                 case 'logging in':
                     $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
                     return FALSE;
                 default:
+                    $this->result->addMessage('SIP爬蟲DeepLog status回應: ' . $sip_log['response']['status'] . '，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
                     return TRUE;
             }
         }
@@ -270,23 +304,33 @@ class Cert_student extends Certification_base
         $sip_name = $content['sip_data']['result']['name'] ?? '';
         $sip_school = $content['sip_data']['university'] ?? '';
         $sip_department = $content['sip_data']['result']['department'] ?? '';
-        if ( ! isset($content['ocr_parser']['res']) || $content['ocr_parser']['res'] !== TRUE || empty($content['ocr_parser']['content']))
+        $sip_flag = TRUE;
+        $sip_not_match_column = [];
+        if ( ! empty($content['sip_data']))
         {
             if ($name != $sip_name)
             {
-                $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                return FALSE;
+                $sip_not_match_column[] = "1.實名認證姓名=\"{$name}\"2.SIP姓名=\"{$sip_name}\"";
+                $sip_flag = FALSE;
             }
             if ($school != $sip_school)
             {
-                $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                return FALSE;
+                $sip_not_match_column[] = "1.實名認證學校=\"{$school}\"2.SIP學校=\"{$sip_school}\"";
+                $sip_flag = FALSE;
             }
             if ($department != $sip_department)
             {
-                $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                return FALSE;
+                $sip_not_match_column[] = "1.實名認證科系=\"{$department}\"2.SIP科系=\"{$sip_department}\"";
+                $sip_flag = FALSE;
             }
+        }
+        if ($sip_flag === FALSE)
+        {
+            $this->result->addMessage('SIP資訊與使用者資訊不符' . (
+                empty($sip_not_match_column)
+                    ? ''
+                    : ('（' . implode('、', $sip_not_match_column) . '）')
+                ), CERTIFICATION_STATUS_PENDING_TO_VALIDATE, MessageDisplay::Backend);
         }
         if ($name == $sip_name && $school == $sip_school && $department == $sip_department)
         {
@@ -302,28 +346,35 @@ class Cert_student extends Certification_base
         {
             $ocr_system = $config_school_system_list[0] ?? '';
         }
+        $ocr_flag = TRUE;
+        $ocr_not_match_column = [];
         if ($name != $ocr_name)
         {
-            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return FALSE;
+            $ocr_not_match_column[] = '姓名';
+            $ocr_flag = FALSE;
         }
         if ($school != $ocr_school)
         {
-            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return FALSE;
+            $ocr_not_match_column[] = '學校';
+            $ocr_flag = FALSE;
         }
         if ($department != $ocr_department)
         {
-            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            return FALSE;
+            $ocr_not_match_column[] = '科系';
+            $ocr_flag = FALSE;
         }
         if ($system != $ocr_system)
         {
-            $this->result->addMessage('SIP資訊與使用者資訊不符', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-            $this->result->addMessage('OCR資訊與使用者資訊不符：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $ocr_not_match_column[] = '學制';
+            $ocr_flag = FALSE;
+        }
+        if ($ocr_flag === FALSE)
+        {
+            $this->result->addMessage('OCR資訊與使用者資訊不符' . (
+                empty($ocr_not_match_column)
+                    ? ''
+                    : ('（' . implode('、', $ocr_not_match_column) . '）')
+                ) . '：轉人工', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
             return FALSE;
         }
 

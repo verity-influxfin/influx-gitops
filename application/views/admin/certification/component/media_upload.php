@@ -8,15 +8,16 @@
             echo '<input style="display:none;" class="extra_info" type="text" name="'.$k.'" value="'.$v.'"/>';
         }
     }
-    ?>
-    <div type="submit" id="mediaUploadBtn" class="btn btn-primary" onclick="submitMedia($(this))" disabled>上傳檔案</div>
+  ?>
+  <div type="submit" id="mediaUploadBtn" class="btn btn-primary" onclick="submitMedia($(this))" disabled>上傳檔案</div>
 </div>
 <script src="https://unpkg.com/heic2any"></script>
 <script>
     let imageFormData = [];
 
     function mediaUploadOnChange(event) {
-        let $submit_btn = $("#mediaUploadBtn");
+        let upload_element = $(event.currentTarget);
+        let $submit_btn = upload_element.parent().find('div#mediaUploadBtn');
         $submit_btn.text(`資料處理中`);
         $submit_btn.attr("disabled", "disabled");
         let allFileCount = Object.keys(event.target.files).length;

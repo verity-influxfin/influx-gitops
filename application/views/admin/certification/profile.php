@@ -68,101 +68,26 @@
                                     <div class="table-responsive Pr">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人行動電話</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prMobileNo"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人Email</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prEmail"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人擔任本企業負責人年度-起始</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYear"
-                                                        placeholder="格式:YYY"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人擔任本企業負責人年度-結束</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYearEnd"
-                                                        placeholder="格式:YYY"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人從事本行業年度-起始</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prStartYear"
-                                                        placeholder="格式:YYY"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人從事本行業年度-結束</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prEndYear"
-                                                        placeholder="格式:YYY"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人學歷</span></td>
-                                                    <td>
-                                                        <select v-model="formData.prEduLevel" class="table-input form-control">
-                                                            <option :value="''"></option>
-                                                            <option :value="'A'">A:國小</option>
-                                                            <option :value="'B'">B:國中</option>
-                                                            <option :value="'C'">C:高中職</option>
-                                                            <option :value="'D'">D:專科</option>
-                                                            <option :value="'E'">E:大學</option>
-                                                            <option :value="'F'">F:碩士</option>
-                                                            <option :value="'G'">G:博士</option>
-                                                            <option :value="'H'">H:無</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>個人不動產持有人名稱</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.realEstateOwner"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>個人不動產地址</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.realEstateAddress"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>個人不動產使用狀況</span></td>
-                                                    <td>
-                                                        <select v-model="formData.realEstateUsage" class="table-input form-control">
-                                                            <option :value="''"></option>
-                                                            <option :value="'1'">1:自用</option>
-                                                            <option :value="'2'">2:出租</option>
-                                                            <option :value="'3'">3:閒置</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>個人不動產設定情形</span></td>
-                                                    <td>
-                                                        <select v-model="formData.realEstateMortgage" class="table-input form-control">
-                                                            <option :value="''"></option>
-                                                            <option :value="'1'">1:有</option>
-                                                            <option :value="'0'">0:無</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="table-responsive OtherRealPr">
-                                        <table class="table table-striped table-bordered table-hover dataTable">
-                                            <tbody>
-                                            <tr style="text-align: center;">
-                                                <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>實際負責人是否等於登記負責人</span></td>
-                                                <td>
-                                                    <select v-model="formData.isPrRegister" class="table-input sk-input form-control">
-                                                        <option :value="1">1:是</option>
-                                                        <option :value="0">0:否</option>
+                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
+                                                <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                <tr><td><span>負責人現居地址-郵遞區號</span></td><td><input class="sk-input zipcode" type="text" name="PrCurAddrZip"></td></tr>
+                                                <tr><td><span>負責人現居地址-郵遞區號名稱</span></td><td><input class="sk-input" type="text" name="PrCurAddrZipName"></td></tr>
+                                                <tr><td><span>負責人現居地址-非郵遞地址資料</span></td><td><input class="sk-input address" type="text" name="PrCurlAddress"></td></tr>
+                                                <tr><td><span>負責人連絡電話-區碼</span></td><td><input class="sk-input" type="text" name="PrTelAreaCode"></td></tr>
+                                                <tr><td><span>負責人連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="PrTelNo"></td></tr>
+                                                <tr><td><span>負責人連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="PrTelExt"></td></tr>
+                                                <tr><td><span>負責人連絡行動電話</span></td><td><input class="sk-input" type="text" name="PrMobileNo"></td></tr>
+                                                <tr><td><span>負責人從事本行業年度</span></td><td><input class="sk-input" type="text" name="PrStartYear" placeholder="格式:YYYY"></td></tr>
+                                                <tr><td><span>負責人學歷</span></td><td>
+                                                    <select name="PrEduLevel" class="table-input sk-input">
+                                                        <option value="A">A:國小</option>
+                                                        <option value="B">B:國中</option>
+                                                        <option value="C">C:高中職</option>
+                                                        <option value="D">D:專科</option>
+                                                        <option value="E">E:大學</option>
+                                                        <option value="F">F:碩士</option>
+                                                        <option value="G">G:博士</option>
+                                                        <option value="H">H:無</option>
                                                     </select>
                                                 </td>
                                             </tr>
@@ -292,68 +217,19 @@
                                     <div class="table-responsive Pr">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                            <tr style="text-align: center;">
-                                                <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人行動電話</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prMobileNo"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人Email</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prEmail"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人擔任本企業負責人年度-起始</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYear"
-                                                           placeholder="格式:YYY"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人擔任本企業負責人年度-結束</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prInChargeYearEnd"
-                                                           placeholder="格式:YYY"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人從事本行業年度-起始</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prStartYear"
-                                                           placeholder="格式:YYY"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人從事本行業年度-結束</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.prEndYear"
-                                                           placeholder="格式:YYY"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>負責人學歷</span></td>
-                                                <td>
-                                                    <select v-model="formData.prEduLevel" class="table-input form-control">
-                                                        <option :value="'A'">A:國小</option>
-                                                        <option :value="'B'">B:國中</option>
-                                                        <option :value="'C'">C:高中職</option>
-                                                        <option :value="'D'">D:專科</option>
-                                                        <option :value="'E'">E:大學</option>
-                                                        <option :value="'F'">F:碩士</option>
-                                                        <option :value="'G'">G:博士</option>
-                                                        <option :value="'H'">H:無</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>個人不動產持有人名稱</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.realEstateOwner"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>個人不動產地址</span></td>
-                                                <td><input class="sk-input form-control" type="text" v-model="formData.realEstateAddress"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>個人不動產使用狀況</span></td>
-                                                <td>
-                                                    <select v-model="formData.realEstateUsage" class="table-input form-control">
-                                                        <option :value="''">請選擇</option>
-                                                        <option :value="'1'">1:自用</option>
-                                                        <option :value="'2'">2:出租</option>
-                                                        <option :value="'3'">3:閒置</option>
+                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
+                                                <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                <tr><td><span>配偶現居地址-郵遞區號</span></td><td><input class="sk-input zipcode" type="text" name="SpouseCurAddrZip"></td></tr>
+                                                <tr><td><span>配偶現居地址-郵遞區號名稱</span></td><td><input class="sk-input" type="text" name="SpouseCurAddrZipName"></td></tr>
+                                                <tr><td><span>配偶現居地址-非郵遞地址資料</span></td><td><input class="sk-input address" type="text" name="SpouseCurlAddress"></td></tr>
+                                                <tr><td><span>配偶連絡電話-區碼</span></td><td><input class="sk-input" type="text" name="SpouseTelAreaCode"></td></tr>
+                                                <tr><td><span>配偶連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="SpouseTelNo"></td></tr>
+                                                <tr><td><span>配偶連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="SpouseTelExt"></td></tr>
+                                                <tr><td><span>配偶連絡行動電話</span></td><td><input class="sk-input" type="text" name="SpouseMobileNo"></td></tr>
+                                                <tr><td><span>配偶是否擔任本案保證人</span></td><td>
+                                                    <select name="IsPrSpouseGu" class="table-input sk-input">
+                                                        <option value="1">1:是</option>
+                                                        <option value="0">0:否</option>
                                                     </select>
                                                 </td>
                                             </tr>
@@ -377,15 +253,23 @@
                                     <div class="table-responsive OtherRealPr">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                            <tr style="text-align: center;">
-                                                <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>實際負責人是否等於登記負責人</span></td>
-                                                <td>
-                                                    <select v-model="formData.isPrRegister" class="table-input sk-input form-control">
-                                                        <option :value="1">1:是</option>
-                                                        <option :value="0">0:否</option>
+                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
+                                                <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                <tr><td><span>保證人甲現居地址-郵遞區號</span></td><td><input class="sk-input zipcode" type="text" name="GuOneCurAddrZip"></td></tr>
+                                                <tr><td><span>保證人甲現居地址-郵遞區號名稱</span></td><td><input class="sk-input" type="text" name="GuOneCurAddrZipName"></td></tr>
+                                                <tr><td><span>保證人甲現居地址-非郵遞地址資料</span></td><td><input class="sk-input address" type="text" name="GuOneCurlAddress"></td></tr>
+                                                <tr><td><span>保證人甲連絡電話-區碼</span></td><td><input class="sk-input" type="text" name="GuOneTelAreaCode"></td></tr>
+                                                <tr><td><span>保證人甲連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="GuOneTelNo"></td></tr>
+                                                <tr><td><span>保證人甲連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="GuOneTelExt"></td></tr>
+                                                <tr><td><span>保證人甲連絡行動電話</span></td><td><input class="sk-input" type="text" name="GuOneMobileNo"></td></tr>
+                                                <tr><td><span>保證人甲_任職公司</span></td><td>
+                                                    <select name="GuOneCompany" class="table-input sk-input">
+                                                        <option value="A">A:公家機關</option>
+                                                        <option value="B">B:上市櫃公司</option>
+                                                        <option value="C">C:專業人士</option>
+                                                        <option value="D">D:借戶</option>
+                                                        <option value="E">E:其他民營企業</option>
+                                                        <option value="F">F:無</option>
                                                     </select>
                                                 </td>
                                             </tr>
@@ -433,24 +317,23 @@
                                     <div class="table-responsive GuOne">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                            <tr style="text-align: center;">
-                                                <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>是否有徵提保證人</span></td>
-                                                <td>
-                                                    <select v-model="formData.hasGuarantor" class="table-input sk-input form-control">
-                                                        <option :value="1">1:是</option>
-                                                        <option :value="0">0:否</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><span>配偶是否擔任保證人</span></td>
-                                                <td>
-                                                    <select v-model="formData.isPrSpouseGu" class="table-input sk-input form-control">
-                                                        <option :value="1">1:是</option>
-                                                        <option :value="0">0:否</option>
+                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
+                                                <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                <tr><td><span>保證人乙現居地址-郵遞區號</span></td><td><input class="sk-input zipcode" type="text" name="GuTwoCurAddrZip"></td></tr>
+                                                <tr><td><span>保證人乙現居地址-郵遞區號名稱</span></td><td><input class="sk-input" type="text" name="GuTwoCurAddrZipName"></td></tr>
+                                                <tr><td><span>保證人乙現居地址-非郵遞地址資料</span></td><td><input class="sk-input address" type="text" name="GuTwoCurlAddress"></td></tr>
+                                                <tr><td><span>保證人乙連絡電話-區碼</span></td><td><input class="sk-input" type="text" name="GuTwoTelAreaCode"></td></tr>
+                                                <tr><td><span>保證人乙連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="GuTwoTelNo"></td></tr>
+                                                <tr><td><span>保證人乙連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="GuTwoTelExt"></td></tr>
+                                                <tr><td><span>保證人乙連絡行動電話</span></td><td><input class="sk-input" type="text" name="GuTwoMobileNo"></td></tr>
+                                                <tr><td><span>保證人乙_任職公司</span></td><td>
+                                                    <select name="GuTwoCompany" class="table-input sk-input">
+                                                        <option value="A">A:公家機關</option>
+                                                        <option value="B">B:上市櫃公司</option>
+                                                        <option value="C">C:專業人士</option>
+                                                        <option value="D">D:借戶</option>
+                                                        <option value="E">E:其他民營企業</option>
+                                                        <option value="F">F:無</option>
                                                     </select>
                                                 </td>
                                             </tr>
@@ -659,7 +542,26 @@
                 }).then(({ data }) => {
                     mergeDeep(this.formData, data.response)
                 })
+
+                $.each($("input.address"), function (key, item) {
+                    if ($(item).val()) {
+                        $(item).trigger("change");
+                    }
+                })
             }
         },
     })
+    $( "#skbank_form_tab :first-child :first-child" ).trigger( "click" );
+
+    $(".address").on("change", function () {
+        let address = $(this);
+        $.ajax({
+            type: 'GET',
+            url: `https://zip5.5432.tw/zip5json.py?adrs=${address.val()}`,
+            success: function (response) {
+                address.parents(".dataTable").find("input.zipcode").val(response.zipcode.substring(0, 3));
+            }
+        });
+    });
+});
 </script>

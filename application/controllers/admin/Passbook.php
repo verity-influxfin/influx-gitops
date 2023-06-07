@@ -118,23 +118,23 @@ class Passbook extends MY_Admin_Controller {
     public function display(){
         $get                =	 $this->input->get(NULL, TRUE);
         $account            =    isset($get['virtual_account'])?$get['virtual_account']:'';
-        $virtual_account     =    $this->virtual_account_model->get_by(array('virtual_account'=>$account));
+        $virtual_account    =    $this->virtual_account_model->get_by(array('virtual_account'=>$account));
         $sdate              =    ! empty($get['sdate']) ? $get['sdate'] : 'all';
         $edate              =    ! empty($get['edate']) ? $get['edate'] : 'all';
         if($virtual_account){
             $data = $this->passbook_client->request('GET', 'vitual_passbook', [
                     'query' => array(
-                    'id' => $virtual_account->id,
-                    "sdate" => $sdate,
-                    "edate" => $edate
+                    'id'    => $virtual_account->id,
+                    'sdate' => $sdate,
+                    'edate' => $edate
                 )
             ])->getBody()->getContents();
 
             $data       = json_decode($data, true);
             $page_data 	= array(
-                "type"  => "list",
-                "sdate" => $sdate,
-                "edate" => $edate
+                'type'  => 'list',
+                'sdate' => $sdate,
+                'edate' => $edate
             );
             $page_data['list']                  = $data[0];
             $page_data['virtual_account']       = $data[2];
@@ -155,19 +155,23 @@ class Passbook extends MY_Admin_Controller {
      * @created_by                   Howard
      */
     public function edit(){
+        $get                = $this->input->get(NULL, TRUE);
+        $sdate              = ! empty($get['sdate']) ? $get['sdate'] : get_entering_date();
+        $edate              = ! empty($get['edate']) ? $get['edate'] : get_entering_date();
         $data = $this->passbook_client->request('GET', 'vitual_passbook', [
-            'query' => $this->input->get()
+                    'query' => array(
+                    'id'    => isset($get['id'])?$get['id']:'',
+                    'sdate' => $sdate,
+                    'edate' => $edate
+            )
         ])->getBody()->getContents();
 
-        $get 		= $this->input->get(NULL, TRUE);
-        $data       = json_decode($data, true);
+        $data           = json_decode($data, true);
         if($data[2]['id']){
-            $sdate = ! empty($get['sdate']) ? $get['sdate'] : get_entering_date();
-            $edate = ! empty($get['edate']) ? $get['edate'] : get_entering_date();
             $page_data 	= array(
-                "type" 	=> "list",
-                "sdate"	=> $sdate,
-                "edate"	=> $edate
+                'type' 	=> 'list',
+                'sdate'	=> $sdate,
+                'edate'	=> $edate
             );
             $page_data['list']                  = $data[0];
             $page_data['virtual_account']       = $data[2];
@@ -368,10 +372,9 @@ class Passbook extends MY_Admin_Controller {
         $get 	= $this->input->get(NULL, TRUE);
         $id 	= isset($get['id'])?intval($get['id']):0;
         if($id){
-            $info = $this->withdraw_model->get($id);
-            if($info && $info->status==0 && $info->frozen_id>0){
-                $this->withdraw_model->update($id,array('status'=>3));
-                $this->frozen_amount_model->update($info->frozen_id,array('status'=>0));
+            $this->load->library('withdraw_lib');
+            if ($this->withdraw_lib->withdraw_deny([$id]) === TRUE)
+            {
                 echo '提領駁回成功，已取消凍結';die();
             }else{
                 echo '查無此ID';die();

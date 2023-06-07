@@ -33,7 +33,7 @@ class User_lib {
     ];
 
     public $logRewardColumns = [
-        'student', 'salary_man', 'small_enterprise', 'fullMember'
+        'student', 'salary_man', 'small_enterprise', 'fullMember', 'registered'
     ];
 
     public function __construct()
@@ -427,6 +427,11 @@ class User_lib {
             if ( ! isset($list[$userQrcodeId]['fullMemberCount']))
                 $list[$userQrcodeId]['fullMemberCount'] = 0;
 
+            if ( ! isset($list[$userQrcodeId]['registeredCount']))
+            {
+                $list[$userQrcodeId]['registeredCount'] = 0;
+            }
+
             if ( ! isset($list[$userQrcodeId]['downloadedCount']))
                 $list[$userQrcodeId]['downloadedCount'] = 0;
 
@@ -443,6 +448,15 @@ class User_lib {
                     $list[$userQrcodeId]['downloadRewardAmount'] = $list[$userQrcodeId]['downloadedCount'] * intval($settings['reward']['download']['amount']);
                     $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['downloadRewardAmount'];
                 }
+            }
+            if (isset($settings['reward']['registered']['amount']))
+            {
+                $list[$userQrcodeId]['registeredRewardAmount'] = $list[$userQrcodeId]['registeredCount'] * intval($settings['reward']['registered']['amount']);
+                $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['registeredRewardAmount'];
+            }
+            else
+            {
+                $list[$userQrcodeId]['registeredRewardAmount'] = 0;
             }
         }
 
@@ -501,14 +515,31 @@ class User_lib {
 
     /**
      * 結算所有推薦碼的獎勵
+     * @param $year : 年
+     * @param $month : 月
      * @return int
      */
-    public function scriptHandlePromoteReward(): int
+    public function scriptHandlePromoteReward($year = NULL, $month = NULL): int
     {
         $count = 0;
         $this->CI->load->model('user/user_qrcode_model');
-        $startTime = date('Y-m-01 00:00:00', strtotime("-1 month"));
-        $endTime = date('Y-m-01 00:00:00');
+
+        $tmp_timestamp = time();
+        if (empty($year))
+        {
+            $year = date('Y', $tmp_timestamp);
+        }
+        if (empty($month))
+        {
+            $month = date('m', $tmp_timestamp);
+        }
+        if ( ! ($now = strtotime("{$year}-{$month}")))
+        {
+            $now = $tmp_timestamp;
+        }
+
+        $startTime = date('Y-m-01 00:00:00', strtotime("-1 month", $now));
+        $endTime = date('Y-m-01 00:00:00', $now);
         $userQrcodes = $this->CI->user_qrcode_model->getQrcodeRewardInfo(['status' => [PROMOTE_STATUS_AVAILABLE],
             'settlementing' => 0, 'subcode_flag' => 0]);
         foreach ($userQrcodes as $qrcode)

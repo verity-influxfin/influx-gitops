@@ -273,7 +273,7 @@ class Risk extends MY_Admin_Controller {
         $input_target_column = array_flip($input_target_column);
         $title_target = array_intersect_key([
             'target_no' => ['name' => '案號', 'width' => 20],
-            'user_id' => ['name' => '會員編號'],
+            'user_id' => ['name' => '會員編號', 'width' => 20, 'alignment' => ['h' => 'right']],
             'user_name' => ['name' => '姓名'],
             'user_phone' => ['name' => '電話', 'datatype' => \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING, 'width' => 12],
             'product_name' => ['name' => '產品名稱', 'width' => 20],
@@ -435,6 +435,10 @@ class Risk extends MY_Admin_Controller {
 
                 // 組裝資料
                 $user_cert = array_intersect_key($user_stage_value['btn'], $title_cert);
+                if ($target['has_delayed'] === '1')
+                {
+                    $target['user_id'] .= '(曾逾期)';
+                }
                 $data_rows[$stage][] = array_replace(array_intersect_key($target, $input_target_column), $user_cert);
             }
         }

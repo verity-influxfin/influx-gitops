@@ -122,6 +122,7 @@ defined('NOT_INCORPORATION') or define('NOT_INCORPORATION', 223); //公司不是
 defined('NO_RESPONSIBLE_USER_BIND') or define('NO_RESPONSIBLE_USER_BIND', 224); //法人帳號沒有綁定自然人帳號
 defined('NO_RESPONSIBLE_IDENTITY') or define('NO_RESPONSIBLE_IDENTITY', 225); // 法人沒有通過負責人實名 by news
 defined('PROMOTE_CODE_NOT_EXIST') or define('PROMOTE_CODE_NOT_EXIST', 226); // 該推薦碼不存在
+defined('LOW_WITHDRAW_AMOUNT') or define('LOW_WITHDRAW_AMOUNT', 227); // 提領金額過低
 defined('GO_GET_EMAIL_VERIFICATION') or define('GO_GET_EMAIL_VERIFICATION', 227); // 請至信箱收信驗證
 defined('PROMOTE_CODE_NOT_APPLY') or define('PROMOTE_CODE_NOT_APPLY', 228); // 推薦碼尚未按下「立即申請」
 defined('PROMOTE_CODE_NOT_GENERAL') or define('PROMOTE_CODE_NOT_GENERAL', 229); // 非一般經銷商
@@ -356,6 +357,10 @@ defined('TARGET_CERTIFICATE_DEFAULT') OR define('TARGET_CERTIFICATE_DEFAULT', 0)
 defined('TARGET_CERTIFICATE_SUBMITTED') OR define('TARGET_CERTIFICATE_SUBMITTED', 1); // 已一鍵送出，信用評估中
 defined('TARGET_CERTIFICATE_RE_SUBMITTING') OR define('TARGET_CERTIFICATE_RE_SUBMITTING', 2); // 已一鍵送出，徵信項審核失敗，重新提交徵信項
 
+// Sub-loan status
+defined('SUBLOAN_STATUS_CANCELED') or define('SUBLOAN_STATUS_CANCELED', 8); // 已取消
+defined('SUBLOAN_STATUS_FAILED') or define('SUBLOAN_STATUS_FAILED', 9); // 申請失敗
+
 //Investment
 defined('INVESTMENT_WAITING_IMPORT') OR define('INVESTMENT_WAITING_IMPORT', 0);
 defined('INVESTMENT_WAITING_BIDDING') OR define('INVESTMENT_WAITING_BIDDING', 1);
@@ -464,7 +469,7 @@ defined('STAGE_CER_TARGET')         OR define('STAGE_CER_TARGET' , 9999);
 defined('STAGE_CER_MIN_AMOUNT')     OR define('STAGE_CER_MIN_AMOUNT' , 3000);
 defined('SUL_INTEREST_STARTING_RATE') 		OR define('SUL_INTEREST_STARTING_RATE' , 5); //分期利率
 defined('SUL_INTEREST_ENDING_RATE') 		OR define('SUL_INTEREST_ENDING_RATE' , 20); //分期利率
-defined('PREPAYMENT_ALLOWANCE_FEES') 		OR define('PREPAYMENT_ALLOWANCE_FEES'		, 0.5); //提還補貼%
+defined('PREPAYMENT_ALLOWANCE_FEES') or define('PREPAYMENT_ALLOWANCE_FEES', 0); //提還補貼%
 defined('GRACE_PERIOD') 					OR define('GRACE_PERIOD'					, 7); //寬限期
 defined('TRANSACTION_PASSWORD_LENGTH') 		OR define('TRANSACTION_PASSWORD_LENGTH'		, 6); //交易密碼長度
 defined('TRANSACTION_PASSWORD_LENGTH_MAX') 	OR define('TRANSACTION_PASSWORD_LENGTH_MAX'	, 50); //交易密碼長度
@@ -485,6 +490,7 @@ defined('BANK_COST_ACCOUNT') 		OR define('BANK_COST_ACCOUNT'		, '00000000000000'
 defined('LENDING_URL') 				OR define('LENDING_URL'				, getenv('ENV_LENDING_URL'));
 defined('BORROW_URL') 				OR define('BORROW_URL'				, getenv('ENV_BORROW_URL'));
 defined('CREDIT_EMAIL') 			OR define('CREDIT_EMAIL'		, getenv('ENV_CREDIT_EMAIL'));
+defined('MINIMUM_WITHDRAW_AMOUNT') or define('MINIMUM_WITHDRAW_AMOUNT', 32); // 最低提領金額
 
 //SOURCE
 defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//代收
@@ -708,6 +714,12 @@ defined('TRANSFER_STATUS_FINISHED') OR define('TRANSFER_STATUS_FINISHED', 10);
 defined('VIRTUAL_ACCOUNT_STATUS_BLOCKED') OR define('VIRTUAL_ACCOUNT_STATUS_BLOCKED', 0);
 defined('VIRTUAL_ACCOUNT_STATUS_AVAILABLE') OR define('VIRTUAL_ACCOUNT_STATUS_AVAILABLE', 1);
 defined('VIRTUAL_ACCOUNT_STATUS_USING') OR define('VIRTUAL_ACCOUNT_STATUS_USING', 2);
+
+// status of the withdraw
+defined('WITHDRAW_STATUS_WAITING') or define('WITHDRAW_STATUS_WAITING', 0); // 待出款
+defined('WITHDRAW_STATUS_FINISHED') or define('WITHDRAW_STATUS_FINISHED', 1); // 提領成功
+defined('WITHDRAW_STATUS_PROCESSING') or define('WITHDRAW_STATUS_PROCESSING', 2); // 出款中
+defined('WITHDRAW_STATUS_CANCELED') or define('WITHDRAW_STATUS_CANCELED', 3); // 取消
 
 // borrower/investor
 defined('USER_BORROWER') OR define('USER_BORROWER', 0);

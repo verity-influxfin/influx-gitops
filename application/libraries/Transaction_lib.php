@@ -196,7 +196,8 @@ class Transaction_lib{
 
 	//提領
 	public function withdraw($user_id,$amount=0,$investor=1){
-		if($user_id && $amount > 31 ){
+        if ($user_id && $this->check_minimum_withdraw_amount($amount))
+        {
 			$virtual_account = $this->CI->virtual_account_model->get_by([
 				'status'	=> 1,
 				'investor'	=> $investor,
@@ -1036,7 +1037,9 @@ class Transaction_lib{
 		$transaction 	= array();
 		if($target_id){
 			$target 	= $this->CI->target_model->get($target_id);
-			if( $target && $target->status == 4 && $target->loan_status == 2 && $target->sub_status == 8){
+            $this->CI->load->library('target_lib');
+            if ($target && $target->status == 4 && $target->loan_status == 2 && $this->CI->target_lib->is_sub_loan($target->target_no) === TRUE)
+            {
 				$this->CI->load->model('loan/subloan_model');
 				$subloan	= $this->CI->subloan_model->get_by(array(
 					'status'		=> 2,
@@ -1412,5 +1415,16 @@ class Transaction_lib{
         }
 
         return FALSE;
+    }
+
+    /**
+     * 檢查提領金額是否符合最低限制
+     * @param $amount
+     * @return bool
+     */
+    public function check_minimum_withdraw_amount($amount): bool
+    {
+        $amount = (int) $amount;
+        return $amount >= MINIMUM_WITHDRAW_AMOUNT;
     }
 }

@@ -3,6 +3,7 @@
 namespace Approve_target;
 
 use CertificationResult\IdentityCertificationResult;
+use CertificationResult\MessageDisplay;
 use CertificationResult\SocialCertificationResult;
 use CreditSheet\CreditSheetFactory;
 
@@ -30,10 +31,9 @@ abstract class Approve_base implements Approve_interface
     {
         $this->CI = &get_instance();
 
-        $this->result = $this->get_initial_result();
         $this->target = $target;
+        $this->result = $this->get_initial_result($this->target['status'], $this->target['sub_status']);
         $this->script_status = TARGET_SCRIPT_STATUS_APPROVE_TARGET;
-        $this->result->set_status($this->target['status'], $this->target['sub_status']);
 
         $this->CI->load->library('anti_fraud_lib');
         $this->CI->load->library('brookesia/black_list_lib');
@@ -43,12 +43,15 @@ abstract class Approve_base implements Approve_interface
         $this->CI->load->library('credit_lib');
         $this->CI->load->library('loanmanager/product_lib');
         $this->CI->load->library('judicialperson_lib');
+        $this->CI->load->library('target_lib');
         $this->CI->load->library('user_bankaccount_lib');
         $this->CI->load->library('verify/data_verify_lib');
 
         $this->CI->load->model('log/log_integration_model');
         $this->CI->load->model('log/log_usercertification_model');
+        $this->CI->load->model('loan/credit_sheet_review_model');
         $this->CI->load->model('loan/target_associate_model');
+        $this->CI->load->model('loan/subloan_model');
         $this->CI->load->model('transaction/order_model');
         $this->CI->load->model('user/judicial_person_model');
         $this->CI->load->model('user/user_bankaccount_model');
@@ -68,8 +71,7 @@ abstract class Approve_base implements Approve_interface
         $match_brookesia = FALSE;
 
         // 檢查是否為產轉
-        $subloan_list = $this->CI->config->item('subloan_list');
-        $subloan_status = (bool) preg_match('/' . $subloan_list . '/', $this->target['target_no']);
+        $subloan_status = $this->CI->target_lib->is_sub_loan($this->target['target_no']);
 
         // 核可前的行為
         if ($this->check_before_approve() === FALSE)
@@ -117,6 +119,7 @@ abstract class Approve_base implements Approve_interface
         {
             $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_DEBUG);
             goto END;
         }
 
@@ -141,9 +144,23 @@ abstract class Approve_base implements Approve_interface
             {
                 $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_SECOND_INSTANCE);
             }
+            elseif ( ! empty($this->loan_amount) && ! empty($this->platform_fee) && ! empty($this->credit))
+            {
+                $this->result->set_status(TARGET_WAITING_SIGNING);
+            }
+            else
+            {
+                $status = $this->result->get_status();
+                $this->result->add_memo($status, "因無credit/platform_fee/loan_amount，案件維持status={$status}", Approve_target_result::DISPLAY_DEBUG);
+            }
         }
 
         $status = $this->result->get_status();
+        if ($subloan_status === TRUE && $status === TARGET_WAITING_APPROVE)
+        {
+            $status = TARGET_WAITING_SIGNING;
+        }
+
         switch ($status)
         {
             case TARGET_WAITING_SIGNING:
@@ -155,7 +172,7 @@ abstract class Approve_base implements Approve_interface
                 }
                 break;
             case TARGET_FAIL:
-                $res = $this->set_target_failure();
+                $res = $this->set_target_failure($subloan_status);
                 if ($res === TRUE)
                 {
                     $res = $this->failure_notify($subloan_status);
@@ -190,6 +207,10 @@ abstract class Approve_base implements Approve_interface
         {
             return FALSE;
         }
+        if ($this->check_need_second_instance_by_product() === TRUE)
+        {
+            return TRUE;
+        }
         if ($match_brookesia === TRUE)
         {
             // 命中反詐欺
@@ -203,7 +224,7 @@ abstract class Approve_base implements Approve_interface
 
         // todo: 如果後台二審審核通過也要共用這個架構，再想辦法
 
-        return $this->check_need_second_instance_by_product();
+        return FALSE;
     }
 
     /**
@@ -219,7 +240,7 @@ abstract class Approve_base implements Approve_interface
      * 依不同產品檢查是否需進二審
      * @return bool
      */
-    protected function check_need_second_instance_by_product(): bool
+    public function check_need_second_instance_by_product(): bool
     {
         return FALSE;
     }
@@ -336,6 +357,7 @@ abstract class Approve_base implements Approve_interface
                             log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
                         }
                         $this->result->set_action_cancel();
+                        $this->result->add_memo($this->result->get_status(), '實名認證被退件，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
                         return FALSE;
                     }
                     elseif ($result[0] === FALSE && $result[1] === TRUE)
@@ -348,6 +370,13 @@ abstract class Approve_base implements Approve_interface
                         $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
                         if (isset($cert_helper))
                         {
+                            $cert_helper->result->addMessage(IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE . '，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                            $cert_helper->remark['verify_result'] = $cert_helper->result->getAllMessage(MessageDisplay::Backend);
+                            $cert_helper->remark['verify_result_json'] = $cert_helper->result->jsonDump();
+                            $this->CI->user_certification_model->update($identity_cert->id, [
+                                'remark' => json_encode($cert_helper->remark, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE),
+                            ]);
+
                             $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
                         }
                         else
@@ -365,6 +394,7 @@ abstract class Approve_base implements Approve_interface
                             log_message('error', "實名認證 user_certification {$identity_cert->id} 轉人工失敗");
                         }
                         $this->result->set_action_cancel();
+                        $this->result->add_memo($this->result->get_status(), '實名認證轉人工，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
                         return FALSE;
                     }
                     else
@@ -379,6 +409,7 @@ abstract class Approve_base implements Approve_interface
             }
         }
         $this->result->set_action_cancel();
+        $this->result->add_memo($this->result->get_status(), '未送出審核，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
         return FALSE;
     }
 
@@ -430,6 +461,7 @@ abstract class Approve_base implements Approve_interface
         {
             // 算不出或找不到信用額度->失敗
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '無信用額度，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
         }
 
@@ -580,6 +612,7 @@ abstract class Approve_base implements Approve_interface
             if ( ! $rs)
             {
                 $this->result->set_action_cancel();
+                $this->result->add_memo($this->result->get_status(), '無核可信用額度，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
                 return [];
             }
 
@@ -753,6 +786,7 @@ abstract class Approve_base implements Approve_interface
         if ($this->can_approve() === FALSE)
         {
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '未送出審核、或被其他排程處理中，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
         }
 
@@ -762,8 +796,19 @@ abstract class Approve_base implements Approve_interface
         {
             log_message('error', "Approve target 查無產品設定檔 ({$this->target_product_id}:{$this->target_sub_product_id})");
             $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '查無產品設定檔，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
         }
+
+        // 檢查是否有二審通過的 credit sheet review，但案件卻還卡在二審
+        $credit_sheet_review = $this->CI->credit_sheet_review_model->has_info_by_target_id($this->target['id'], 2);
+        if ($credit_sheet_review && $this->target['status'] == TARGET_WAITING_APPROVE && $this->target['sub_status'] == TARGET_SUBSTATUS_SECOND_INSTANCE)
+        {
+            $this->result->set_action_cancel();
+            $this->result->set_status(TARGET_WAITING_SIGNING, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET);
+            return FALSE;
+        }
+
         return TRUE;
     }
 
@@ -810,18 +855,33 @@ abstract class Approve_base implements Approve_interface
      */
     protected function update_target_script_status(): int
     {
-        return $this->CI->target_model->get_affected_after_update($this->target['id'], [
+        $param = [
             'script_status' => $this->script_status,
-        ], [
+        ];
+
+        $res = $this->CI->target_model->get_affected_after_update($this->target['id'], $param, [
             'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
         ]);
+
+        if ( ! $res)
+        {
+            return 0;
+        }
+        $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+
+        return $res;
     }
 
     /**
      * 取得 property $result 的初始值
+     * @param $status
+     * @param $sub_status
      * @return Approve_target_result
      */
-    abstract public function get_initial_result(): Approve_target_result;
+    public function get_initial_result($status, $sub_status): Approve_target_result
+    {
+        return new Approve_target_result($status, $sub_status);
+    }
 
     /**
      * 取消該次該案的跑批流程
@@ -841,10 +901,12 @@ abstract class Approve_base implements Approve_interface
 
     protected function get_action_cancel_param(): array
     {
+        $status = $this->result->get_status();
         return [
-            'status' => $this->result->get_status(),
+            'status' => $status,
             'sub_status' => $this->result->get_sub_status(),
             'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+            'memo' => json_encode($this->result->get_all_memo($status)),
         ];
     }
 
@@ -901,7 +963,7 @@ abstract class Approve_base implements Approve_interface
             'platform_fee' => $this->get_platform_fee($subloan_status),
             'interest_rate' => $this->credit['rate'],
             'status' => TARGET_WAITING_SIGNING,
-            'sub_status' => $renew ? TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : TARGET_SUBSTATUS_NORNAL,
+            'sub_status' => $renew ? TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : $this->result->get_sub_status(),
             'target_data' => json_encode($target_data),
             'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
         ];
@@ -953,9 +1015,10 @@ abstract class Approve_base implements Approve_interface
 
     /**
      * 案件審核失敗
+     * @param $subloan_status
      * @return bool
      */
-    public function set_target_failure(): bool
+    public function set_target_failure($subloan_status): bool
     {
         $param = $this->get_approve_failure_param();
         if (empty($param))
@@ -965,6 +1028,23 @@ abstract class Approve_base implements Approve_interface
 
         $this->CI->target_model->update($this->target['id'], $param);
         $this->CI->target_lib->insert_change_log($this->target['id'], $param);
+
+        if ($subloan_status === TRUE)
+        {
+            $subloan = $this->CI->subloan_model->get_by(array(
+                'status' => [0, 1],
+                'new_target_id' => $this->target['id'],
+            ));
+            if ( ! empty($subloan))
+            {
+                $result = $this->CI->subloan_model->update($subloan->id, array('status' => 9));
+                if ($result)
+                {
+                    $this->CI->target_lib->insert_change_log($subloan->target_id, array('sub_status' => TARGET_SUBSTATUS_NORNAL), 0, SYSTEM_ADMIN_ID);
+                    $this->CI->target_model->update($subloan->target_id, array('sub_status' => TARGET_SUBSTATUS_NORNAL));
+                }
+            }
+        }
 
         return TRUE;
     }
@@ -998,9 +1078,11 @@ abstract class Approve_base implements Approve_interface
             'status' => TARGET_WAITING_APPROVE,
             'sub_status' => $this->result->get_sub_status(),
         ];
-        if (empty($param))
+
+        $memo = $this->result->get_all_memo(TARGET_WAITING_APPROVE);
+        if ( ! empty($memo))
         {
-            return FALSE;
+            $param['memo'] = json_encode($memo, JSON_PRETTY_PRINT);
         }
 
         $this->CI->target_model->update($this->target['id'], $param);
@@ -1022,11 +1104,26 @@ abstract class Approve_base implements Approve_interface
             return FALSE;
         }
 
-        $this->CI->target_model->update($this->target['id'], $param);
-
         $credit_sheet = CreditSheetFactory::getInstance($this->target['id']);
-        $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
+        $credit_sheet_approve_res = $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
+        if ($credit_sheet_approve_res !== $credit_sheet::RESPONSE_CODE_OK)
+        {
+            // 避免已處理的案件 script_status 卡在 4
+            $res = $this->CI->target_model->update_by([
+                'id' => $this->target['id']
+            ], ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+            return FALSE;
+        }
 
+        $res = $this->CI->target_model->update_by([
+            'id' => $this->target['id'],
+            'status' => TARGET_WAITING_APPROVE
+        ], $param);
+
+        if ( ! $res)
+        {
+            return FALSE;
+        }
         $this->CI->target_lib->insert_change_log($this->target['id'], $param);
         $this->target = array_replace($this->target, $param);
         return TRUE;
@@ -1048,7 +1145,8 @@ abstract class Approve_base implements Approve_interface
             'status' => TARGET_WAITING_APPROVE,
             'sub_status' => TARGET_SUBSTATUS_SECOND_INSTANCE,
             'target_data' => json_encode($target_data),
-            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE
+            'script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE,
+            'memo' => json_encode($this->result->get_all_memo(TARGET_WAITING_APPROVE))
         ];
     }
 

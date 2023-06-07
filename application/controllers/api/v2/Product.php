@@ -1704,8 +1704,9 @@ class Product extends REST_Controller {
             }
 
             $biddingHistory = [];
+            $this->load->library('target_lib');
             if ($target->status == 3
-                && $target->sub_status != TARGET_SUBSTATUS_SUBLOAN_TARGET
+                && ! $this->target_lib->is_sub_loan($target->target_no)
             ){
             $this->load->model('loan/investment_model');
             $this->load->model('log/log_targetschange_model');

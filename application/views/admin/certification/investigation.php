@@ -39,8 +39,9 @@
 									<div class="form-group">
 										<label>交件方式</label>
 										<p class="form-control-static"><?php
-                                        if(defined('content') && defined('certification') &&isset($content['return_type'])){
-                                            switch($certification['id']){
+                                            if (isset($content['return_type']))
+                                            {
+                                            switch($content['return_type']){
                             					case 0:
                             						$type = '郵局申請(紙本)';
                             					    break;
@@ -59,21 +60,42 @@
                                         }else{
                                             $type = '';
                                         }
-                                        ! empty($type) ? $type : '' ?></p>
+                                        echo $type; ?></p>
 									</div>
-                                        <? if(in_array($content['return_type'],[1,2])){?>
-                                            <div class="form-group">
-                                                <label>聯徵資料</label><br>
-                                            <? if (!empty($content['pdf_file'])) { ?>
-                                                <a href="<?= isset($content['pdf_file']) ? $content['pdf_file'] : ""?>" target="_blank">下載</a>
-                                            <? }else{?>
-                                                <p>尚未收到回信PDF</p>
-                                            <?} ?>
-                                            </div>
-                                        <?}?>
+                                    <div class="form-group">
+                                        <?php
+                                        if ( ! empty($content['pdf_file']))
+                                        {
+                                            // user 回信或是 admin 上傳 pdf 檔案
+                                            ?>
+                                            <label>聯徵資料</label><br>
+                                            <a href="<?= $content['pdf_file']; ?>" target="_blank">下載</a>
+                                        <?php }
+                                        elseif ( ! empty($content['images']))
+                                        {
+                                            // admin 上傳圖片
+                                            ?>
+                                            <label>聯徵資料</label><br>
+                                            <?php
+                                            $index = 0;
+                                            foreach ($content['images'] as $value)
+                                            { ?>
+                                                <a href="<?= $value; ?>" target="_blank" data-fancybox="images" class="btn btn-sm btn-default" style="margin-bottom: 2px">圖片<?= ++$index; ?></a>
+                                                <?php
+                                            }
+                                        }
+                                        elseif (in_array($content['return_type'], [1, 2]))
+                                        {
+                                            // 原始邏輯
+                                            ?>
+                                            <label>聯徵資料</label><br>
+                                            <p>尚未收到回信PDF</p>
+                                        <?php }
+                                        ?>
+                                    </div>
 								</div>
-                                <? if($content['return_type']==0){?>
-								<div class="col-lg-6">
+                                <div class="col-lg-6">
+                                    <?php if ($content['return_type'] == 0){ ?>
 									<h1>圖片</h1>
 									<fieldset disabled>
 										<div class="form-group">
@@ -83,8 +105,29 @@
 											</a>
 										</div>
 									</fieldset>
-								</div>
-                                <? } ?>
+                                    <?php } ?>
+                                    <?php
+                                    // 待人工審核時才可以上傳
+                                    if ($data->status == CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+                                    {
+                                        if ( ! empty($ocr['upload_page']['pdf_file']))
+                                        {
+                                            ?>
+                                            <label>上傳pdf檔案</label>
+                                            <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                                <?= $ocr['upload_page']['pdf_file']; ?>
+                                            </div>
+                                        <?php }
+                                        if ( ! empty($ocr['upload_page']['images']))
+                                        {
+                                            ?>
+                                            <label>上傳圖片</label>
+                                            <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                                                <?= $ocr['upload_page']['images']; ?>
+                                            </div>
+                                        <?php }
+                                    } ?>
+                                </div>
 								<!-- 聯徵報告 -->
 								<div class="col-lg-12">
 								<?

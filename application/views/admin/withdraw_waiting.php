@@ -77,9 +77,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-						<a href="javascript:void(0)" target="_blank" onclick="toloan();" class="btn btn-primary float-right" >轉出放款匯款單</a>
-                        </div>
+						<div class="panel-heading">
+							<a href="javascript:void(0)" onclick="toloan();" class="btn btn-primary float-right" >轉出放款匯款單</a>
+							</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -107,7 +107,7 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
-												<? if($value->status==0){ ?>
+                                                <? if($value->status==0){ ?>
 												<input class="withdraws" type="checkbox" value="<?=isset($value->id)?$value->id:"" ?>" />
 												<? } ?>
 												&nbsp;<?=isset($value->id)?$value->id:"" ?>
@@ -127,7 +127,11 @@
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不成功</button>';
 												} ?></td>
 											<td><?=isset($value->sys_check)?$sys_check_list[$value->sys_check]:"" ?></td>
-											<td><?=isset($value->investor)&&$value->investor==0?'<button class="btn btn-danger" onclick="withdraw_deny('.(isset($value->id)?$value->id:"").')">逾期退回</button>':"" ?></td>
+                                            <td>
+                                                <button class="btn btn-danger"
+                                                        onclick="withdraw_deny(<?php echo $value->id ?? '' ?>)">退回提領
+                                                </button>
+                                            </td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
                                         </tr>                                        
 									<?php 

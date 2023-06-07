@@ -152,12 +152,6 @@
 								<table class="table table-bordered table-hover table-striped">
 									<tbody>
 										<tr>
-											<td>
-												<p class="form-control-static">註冊數量</p>
-											</td>
-											<td>
-												<p class="form-control-static"><?= $data['registeredCount']??"" ?></p>
-											</td>
                                             <td>
                                                 <p class="form-control-static">下載數量</p>
                                             </td>
@@ -179,6 +173,21 @@
                                         </tr>
                                         <tr>
                                             <td>
+                                                <p class="form-control-static">註冊數量</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= $data['registeredCount'] ?? '' ?></p>
+                                            </td>
+                                            <td colspan="2"></td>
+                                            <td>
+                                                <p class="form-control-static">註冊獎金</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= $data['registeredRewardAmount'] ?? '' ?></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
                                                 <p class="form-control-static">學生貸核准數量</p>
                                             </td>
                                             <td >
@@ -190,7 +199,6 @@
                                             <td >
                                                 <p class="form-control-static"><?= isset($data['loanedBalance'])?$data['loanedBalance']['student']??"":"" ?></p>
                                             </td>
-                                            <td colspan="2"></td>
                                             <td>
                                                 <p class="form-control-static">學生貸獎金</p>
                                             </td>
@@ -211,7 +219,6 @@
                                             <td>
                                                 <p class="form-control-static"><?= isset($data['loanedBalance'])?$data['loanedBalance']['salary_man']??"":"" ?></p>
                                             </td>
-                                            <td colspan="2"></td>
                                             <td>
                                                 <p class="form-control-static">上班族貸獎金</p>
                                             </td>
@@ -232,7 +239,6 @@
                                             <td>
                                                 <p class="form-control-static"><?= isset($data['loanedBalance'])?$data['loanedBalance']['small_enterprise']??"":"" ?></p>
                                             </td>
-                                            <td colspan="2"></td>
                                             <td>
                                                 <p class="form-control-static">微企貸獎金</p>
                                             </td>
@@ -250,7 +256,7 @@
                                             <td>
                                                 <p class="form-control-static"><?= $data['collaborationCount'][$collaborator['id']]??0 ?></p>
                                             </td>
-                                            <td colspan="4">
+                                            <td colspan="2">
                                                 <p class="form-control-static"></p>
                                             </td>
                                             <td>
@@ -271,7 +277,7 @@
 <!--                                            <td>-->
 <!--                                                <p class="form-control-static">--><?//= $data['totalLoanedAmount']??"" ?><!--</p>-->
 <!--                                            </td>-->
-                                            <td colspan="6">
+                                            <td colspan="4">
                                                 <p class="form-control-static"></p>
                                             </td>
                                             <td>
@@ -392,6 +398,19 @@
                                             </td>
                                             <td>
                                                 <input type="text" disabled style="width: 120px" class="form-control number" data-category="full_member" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['full_member'])?$data['info']['settings']['reward']['full_member']['amount']??"":"" ?>">
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color:#f5f5f5;">
+                                            <td style="vertical-align: middle; text-align: center;">
+                                                <p class="form-control-static">
+                                                    註冊獎金公式<br>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <input type="text" disabled style="width: 120px"
+                                                       class="form-control number" data-category="registered"
+                                                       data-type="amount"
+                                                       value="<?= $data['info']['settings']['reward']['registered']['amount'] ?? '' ?>">
                                             </td>
                                         </tr>
 									</tbody>

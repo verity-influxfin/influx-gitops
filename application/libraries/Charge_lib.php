@@ -915,8 +915,9 @@ class Charge_lib
 										'status'			=> 2
 									];
 
-                                    $no_prepayment_allowance = $this->CI->config->item('no_prepayment_allowance');
-                                    if(!in_array($target->product_id, $no_prepayment_allowance)){
+                                    $has_prepayment_allowance = $this->CI->config->item('has_prepayment_allowance');
+                                    if (in_array($target->product_id, $has_prepayment_allowance))
+                                    {
                                         $prepayment_allowance	= intval(round($value['remaining_principal']/100*PREPAYMENT_ALLOWANCE_FEES,0));//提還補貼金
                                         $transaction_param[] = [
                                             'source'			=> SOURCE_PREPAYMENT_ALLOWANCE,
