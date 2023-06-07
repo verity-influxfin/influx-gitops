@@ -7885,8 +7885,15 @@ define({
                             "group": "Parameter",
                             "type": "Integer",
                             "optional": false,
-                            "field": "id",
-                            "description": "<p>上傳後的image id</p>"
+                            "field": "front_id",
+                            "description": "<p>學生證正面上傳後的image id</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Integer",
+                            "optional": false,
+                            "field": "back_id",
+                            "description": "<p>學生證背面上傳後的image id</p>"
                         }
                     ]
                 }
@@ -7978,8 +7985,15 @@ define({
                             "group": "Parameter",
                             "type": "Integer",
                             "optional": false,
-                            "field": "id",
-                            "description": "<p>上傳後的image id</p>"
+                            "field": "front_id",
+                            "description": "<p>學生證正面上傳後的image id</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Integer",
+                            "optional": false,
+                            "field": "back_id",
+                            "description": "<p>學生證背面上傳後的image id</p>"
                         }
                     ]
                 }
