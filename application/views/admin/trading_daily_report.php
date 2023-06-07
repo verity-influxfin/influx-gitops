@@ -117,6 +117,11 @@
                                     <td>{{ tradingData.verify_fee.amount }}</td>
                                 </tr>
                                 <tr>
+                                    <td>慈善捐款</td>
+                                    <td>{{ tradingData.charity.count }}</td>
+                                    <td>{{ tradingData.charity.amount }}</td>
+                                </tr>
+                                <tr>
                                     <td colspan="3">上述交易核對無誤</td>
                                 </tr>
                             </table>
@@ -294,6 +299,10 @@ const v = new Vue({
                     count: 0,
                     amount: 0
                 },
+                charity: {
+                    count: 0,
+                    amount: 0
+                },
                 platform_fee: 0,
                 subloan_fee: 0,
                 transfer_fee: 0,
@@ -333,13 +342,15 @@ const v = new Vue({
             if (['', 0, null].includes(this.sdate) || ['', 0, null].includes(this.edate)) {
                 alert('開始與結束時間為必選欄位');
             } else {
-                axios.get(`${p2p_orm_host}/daily_financial_report/?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
+                axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
                 .then((res) => {
                     this.tradingData = res.data;
-                })
+                }) 
                 .catch((err) => {
                     console.log(err);
                 });
+                this.bank_balance = 0;
+                this.secondary_journal = 0;
             }
         },
         exportExcel() {

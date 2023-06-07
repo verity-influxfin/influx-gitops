@@ -478,7 +478,7 @@
                             </div>
                             <div class="row">
                                 <label class="left-label">付款銀行</label>
-                                <label class="right-label" v-if="item.content.payment_bank">{{ bankArr[item.content.payment_bank]['bank_name'] }}</label>
+                                <label class="right-label" v-if="item.content.payment_bank">{{ bankArr[item.content.payment_bank]['bank_name'] + '-' + bankArr[item.content.payment_bank]['branch'][item.content.payment_branch]}}</label>
                                 <!-- bankArr[item.content.payment_bank]['bank_name'] -->
                             </div>
                             <div class="row">
@@ -539,12 +539,12 @@
                                 <label class="right-label">{{ item.content.payee }}</label>
                             </div>
                             <div class="row">
-                                <label class="left-label">受款人戶名</label>
+                                <label class="left-label">受款人帳號</label>
                                 <label class="right-label">{{ item.content.payee_account }}</label>
                             </div>
                             <div class="row">
                                 <label class="left-label">託收銀行</label>
-                                <label class="right-label" v-if="item.content.collection_bank">{{ bankArr[item.content.collection_bank]['bank_name'] }}</label>
+                                <label class="right-label" v-if="item.content.collection_bank">{{ bankArr[item.content.collection_bank]['bank_name'] + '-' + bankArr[item.content.collection_bank]['branch'][item.content.collection_branch] }}</label>
                                 <!-- bankArr[item.content.collection_bank]['bank_name'] -->
                             </div>
                             <div class="row">
@@ -692,7 +692,7 @@
                                                 <label class="right-label">{{ item.content.payee }}</label>
                                             </div>
                                             <div class="row">
-                                                <label class="left-label">受款人戶名</label>
+                                                <label class="left-label">受款人帳號</label>
                                                 <label class="right-label">{{ item.content.payee_account }}</label>
                                             </div>
                                             <div class="row">
