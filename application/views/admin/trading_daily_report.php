@@ -350,7 +350,6 @@ const v = new Vue({
                 .catch((err) => {
                     console.log(err);
                 });
-                console.log(this.tradingData)
                 this.bank_balance = 0;
                 this.secondary_journal = 0;
             }
