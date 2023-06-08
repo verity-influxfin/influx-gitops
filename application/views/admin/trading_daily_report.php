@@ -343,8 +343,7 @@ const v = new Vue({
                 alert('開始與結束時間為必選欄位');
             } else {
                 alert(p2p_orm_host);
-                alert(p2p_orm_host);
-                axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
+                axios.get(`${p2p_orm_host}/daily_financial_report/?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
                 .then((res) => {
                     this.tradingData = res.data;
                 }) 
