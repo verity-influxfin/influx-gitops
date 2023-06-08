@@ -344,7 +344,7 @@ const v = new Vue({
             } else {
                 alert(p2p_orm_host);
                 alert(p2p_orm_host);
-                axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
+                axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
                 .then((res) => {
                     this.tradingData = res.data;
                 }) 
