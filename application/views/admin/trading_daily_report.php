@@ -251,6 +251,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
+console.log(p2p_orm_host);
 
 const v = new Vue({
     el: '#page-wrapper',
@@ -342,7 +343,7 @@ const v = new Vue({
             if (['', 0, null].includes(this.sdate) || ['', 0, null].includes(this.edate)) {
                 alert('開始與結束時間為必選欄位');
             } else {
-                axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
+                axios.get(`https://p2p-orm.influxfin.com/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
                 .then((res) => {
                     this.tradingData = res.data;
                 }) 
