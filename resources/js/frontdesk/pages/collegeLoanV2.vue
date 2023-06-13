@@ -587,7 +587,7 @@
         <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•申貸金額：NT$ 3,000~150,000元</span>
         <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•利率：學生貸4%~16%</span>
         <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•期數：3~24期</span>
-        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•平台服務費：平台服務費最低500元，學生貸3%</span>
+        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•平台服務費：平台服務費最低500元，學生貸收取本金的3%</span>
       </div>
     </div>
   </div>
