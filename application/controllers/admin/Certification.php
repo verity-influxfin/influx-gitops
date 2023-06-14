@@ -805,6 +805,7 @@ class Certification extends MY_Admin_Controller {
 			}
 			else{
 				alert('ERROR , id is not exist',$back_url);
+				}
 			}
 		}
 	}
