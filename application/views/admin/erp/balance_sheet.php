@@ -118,7 +118,7 @@
                                                 </tr>
                                                 <tr>
                                                     <!-- <td>{{ langKey.left.other }}</td> -->
-                                                    <td> langKey.left.other </td>
+                                                    <td> 其他損失 </td>
                                                     <td v-if="dictData.fixed_left.other">{{ format(dictData.fixed_left.other) }}</td>
                                                     <td v-else>0</td>
                                                 </tr>
@@ -164,7 +164,8 @@
                                                 <td>{{ format(dictData.right.total) }}</td>
                                             </tr>
                                             <tr>
-                                                <td>{{ langKey.right.other }}</td>
+                                                <!-- <td>{{ langKey.right.other }}</td> -->
+                                                <td> 其他收入 </td>
                                                 <td v-if="dictData.fixed_right.other">{{ format(dictData.fixed_right.other) }}</td>
                                                 <td v-else>0</td>
                                             </tr>
@@ -203,7 +204,8 @@
                                                 <td>{{ format(dictData.all_delay_interest_receivable) }}</td>
                                             </tr>
                                             <tr>
-                                                <td>{{ langKey.adjust_different }}</td>
+                                                <!-- <td>{{ langKey.adjust_different }}</td> -->
+                                                <td> 調整後左右差額 </td>
                                                 <td>{{ format(dictData.fixed_balance) }}</td>
                                             </tr>
                                         </tbody>
