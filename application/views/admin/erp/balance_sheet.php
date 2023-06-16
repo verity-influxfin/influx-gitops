@@ -116,6 +116,11 @@
                                                     <td>{{ langKey.left.total }}</td>
                                                     <td>{{ format(dictData.left.total) }}</td>
                                                 </tr>
+                                                <tr>
+                                                    <td>{{ langKey.left.other }}</td>
+                                                    <td v-if="dictData.fixed_left.other">{{ format(dictData.fixed_left.other) }}</td>
+                                                    <td v-else>0</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -157,6 +162,11 @@
                                                 <td>{{ langKey.right.total }}</td>
                                                 <td>{{ format(dictData.right.total) }}</td>
                                             </tr>
+                                            <tr>
+                                                <td>{{ langKey.right.other }}</td>
+                                                <td v-if="dictData.fixed_right.other">{{ format(dictData.fixed_right.other) }}</td>
+                                                <td v-else>0</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -190,6 +200,10 @@
                                             <tr>
                                                 <td>{{ langKey.all_delay_interest_receivable }}</td>
                                                 <td>{{ format(dictData.all_delay_interest_receivable) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ langKey.adjust_different }}</td>
+                                                <td>{{ format(dictData.fixed_balance) }}</td>
                                             </tr>
                                         </tbody>
                                     </table>

@@ -192,6 +192,7 @@ var app = new Vue({
                         bank_verify_fee: '金融驗證費',
                         legal_collection_platform_fee: '法催平台手續費',
                         total: '小計',
+                        other: '其他損失'
                     },
                     right: {
                         sales_tax: '銷項稅額',
@@ -201,12 +202,14 @@ var app = new Vue({
                         delay_interest_income: '延滯息收入',
                         transfer_out_gain: '債權出讓:差額收益',
                         total: '小計',
+                        other: '其他收入'
                     },
                     balance: '左右差額',
                     all_principal_repaid: '總已還本金',
                     all_loan_amount: '總出借金額',
                     all_interest_receivable: '總應收利息',
                     all_delay_interest_receivable: '總應收延滯息',
+                    adjust_different: '調整後左右差額'
                 }
             }
             else {
@@ -224,6 +227,7 @@ var app = new Vue({
                         bank_verify_fee: 'Bank Verify Fee',
                         legal_collection_platform_fee: 'Legal Collection Platform Fee',
                         total: 'Total',
+                        other: 'Other lost'
                     },
                     right: {
                         sales_tax: 'Sales Tax',
@@ -233,12 +237,14 @@ var app = new Vue({
                         delay_interest_income: 'Delay Interest Income',
                         transfer_out_gain: 'Transfer Out: Gain',
                         total: 'Total',
+                        other: 'Other income'
                     },
                     balance: 'Balance',
                     all_principal_repaid: 'All Principal Repaid',
                     all_loan_amount: 'All Loan Amount',
                     all_interest_receivable: 'All Interest Receivable',
                     all_delay_interest_receivable: 'All Delay Interest Receivable',
+                    adjust_different: 'left and right different'
                 }
             }
         }
