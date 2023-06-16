@@ -333,6 +333,12 @@
                                                     <td>{{ format(diffData.left.total.after) }}</td>
                                                     <td :class="textClass(diffData.left.total.diff)">{{ format(diffData.left.total.diff) }}</td>
                                                 </tr>
+                                                <tr>
+                                                    <td> 其他損失 </td>
+                                                    <td>{{ format(diffData.fixed_left.other.before) }}</td>
+                                                    <td>{{ format(diffData.fixed_left.other.after) }}</td>
+                                                    <td>{{ format(diffData.fixed_left.other.diff) }}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -390,6 +396,12 @@
                                                 <td>{{ format(diffData.right.total.after) }}</td>
                                                 <td :class="textClass(diffData.right.total.diff)">{{ format(diffData.right.total.diff) }}</td>
                                             </tr>
+                                            <tr>
+                                                <td> 其他收入 </td>
+                                                <td>{{ format(diffData.fixed_right.other.before) }}</td>
+                                                <td>{{ format(diffData.fixed_right.other.after) }}</td>
+                                                <td>{{ format(diffData.fixed_right.other.diff) }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -435,6 +447,12 @@
                                                 <td>{{ format(diffData.all_delay_interest_receivable.before) }}</td>
                                                 <td>{{ format(diffData.all_delay_interest_receivable.after) }}</td>
                                                 <td :class="textClass(diffData.all_delay_interest_receivable.diff)">{{ format(diffData.all_delay_interest_receivable.diff) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td> 調整後左右差額 </td>
+                                                <td>{{ format(diffData.fixed_balance.before) }}</td>
+                                                <td>{{ format(diffData.fixed_balance.after) }}</td>
+                                                <td>{{ format(diffData.fixed_balance.diff) }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
