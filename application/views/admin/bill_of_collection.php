@@ -1387,7 +1387,8 @@ const v = new Vue({
         approveModify(modifyCheck, isApprove) {
             axios.put(`${p2p_orm_host}/user_cheque/review?cheque_id=${modifyCheck.cheque_id}&review=${isApprove}`)
             .then((res) => {
-                alert('審核成功');
+                if (isApprove == true) { alert('審核成功'); }
+                else if (isApprove == false) { alert('退回成功'); }
                 document.location.reload();
             }).catch((err) => {
                 console.log(err);

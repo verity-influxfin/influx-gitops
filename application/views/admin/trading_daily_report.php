@@ -191,7 +191,7 @@
                                         <input
                                             type="text" 
                                             class="insertInput"
-                                            v-model="bank_balance"
+                                            v-model="tradingData.bank_balance"
                                         >
                                     </td>
                                 </tr>
@@ -343,24 +343,23 @@ const v = new Vue({
                 alert('開始與結束時間為必選欄位');
             } else {
                 
-                axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
+                axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}`)
                 .then((res) => {
                     this.tradingData = res.data;
                 }) 
                 .catch((err) => {
                     console.log(err);
                 });
-                this.bank_balance = 0;
                 this.secondary_journal = 0;
             }
         },
         exportExcel() {
-            if (['', 0, null].includes(this.bank_balance)) {
+            if (['', 0, null].includes(this.tradingData.bank_balance)) {
                 alert('銀行帳戶初期餘額，為必填欄位。')
             } else if (['', 0, null].includes(this.sdate) || ['', 0, null].includes(this.edate)) {
                 alert('開始與結束時間為必選欄位');
             } else {
-                axios.get(`${p2p_orm_host}/daily_financial_report/excel?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
+                axios.get(`${p2p_orm_host}/daily_financial_report/excel?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.tradingData.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
                 .then((res) => {
                     const url = window.URL.createObjectURL(new Blob([res.data]));
                     const link = document.createElement('a');
