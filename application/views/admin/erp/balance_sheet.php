@@ -117,7 +117,8 @@
                                                     <td>{{ format(dictData.left.total) }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>{{ langKey.left.other }}</td>
+                                                    <!-- <td>{{ langKey.left.other }}</td> -->
+                                                    <td> langKey.left.other </td>
                                                     <td v-if="dictData.fixed_left.other">{{ format(dictData.fixed_left.other) }}</td>
                                                     <td v-else>0</td>
                                                 </tr>
