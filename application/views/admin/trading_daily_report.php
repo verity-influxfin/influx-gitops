@@ -117,6 +117,11 @@
                                     <td>{{ tradingData.verify_fee.amount }}</td>
                                 </tr>
                                 <tr>
+                                    <td>慈善捐款</td>
+                                    <td>{{ tradingData.charity.count }}</td>
+                                    <td>{{ tradingData.charity.amount }}</td>
+                                </tr>
+                                <tr>
                                     <td colspan="3">上述交易核對無誤</td>
                                 </tr>
                             </table>
@@ -186,7 +191,7 @@
                                         <input
                                             type="text" 
                                             class="insertInput"
-                                            v-model="bank_balance"
+                                            v-model="tradingData.bank_balance"
                                         >
                                     </td>
                                 </tr>
@@ -294,6 +299,10 @@ const v = new Vue({
                     count: 0,
                     amount: 0
                 },
+                charity: {
+                    count: 0,
+                    amount: 0
+                },
                 platform_fee: 0,
                 subloan_fee: 0,
                 transfer_fee: 0,
@@ -316,16 +325,16 @@ const v = new Vue({
     },
     computed: {
         sumSecondary() {
-            return this.tradingData.platform_fee + this.tradingData.subloan_fee + this.tradingData.transfer_fee + this.tradingData.prepayment_fee + this.tradingData.damage + this.tradingData.law_fee;
+            return parseInt(this.tradingData.platform_fee) + parseInt(this.tradingData.subloan_fee) + parseInt(this.tradingData.transfer_fee) + parseInt(this.tradingData.prepayment_fee) + parseInt(this.tradingData.damage) + parseInt(this.tradingData.law_fee);
         },
         sumSystemAccounts() {
-            return this.tradingData.passbook_amount + this.tradingData.unknown_funds + this.tradingData.virtual_balance + this.secondary_journal;
+            return parseInt(this.tradingData.passbook_amount) + parseInt(this.tradingData.unknown_funds) + parseInt(this.tradingData.virtual_balance) + parseInt(this.secondary_journal);
         },
         sumBankAccounts() {
-            return this.bank_balance;
+            return parseInt(this.tradingData.bank_balance);
         },
         accountsDifferent() {
-            return this.sumSystemAccounts - this.sumBankAccounts;
+            return parseInt(this.sumSystemAccounts) - parseInt(this.sumBankAccounts);
         }
     },
     methods: {
@@ -333,22 +342,24 @@ const v = new Vue({
             if (['', 0, null].includes(this.sdate) || ['', 0, null].includes(this.edate)) {
                 alert('開始與結束時間為必選欄位');
             } else {
-                axios.get(`${p2p_orm_host}/daily_financial_report/?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`)
+                
+                axios.get(`${p2p_orm_host}/daily_financial_report?sdate=${this.sdate}&edate=${this.edate}`)
                 .then((res) => {
                     this.tradingData = res.data;
-                })
+                }) 
                 .catch((err) => {
                     console.log(err);
                 });
+                this.secondary_journal = 0;
             }
         },
         exportExcel() {
-            if (['', 0, null].includes(this.bank_balance)) {
+            if (['', 0, null].includes(this.tradingData.bank_balance)) {
                 alert('銀行帳戶初期餘額，為必填欄位。')
             } else if (['', 0, null].includes(this.sdate) || ['', 0, null].includes(this.edate)) {
                 alert('開始與結束時間為必選欄位');
             } else {
-                axios.get(`${p2p_orm_host}/daily_financial_report/excel?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
+                axios.get(`${p2p_orm_host}/daily_financial_report/excel?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.tradingData.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
                 .then((res) => {
                     const url = window.URL.createObjectURL(new Blob([res.data]));
                     const link = document.createElement('a');
