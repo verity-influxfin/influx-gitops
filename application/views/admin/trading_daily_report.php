@@ -331,7 +331,7 @@ const v = new Vue({
             return parseInt(this.tradingData.passbook_amount) + parseInt(this.tradingData.unknown_funds) + parseInt(this.tradingData.virtual_balance) + parseInt(this.secondary_journal);
         },
         sumBankAccounts() {
-            return parseInt(this.bank_balance);
+            return parseInt(this.tradingData.bank_balance);
         },
         accountsDifferent() {
             return parseInt(this.sumSystemAccounts) - parseInt(this.sumBankAccounts);
