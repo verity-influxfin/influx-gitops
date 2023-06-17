@@ -136,10 +136,6 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{ langKey.right.sales_tax }}</td>
-                                                <td>{{ format(dictData.right.sales_tax) }}</td>
-                                            </tr>
-                                            <tr>
                                                 <td>{{ langKey.right.interest_income }}</td>
                                                 <td>{{ format(dictData.right.interest_income) }}</td>
                                             </tr>
@@ -354,12 +350,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>{{ langKey.right.sales_tax }}</td>
-                                                <td>{{ format(diffData.right.sales_tax.before) }}</td>
-                                                <td>{{ format(diffData.right.sales_tax.after) }}</td>
-                                                <td :class="textClass(diffData.right.sales_tax.diff)">{{ format(diffData.right.sales_tax.diff) }}</td>
-                                            </tr>
                                             <tr>
                                                 <td>{{ langKey.right.interest_income }}</td>
                                                 <td>{{ format(diffData.right.interest_income.before) }}</td>
