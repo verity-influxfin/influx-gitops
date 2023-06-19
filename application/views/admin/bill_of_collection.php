@@ -218,13 +218,16 @@
     
             <div class="modal-card" v-if="isUpsert == false || updateType == 'modifyCheck'">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label>發票會員ID：</label>
                         <input
                             type="text" 
                             class="insertInput" 
                             v-model="upsertData.user_id"
                         >
+                    </div>
+                    <div class="col-md-1">
+                        <button @click="searchTargetNo(upsertData.user_id)">查詢</button>
                     </div>
                     <div class="col-md-4">
                         <label>發票人：</label>
@@ -236,12 +239,12 @@
                     </div>
                     <div class="col-md-4">
                         <label>案號：</label>
-                        <input
-                            type="text" 
-                            class="insertInput" 
-                            v-model="upsertData.target_no"
-                            value="null"
-                        >
+                        <select class="insertSelect" v-model="upsertData.target_no">
+                            <option value="">請選擇</option>
+                            <template v-for="target_no in targetsList">
+                                <option :value="target_no">{{ target_no }}</option>
+                            </template>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -311,7 +314,7 @@
                         >
                     </div>
                     <div class="col-md-4">
-                        <label>禁背轉票據：</label>
+                        <label>禁被轉票據：</label>
                         <select class="insertSelect" v-model="upsertData.is_nonnegotiable">
                             <option value="">請選擇</option>
                             <option value="1">是</option>
@@ -393,10 +396,6 @@
                             rows="8" 
                             cols="60"
                         ></textarea>
-                    </div>
-                    <div class="col-md-4">
-                        <button class="influxBtn">普金</button>
-                        <button class="influxBtn">普租</button>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -835,7 +834,9 @@
                             <thead>
                                 <tr>
                                     <th>編輯票據資訊</th>
+                                    <th>Detail</th>
                                     <th>票據ID</th>
+                                    <th>狀態</th>
                                     <th>發票人</th>
                                     <th>發票人會員ID</th>
                                     <th>案號</th>
@@ -854,10 +855,8 @@
                                     <th>受款人戶名</th>
                                     <th>延期提示日期</th>
                                     <th>領回原因</th>
-                                    <th>狀態</th>
                                     <th>最後編輯人員</th>
                                     <th>備註</th>
-                                    <th>Detail</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -877,7 +876,28 @@
                                     <template v-else>
                                         <td>主管審核中</td>
                                     </template>
+                                    <td>
+                                        <button 
+                                            class="editBtn"
+                                            @click="detailForm(item.id)"
+                                        >Detail</button>
+                                    </td>
                                     <td>{{ item.id }}</td>
+                                    <template v-if="item.status == 0">
+                                        <td>標記刪除</td>
+                                    </template>
+                                    <template v-else-if="item.status == 1">
+                                        <td>正常(託收中)</td>
+                                    </template>
+                                    <template v-else-if="item.status == 2">
+                                        <td>已領回</td>
+                                    </template>
+                                    <template v-else-if="item.status == 3">
+                                        <td>未託收</td>
+                                    </template>
+                                    <template v-else>
+                                        <td>已結束</td>
+                                    </template>
                                     <td>{{ item.cheque_drawer }}</td>
                                     <td>{{ item.user_id }}</td>
                                     <td>{{ item.target_no }}</td>
@@ -914,34 +934,14 @@
                                     <td>{{ item.payee }}</td>
                                     <td>{{ item.retrieve_date }}</td>
                                     <td>{{ item.retrieve_reason }}</td>
-                                    <template v-if="item.status == 0">
-                                        <td>標記刪除</td>
-                                    </template>
-                                    <template v-else-if="item.status == 1">
-                                        <td>正常(託收中)</td>
-                                    </template>
-                                    <template v-else-if="item.status == 2">
-                                        <td>已領回</td>
-                                    </template>
-                                    <template v-else-if="item.status == 3">
-                                        <td>未託收</td>
-                                    </template>
-                                    <template v-else>
-                                        <td>已結束</td>
-                                    </template>
                                     <td>{{ item.admin }}</td>
                                     <td>{{ item.remark }}</td>
-                                    <td>
-                                        <button 
-                                            class="editBtn"
-                                            @click="detailForm(item.id)"
-                                        >Detail</button>
-                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+
                 <nav style="text-align: center;">
                     <ul class="pagination">
                         <li class="page-item">
@@ -981,6 +981,7 @@ var loginData = '<?php print_r(json_encode($login_info))?>';
 var loginInfo = JSON.parse(loginData);
 var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
 
+
 $(document).ready(function () {
     var modal = document.getElementById('upsertModal');
     var modal1 = document.getElementById('detailModal');
@@ -1009,22 +1010,22 @@ const v = new Vue({
             updateType: '',
             tableData: [],
             upsertData: {
-                user_id: 0,
+                user_id: '',
                 cheque_drawer: '',
                 target_no: '',
                 drawer_bankaccout: '',
                 payment_bank: '',
                 payment_branch: '',
                 cheque_no: '',
-                cheque_amount: 0,
+                cheque_amount: '',
                 cheque_due_date: '',
-                instalment: 0,
-                is_nonnegotiable: 0,
-                is_personal: 0,
+                instalment: '',
+                is_nonnegotiable: '',
+                is_personal: '',
                 collection_bank: '',
                 collection_branch: '',
                 collection_date: '',
-                payee_id: 0,
+                payee_id: '',
                 payee: '',
                 payee_account: '',
                 remark: '',
@@ -1053,8 +1054,9 @@ const v = new Vue({
             paymentBranchArr: {},
             collectBranchArr: {},
             page: 1,
-            pageSize: 10,
-            total: 0
+            pageSize: 50,
+            total: 0,
+            targetsList: []
         }
     },
     computed: {
@@ -1156,6 +1158,10 @@ const v = new Vue({
         },
         submitForm() {
             const formData = new FormData();
+
+            if (['', 0, null].includes(this.upsertData.target_no)) {
+                alert('案號為必填欄位，請填入正確之案號。');
+            }
             
             this.upsertData['edit_status'] = 1;
             this.upsertData['admin_id'] = loginInfo.id;
@@ -1179,22 +1185,38 @@ const v = new Vue({
                     document.location.reload();
                 })
                 .catch((err) => {
+                    if (err.response.data.detail == 'target_no not found') {
+                        alert('案號錯誤，請輸入正確的案號。');
+                    }
                     console.log(err);
                 });
             }, "1000");
         },
         submitEditForm(check_id) {
             const formData = new FormData();
+
+            if (['', 0, null].includes(this.upsertData.target_no)) {
+                alert('案號為必填欄位，請填入正確之案號。');
+            }
+
             if (this.updateType == 'modifyCheck') {
                 this.upsertData['edit_status'] = 2;
             } else if (this.updateType == 'renew') {
                 this.upsertData['edit_status'] = 3;
+                if (this.upsertData.cash_status == 1) {
+                    this.upsertData['status'] = 4;
+                } else if (this.upsertData.cash_status == 2) {
+                    this.upsertData['status'] = 2;
+                }
             } else if (this.updateType == 'retrieve') {
                 this.upsertData['edit_status'] = 4;
+                this.upsertData['status'] = 2;
             } else if (this.updateType == 'reCollect') {
                 this.upsertData['edit_status'] = 5;
+                this.upsertData['status'] = 1;
             } else {
                 this.upsertData['edit_status'] = 6;
+                this.upsertData['status'] = 4;
             }
             this.upsertData['admin_id'] = loginInfo.id;
             this.upsertData['cheque_id'] = check_id;
@@ -1238,29 +1260,32 @@ const v = new Vue({
             catch (err) { this.collectBranchArr = {}; }
         },
         deleteForm(item) {
-            const formData = new FormData();
-
-            item['admin_id'] = loginInfo.id;
-            item['cheque_id'] = item.id;
-            item['status'] = 0;
-            item['edit_status'] = 0;
-            var ipInfo;
-            $.getJSON(`https://api.db-ip.com/v2/free/self`, function(data) {
-                ipInfo = data;
-            });
-            setTimeout(() => {
-                item['updated_ip'] = ipInfo.ipAddress;
-
-                formData.append('data', JSON.stringify(item));
-                const headers = { 'Content-Type': 'multipart/form-data' };
-                axios.put(`${p2p_orm_host}/user_cheque/edit`, formData, { headers })
-                .then((res) => {
-                    document.location.reload();
-                })
-                .catch((err) => {
-                    console.log(err);
+            var yes = confirm('確定刪除該票據？');
+            if (yes) {
+                const formData = new FormData();
+    
+                item['admin_id'] = loginInfo.id;
+                item['cheque_id'] = item.id;
+                item['status'] = 0;
+                item['edit_status'] = 0;
+                var ipInfo;
+                $.getJSON(`https://api.db-ip.com/v2/free/self`, function(data) {
+                    ipInfo = data;
                 });
-            }, "1000");
+                setTimeout(() => {
+                    item['updated_ip'] = ipInfo.ipAddress;
+    
+                    formData.append('data', JSON.stringify(item));
+                    const headers = { 'Content-Type': 'multipart/form-data' };
+                    axios.put(`${p2p_orm_host}/user_cheque/edit`, formData, { headers })
+                    .then((res) => {
+                        document.location.reload();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                }, "1000");
+            }
         },
         detailForm(check_id) {
             let modal = document.getElementById('detailModal');
@@ -1275,6 +1300,7 @@ const v = new Vue({
                     let date = dateFormat.getFullYear()+ "/" + (dateFormat.getMonth()+1)+ "/" + dateFormat.getDate()+ " " + dateFormat.getHours()+ ":" + dateFormat.getMinutes()+ ":" + dateFormat.getSeconds();
                     this.detailData[i]['date'] = date;
                 }
+                console.log(this.detailData);
             })
             .catch((err) => {
                 console.log(err);
@@ -1290,22 +1316,22 @@ const v = new Vue({
             this.isUpsert = false;
             this.updateType = '';
             this.upsertData = {
-                user_id: 0,
+                user_id: '',
                 cheque_drawer: '',
                 target_no: '',
                 drawer_bankaccout: '',
                 payment_bank: '',
                 payment_branch: '',
                 cheque_no: '',
-                cheque_amount: 0,
+                cheque_amount: '',
                 cheque_due_date: null,
-                instalment: 0,
-                is_nonnegotiable: 0,
-                is_personal: 0,
+                instalment: '',
+                is_nonnegotiable: '',
+                is_personal: '',
                 collection_bank: '',
                 collection_branch: '',
                 collection_date: null,
-                payee_id: 0,
+                payee_id: '',
                 payee: '',
                 payee_account: '',
                 remark: '',
@@ -1325,7 +1351,8 @@ const v = new Vue({
         approveModify(modifyCheck, isApprove) {
             axios.put(`${p2p_orm_host}/user_cheque/review?cheque_id=${modifyCheck.cheque_id}&review=${isApprove}`)
             .then((res) => {
-                alert('審核成功');
+                if (isApprove == true) { alert('審核成功'); }
+                else if (isApprove == false) { alert('退回成功'); }
                 document.location.reload();
             }).catch((err) => {
                 console.log(err);
@@ -1359,7 +1386,8 @@ const v = new Vue({
             else if (type == 'next') { this.page++; }
             else { this.page = current_page; }
             this.goSearch();
-        },exportExcel() {
+        },
+        exportExcel() {
             if (this.sdate != null && this.edate != null) {
                 axios.post(`${p2p_orm_host}/user_cheque/excel?sdate=${this.sdate}&edate=${this.edate}`, this.searchData, { responseType: 'blob' })
                 .then((res) => {
@@ -1389,6 +1417,16 @@ const v = new Vue({
                     console.log(err);
                 })
             }
+        },
+        searchTargetNo(user_id) {
+            axios.get(`${p2p_orm_host}/user_cheque/id?user_id=${user_id}`)
+            .then((res) => {
+                this.upsertData.cheque_drawer = res.data.name;
+                this.targetsList = res.data.target_no
+            })
+            .catch((err) => {
+                console.log(err);
+            })            
         }
     },
 });
