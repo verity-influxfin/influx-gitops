@@ -359,12 +359,19 @@ const v = new Vue({
             } else if (['', 0, null].includes(this.sdate) || ['', 0, null].includes(this.edate)) {
                 alert('開始與結束時間為必選欄位');
             } else {
+                let this_date = '';
+                if (this.sdate == this.edate) {
+                    this_date = this.sdate.replaceAll('-', '')
+                } else {
+                    this_date = `${this.sdate.replaceAll('-', '')}-${this.edate.replaceAll('-', '').substring(4)}`
+                }
+
                 axios.get(`${p2p_orm_host}/daily_financial_report/excel?sdate=${this.sdate}&edate=${this.edate}&bank_balance=${this.tradingData.bank_balance}&secondary_journal=${this.secondary_journal}`, { responseType: 'blob' })
                 .then((res) => {
                     const url = window.URL.createObjectURL(new Blob([res.data]));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', '交易日報表.xlsx'); 
+                    link.setAttribute('download', `交易日報表${this_date}.xlsx`); 
                     document.body.appendChild(link);
                     link.click();
                     link.remove();

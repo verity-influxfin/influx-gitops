@@ -229,13 +229,16 @@
     
             <div class="modal-card" v-if="isUpsert == false || updateType == 'modifyCheck'">
                 <div class="row">
-                    <div class="col-md-4">
-                        <label>會員ID：</label>
+                    <div class="col-md-3">
+                        <label>發票會員ID：</label>
                         <input
                             type="text" 
                             class="insertInput" 
                             v-model="upsertData.user_id"
                         >
+                    </div>
+                    <div class="col-md-1">
+                        <button @click="searchTargetNo(upsertData.user_id)">查詢</button>
                     </div>
                     <div class="col-md-4">
                         <label>發票人：</label>
@@ -247,12 +250,12 @@
                     </div>
                     <div class="col-md-4">
                         <label>案號：</label>
-                        <input
-                            type="text" 
-                            class="insertInput" 
-                            v-model="upsertData.target_no"
-                            value="null"
-                        >
+                        <select class="insertSelect" v-model="upsertData.target_no">
+                            <option value="">請選擇</option>
+                            <template v-for="target_no in targetsList">
+                                <option :value="target_no">{{ target_no }}</option>
+                            </template>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -322,7 +325,7 @@
                         >
                     </div>
                     <div class="col-md-4">
-                        <label>禁背轉票據：</label>
+                        <label>禁被轉票據：</label>
                         <select class="insertSelect" v-model="upsertData.is_nonnegotiable">
                             <option value="">請選擇</option>
                             <option value="1">是</option>
@@ -870,6 +873,7 @@
                                     <th>編輯票據資訊</th>
                                     <th>Detail</th>
                                     <th>票據ID</th>
+                                    <th>狀態</th>
                                     <th>發票人</th>
                                     <th>會員ID</th>
                                     <th>案號</th>
@@ -889,7 +893,6 @@
                                     <th>受款人戶名</th>
                                     <th>領回日期</th>
                                     <th>領回原因</th>
-                                    <th>狀態</th>
                                     <th>最後編輯人員</th>
                                     <th>備註</th>
                                 </tr>
@@ -919,12 +922,25 @@
                                             >Detail</button>
                                         </td>
                                         <td>{{ item.id }}</td>
+                                        <template v-if="item.status == 0">
+                                            <td>標記刪除</td>
+                                        </template>
+                                        <template v-else-if="item.status == 1">
+                                            <td>正常(託收中)</td>
+                                        </template>
+                                        <template v-else-if="item.status == 2">
+                                            <td>已領回</td>
+                                        </template>
+                                        <template v-else-if="item.status == 3">
+                                            <td>未託收</td>
+                                        </template>
+                                        <template v-else>
+                                            <td>已結束</td>
+                                        </template>
                                         <td>{{ item.cheque_drawer }}</td>
                                         <td>{{ item.user_id }}</td>
                                         <td>{{ item.target_no }}</td>
-                                        <td>{{ item.instalment }}</td>
-                                        <td v-if="item.payment_bank">{{ bankArr[item.payment_bank]['bank_name'] }}</td>
-                                        <td v-else></td>
+                                        <td>{{ bankArr[item.payment_bank]['bank_name'] }}</td>
                                         <td>{{ item.drawer_bankaccout }}</td>
                                         <td>{{ item.cheque_no }}</td>
                                         <td>{{ item.cheque_amount }}</td>
@@ -957,21 +973,6 @@
                                         <td>{{ item.payee }}</td>
                                         <td>{{ item.retrieve_date }}</td>
                                         <td>{{ item.retrieve_reason }}</td>
-                                        <template v-if="item.status == 0">
-                                            <td>標記刪除</td>
-                                        </template>
-                                        <template v-else-if="item.status == 1">
-                                            <td>正常(託收中)</td>
-                                        </template>
-                                        <template v-else-if="item.status == 2">
-                                            <td>已領回</td>
-                                        </template>
-                                        <template v-else-if="item.status == 3">
-                                            <td>未託收</td>
-                                        </template>
-                                        <template v-else>
-                                            <td>已結束</td>
-                                        </template>
                                         <td>{{ item.admin }}</td>
                                         <td>{{ item.remark }}</td>
                                     </template>
@@ -980,6 +981,7 @@
                         </table>
                     </div>
                 </div>
+
                 <nav style="text-align: center;">
                     <ul class="pagination">
                         <li class="page-item">
@@ -1018,6 +1020,7 @@
 var loginData = '<?php print_r(json_encode($login_info))?>';
 var loginInfo = JSON.parse(loginData);
 var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
+
 
 $(document).ready(function () {
     var modal = document.getElementById('upsertModal');
@@ -1092,7 +1095,8 @@ const v = new Vue({
             collectBranchArr: {},
             page: 1,
             pageSize: 50,
-            total: 0
+            total: 0,
+            targetsList: []
         }
     },
     computed: {
@@ -1297,6 +1301,7 @@ const v = new Vue({
         },
         deleteForm(item) {
             let yes = confirm('確定刪除該票據？');
+
             if (yes) {
                 const formData = new FormData();
     
@@ -1422,7 +1427,8 @@ const v = new Vue({
             else if (type == 'next') { this.page++; }
             else { this.page = current_page; }
             this.goSearch();
-        },exportExcel() {
+        },
+        exportExcel() {
             if (this.sdate != null && this.edate != null) {
                 axios.post(`${p2p_orm_host}/user_cheque/excel?sdate=${this.sdate}&edate=${this.edate}`, this.searchData, { responseType: 'blob' })
                 .then((res) => {
@@ -1452,6 +1458,16 @@ const v = new Vue({
                     console.log(err);
                 })
             }
+        },
+        searchTargetNo(user_id) {
+            axios.get(`${p2p_orm_host}/user_cheque/id?user_id=${user_id}`)
+            .then((res) => {
+                this.upsertData.cheque_drawer = res.data.name;
+                this.targetsList = res.data.target_no
+            })
+            .catch((err) => {
+                console.log(err);
+            })            
         }
     },
 });
