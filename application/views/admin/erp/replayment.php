@@ -13,14 +13,14 @@
             <div>
                 <ul class="nav nav-tabs" id="myTabs" role="tablist">
                     <li role="presentation" class="active">
-                        <a role="tab" data-toggle="tab" aria-controls="test1" aria-expanded="true" @click="tab='tab1'">債權</a>
+                        <a role="tab" data-toggle="tab" aria-controls="test2" aria-expanded="true" @click="tab='tab1'">併表</a>
                     </li>
                     <li role="presentation">
-                        <a role="tab" data-toggle="tab" aria-controls="test2" aria-expanded="false" @click="tab='tab2'">併表</a>
+                        <a role="tab" data-toggle="tab" aria-controls="test1" aria-expanded="false" @click="tab='tab2'">債權</a>
                     </li>
                 </ul>
             </div>
-            <div class="panel panel-default" v-show="tab == 'tab1'">
+            <div class="panel panel-default" v-show="tab == 'tab2'">
                 <div class="panel-heading clearfix">
                     <form class="form-inline" ref="search-form" @submit.prevent="doSearch">
                         <div class="row alert alert-info m-3">
@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default" v-show="tab == 'tab2'">
+            <div class="panel panel-default" v-show="tab == 'tab1'">
                 <div class="panel-heading clearfix">
                     <form class="form-inline" ref="search-form" @submit.prevent="doSearchLatest">
                         <div class="row alert alert-info m-3">

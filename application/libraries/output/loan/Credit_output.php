@@ -36,6 +36,8 @@ class Credit_output
 				'id' => $credit->product_id,
 				'sub_product_id' => isset($credit->sub_product_id)?$credit->sub_product_id:'',
 				'name' => $this->productMapping[$credit->product_id]["name"] . (isset($credit->sub_product_name) ? ' / ' . $credit->sub_product_name : ''),
+                'loan_range_s' => $this->productMapping[$credit->product_id]['loan_range_s'],
+                'loan_range_e' => $this->productMapping[$credit->product_id]['loan_range_e'],
 			],
 			'level' => $credit->level,
 			'points' => $credit->points,

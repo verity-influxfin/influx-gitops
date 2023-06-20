@@ -41,4 +41,90 @@ class Withdraw_model extends MY_Model
         return $data;
     }
 
+    public function get_auto_withdraw_list()
+    {
+        $sql = '
+            SELECT `a`.`id`
+            FROM (
+                SELECT `w`.`id`, NULL as `limit_date`, `w`.`created_at` 
+                FROM `p2p_transaction`.`withdraw` `w`
+                WHERE `w`.`status` = ' . WITHDRAW_STATUS_WAITING . '
+                AND `w`.`frozen_id` > 0
+                AND `w`.`investor` = ' . USER_INVESTOR . '
+                UNION
+                SELECT `w`.`id`, unix_timestamp(`a`.`limit_date`) as `limit_date`, `w`.`created_at`
+                FROM `p2p_transaction`.`withdraw` w
+                LEFT JOIN (
+                    SELECT MIN(`t`.`limit_date`) AS `limit_date`,`t`.`user_from`
+                    FROM `p2p_transaction`.`transactions` `t` 
+                    WHERE `t`.`status` = ' . TRANSACTION_STATUS_TO_BE_PAID . ' 
+                    AND `t`.`source` IN (' . SOURCE_AR_PRINCIPAL . ',' . SOURCE_AR_INTEREST . ')
+                    GROUP BY `t`.`user_from`
+                ) `a` ON `a`.user_from = `w`.`user_id` 
+                WHERE `w`.`status` = ' . WITHDRAW_STATUS_WAITING . '
+                AND `w`.`frozen_id` > 0
+                AND `w`.`investor` = ' . USER_BORROWER . '
+                AND `w`.`user_id` NOT IN (
+                    SELECT DISTINCT `t`.`user_id` FROM `p2p_loan`.`targets` `t`
+                    WHERE `t`.`status` = ' . TARGET_REPAYMENTING . '
+                    AND (`t`.`id` IN (
+                            SELECT `s`.`new_target_id` FROM `p2p_loan`.`subloan` `s`
+                            WHERE `s`.`status` NOT IN (' . SUBLOAN_STATUS_CANCELED . ',' . SUBLOAN_STATUS_FAILED . ')
+                        )
+                    ) 
+                )
+            ) `a`
+            WHERE `a`.`limit_date` IS NULL
+            OR `a`.`limit_date` > `a`.`created_at`
+        ';
+
+        return $this->db->query($sql)->result_array();
+    }
+
+    public function get_all_withdraw_list()
+    {
+        return $this->db
+            ->select('id')
+            ->from('p2p_transaction.withdraw')
+            ->where('status', WITHDRAW_STATUS_WAITING)
+            ->where('frozen_id >', 0)
+            ->get()
+            ->result_array();
+    }
+
+    public function get_frozen_id_list(array $withdraw_ids)
+    {
+        return $this->db
+            ->select('frozen_id')
+            ->from('p2p_transaction.withdraw')
+            ->where_in('id', $withdraw_ids)
+            ->where('frozen_id >', 0)
+            ->get()
+            ->result_array();
+    }
+
+    public function get_affected_after_update($update_param, $where_param): int
+    {
+        if (empty($update_param))
+        {
+            return 0;
+        }
+
+        if ( ! empty($where_param))
+        {
+            $this->_set_where([0 => $where_param]);
+        }
+
+        $update_param['updated_at'] = time();
+        $update_param['updated_ip'] = get_ip();
+        foreach ($update_param as $key => $value)
+        {
+            $this->_database->set($key, $value);
+        }
+
+        $this->_database
+            ->update('p2p_transaction.withdraw');
+
+        return $this->_database->affected_rows();
+    }
 }

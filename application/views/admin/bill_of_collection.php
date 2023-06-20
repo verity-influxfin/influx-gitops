@@ -1,8 +1,6 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-md-4">
-            <!-- <div>print_r($login_info)</div> -->
-            
             <h1 class="page-header">託收票據明細表</h1>
         </div>
         <div class="col-md-6">
@@ -28,7 +26,7 @@
                             <option value="modifyCheck">更改票據資訊</option>
                             <option value="renew">更新兌現結果</option>
                             <option value="retrieve">領回託收票據</option>
-                            <option value="reCollect">重新託收票據</option>
+                            <option value="reCollect">託收票據</option>
                             <option value="stopTracking">結束追蹤票據</option>
                         </select>
                     </div>
@@ -51,14 +49,13 @@
                         <label>是否已兌現：</label>
                         <select class="insertSelect" v-model="upsertData.cash_status">
                             <option value="">請選擇</option>
-                            <option value="0">確認中</option>
                             <option value="1">兌現成功</option>
                             <option value="2">兌現失敗</option>
                         </select>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-3" v-if="upsertData.cash_status == 1">
                         <label>入帳日：</label>
                         <input
                             type="date" 
@@ -70,8 +67,20 @@
                             style="line-height:20px !important; width: 120px;"
                         >
                     </div>
+                    <div class="col-md-3" v-if="upsertData.cash_status == 2">
+                        <label>領回日期：</label>
+                        <input
+                            type="date"
+                            class="insertInput" 
+                            v-model="upsertData.retrieve_date"
+                            value="null"
+                            min="2023-01-01" 
+                            max="2030-12-31"
+                            style="line-height:20px !important; width: 120px;"
+                        >
+                    </div>
                 </div>
-                <div class="row mt-1">
+                <div class="row mt-1" v-if="upsertData.cash_status == 2">
                     <div class="col-md-12">
                         <label style="float: left;">未兌現原因：</label>
                         <textarea 
@@ -84,7 +93,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-12" style="text-align: end;">
-                        <button class="cancelBtn">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button @click="submitEditForm(upsertData.id)" class="submitBtn">送出</button>
                     </div>
                 </div>
@@ -118,7 +127,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-12" style="text-align: end;">
-                        <button class="cancelBtn">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button @click="submitEditForm(upsertData.id)" class="submitBtn">送出</button>
                     </div>
                 </div>
@@ -128,29 +137,21 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label>託收銀行：</label>
-                        <input
-                            type="text" 
-                            class="insertInput" 
-                            v-model="upsertData.collection_bank"
-                        >
+                        <select class="insertSelect" v-model="upsertData.collection_bank" @change="selectCollectBank()">
+                            <option value="">請選擇</option>
+                            <template v-for="(value, key, index) in bankArr">
+                                <option :value="key">{{ value.bank_name }}</option>
+                            </template>
+                        </select>
                     </div>
                     <div class="col-md-4">
                         <label>託收分行：</label>
-                        <input
-                            type="text" 
-                            class="insertInput" 
-                            v-model="upsertData.collection_branch"
-                        >
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <label>受款人戶名：</label>
-                        <input
-                            type="text" 
-                            class="insertInput" 
-                            v-model="upsertData.payee"
-                        >
+                        <select class="insertSelect" v-model="upsertData.collection_branch">
+                            <option value="">請選擇</option>
+                            <template v-for="(value, key, index) in collectBranchArr">
+                                <option :value="key">{{ value }}</option>
+                            </template>
+                        </select>
                     </div>
                     <div class="col-md-4">
                         <label>受款人帳號：</label>
@@ -161,8 +162,17 @@
                         >
                     </div>
                 </div>
+
                 <div class="row mt-1">
-                    <div class="col-md-12">
+                    <div class="col-md-4">
+                        <label>受款人戶名：</label>
+                        <input
+                            type="text" 
+                            class="insertInput" 
+                            v-model="upsertData.payee"
+                        >
+                    </div>
+                    <div class="col-md-4">
                         <label>託收日：</label>
                         <input
                             type="date" 
@@ -174,9 +184,10 @@
                         >
                     </div>
                 </div>
+              
                 <div class="row mt-2">
                     <div class="col-md-12" style="text-align: end;">
-                        <button class="cancelBtn">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button @click="submitEditForm(upsertData.id)" class="submitBtn">送出</button>
                     </div>
                 </div>
@@ -210,7 +221,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-12" style="text-align: end;">
-                        <button class="cancelBtn">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button @click="submitEditForm(upsertData.id)" class="submitBtn">送出</button>
                     </div>
                 </div>
@@ -330,7 +341,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-4">
                         <label>託收銀行：</label>
                         <select class="insertSelect" v-model="upsertData.collection_bank" @change="selectCollectBank()">
@@ -360,7 +371,7 @@
                             style="line-height:20px !important;"
                         >
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div class="col-md-4">
                         <label>收款會員ID：</label>
@@ -370,7 +381,7 @@
                             v-model="upsertData.payee_id"
                         >
                     </div>
-                    <div class="col-md-4">
+                    <!-- <div class="col-md-4">
                         <label>收款人戶名：</label>
                         <input
                             type="text" 
@@ -385,7 +396,7 @@
                             class="insertInput" 
                             v-model="upsertData.payee_account"
                         >
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row">
                     <div class="col-md-8">
@@ -405,7 +416,7 @@
                         <img v-if="!editImage" :src="upsertData.image">
                     </div>
                     <div class="col-md-6" style="text-align: end;">
-                        <button class="cancelBtn" @click="cancelForm">取消</button>
+                        <button class="cancelBtn" @click="cancelForm()">取消</button>
                         <button v-if="!isUpsert" class="submitBtn" @click="submitForm()">送出</button>
                         <button v-else class="submitBtn" @click="submitEditForm(upsertData.id)">送出</button>
                     </div>
@@ -455,7 +466,7 @@
                     <div v-else-if="item.edit_status == 2" class="editBar">更新票據資訊</div>
                     <div v-else-if="item.edit_status == 3" class="editBar">更新兌現結果</div>
                     <div v-else-if="item.edit_status == 4" class="editBar">領回託收票據</div>
-                    <div v-else-if="item.edit_status == 5" class="editBar">重新託收票據</div>
+                    <div v-else-if="item.edit_status == 5" class="editBar">託收票據</div>
                     <div v-else>結束追蹤票據</div>
 
                     <div class="row" style="width: 80%; margin: auto;">
@@ -470,7 +481,8 @@
                             </div>
                             <div class="row">
                                 <label class="left-label">付款銀行</label>
-                                <label class="right-label">{{ bankArr[item.content.payment_bank]['bank_name'] }}</label>
+                                <label class="right-label" v-if="item.content.payment_bank">{{ bankArr[item.content.payment_bank]['bank_name'] + '-' + bankArr[item.content.payment_bank]['branch'][item.content.payment_branch]}}</label>
+                                <!-- bankArr[item.content.payment_bank]['bank_name'] -->
                             </div>
                             <div class="row">
                                 <label class="left-label">發票人帳號</label>
@@ -488,6 +500,7 @@
                                 <label class="right-label" v-else-if="item.content.status == 3">未託收</label>
                                 <label class="right-label" v-else>已結束</label>
                             </div>
+                            
                         </div>
                         
                         <div class="col-md-3 detail_divide">
@@ -529,8 +542,13 @@
                                 <label class="right-label">{{ item.content.payee }}</label>
                             </div>
                             <div class="row">
+                                <label class="left-label">受款人帳號</label>
+                                <label class="right-label">{{ item.content.payee_account }}</label>
+                            </div>
+                            <div class="row">
                                 <label class="left-label">託收銀行</label>
-                                <label class="right-label">{{ bankArr[item.content.collection_bank]['bank_name'] }}</label>
+                                <label class="right-label" v-if="item.content.collection_bank">{{ bankArr[item.content.collection_bank]['bank_name'] + '-' + bankArr[item.content.collection_bank]['branch'][item.content.collection_branch] }}</label>
+                                <!-- bankArr[item.content.collection_bank]['bank_name'] -->
                             </div>
                             <div class="row">
                                 <label class="left-label">託收日</label>
@@ -545,21 +563,25 @@
                             
                             <div class="row">
                                 <label class="left-label">是否已兌現</label>
-                                <label class="right-label" v-if="item.content.cash_status == 1">確認中</label>
-                                <label class="right-label" v-else-if="item.content.cash_status == 2">兌現成功</label>
-                                <label class="right-label" v-else>兌現失敗</label>
+                                <label class="right-label" v-if="item.content.cash_status == 1">兌現成功</label>
+                                <label class="right-label" v-else-if="item.content.cash_status == 2">兌現失敗</label>
+                                <label class="right-label" v-else>確認中</label>
                             </div>
                             <div class="row">
                                 <label class="left-label">未兌現原因</label>
                                 <label class="right-label">{{ item.content.outstanding_reason }}</label>
                             </div>
                             <div class="row">
-                                <label class="left-label">延期提示日期</label>
+                                <label class="left-label">領回日期</label>
                                 <label class="right-label">{{ item.content.retrieve_date }}</label>
                             </div>
                             <div class="row">
                                 <label class="left-label">領回原因</label>
                                 <label class="right-label">{{ item.content.retrieve_reason }}</label>
+                            </div>
+                            <div class="row">
+                                <label class="left-label">結束追蹤日期</label>
+                                <label class="right-label">{{ item.content.stop_tracking }}</label>
                             </div>
                             <div class="row">
                                 <label class="left-label">備註</label>
@@ -593,7 +615,7 @@
                                 <td v-else-if="item.edit_status == 2">更新票據資訊</td>
                                 <td v-else-if="item.edit_status == 3">更新兌現結果</td>
                                 <td v-else-if="item.edit_status == 4">領回託收票據</td>
-                                <td v-else-if="item.edit_status == 5">重新託收票據</td>
+                                <td v-else-if="item.edit_status == 5">託收票據</td>
                                 <td v-else-if="item.edit_status == 6">結束追蹤票據</td>
                                 <td v-else>刪除</td>
                                 <td>{{ item.date }}</td>
@@ -614,7 +636,7 @@
                                             </div>
                                             <div class="row">
                                                 <label class="left-label">付款銀行</label>
-                                                <label class="right-label">{{ item.content.payment_bank }}</label>
+                                                <label class="right-label" v-if="item.content.payment_bank">{{ bankArr[item.content.payment_bank]['bank_name'] + '-' + bankArr[item.content.payment_bank]['branch'][item.content.payment_branch]}}</label>
                                             </div>
                                             <div class="row">
                                                 <label class="left-label">發票人帳號</label>
@@ -673,8 +695,12 @@
                                                 <label class="right-label">{{ item.content.payee }}</label>
                                             </div>
                                             <div class="row">
+                                                <label class="left-label">受款人帳號</label>
+                                                <label class="right-label">{{ item.content.payee_account }}</label>
+                                            </div>
+                                            <div class="row">
                                                 <label class="left-label">託收銀行</label>
-                                                <label class="right-label">{{ item.content.collection_bank }}</label>
+                                                <label class="right-label" v-if="item.content.collection_bank">{{ bankArr[item.content.collection_bank]['bank_name'] + '-' + bankArr[item.content.collection_bank]['branch'][item.content.collection_branch] }}</label>
                                             </div>
                                             <div class="row">
                                                 <label class="left-label">託收日</label>
@@ -689,16 +715,16 @@
                                             
                                             <div class="row">
                                                 <label class="left-label">是否已兌現</label>
-                                                <label class="right-label" v-if="item.content.cash_status == 1">確認中</label>
-                                                <label class="right-label" v-else-if="item.content.cash_status == 2">兌現成功</label>
-                                                <label class="right-label" v-else>兌現失敗</label>
+                                                <label class="right-label" v-if="item.content.cash_status == 1">兌現成功</label>
+                                                <label class="right-label" v-else-if="item.content.cash_status == 2">兌現失敗</label>
+                                                <label class="right-label" v-else>確認中</label>
                                             </div>
                                             <div class="row">
                                                 <label class="left-label">未兌現原因</label>
                                                 <label class="right-label">{{ item.content.outstanding_reason }}</label>
                                             </div>
                                             <div class="row">
-                                                <label class="left-label">延期提示日期</label>
+                                                <label class="left-label">領回日期</label>
                                                 <label class="right-label">{{ item.content.retrieve_date }}</label>
                                             </div>
                                             <div class="row">
@@ -706,10 +732,22 @@
                                                 <label class="right-label">{{ item.content.retrieve_reason }}</label>
                                             </div>
                                             <div class="row">
+                                                <label class="left-label">結束追蹤日期</label>
+                                                <label class="right-label">{{ item.content.stop_tracking }}</label>
+                                            </div>
+                                            <div class="row">
                                                 <label class="left-label">備註</label>
                                                 <label class="right-label">{{ item.content.remark }}</label>
                                             </div>
                                             
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <img 
+                                                :src="item.content.image" 
+                                                style="width: 50%;"
+                                            />    
                                         </div>
                                     </div>
                                 </td>
@@ -729,7 +767,7 @@
                     <table>
                         <tr>
                             <td> 
-                                發票人 使用者ID： 
+                                會員ID： 
                             </td>
                             <td>
                                 <input 
@@ -789,7 +827,7 @@
                         </tr>
                         <tr>
                             <td> 
-                                是否逾期： 
+                                是否到期： 
                             </td>
                             <td>
                                 <select v-model="searchData.date_expire">
@@ -814,7 +852,6 @@
                             <td>
                                 <select v-model="searchData.status">
                                     <option value="">請選擇</option>
-                                    <option value="0">標記刪除</option>
                                     <option value="1">正常（託收中）</option>
                                     <option value="2">已領回</option>
                                     <option value="3">未託收</option>
@@ -838,8 +875,9 @@
                                     <th>票據ID</th>
                                     <th>狀態</th>
                                     <th>發票人</th>
-                                    <th>發票人會員ID</th>
+                                    <th>會員ID</th>
                                     <th>案號</th>
+                                    <th>期數</th>
                                     <th>付款銀行</th>
                                     <th>發票人帳號</th>
                                     <th>票據號碼</th>
@@ -853,7 +891,7 @@
                                     <th>託收日</th>
                                     <th>受款人會員ID</th>
                                     <th>受款人戶名</th>
-                                    <th>延期提示日期</th>
+                                    <th>領回日期</th>
                                     <th>領回原因</th>
                                     <th>最後編輯人員</th>
                                     <th>備註</th>
@@ -861,81 +899,83 @@
                             </thead>
                             <tbody>
                                 <tr v-for="item in tableData" :key="item.id">
-                                    <template v-if="item.review_status == 1">
+                                    <template v-if="item.status != 0">
+                                        <template v-if="item.review_status == 1">
+                                            <td>
+                                                <button 
+                                                    class="editBtn"
+                                                    @click="editForm(item.id)"
+                                                >編輯</button>
+                                                <button 
+                                                    class="deleteBtn"
+                                                    @click="deleteForm(item)"
+                                                >刪除</button>
+                                            </td>
+                                        </template>
+                                        <template v-else>
+                                            <td>主管審核中</td>
+                                        </template>
                                         <td>
                                             <button 
                                                 class="editBtn"
-                                                @click="editForm(item.id)"
-                                            >編輯</button>
-                                            <button 
-                                                class="deleteBtn"
-                                                @click="deleteForm(item)"
-                                            >刪除</button>
+                                                @click="detailForm(item.id)"
+                                            >Detail</button>
                                         </td>
+                                        <td>{{ item.id }}</td>
+                                        <template v-if="item.status == 0">
+                                            <td>標記刪除</td>
+                                        </template>
+                                        <template v-else-if="item.status == 1">
+                                            <td>正常(託收中)</td>
+                                        </template>
+                                        <template v-else-if="item.status == 2">
+                                            <td>已領回</td>
+                                        </template>
+                                        <template v-else-if="item.status == 3">
+                                            <td>未託收</td>
+                                        </template>
+                                        <template v-else>
+                                            <td>已結束</td>
+                                        </template>
+                                        <td>{{ item.cheque_drawer }}</td>
+                                        <td>{{ item.user_id }}</td>
+                                        <td>{{ item.target_no }}</td>
+                                        <td>{{ bankArr[item.payment_bank]['bank_name'] }}</td>
+                                        <td>{{ item.drawer_bankaccout }}</td>
+                                        <td>{{ item.cheque_no }}</td>
+                                        <td>{{ item.cheque_amount }}</td>
+                                        <td>{{ item.cheque_due_date }}</td>
+                                        <template v-if="item.is_nonnegotiable == 1">
+                                            <td>是</td>
+                                        </template>
+                                        <template v-else>
+                                            <td>否</td>
+                                        </template>
+                                        <template v-if="item.is_personal == 1">
+                                            <td>是</td>
+                                        </template>
+                                        <template v-else>
+                                            <td>否</td>
+                                        </template>
+                                        <template v-if="item.cash_status == 0">
+                                            <td>確認中</td>
+                                        </template>
+                                        <template v-else-if="item.cash_status == 1">
+                                            <td>兌現成功</td>
+                                        </template>
+                                        <template v-else>
+                                            <td>兌現失敗</td>
+                                        </template>
+                                        <td>{{ item.outstanding_reason }}</td>
+                                        <td>{{ item.posting_date }}</td>
+                                        <td>{{ item.collection_date }}</td>
+                                        <td>{{ item.payee_id }}</td>
+                                        <td>{{ item.payee }}</td>
+                                        <td>{{ item.retrieve_date }}</td>
+                                        <td>{{ item.retrieve_reason }}</td>
+                                        <td>{{ item.admin }}</td>
+                                        <td>{{ item.remark }}</td>
                                     </template>
-                                    <template v-else>
-                                        <td>主管審核中</td>
-                                    </template>
-                                    <td>
-                                        <button 
-                                            class="editBtn"
-                                            @click="detailForm(item.id)"
-                                        >Detail</button>
-                                    </td>
-                                    <td>{{ item.id }}</td>
-                                    <template v-if="item.status == 0">
-                                        <td>標記刪除</td>
-                                    </template>
-                                    <template v-else-if="item.status == 1">
-                                        <td>正常(託收中)</td>
-                                    </template>
-                                    <template v-else-if="item.status == 2">
-                                        <td>已領回</td>
-                                    </template>
-                                    <template v-else-if="item.status == 3">
-                                        <td>未託收</td>
-                                    </template>
-                                    <template v-else>
-                                        <td>已結束</td>
-                                    </template>
-                                    <td>{{ item.cheque_drawer }}</td>
-                                    <td>{{ item.user_id }}</td>
-                                    <td>{{ item.target_no }}</td>
-                                    <td>{{ bankArr[item.payment_bank]['bank_name'] }}</td>
-                                    <td>{{ item.drawer_bankaccout }}</td>
-                                    <td>{{ item.cheque_no }}</td>
-                                    <td>{{ item.cheque_amount }}</td>
-                                    <td>{{ item.cheque_due_date }}</td>
-                                    <template v-if="item.is_nonnegotiable == 1">
-                                        <td>是</td>
-                                    </template>
-                                    <template v-else>
-                                        <td>否</td>
-                                    </template>
-                                    <template v-if="item.is_personal == 1">
-                                        <td>是</td>
-                                    </template>
-                                    <template v-else>
-                                        <td>否</td>
-                                    </template>
-                                    <template v-if="item.cash_status == 0">
-                                        <td>確認中</td>
-                                    </template>
-                                    <template v-else-if="item.cash_status == 1">
-                                        <td>兌現成功</td>
-                                    </template>
-                                    <template v-else>
-                                        <td>兌現失敗</td>
-                                    </template>
-                                    <td>{{ item.outstanding_reason }}</td>
-                                    <td>{{ item.posting_date }}</td>
-                                    <td>{{ item.collection_date }}</td>
-                                    <td>{{ item.payee_id }}</td>
-                                    <td>{{ item.payee }}</td>
-                                    <td>{{ item.retrieve_date }}</td>
-                                    <td>{{ item.retrieve_reason }}</td>
-                                    <td>{{ item.admin }}</td>
-                                    <td>{{ item.remark }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1260,7 +1300,8 @@ const v = new Vue({
             catch (err) { this.collectBranchArr = {}; }
         },
         deleteForm(item) {
-            var yes = confirm('確定刪除該票據？');
+            let yes = confirm('確定刪除該票據？');
+
             if (yes) {
                 const formData = new FormData();
     
