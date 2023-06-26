@@ -325,7 +325,7 @@
                         >
                     </div>
                     <div class="col-md-4">
-                        <label>禁被轉票據：</label>
+                        <label>禁背轉票據：</label>
                         <select class="insertSelect" v-model="upsertData.is_nonnegotiable">
                             <option value="">請選擇</option>
                             <option value="1">是</option>
@@ -521,7 +521,7 @@
                                 <label class="right-label">{{ item.content.cheque_amount }}</label>
                             </div>
                             <div class="row">
-                                <label class="left-label">禁被轉票據</label>
+                                <label class="left-label">禁背轉票據</label>
                                 <label class="right-label" v-if="item.content.is_nonnegotiable == 1">是</label>
                                 <label class="right-label" v-else>否</label>
                             </div>
@@ -674,7 +674,7 @@
                                                 <label class="right-label">{{ item.content.cheque_amount }}</label>
                                             </div>
                                             <div class="row">
-                                                <label class="left-label">禁被轉票據</label>
+                                                <label class="left-label">禁背轉票據</label>
                                                 <label class="right-label" v-if="item.content.is_nonnegotiable == 1">是</label>
                                                 <label class="right-label" v-else>否</label>
                                             </div>
@@ -883,7 +883,7 @@
                                     <th>票據號碼</th>
                                     <th>票據金額</th>
                                     <th>票據到期日</th>
-                                    <th>禁被轉票據</th>
+                                    <th>禁背轉票據</th>
                                     <th>個人票</th>
                                     <th>是否已兌現</th>
                                     <th>未兌現原因</th>
