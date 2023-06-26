@@ -940,6 +940,7 @@
                                         <td>{{ item.cheque_drawer }}</td>
                                         <td>{{ item.user_id }}</td>
                                         <td>{{ item.target_no }}</td>
+                                        <td>{{ item.instalment }}</td>
                                         <td>{{ bankArr[item.payment_bank]['bank_name'] }}</td>
                                         <td>{{ item.drawer_bankaccout }}</td>
                                         <td>{{ item.cheque_no }}</td>
