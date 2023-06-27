@@ -4,7 +4,8 @@
             <h1 class="page-header">託收票據明細表</h1>
         </div>
         <div class="col-md-6">
-            <button class="headerButton" id="exportExcel" @click="exportExcel()">匯出excel</button>
+            <button class="headerButton exportExcel" @click="exportExcel(true)">匯出完整excel</button>
+            <button class="headerButton exportExcel" @click="exportExcel(false)">匯出部分excel</button>
             <button class="headerButton" id="addCheck" @click="addCheck()">新增託收票據</button>
             
         </div>
@@ -878,22 +879,15 @@
                                     <th>會員ID</th>
                                     <th>案號</th>
                                     <th>期數</th>
-                                    <th>付款銀行</th>
-                                    <th>發票人帳號</th>
                                     <th>票據號碼</th>
                                     <th>票據金額</th>
                                     <th>票據到期日</th>
-                                    <th>禁背轉票據</th>
-                                    <th>個人票</th>
                                     <th>是否已兌現</th>
-                                    <th>未兌現原因</th>
                                     <th>入帳日</th>
                                     <th>託收日</th>
-                                    <th>受款人會員ID</th>
                                     <th>受款人戶名</th>
                                     <th>領回日期</th>
-                                    <th>領回原因</th>
-                                    <th>最後編輯人員</th>
+                                    <th>結束追蹤日期</th>
                                     <th>備註</th>
                                 </tr>
                             </thead>
@@ -941,23 +935,9 @@
                                         <td>{{ item.user_id }}</td>
                                         <td>{{ item.target_no }}</td>
                                         <td>{{ item.instalment }}</td>
-                                        <td>{{ bankArr[item.payment_bank]['bank_name'] }}</td>
-                                        <td>{{ item.drawer_bankaccout }}</td>
                                         <td>{{ item.cheque_no }}</td>
                                         <td>{{ item.cheque_amount }}</td>
                                         <td>{{ item.cheque_due_date }}</td>
-                                        <template v-if="item.is_nonnegotiable == 1">
-                                            <td>是</td>
-                                        </template>
-                                        <template v-else>
-                                            <td>否</td>
-                                        </template>
-                                        <template v-if="item.is_personal == 1">
-                                            <td>是</td>
-                                        </template>
-                                        <template v-else>
-                                            <td>否</td>
-                                        </template>
                                         <template v-if="item.cash_status == 0">
                                             <td>確認中</td>
                                         </template>
@@ -967,14 +947,11 @@
                                         <template v-else>
                                             <td>兌現失敗</td>
                                         </template>
-                                        <td>{{ item.outstanding_reason }}</td>
                                         <td>{{ item.posting_date }}</td>
                                         <td>{{ item.collection_date }}</td>
-                                        <td>{{ item.payee_id }}</td>
                                         <td>{{ item.payee }}</td>
                                         <td>{{ item.retrieve_date }}</td>
-                                        <td>{{ item.retrieve_reason }}</td>
-                                        <td>{{ item.admin }}</td>
+                                        <td>{{ item.stop_tracking }}</td>
                                         <td>{{ item.remark }}</td>
                                     </template>
                                 </tr>
@@ -1429,9 +1406,9 @@ const v = new Vue({
             else { this.page = current_page; }
             this.goSearch();
         },
-        exportExcel() {
+        exportExcel(is_all) {
             if (this.sdate != null && this.edate != null) {
-                axios.post(`${p2p_orm_host}/user_cheque/excel?sdate=${this.sdate}&edate=${this.edate}`, this.searchData, { responseType: 'blob' })
+                axios.post(`${p2p_orm_host}/user_cheque/excel?sdate=${this.sdate}&edate=${this.edate}&all_data=${is_all}`, this.searchData, { responseType: 'blob' })
                 .then((res) => {
                     const url = window.URL.createObjectURL(new Blob([res.data]));
                     const link = document.createElement('a');
@@ -1445,7 +1422,7 @@ const v = new Vue({
                     console.log(err);
                 })
             } else {
-                axios.post(`${p2p_orm_host}/user_cheque/excel`, this.searchData, { responseType: 'blob' })
+                axios.post(`${p2p_orm_host}/user_cheque/excel?all_data=${is_all}`, this.searchData, { responseType: 'blob' })
                 .then((res) => {
                     const url = window.URL.createObjectURL(new Blob([res.data]));
                     const link = document.createElement('a');
@@ -1483,8 +1460,7 @@ const v = new Vue({
     height: 44px;
     box-shadow: 2px 4px 14px rgba(219, 47, 47, 0.08), 0px 4px 8px rgba(219, 47, 47, 0.16);
 }
-#exportExcel {
-    width: 100px;
+.exportExcel {
     background: #036FB7;
 }
 #addCheck {
