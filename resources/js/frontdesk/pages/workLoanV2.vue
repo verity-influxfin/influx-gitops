@@ -904,7 +904,8 @@
         <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•申貸金額：NT$ 10,000~500,000元</span>
         <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•利率：上班族貸5%~16%</span>
         <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•期數：3~24期</span>
-        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•平台服務費：平台服務費最低500元，上班族貸收取本金的4%</span>
+        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•平台服務費：平台服務費最低500元，上班族貸4%</span>
+        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•示例：小普在平台申請1萬元審核通過後，手續費為500元</span>
       </div>
     </div>
   </div>
