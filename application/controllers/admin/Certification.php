@@ -327,26 +327,27 @@ class Certification extends MY_Admin_Controller {
                     {
                         $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*,.heic,.heif','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
 
-                    if ($this->_can_upload_by_cert_status($info->status))
-                    {
-                        $file_type = [];
+                        if ($this->_can_upload_by_cert_status($info->status))
+                        {
+                            $file_type = [];
 
-                        if (in_array($info->certification_id, $cert_can_upload_pdf))
-                        {
-                            $file_type[] = '.pdf';
-                        }
-                        if (in_array($info->certification_id, $cert_can_upload_video))
-                        {
-                            $file_type[] = 'video/mp4';
-                            $file_type[] = 'video/ogg';
-                        }
-                        if (!empty($file_type))
-                        {
-                            $page_data['ocr']['upload_page'] = $this->_upload_page($info, [], ['.pdf']);
-                        }
-                        else
-                        {
-                            $page_data['ocr']['upload_page'] = $this->_upload_page($info);
+                            if (in_array($info->certification_id, $cert_can_upload_pdf))
+                            {
+                                $file_type[] = '.pdf';
+                            }
+                            if (in_array($info->certification_id, $cert_can_upload_video))
+                            {
+                                $file_type[] = 'video/mp4';
+                                $file_type[] = 'video/ogg';
+                            }
+                            if (!empty($file_type))
+                            {
+                                $page_data['ocr']['upload_page'] = $this->_upload_page($info, [], ['.pdf']);
+                            }
+                            else
+                            {
+                                $page_data['ocr']['upload_page'] = $this->_upload_page($info);
+                            }
                         }
                     }
                     $return_config = [
@@ -805,9 +806,9 @@ class Certification extends MY_Admin_Controller {
 			}
 			else{
 				alert('ERROR , id is not exist',$back_url);
-				}
 			}
 		}
+		
 	}
 
     private function _get_default_upload_file_type()
