@@ -62,6 +62,9 @@ class Page extends CI_Controller
         // 更新官網流量到 db
         $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), Sale_dashboard_model::TARGET_WEB_TRAFFIC, $ga_amounts);
 
+        // 更新會員與案件資訊
+        $this->_update_target_info_at_day($today->modify('-1 day'));
+
         // 更新 iOS 下載量 - 前天的
         for ($i = 0; $i < 3; $i++)
         {
@@ -78,8 +81,6 @@ class Page extends CI_Controller
             $this->sale_dashboard_model->set_amounts_at($today->modify("-{$modifier} day"), Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID, $android_amounts);
         }
 
-        // 更新會員與案件資訊
-        $this->_update_target_info_at_day($today->modify('-1 day'));
         echo 'ok';
     }
 
