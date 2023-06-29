@@ -27,31 +27,25 @@ class Product_student extends Approve_target_credit_base
         $option_cert = $this->product_config['option_certifications'] ?? [];
         $cer_success_id = []; // 存審核成功的徵信項
 
-        foreach ($user_certs as $value)
-        {
+        foreach ($user_certs as $value) {
             $cert_helper = Certification_factory::get_instance_by_id($value['id']);
             // 非成功或過期
-            if ($cert_helper->is_succeed() === FALSE || $cert_helper->is_expired() === TRUE)
-            {
+            if ($cert_helper->is_succeed() === FALSE || $cert_helper->is_expired() === TRUE) {
                 // 非為選填項
-                if ( ! in_array($value['certification_id'], $option_cert))
-                {
+                if (!in_array($value['certification_id'], $option_cert)) {
                     $this->result->set_action_cancel();
                     $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_NORNAL);
                     $this->result->add_memo($this->result->get_status(), "必填徵信項({$value['certification_id']})未審核成功，案件尚無法核可", Approve_target_result::DISPLAY_BACKEND);
                     return FALSE;
                 }
-            }
-            else
-            {
+            } else {
                 $cer_success_id[] = $value['certification_id'];
             }
         }
 
         // 檢查系統自動過件，必要的徵信項
         $required_cert = array_diff($this->product_config_cert, $option_cert);
-        if ( ! empty(array_diff($required_cert, $cer_success_id)))
-        {
+        if (!empty(array_diff($required_cert, $cer_success_id))) {
             $this->result->set_action_cancel();
             $this->result->add_memo($this->result->get_status(), '必填徵信項未全數成功(' . implode(',', array_diff($required_cert, $cer_success_id)) . ')，案件尚無法核可', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
@@ -62,8 +56,7 @@ class Product_student extends Approve_target_credit_base
             'user_id' => $this->target_user_id,
             'meta_key' => 'school_system'
         ]);
-        if ( ! empty($user_meta_school_system['meta_value']) && $user_meta_school_system['meta_value'] == 3)
-        {
+        if (!empty($user_meta_school_system['meta_value']) && $user_meta_school_system['meta_value'] == 3) {
             // 若為五專，直接退案
             $this->result->add_msg(TARGET_FAIL, Approve_target_result::TARGET_FAIL_DEFAULT_MSG);
             $this->result->add_memo(TARGET_FAIL, '學制為五專', Approve_target_result::DISPLAY_BACKEND);
@@ -78,8 +71,7 @@ class Product_student extends Approve_target_credit_base
      */
     protected function check_product(): bool
     {
-        if ($this->get_check_applicant_age_res($this->target) === FALSE)
-        {
+        if ($this->get_check_applicant_age_res($this->target) === FALSE) {
             $this->result->add_msg(TARGET_FAIL, '身份非平台服務範圍');
             return FALSE;
         }
@@ -107,8 +99,7 @@ class Product_student extends Approve_target_credit_base
             'product_id' => PRODUCT_ID_SALARY_MAN,
             'status' => [TARGET_REPAYMENTING, TARGET_REPAYMENTED]
         ]);
-        if ($apply_prod_salary_man_res === TRUE)
-        {
+        if ($apply_prod_salary_man_res === TRUE) {
             $this->result->add_msg(TARGET_FAIL, Approve_target_result::TARGET_FAIL_DEFAULT_MSG);
             $this->result->add_memo(TARGET_FAIL, '曾成功申請上班族貸', Approve_target_result::DISPLAY_BACKEND);
             return FALSE;
@@ -125,33 +116,28 @@ class Product_student extends Approve_target_credit_base
     {
         $result = parent::can_approve();
 
-        if (empty($this->user_certs))
-        {
+        if (empty($this->user_certs)) {
             return $result;
         }
 
         $user_certs = $this->user_certs;
         if (isset($user_certs[CERTIFICATION_IDENTITY]['status']) && $user_certs[CERTIFICATION_IDENTITY]['status'] == CERTIFICATION_STATUS_SUCCEED &&
-            isset($user_certs[CERTIFICATION_STUDENT]['status']) && $user_certs[CERTIFICATION_STUDENT]['status'] == CERTIFICATION_STATUS_SUCCEED)
-        {
+            isset($user_certs[CERTIFICATION_STUDENT]['status']) && $user_certs[CERTIFICATION_STUDENT]['status'] == CERTIFICATION_STATUS_SUCCEED) {
             // 1. 申請學生貸，且實名認證、學生認證已審核通過
             // 2. 通過反詐欺爬蟲（未命中、未被封鎖）
             // 符合者，將金融驗證轉為待驗證
             $this->CI->load->library('anti_fraud_lib');
             $anti_fraud_response = $this->CI->anti_fraud_lib->get_by_user_id($this->target_user_id);
-            if (isset($anti_fraud_response['status']) && $anti_fraud_response['status'] == 200 && empty($anti_fraud_response['response']['results']))
-            {
+            if (isset($anti_fraud_response['status']) && $anti_fraud_response['status'] == 200 && empty($anti_fraud_response['response']['results'])) {
                 $this->CI->load->model('user/user_bankaccount_model');
                 $bank_account = $this->CI->user_bankaccount_model->get_by([
                     'status' => VIRTUAL_ACCOUNT_STATUS_AVAILABLE,
                     'investor' => USER_BORROWER,
                     'user_id' => $this->target_user_id
                 ]);
-                if (isset($bank_account->verify) && $bank_account->verify == 0)
-                {
+                if (isset($bank_account->verify) && $bank_account->verify == 0) {
                     $cert_debit_card = $this->CI->user_certification_model->get($bank_account->user_certification_id);
-                    if ( ! empty($cert_debit_card))
-                    {
+                    if (!empty($cert_debit_card)) {
                         $new_content = json_encode(array_merge(
                             json_decode($cert_debit_card->content ?? '', TRUE),
                             ['in_advance' => TRUE]
@@ -174,15 +160,13 @@ class Product_student extends Approve_target_credit_base
         $school_config = $this->CI->config->item('school_points');
         $info = $this->CI->user_meta_model->get_by(['user_id' => $this->target_user_id, 'meta_key' => 'school_name']);
 
-        if (in_array($info->meta_value, $school_config['lock_school']))
-        {
+        if (in_array($info->meta_value, $school_config['lock_school'])) {
             $this->result->add_memo(TARGET_WAITING_APPROVE, "{$info->meta_value}為黑名單學校", Approve_target_result::DISPLAY_BACKEND);
             return TRUE;
         }
 
         // 信評等級是10，要轉二審
-        if ($this->credit['level'] == 10)
-        {
+        if ($this->credit['level'] == 10) {
             return TRUE;
         }
 
