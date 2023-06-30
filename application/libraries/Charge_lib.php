@@ -1116,7 +1116,6 @@ class Charge_lib
 				$next_date 	= $transaction->limit_date;
 				$range_days	= get_range_days($date,$next_date);
 				$amount		= 0;
-				$difference = -1;
 				if(in_array($range_days,[1,3,7])){
 					$transaction = $this->CI->transaction_model->get_many_by(array(
 						'target_id'		=> $target->id,
@@ -1141,7 +1140,7 @@ class Charge_lib
 								$this->CI->notification_lib->notice_normal_target($target->user_id, $amount, $difference, $target->target_no, $next_date);
 							}
 						}
-						if($range_days==1 && $difference < 0){
+						if($range_days==1){
 							$this->CI->load->library('sms_lib');
 							$this->CI->sms_lib->notice_normal_target($target->user_id,$amount,$target->target_no,$next_date);
 						}
