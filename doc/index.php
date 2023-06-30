@@ -5,14 +5,17 @@ function app_access()
 
     $environment = $_SERVER['CI_ENV']?? 'development';
     if($environment=="development"){
-        return true;
+        $list = [
+            '114.34.172.44',
+            '54.64.205.49'
+        ];
     }else{
-        $list	= array(
+        $list = [
             '114.34.172.44',
             '13.112.224.83',
             '52.194.4.73',
             '18.179.183.180'
-        );
+        ];
     }
     foreach($list as $ip){
         if(preg_match('/\.\*$/',$ip)){
