@@ -52,7 +52,7 @@ function get_ip() {
     }
     return $ip = $_SERVER['REMOTE_ADDR'];
 }
-
+echo print_r($_SERVER);
 if (! app_access()) {
     header('Location: /doc/403.html');
     exit();
