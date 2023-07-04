@@ -361,7 +361,15 @@ class Repayment extends REST_Controller {
      * 					"date": "2019-03-10",
      * 					"instalment": 1,
      * 					"amount": 1687
-     * 				}
+     * 				},
+     *              "prepayment_info": {
+     *                  "settlement_date": "2019-01-25",
+     *                  "remaining_instalment": 3,
+     *                  "remaining_principal": 5000,
+     *                  "interest_payable": 11,
+     *                  "liquidated_damages": 250,
+     *                  "total": 5261
+     *              }
      * 			}
      * 			]
      * 		}
@@ -426,6 +434,7 @@ class Repayment extends REST_Controller {
 					'created_at' 		=> intval($value->created_at),
 					'next_repayment' 	=> $next_repayment,
 					'pay_off_at' 	    => $pay_off_at,
+                    'prepayment_info'   => $this->prepayment_lib->get_prepayment_info($value)??[]
 				];
 
 			}
