@@ -330,6 +330,7 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {Number} delay_days 逾期天數
 	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {Number} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
+     * @apiSuccess {Number} remaining_principal 剩餘本金
 	 * @apiSuccess {Number} created_at 申請日期
 	 * @apiSuccess {Object} next_repayment 最近一期應還款
 	 * @apiSuccess {String} next_repayment.date 還款日
@@ -354,6 +355,7 @@ class Repayment extends REST_Controller {
      * 				"delay_days": 0,
      * 				"status": 5,
      * 				"sub_status": 0,
+     *              “remaining_principal”： 0,
      * 				"created_at": 1547444954,
      * 				"next_repayment": {
      * 					"date": "2019-03-10",
@@ -420,6 +422,7 @@ class Repayment extends REST_Controller {
 					'delay_days' 		=> intval($value->delay_days),
 					'status' 			=> intval($value->status),
 					'sub_status' 		=> intval($value->sub_status),
+                    'remaining_principal' => intval($this->target_lib->get_amortization_table($value)["remaining_principal"]),
 					'created_at' 		=> intval($value->created_at),
 					'next_repayment' 	=> $next_repayment,
 					'pay_off_at' 	    => $pay_off_at,

@@ -33605,6 +33605,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "remaining_principal",
+                            "description": "<p>剩餘本金</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "created_at",
                             "description": "<p>申請日期</p>"
                         },
