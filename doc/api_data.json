@@ -16623,15 +16623,15 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "prepayment_info.remaining_instalment",
+            "field": "prepayment_info.settlement_date",
             "description": "<p>結息日</p>"
           },
           {
             "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "prepayment_info.remaining_principal",
-            "description": "<p>剩餘本金</p>"
+            "field": "prepayment_info.remaining_instalment",
+            "description": "<p>剩餘期數</p>"
           },
           {
             "group": "Success 200",
