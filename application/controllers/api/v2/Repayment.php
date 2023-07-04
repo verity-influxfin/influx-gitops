@@ -333,9 +333,17 @@ class Repayment extends REST_Controller {
      * @apiSuccess {Number} remaining_principal 剩餘本金
 	 * @apiSuccess {Number} created_at 申請日期
 	 * @apiSuccess {Object} next_repayment 最近一期應還款
-	 * @apiSuccess {String} next_repayment.date 還款日
-	 * @apiSuccess {Number} next_repayment.instalment 期數
-	 * @apiSuccess {Number} next_repayment.amount 金額
+     * @apiSuccess {String} next_repayment.date 還款日
+     * @apiSuccess {Number} next_repayment.instalment 期數
+     * @apiSuccess {Number} next_repayment.amount 金額
+     * @apiSuccess {Object} prepayment_info 提前還款資訊
+     * @apiSuccess {String} prepayment_info.settlement_date 結息日
+     * @apiSuccess {Number} prepayment_info.remaining_instalment 剩餘期數
+     * @apiSuccess {Number} prepayment_info.remaining_principal 剩餘本金
+     * @apiSuccess {Number} prepayment_info.interest_payable 應付利息
+     * @apiSuccess {Number} prepayment_info.liquidated_damages 違約金（提還違約金）
+     * @apiSuccess {Number} prepayment_info.total 合計
+     *
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",

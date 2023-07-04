@@ -33642,6 +33642,55 @@ define({
                             "optional": false,
                             "field": "next_repayment.amount",
                             "description": "<p>金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "prepayment_info",
+                            "description": "<p>提前還款資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "prepayment_info.remaining_instalment",
+                            "description": "<p>結息日</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "prepayment_info.remaining_principal",
+                            "description": "<p>剩餘本金</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "prepayment_info.remaining_principal",
+                            "description": "<p>剩餘本金</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "prepayment_info.interest_payable",
+                            "description": "<p>應付利息</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "prepayment_info.liquidated_damages",
+                            "description": "<p>違約金（提還違約金）</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "prepayment_info.total",
+                            "description": "<p>合計</p>"
                         }
                     ]
                 },
@@ -33667,11 +33716,20 @@ define({
                             "        \"delay_days\": 0,\n" +
                             "        \"status\": 5,\n" +
                             "        \"sub_status\": 0,\n" +
+                            "        \"remaining_principal\": 0,\n" +
                             "        \"created_at\": 1572183884,\n" +
                             "        \"next_repayment\": {\n" +
                             "          \"date\": \"2019-12-10\",\n" +
                             "          \"instalment\": 1,\n" +
                             "          \"amount\": 735\n" +
+                            "        },\n" +
+                            "        \"prepayment_info\": {\n" +
+                            "          \"settlement_date\": \"2019-01-25\",\n" +
+                            "          \"remaining_instalment\": 3,\n" +
+                            "          \"remaining_principal\": 5000\n" +
+                            "          \"interest_payable\": 11\n" +
+                            "          \"liquidated_damages\": 250\n" +
+                            "          \"total\": 5261\n" +
                             "        }\n" +
                             "      }\n" +
                             "    ]\n" +
