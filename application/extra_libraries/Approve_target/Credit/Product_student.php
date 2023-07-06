@@ -24,17 +24,17 @@ class Product_student extends Approve_target_credit_base
      */
     protected function check_cert($user_certs): bool
     {
+        $cert = $this->product_config['certifications'] ?? [];
         $option_cert = $this->product_config['option_certifications'] ?? [];
         $cer_success_id = []; // 存審核成功的徵信項
 
-        foreach ($user_certs as $value)
-        {
+        foreach ($user_certs as $value) {
             $cert_helper = Certification_factory::get_instance_by_id($value['id']);
             // 非成功或過期
             if ($cert_helper->is_succeed() === FALSE || $cert_helper->is_expired() === TRUE)
             {
-                // 非為選填項
-                if ( ! in_array($value['certification_id'], $option_cert))
+                // 非為選填項 = 必填項 - 選填項
+                if (in_array($value['certification_id'], array_diff($cert, $option_cert)))
                 {
                     $this->result->set_action_cancel();
                     $this->result->set_status(TARGET_WAITING_APPROVE, TARGET_SUBSTATUS_NORNAL);

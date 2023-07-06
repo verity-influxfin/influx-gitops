@@ -1272,21 +1272,28 @@ class Target_model extends MY_Model
 
     public function get_list($target_condition = [])
     {
-        $sub_query = $this->db->select('csr.name')
+        $sub_query1 = $this->db
+            ->select('Max(id) as id')
+            ->select('MAX(updated_at)')
+            ->select('target_id')
+            ->from('p2p_loan.credit_sheet')
+            ->group_by('target_id')
+            ->get_compiled_select(NULL, True);
+
+        $sub_query2 = $this->db
+            ->select('csr.name')
             ->select('cs.target_id')
             ->from('p2p_loan.credit_sheet_review csr')
-            ->from('p2p_loan.credit_sheet cs')
-            ->where('cs.id = csr.credit_sheet_id')
+            ->join("($sub_query1) cs", 'cs.id = csr.credit_sheet_id', 'JOIN')
             ->where('csr.id IN (SELECT MAX(id) FROM p2p_loan.credit_sheet_review GROUP BY credit_sheet_id)')
             ->where('csr.admin_id <>', SYSTEM_ADMIN_ID)
             ->get_compiled_select(NULL, TRUE);
 
-        $this->_database
-            ->distinct()
+            $this->_database
             ->select('t.*')
             ->select('a.name AS credit_sheet_reviewer')
             ->from('p2p_loan.targets t')
-            ->join("({$sub_query}) a", 'a.target_id = t.id', 'LEFT');
+            ->join("({$sub_query2}) a", 'a.target_id = t.id', 'LEFT');
         if ( ! empty($target_condition))
         {
             $this->_set_where([$target_condition]);

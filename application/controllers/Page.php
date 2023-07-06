@@ -62,24 +62,32 @@ class Page extends CI_Controller
         // 更新官網流量到 db
         $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), Sale_dashboard_model::TARGET_WEB_TRAFFIC, $ga_amounts);
 
-        // 更新 iOS 下載量 - 前天的
-        for ($i = 0; $i < 3; $i++)
-        {
-            $modifier = 2 + $i;
-            $ios_amounts = $this->_get_ios_sales_summary_data($today->modify("-{$modifier} day")->format('Y-m-d'));
-            $this->sale_dashboard_model->set_amounts_at($today->modify("-{$modifier} day"), Sale_dashboard_model::TARGET_DOWNLOAD_IOS, $ios_amounts);
-        }
-
-        // 更新 Android 下載量 - 四天前的才有數據(google 報表更新怎麼比 apple 還慢?)
-        for ($i = 0; $i < 3; $i++)
-        {
-            $modifier = 4 + $i;
-            $android_amounts = $this->_get_android_install_report($today->modify("-{$modifier} day"));
-            $this->sale_dashboard_model->set_amounts_at($today->modify("-{$modifier} day"), Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID, $android_amounts);
-        }
-
         // 更新會員與案件資訊
         $this->_update_target_info_at_day($today->modify('-1 day'));
+
+        try {
+            // 更新 Android 下載量 - 四天前的才有數據(google 報表更新怎麼比 apple 還慢?)
+            for ($i = 0; $i < 3; $i++) {
+                $modifier = 4 + $i;
+                $android_amounts = $this->_get_android_install_report($today->modify("-{$modifier} day"));
+                $this->sale_dashboard_model->set_amounts_at($today->modify("-{$modifier} day"), Sale_dashboard_model::TARGET_DOWNLOAD_ANDROID, $android_amounts);
+            }
+        } catch (Exception $e) {
+            log_message('error', "android amounts: " . json_encode($e->getMessage(), JSON_UNESCAPED_UNICODE));
+        }
+
+
+        try {
+            // 更新 iOS 下載量 - 前天的
+            for ($i = 0; $i < 3; $i++) {
+                $modifier = 2 + $i;
+                $ios_amounts = $this->_get_ios_sales_summary_data($today->modify("-{$modifier} day")->format('Y-m-d'));
+                $this->sale_dashboard_model->set_amounts_at($today->modify("-{$modifier} day"), Sale_dashboard_model::TARGET_DOWNLOAD_IOS, $ios_amounts);
+            }
+        } catch (Exception $e) {
+            log_message('error', "ios amounts: " . json_encode($e->getMessage(), JSON_UNESCAPED_UNICODE));
+        }
+
         echo 'ok';
     }
 

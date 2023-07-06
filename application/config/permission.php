@@ -32,6 +32,15 @@ $config['permission'] = [
             'list_new' => ['model' => 'AntiFraud', 'submodel' => 'list_new', 'action' => 'read'],
         ],
     ],
+    // 'BillOfCollection' => [
+    //     'name' => '託收票據明細表',
+    //     'menu' => [
+    //         'index' => ['name' => '託收票據明細表'],
+    //     ],
+    //     'permission' => [
+    //         'index' => ['model' => 'BillOfCollection', 'submodel' => 'index', 'action' => 'read'],
+    //     ],
+    // ],
     'Target' => [
         'name' => '借款管理',
         'menu' => [
@@ -465,6 +474,8 @@ $config['permission'] = [
             'passbook_report' => ['name' => '虛擬帳號餘額明細表'],
             'estatement' => ['name' => '個人對帳單'],
             'index' => ['name' => '收支統計表'],
+            'cheque_table' => ['name' => '託收票據明細表'],
+            'trading_day_report' => ['name' => '交易日報表'],
         ],
         'permission' => [
             'daily_report' => ['model' => 'Account', 'submodel' => 'daily_report', 'action' => 'read'],
@@ -476,6 +487,8 @@ $config['permission'] = [
             'index' => ['model' => 'Account', 'submodel' => 'index', 'action' => 'read'],
             'estatement_excel' => ['model' => 'Account', 'submodel' => 'estatement', 'action' => 'read'],
             'estatement_s_excel' => ['model' => 'Account', 'submodel' => 'estatement', 'action' => 'read'],
+            'cheque_table' => ['model' => 'Account', 'submodel' => 'cheque_table', 'action' => 'read'],
+            'trading_day_report' => ['model' => 'Account', 'submodel' => 'trading_day_report', 'action' => 'read'],
         ],
     ],
     'Ocr' => [
