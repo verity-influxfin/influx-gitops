@@ -1156,6 +1156,7 @@ class Repayment extends REST_Controller {
      * @apiSuccess {Number} amount 金額
      * @apiSuccess {String} bank_amount 帳戶餘額
      * @apiSuccess {String} remark 備註
+     * @apiSuccess {int} source 備註代號
      * @apiSuccess {String} tx_datetime 交易時間
      * @apiSuccess {Number} created_at 入帳時間
      * @apiSuccessExample {Object} SUCCESS
@@ -1167,6 +1168,7 @@ class Repayment extends REST_Controller {
      * 					"amount": 500000,
      * 					"bank_amount": 500000,
      * 					"remark": "平台代收",
+     *                  "source": 1,
      * 					"tx_datetime": "2019-01-17 19:57:50",
      * 					"created_at": 1547726281
      * 				},
@@ -1174,6 +1176,7 @@ class Repayment extends REST_Controller {
      * 					"amount": -5,
      * 					"bank_amount": 499995,
      * 					"remark": "還款利息",
+     *                  "source": 14,
      * 					"tx_datetime": "2019-01-17 19:59:24",
      * 					"created_at": 1547726364
      * 				},
@@ -1181,6 +1184,7 @@ class Repayment extends REST_Controller {
      * 					"amount": -5000,
      * 					"bank_amount": 494995,
      * 					"remark": "還款本金",
+     *                  "source": 12,
      * 					"tx_datetime": "2019-01-17 19:59:24",
      * 					"created_at": 1547726364
      * 				},
@@ -1188,6 +1192,7 @@ class Repayment extends REST_Controller {
      * 					"amount": -250,
      * 					"bank_amount": 494745,
      * 					"remark": "提前還款違約金",
+     *                  "source": 8,
      * 					"tx_datetime": "2019-01-17 19:59:25",
      * 					"created_at": 1547726365
      * 				}
@@ -1250,6 +1255,7 @@ class Repayment extends REST_Controller {
 					'amount' 		=> $value['amount'],
 					'bank_amount'	=> $value['bank_amount'],
 					'remark'		=> $remark,
+                    'source'        => intval($value['remark']['source'] ?? ''),
 					'tx_datetime'	=> $value['tx_datetime'],
 					'created_at'	=> $value['created_at'],
 				];
