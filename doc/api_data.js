@@ -34123,6 +34123,13 @@ define({
                         },
                         {
                             "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "source",
+                            "description": "<p>備註代號</p>"
+                        },
+                        {
+                            "group": "Success 200",
                             "type": "String",
                             "optional": false,
                             "field": "tx_datetime",
@@ -34140,7 +34147,19 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n     \"result\": \"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t\t{\n\t\t\t\t\t\"amount\": 500000,\n\t\t\t\t\t\"bank_amount\": 500000,\n\t\t\t\t\t\"remark\": \"平台代收\",\n\t\t\t\t\t\"tx_datetime\": \"2019-01-17 19:57:50\",\n\t\t\t\t\t\"created_at\": 1547726281\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"amount\": -5,\n\t\t\t\t\t\"bank_amount\": 499995,\n\t\t\t\t\t\"remark\": \"還款利息\",\n\t\t\t\t\t\"tx_datetime\": \"2019-01-17 19:59:24\",\n\t\t\t\t\t\"created_at\": 1547726364\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"amount\": -5000,\n\t\t\t\t\t\"bank_amount\": 494995,\n\t\t\t\t\t\"remark\": \"還款本金\",\n\t\t\t\t\t\"tx_datetime\": \"2019-01-17 19:59:24\",\n\t\t\t\t\t\"created_at\": 1547726364\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"amount\": -250,\n\t\t\t\t\t\"bank_amount\": 494745,\n\t\t\t\t\t\"remark\": \"提前還款違約金\",\n\t\t\t\t\t\"tx_datetime\": \"2019-01-17 19:59:25\",\n\t\t\t\t\t\"created_at\": 1547726365\n\t\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+                        "content": "   {\n     \"result\": \"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t\t{\n\t\t\t\t\t\"amount\": 500000,\n\t\t\t\t\t\"bank_amount\": 500000," +
+                            "\n\t\t\t\t\t\"remark\": \"平台代收\"," +
+                            "\n\t\t\t\t\t\"source\": 1," +
+                            "\n\t\t\t\t\t\"tx_datetime\": \"2019-01-17 19:57:50\",\n\t\t\t\t\t\"created_at\": 1547726281\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"amount\": -5,\n\t\t\t\t\t\"bank_amount\": 499995," +
+                            "\n\t\t\t\t\t\"remark\": \"還款利息\"," +
+                            "\n\t\t\t\t\t\"source\": 14," +
+                            "\n\t\t\t\t\t\"tx_datetime\": \"2019-01-17 19:59:24\",\n\t\t\t\t\t\"created_at\": 1547726364\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"amount\": -5000,\n\t\t\t\t\t\"bank_amount\": 494995," +
+                            "\n\t\t\t\t\t\"remark\": \"還款本金\"," +
+                            "\n\t\t\t\t\t\"source\": 12," +
+                            "\n\t\t\t\t\t\"tx_datetime\": \"2019-01-17 19:59:24\",\n\t\t\t\t\t\"created_at\": 1547726364\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"amount\": -250,\n\t\t\t\t\t\"bank_amount\": 494745," +
+                            "\n\t\t\t\t\t\"remark\": \"提前還款違約金\"," +
+                            "\n\t\t\t\t\t\"source\": 8," +
+                            "\n\t\t\t\t\t\"tx_datetime\": \"2019-01-17 19:59:25\",\n\t\t\t\t\t\"created_at\": 1547726365\n\t\t\t\t}\n\t\t\t]\n\t\t}\n   }",
                         "type": "Object"
                     }
                 ]
