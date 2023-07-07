@@ -5,12 +5,13 @@ function app_access()
 
     $environment = $_SERVER['CI_ENV']?? 'development';
     if($environment=="development"){
-        $list = [
-            '114.34.172.44',
-            '54.64.205.49',
-            '203.204.38.23',//翠帝提供之IP
-            '101.12.51.38'//翠帝提供之IP
-        ];
+        return True;
+//        $list = [
+//            '114.34.172.44',
+//            '54.64.205.49',
+//            '203.204.38.23',//翠帝提供之IP
+//            '101.12.51.38'//翠帝提供之IP
+//        ];
     }else{
         $list = [
             '114.34.172.44',
