@@ -384,9 +384,12 @@ class Transfer_lib{
 					}
 				}
 			}
-			if($transfers->expire_time < time()){
-				$this->cancel_transfer($transfers);
-			}
+            if ($transfers->expire_time < time()) {
+                $this->cancel_transfer($transfers);
+            } else {
+                $this->CI->load->library('Transaction_lib');
+                $this->transaction_lib->transfer_success($transfers->id);
+            }
 			return true;
 		}
 		return false;
