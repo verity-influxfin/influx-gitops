@@ -749,6 +749,7 @@
                                                 :src="item.content.image" 
                                                 style="width: 50%;"
                                             />    
+                                            <a :href="item.content.image">下載</a>
                                         </div>
                                     </div>
                                 </td>
