@@ -1,9 +1,12 @@
+內容更新：
+2023-07-10 api文件存取方式改成帳密需要執行的指令
+
 LAMP開發環境：
 php 7.2
 phpmyadmin
 mysql
 php-mbstring
- 
+
 版本控制：
 git
 composer
@@ -97,3 +100,12 @@ SetEnv ENV_EZPAY_IV ""
 #PDF password
 SetEnv ENV_PDF_OWNER_PASSWORD ""
 
+
+api文件存取方式改成帳密:
+
+1. 執行以下指令
+bash setPwAccess.sh
+
+2. 輸入機器環境變數
+Which env? [d]:dev, [p]:prod
+d:測試環境，p:正式環境
