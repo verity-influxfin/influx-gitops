@@ -384,9 +384,16 @@ class Transfer_lib{
 					}
 				}
 			}
-            if ($transfers->expire_time < time()) {
+            $currentTime = time();
+            if ($transfers->expire_time < $currentTime) {
+//                echo "，$transfers->id 已過期<br/>";
                 $this->cancel_transfer($transfers);
-            } else {
+                return true;
+            }
+//            echo "，$transfers->id 未過期<br/>";
+            if ($transfer_investments && $ended) {
+//                echo "，$transfers->id 未過期且有 transfer_investments<br/>";
+//                echo "，準備放行前status：$transfers->status<br/>";
                 try {
                     print_r(["id"=>$transfers->id]);
                     $this->CI->load->library('Transaction_lib');
