@@ -387,8 +387,13 @@ class Transfer_lib{
             if ($transfers->expire_time < time()) {
                 $this->cancel_transfer($transfers);
             } else {
-                $this->CI->load->library('Transaction_lib');
-                $this->transaction_lib->transfer_success($transfers->id);
+                try {
+                    print_r(["id"=>$transfers->id]);
+                    $this->CI->load->library('Transaction_lib');
+                    $this->CI->transaction_lib->transfer_success($transfers->id);
+                } catch (Exception $e) {
+                    throw new Exception(print_r([$e->getMessage(),'$transfers'=>$transfers], true));
+                }
             }
 			return true;
 		}
