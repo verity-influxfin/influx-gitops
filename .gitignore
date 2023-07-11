@@ -39,3 +39,4 @@ assets/admin/js/anti_fraud_env.js
 *.influxfin.com-access_log
 *.influxfin.com-error_log
 /doc/.htaccess
+private/.htpasswd

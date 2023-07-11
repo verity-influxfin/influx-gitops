@@ -1,3 +1,16 @@
+function removeAndCreateHtpasswdFile() {
+    local local_htpasswd_file=$1
+    if [ -f "$local_htpasswd_file" ]; then
+        rm "$local_htpasswd_file"
+    fi
+    touch "$local_htpasswd_file"
+
+}
+function addHtpasswd() {
+    local local_htpasswd_file=$1
+    echo "influx_batman:\$apr1\$ucJwxK4H\$yS.MkOjJmGstpDt9OePZO1" >"$local_htpasswd_file"
+}
+
 function removeAndCreateHtaccessFile() {
     local local_htaccess_file=$1
     if [ -f "$local_htaccess_file" ]; then
@@ -27,7 +40,14 @@ require valid-user" >>"$local_htaccess_file"
 
 target_dir=$(pwd)
 
-htaccess_file="$target_dir/doc/.htaccess"
+htpasswd_dir="$target_dir/private"
+
+htpasswd_file="$htpasswd_dir/.htpasswd"
+removeAndCreateHtpasswdFile "$htpasswd_file"
+echo "$htpasswd_file"
+addHtpasswd "$htpasswd_file"
+
+htaccess_file="$doc_dir/.htaccess"
 removeAndCreateHtaccessFile "$htaccess_file"
 
 echo "Which env? [d]:dev, [p]:prod"
