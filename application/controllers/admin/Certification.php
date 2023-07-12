@@ -1420,7 +1420,7 @@ class Certification extends MY_Admin_Controller {
                     }
 				}
 				if ($media_check === false) {
-                    $this->json_output->setStatusCode(204)->setErrorCode('檔案上傳失敗，請洽工程師')->send();
+                    $this->json_output->setStatusCode(204)->setStatusMessage('檔案上傳失敗，請洽工程師')->send();
 				} else {
 					$group_id = time();
 					$this->load->model('log/log_image_model');
@@ -1475,12 +1475,12 @@ class Certification extends MY_Admin_Controller {
                     if ($res) {
                         $this->json_output->setStatusCode(200)->setResponse(['message'=>'檔案上傳成功'])->send();
                     }else {
-                        $this->json_output->setStatusCode(204)->setErrorCode('檔案上傳失敗，資料更新失敗，請洽工程師')->send();
+                        $this->json_output->setStatusCode(204)->setStatusMessage('檔案上傳失敗，資料更新失敗，請洽工程師1')->send();
                     }
 				}
 			}
 		} else {
-            $this->json_output->setStatusCode(204)->setErrorCode('檔案上傳失敗，缺少參數，請洽工程師')->send();
+            $this->json_output->setStatusCode(204)->setStatusMessage('檔案上傳失敗，缺少參數，請洽工程師2')->send();
 		}
 	}
 
