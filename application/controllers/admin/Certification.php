@@ -1602,12 +1602,12 @@ class Certification extends MY_Admin_Controller {
         $response_data = [];
 
         if(! isset($get['id']) || empty($get['id'])){
-            $this->json_output->setStatusCode(204)->setErrorCode('缺少參數，無法找資料')->send();
+            $this->json_output->setStatusCode(204)->setStatusMessage('缺少參數，無法找資料')->send();
         }
 
         $certification_info = $this->user_certification_model->get_by(['id' => $get['id']]);
         if(! $certification_info){
-            $this->json_output->setStatusCode(204)->setErrorCode('找不到資料')->send();
+            $this->json_output->setStatusCode(204)->setStatusMessage('找不到資料')->send();
         }
 
         $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
@@ -1702,12 +1702,12 @@ class Certification extends MY_Admin_Controller {
         $response_data = [];
 
         if(! isset($get['id']) || empty($get['id'])){
-            $this->json_output->setStatusCode(204)->setErrorCode('缺少參數，無法找資料')->send();
+            $this->json_output->setStatusCode(204)->setStatusMessage('缺少參數，無法找資料')->send();
         }
 
         $certification_info = $this->user_certification_model->get_by(['id' => $get['id']]);
         if(! $certification_info){
-            $this->json_output->setStatusCode(204)->setErrorCode('找不到資料')->send();
+            $this->json_output->setStatusCode(204)->setStatusMessage('找不到資料')->send();
         }
 
         $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
