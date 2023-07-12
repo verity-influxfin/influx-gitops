@@ -3,3 +3,7 @@ RewriteCond $1 !^(index\.php|resources|doc|images|robots\.txt)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+
+php_value memory_limit 1536M
+php_value upload_max_filesize 200M
+php_value post_max_size 50M
