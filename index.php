@@ -1,8 +1,8 @@
 <?php
 set_time_limit(0);
-ini_set('memory_limit','1536M');
-ini_set('upload_max_filesize', '200M');
-ini_set('post_max_size', '253M');
+ini_set('memory_limit','1536M');//這邊的設定無效，調整參數需要在.htaccess中設定
+ini_set('upload_max_filesize', '200M');//這邊的設定無效，調整參數需要在.htaccess中設定
+ini_set('post_max_size', '253M');//這邊的設定無效，調整參數需要在.htaccess中設定
 /*
  *                       _oo0oo_					|                               |~~~~~~~|
  *                      o8888888o					|                               |       |
