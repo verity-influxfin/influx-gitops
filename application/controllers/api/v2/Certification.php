@@ -5964,4 +5964,39 @@ class Certification extends REST_Controller {
         $booking_detail = $this->booking_lib->get_booked_list_by_user($target_id, $user_id);
         $this->response($booking_detail);
     }
+
+    // 更改認證項狀態
+    public function status_edit_post()
+    {
+        $this->load->model('user_certification_model');
+        $this->load->library('form_validation');
+        $id = $this->input->post('certification_id');//certification_id （int, p2p_user.user_certification ID）
+        $status = $this->input->post('status');//status（int, p2p_user.user_certification STATUS, 0:等待驗證 1:驗證成功 2:驗證失敗 3:需人工 4:未上傳文件）
+        $data = ['certification_id' => $id, 'status' => $status];
+        $rules = [
+            [
+                'field' => 'certification_id',
+                'label' => 'certification_id',
+                'rules' => 'required|integer|greater_than[0]'
+            ],
+            [
+                'field' => 'status',
+                'label' => 'status',
+                'rules' => 'required|integer|greater_than_equal_to[0]|less_than[5]'
+            ]
+        ];
+        $this->form_validation->set_data($data);
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run() == FALSE) {
+            $this->response(['result' => 'ERROR', 'error' => 401, 'error_msg' => $this->form_validation->error_array()]);
+        }
+
+        $rs = $this->user_certification_model->update($id, ['status' => $status]);
+        if (!$rs) {
+            $this->response(['result' => 'ERROR', 'error' => 402]);
+        }
+
+        $result = $this->user_certification_model->get($id);
+        $this->response(['result' => 'SUCCESS', 'data' => ['id' => intval($result->id), 'status' => intval($result->status)]]);
+    }
 }
