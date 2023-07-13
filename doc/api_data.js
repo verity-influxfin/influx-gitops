@@ -54677,5 +54677,139 @@ define({
                 }
             ]
         },
+        {
+            "type": "post",
+            "url": "/v2/certification/status_edit",
+            "title": "認證 更改認證項狀態",
+            "version": "0.1.0",
+            "name": "PostCertificationStatusEdit",
+            "group": "Certification",
+            "description": "",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "certification_id",
+                            "description": "<p>認證項id</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "status",
+                            "description": "<p>認證項狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:需人工 4:未上傳文件</p>"
+                        },
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data",
+                            "description": "<p>data</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "data.id",
+                            "description": "<p>認證項id</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "data.status",
+                            "description": "<p>認證項更改後的狀態</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{  \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"id\": 1,\n" +
+                            "        \"status\": 0,\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "401",
+                            "description": "<p>輸入資料不符合規定</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "402",
+                            "description": "<p>更新失敗</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "401",
+                        "content": "{\n" +
+                            "    \"result\": \"ERROR\",\n" +
+                            "    \"error\": 401,\n" +
+                            "    \"error_msg\": {\n" +
+                            "        \"certification_id\": \"The certification_id field must contain an integer.\"\n" +
+                            "    }" +
+                            "\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "402",
+                        "content": "{\n" +
+                            "    \"result\": \"ERROR\",\n" +
+                            "    \"error\": 402,\n" +
+                            "\n}",
+                        "type": "Object"
+                    },
+                ]
+            },
+            "filename": "application/controllers/api/v2/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/status_edit"
+                }
+            ]
+        },
     ]
 });
