@@ -674,6 +674,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';    
 
 $(document).ready(function () {
     var modal = document.getElementById('addTargetModal');
@@ -750,7 +751,7 @@ const v = new Vue({
         },
         searchTargets() {
             params = { query: this.searchTargetKeyword };
-            axios.get(`http://127.0.0.1:8000/enterprise_document/targets`, { params: params })
+            axios.get(`${p2p_orm_host}/enterprise_document/targets`, { params: params })
             .then((res) => {
                 this.targetsList = res.data;
             }).catch((err) => {
@@ -792,7 +793,7 @@ const v = new Vue({
                         this.insertTargetsList[i]['created_ip'] = ipInfo.ipAddress;
                     }
 
-                    axios.post(`http://127.0.0.1:8000/enterprise_document/insert`, this.insertTargetsList)
+                    axios.post(`${p2p_orm_host}/enterprise_document/insert`, this.insertTargetsList)
                     .then((res) => {
                         if (res.data == 'SUCCESS') {
                             alert('新增成功');
@@ -817,7 +818,7 @@ const v = new Vue({
             if (this.searchDebtData.status != '') {
                 params['upload_status'] = parseInt(this.searchDebtData.status);
             }
-            axios.get(`http://127.0.0.1:8000/enterprise_document/enterprise`, { params: params })
+            axios.get(`${p2p_orm_host}/enterprise_document/enterprise`, { params: params })
             .then((res) => {
                 this.debtDocsList = res.data;
             }).catch((err) => {
@@ -873,7 +874,7 @@ const v = new Vue({
                     for (let i = 0; i < this.files.length; i ++) {
                         formData.append('files', this.files[i]);
                     }
-                    axios.post(`http://127.0.0.1:8000/enterprise_document/uploadfiles`, formData, { params, headers })
+                    axios.post(`${p2p_orm_host}/enterprise_document/uploadfiles`, formData, { params, headers })
                     .then((res) => {
                         alert('上傳成功');
                         location.reload();
