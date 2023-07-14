@@ -206,8 +206,11 @@
               <div class="roadmap-item-content">
                 <div class="roadmap-item-content-title">聯盟銀行</div>
                 <div>
-                  •聯手<span class="color-primary">上海銀行</span
-                  >推廣信貸及數存產品
+                  •曾聯手<span class="color-primary">上海銀行</span
+                  >推廣信貸(合作期間：
+                </div>
+                <div>
+                  &nbsp;&nbsp;2021/04~12月)及數存產品
                 </div>
                 <div>•會員數突破<span class="color-primary">6萬人次</span></div>
                 <div>
