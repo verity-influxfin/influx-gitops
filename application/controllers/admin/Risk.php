@@ -432,7 +432,16 @@ class Risk extends MY_Admin_Controller {
         {
             $spreadsheet = $this->spreadsheet_lib->load_multi_sheet($title_rows, $data_rows[$key], $spreadsheet, $value);
         }
-        $this->spreadsheet_lib->download('export.xlsx', $spreadsheet);
+
+        // 命名檔案
+        $product_type_dict = [
+            PRODUCT_ID_STUDENT => '學生貸',
+            PRODUCT_ID_SALARY_MAN => '上班族貸',
+        ];
+        $file_name = $product_type_dict[$input['product_id']] ?? 'export';
+        $file_name .= date('Ymd') . '.xlsx';
+
+        $this->spreadsheet_lib->download($file_name, $spreadsheet);
     }
 
 	public function index(){
