@@ -470,7 +470,7 @@
                                     </template>
                                 </td>
                                 <td>
-                                    <button>案件資訊</button>
+                                    <button @click="toTargetPage(item.target_id)">案件資訊</button>
                                 </td>
                             </template>
                         </tr>
@@ -660,7 +660,7 @@
                                     </template>
                                 </td>
                                 <td>
-                                    <button>案件資訊</button>
+                                    <button @click="toTargetPage(item.target_id)">案件資訊</button>
                                 </td>
                             </template>
                         </tr>
