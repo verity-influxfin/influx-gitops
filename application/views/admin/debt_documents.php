@@ -52,7 +52,7 @@
                                     >
                                 </td>
                                 <td>{{ item.target_no }}</td>
-                                <td>{{ item.created_at }}</td>
+                                <td>{{ item.create_date }}</td>
                                 <td>{{ item.loan_date }}</td>
                                 <td>{{ item.amount }}</td>
                                 <td>{{ item.user_id }}</td>
@@ -149,7 +149,7 @@
                     <div class="col-md-2">
                         <label>案號</label>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-10">
                         {{ infoData.target_no }}
                     </div>
                 </div>
@@ -157,7 +157,7 @@
                     <div class="col-md-2">
                         <label>會員ID</label>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-10">
                         {{ infoData.user_id }}
                     </div>
                 </div>
@@ -165,7 +165,7 @@
                     <div class="col-md-2">
                         <label>會員姓名</label>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-10">
                         {{ infoData.name }}
                     </div>
                 </div>
@@ -173,7 +173,7 @@
                     <div class="col-md-2">
                         <label>申請日期</label>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-10">
                         {{ infoData.create_date }}
                     </div>
                 </div>
@@ -181,7 +181,7 @@
                     <div class="col-md-2">
                         <label>放款日期</label>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-10">
                         {{ infoData.loan_date }}
                     </div>
                 </div>
@@ -189,7 +189,7 @@
                     <div class="col-md-2">
                         <label>放款金額</label>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-10">
                         {{ infoData.amount }}
                     </div>
                 </div>
@@ -370,7 +370,7 @@
                                     </template>
                                 </td>
                                 <td>
-                                    <button>案件資訊</button>
+                                    <button @click="toTargetPage(item.target_id)">案件資訊</button>
                                 </td>
                             </template>
                         </tr>
@@ -674,7 +674,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';    
+var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
 
 $(document).ready(function () {
     var modal = document.getElementById('addTargetModal');
@@ -821,6 +821,7 @@ const v = new Vue({
             axios.get(`${p2p_orm_host}/enterprise_document/enterprise`, { params: params })
             .then((res) => {
                 this.debtDocsList = res.data;
+                console.log(this.debtDocsList);
             }).catch((err) => {
                 console.log(err);
             })
@@ -877,7 +878,12 @@ const v = new Vue({
                     axios.post(`${p2p_orm_host}/enterprise_document/uploadfiles`, formData, { params, headers })
                     .then((res) => {
                         alert('上傳成功');
-                        location.reload();
+                        let modal = document.getElementById('uploadModal');
+                        modal.style.display = 'none';
+                        modal = document.getElementById('infoModal');
+                        modal.style.display = 'none';
+
+                        this.searchDebtDocs();
                     }).catch((err) => {
                         console.log(err);
                     })
@@ -894,6 +900,9 @@ const v = new Vue({
             this.infoFiles = this.infoData.document[colName];
             this.uploadId = this.infoData.id;
             this.uploadColumn = colName;
+        },
+        toTargetPage(target_id) {
+            window.open(`/admin/target/detail?id=${target_id}`);
         }
     }
 })
