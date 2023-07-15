@@ -201,10 +201,9 @@
                             <a :href="item">{{ item.split('/')[item.split('/').length -1] }}</a>
                         </div>
                         <div class="row mt-2 ml-2" v-else>
-                            <img 
-                                :src="item" 
-                                style="width: 50%;"
-                            />  
+                            <a :href="item" data-fancybox="images">
+                                <img :src="item" style='max-width:300px;'>
+                            </a>
                         </div>
                     </template>
                     <div class="row mt-2 ml-2">
