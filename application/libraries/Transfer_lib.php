@@ -390,18 +390,18 @@ class Transfer_lib{
                 $this->cancel_transfer($transfers);
                 return true;
             }
-//            echo "，$transfers->id 未過期<br/>";
-            if ($transfer_investments && $ended) {
-//                echo "，$transfers->id 未過期且有 transfer_investments<br/>";
-//                echo "，準備放行前status：$transfers->status<br/>";
-                try {
-                    print_r(["id"=>$transfers->id]);
-                    $this->CI->load->library('Transaction_lib');
-                    $this->CI->transaction_lib->transfer_success($transfers->id);
-                } catch (Exception $e) {
-                    throw new Exception(print_r([$e->getMessage(),'$transfers'=>$transfers], true));
-                }
-            }
+////            echo "，$transfers->id 未過期<br/>";
+//            if ($transfer_investments && $ended) {
+////                echo "，$transfers->id 未過期且有 transfer_investments<br/>";
+////                echo "，準備放行前status：$transfers->status<br/>";
+//                try {
+//                    print_r(["id"=>$transfers->id]);
+//                    $this->CI->load->library('Transaction_lib');
+//                    $this->CI->transaction_lib->transfer_success($transfers->id);
+//                } catch (Exception $e) {
+//                    throw new Exception(print_r([$e->getMessage(),'$transfers'=>$transfers], true));
+//                }
+//            }
 			return true;
 		}
 		return false;
