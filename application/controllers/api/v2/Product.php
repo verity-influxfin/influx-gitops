@@ -1277,6 +1277,7 @@ class Product extends REST_Controller {
      * @apiSuccess {Number} id Target ID
      * @apiSuccess {String} target_no 案號
      * @apiSuccess {Number} product_id Product ID
+     * @apiSuccess {Number} sub_product_id Sub Product ID
      * @apiSuccess {Number} user_id User ID
      * @apiSuccess {Number} amount 申請金額
      * @apiSuccess {Number} loan_amount 核准金額
@@ -1817,6 +1818,7 @@ class Product extends REST_Controller {
                 'target_no' 		    => $target->target_no,
                 'product_name' => $product_name,
                 'product_id' 		    => intval($target->product_id),
+                'sub_product_id' 		    => intval($target->sub_product_id),
                 'user_id' 			    => intval($target->user_id),
                 'order_id'              => intval($target->order_id),
                 'order_info'            => $order_info,
