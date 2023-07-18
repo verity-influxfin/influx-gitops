@@ -763,6 +763,9 @@ class Transaction_lib{
                 }
                 $transfer_info[] = $infos;
             }
+
+            $need_cancel_transfer = false;//當其中的一筆債權失敗，則全部取消
+
             $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
             $rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
             if($mrs && $rs && $unlock){
@@ -1026,6 +1029,17 @@ class Transaction_lib{
             //unlock target
             $this->CI->target_model->update_many($target_ids, array('script_status' => 0));
             $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 0));
+
+            if ($need_cancel_transfer) {
+                $this->CI->load->library('transfer_lib');
+                if (count($transfers) > 1) {
+                    $this->CI->transfer_lib->cancel_combination_transfer($transfers);
+                }
+                else {
+                    $this->CI->transfer_lib->cancel_transfer($transfers[0]);
+                }
+            }
+
             return true;
         }
 		return false;
