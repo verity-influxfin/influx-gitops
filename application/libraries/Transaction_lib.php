@@ -741,6 +741,11 @@ class Transaction_lib{
                 $transfers[] = $o_transfer;
             }
 
+            if (!$transfers){
+//                如果沒有transfer，後續的迴圈不會執行，所以直接return true
+                return true;
+            }
+
             //lock target
             $unlock        = true;
             $is_order      = false;
@@ -762,6 +767,11 @@ class Transaction_lib{
                     $unlock = false;
                 }
                 $transfer_info[] = $infos;
+            }
+
+            if (!$unlock) {
+//                因為只有 unlock 為 true的情況，才會執行後續的迴圈，所以直接return true
+                return true;
             }
 
             $need_cancel_transfer = false;//當其中的一筆債權失敗，則全部取消
