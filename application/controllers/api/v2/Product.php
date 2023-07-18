@@ -1327,6 +1327,7 @@ class Product extends REST_Controller {
      * 			'id':'1',
      * 			'target_no': '1803269743',
      * 			'product_id':'1',
+     *          'sub_product_id': 2,
      * 			'user_id':'1',
      * 			'amount':'5000',
      * 			'loan_amount':'12000',
