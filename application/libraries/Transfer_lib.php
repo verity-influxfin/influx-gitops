@@ -532,6 +532,47 @@ class Transfer_lib{
 		}
 		return $count;
 	}
+    public function script_transfer_success_v2(){
+        $script  	= 14;
+        $count 		= 0;
+        $ids		= [];
+        $transfers 	= $this->CI->transfer_model->limit(15)->get_many_by([
+            'status'		=> 1,
+            'script_status'	=> 0
+        ]);
+
+        if(empty($transfers)){
+            return $count;
+        }
+
+        $this->CI->load->library('Transaction_lib');
+
+        $combination_ids = [];
+
+        $need_update_transfer_ids = [];
+
+        foreach ($transfers as $transfer) {
+
+            $combination_id = $transfer->combination;
+            $transfer_id = $transfer->id;
+            if (in_array($combination_id, $combination_ids)) {
+                continue;
+            }
+            if ($combination_id != 0) {
+                $combination_ids[] = $combination_id;
+            }
+            $need_update_transfer_ids[] = $transfer_id;
+        }
+        $this->CI->transfer_model->update_many($need_update_transfer_ids, ['script_status' => $script]);
+
+        foreach ($need_update_transfer_ids as $transfer_id){
+            $success = $this->CI->transaction_lib->transfer_success($transfer_id, 0);
+            if ($success) {
+                $count++;
+            }
+        }
+        return $count;
+    }
 
 	public function check_combination($target_id,$new_investment){
 		if($new_investment!=0){
