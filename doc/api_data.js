@@ -18322,6 +18322,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "sub_product_id",
+                            "description": "<p>Sub Product ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "user_id",
                             "description": "<p>User ID</p>"
                         },
@@ -19093,6 +19100,7 @@ define({
                             "        \"target_no\": \"SUL2020042012635\",\n" +
                             "        \"product_name\": \"孵化基金 / 非學生孵化基金\",\n" +
                             "        \"product_id\": 8,\n" +
+                            "        \"sub_product_id\": 9,\n" +
                             "        \"user_id\": 12820,\n" +
                             "        \"order_id\": 0,\n" +
                             "        \"order_info\": [],\n" +
