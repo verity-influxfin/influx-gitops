@@ -773,6 +773,12 @@ class Transaction_lib{
                 $virtual_account  = '';
                 foreach($transfers as $t => $transfer) {
                     $transaction 	= [];
+
+                    if (!$transfer || $transfer->status != 1) {
+                        $need_cancel_transfer = true;
+                        continue;
+                    }
+
                     if ($transfer && $transfer->status == 1) {
                         $target     = $transfer_info[$t]['targets'];
                         $investment = $transfer_info[$t]['investment'];
@@ -795,6 +801,13 @@ class Transaction_lib{
                             'frozen_status' => 1
                         ));
 
+                        if ($principal != $transfer->principal|| !$transfer_investments) {
+//                            債轉的原投資債權案件的 (正常的)內帳交易紀錄(應收借款本金)的金額 不等於 債轉的剩餘本金 or
+//                            債轉 沒有 待放款且凍結中的債轉案買方投標歷程紀錄
+                            $need_cancel_transfer = true;
+                            continue;//$is_order依然為false，因此不會執行後續程式碼
+                        }
+
                         if ($principal == $transfer->principal &&$transfer_investments) {
                             $investment_data = array(
                                 'target_id' => $investment->target_id,
@@ -806,6 +819,12 @@ class Transaction_lib{
                             );
 
                             $new_investment = $this->CI->investment_model->insert($investment_data);
+
+                            if (!$new_investment) {
+                                $need_cancel_transfer = true;
+                                continue;//$is_order依然為false，因此不會執行後續程式碼
+                            }
+
                             if ($new_investment) {
                                 $invest_list[$target->product_id][] = $new_investment;
                                 $invest_target[$new_investment]    = $target->target_no;
@@ -813,6 +832,14 @@ class Transaction_lib{
                                 $transfer_fee = 0;
                                 $transfer_account==''?$transfer_account=$this->CI->virtual_account_model->get_by(['user_id' => $investment->user_id, 'investor' => 1]):null;
                                 $virtual_account==''?$virtual_account=$this->CI->virtual_account_model->get_by(['user_id' => $transfer_investments->user_id, 'investor' => 1]):null;
+
+                                if (!$transfer_account || !$virtual_account) {
+                                    //沒有 原投資債權案件的虛擬帳號 or
+                                    // 沒有 債轉案買方的 虛擬帳號
+                                    $need_cancel_transfer = true;
+                                    continue;//$is_order依然為false，因此不會執行後續程式碼
+                                }
+
                                 if ($transfer_account && $virtual_account) {
                                     if ($target->order_id != 0) {
                                         $target_inves = $this->CI->investment_model->get_many_by([
