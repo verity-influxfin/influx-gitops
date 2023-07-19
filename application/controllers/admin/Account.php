@@ -1131,4 +1131,12 @@ TEMP;
         $this->load->view('admin/trading_daily_report');
         $this->load->view('admin/_footer');
 	}
+
+	public function debt_documents()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/debt_documents');
+        $this->load->view('admin/_footer');
+    }
 }

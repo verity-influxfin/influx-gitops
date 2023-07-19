@@ -469,6 +469,7 @@ $config['permission'] = [
             'index' => ['name' => '收支統計表'],
             'cheque_table' => ['name' => '託收票據明細表'],
             'trading_day_report' => ['name' => '交易日報表'],
+            'debt_documents' => ['name' => '企金紙本債權文件存檔']
         ],
         'permission' => [
             'daily_report' => ['model' => 'Account', 'submodel' => 'daily_report', 'action' => 'read'],
@@ -482,6 +483,7 @@ $config['permission'] = [
             'estatement_s_excel' => ['model' => 'Account', 'submodel' => 'estatement', 'action' => 'read'],
             'cheque_table' => ['model' => 'Account', 'submodel' => 'cheque_table', 'action' => 'read'],
             'trading_day_report' => ['model' => 'Account', 'submodel' => 'trading_day_report', 'action' => 'read'],
+            'debt_documents' => ['model' => 'Account', 'submodel' => 'debt_documents', 'action' => 'read'],
         ],
     ],
     'Ocr' => [
