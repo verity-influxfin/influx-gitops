@@ -756,6 +756,10 @@ class Transaction_lib{
             $contract      = false;
             $invest_list   = [];
             $invest_target = [];
+
+            $skip_process = false;//檢查是否要跳過本次處理
+            $need_cancel_transfer = false;//當其中的一筆債權失敗，則全部取消
+
             foreach($transfers as $tc => $transfer_check) {
                 $infos                  = [];
                 $target_ids[]           = $transfer_check->target_id;
