@@ -763,22 +763,23 @@ class Transaction_lib{
                 $infos['targets']       = $this->CI->target_model->get($transfer_check->target_id);
                 $infos['investment']    = $this->CI->investment_model->get($transfer_check->investment_id);
                 //$infos
-                if($infos['targets']->script_status != 0 && $infos['investment']->status != 3 ){
+                if ($infos['targets']->script_status != 0) {
+//                    其中一筆有其他跑批正在執行 -> 不會自動退回/不會自動放行
+                    $skip_process = true;
                     $unlock = false;
+                }elseif ($infos['investment']->status != 3) {
+//                    investment 不是 還款 -> 全部自動退回
+                    $unlock = false;
+                    $need_cancel_transfer = true;
                 }
                 $transfer_info[] = $infos;
             }
-
-            if (!$unlock) {
-//                因為只有 unlock 為 true的情況，才會執行後續的迴圈，所以直接return true
-                return true;
+            $mrs = $rs = false;
+            if ($unlock) {
+                $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
+                $rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
             }
-
-            $need_cancel_transfer = false;//當其中的一筆債權失敗，則全部取消
-
-            $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
-            $rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
-            if($mrs && $rs && $unlock){
+            if($mrs && $rs){
                 $transfer_account = '';
                 $virtual_account  = '';
                 foreach($transfers as $t => $transfer) {
@@ -1066,6 +1067,10 @@ class Transaction_lib{
             //unlock target
             $this->CI->target_model->update_many($target_ids, array('script_status' => 0));
             $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 0));
+
+            if ($skip_process){
+                return true;
+            }
 
             if ($need_cancel_transfer) {
                 $this->CI->load->library('transfer_lib');
