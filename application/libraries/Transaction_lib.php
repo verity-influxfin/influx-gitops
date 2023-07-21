@@ -778,6 +778,11 @@ class Transaction_lib{
                 }
                 $transfer_info[] = $infos;
             }
+            if ($skip_process){
+                $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 0));
+                return true;
+            }
+
             $mrs = $rs = false;
             if ($unlock) {
                 $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
@@ -1071,10 +1076,6 @@ class Transaction_lib{
             //unlock target
             $this->CI->target_model->update_many($target_ids, array('script_status' => 0));
             $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 0));
-
-            if ($skip_process){
-                return true;
-            }
 
             if ($need_cancel_transfer) {
                 $this->CI->load->library('transfer_lib');
