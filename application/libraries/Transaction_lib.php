@@ -770,7 +770,6 @@ class Transaction_lib{
                 if ($infos['targets']->script_status != 0) {
 //                    其中一筆有其他跑批正在執行 -> 不會自動退回/不會自動放行
                     $skip_process = true;
-                    $unlock = false;
                 }elseif ($infos['investment']->status != 3) {
 //                    investment 不是 還款 -> 全部自動退回
                     $unlock = false;
