@@ -766,6 +766,8 @@ class Transaction_lib{
                 $transfer_ids[]         = $transfer_check->id;
                 $infos['targets']       = $this->CI->target_model->get($transfer_check->target_id);
                 $infos['investment']    = $this->CI->investment_model->get($transfer_check->investment_id);
+                $transfer_info[] = $infos;
+
                 //$infos
                 if ($infos['targets']->script_status != 0) {
 //                    其中一筆有其他跑批正在執行 -> 不會自動退回/不會自動放行
@@ -775,7 +777,6 @@ class Transaction_lib{
                     $unlock = false;
                     $need_cancel_transfer = true;
                 }
-                $transfer_info[] = $infos;
             }
             if ($skip_process){
                 $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 0));
