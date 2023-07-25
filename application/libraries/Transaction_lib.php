@@ -1063,9 +1063,9 @@ class Transaction_lib{
                                             }
                                         }
                                     }
-                                }
-                            }
-                        }
+
+
+
                         if ($is_order) {
                             $this->CI->load->model('transaction/order_model');
                             $order = $this->CI->order_model->get($target->order_id);
@@ -1106,19 +1106,18 @@ class Transaction_lib{
             echo "failed:" . $e->getMessage() . "<br/>";
             $need_cancel_transfer = true;
         }
-            }
-            //unlock target
-            $this->CI->target_model->update_many($target_ids, array('script_status' => 0));
-            $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 0));
 
-            if ($need_cancel_transfer) {
-                $this->CI->load->library('transfer_lib');
-                if (count($transfers) > 1) {
-                    $this->CI->transfer_lib->cancel_combination_transfer($transfers);
-                }
-                else {
-                    $this->CI->transfer_lib->cancel_transfer($transfers[0]);
-                }
+        //unlock target
+        $this->CI->target_model->update_many($target_ids, array('script_status' => 0));
+        $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 0));
+
+        if ($need_cancel_transfer) {
+            $this->CI->load->library('transfer_lib');
+            if (count($transfers) > 1) {
+                $this->CI->transfer_lib->cancel_combination_transfer($transfers);
+            }
+            else {
+                $this->CI->transfer_lib->cancel_transfer($transfers[0]);
             }
         }
         return true;
