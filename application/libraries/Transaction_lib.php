@@ -802,6 +802,7 @@ class Transaction_lib{
                 $this->CI->transfer_investment_model->trans_begin();
                 $this->CI->frozen_amount_model->trans_begin();
                 $this->CI->investment_model->trans_begin();
+                $this->CI->order_model->trans_begin();
 
 
                 $transfer_account = '';
@@ -1088,6 +1089,7 @@ class Transaction_lib{
                 $this->CI->transfer_investment_model->trans_commit();
                 $this->CI->frozen_amount_model->trans_commit();
                 $this->CI->investment_model->trans_commit();
+                $this->CI->order_model->trans_commit();
 
                 echo "success" . "<br/>";
             } catch (Exception $e) {
@@ -1098,6 +1100,7 @@ class Transaction_lib{
                 $this->CI->transfer_investment_model->trans_rollback();
                 $this->CI->frozen_amount_model->trans_rollback();
                 $this->CI->investment_model->trans_rollback();
+                $this->CI->order_model->trans_rollback();
 
                 echo "failed:" . $e->getMessage() . "<br/>";
                 $need_cancel_transfer = true;
