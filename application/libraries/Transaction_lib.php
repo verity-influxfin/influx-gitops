@@ -714,7 +714,9 @@ class Transaction_lib{
 	//債轉成功
 	function transfer_success($transfer_id,$admin_id=0){
 		$date 			= get_entering_date();
-		if($transfer_id){
+        if(!$transfer_id){
+            return false;
+        }
             $this->CI->config->item('product_list');
             $this->CI->load->model('loan/transfer_model');
             $this->CI->load->model('loan/transfer_investment_model');
@@ -1086,10 +1088,8 @@ class Transaction_lib{
                     $this->CI->transfer_lib->cancel_transfer($transfers[0]);
                 }
             }
-
-            return true;
         }
-		return false;
+        return true;
 	}
 
 	//放款成功
