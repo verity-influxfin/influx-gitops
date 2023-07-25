@@ -727,6 +727,7 @@ class Transaction_lib{
             $o_transfer = $this->CI->transfer_model->get($transfer_id);
             $amount     = $o_transfer->amount;
             $target_no  = false;
+            $transfers  = [];
             if ($o_transfer->combination != 0) {
                 $this->CI->load->model('loan/transfer_combination_model');
                 $combinations_info = $this->CI->transfer_combination_model->get($o_transfer->combination);
