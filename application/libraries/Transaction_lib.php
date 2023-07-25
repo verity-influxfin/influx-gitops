@@ -790,6 +790,16 @@ class Transaction_lib{
                 $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
                 $rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
             }
+
+        try {
+            $this->CI->transfer_model->trans_begin();
+            $this->CI->target_model->trans_begin();
+            $this->CI->transaction_model->trans_begin();
+            $this->CI->investment_model->trans_begin();
+            $this->CI->transfer_investment_model->trans_begin();
+            $this->CI->frozen_amount_model->trans_begin();
+            $this->CI->investment_model->trans_begin();
+
             if($mrs && $rs){
                 $transfer_account = '';
                 $virtual_account  = '';
@@ -1074,6 +1084,28 @@ class Transaction_lib{
                         }
                     }
                 }
+
+            $this->CI->transfer_model->trans_commit();
+            $this->CI->target_model->trans_commit();
+            $this->CI->transaction_model->trans_commit();
+            $this->CI->investment_model->trans_commit();
+            $this->CI->transfer_investment_model->trans_commit();
+            $this->CI->frozen_amount_model->trans_commit();
+            $this->CI->investment_model->trans_commit();
+
+            echo "success" . "<br/>";
+        } catch (Exception $e) {
+            $this->CI->transfer_model->trans_rollback();
+            $this->CI->target_model->trans_rollback();
+            $this->CI->transaction_model->trans_rollback();
+            $this->CI->investment_model->trans_rollback();
+            $this->CI->transfer_investment_model->trans_rollback();
+            $this->CI->frozen_amount_model->trans_rollback();
+            $this->CI->investment_model->trans_rollback();
+
+            echo "failed:" . $e->getMessage() . "<br/>";
+            $need_cancel_transfer = true;
+        }
             }
             //unlock target
             $this->CI->target_model->update_many($target_ids, array('script_status' => 0));
