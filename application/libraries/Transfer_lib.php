@@ -524,9 +524,9 @@ class Transfer_lib{
                     $this->CI->transfer_model->update($value->id,['script_status'=>$script]);
                     $value->combination!=0?array_push($combination_ids, $value->combination):null;
                     $success = $this->CI->transaction_lib->transfer_success($value->id,0);
-                }
-                if($success){
-                    $count++;
+                    if($success){
+                        $count++;
+                    }
                 }
             }
 		}
