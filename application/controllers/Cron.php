@@ -573,7 +573,8 @@ class Cron extends CI_Controller
 		$this->load->library('Transfer_lib');
 		$script  	= 14;
 		$start_time = time();
-		$count 		= $this->transfer_lib->script_transfer_success();
+//		$count 		= $this->transfer_lib->script_transfer_success();
+		$count 		= $this->transfer_lib->script_transfer_success_v2();
 		$num		= $count ? intval($count) : 0;
 		$end_time 	= time();
 		$data		= [
