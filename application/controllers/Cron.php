@@ -526,6 +526,23 @@ class Cron extends CI_Controller
 		die('1');
 	}
 
+    public function create_investor_estatement_html()
+    {	//每五分鐘
+        $this->load->library('Estatement_lib');
+        $script  	= 16;
+        $start_time = time();
+        $count 		= $this->estatement_lib->script_create_investor_estatement_content();
+        $num		= $count ? intval($count) : 0;
+        $end_time 	= time();
+        $data		= array(
+            "script_name"	=> "create_investor_estatement_html",
+            "num"			=> $num,
+            "start_time"	=> $start_time,
+            "end_time"		=> $end_time
+        );
+        $this->log_script_model->insert($data);
+        die('1');
+    }
 	public function re_create_estatement_html()
 	{	//重新產生指定使用者對帳單
 		$this->load->library('Estatement_lib');
