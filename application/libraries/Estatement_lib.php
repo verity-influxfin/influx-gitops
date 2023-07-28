@@ -1141,6 +1141,36 @@ class Estatement_lib{
         return $count;
     }
 
+    function script_create_borrower_estatement_content(){
+        $day 				= 2;  // Create estatement content on the second day of every month.
+        $count				= 0;
+        $entering_date		= get_entering_date();
+        $date  				= date("Y-m-j",strtotime($entering_date));
+        $estatement_date 	= date("Y-m-").$day;
+        if($date === $estatement_date){
+            $first_day = 1;
+            $sdate = date("Y-m-",strtotime($entering_date.' -1 month')).$first_day;
+            $next_month_sdate = date("Y-m-d",strtotime($sdate.' +1 month'));
+            $edate = date("Y-m-d",strtotime($next_month_sdate.' -1 day'));
+            $exist = $this->CI->user_estatement_model->get_by([
+                "sdate"	=> $sdate,
+                "edate"	=> $edate,
+                "type" => "estatement",
+                "investor" => 0,
+            ]);
+            if(!$exist){
+                $borrower_list 	= $this->get_borrower_user_list($sdate,$edate);
+                if($borrower_list){
+                    foreach($borrower_list as $key => $user_id){
+                        $rs = $this->get_estatement_borrower($user_id,$sdate,$edate);
+                        $count++;
+                    }
+                }
+            }
+        }
+        return $count;
+    }
+
     function script_re_create_estatement_content($user_id,$start,$end,$investor=0,$detail=0){
         $count = 0;
         $sdate = date("Y-m-d",strtotime($start));
