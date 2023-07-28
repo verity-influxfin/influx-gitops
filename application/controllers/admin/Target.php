@@ -2509,5 +2509,13 @@ class Target extends MY_Admin_Controller {
         $this->load->view('admin/target/uploaded_contract', $page_data);
         $this->load->view('admin/_footer');
     }
+
+    public function personal_finance_report()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/personal_finance_report');
+        $this->load->view('admin/_footer');
+    }
 }
 ?>
