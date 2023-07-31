@@ -878,7 +878,7 @@ class Estatement_lib{
 			$sdatetime			= $date_range?$date_range["sdatetime"]:"";
 			$user_list 			= array();
 			if($edatetime){
-				$transaction 	= $this->CI->transaction_model->get_many_by(array(
+				$transaction 	= $this->CI->transaction_model->limit(500)->get_many_by(array(
 					"source" 				=> [1,10],
 					"bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
 					"entering_date <=" 		=> $edate,
@@ -932,7 +932,7 @@ class Estatement_lib{
 			$sdatetime			= $date_range?$date_range["sdatetime"]:"";
 			$user_list 			= array();
 			if($edatetime){
-				$target 		= $this->CI->target_model->get_many_by(array(
+				$target 		= $this->CI->target_model->limit(500)->get_many_by(array(
 					"status" 		=> array(5,10),
 					"loan_date <=" 	=> $edate,
 				));
