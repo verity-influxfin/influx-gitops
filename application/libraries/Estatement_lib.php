@@ -1164,35 +1164,47 @@ class Estatement_lib{
 		return $count;
 	}
 
-    function script_create_investor_estatement_content(){
+    function script_create_investor_estatement_content(): int
+    {
         $day 				= 2;  // Create estatement content on the second day of every month.
-        $count				= 0;
         $entering_date		= get_entering_date();
         $date  				= date("Y-m-j",strtotime($entering_date));
         $estatement_date 	= date("Y-m-").$day;
-        if($date === $estatement_date){
+        if ($date !== $estatement_date) return 0;
             $first_day = 1;
             $sdate = date("Y-m-",strtotime($entering_date.' -1 month')).$first_day;
             $next_month_sdate = date("Y-m-d",strtotime($sdate.' +1 month'));
             $edate = date("Y-m-d",strtotime($next_month_sdate.' -1 day'));
-            $exist = $this->CI->user_estatement_model->get_by([
+            $exist = $this->CI->user_estatement_model->query_table()
+            ->select("user_id")
+            ->where([
                 "sdate" => $sdate,
                 "edate" => $edate,
                 "type" => "estatement",
                 "investor" => 1,
-            ]);
-            if(!$exist){
-                $investor_list 	= $this->get_investor_user_list($sdate,$edate);
-                if($investor_list){
-                    foreach($investor_list as $key => $user_id){
-                        $rs = $this->get_estatement_investor($user_id,$sdate,$edate);
-                        if($rs) {
-                            $count++;
-                            $rs = $this->get_estatement_investor_detail($user_id, $sdate, $edate);
-                            $count += $rs ? 1 : 0;
-                        }
-                    }
-                }
+            ])->get()->result_array();
+        $exist_userid_list = [];
+        foreach ($exist as $key => $value) {
+            $exist_userid_list[] = $value['user_id'];
+        }
+
+        if (count($exist_userid_list) > 0) {
+            echo("有資料，排除掉已經處理過的");
+            $investor_list = $this->get_investor_user_list_without_exist($sdate, $edate, $exist_userid_list);
+        }
+        else {
+            echo("沒資料，全部都要處理");
+            $investor_list = $this->get_investor_user_list($sdate, $edate);
+        }
+        if (count($investor_list) === 0) return 0;
+
+        $count = 0;
+        foreach ($investor_list as $key => $user_id) {
+            $rs = $this->get_estatement_investor($user_id, $sdate, $edate);
+            if ($rs) {
+                $count++;
+                $rs = $this->get_estatement_investor_detail($user_id, $sdate, $edate);
+                if ($rs) $count++;
             }
         }
         return $count;
