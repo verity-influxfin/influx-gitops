@@ -947,6 +947,34 @@ class Estatement_lib{
 		return false;
 	}
 
+    /**
+     * @param $sdate
+     * @param $edate
+     * @param $exist_userid_list
+     * @return array|false
+     */
+    function get_borrower_user_list_without_exist($sdate = "", $edate = "", $exist_userid_list = []): array
+    {
+        if (!empty($sdate) && !empty($edate) && $edate >= $sdate) {
+            $this->CI->load->model('transaction/target_model');
+            $user_list = array();
+            if (entering_date_range($edate)) {
+                $target = $this->CI->target_model->limit(500)->get_many_by(array(
+                    "status" => [5, 10],
+                    "loan_date <=" => $edate,
+                    "user_to not" => $exist_userid_list,
+                ));
+                if (!empty($target)) {
+                    foreach ($target as $key => $value) {
+                        $user_list[$value->user_id] = $value->user_id;
+                    }
+                }
+            }
+            return $user_list;
+        }
+        return false;
+    }
+
 	function create_estatement_pdf($user_estatement= array()){
 		if($user_estatement->id && $user_estatement->url=="" && !empty($user_estatement->content)){
 			$url 		= "";
