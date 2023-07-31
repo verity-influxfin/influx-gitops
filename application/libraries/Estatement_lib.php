@@ -894,6 +894,35 @@ class Estatement_lib{
 		return false;
 	}
 
+    /**
+     * @param string $sdate
+     * @param string $edate
+     * @param array $exist_userid_list
+     * @return array|bool
+     */
+    private function get_investor_user_list_without_exist($sdate = "", $edate = "", $exist_userid_list = []): array
+    {
+        if (!empty($sdate) && !empty($edate) && $edate >= $sdate) {
+            $user_list = array();
+            if (entering_date_range($edate)) {
+                $transaction = $this->CI->transaction_model->limit(500)->get_many_by(array(
+                    "source" => [1, 10],
+                    "bank_account_to like" => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . "%",
+                    "entering_date <=" => $edate,
+                    "user_to not" => $exist_userid_list,
+                ));
+
+                if (!empty($transaction)) {
+                    foreach ($transaction as $key => $value) {
+                        $user_list[$value->user_to] = $value->user_to;
+                    }
+                }
+            }
+            return $user_list;
+        }
+        return false;
+    }
+
 	function get_borrower_user_list($sdate="",$edate=""){
 		if(!empty($sdate) && !empty($edate) && $edate >= $sdate){
 			$this->CI->load->model('transaction/target_model');
