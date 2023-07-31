@@ -878,7 +878,8 @@ class Estatement_lib{
 			$sdatetime			= $date_range?$date_range["sdatetime"]:"";
 			$user_list 			= array();
 			if($edatetime){
-				$transaction 	= $this->CI->transaction_model->limit(500)->get_many_by(array(
+                //每筆約 1 ～ 1.5 秒
+				$transaction 	= $this->CI->transaction_model->limit(200)->get_many_by(array(
 					"source" 				=> [1,10],
 					"bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
 					"entering_date <=" 		=> $edate,
@@ -905,7 +906,8 @@ class Estatement_lib{
         if (!empty($sdate) && !empty($edate) && $edate >= $sdate) {
             $user_list = array();
             if (entering_date_range($edate)) {
-                $transaction = $this->CI->transaction_model->limit(500)->get_many_by(array(
+                //每筆約 1 ～ 1.5 秒
+                $transaction = $this->CI->transaction_model->limit(200)->get_many_by(array(
                     "source" => [1, 10],
                     "bank_account_to like" => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . "%",
                     "entering_date <=" => $edate,
@@ -932,7 +934,8 @@ class Estatement_lib{
 			$sdatetime			= $date_range?$date_range["sdatetime"]:"";
 			$user_list 			= array();
 			if($edatetime){
-				$target 		= $this->CI->target_model->limit(500)->get_many_by(array(
+                //每筆約 1 ～ 1.5 秒
+				$target 		= $this->CI->target_model->limit(200)->get_many_by(array(
 					"status" 		=> array(5,10),
 					"loan_date <=" 	=> $edate,
 				));
@@ -959,7 +962,8 @@ class Estatement_lib{
             $this->CI->load->model('transaction/target_model');
             $user_list = array();
             if (entering_date_range($edate)) {
-                $target = $this->CI->target_model->limit(500)->get_many_by(array(
+                //每筆約 1 ～ 1.5 秒
+                $target = $this->CI->target_model->limit(200)->get_many_by(array(
                     "status" => [5, 10],
                     "loan_date <=" => $edate,
                     "user_id not" => $exist_userid_list,
