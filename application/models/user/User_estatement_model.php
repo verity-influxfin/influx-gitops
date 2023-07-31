@@ -27,4 +27,7 @@ class User_estatement_model extends MY_Model
         return $data;
     }
 
+    public function query_table(){
+        return $this->db->from($this->_table);
+    }
 }
