@@ -1166,16 +1166,16 @@ class Estatement_lib{
 
     function script_create_investor_estatement_content(): int
     {
-        $day 				= 2;  // Create estatement content on the second day of every month.
-        $entering_date		= get_entering_date();
-        $date  				= date("Y-m-j",strtotime($entering_date));
-        $estatement_date 	= date("Y-m-").$day;
+        $day = 2;  // Create estatement content on the second day of every month.
+        $entering_date = get_entering_date();
+        $date = date("Y-m-j", strtotime($entering_date));
+        $estatement_date = date("Y-m-") . $day;
         if ($date !== $estatement_date) return 0;
-            $first_day = 1;
-            $sdate = date("Y-m-",strtotime($entering_date.' -1 month')).$first_day;
-            $next_month_sdate = date("Y-m-d",strtotime($sdate.' +1 month'));
-            $edate = date("Y-m-d",strtotime($next_month_sdate.' -1 day'));
-            $exist = $this->CI->user_estatement_model->query_table()
+        $first_day = 1;
+        $sdate = date("Y-m-", strtotime($entering_date . ' -1 month')) . $first_day;
+        $next_month_sdate = date("Y-m-d", strtotime($sdate . ' +1 month'));
+        $edate = date("Y-m-d", strtotime($next_month_sdate . ' -1 day'));
+        $exist = $this->CI->user_estatement_model->query_table()
             ->select("user_id")
             ->where([
                 "sdate" => $sdate,
@@ -1212,21 +1212,21 @@ class Estatement_lib{
 
     function script_create_borrower_estatement_content(): int
     {
-        $day 				= 2;  // Create estatement content on the second day of every month.
-        $entering_date		= get_entering_date();
-        $date  				= date("Y-m-j",strtotime($entering_date));
-        $estatement_date 	= date("Y-m-").$day;
-        if ($date !== $estatement_date)return 0;
-            $first_day = 1;
-            $sdate = date("Y-m-",strtotime($entering_date.' -1 month')).$first_day;
-            $next_month_sdate = date("Y-m-d",strtotime($sdate.' +1 month'));
-            $edate = date("Y-m-d",strtotime($next_month_sdate.' -1 day'));
-            $exist = $this->CI->user_estatement_model->query_table()->where([
-                "sdate"	=> $sdate,
-                "edate"	=> $edate,
-                "type" => "estatement",
-                "investor" => 0,
-            ])
+        $day = 2;  // Create estatement content on the second day of every month.
+        $entering_date = get_entering_date();
+        $date = date("Y-m-j", strtotime($entering_date));
+        $estatement_date = date("Y-m-") . $day;
+        if ($date !== $estatement_date) return 0;
+        $first_day = 1;
+        $sdate = date("Y-m-", strtotime($entering_date . ' -1 month')) . $first_day;
+        $next_month_sdate = date("Y-m-d", strtotime($sdate . ' +1 month'));
+        $edate = date("Y-m-d", strtotime($next_month_sdate . ' -1 day'));
+        $exist = $this->CI->user_estatement_model->query_table()->where([
+            "sdate" => $sdate,
+            "edate" => $edate,
+            "type" => "estatement",
+            "investor" => 0,
+        ])
             ->select("user_id")
             ->get()->result_array();
         $exist_userid_list = [];
