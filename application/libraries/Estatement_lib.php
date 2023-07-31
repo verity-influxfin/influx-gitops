@@ -962,7 +962,7 @@ class Estatement_lib{
                 $target = $this->CI->target_model->limit(500)->get_many_by(array(
                     "status" => [5, 10],
                     "loan_date <=" => $edate,
-                    "user_to not" => $exist_userid_list,
+                    "user_id not" => $exist_userid_list,
                 ));
                 if (!empty($target)) {
                     foreach ($target as $key => $value) {
