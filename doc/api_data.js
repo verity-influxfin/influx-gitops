@@ -11653,58 +11653,135 @@ define({
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
-                            "field": "parttime",
+                            "optional": true,
+                            "field": "income",
                             "description": "<p>打工收入</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
-                            "field": "allowance",
+                            "optional": true,
+                            "field": "incomeStudent",
                             "description": "<p>零用錢收入</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "scholarship",
                             "description": "<p>獎學金收入</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "other_income",
                             "description": "<p>其他收入</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "restaurant",
                             "description": "<p>餐飲支出</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "transportation",
                             "description": "<p>交通支出</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
+                            "field": "telegraph_expense",
+                            "description": "<p>網路電信支出</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
                             "field": "entertainment",
                             "description": "<p>娛樂支出</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "other_expense",
                             "description": "<p>其他支出</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "rent_expenses",
+                            "description": "<p>租金</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "educational_expenses",
+                            "description": "<p>教育</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "insurance_expenses",
+                            "description": "<p>保險</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "social_expenses",
+                            "description": "<p>社交</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "long_assure_monthly_payment",
+                            "description": "<p>房貸</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "mid_assure_monthly_payment",
+                            "description": "<p>車貸</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "credit_monthly_payment",
+                            "description": "<p>信貸</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "student_loans_monthly_payment",
+                            "description": "<p>學貸</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "credit_card_monthly_payment",
+                            "description": "<p>信用卡</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "other_private_borrowing",
+                            "description": "<p>其他民間借款</p>"
                         },
                         {
                             "group": "Parameter",

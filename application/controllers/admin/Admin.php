@@ -388,7 +388,9 @@ class Admin extends MY_Admin_Controller {
 
             if ($this->group_model->update_form_data($id, $data, $permission_data) === TRUE)
             {
-                $this->admin_model->update_by(['group_id' => $id], ['permission_status' => 0]);
+                if ($id != 1) {//不是超級使用者
+                    $this->admin_model->update_by(['group_id' => $id], ['permission_status' => 0]);
+                }
                 alert('更新成功', admin_url('admin/group_permission_list'));
             }
             else
