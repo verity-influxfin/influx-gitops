@@ -1512,8 +1512,19 @@ class Certification extends REST_Controller {
 	 * @apiParam {Number} other_income 其他收入
 	 * @apiParam {Number} restaurant 餐飲支出
 	 * @apiParam {Number} transportation 交通支出
+     * @apiParam {Number} telegraph_expense 網路電信支出
 	 * @apiParam {Number} entertainment 娛樂支出
 	 * @apiParam {Number} other_expense 其他支出
+     * @apiParam {Number} rent_expenses 租金
+     * @apiParam {Number} educational_expenses 教育
+     * @apiParam {Number} insurance_expenses 保險
+     * @apiParam {Number} social_expenses 社交
+     * @apiParam {Number} long_assure_monthly_payment 房貸
+     * @apiParam {Number} mid_assure_monthly_payment 車貸
+     * @apiParam {Number} credit_monthly_payment 信貸
+     * @apiParam {Number} student_loans_monthly_payment 學貸
+     * @apiParam {Number} credit_card_monthly_payment 信用卡
+     * @apiParam {Number} other_private_borrowing 其他民間借款
      * @apiParam {Number} [creditcard_image] 信用卡帳單照 ( 圖片ID )
      * @apiParam {Number} [passbook_image] 存摺內頁照 ( 圖片ID )
      *
