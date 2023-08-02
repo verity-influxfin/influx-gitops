@@ -3479,13 +3479,19 @@ END:
             {
                 goto END;
             }
+            $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $user_qrcode_info['alias']]);
+            if ($qrcode_settings)
+            {
+                $data['promote_name'] =$qrcode_settings->description;
+            }
             $url = 'https://event.influxfin.com/R/url?p=' . $user_qrcode_info['promote_code'];
             $qrcode = get_qrcode($url);
 
+            $data['promote_alias'] = $user_qrcode_info['alias'];
             $data['promote_code'] = $user_qrcode_info['promote_code'];
             $data['promote_url'] = $url;
             $data['promote_qrcode'] = $qrcode;
-            $data['status'] = $user_qrcode_info['status'];
+            $data['status'] = intval($user_qrcode_info['status']);
             $data['start_time'] = $user_qrcode_info['start_time'];
             $data['expired_time'] = $user_qrcode_info['end_time'];
 
