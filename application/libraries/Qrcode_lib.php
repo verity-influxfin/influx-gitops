@@ -1099,6 +1099,10 @@ class Qrcode_lib
                 foreach ($user_qrcode[$category] as $value)
                 {
                     $formattedMonth = date("Y-m", strtotime($value['loan_date']));
+                    if(!isset($list[$formattedMonth])){
+                        continue;
+                    }
+
                     $list[$formattedMonth][$user_qrcode_id][$category]['count'] += 1;
                     $list[$formattedMonth][$user_qrcode_id]['list'][] = [
                         'loan_date' => $value['loan_date'],
@@ -1115,6 +1119,10 @@ class Qrcode_lib
                 foreach ($collaboration_list as $value)
                 {
                     $formattedMonth = date("Y-m", strtotime($value['loan_time']));
+                    if(!isset($list[$formattedMonth])){
+                        continue;
+                    }
+
                     $list[$formattedMonth][$user_qrcode_id]['collaboration'][$collaborator_id]['count'] += 1;
                 }
             }
@@ -1123,6 +1131,10 @@ class Qrcode_lib
             foreach ($user_qrcode['fullMember'] as $value)
             {
                 $formattedMonth = date("Y-m", strtotime($value['created_at']));
+                if(!isset($list[$formattedMonth])){
+                    continue;
+                }
+
                 $list[$formattedMonth][$user_qrcode_id]['full_member_count'] += 1;
             }
 
@@ -1130,6 +1142,10 @@ class Qrcode_lib
             foreach ($user_qrcode['registered'] as $value)
             {
                 $formattedMonth = date('Y-m', strtotime($value['created_at']));
+                if(!isset($list[$formattedMonth])){
+                    continue;
+                }
+
                 $list[$formattedMonth][$user_qrcode_id]['registered_count'] += 1;
             }
         }
