@@ -879,21 +879,22 @@ class Estatement_lib{
 			$user_list 			= array();
 			if($edatetime){
                 //每筆約 2 秒
-				$transaction 	= $this->CI->transaction_model->limit(150)->get_many_by(array(
-					"source" 				=> [1,10],
-					"bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
-					"entering_date <=" 		=> $edate,
-				));
-				if(!empty($transaction)){
-					foreach($transaction as $key => $value){
-						$user_list[$value->user_to] = $value->user_to;
-					}
-				}
-			}
-			return $user_list;
-		}
-		return false;
-	}
+                $transaction 	= $this->CI->transaction_model->get_many_by(array(
+                    "source" 				=> [1,10],
+                    "bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
+                    "entering_date <=" 		=> $edate,
+                ));
+                if(!empty($transaction)){
+                    foreach($transaction as $key => $value){
+                        $user_list[$value->user_to] = $value->user_to;
+                    }
+                    $user_list = array_chunk($user_list, 150)[0] ?? [];
+                }
+            }
+            return $user_list;
+        }
+        return false;
+    }
 
     /**
      * @param string $sdate
