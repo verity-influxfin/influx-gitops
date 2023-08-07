@@ -1,3 +1,4 @@
+<meta charset="UTF-8">
 <div id="page-wrapper">
     <div class="row">
         <div class="col-md-4">
@@ -98,7 +99,10 @@
                         >查詢</button>
                     </td>
                     <td>
-                        <button class="searchBtn ml-3">匯出報表</button>
+                        <button 
+                            class="searchBtn ml-3"
+                            @click="exportLoanPPT()"
+                        >匯出報表</button>
                     </td>
                 </tr>
             </table>
@@ -107,7 +111,7 @@
         <div class="panel-body mt-5">
             <template v-if="loanSelect.student">
                 <h3>申貸戶統計 - 學生貸</h3>
-                <div class="table-responsive">
+                <div class="table-responsive" id="loanDiv1">
                     <table class="table table-striped table-bordered table-hover" width="100%">
                         <tbody>
                             <tr>
@@ -163,7 +167,7 @@
 
             <template v-if="loanSelect.work">
                 <h3 class="mt-3">申貸戶統計 - 上班族貸</h3>
-                <div class="table-responsive">
+                <div class="table-responsive" id="loanDiv2">
                     <table class="table table-striped table-bordered table-hover" width="100%">
                         <tbody>
                             <tr>
@@ -235,7 +239,7 @@
 
             <template v-if="loanSelect.statistics">
                 <h3>申貸數據統計</h3>
-                <div class="table-responsive">
+                <div class="table-responsive" id="loanDiv3">
                     <table class="table table-striped table-bordered table-hover" width="100%">
                         <tbody>
                             <tr>
@@ -279,8 +283,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="tdTitleBlue">成交率(%)</td>
-                                <td v-for="item in loanReportDict.statistics.student_turnover_rate" :key="item">
+                                <td class="tdTitleOrg">成交率(%)</td>
+                                <td class="tdTitleOrg" v-for="item in loanReportDict.statistics.student_turnover_rate" :key="item">
                                     {{ item }} ％
                                 </td>
                             </tr>  
@@ -315,8 +319,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="tdTitleBlue">成交率(%)</td>
-                                <td v-for="item in loanReportDict.statistics.work_turnover_rate" :key="item">
+                                <td class="tdTitleOrg">成交率(%)</td>
+                                <td class="tdTitleOrg" v-for="item in loanReportDict.statistics.work_turnover_rate" :key="item">
                                     {{ item }} ％
                                 </td>
                             </tr>                              
@@ -428,7 +432,10 @@
                         >查詢</button>
                     </td>
                     <td>
-                        <button class="searchBtn ml-3">匯出報表</button>
+                        <button 
+                            class="searchBtn ml-3"
+                            @click="exportTransactionPPT()"
+                        >匯出報表</button>
                     </td>
                 </tr>
             </table>
@@ -437,7 +444,7 @@
         <div class="panel-body mt-5">
             <template v-if="transactionSelect.case">
                 <h3>成交案統計</h3>
-                <div class="table-responsive">
+                <div class="table-responsive" id="transactionDiv1">
                     <table class="table table-striped table-bordered table-hover" width="100%">
                         <tbody>
                             <tr>
@@ -517,7 +524,7 @@
 
             <template v-if="transactionSelect.household">
                 <h3>成交戶統計</h3>
-                <div class="table-responsive">
+                <div class="table-responsive" id="transactionDiv2">
                     <table class="table table-striped table-bordered table-hover" width="100%">
                         <tbody>
                             <tr>
@@ -596,7 +603,7 @@
 
             <template v-if="transactionSelect.new_household">
                 <h3>新戶成交統計</h3>
-                <div class="table-responsive">
+                <div class="table-responsive" id="transactionDiv3">
                     <table class="table table-striped table-bordered table-hover" width="100%">
                         <tbody>
                             <tr>
@@ -664,7 +671,7 @@
 
             <template v-if="transactionSelect.amount">
                 <h3>成交金額</h3>
-                <div class="table-responsive">
+                <div class="table-responsive" id="transactionDiv4">
                     <table class="table table-striped table-bordered table-hover" width="100%">
                         <tbody>
                             <tr>
@@ -742,7 +749,7 @@
 
             <template v-if="transactionSelect.statistics">
                 <h3>成交數據統計</h3>
-                <div class="table-responsive">
+                <div class="table-responsive" id="transactionDiv5">
                     <table class="table table-striped table-bordered table-hover" width="100%">
                         <tbody>
                             <tr>
@@ -873,13 +880,151 @@
                         >查詢</button>
                     </td>
                     <td>
-                        <button class="searchBtn ml-3">匯出報表</button>
+                        <button 
+                            class="searchBtn ml-3"
+                            @click="exportIdentityPPT()"
+                        >匯出報表</button>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <div class="panel-body mt-5">
+        <div class="panel-body mt-5" >
+            <template v-if="identityReportDict.identity_household">
+                <h3>申貸戶</h3>
+                <div class="table-responsive" id="identityDiv1">
+                    <table class="table table-striped table-bordered table-hover" width="100%">
+                        <tbody>
+                            <tr>
+                                <td class="tdTitleBlue">年月份</td>
+                                <td
+                                    class="tdTitleBlue" 
+                                    v-for="item in identityReportDict.date_list" 
+                                    :key="item"
+                                >
+                                    {{ item }} 月
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">學生完成實名</td>
+                                <td v-for="item in identityReportDict.identity_household.student_done" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">學生未完成實名</td>
+                                <td v-for="item in identityReportDict.identity_household.student_unfinish" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">學生總計</td>
+                                <td v-for="item in identityReportDict.identity_household.student_total" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleOrg">學生完成占比(%)</td>
+                                <td class="tdTitleOrg" v-for="item in identityReportDict.identity_household.student_rate" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">上班族完成實名</td>
+                                <td v-for="item in identityReportDict.identity_household.work_done" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">上班族未完成實名</td>
+                                <td v-for="item in identityReportDict.identity_household.work_unfinish" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">上班族總計</td>
+                                <td v-for="item in identityReportDict.identity_household.work_total" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleOrg">上班族完成占比(%)</td>
+                                <td class="tdTitleOrg" v-for="item in identityReportDict.identity_household.work_rate" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+
+            <template v-if="identityReportDict.identity_new_household">
+                <h3>申貸新戶</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" width="100%" id="identityDiv2">
+                        <tbody>
+                            <tr>
+                                <td class="tdTitleBlue">年月份</td>
+                                <td
+                                    class="tdTitleBlue" 
+                                    v-for="item in identityReportDict.date_list" 
+                                    :key="item"
+                                >
+                                    {{ item }} 月
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">學生完成實名</td>
+                                <td v-for="item in identityReportDict.identity_new_household.student_done" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">學生未完成實名</td>
+                                <td v-for="item in identityReportDict.identity_new_household.student_unfinish" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">學生總計</td>
+                                <td v-for="item in identityReportDict.identity_new_household.student_total" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleOrg">學生完成占比(%)</td>
+                                <td class="tdTitleOrg" v-for="item in identityReportDict.identity_new_household.student_rate" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">上班族完成實名</td>
+                                <td v-for="item in identityReportDict.identity_new_household.work_done" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">上班族未完成實名</td>
+                                <td v-for="item in identityReportDict.identity_new_household.work_unfinish" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleBlue">上班族總計</td>
+                                <td v-for="item in identityReportDict.identity_new_household.work_total" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdTitleOrg">上班族完成占比(%)</td>
+                                <td class="tdTitleOrg" v-for="item in identityReportDict.identity_new_household.work_rate" :key="item">
+                                    {{ item }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
         </div>
     </div>
 
@@ -887,6 +1032,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <script>
 var p2p_orm_host = '<?php print_r(getenv('ENV_P2P_ORM_HTTPS_HOST'))?>';
 
@@ -913,7 +1059,8 @@ const v = new Vue({
                 statistics: false
             },
             loanReportDict: {},
-            transactionReportDict: {}
+            transactionReportDict: {},
+            identityReportDict: {}
         }
     },
     methods: {
@@ -1070,6 +1217,151 @@ const v = new Vue({
 
             chart.draw(data, options);
         },
+        goSearchIdentity() {
+            if (this.start_date == '' || this.end_date == '') {
+                alert('請選擇查詢時間區間。')
+            } else {
+                axios.post(`${p2p_orm_host}/personal_finance_report/identity?start_dt=${this.start_date}&end_dt=${this.end_date}`)
+                .then((res) => {
+                    console.log(res.data);
+                    this.identityReportDict = res.data;
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+            }
+        },
+        exportIdentityPPT() {
+            var pptx = new PptxGenJS();
+
+            pptx.tableToSlides('identityDiv1');
+            pptx.tableToSlides('identityDiv2');
+
+            // 匯出PPT檔案並下載
+            pptx.writeFile({ fileName: "identity.pptx" });
+        },
+        exportLoanPPT() {
+            var pptx = new PptxGenJS();
+
+            pptx.tableToSlides('loanDiv1');
+            pptx.tableToSlides('loanDiv2');
+
+            let labels_list = [];
+            let student_list = [];
+            let work_list = [];
+            for (let i = 0; i < this.loanReportDict.date_list.length; i ++) {
+                labels_list.push(this.loanReportDict.date_list[i]);
+                student_list.push(this.loanReportDict.trend.student_trend[i]);
+                work_list.push(this.loanReportDict.trend.work_trend[i]);
+            }
+
+            let dataChartAreaLine = [
+                {
+                    name: "上班族貸",
+                    labels: labels_list,
+                    values: work_list,
+                },
+                {
+                    name: "學生貸",
+                    labels: labels_list,
+                    values: student_list,
+                },
+            ];
+
+            var slide = pptx.addSlide();
+            slide.addChart(pptx.ChartType.line, dataChartAreaLine, { x: 1, y: 1, w: 8, h: 4 });
+
+            pptx.tableToSlides('loanDiv3');
+
+            // 匯出PPT檔案並下載
+            pptx.writeFile({ fileName: "loan.pptx" });
+        },
+        exportTransactionPPT() {
+            var pptx = new PptxGenJS();
+
+            pptx.tableToSlides('transactionDiv1');
+            pptx.tableToSlides('transactionDiv2');
+
+            let labels_list = [];
+            let student_list = [];
+            let work_list = [];
+            for (let i = 0; i < this.transactionReportDict.date_list.length; i ++) {
+                labels_list.push(this.transactionReportDict.date_list[i]);
+                student_list.push(this.transactionReportDict.trend.student_case[i]);
+                work_list.push(this.transactionReportDict.trend.work_case[i]);
+            }
+            let dataChartAreaLine = [
+                {
+                    name: "上班族貸",
+                    labels: labels_list,
+                    values: work_list,
+                },
+                {
+                    name: "學生貸",
+                    labels: labels_list,
+                    values: student_list,
+                },
+            ];
+            let slide = pptx.addSlide();
+            slide.addChart(pptx.ChartType.line, dataChartAreaLine, { x: 1, y: 1, w: 8, h: 4 });
+
+
+            let labels_list1 = [];
+            let student_list1 = [];
+            let work_list1 = [];
+            for (let i = 0; i < this.transactionReportDict.date_list.length; i ++) {
+                labels_list1.push(this.transactionReportDict.date_list[i]);
+                student_list1.push(this.transactionReportDict.trend.student_household[i]);
+                work_list1.push(this.transactionReportDict.trend.work_household[i]);
+            }
+            let dataChartAreaLine1 = [
+                {
+                    name: "上班族貸",
+                    labels: labels_list1,
+                    values: work_list1,
+                },
+                {
+                    name: "學生貸",
+                    labels: labels_list1,
+                    values: student_list1,
+                },
+            ];
+            let slide1 = pptx.addSlide();
+            slide1.addChart(pptx.ChartType.line, dataChartAreaLine1, { x: 1, y: 1, w: 8, h: 4 });
+            
+
+            pptx.tableToSlides('transactionDiv3');
+            pptx.tableToSlides('transactionDiv4');
+
+            let labels_list2 = [];
+            let student_list2 = [];
+            let work_list2 = [];
+            for (let i = 0; i < this.transactionReportDict.date_list.length; i ++) {
+                labels_list2.push(this.transactionReportDict.date_list[i]);
+                student_list2.push(this.transactionReportDict.amount_trend.student[i]);
+                work_list2.push(this.transactionReportDict.amount_trend.work[i]);
+            }
+            let dataChartAreaLine2 = [
+                {
+                    name: "上班族貸",
+                    labels: labels_list2,
+                    values: work_list2,
+                },
+                {
+                    name: "學生貸",
+                    labels: labels_list2,
+                    values: student_list2,
+                },
+            ];
+            let slide2 = pptx.addSlide();
+            slide2.addChart(pptx.ChartType.line, dataChartAreaLine2, { x: 1, y: 1, w: 8, h: 4 });
+
+
+            pptx.tableToSlides('transactionDiv5');
+
+            // 匯出PPT檔案並下載
+            pptx.writeFile({ fileName: "transaction.pptx" });
+        }
     }
 });
 
