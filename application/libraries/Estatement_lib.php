@@ -197,7 +197,18 @@ class Estatement_lib{
 				}
 
 				// 無任何應收帳款合計&利息收入&違約補貼金&應收本金&應收利息&虛擬帳號出入記錄時，不寄送帳單
-				if(!$ar_total_count && !$interest_count && !$allowance_count && !$ar_principal_count && !$ar_interest_count && !$virtual_account_record_count) {
+                if(!$ar_total_count && !$interest_count && !$allowance_count && !$ar_principal_count && !$ar_interest_count && !$virtual_account_record_count) {
+                    $param = array(
+                        "user_id"	=> $user_id,
+                        "type"		=> "estatement_failed",
+                        "investor"	=> 1,
+                        "sdate"		=> $sdate,
+                        "edate"		=> $edate,
+                        "content"	=> "",
+                        "url"		=> "",
+                        "status"    => 1,
+                    );
+					$rs = $this->CI->user_estatement_model->insert($param);
 					return false;
 				}
 
@@ -1107,6 +1118,7 @@ class Estatement_lib{
 	function script_create_estatement_pdf(){
 		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
 			"url"	=> "",
+            "type !="=> "estatement_failed",
 		));
 		$count = 0;
 		if($list){
@@ -1122,6 +1134,7 @@ class Estatement_lib{
 		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
 			"url !="	=> "",
 			"status"	=> 0,
+            "type !="=> "estatement_failed"
 		));
 		$count = 0;
 		if($list){
@@ -1147,6 +1160,7 @@ class Estatement_lib{
 			$exist = $this->CI->user_estatement_model->get_by([
 				"sdate"	=> $sdate,
 				"edate"	=> $edate,
+                "type !="=> "estatement_failed"
 			]);
 			if(!$exist){
 				$investor_list 	= $this->get_investor_user_list($sdate,$edate);
@@ -1188,9 +1202,10 @@ class Estatement_lib{
             ->where([
                 "sdate" => $sdate,
                 "edate" => $edate,
-                "type" => "estatement",
                 "investor" => 1,
-            ])->get()->result_array();
+            ])
+            ->where_in("type", ["estatement", "estatement_failed"])
+            ->get()->result_array();
         $exist_userid_list = [];
         foreach ($exist as $key => $value) {
             $exist_userid_list[] = $value['user_id'];
@@ -1232,9 +1247,9 @@ class Estatement_lib{
         $exist = $this->CI->user_estatement_model->query_table()->where([
             "sdate" => $sdate,
             "edate" => $edate,
-            "type" => "estatement",
             "investor" => 0,
         ])
+            ->where_in("type", ["estatement", "estatement_failed"])
             ->select("user_id")
             ->get()->result_array();
         $exist_userid_list = [];
