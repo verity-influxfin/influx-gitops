@@ -197,7 +197,18 @@ class Estatement_lib{
 				}
 
 				// 無任何應收帳款合計&利息收入&違約補貼金&應收本金&應收利息&虛擬帳號出入記錄時，不寄送帳單
-				if(!$ar_total_count && !$interest_count && !$allowance_count && !$ar_principal_count && !$ar_interest_count && !$virtual_account_record_count) {
+                if(!$ar_total_count && !$interest_count && !$allowance_count && !$ar_principal_count && !$ar_interest_count && !$virtual_account_record_count) {
+                    $param = array(
+                        "user_id"	=> $user_id,
+                        "type"		=> "estatement_failed",
+                        "investor"	=> 1,
+                        "sdate"		=> $sdate,
+                        "edate"		=> $edate,
+                        "content"	=> "",
+                        "url"		=> "",
+                        "status"    => 1,
+                    );
+					$rs = $this->CI->user_estatement_model->insert($param);
 					return false;
 				}
 
