@@ -1202,9 +1202,10 @@ class Estatement_lib{
             ->where([
                 "sdate" => $sdate,
                 "edate" => $edate,
-                "type" => "estatement",
                 "investor" => 1,
-            ])->get()->result_array();
+            ])
+            ->where_in("type", ["estatement", "estatement_failed"])
+            ->get()->result_array();
         $exist_userid_list = [];
         foreach ($exist as $key => $value) {
             $exist_userid_list[] = $value['user_id'];
@@ -1246,9 +1247,9 @@ class Estatement_lib{
         $exist = $this->CI->user_estatement_model->query_table()->where([
             "sdate" => $sdate,
             "edate" => $edate,
-            "type" => "estatement",
             "investor" => 0,
         ])
+            ->where_in("type", ["estatement", "estatement_failed"])
             ->select("user_id")
             ->get()->result_array();
         $exist_userid_list = [];
