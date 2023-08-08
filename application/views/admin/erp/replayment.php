@@ -118,14 +118,14 @@
             <div class="panel panel-default" v-show="tab == 'tab1'">
                 <div class="panel-heading clearfix">
                     <form class="form-inline" ref="search-form" @submit.prevent="doSearchLatest">
-                        <div class="row alert alert-info m-3">
+                        <!-- <div class="row alert alert-info m-3">
                             <div class="col-lg-12">
                                 <div>
                                     投資人 ID ,債權 ID 串列 擇一輸入，若兩者皆輸入，則以投資人ID為主<br />
                                     債權 ID 串列以 ',' 分隔，如: 3,4,5
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group">
