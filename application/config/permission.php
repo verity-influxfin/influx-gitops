@@ -619,8 +619,8 @@ $config['permission'] = [
       'name' => 'ERP 帳務',
       'menu' => [
           'assets_sheet' => ['name' => '債權明細表'],
-          'etpr' => ['name' => '本攤表'],
-          'replayment' => ['name' => '本攤表v2'],
+          'etpr' => ['name' => '交易日記帳'],
+          'replayment' => ['name' => '本金攤還表'],
           'soci' => ['name' => '損益表'],
           'sofp' => ['name' => '資產負債表'],
           'journal' => ['name' => '日記簿'],
