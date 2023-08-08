@@ -1118,6 +1118,7 @@ class Estatement_lib{
 	function script_create_estatement_pdf(){
 		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
 			"url"	=> "",
+            "type !="=> "estatement_failed",
 		));
 		$count = 0;
 		if($list){
@@ -1133,6 +1134,7 @@ class Estatement_lib{
 		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
 			"url !="	=> "",
 			"status"	=> 0,
+            "type !="=> "estatement_failed"
 		));
 		$count = 0;
 		if($list){
@@ -1158,6 +1160,7 @@ class Estatement_lib{
 			$exist = $this->CI->user_estatement_model->get_by([
 				"sdate"	=> $sdate,
 				"edate"	=> $edate,
+                "type !="=> "estatement_failed"
 			]);
 			if(!$exist){
 				$investor_list 	= $this->get_investor_user_list($sdate,$edate);
