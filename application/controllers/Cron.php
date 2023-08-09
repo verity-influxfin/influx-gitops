@@ -1082,7 +1082,6 @@ class Cron extends CI_Controller
     }
     public function get_investor_estatement_count_status()
     {
-
         $year = $this->input->get('year');
         $month = $this->input->get('month');
         $this->load->library('Estatement_lib');
