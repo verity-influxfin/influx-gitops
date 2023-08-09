@@ -1225,7 +1225,7 @@ class Estatement_lib{
 					}
 				}
 				$borrower_list 	= $this->get_borrower_user_list($sdate,$edate);
-				if($borrower_list){
+				if(!empty($borrower_list)){
 					foreach($borrower_list as $key => $user_id){
 						$rs = $this->get_estatement_borrower($user_id,$sdate,$edate);
 						$count++;
