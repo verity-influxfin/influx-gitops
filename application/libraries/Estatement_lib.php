@@ -894,7 +894,6 @@ class Estatement_lib{
             return [];
         }
 
-        //每筆約 2 秒
         $transaction 	= $this->CI->transaction_model->get_many_by(array(
             "source" 				=> [1,10],
             "bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
@@ -928,7 +927,6 @@ class Estatement_lib{
             return [];
         }
 
-        //每筆約 2 秒
         $transaction = $this->CI->transaction_model->get_many_by(array(
             "source" => [1, 10],
             "bank_account_to like" => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . "%",
@@ -978,7 +976,6 @@ class Estatement_lib{
             return [];
         }
 
-        //每筆約 2 秒
         $target 		= $this->CI->target_model->get_many_by(array(
             "status" 		=> array(5,10),
             "loan_date <=" 	=> $edate,
@@ -1018,7 +1015,6 @@ class Estatement_lib{
         }
 
         $this->CI->load->model('transaction/target_model');
-        //每筆約 2 秒
         $target = $this->CI->target_model->get_many_by(array(
             "status" => [5, 10],
             "loan_date <=" => $edate,
