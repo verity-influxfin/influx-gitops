@@ -1214,7 +1214,7 @@ class Estatement_lib{
 			]);
 			if(!$exist){
 				$investor_list 	= $this->get_investor_user_list($sdate,$edate);
-				if($investor_list){
+				if(!empty($investor_list)){
 					foreach($investor_list as $key => $user_id){
 						$rs = $this->get_estatement_investor($user_id,$sdate,$edate);
 						if($rs) {
