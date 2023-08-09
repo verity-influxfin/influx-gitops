@@ -1363,7 +1363,6 @@ class Estatement_lib{
 
     public function script_create_investor_estatement_content_count_status(string $year = '', string $month = ''): void
     {
-        die("1");
         $date_dict = $this->get_target_month_dict($year, $month);
         $sdate = $date_dict['sdate'];
         $edate = $date_dict['edate'];
