@@ -994,29 +994,6 @@ class Estatement_lib{
     }
 
 	function get_borrower_user_list($sdate="",$edate=""){
-		if(!empty($sdate) && !empty($edate) && $edate >= $sdate){
-			$this->CI->load->model('transaction/target_model');
-			$date_range			= entering_date_range($edate);
-			$edatetime			= $date_range?$date_range["edatetime"]:"";
-			$date_range			= entering_date_range($sdate);
-			$sdatetime			= $date_range?$date_range["sdatetime"]:"";
-			$user_list 			= array();
-			if($edatetime){
-                //每筆約 2 秒
-                $target 		= $this->CI->target_model->get_many_by(array(
-                    "status" 		=> array(5,10),
-                    "loan_date <=" 	=> $edate,
-                ));
-                if(!empty($target)){
-                    foreach($target as $key => $value){
-                        $user_list[$value->user_id] = $value->user_id;
-                    }
-                    $user_list = array_chunk($user_list, 150)[0] ?? [];
-                }
-            }
-            return $user_list;
-        }
-        return false;
         $user_list = $this->get_all_borrower_user_list($sdate,$edate);
 		return array_chunk($user_list, 150)[0] ?? [];
     }
