@@ -987,7 +987,7 @@ class Qrcode_lib
         $where = ['user_id' => $master_user_id, 'status' => [PROMOTE_STATUS_AVAILABLE],
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
 
-        $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
+//        $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
         $promoted_reward_info = $this->CI->qrcode_lib->get_promoted_reward_info($where, '', '', 0, 0, FALSE, TRUE, TRUE);
         if (empty($promoted_reward_info))
         {
