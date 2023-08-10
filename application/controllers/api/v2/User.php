@@ -3272,7 +3272,7 @@ END:
             $qrcode = get_qrcode($url);
 
             $contract = "";
-            if ($userQrcodeInfo['status'] == PROMOTE_STATUS_AVAILABLE)
+            if (in_array($userQrcodeInfo['status'], [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY, PROMOTE_STATUS_CAN_SIGN_CONTRACT]))
             {
                 $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id'], [], FALSE);
 
