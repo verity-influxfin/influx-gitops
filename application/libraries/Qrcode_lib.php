@@ -987,8 +987,14 @@ class Qrcode_lib
         $where = ['user_id' => $master_user_id, 'status' => [PROMOTE_STATUS_AVAILABLE],
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
 
-        // $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
-        list($_subcode_reward_list, $_subcode_list, $_main_qrcode_reward_list) = $this->CI->qrcode_lib->get_promoted_reward_info($where, '', '', 0, 0, FALSE, TRUE, TRUE);
+         $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
+        $promoted_reward_info = $this->CI->qrcode_lib->get_promoted_reward_info($where, '', '', 0, 0, FALSE, TRUE, TRUE);
+        if (empty($promoted_reward_info))
+        {
+            throw new \Exception('該推薦碼不存在', PROMOTE_CODE_NOT_EXIST);
+        }
+
+        list($_subcode_reward_list, $_subcode_list, $_main_qrcode_reward_list) = $promoted_reward_info;
         foreach ($_subcode_reward_list as $_subcode_reward) {
             $_user_qrcode_id = $_subcode_reward['info']['id'];
             $_main_qrcode_id = $_subcode_list[$_user_qrcode_id]['master_user_qrcode_id'];
