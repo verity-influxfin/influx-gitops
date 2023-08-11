@@ -166,6 +166,18 @@ var app = new Vue({
             }).finally(() => {
                 this.is_waiting_response = false
             })
+        },
+        downloadAllInvestmentExcel() {
+            axios.get(`http://35.73.90.224:22307/stack_replayment_schedule/excel?investment_id_int_list_str=ALL`, { responseType: 'blob' })
+            .then((res) => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', '全平台本金攤還表.xlsx'); 
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            })
         }
     }
 })

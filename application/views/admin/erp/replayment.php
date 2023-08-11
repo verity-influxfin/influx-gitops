@@ -147,8 +147,11 @@
                                 <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
                                     <i class="fa fa-search"></i> 搜尋
                                 </button>
-                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadExcelLatest">
+                                <button class="btn btn-primary" type="button" :disabled="is_waiting_response" @click="downloadExcelLatest">
                                     <i class="fa fa-file-excel-o"></i> 檔案下載
+                                </button>
+                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadAllInvestmentExcel">
+                                    <i class="fa fa-file-excel-o"></i> 全平台本金攤還表下載
                                 </button>
                             </div>
                         </div>
