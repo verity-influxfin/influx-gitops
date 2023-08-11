@@ -117,8 +117,7 @@ class S3_lib {
 
 	public function public_get_filename($s3_url,$bucket=S3_BUCKET_MAILBOX)
 	{
-		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
-		return $key;
+        return str_replace('https://' . $bucket . '.s3.us-west-2.amazonaws.com/', '', $s3_url);
 
 	}
 
