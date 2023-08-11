@@ -118,6 +118,19 @@ class Sns extends REST_Controller {
 		}
 	}
 
+    private function record_mailbox_log($log_data)
+    {
+        $log_data['actions'] = json_encode($log_data['actions'], JSON_UNESCAPED_UNICODE);
+        $this->log_mailbox_model->insert([
+            "filename" => $log_data['filename'],
+            "mail_from" => $log_data['mail_from'],
+            "mail_title" => $log_data['mail_title'],
+            "remark" => $log_data['remark'],
+            "actions" => $log_data['actions'],
+        ]);
+        echo json_encode($log_data,JSON_UNESCAPED_UNICODE) . "\n";
+    }
+
     private function process_mail($info, $attachments, $cert_info, $s3_url, $certification_id)
     {
         $rs = $this->attachment_pdf($attachments, $cert_info, $s3_url, $certification_id);
