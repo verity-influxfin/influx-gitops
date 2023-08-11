@@ -118,6 +118,26 @@ class Sns extends REST_Controller {
 		}
 	}
 
+    private function process_unknown_mail(string $s3_url, string $bucket): array
+    {
+        try {
+            $actions[] = 'unknown_mail';
+            $rs = $this->s3_lib->unknown_mail($s3_url, $bucket);
+            if (!$rs){
+                throw new Exception('unknown_mail failed');
+            }
+
+            $actions[] = 'public_delete_s3object';
+            $rs = $this->s3_lib->public_delete_s3object($s3_url, $bucket);
+            if (!$rs){
+                throw new Exception('public_delete_s3object failed');
+            }
+        } catch (Exception $e) {
+            $actions = [$e->getMessage()];
+        }
+        return $actions;
+    }
+
     private function record_mailbox_log($log_data)
     {
         $log_data['actions'] = json_encode($log_data['actions'], JSON_UNESCAPED_UNICODE);
