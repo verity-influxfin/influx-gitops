@@ -168,7 +168,7 @@ var app = new Vue({
             })
         },
         downloadAllInvestmentExcel() {
-            axios.get(`https://p2p-orm.influxfin.com/stack_replayment_schedule/excel?investment_id_int_list_str=ALL`, { responseType: 'blob' })
+            axios.get(`/admin/erp/get_all_investment_sheet_excel`, { responseType: 'blob' })
             .then((res) => {
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
@@ -177,6 +177,8 @@ var app = new Vue({
                 document.body.appendChild(link);
                 link.click();
                 link.remove();
+            }).finally(() => {
+                this.is_waiting_response = false
             })
         }
     }

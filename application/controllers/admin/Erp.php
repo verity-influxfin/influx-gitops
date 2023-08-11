@@ -252,7 +252,26 @@ class ERP extends MY_Admin_Controller
     }
 
     /**
-     * 資產負債表 UI
+     * 取得全站本攤表資料
+     * 
+     * @created_at            2023-08-11
+     * @created_at            Derek
+     */
+    public function get_all_investment_sheet_excel()
+    {
+        $res = $this->erp_client->request('GET', '/stack_replayment_schedule/excel?investment_id_int_list_str=ALL');
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        echo $data;
+        die();
+    }
+
+    /**
+     * 全站本攤表
      * 
      * @created_at      2021-07-30
      * @created_by      Jack
