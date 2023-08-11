@@ -10,6 +10,7 @@ class Sns extends REST_Controller {
 		parent::__construct();
 		$this->load->model('user/user_model');
 		$this->load->model('user/user_certification_model');
+        $this->load->model('log/log_mailbox_model');
 		$this->load->library('S3_lib');
 		$this->load->library('Certification_lib');
 		$client = new Aws\S3\S3Client(array(
