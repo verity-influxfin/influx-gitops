@@ -168,7 +168,7 @@ var app = new Vue({
             })
         },
         downloadAllInvestmentExcel() {
-            axios.get(`http://35.73.90.224:22307/stack_replayment_schedule/excel?investment_id_int_list_str=ALL`, { responseType: 'blob' })
+            axios.get(`https://p2p-orm.influxfin.com/stack_replayment_schedule/excel?investment_id_int_list_str=ALL`, { responseType: 'blob' })
             .then((res) => {
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
