@@ -201,9 +201,9 @@ class Sns extends REST_Controller {
                 ) {
                     $detail['remark'] = "有附件，夾帶附件為支援的格式，且認證項目不是驗證成功/驗證失敗，處理檔案";
 
-                    $this->process_mail($info, $attachments, $cert_info, $s3_url, $certification_id);
-
-                    $detail['actions'] = ['process_mail'];
+                    $result = $this->process_mail($info, $attachments, $cert_info, $s3_url, $certification_id);
+                    $actions = $result ? ['process_mail'] : ['process_mail failed'];
+                    $detail['actions'] = $actions;
                     $this->record_mailbox_log($detail);
                     continue;
                 }
@@ -239,9 +239,9 @@ class Sns extends REST_Controller {
                     'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
                     'remark'    => json_encode($remark)
                 ]);
-                $this->process_mail($info, null, $cert_info, $s3_url, $certification_id);
-
-                $detail['actions'] = ['process_mail'];
+                $result = $this->process_mail($info, null, $cert_info, $s3_url, $certification_id);
+                $actions = $result ? ['process_mail with no attachments'] : ['process_mail failed with no attachments'];
+                $detail['actions'] = $actions;
                 $this->record_mailbox_log($detail);
                 continue;
             }
@@ -301,13 +301,37 @@ class Sns extends REST_Controller {
         echo json_encode($log_data,JSON_UNESCAPED_UNICODE) . "\n";
     }
 
-    private function process_mail($info, $attachments, $cert_info, $s3_url, $certification_id)
+    /**
+     * @param $info
+     * @param $attachments
+     * @param $cert_info
+     * @param $s3_url
+     * @param $certification_id
+     * @return bool
+     * @throws Exception
+     */
+    private function process_mail($info, $attachments, $cert_info, $s3_url, $certification_id): bool
     {
-        $rs = $this->attachment_pdf($attachments, $cert_info, $s3_url, $certification_id);
-        if ( ! empty($rs))
-        {
-            $this->certification_lib->save_mail_url($info['0'], $rs['url'], $rs['is_valid_pdf']);
+        if (!isset($attachments)) {
+            return false;
         }
+        $name = ($certification_id === 9) ? 'investigation' : 'job';
+        $rs = $this->s3_lib->credit_mail_pdf($attachments, $cert_info->user_id, $name, 'user_upload/' . $cert_info->user_id);
+        if (empty($rs)) {
+            log_message('error',json_encode(['function_name'=>'credit_mail_pdf','message'=>'failed']));
+            return false;
+        }
+        $rs = $this->certification_lib->save_mail_url($info['0'], $rs['url'], $rs['is_valid_pdf']);
+        if (empty($rs)) {
+            log_message('error',json_encode(['function_name'=>'save_mail_url','message'=>'failed']));
+            return false;
+        }
+        $rs = $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
+        if (!$rs){
+            log_message('error',json_encode(['function_name'=>'public_delete_s3object','message'=>'failed']));
+            throw new Exception('public_delete_s3object failed');
+        }
+        return true;
     }
 
     private function attachment_pdf($attachments, $cert_info, $s3_url, $certification_id): array
