@@ -3115,7 +3115,7 @@ class Target_lib
 
     public function get_individual_product_ids(): array
     {
-        return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
+        return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER, PRODUCT_ID_HOME_LOAN];
     }
 
     public function get_home_loan_product_ids():array
