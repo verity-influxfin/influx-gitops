@@ -1722,6 +1722,10 @@ class Product extends REST_Controller {
                 "target_id"		=> $target->id,
                 "status"		=> 3,
             ));
+            if(empty($targetLog)){
+                throw new Exception('no target log was found');
+            }
+
             $targets_start = $targetLog->created_at;
             $currentIndex = strval(floor((time() - $targets_start) / 60 / 60)) + 1;
 //                if(!$currentIndex > 90){
