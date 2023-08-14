@@ -1086,4 +1086,21 @@ class Cron extends CI_Controller
         $this->log_script_model->insert($data);
         die('1');
     }
+    public function get_investor_estatement_count_status()
+    {
+        $year = $this->input->get('year');
+        $month = $this->input->get('month');
+        $this->load->library('Estatement_lib');
+        $this->estatement_lib->script_create_investor_estatement_content_count_status($year, $month);
+        die();
+    }
+
+    public function get_borrower_estatement_count_status()
+    {
+        $year= $this->input->get('year');
+        $month= $this->input->get('month');
+        $this->load->library('Estatement_lib');
+        $this->estatement_lib->script_create_borrower_estatement_content_count_status($year, $month);
+        die();
+    }
 }

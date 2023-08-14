@@ -54468,6 +54468,87 @@ define({
                     "url": "/api/v2/website/credit_department"
                 }
             ]
+        },        {
+            "type": "get",
+            "url": "/v2/website/department",
+            "title": "取得系所清單",
+            "version": "0.2.0",
+            "name": "Get_Department",
+            "group": "Website",
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"list\": [\n" +
+                            "           \"台北海洋科技大學\": {\n" +
+                            "                \"city\": \"新北市\",\n" +
+                            "                \"shortName\": \"TUMT\",\n" +
+                            "                \"fullName\": \"Taipei University of Marine Technology\",\n" +
+                            "                \"discipline\": {\n" +
+                            "                    \"其他學門\": [\n" +
+                            "                        \"海空物流與行銷系(淡水校本部)\",\n" +
+                            "                        \"旅遊管理系(淡水校本部)\",\n" +
+                            "                        \"健康促進與銀髮保健系(淡水校本部)\",\n" +
+                            "                        \"餐飲管理系(士林校區)\",\n" +
+                            "                        \"健康照顧社會工作系(淡水校本部)\",\n" +
+                            "                        \"食品科技與行銷系(士林校區)\",\n" +
+                            "                        \"時尚造型設計管理系寵物美容設計組(淡水校本部)\",\n" +
+                            "                        \"海洋運動休閒系(士林校區)\",\n" +
+                            "                        \"海洋休閒觀光系(士林校區)\",\n" +
+                            "                        \"時尚造型設計管理系整體造型設計組(淡水校本部)\",\n" +
+                            "                        \"表演藝術系(淡水校本部)\",\n" +
+                            "                        \"數位遊戲與動畫設計系(淡水校本部)\",\n" +
+                            "                        \"視覺傳達設計系(淡水校本部)\"\n" +
+                            "                    ]\n" +
+                            "                }\n" +
+                            "            },\n" +
+                            "        ]\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "401",
+                            "description": "<p>未授權的請求</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "401",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"data\": {},\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Website.php",
+            "groupTitle": "Website",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/website/department"
+                }
+            ]
         },
         {
             "type": "get",
