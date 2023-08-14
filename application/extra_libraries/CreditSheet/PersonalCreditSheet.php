@@ -143,6 +143,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             case PRODUCT_ID_STUDENT:
                 return -1500;
             case PRODUCT_ID_SALARY_MAN:
+            case PRODUCT_ID_HOME_LOAN:
                 return -1000;
             default:
                 return 0;
@@ -156,6 +157,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             case PRODUCT_ID_STUDENT:
                 return 2000;
             case PRODUCT_ID_SALARY_MAN:
+            case PRODUCT_ID_HOME_LOAN:
                 return 1000;
             default:
                 return 0;
@@ -168,6 +170,8 @@ class PersonalCreditSheet extends CreditSheetBase {
         {
             case PRODUCT_ID_SALARY_MAN:
                 return 10000;
+            case PRODUCT_ID_HOME_LOAN:
+                return 30000;
             default:
                 return 0;
         }
@@ -179,6 +183,8 @@ class PersonalCreditSheet extends CreditSheetBase {
         {
             case PRODUCT_ID_SALARY_MAN:
                 return 20000;
+            case PRODUCT_ID_HOME_LOAN:
+                return 1000000;
             default:
                 return 0;
         }
