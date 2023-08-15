@@ -183,34 +183,17 @@ class Sms_lib {
 	}
 
 	public function send($type,$user_id,$phone,$content){
-
-		$data = array(
-			"UID"	=> EVER8D_UID,
-			"PWD"	=> EVER8D_PWD,
-			"msg"	=> $content,
-			"DEST"	=> $phone,
-		);
-
-		if(is_development()){
-			$rs 	= 1;
-			$status = 1;
-		}else{
-			$rs = curl_get("https://oms.every8d.com/API21/HTTP/sendSMS.ashx",$data);
-			if(substr($rs,0,1) == "-"){
-				$status = 0;
-			} else {
-				$status	= 1;
-			}
-		}
-
-		$rs = $this->CI->log_sns_model->insert(array(
-			"type" 		=> $type,
-			"user_id"	=> $user_id,
-			"phone"		=> $phone,
-			"response"	=> $rs,
-			"status" 	=> $status
-		));
-		return $status?true:false;
+        if (is_development()){
+            return true;
+        }
+        $data = [
+            "type" => $type,
+            "user_id" => $user_id,
+            "phone" => $phone,
+            "content" => $content
+        ];
+        $rs = curl_get_statuscode("http://" . getenv('GRACULA_IP') . ":9452/cartero/api/sms-send", $data);
+        return $rs['code'] === 200;
 	}
 
 }
