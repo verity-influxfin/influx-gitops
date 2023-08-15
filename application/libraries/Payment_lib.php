@@ -366,12 +366,14 @@ class Payment_lib{
 
 			if($content !=""){
 				$upload 	= $this->upload_file($content,'normal');
-				$batch_no 	= $upload?$upload['batch_no']:"";
-				$txn_key 	= $upload?$upload['txn_key']:"";
+                $batch_no = isset($upload['batch_no']) ? $upload['batch_no'] : "";
+                $txn_key = isset($upload['txn_key']) ? $upload['txn_key'] : "";
+                $res = isset($upload['res']) ? $upload['res'] : "";
 				$this->CI->log_paymentexport_model->insert(array(
 					"type"		=> "bankaccount",
 					"content"	=> json_encode($ids),
 					"cdata"		=> base64_encode($content),
+                    "res"       => json_encode($res),
 					"batch_no"	=> $batch_no,
 					"txn_key"	=> $txn_key,
 					"admin_id"	=> $admin_id,
@@ -380,12 +382,14 @@ class Payment_lib{
 
 			if($xml_content !=""){
 				$upload 	= $this->upload_file($xml_content,'fxml');
-				$batch_no 	= $upload?$upload['batch_no']:"";
-				$txn_key 	= $upload?$upload['txn_key']:"";
+                $batch_no = isset($upload['batch_no']) ? $upload['batch_no'] : "";
+                $txn_key = isset($upload['txn_key']) ? $upload['txn_key'] : "";
+                $res = isset($upload['res']) ? $upload['res'] : "";
 				$this->CI->log_paymentexport_model->insert(array(
 					"type"		=> "bankaccount",
 					"content"	=> json_encode($xml_ids),
 					"cdata"		=> base64_encode($xml_content),
+                    "res"       => json_encode($res),
 					"batch_no"	=> $batch_no,
 					"txn_key"	=> $txn_key,
 					"admin_id"	=> $admin_id,
@@ -476,14 +480,16 @@ class Payment_lib{
 				}
 
 				$upload 	= $this->upload_file($content,'atm');
-				$batch_no 	= $upload?$upload['batch_no']:"";
-				$txn_key 	= $upload?$upload['txn_key']:"";
+                $batch_no = isset($upload['batch_no']) ? $upload['batch_no'] : "";
+                $txn_key = isset($upload['txn_key']) ? $upload['txn_key'] : "";
+                $res = isset($upload['res']) ? $upload['res'] : "";
 
 				$this->CI->load->model('log/log_paymentexport_model');
 				$this->CI->log_paymentexport_model->insert(array(
 					"type"		=> "target_loan",
 					"content"	=> json_encode($ids),
 					"cdata"		=> base64_encode($content),
+                    "res"       => json_encode($res),
 					"batch_no"	=> $batch_no,
 					"txn_key"	=> $txn_key,
 					"admin_id"	=> $admin_id,
@@ -609,14 +615,16 @@ class Payment_lib{
 				}
 
 				$upload 	= $this->upload_file($content,'atm');
-				$batch_no 	= $upload?$upload['batch_no']:"";
-				$txn_key 	= $upload?$upload['txn_key']:"";
+                $batch_no = isset($upload['batch_no']) ? $upload['batch_no'] : "";
+                $txn_key = isset($upload['txn_key']) ? $upload['txn_key'] : "";
+                $res = isset($upload['res']) ? $upload['res'] : "";
 
 				$this->CI->load->model('log/log_paymentexport_model');
 				$this->CI->log_paymentexport_model->insert(array(
 					"type"		=> "withdraw",
 					"content"	=> json_encode($ids),
 					"cdata"		=> base64_encode($content),
+                    "res"       => json_encode($res),
 					"batch_no"	=> $batch_no,
 					"txn_key"	=> $txn_key,
 					"admin_id"	=> $admin_id,
@@ -685,14 +693,16 @@ class Payment_lib{
 				}
 
 				$upload 	= $this->upload_file($content,'atm');
-				$batch_no 	= $upload?$upload['batch_no']:"";
-				$txn_key 	= $upload?$upload['txn_key']:"";
+                $batch_no = isset($upload['batch_no']) ? $upload['batch_no'] : "";
+                $txn_key = isset($upload['txn_key']) ? $upload['txn_key'] : "";
+                $res = isset($upload['res']) ? $upload['res'] : "";
 
 				$this->CI->load->model('log/log_paymentexport_model');
 				$this->CI->log_paymentexport_model->insert(array(
 					"type"		=> "unknown_refund",
 					"content"	=> json_encode($ids),
 					"cdata"		=> base64_encode($content),
+                    "res"       => json_encode($res),
 					"batch_no"	=> $batch_no,
 					"txn_key"	=> $txn_key,
 					"admin_id"	=> $admin_id,
