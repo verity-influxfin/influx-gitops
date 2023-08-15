@@ -900,12 +900,12 @@
     </div>
     <div class="product-info">
       <div class="row no-gutters" style="justify-content: center; height: 50px;">
-        <span style="margin: auto 0; font-size: 16px; color: #023D64; font-weight: 700;">上班族貸</span>
-        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•申貸金額：NT$ 10,000~500,000元</span>
-        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•利率：上班族貸5%~16%</span>
-        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•期數：3~24期</span>
-        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•平台服務費：平台服務費最低500元，上班族貸4%</span>
-        <span class="ml-3" style="margin: auto 0; font-size: 14px; color: #023D64; opacity: 0.56; font-weight: 400;">•示例：小普在平台申請1萬元審核通過後，手續費為500元</span>
+        <span style="margin: auto 0; font-size: 14px; color: #023D64; font-weight: 700;">上班族貸</span>
+        <span class="ml-3" style="margin: auto 0; font-size: 12px; color: #023D64; opacity: 0.56; font-weight: 400;">•申貸金額：NT$ 10,000~500,000元</span>
+        <span class="ml-3" style="margin: auto 0; font-size: 12px; color: #023D64; opacity: 0.56; font-weight: 400;">•利率：上班族貸5%~16%</span>
+        <span class="ml-3" style="margin: auto 0; font-size: 12px; color: #023D64; opacity: 0.56; font-weight: 400;">•期數：3~24期</span>
+        <span class="ml-3" style="margin: auto 0; font-size: 12px; color: #023D64; opacity: 0.56; font-weight: 400;">•平台服務費：平台服務費最低500元，上班族貸4%</span>
+        <span class="ml-3" style="margin: auto 0; font-size: 12px; color: #023D64; opacity: 0.56; font-weight: 400;">•範例：貸款金額 NT$ 2 萬，貸款期間 2 年，貸款年利率 5%~16% (固定計息)，手續費為本金4%為800元，總費用年百分率約為：9.05%~20.25%。</span>
       </div>
     </div>
   </div>
