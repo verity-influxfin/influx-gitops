@@ -757,9 +757,9 @@ class Payment_lib{
 		$xml 		= json_decode(json_encode($xml),TRUE);
 		if($xml && $xml['BODY']['DATA']['ERROR_ID']=='0000' && $txnkey==$xml['HEADER']['TXNKEY']){
 			$batch_no 	= $xml['BODY']['DATA']['BATCH_NO'];
-			return array( 'batch_no' => $batch_no,'txn_key' => $txnkey );
+			return array( 'batch_no' => $batch_no,'txn_key' => $txnkey, 'res' => $xml );
 		}
-		return false;
+		return array('res' => $xml);
 
 	}
 
