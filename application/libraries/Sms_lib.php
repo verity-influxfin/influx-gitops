@@ -192,7 +192,7 @@ class Sms_lib {
             "phone" => $phone,
             "content" => $content
         ];
-        $rs = curl_get_statuscode("http://54.249.154.167:9452/cartero/api/sms-send", $data);
+        $rs = curl_get_statuscode("http://" . getenv('GRACULA_IP') . ":9452/cartero/api/sms-send", $data);
         return $rs['code'] === 200;
 	}
 
