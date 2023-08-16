@@ -173,10 +173,10 @@ var app = new Vue({
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', '全平台本金攤還表.xlsx'); 
+                const filename = res.headers["content-disposition"].split("filename=")[1]
+                link.download = filename.slice(1, filename.length - 1)
                 document.body.appendChild(link);
                 link.click();
-                link.remove();
             }).finally(() => {
                 this.is_waiting_response = false
             })
