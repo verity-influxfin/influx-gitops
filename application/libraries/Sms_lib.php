@@ -182,7 +182,8 @@ class Sms_lib {
 		return false;
 	}
 
-	public function send($type,$user_id,$phone,$content){
+    public function send(string $type, int $user_id, string $phone, string $content): bool
+    {
         if (is_development()){
             return true;
         }
@@ -192,8 +193,10 @@ class Sms_lib {
             "phone" => $phone,
             "content" => $content
         ];
-        $rs = curl_get_statuscode("http://" . getenv('GRACULA_IP') . ":9452/cartero/api/sms-send", $data);
-        return $rs['code'] === 200;
-	}
+        $url = "http://" . getenv('GRACULA_IP') . ":9452/cartero/api/sms-send";
+        $rs = curl_post_json($url, $data);
+        $rs = json_decode($rs, true);
+        return isset($rs['status']) && $rs['status'] === 200;
+    }
 
 }
