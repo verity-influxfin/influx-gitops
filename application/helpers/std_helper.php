@@ -104,7 +104,36 @@
 		curl_close($curl);
 		return $rs;
 	}
+    function curl_post_json($url,$data = array(),$header = array(),$timeout=null, $get_info = FALSE) {
+        $curl = curl_init($url);
 
+        $header[] = 'Content-Type: application/json';
+        curl_setopt_array($curl, array(
+            CURLOPT_SSL_VERIFYHOST=> ENVIRONMENT == "production" ? 2 : false,
+            CURLOPT_SSL_VERIFYPEER=> false,
+            CURLOPT_RETURNTRANSFER => 1, //不直接顯示回傳結果
+            CURLOPT_TIMEOUT => isset($timeout) ? $timeout : 0,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_HTTPHEADER => $header,
+            CURLOPT_POSTFIELDS =>json_encode($data, JSON_UNESCAPED_UNICODE),
+            CURLINFO_HEADER_OUT => $get_info === true,
+        ));
+
+        $rs = curl_exec($curl);
+
+        if ($get_info === TRUE)
+        {
+            $rs_decode = json_decode($rs, TRUE);
+            if (json_last_error() === JSON_ERROR_NONE)
+            {
+                $rs_decode['curl_getinfo'] = curl_getinfo($curl);
+                $rs = json_encode($rs_decode);
+            }
+        }
+
+        curl_close($curl);
+        return $rs;
+    }
     function curl_put($url, $data = array(), $header = array(), $timeout = NULL)
     {
         $curl = curl_init($url);
