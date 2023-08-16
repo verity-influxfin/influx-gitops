@@ -104,7 +104,9 @@
 		curl_close($curl);
 		return $rs;
 	}
-    function curl_post_json($url,$data = array(),$header = array(),$timeout=null, $get_info = FALSE) {
+
+function curl_post_json(string $url, array $data = array(), array $header = array(), $timeout = null, $get_info = FALSE): string
+{
         $curl = curl_init($url);
 
         $header[] = 'Content-Type: application/json';
