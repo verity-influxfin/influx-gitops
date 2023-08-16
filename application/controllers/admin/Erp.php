@@ -259,7 +259,7 @@ class ERP extends MY_Admin_Controller
      */
     public function get_all_investment_sheet_excel()
     {
-        $res = $this->erp_client->request('GET', '/stack_replayment_schedule/excel?investment_id_int_list_str=ALL');
+        $res = $this->erp_client->request('GET', '/all_stack_replayment_schedule/excel');
         $des = $res->getHeader('content-disposition')[0];
         $data = $res->getBody()->getContents();
         // create download file by data
