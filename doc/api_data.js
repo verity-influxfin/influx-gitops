@@ -20421,6 +20421,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "certificate_status",
+                            "description": "<p>一鍵送出 0:否 1:是</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "created_at",
                             "description": "<p>申請日期</p>"
                         },
@@ -20493,6 +20500,7 @@ define({
                             "                \"delay\": 0,\n" +
                             "                \"status\": 0,\n" +
                             "                \"sub_status\": 0,\n" +
+                            "                \"certificate_status\": 0,\n" +
                             "                \"associate\": {\n" +
                             "                    \"owner\": true,\n" +
                             "                    \"identity\": 2,\n" +
@@ -20520,6 +20528,7 @@ define({
                             "                \"delay\": 0,\n" +
                             "                \"status\": 0,\n" +
                             "                \"sub_status\": 9,\n" +
+                            "                \"certificate_status\": 1,\n" +
                             "                \"associate\": false,\n" +
                             "                \"subloan_target_status\": 0,\n" +
                             "                \"subloan_target_sub_status\": 0,\n" +

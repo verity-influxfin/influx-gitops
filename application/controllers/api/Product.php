@@ -742,6 +742,7 @@ class Product extends REST_Controller {
 					"delay" 			=> $value->delay,
 					"status" 			=> $value->status,
 					"sub_status" 		=> $value->sub_status,
+                    "certificate_status"     => $value->certificate_status,
 					"created_at" 		=> $value->created_at,
 				);
 			}
