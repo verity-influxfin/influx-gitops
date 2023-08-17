@@ -170,9 +170,11 @@ var app = new Vue({
         downloadAllInvestmentExcel() {
             axios.get(`/admin/erp/get_all_investment_sheet_excel`, { responseType: 'blob' })
             .then((res) => {
+                console.log('blob data', res.data);
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
                 link.href = url;
+                console.log('header', res.headers["content-disposition"])
                 const filename = res.headers["content-disposition"].split("filename=")[1]
                 link.download = filename.slice(1, filename.length - 1)
                 document.body.appendChild(link);
