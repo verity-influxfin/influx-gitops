@@ -298,7 +298,7 @@ $config['product_list'] = [
         'interest_rate_s' => 5.5,
         'interest_rate_e' => 16,
         'condition_rate' => [
-            'salary_below' => 35000,
+            'salary_below' => 40000,
             'rate' => 3
         ],
         'available_company_categories' => [
@@ -372,6 +372,10 @@ $config['product_list'] = [
         'loan_range_e' => 200000,
         'interest_rate_s' => ORDER_INTEREST_RATE,
         'interest_rate_e' => ORDER_INTEREST_RATE,
+        'condition_rate' => [
+            'salary_below' => 40000,
+            'rate' => 3
+        ],
         'charge_platform' => 4,
         'charge_platform_min' => PLATFORM_FEES_MIN,
         'sub_product' => [],
@@ -1552,7 +1556,7 @@ $config['sub_product_list'] = [
                 'interest_rate_s' => 5.5,
                 'interest_rate_e' => 16,
                 'condition_rate' => [
-                    'salary_below' => 35000,
+                    'salary_below' => 40000,
                     'rate' => 3
                 ],
                 'need_upload_images' => [
@@ -1641,7 +1645,7 @@ $config['sub_product_list'] = [
                 'interest_rate_s' => 5.5,
                 'interest_rate_e' => 16,
                 'condition_rate' => [
-                    'salary_below' => 35000,
+                    'salary_below' => 40000,
                     'rate' => 3
                 ],
                 'need_upload_images' => [
@@ -1730,7 +1734,7 @@ $config['sub_product_list'] = [
                 'interest_rate_s' => 5.5,
                 'interest_rate_e' => 16,
                 'condition_rate' => [
-                    'salary_below' => 35000,
+                    'salary_below' => 40000,
                     'rate' => 3
                 ],
                 'need_upload_images' => [
