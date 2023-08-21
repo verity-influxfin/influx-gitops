@@ -1240,6 +1240,7 @@ class Product extends REST_Controller {
                     'delay' 			         => intval($value->delay),
                     'status' 			         => intval($value->status),
                     'sub_status' 		         => intval($value->sub_status),
+                    'certificate_status' 		 => intval($value->certificate_status),
                     'associate' 		         => (isset($value->associate) ? $value->associate : false),
                     'subloan_target_status'      => intval($subloan_target_status),
                     'subloan_target_sub_status'  => intval($subloan_target_sub_status),
