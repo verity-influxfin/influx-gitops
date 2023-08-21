@@ -19164,7 +19164,14 @@ define({
                             "optional": false,
                             "field": "associate.agitate.email",
                             "description": "<p>電子信箱</p>"
-                        }
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "certificate_status",
+                            "description": "<p>一鍵送出 0:否 1:是</p>"
+                        },
                     ]
                 },
                 "examples": [

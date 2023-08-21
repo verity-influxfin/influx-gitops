@@ -1856,6 +1856,7 @@ class Product extends REST_Controller {
                 'certification'		    => $certification,
                 'amortization_schedule'	=> $amortization_schedule,
                 'biddingHistory' => $biddingHistory,
+                'certificate_status' => intval($target->certificate_status),
                 'verify_status' => $this->chk_target_verifying($target->target_data ?? '') ? 1 : 0,
             ];
 
