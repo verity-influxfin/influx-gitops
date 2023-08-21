@@ -168,23 +168,23 @@ var app = new Vue({
             })
         },
         downloadAllInvestmentExcel() {
-            let url = '/admin/erp/get_all_investment_sheet_excel';
-            this.is_waiting_response = true
-            axios({
-                url,
-                methods: 'GET',
-                responseType: 'blob'
-            }).then(res => {
+            let today = new Date();
+            let filename = `assets_${today.getFullYear()}${(today.getMonth() + 1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}`
+            
+            // 經由 php 請求外部一直失敗，找不出原因，所以先暫定寫死 IP 取正式站本攤表資料
+            axios.get(`https://p2p-orm.influxfin.com/all_stack_replayment_schedule/excel`, { responseType: 'blob' })
+            .then((res) => {
                 console.log(res)
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                const filename = res.headers["content-disposition"].split("filename=")[1]
-                link.download = filename.slice(1, filename.length - 1)
+                link.setAttribute('download', `${filename}.xlsx`); 
                 document.body.appendChild(link);
                 link.click();
-            }).finally(() => {
-                this.is_waiting_response = false
+                link.remove();
+            })
+            .catch((err) => {
+                console.log(err);
             })
         }
     }
