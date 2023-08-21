@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
-                <div class="panel-heading">
+                <div class="panel-heading col-lg-5">
                     <table>
                         <tr style="vertical-align: baseline;">
                             <td style="padding: 14px 0;"> 
@@ -42,7 +42,7 @@
                                 >
                             </td>
                             <td>
-                                <button class="btn btn-default ml-5" @click="goSearch()">查詢</button>
+                                <button class="btn btn-default" @click="goSearch()">查詢</button>
                             </td>
                         </tr>
                     </table>
@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12" style="text-align: center;">
+                        <div class="col-md-6" style="text-align: center;">
                             <table>
                                 <tr>
                                     <th colspan="3">一. 交易項目</td>
@@ -126,10 +126,29 @@
                                 </tr>
                             </table>
                         </div>
+                        <div class="col-md-6" style="text-align: center;">
+                            <table>
+                                <tr>
+                                    <th colspan="3">平台交易調整</td>
+                                </tr>
+                                <tr>
+                                    <th>科目</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                </tr>
+                                <template v-for="(values, names) in tradingData.entry1" @dblclick="goSearch()">
+                                    <tr v-for="(value, name) in values">
+                                        <td >{{ change_name_to_chinese(name) }}</td>
+                                        <td>{{ names === 'Debit' ? value : ' ' }}</td>
+                                        <td>{{ names === 'Credit' ? value : ' ' }}</td>
+                                    </tr>
+                                </template>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="row mt-5">
-                        <div class="col-md-12" style="text-align: center;">
+                        <div class="col-md-6" style="text-align: center;">
                             <table>
                                 <tr>
                                     <th colspan="2">二. 交易收入</td>
@@ -171,10 +190,29 @@
                                 </tr>
                             </table>
                         </div>
+                        <div class="col-md-6" style="text-align: center;">
+                            <table>
+                                <tr>
+                                    <th colspan="3">每日收益調整</td>
+                                </tr>
+                                <tr>
+                                    <th>科目</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                </tr>
+                                <template v-for="(values, names) in tradingData.entry2" @dblclick="goSearch()">
+                                    <tr v-for="(value, name) in values">
+                                        <td >{{ change_name_to_chinese(name) }}</td>
+                                        <td>{{ names === 'Debit' ? value : ' ' }}</td>
+                                        <td>{{ names === 'Credit' ? value : ' ' }}</td>
+                                    </tr>
+                                </template>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="row mt-5">
-                        <div class="col-md-12" style="text-align: center;">
+                        <div class="col-md-6" style="text-align: center;">
                             <table>
                                 <tr>
                                     <th colspan="3">三. 帳務金流(虛擬帳戶)</td>
@@ -230,6 +268,28 @@
                                     <td>差異</td>
                                     <td>{{ accountsDifferent }}</td>
                                     <td>0</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6" style="text-align: center;">
+                            <table>
+                                <tr>
+                                    <th colspan="3">收益提領</td>
+                                </tr>
+                                <tr>
+                                    <th>科目</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                </tr>
+                                <tr>
+                                    <td >銀行存款(自有)</td>
+                                    <td>{{ tradingData.virtual_balance - 1000 }}</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td >銀行存款(代收)</td>
+                                    <td>0</td>
+                                    <td>{{ tradingData.virtual_balance - 1000 }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -380,6 +440,30 @@ const v = new Vue({
                     console.log(err);
                 });
             }
+        },
+        change_name_to_chinese(name) {
+            const name_dict = {
+                "bank_account": "銀行存款",
+                "platform_fee": "平台服務費",
+                "subloan_fee": "轉換產品服務費",
+                "transfer_fee": "債權轉讓服務費",
+                "prepayment_fee": "提還違約金",
+                "damage": "已還違約金",
+                "law_fee": "法催執行費",
+                "verify_fee": "平台驗證費",
+                "cross_fee": "跨行轉帳費",
+                "bank_account (recharge)": "銀行存款(代收)",
+                "re_verify": "銀行存款(平台驗證費)",
+                "re_cross": "銀行存款(跨行轉帳費)",
+                "bank_ammount (unknown_funds)": "銀行存款(不明資金)",
+                "current_liabilities": "以成本衡量之金融負債-流動",
+                "bank_account (lending)": "銀行存款(放款)",
+                "bank_account (withdraw)": "銀行存款(提領)",
+                "bank_account (verify_fee)": "銀行存款(平台驗證費)",
+                "unknown_amounts_returned": "以成本衡量之金融負債-流動(不明資金)",
+                "other_incone": "其他收入"
+            }
+            return name_dict[name] ?? name;
         }
     }
 });
@@ -399,7 +483,7 @@ const v = new Vue({
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 30%;
+    width: 100%;
 }
 
 td, th {
