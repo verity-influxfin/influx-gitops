@@ -621,6 +621,15 @@ class Target_lib
         return false;
     }
 
+    private function remark_target($target_id, $remark)
+    {
+        $param = [
+            'remark' => $remark,
+        ];
+        $this->CI->target_model->update($target_id, $param);
+        $this->insert_change_log($target_id, $param);
+    }
+
     public function target_verify_success($target = [], $admin_id = 0, $param = [], $user_id = 0)
     {
         if (!empty($target) && $target->status == 2) {
