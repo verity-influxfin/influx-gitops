@@ -19717,6 +19717,7 @@ define({
                             "        ],\n" +
                             "        \"amortization_schedule\": [],\n" +
                             "        \"biddingHistory\": []\n" +
+                            "        \"certificate_status\": 0,\n" +
                             "    }\n" +
                             "}",
                         "type": "Object"
