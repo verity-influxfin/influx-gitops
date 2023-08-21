@@ -582,6 +582,7 @@ class Subloan extends REST_Controller {
                 }
                 $subloan_target[$field] = (int)$subloan_target[$field];
             }
+            $subloan_target['certificate_status'] = intval($new_target->certificate_status);
 
 			$subloan_target['contract'] 				= $contract;
 			$subloan_target['amortization_schedule'] 	= $amortization_schedule;
