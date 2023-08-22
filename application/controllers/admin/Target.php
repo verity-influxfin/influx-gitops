@@ -772,7 +772,7 @@ class Target extends MY_Admin_Controller {
         }
 
         $credit["amount"] = (int) $newCredits["amount"];
-
+        $message = "";
         if ($fixed_amount == 0) {
             $past_targets = $this->target_model->get_many_by([
                 'user_id' => $userId,
@@ -785,12 +785,19 @@ class Target extends MY_Admin_Controller {
                 if (isset($certification) && $certification->status == 1) {
                     $content = json_decode($certification->content);
                     if (isset($content->monthly_repayment) && isset($content->total_repayment)) {
+                        $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
                         $product_id = $target->product_id;
                         // 上班族貸款
                         if (in_array($product_id, [3, 4])) {
                             $product = $this->config->item('product_list')[$product_id];
                             if ($product['condition_rate']['salary_below'] >= $content->monthly_repayment) {
                                 $credit["amount"] = $target->loan_amount;
+                                if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment) {
+                                    $message = "該會員薪資低於4萬，負債大於22倍，系統給定信用額度為0~3000元；若需調整請至「額度調整 1000~20000」之欄位填寫額度";
+                                }
+                                else {
+                                    $message = "該會員薪資低於4萬，負債小於22倍，系統給定信用額度為3000~10000元；若需調整請至「額度調整 1000~20000」之欄位填寫額度";
+                                }
                             }
                         }
                     }
@@ -811,6 +818,7 @@ class Target extends MY_Admin_Controller {
 
         $response = [
 			"credits" => $this->credit_output->toOne(),
+            "message" => $message,
 		];
 		$this->json_output->setStatusCode(200)->setResponse($response)->send();
 	}
