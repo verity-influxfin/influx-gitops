@@ -462,7 +462,13 @@ class Target_lib
                                                 $range_min = 3000;
                                                 $range_max = 10000;
                                             }
-                                            $param['loan_amount'] = max($range_min, min($range_max, $loan_amount));
+
+                                            $loan_amount = max($range_min, min($range_max, $loan_amount));
+                                            $param['loan_amount'] = $loan_amount;
+
+                                            $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
+                                            $param['platform_fee'] = $platform_fee;
+
                                             goto FORCE_SECOND_INSTANCE;
                                         }
 
