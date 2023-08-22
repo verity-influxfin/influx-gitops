@@ -463,7 +463,6 @@ class Target_lib
                                                 $range_max = 10000;
                                             }
                                             $param['loan_amount'] = max($range_min, min($range_max, $loan_amount));
-                                            $param['status'] = TARGET_WAITING_SIGNING;
                                             goto FORCE_SECOND_INSTANCE;
                                         }
 
