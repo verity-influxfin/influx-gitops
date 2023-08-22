@@ -956,6 +956,7 @@
 								</td>
 							</tr>
 						</table>
+                        <div id="credit-info-message"></div>
 					</div>
 				</div>
 				<div class="panel-body">
@@ -1991,7 +1992,9 @@
 			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
 			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
 		}
-
+        function fillCreditMessage(message) {
+            $("#credit-info-message").text(message);
+        }
 		function fillFakeVerifications(type, show = true) {
 			var tableId = "#" + type + "-verifications";
 			for (var i = 0; i < 3; i++) {
@@ -2271,6 +2274,7 @@
 				beforeSend: function () {
 					changeReevaluationLoading(true);
 					clearCreditInfo(true);
+                    fillCreditMessage('');
 				},
 				complete: function () {
 					changeReevaluationLoading(false);
@@ -2285,8 +2289,10 @@
 					}
 
 					let creditJson = response.response.credits;
+                    let message = response.response.message;
 					credit = new Credit(creditJson);
 					fillCreditInfo(credit, true);
+                    fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
 				}
