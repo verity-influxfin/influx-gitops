@@ -1584,7 +1584,7 @@
             $(`#2_fixed_amount`).attr({
                 "max": case_aprove_item.creditLineInfo.fixed_amount_max,
                 "min": case_aprove_item.creditLineInfo.fixed_amount_min,
-                "onblur": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
+                "oninput": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
                     `else if(value<=${case_aprove_item.creditLineInfo.fixed_amount_min}){value=${case_aprove_item.creditLineInfo.fixed_amount_min}}`
             });
         }
@@ -1649,7 +1649,7 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
-        $('#2_fixed_amount').on('blur', function () {
+        $('#2_fixed_amount').change(function () {
             let fixed_amount = parseInt($(this).val());
             if (fixed_amount <= 0) {
                 return;
