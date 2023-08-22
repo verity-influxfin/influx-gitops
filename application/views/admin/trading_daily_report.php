@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
-                <div class="panel-heading">
+                <div class="panel-heading col-lg-5">
                     <table>
                         <tr style="vertical-align: baseline;">
                             <td style="padding: 14px 0;"> 
@@ -42,7 +42,7 @@
                                 >
                             </td>
                             <td>
-                                <button class="btn btn-default ml-5" @click="goSearch()">查詢</button>
+                                <button class="btn btn-default" @click="goSearch()">查詢</button>
                             </td>
                         </tr>
                     </table>
@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12" style="text-align: center;">
+                        <div class="col-md-6" style="text-align: center;">
                             <table>
                                 <tr>
                                     <th colspan="3">一. 交易項目</td>
@@ -69,67 +69,86 @@
                                 <tr>
                                     <td>代收交易</td>
                                     <td>{{ tradingData.recharge.count }}</td>
-                                    <td>{{ tradingData.recharge.amount }}</td>
+                                    <td>{{ thousandth(tradingData.recharge.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>放款交易</td>
                                     <td>{{ tradingData.lending.count }}</td>
-                                    <td>{{ tradingData.lending.amount }}</td>
+                                    <td>{{ thousandth(tradingData.lending.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>還款</td>
                                     <td>{{ tradingData.payment.count }}</td>
-                                    <td>{{ tradingData.payment.amount }}</td>
+                                    <td>{{ thousandth(tradingData.payment.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>提前還款</td>
                                     <td>{{ tradingData.prepayment.count }}</td>
-                                    <td>{{ tradingData.prepayment.amount }}</td>
+                                    <td>{{ thousandth(tradingData.prepayment.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>逾期還款</td>
                                     <td>{{ tradingData.delay_payment.count }}</td>
-                                    <td>{{ tradingData.delay_payment.amount }}</td>
+                                    <td>{{ thousandth(tradingData.delay_payment.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>提領交易</td>
                                     <td>{{ tradingData.withdraw.count }}</td>
-                                    <td>{{ tradingData.withdraw.amount }}</td>
+                                    <td>{{ thousandth(tradingData.withdraw.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>產品轉換放款</td>
                                     <td>{{ tradingData.subloan.count }}</td>
-                                    <td>{{ tradingData.subloan.amount }}</td>
+                                    <td>{{ thousandth(tradingData.subloan.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>債權轉讓交易</td>
                                     <td>{{ tradingData.tansfer.count }}</td>
-                                    <td>{{ tradingData.tansfer.amount }}</td>
+                                    <td>{{ thousandth(tradingData.tansfer.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>推薦有賞</td>
                                     <td>{{ tradingData.promote_reward.count }}</td>
-                                    <td>{{ tradingData.promote_reward.amount }}</td>
+                                    <td>{{ thousandth(tradingData.promote_reward.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>平台驗證費</td>
                                     <td>{{ tradingData.verify_fee.count }}</td>
-                                    <td>{{ tradingData.verify_fee.amount }}</td>
+                                    <td>{{ thousandth(tradingData.verify_fee.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td>慈善捐款</td>
                                     <td>{{ tradingData.charity.count }}</td>
-                                    <td>{{ tradingData.charity.amount }}</td>
+                                    <td>{{ thousandth(tradingData.charity.amount) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="3">上述交易核對無誤</td>
                                 </tr>
                             </table>
                         </div>
+                        <div class="col-md-6" style="text-align: center;">
+                            <table>
+                                <tr>
+                                    <th colspan="3">平台交易調整</td>
+                                </tr>
+                                <tr>
+                                    <th>科目</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                </tr>
+                                <template v-for="(values, names) in tradingData.entry1" @dblclick="goSearch()">
+                                    <tr v-for="(value, name) in values">
+                                        <td >{{ change_name_to_chinese(name) }}</td>
+                                        <td>{{ names === 'Debit' ? thousandth(value) : ' ' }}</td>
+                                        <td>{{ names === 'Credit' ? thousandth(value) : ' ' }}</td>
+                                    </tr>
+                                </template>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="row mt-5">
-                        <div class="col-md-12" style="text-align: center;">
+                        <div class="col-md-6" style="text-align: center;">
                             <table>
                                 <tr>
                                     <th colspan="2">二. 交易收入</td>
@@ -143,38 +162,57 @@
                                 </tr>
                                 <tr>
                                     <td>平台服務費</td>
-                                    <td>{{ tradingData.platform_fee }}</td>
+                                    <td>{{ thousandth(tradingData.platform_fee) }}</td>
                                 </tr>
                                 <tr>
                                     <td>轉換產品服務費</td>
-                                    <td>{{ tradingData.subloan_fee }}</td>
+                                    <td>{{ thousandth(tradingData.subloan_fee) }}</td>
                                 </tr>
                                 <tr>
                                     <td>債權轉讓服務費</td>
-                                    <td>{{ tradingData.transfer_fee }}</td>
+                                    <td>{{ thousandth(tradingData.transfer_fee) }}</td>
                                 </tr>
                                 <tr>
                                     <td>提還違約金</td>
-                                    <td>{{ tradingData.prepayment_fee }}</td>
+                                    <td>{{ thousandth(tradingData.prepayment_fee) }}</td>
                                 </tr>
                                 <tr>
                                     <td>已還違約金</td>
-                                    <td>{{ tradingData.damage }}</td>
+                                    <td>{{ thousandth(tradingData.damage) }}</td>
                                 </tr>
                                 <tr>
                                     <td>法催執行費</td>
-                                    <td>{{ tradingData.law_fee }}</td>
+                                    <td>{{ thousandth(tradingData.law_fee) }}</td>
                                 </tr>
                                 <tr>
                                     <td>合計</td>
-                                    <td>{{ sumSecondary }}</td>
+                                    <td>{{ thousandth(sumSecondary) }}</td>
                                 </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6" style="text-align: center;">
+                            <table>
+                                <tr>
+                                    <th colspan="3">每日收益調整</td>
+                                </tr>
+                                <tr>
+                                    <th>科目</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                </tr>
+                                <template v-for="(values, names) in tradingData.entry2" @dblclick="goSearch()">
+                                    <tr v-for="(value, name) in values">
+                                        <td >{{ change_name_to_chinese(name) }}</td>
+                                        <td>{{ names === 'Debit' ? thousandth(value) : ' ' }}</td>
+                                        <td>{{ names === 'Credit' ? thousandth(value) : ' ' }}</td>
+                                    </tr>
+                                </template>
                             </table>
                         </div>
                     </div>
 
                     <div class="row mt-5">
-                        <div class="col-md-12" style="text-align: center;">
+                        <div class="col-md-6" style="text-align: center;">
                             <table>
                                 <tr>
                                     <th colspan="3">三. 帳務金流(虛擬帳戶)</td>
@@ -197,17 +235,17 @@
                                 </tr>
                                 <tr>
                                     <td>1.會員虛擬帳戶</td>
-                                    <td>{{ tradingData.passbook_amount }}</td>
+                                    <td>{{ thousandth(tradingData.passbook_amount) }}</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
                                     <td>2.不明來源資金</td>
-                                    <td>{{ tradingData.unknown_funds }}</td>
+                                    <td>{{ thousandth(tradingData.unknown_funds) }}</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
                                     <td>3.平台收益虛擬帳戶</td>
-                                    <td>{{ tradingData.virtual_balance }}</td>
+                                    <td>{{ thousandth(tradingData.virtual_balance) }}</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
@@ -223,13 +261,35 @@
                                 </tr>
                                 <tr>
                                     <td>合計</td>
-                                    <td>{{ sumSystemAccounts }}</td>
-                                    <td>{{ sumBankAccounts }}</td>
+                                    <td>{{ thousandth(sumSystemAccounts) }}</td>
+                                    <td>{{ thousandth(sumBankAccounts) }}</td>
                                 </tr>
                                 <tr>
                                     <td>差異</td>
-                                    <td>{{ accountsDifferent }}</td>
+                                    <td>{{ thousandth(accountsDifferent) }}</td>
                                     <td>0</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6" style="text-align: center;">
+                            <table>
+                                <tr>
+                                    <th colspan="3">收益提領</td>
+                                </tr>
+                                <tr>
+                                    <th>科目</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                </tr>
+                                <tr>
+                                    <td >銀行存款(自有)</td>
+                                    <td>{{ thousandth(tradingData.virtual_balance - 1000) }}</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td >銀行存款(代收)</td>
+                                    <td>0</td>
+                                    <td>{{ thousandth(tradingData.virtual_balance - 1000) }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -380,6 +440,33 @@ const v = new Vue({
                     console.log(err);
                 });
             }
+        },
+        change_name_to_chinese(name) {
+            const name_dict = {
+                "bank_account": "銀行存款",
+                "platform_fee": "平台服務費",
+                "subloan_fee": "轉換產品服務費",
+                "transfer_fee": "債權轉讓服務費",
+                "prepayment_fee": "提還違約金",
+                "damage": "已還違約金",
+                "law_fee": "法催執行費",
+                "verify_fee": "平台驗證費",
+                "cross_fee": "跨行轉帳費",
+                "bank_account (recharge)": "銀行存款(代收)",
+                "re_verify": "銀行存款(平台驗證費)",
+                "re_cross": "銀行存款(跨行轉帳費)",
+                "bank_ammount (unknown_funds)": "銀行存款(不明資金)",
+                "current_liabilities": "以成本衡量之金融負債-流動",
+                "bank_account (lending)": "銀行存款(放款)",
+                "bank_account (withdraw)": "銀行存款(提領)",
+                "bank_account (verify_fee)": "銀行存款(平台驗證費)",
+                "unknown_amounts_returned": "以成本衡量之金融負債-流動(不明資金)",
+                "other_incone": "其他收入"
+            }
+            return name_dict[name] ?? name;
+        },
+        thousandth(num) {
+            return String(num).replace(/(\d)(?=(\d{3})+$)/g, "$1,");
         }
     }
 });
@@ -396,10 +483,14 @@ const v = new Vue({
     background: #036FB7;
 }
 
+span {
+      white-space: pre-wrap;
+}
+
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 30%;
+    width: 100%;
 }
 
 td, th {
