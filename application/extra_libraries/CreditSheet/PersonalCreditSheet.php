@@ -165,7 +165,7 @@ class PersonalCreditSheet extends CreditSheetBase {
         switch ($product_id)
         {
             case PRODUCT_ID_SALARY_MAN:
-                return 10000;
+                return 1000;
             default:
                 return 0;
         }
