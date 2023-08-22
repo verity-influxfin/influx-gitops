@@ -480,6 +480,10 @@ const v = new Vue({
     background: #036FB7;
 }
 
+span {
+      white-space: pre-wrap;
+}
+
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
