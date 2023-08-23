@@ -1388,6 +1388,7 @@ class Credit_lib{
 					'amount'	 => intval($rs->amount),
 					'instalment' => intval($rs->instalment),
 					'created_at' => intval($rs->created_at),
+                    'remark'     => $rs->remark,
 					'expire_time'=> intval($rs->expire_time),
                     'sub_product_id' => (int) $rs->sub_product_id,
 				];
