@@ -75,6 +75,7 @@
                                         <th>應收利息</th>
                                         <th>本金餘額</th>
                                         <th>逾期本金餘額</th>
+                                        <th>應收延滯息</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="is_waiting_response">
@@ -102,6 +103,7 @@
                                                 <td class="text-right">{{ amount(row.interest_receivable) }}</td>
                                                 <td class="text-right">{{ amount(row.principal_balance) }}</td>
                                                 <td class="text-right">{{ amount(row.delay_principal_balance) }}</td>
+                                                <td class="text-right">{{ amount(row.receivable_delay_interest_int) }}</td>
                                             </tr>
                                         </template>
                                         <!-- <tr>
@@ -177,6 +179,8 @@
                                         <th>應收本金</th>
                                         <th>應收利息</th>
                                         <th>本金餘額</th>
+                                        <th>逾期本金餘額</th>
+                                        <th>應收延滯息</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="is_waiting_response">
@@ -196,6 +200,8 @@
                                             <td class="text-right">{{ amount(row.principal_receivable) }}</td>
                                             <td class="text-right">{{ amount(row.interest_receivable) }}</td>
                                             <td class="text-right">{{ amount(row.principal_balance) }}</td>
+                                            <td class="text-right">{{ amount(row.delay_principal_balance) }}</td>
+                                            <td class="text-right">{{ amount(row.receivable_delay_interest_int) }}</td>
                                         </tr>
                                     </template>
                                 </tbody>
