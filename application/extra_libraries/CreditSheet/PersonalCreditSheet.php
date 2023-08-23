@@ -176,6 +176,11 @@ class PersonalCreditSheet extends CreditSheetBase {
         switch ($product_id)
         {
             case PRODUCT_ID_SALARY_MAN:
+                $this->CI->load->library('credit_lib');
+                $credit = $this->CI->credit_lib->get_credit($this->user->id, $product_id, $this->target->sub_product_id);
+                if (isset($credit) && isset($credit['amount']) && $credit['amount'] > 20000) {
+                    return $credit['amount'];
+                }
                 return 20000;
             default:
                 return 0;
