@@ -408,6 +408,7 @@ class Certification extends REST_Controller {
                         $fields 	= [];
 						break;
 					case 501:
+					case 502:
                         $fields 	= [];
 						break;
 					case 1000:
