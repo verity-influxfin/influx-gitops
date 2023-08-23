@@ -69,8 +69,7 @@ class Credit_output
             'level' => $credit->level,
             'points' => $credit->points,
             'amount' => $credit->amount,
-            'remark' => json_decode($credit->remark),
-//            'remark' => $credit->remark,
+            'remark' => $credit->remark,
             'expired_at' => $credit->expire_time,
             'created_at' => $credit->created_at
         ];
@@ -91,6 +90,7 @@ class Credit_output
             $credit->level = isset($creditInput["level"]) ? $creditInput["level"] : '';
             $credit->points = isset($creditInput["points"]) ? $creditInput["points"] : '';
             $credit->amount = isset($creditInput["amount"]) ? $creditInput["amount"] : '';
+            $credit->remark = isset($creditInput["remark"]) ? json_decode($creditInput["remark"]) : '';
             $credit->expire_time = isset($creditInput["expire_time"]) ? $creditInput["expire_time"] : '';
             $credit->created_at = isset($creditInput["created_at"]) ? $creditInput["created_at"] : '';
         }
