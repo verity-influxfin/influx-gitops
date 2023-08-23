@@ -2012,8 +2012,11 @@
 			$("#" + prefix + "credit-points").text(credit.points);
 			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
 			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
-            if (!isReEvaluated){
+            if (!isReEvaluated) {
                 $("#credit-original-info-modal-btn").removeAttr('disabled');
+                credit.remark?.scoreHistory?.forEach(function (item) {
+                    $("<div>").text(item).appendTo("#original-remark");
+                });
             }
 		}
         function fillCreditMessage(message) {
