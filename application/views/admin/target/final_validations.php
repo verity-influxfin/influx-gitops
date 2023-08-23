@@ -549,7 +549,7 @@
 								</div>
 							</div>
 						</div>
-                        <button id="credit-original-info-modal-btn" class="btn btn-secondary mr-2" type="button" data-toggle="modal" data-target="#credit-original-info-modal" disabled>
+                        <button id="credit-original-info-modal-btn" class="btn btn-info mr-2" type="button" data-toggle="modal" data-target="#credit-original-info-modal" disabled>
                             查看分數額度組成原因
                         </button>
 					</div>
@@ -1187,10 +1187,10 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="credit-original-info-Label">分數額度組成原因</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
+                    <h3 class="modal-title">分數額度組成原因</h3>
                 </div>
                 <div class="modal-body">
                     <div id="original-remark"></div>
