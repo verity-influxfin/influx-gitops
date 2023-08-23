@@ -6,6 +6,7 @@ class Credit
 		this.level = credit.level;
 		this.points = credit.points;
 		this.amount = credit.amount;
+		this.remark = credit.remark;
 		this.expiredAt = credit.expired_at;
 		this.createdAt = credit.created_at;
 	}
