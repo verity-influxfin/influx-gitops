@@ -549,7 +549,7 @@
 								</div>
 							</div>
 						</div>
-                        <button id="credit-original-info-modal-btn" class="btn btn-secondary mr-2 disabled" type="button" data-toggle="modal" data-target="#credit-original-info-modal" disabled>
+                        <button id="credit-original-info-modal-btn" class="btn btn-secondary mr-2" type="button" data-toggle="modal" data-target="#credit-original-info-modal" disabled>
                             查看分數額度組成原因
                         </button>
 					</div>
@@ -2012,6 +2012,9 @@
 			$("#" + prefix + "credit-points").text(credit.points);
 			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
 			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
+            if (!isReEvaluated){
+                $("#credit-original-info-modal-btn").removeAttr('disabled');
+            }
 		}
         function fillCreditMessage(message) {
             $("#credit-info-message").text(message);
