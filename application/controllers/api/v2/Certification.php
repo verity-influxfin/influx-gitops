@@ -471,6 +471,7 @@ class Certification extends REST_Controller {
 						$fields 	= ['salesdetail'];
 						break;
 					default:
+                        $fields 	= [];
 						break;
 				}
 
