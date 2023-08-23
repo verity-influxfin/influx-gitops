@@ -1115,7 +1115,7 @@ class Target extends MY_Admin_Controller {
 			$response = [
 				"target" => $this->current_target_output->toOne(),
 				"user" => $this->user_output->toOne(true),
-				"credits" => $this->credit_output->toOne(),
+				"credits" => $this->credit_output->toOneWithRemark(),
 				"verifications" => $this->verifications_output->toMany(),
 				"bank_accounts" => $this->bank_account_output->toMany(),
 				"virtual_accounts" => $this->virtual_account_output->toMany(),
