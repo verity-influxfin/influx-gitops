@@ -49936,31 +49936,31 @@ define({
                         },
                         {
                             "group": "Parameter",
-                            "type": "file",
+                            "type": "String",
                             "optional": true,
                             "field": "image",
-                            "description": "<p>附圖(最多5張)</p>"
+                            "description": "<p>已上傳好的附圖id(最多5張)，用「,」分割image的id，\ne.g.「100001,100002,100003,100004,100005」</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "file",
                             "optional": true,
                             "field": "image1",
-                            "description": "<p>附圖1</p>"
+                            "description": "<p>未上傳的附圖圖檔1</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "file",
                             "optional": true,
                             "field": "image2",
-                            "description": "<p>附圖2</p>"
+                            "description": "<p>未上傳的附圖圖檔2</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "file",
                             "optional": true,
                             "field": "image3",
-                            "description": "<p>附圖3</p>"
+                            "description": "<p>未上傳的附圖圖檔3</p>"
                         }
                     ]
                 }
