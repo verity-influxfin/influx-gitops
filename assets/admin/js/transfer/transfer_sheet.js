@@ -1,3 +1,25 @@
+$(document).ready(function () {
+    const detailTable = $('#history-table').DataTable({
+        'ordering': false,
+        'language': {
+            'processing': '處理中...',
+            'lengthMenu': '顯示 _MENU_ 項結果',
+            'zeroRecords': '目前無資料',
+            'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
+            'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
+            'infoFiltered': '(從 _MAX_ 項結果過濾)',
+            'search': '使用本次搜尋結果快速搜尋',
+            'paginate': {
+                'first': '首頁',
+                'previous': '上頁',
+                'next': '下頁',
+                'last': '尾頁'
+            }
+        },
+        "info": false
+    })
+});
+
 var app = new Vue({
     el: '#page-wrapper',
     data: {
@@ -57,6 +79,29 @@ var app = new Vue({
             }).finally(() => {
                 this.is_waiting_response = false
             })
+        },
+        setDetailTableRow(combination_no) {
+            $('#historyModal').modal('toggle')
+            $('#history-table').DataTable().clear()
+            this.combinations_detail.forEach(list => {
+                if (list.combination_no === combination_no) {
+                    $('#history-table').DataTable().row.add([
+                        list.transfer_date,
+                        list.user_id,
+                        list.new_user_id,
+                        list.target_no,
+                        list.loan_amount,
+                        list.interest_rate,
+                        list.amount,
+                        list.principal,
+                        list.interest,
+                        list.delay_interest,
+                        list.instalment
+                    ])
+                }
+            });
+            $('#history-table').DataTable().draw()
+
         },
         downloadExcel() {
             $("#fileDownloadIframe").remove();

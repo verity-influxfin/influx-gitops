@@ -143,7 +143,9 @@
                                             <td>{{ conbine.combine_delay_interest }}</td>
                                             <td>{{ conbine.min_instalment }}</td>
                                             <td>{{ conbine.max_instalment }}</td>
-                                            <td>Detail</td>
+                                            <td><button class="btn btn-info" @click="setDetailTableRow(conbine.combination_no)">
+                                                    查看
+                                                </button></td>
 
                                     </template>
                                 </tbody>
@@ -151,8 +153,44 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <form class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h3 class="modal-title">打包內容</h3>
+                            </div>
+                            <div class="modal-body p-5">
+                                <table id="history-table">
+                                    <thead>
+                                        <tr>
+                                            <th>轉(受)讓日期</th>
+                                            <th>出讓人會員 ID</th>
+                                            <th>受讓人會員 ID</th>
+                                            <th>案號</th>
+                                            <th>債權金額</th>
+                                            <th>年化利率</th>
+                                            <th>價額</th>
+                                            <th>剩餘本金</th>
+                                            <th>剩餘利息</th>
+                                            <th>剩餘延滯息</th>
+                                            <th>剩餘期數</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<style>
+    .modal-xl {
+        width: 95%;
+    }
+</style>
 <?php $this->load->view('admin/_footer'); ?>

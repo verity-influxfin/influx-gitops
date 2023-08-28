@@ -857,7 +857,9 @@ class Transfer extends MY_Admin_Controller
                 'menu'      => $this->menu,
                 'use_vuejs' => TRUE,
                 'scripts'   => [
-                    '/assets/admin/js/transfer/transfer_sheet.js'
+                    '/assets/admin/js/transfer/transfer_sheet.js',
+                    'https://cdn.jsdelivr.net/npm/vue@2.6.14',
+                    'https://unpkg.com/axios/dist/axios.min.js'
                 ]
             ]
         );
