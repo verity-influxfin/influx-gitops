@@ -1210,10 +1210,12 @@ class Product extends REST_Controller {
                 $subloan_target_status     = '';
                 $subloan_target_sub_status = '';
                 if($value->sub_status == 1){
-                    $subloan     = $this->subloan_lib ->get_subloan($value);
-                    $new_target  = $this->target_model->get($subloan->new_target_id);
-                    $subloan_target_status     = $new_target->status;
-                    $subloan_target_sub_status = $new_target->sub_status;
+                    $subloan     = $this->subloan_lib->get_subloan($value);
+                    if($subloan){
+                        $new_target  = $this->target_model->get($subloan->new_target_id);
+                        $subloan_target_status     = $new_target->status;
+                        $subloan_target_sub_status = $new_target->sub_status;
+                    }
                 }
 
                 $reason = $value->reason;
