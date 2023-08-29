@@ -3468,10 +3468,10 @@ class Product extends REST_Controller {
             if($image){
                 $param['person_image'] = $image;
             }else{
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                $this->response(array('result' => 'ERROR, upload person_image failed','error' => INPUT_NOT_CORRECT ));
             }
         }else{
-            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            $this->response(array('result' => 'ERROR, no person_image','error' => INPUT_NOT_CORRECT ));
         }
 
         if ($target->product_id == PRODUCT_ID_HOME_LOAN && $target->sub_product_id == SUB_PRODUCT_ID_HOME_LOAN_SHORT) {
