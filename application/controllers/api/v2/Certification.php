@@ -2371,7 +2371,7 @@ class Certification extends REST_Controller {
 			$content['return_type'] = isset($input['return_type']) && intval($input['return_type'])?$input['return_type']:0;
 
 			$send_mail = false;
-			if($content['return_type']==0){
+            if (in_array($content['return_type'], [0, 3])) {
                 //上傳檔案欄位
                 $file_fields 	= ['postal_image'];
                 foreach ($file_fields as $field) {
