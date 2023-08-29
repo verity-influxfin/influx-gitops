@@ -3548,7 +3548,7 @@ class Certification_lib{
 			}
 		}
 
-        $this->repayment_capacity_verify();
+        // $this->repayment_capacity_verify();
 
 		return $count;
 	}
