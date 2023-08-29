@@ -493,7 +493,7 @@ class Target_lib
                                 // #2779: 命中黑名單學校進二審審核
                                 $school_config = $this->CI->config->item('school_points');
                                 $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
-                                if ( ! $subloan_status && ! $renew && in_array($info->meta_value, $school_config['lock_school']) && in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
+                                if ( isset($info) && !$subloan_status && !$renew && in_array($info->meta_value, $school_config['lock_school']) && in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
                                 {
                                     $approve_target_result->add_memo(TARGET_WAITING_APPROVE, "{$info->meta_value}為黑名單學校", $approve_target_result::DISPLAY_BACKEND);
                                     goto FORCE_SECOND_INSTANCE;
