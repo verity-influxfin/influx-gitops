@@ -13133,12 +13133,13 @@ define({
                             "allowedValues": [
                                 "0",
                                 "1",
-                                "2"
+                                "2",
+                                "3"
                             ],
                             "optional": true,
                             "field": "return_type",
                             "defaultValue": "0",
-                            "description": "<p>回寄方式 0:郵局 1:自然人憑證 2:投資人行動網</p>"
+                            "description": "<p>回寄方式 0:郵局 1:自然人憑證 2:投資人行動網 3:聯徵中心</p>"
                         },
                         {
                             "group": "Parameter",
