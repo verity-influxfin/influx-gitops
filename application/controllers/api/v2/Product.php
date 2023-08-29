@@ -3472,6 +3472,21 @@ class Product extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
         }
 
+        if ($target->product_id == PRODUCT_ID_HOME_LOAN && $target->sub_product_id == SUB_PRODUCT_ID_HOME_LOAN_SHORT) {
+            if (!isset($_FILES['deed_image']) || empty($_FILES['deed_image'])) {
+                $this->response(array('result' => 'ERROR, no deed_image', 'error' => INPUT_NOT_CORRECT));
+            }
+            log_message('debug', '-- Before upload deed image: ' . time() . ' --');
+            $image = $this->s3_upload->image($_FILES, 'deed_image', $user_id, 'signing_target');
+            log_message('debug', '-- After upload deed image: ' . time() . ' --');
+            if (!$image) {
+                $this->response(array('result' => 'ERROR, upload deed_image failed', 'error' => INPUT_NOT_CORRECT));
+            }
+            $target_data = json_decode($target->target_data, TRUE);
+            $target_data['deed_image'] = $image;
+            $param['target_data'] = json_encode($target_data, JSON_FORCE_OBJECT);
+        }
+
         $this->load->library('loanmanager/product_lib');
         if ($this->product_lib->need_chk_allow_age($target->product_id, $target->sub_prduct_id ?? 0) === TRUE)
         {
