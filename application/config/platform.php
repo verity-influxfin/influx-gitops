@@ -425,7 +425,7 @@ $config['product_list'] = [
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
         'allow_age_range' => [18, 45],
-        'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
+        'description' => '須提供工作證明<br>可申請額度<br>1,000-200,000',
         'checkOwner' => false,
     ],
     //5 => [
@@ -1258,7 +1258,7 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [18, 45],
-                'description' => '須提供工作證明<br>可申請額度<br>10,000-500,000',
+                'description' => '須提供工作證明<br>可申請額度<br>1,000-500,000',
                 'checkOwner' => false,
             ]
         ],
