@@ -209,16 +209,19 @@ abstract class Certification_base implements Certification_definition
             if ( ! empty($msg))
             {
                 $this->remark['success'] = $msg;
+            }
+            if (isset($this->remark['fail']))
+            { // 清空失敗原因
+                $this->remark['fail'] = '';
+            }
+            if ( ! empty($this->remark))
+            {
                 $param['remark'] = json_encode($this->remark);
             }
             $rs = $this->CI->user_certification_model->update($this->certification['id'], $param);
 
             $post_flag = $this->post_success($sys_check);
             $notified = $this->success_notification();
-
-            // 驗證推薦碼
-            $this->CI->load->library('certification_lib');
-            $this->CI->certification_lib->verify_promote_code((object) $this->certification, FALSE);
         }
         return $pre_flag && $rs && $post_flag && $notified;
     }
@@ -599,7 +602,8 @@ abstract class Certification_base implements Certification_definition
                 continue;
             }
 
-            if ( ! isset($product['certifications']) || ! in_array($this->certification_id, $product['certifications']))
+            $product_certs = $this->CI->product_lib->get_product_certs_by_product($product, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
+            if ( ! in_array($this->certification_id, $product_certs))
             {
                 continue;
             }
@@ -612,7 +616,8 @@ abstract class Certification_base implements Certification_definition
             for ($i = 0; $i < count($product['sub_product']); $i++)
             {
                 $product_info = $this->CI->product_lib->getProductInfo($product['id'], $product['sub_product'][$i]);
-                if ( ! isset($product_info['certifications']) || ! in_array($this->certification_id, $product_info['certifications']))
+                $product_certs = $this->CI->product_lib->get_product_certs_by_product($product_info, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
+                if ( ! in_array($this->certification_id, $product_certs))
                 {
                     continue;
                 }

@@ -29,6 +29,10 @@ class Ocr_parser_factory
                 return new Cert_incomestatement($info);
             case CERTIFICATION_GOVERNMENTAUTHORITIES:
                 return new Cert_governmentauthorities($info);
+            case CERTIFICATION_HOUSE_DEED:
+                return new Cert_house_deed($info);
+            case CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS:
+                return new Cert_land_and_building_transaction($info);
             default:
                 log_msg('error', "欲建立未支援的認證徵信 OCR Parser 項目 (認證編號:{$info['certification_id']}) ");
                 return NULL;

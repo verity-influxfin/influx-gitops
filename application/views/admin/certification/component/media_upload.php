@@ -1,12 +1,12 @@
 <div id="media-form">
-  <div>檔案名稱:</div>
-  <input type="file" name="file_upload_tmp[]" id="file-picture" multiple accept="<?= isset($data['file_type']) ? $data['file_type'] :'*'; ?>" onchange="mediaUploadOnChange(event)"/>
-  <br/>
-  <?php
+    <div>檔案名稱:</div>
+    <input type="file" name="file_upload_tmp[]" id="file-picture" multiple accept="<?= isset($data['file_type']) ? $data['file_type'] :'*'; ?>" onchange="mediaUploadOnChange(event)"/>
+    <br/>
+    <?php
     if(isset($data['extra_info'])){
-      foreach($data['extra_info'] as $k=>$v){
-        echo '<input style="display:none;" class="extra_info" type="text" name="'.$k.'" value="'.$v.'"/>';
-      }
+        foreach($data['extra_info'] as $k=>$v){
+            echo '<input style="display:none;" class="extra_info" type="text" name="'.$k.'" value="'.$v.'"/>';
+        }
     }
   ?>
   <div type="submit" id="mediaUploadBtn" class="btn btn-primary" onclick="submitMedia($(this))" disabled>上傳檔案</div>

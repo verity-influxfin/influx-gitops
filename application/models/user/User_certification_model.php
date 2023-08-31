@@ -13,6 +13,7 @@ class User_certification_model extends MY_Model
         CERTIFICATION_STATUS_NOT_COMPLETED => "未完成填寫" ,
         CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION => "待資料檢核" ,
         CERTIFICATION_STATUS_AUTHENTICATED => "待送出審核" ,
+        CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE => '待配偶歸戶',
 	);
 	public $investor_list  	= array(
 		0 =>	"借款端",
@@ -134,7 +135,7 @@ class User_certification_model extends MY_Model
         return $list;
     }
 
-	public function get_content($userId, $certification_id, $limit = 1, $offset = 0)
+	public function get_content($userId, $certification_id, $limit = 1, $offset = 0, int $investor = USER_BORROWER)
     {
         $query = $this->db
             ->select('content')
@@ -142,6 +143,7 @@ class User_certification_model extends MY_Model
             ->where('user_id', $userId)
             ->where('status', 1)
             ->where('certification_id', $certification_id)
+            ->where('investor', $investor)
             ->limit($limit, $offset)
             ->get();
 
@@ -292,5 +294,35 @@ class User_certification_model extends MY_Model
             ->get()
             ->result_array();
         return array_column($result_arr, 'id');
+    }
+
+    /**
+     * 取得未歸戶配偶的徵信項
+     * @param int $target_id : 案件ID (targets.id)
+     * @param int $cert_id : 徵信項編號 (user_certification.certification_id)
+     * @param int $investor : 投資端 (constant(INVESTOR)) / 借款端 (constant(BORROWER))
+     * @return mixed
+     */
+    public function get_spouse_last_certification_info(int $target_id, int $cert_id, int $investor)
+    {
+        $sub_query = $this->db
+            ->select('ta.user_id')
+            ->from('p2p_loan.target_associates ta')
+            ->where('ta.target_id', $target_id)
+            ->where('ta.character', ASSOCIATES_CHARACTER_OWNER)
+            ->get_compiled_select('', TRUE);
+
+        return $this->db
+            ->select('uc.id AS certification_id')
+            ->select('uc.sys_check')
+            ->select('uc.expire_time')
+            ->select('uc.status AS user_status')
+            ->from('p2p_user.user_certification uc')
+            ->join("({$sub_query}) ta", 'ta.user_id=uc.user_id')
+            ->where('uc.certification_id', $cert_id)
+            ->where('uc.investor', $investor)
+            ->where('uc.status', CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE)
+            ->order_by('uc.created_at', 'DESC')
+            ->get()->first_row('array');
     }
 }
