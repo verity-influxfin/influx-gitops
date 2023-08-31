@@ -92,7 +92,6 @@ var app = new Vue({
                         list.target_no,
                         list.loan_amount,
                         list.interest_rate,
-                        list.amount,
                         list.principal,
                         list.interest,
                         list.delay_interest,
