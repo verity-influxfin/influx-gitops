@@ -20,7 +20,9 @@ class PersonalCreditSheet extends CreditSheetBase {
 
     // 允許承作的產品類別列表
     public const ALLOW_PRODUCT_LIST = [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER,
-        PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
+        PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER,
+        PRODUCT_ID_HOME_LOAN
+    ];
 
     // 最終核准層次
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
@@ -141,6 +143,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             case PRODUCT_ID_STUDENT:
                 return -1500;
             case PRODUCT_ID_SALARY_MAN:
+            case PRODUCT_ID_HOME_LOAN:
                 return -1000;
             default:
                 return 0;
@@ -154,6 +157,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             case PRODUCT_ID_STUDENT:
                 return 2000;
             case PRODUCT_ID_SALARY_MAN:
+            case PRODUCT_ID_HOME_LOAN:
                 return 1000;
             default:
                 return 0;
@@ -166,6 +170,8 @@ class PersonalCreditSheet extends CreditSheetBase {
         {
             case PRODUCT_ID_SALARY_MAN:
                 return 10000;
+            case PRODUCT_ID_HOME_LOAN:
+                return 30000;
             default:
                 return 0;
         }
@@ -177,6 +183,8 @@ class PersonalCreditSheet extends CreditSheetBase {
         {
             case PRODUCT_ID_SALARY_MAN:
                 return 20000;
+            case PRODUCT_ID_HOME_LOAN:
+                return 1000000;
             default:
                 return 0;
         }

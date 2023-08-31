@@ -260,12 +260,14 @@ class Target_model extends MY_Model
     }
 
     public function getUserStatusByTargetId($targetIds) {
-        $this->db->select('*')
+        $this->db
+            ->select('user_id')
+            ->select('created_at')
             ->from("`p2p_loan`.`targets`")
             ->where_in('id', $targetIds);
         $subquery = $this->db->get_compiled_select('', TRUE);
         $this->db
-            ->select('t.user_id, COUNT(*) as total_count')
+            ->select('t.user_id, COUNT(1) as total_count')
             ->from('`p2p_loan`.`targets` AS `t`')
             ->join("($subquery) as `r`", "`t`.`user_id` = `r`.`user_id`")
             ->where('t.created_at < r.created_at')
@@ -344,6 +346,10 @@ class Target_model extends MY_Model
      * @return mixed
      */
     public function getDelayedTarget($targetIds) {
+        if(empty($targetIds))
+        {
+            return [];
+        }
         $this->db->select('target_id, entering_date, user_from, user_to')
             ->from("`p2p_transaction`.`transactions`")
             ->where_in('target_id', $targetIds)
@@ -671,16 +677,24 @@ class Target_model extends MY_Model
 
     /** 依targets.status取得不重複的使用者ID
      * @param array $status
+     * @param int $company_Status : 是否為法人 (p2p_user.users.company_status)
+     * @param array $where
      * @return mixed
      */
-    public function get_distinct_user_by_status(array $status)
+    public function get_distinct_user_by_status(array $status, int $company_Status = 0, array $where = [])
     {
-        $this->db
-            ->select('DISTINCT(user_id) AS user_id')
+        $this->_database
+            ->select('DISTINCT(targets.user_id) AS user_id')
             ->from('p2p_loan.targets')
-            ->where_in('status', $status);
+            ->join('p2p_user.users', 'users.id=targets.user_id AND users.company_status=' . $company_Status)
+            ->where_in('targets.status', $status);
 
-        return $this->db->get()->result_array();
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
     }
 
     public function get_apply_target_count($where)
@@ -760,10 +774,10 @@ class Target_model extends MY_Model
      * @param int $investor : 投資人/借款人
      * @param array $cert_status : 徵信項狀態 (參考constant(CERTIFICATION_STATUS_*))
      * @param int $product_id : 產品ID
-     * @param $has_stage_target : 是否撈取階段上架的相關申貸案 (TRUE=只撈階段上架 FALSE=不撈取階段上架 NULL=不管是不是階段上架都撈)
+     * @param array $sub_product_id
      * @return mixed
      */
-    public function get_risk_person_list(int $investor, array $cert_status, int $product_id, $has_stage_target = NULL)
+    public function get_risk_person_list(int $investor, array $cert_status, int $product_id, array $sub_product_id)
     {
         $subquery = $this->db
             ->select('DISTINCT(user_id) AS user_id')
@@ -773,10 +787,18 @@ class Target_model extends MY_Model
             ->get_compiled_select(NULL, TRUE);
 
         $this->db
-            ->select('t.*')
+            ->select('t.id')
+            ->select('t.target_no')
+            ->select('t.user_id')
+            ->select('t.product_id')
+            ->select('t.sub_product_id')
+            ->select('t.certificate_status')
+            ->select('t.status')
+            ->select('t.updated_at')
+            ->select('t.created_at')
             ->from('p2p_loan.targets t')
             ->join("({$subquery}) AS a", 'a.user_id=t.user_id')
-            ->where('t.product_id<', PRODUCT_FOREX_CAR_VEHICLE)
+            ->where('t.product_id<', PRODUCT_FOR_JUDICIAL)
             ->where_in('t.status', [
                 TARGET_WAITING_APPROVE,
                 TARGET_WAITING_SIGNING,
@@ -785,16 +807,8 @@ class Target_model extends MY_Model
                 TARGET_ORDER_WAITING_VERIFY
             ])
             ->where('t.product_id', $product_id)
+            ->where_in('t.sub_product_id', $sub_product_id)
             ->order_by('t.id', 'ASC');
-
-        if ($has_stage_target === FALSE)
-        {
-            $this->db->where('t.sub_product_id !=', STAGE_CER_TARGET);
-        }
-        elseif ($has_stage_target === TRUE)
-        {
-            $this->db->where('t.sub_product_id', STAGE_CER_TARGET);
-        }
 
         return $this->db->get()->result();
     }
@@ -1028,6 +1042,21 @@ class Target_model extends MY_Model
     }
 
     /**
+     * 依案件 id 取得對應的產品 id
+     * @param $id
+     * @return mixed
+     */
+    public function get_product_id_by_id($id)
+    {
+        return $this->db
+            ->select(['product_id', 'sub_product_id'])
+            ->from('p2p_loan.targets')
+            ->where('id', $id)
+            ->get()
+            ->first_row('array');
+    }
+
+    /**
      * @param $target_id
      * @param $update_param
      * @param $where_param
@@ -1065,6 +1094,22 @@ class Target_model extends MY_Model
             ->where('id', $id)
             ->get()
             ->first_row('array');
+    }
+
+    public function get_newest_no_by_condition($where)
+    {
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+        $target = $this->_database
+            ->select('target_no')
+            ->from('p2p_loan.targets')
+            ->order_by('created_at', 'desc')
+            ->get()
+            ->first_row('array');
+
+        return $target['target_no'] ?? '';
     }
 
     public function get_specific_product_status($product_id, $status_list = [TARGET_WAITING_APPROVE])

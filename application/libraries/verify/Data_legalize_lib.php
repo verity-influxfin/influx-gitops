@@ -177,7 +177,8 @@ class Data_legalize_lib{
 							$res['error_message'][] = '公司負責人姓名與自然人實名查詢不一致';
 							$res['error_location'][$group_id][] = 'owner';
 						}
-						if($user_info->id_number != $data['owner_id']){
+                        if ( ! isset($data['owner_id']) || empty($data['owner_id']) || $user_info->id_number != $data['owner_id'])
+                        {
 							$res['error_message'][] = '公司負責人統一編號與自然人統一編號查詢不一致';
 							$res['error_location'][$group_id][] = 'owner_id';
 						}

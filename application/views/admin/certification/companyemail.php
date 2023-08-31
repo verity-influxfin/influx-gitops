@@ -1,12 +1,15 @@
 		<script type="text/javascript">
-			function check_fail(){
-				var status = $('#status :selected').val();
-				if(status==2){
-					$('#fail_div').show();
-				}else{
-					$('#fail_div').hide();
-				}
-			}
+            function check_fail() {
+                if ($('#status :selected').val() === '2') {
+                    $('#fail_div').show();
+                } else {
+                    $('#fail_div').hide();
+                }
+            }
+
+            $(document).ready(function () {
+                $('#status').trigger('change');
+            });
 		</script>
         <div id="page-wrapper">
             <div class="row">
@@ -37,13 +40,12 @@
 									</div>
 									<div class="form-group">
 										<label>備註</label>
-										<? 
-											if($remark){
-												if(isset($remark["fail"]) && $remark["fail"]){
-													echo '<p style="color:red;" class="form-control-static">失敗原因：'.$remark["fail"].'</p>';
-												}
-											}
-										?>
+                                        <?php
+                                        if ( ! empty($remark["fail"]))
+                                        {
+                                            echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+                                        }
+                                        ?>
 									</div>
                                     <div class="form-group">
                                         <label>系統審核</label>
