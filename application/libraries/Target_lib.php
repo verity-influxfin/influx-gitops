@@ -1966,7 +1966,7 @@ class Target_lib
                                     if ( ! empty($cert_debit_card))
                                     {
                                         $new_content = json_encode(array_merge(
-                                            json_decode($cert_debit_card['content'], TRUE),
+                                            json_decode($cert_debit_card->content, TRUE),
                                             ['in_advance' => TRUE]
                                         ));
                                         $this->CI->user_certification_model->update($cert_debit_card->id, ['content' => $new_content]);

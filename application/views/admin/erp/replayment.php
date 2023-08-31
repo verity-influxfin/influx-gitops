@@ -75,6 +75,7 @@
                                         <th>應收利息</th>
                                         <th>本金餘額</th>
                                         <th>逾期本金餘額</th>
+                                        <th>應收延滯息</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="is_waiting_response">
@@ -102,6 +103,7 @@
                                                 <td class="text-right">{{ amount(row.interest_receivable) }}</td>
                                                 <td class="text-right">{{ amount(row.principal_balance) }}</td>
                                                 <td class="text-right">{{ amount(row.delay_principal_balance) }}</td>
+                                                <td class="text-right">{{ amount(row.receivable_delay_interest_int) }}</td>
                                             </tr>
                                         </template>
                                         <!-- <tr>
@@ -147,8 +149,11 @@
                                 <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
                                     <i class="fa fa-search"></i> 搜尋
                                 </button>
-                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadExcelLatest">
+                                <button class="btn btn-primary" type="button" :disabled="is_waiting_response" @click="downloadExcelLatest">
                                     <i class="fa fa-file-excel-o"></i> 檔案下載
+                                </button>
+                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadAllInvestmentExcel">
+                                    <i class="fa fa-file-excel-o"></i> 全平台本金攤還表下載
                                 </button>
                             </div>
                         </div>
@@ -214,6 +219,7 @@
                                         <th>日期</th>
                                         <th>應收利息</th>
                                         <th>逾期本金餘額</th>
+                                        <th>應收延滯息</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="is_waiting_response">
@@ -232,6 +238,7 @@
                                             <td style="padding-left: 1em;">{{ row.date }}</td>
                                             <td class="text-right">{{ amount(row.interest_receivable) }}</td>
                                             <td class="text-right">{{ amount(row.delay_principal_balance) }}</td>
+                                            <td class="text-right">{{ amount(row.receivable_delay_interest_int) }}</td>
                                         </tr>
                                     </template>
                                 </tbody>

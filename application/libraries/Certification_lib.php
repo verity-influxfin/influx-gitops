@@ -3275,7 +3275,7 @@ class Certification_lib{
 			}
 		}
 
-        $this->repayment_capacity_verify();
+        // $this->repayment_capacity_verify();
         $this->land_and_building_transactions_verify();
         $this->site_surve_video_verify();
 
