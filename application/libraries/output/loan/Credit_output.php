@@ -20,6 +20,13 @@ class Credit_output
 		$this->loadProductMapping();
 	}
 
+    public function toOneWithRemark(){
+        if (!$this->credit) {
+            return [];
+        }
+        return $this->map_with_remark($this->credit);
+    }
+
 	public function toOne()
 	{
 		if (!$this->credit) {
@@ -48,6 +55,27 @@ class Credit_output
 
 		return $output;
 	}
+    public function map_with_remark($credit)
+    {
+        $output = [
+            'id' => $credit->id,
+            'product' => [
+                'id' => $credit->product_id,
+                'sub_product_id' => isset($credit->sub_product_id)?$credit->sub_product_id:'',
+                'name' => $this->productMapping[$credit->product_id]["name"] . (isset($credit->sub_product_name) ? ' / ' . $credit->sub_product_name : ''),
+                'loan_range_s' => $this->productMapping[$credit->product_id]['loan_range_s'],
+                'loan_range_e' => $this->productMapping[$credit->product_id]['loan_range_e'],
+            ],
+            'level' => $credit->level,
+            'points' => $credit->points,
+            'amount' => $credit->amount,
+            'remark' => $credit->remark,
+            'expired_at' => $credit->expire_time,
+            'created_at' => $credit->created_at
+        ];
+
+        return $output;
+    }
 
 	public function mapToObject($creditInput)
 	{
@@ -62,6 +90,7 @@ class Credit_output
             $credit->level = isset($creditInput["level"]) ? $creditInput["level"] : '';
             $credit->points = isset($creditInput["points"]) ? $creditInput["points"] : '';
             $credit->amount = isset($creditInput["amount"]) ? $creditInput["amount"] : '';
+            $credit->remark = isset($creditInput["remark"]) ? json_decode($creditInput["remark"]) : '';
             $credit->expire_time = isset($creditInput["expire_time"]) ? $creditInput["expire_time"] : '';
             $credit->created_at = isset($creditInput["created_at"]) ? $creditInput["created_at"] : '';
         }

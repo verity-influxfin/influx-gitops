@@ -424,6 +424,56 @@ class Target_lib
                                 $approve_target_result = new \Approve_target\Approve_target_result($target->status, $target->sub_status);
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
 
+                                $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15]);
+                                if (!isset($certification)) {
+                                    $this->remark_target($target->id, '沒有有效的還款力計算結果');
+                                    goto FORCE_SECOND_INSTANCE;
+                                }
+                                if ($certification->status != 1){
+                                    $this->remark_target($target->id, '沒有驗證成功的還款力計算結果');
+                                    goto FORCE_SECOND_INSTANCE;
+                                }
+
+                                $content = json_decode($certification->content);
+                                if (!isset($content->monthly_repayment) || !isset($content->total_repayment)) {
+                                    $this->remark_target($target->id, '沒有有效的還款力計算結果，缺少monthly_repayment 或 total_repayment');
+                                    goto FORCE_SECOND_INSTANCE;
+                                }
+                                $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
+                                // Todo: “新戶” (無申貸成功紀錄者) 且薪水四萬以下
+                                $past_targets = $this->CI->target_model->get_many_by([
+                                    'user_id' => $user_id,
+                                    'status' => [5, 10],
+                                ]);
+                                $is_new_user = count($past_targets) == 0;
+                                if ($is_new_user) {
+                                    $product_id = $target->product_id;
+                                    // 上班族貸款
+                                    if (in_array($product_id, [3, 4])) {
+                                        $product = $this->CI->config->item('product_list')[$product_id];
+                                        if ($product['condition_rate']['salary_below'] > $content->monthly_repayment) {
+                                            if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment) {
+                                                // 高於22倍，0~3000之間
+                                                $range_min = 0;
+                                                $range_max = 3000;
+                                            }
+                                            else {
+                                                // 低於22倍，額度在3000~10000之間
+                                                $range_min = 3000;
+                                                $range_max = 10000;
+                                            }
+
+                                            $loan_amount = max($range_min, min($range_max, $loan_amount));
+                                            $param['loan_amount'] = $loan_amount;
+
+                                            $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
+                                            $param['platform_fee'] = $platform_fee;
+
+                                            goto FORCE_SECOND_INSTANCE;
+                                        }
+
+                                    }
+                                }
                                 // todo: 暫時將「學生貸」、「上班族貸」轉二審
                                 if ( ! $subloan_status &&
                                     ! $renew &&
@@ -443,7 +493,7 @@ class Target_lib
                                 // #2779: 命中黑名單學校進二審審核
                                 $school_config = $this->CI->config->item('school_points');
                                 $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
-                                if ( ! $subloan_status && ! $renew && in_array($info->meta_value, $school_config['lock_school']) && in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
+                                if ( isset($info) && !$subloan_status && !$renew && in_array($info->meta_value, $school_config['lock_school']) && in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
                                 {
                                     $approve_target_result->add_memo(TARGET_WAITING_APPROVE, "{$info->meta_value}為黑名單學校", $approve_target_result::DISPLAY_BACKEND);
                                     goto FORCE_SECOND_INSTANCE;
@@ -619,6 +669,15 @@ class Target_lib
             $this->coop_status_change_no($target->order_id, 'approve_fail');
         }
         return false;
+    }
+
+    private function remark_target($target_id, $remark)
+    {
+        $param = [
+            'remark' => $remark,
+        ];
+        $this->CI->target_model->update($target_id, $param);
+        $this->insert_change_log($target_id, $param);
     }
 
     public function target_verify_success($target = [], $admin_id = 0, $param = [], $user_id = 0)
