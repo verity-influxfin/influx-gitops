@@ -526,6 +526,40 @@ class Cron extends CI_Controller
 		die('1');
 	}
 
+    public function create_investor_estatement_html()
+    {	//每五分鐘
+        $this->load->library('Estatement_lib');
+        $script  	= 16;
+        $start_time = time();
+        $count 		= $this->estatement_lib->script_create_investor_estatement_content();
+        $num		= $count ? intval($count) : 0;
+        $end_time 	= time();
+        $data		= array(
+            "script_name"	=> "create_investor_estatement_html",
+            "num"			=> $num,
+            "start_time"	=> $start_time,
+            "end_time"		=> $end_time
+        );
+        $this->log_script_model->insert($data);
+        die('1');
+    }
+    public function create_borrower_estatement_html()
+    {	//每五分鐘
+        $this->load->library('Estatement_lib');
+        $script  	= 17;
+        $start_time = time();
+        $count 		= $this->estatement_lib->script_create_borrower_estatement_content();
+        $num		= $count ? intval($count) : 0;
+        $end_time 	= time();
+        $data		= array(
+            "script_name"	=> "create_borrower_estatement_html",
+            "num"			=> $num,
+            "start_time"	=> $start_time,
+            "end_time"		=> $end_time
+        );
+        $this->log_script_model->insert($data);
+        die('1');
+    }
 	public function re_create_estatement_html()
 	{	//重新產生指定使用者對帳單
 		$this->load->library('Estatement_lib');
@@ -573,7 +607,8 @@ class Cron extends CI_Controller
 		$this->load->library('Transfer_lib');
 		$script  	= 14;
 		$start_time = time();
-		$count 		= $this->transfer_lib->script_transfer_success();
+//		$count 		= $this->transfer_lib->script_transfer_success();
+		$count 		= $this->transfer_lib->script_transfer_success_v2();
 		$num		= $count ? intval($count) : 0;
 		$end_time 	= time();
 		$data		= [
@@ -1044,5 +1079,22 @@ class Cron extends CI_Controller
         ];
         $this->log_script_model->insert($data);
         die('1');
+    }
+    public function get_investor_estatement_count_status()
+    {
+        $year = $this->input->get('year');
+        $month = $this->input->get('month');
+        $this->load->library('Estatement_lib');
+        $this->estatement_lib->script_create_investor_estatement_content_count_status($year, $month);
+        die();
+    }
+
+    public function get_borrower_estatement_count_status()
+    {
+        $year= $this->input->get('year');
+        $month= $this->input->get('month');
+        $this->load->library('Estatement_lib');
+        $this->estatement_lib->script_create_borrower_estatement_content_count_status($year, $month);
+        die();
     }
 }

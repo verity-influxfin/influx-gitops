@@ -197,7 +197,18 @@ class Estatement_lib{
 				}
 
 				// 無任何應收帳款合計&利息收入&違約補貼金&應收本金&應收利息&虛擬帳號出入記錄時，不寄送帳單
-				if(!$ar_total_count && !$interest_count && !$allowance_count && !$ar_principal_count && !$ar_interest_count && !$virtual_account_record_count) {
+                if(!$ar_total_count && !$interest_count && !$allowance_count && !$ar_principal_count && !$ar_interest_count && !$virtual_account_record_count) {
+                    $param = array(
+                        "user_id"	=> $user_id,
+                        "type"		=> "estatement_failed",
+                        "investor"	=> 1,
+                        "sdate"		=> $sdate,
+                        "edate"		=> $edate,
+                        "content"	=> "",
+                        "url"		=> "",
+                        "status"    => 1,
+                    );
+					$rs = $this->CI->user_estatement_model->insert($param);
 					return false;
 				}
 
@@ -870,53 +881,164 @@ class Estatement_lib{
 		return false;
 	}
 
+    function get_all_investor_user_list($sdate="",$edate=""){
+        if (empty($sdate) || empty($edate) || $edate < $sdate) {
+            return false;
+        }
+
+        $date_range = entering_date_range($edate);
+        $edatetime = $date_range ? $date_range["edatetime"] : "";
+        $date_range = entering_date_range($sdate);
+        $sdatetime = $date_range ? $date_range["sdatetime"] : "";
+        if (!$edatetime){
+            return [];
+        }
+
+        $transaction 	= $this->CI->transaction_model->get_many_by(array(
+            "source" 				=> [1,10],
+            "bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
+            "entering_date <=" 		=> $edate,
+        ));
+        if (empty($transaction)){
+            return [];
+        }
+
+        $user_list = array();
+
+        foreach($transaction as $key => $value){
+            $user_list[$value->user_to] = $value->user_to;
+        }
+        return $user_list;
+    }
 	function get_investor_user_list($sdate="",$edate=""){
-		if(!empty($sdate) && !empty($edate) && $edate >= $sdate){
-			$date_range			= entering_date_range($edate);
-			$edatetime			= $date_range?$date_range["edatetime"]:"";
-			$date_range			= entering_date_range($sdate);
-			$sdatetime			= $date_range?$date_range["sdatetime"]:"";
-			$user_list 			= array();
-			if($edatetime){
-				$transaction 	= $this->CI->transaction_model->get_many_by(array(
-					"source" 				=> [1,10],
-					"bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
-					"entering_date <=" 		=> $edate,
-				));
-				if(!empty($transaction)){
-					foreach($transaction as $key => $value){
-						$user_list[$value->user_to] = $value->user_to;
-					}
-				}
-			}
-			return $user_list;
-		}
-		return false;
-	}
+        $user_list = $this->get_all_investor_user_list($sdate,$edate);
+        return array_chunk($user_list, 150)[0] ?? [];
+    }
+    function get_investor_user_list_total_count($sdate="",$edate=""){
+        $user_list = $this->get_all_investor_user_list($sdate,$edate);
+        return count($user_list);
+    }
+
+    private function get_all_investor_user_list_without_exist($sdate = "", $edate = "", $exist_userid_list = []){
+        if (empty($sdate) || empty($edate) || $edate < $sdate){
+            return [];
+        }
+        if (!entering_date_range($edate)){
+            return [];
+        }
+
+        $transaction = $this->CI->transaction_model->get_many_by(array(
+            "source" => [1, 10],
+            "bank_account_to like" => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . "%",
+            "entering_date <=" => $edate,
+            "user_to not" => $exist_userid_list,
+        ));
+        if (empty($transaction)) {
+            return [];
+        }
+
+        $user_list = [];
+        foreach ($transaction as $key => $value) {
+            $user_list[$value->user_to] = $value->user_to;
+        }
+        return $user_list;
+    }
+
+    /**
+     * @param string $sdate
+     * @param string $edate
+     * @param array $exist_userid_list
+     * @return array|bool
+     */
+    private function get_investor_user_list_without_exist($sdate = "", $edate = "", $exist_userid_list = []): array
+    {
+        $user_list = $this->get_all_investor_user_list_without_exist($sdate, $edate, $exist_userid_list);
+        $user_list = array_chunk($user_list, 150)[0] ?? [];
+        return $user_list;
+    }
+    private function get_investor_user_list_without_exist_total_count($sdate = "", $edate = "", $exist_userid_list = []): int
+    {
+        $user_list = $this->get_all_investor_user_list_without_exist($sdate, $edate, $exist_userid_list);
+        return count($user_list);
+    }
+
+    private function get_all_borrower_user_list($sdate="",$edate=""){
+        if (empty($sdate) || empty($edate) || $edate < $sdate){
+            return [];
+        }
+
+        $this->CI->load->model('transaction/target_model');
+        $date_range			= entering_date_range($edate);
+        $edatetime			= $date_range?$date_range["edatetime"]:"";
+        $date_range			= entering_date_range($sdate);
+        $sdatetime			= $date_range?$date_range["sdatetime"]:"";
+        if(!$edatetime){
+            return [];
+        }
+
+        $target 		= $this->CI->target_model->get_many_by(array(
+            "status" 		=> array(5,10),
+            "loan_date <=" 	=> $edate,
+        ));
+        if (empty($target)){
+            return [];
+        }
+        $user_list 			= [];
+        foreach($target as $key => $value){
+            $user_list[$value->user_id] = $value->user_id;
+        }
+        return $user_list;
+    }
 
 	function get_borrower_user_list($sdate="",$edate=""){
-		if(!empty($sdate) && !empty($edate) && $edate >= $sdate){
-			$this->CI->load->model('transaction/target_model');
-			$date_range			= entering_date_range($edate);
-			$edatetime			= $date_range?$date_range["edatetime"]:"";
-			$date_range			= entering_date_range($sdate);
-			$sdatetime			= $date_range?$date_range["sdatetime"]:"";
-			$user_list 			= array();
-			if($edatetime){
-				$target 		= $this->CI->target_model->get_many_by(array(
-					"status" 		=> array(5,10),
-					"loan_date <=" 	=> $edate,
-				));
-				if(!empty($target)){
-					foreach($target as $key => $value){
-						$user_list[$value->user_id] = $value->user_id;
-					}
-				}
-			}
-			return $user_list;
-		}
-		return false;
-	}
+        $user_list = $this->get_all_borrower_user_list($sdate,$edate);
+		return array_chunk($user_list, 150)[0] ?? [];
+    }
+    function get_borrower_user_list_total_count()
+    {
+        $user_list = $this->get_all_borrower_user_list();
+        return count($user_list);
+    }
+    /**
+     * @param $sdate
+     * @param $edate
+     * @param $exist_userid_list
+     * @return array|false
+     */
+    function get_all_borrower_user_list_without_exist($sdate = "", $edate = "", $exist_userid_list = []): array
+    {
+        if (empty($sdate) || empty($edate) || $edate < $sdate) {
+            return [];
+        }
+        if (!entering_date_range($edate)) {
+            return [];
+        }
+
+        $this->CI->load->model('transaction/target_model');
+        $target = $this->CI->target_model->get_many_by(array(
+            "status" => [5, 10],
+            "loan_date <=" => $edate,
+            "user_id not" => $exist_userid_list,
+        ));
+        if (empty($target)) {
+            return [];
+        }
+        $user_list = [];
+        foreach ($target as $key => $value) {
+            $user_list[$value->user_id] = $value->user_id;
+        }
+        return $user_list;
+    }
+    function get_borrower_user_list_without_exist($sdate = "", $edate = "", $exist_userid_list = []): array
+    {
+        $user_list = $this->get_all_borrower_user_list_without_exist($sdate, $edate, $exist_userid_list);
+        return array_chunk($user_list, 150)[0] ?? [];
+    }
+    function get_borrower_user_list_without_exist_total_count($sdate = "", $edate = "", $exist_userid_list = []): int
+    {
+        $user_list = $this->get_all_borrower_user_list_without_exist($sdate, $edate, $exist_userid_list);
+        return count($user_list);
+    }
 
 	function create_estatement_pdf($user_estatement= array()){
 		if($user_estatement->id && $user_estatement->url=="" && !empty($user_estatement->content)){
@@ -1042,6 +1164,7 @@ class Estatement_lib{
 	function script_create_estatement_pdf(){
 		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
 			"url"	=> "",
+            "type !="=> "estatement_failed",
 		));
 		$count = 0;
 		if($list){
@@ -1057,6 +1180,7 @@ class Estatement_lib{
 		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
 			"url !="	=> "",
 			"status"	=> 0,
+            "type !="=> "estatement_failed"
 		));
 		$count = 0;
 		if($list){
@@ -1082,10 +1206,11 @@ class Estatement_lib{
 			$exist = $this->CI->user_estatement_model->get_by([
 				"sdate"	=> $sdate,
 				"edate"	=> $edate,
+                "type !="=> "estatement_failed"
 			]);
 			if(!$exist){
 				$investor_list 	= $this->get_investor_user_list($sdate,$edate);
-				if($investor_list){
+				if(!empty($investor_list)){
 					foreach($investor_list as $key => $user_id){
 						$rs = $this->get_estatement_investor($user_id,$sdate,$edate);
 						if($rs) {
@@ -1096,7 +1221,7 @@ class Estatement_lib{
 					}
 				}
 				$borrower_list 	= $this->get_borrower_user_list($sdate,$edate);
-				if($borrower_list){
+				if(!empty($borrower_list)){
 					foreach($borrower_list as $key => $user_id){
 						$rs = $this->get_estatement_borrower($user_id,$sdate,$edate);
 						$count++;
@@ -1106,6 +1231,96 @@ class Estatement_lib{
 		}
 		return $count;
 	}
+
+    function script_create_investor_estatement_content(): int
+    {
+        $day = 2;  // Create estatement content on the second day of every month.
+        $entering_date = get_entering_date();
+        $date = date("Y-m-j", strtotime($entering_date));
+        $estatement_date = date("Y-m-") . $day;
+        if ($date !== $estatement_date) return 0;
+        $first_day = 1;
+        $sdate = date("Y-m-", strtotime($entering_date . ' -1 month')) . $first_day;
+        $next_month_sdate = date("Y-m-d", strtotime($sdate . ' +1 month'));
+        $edate = date("Y-m-d", strtotime($next_month_sdate . ' -1 day'));
+        $exist = $this->CI->user_estatement_model->query_table()
+            ->select("user_id")
+            ->where([
+                "sdate" => $sdate,
+                "edate" => $edate,
+                "investor" => 1,
+            ])
+            ->where_in("type", ["estatement", "estatement_failed"])
+            ->get()->result_array();
+        $exist_userid_list = [];
+        foreach ($exist as $key => $value) {
+            $exist_userid_list[] = $value['user_id'];
+        }
+
+        if (count($exist_userid_list) > 0) {
+            echo("有資料，排除掉已經處理過的");
+            $investor_list = $this->get_investor_user_list_without_exist($sdate, $edate, $exist_userid_list);
+        }
+        else {
+            echo("沒資料，全部都要處理");
+            $investor_list = $this->get_investor_user_list($sdate, $edate);
+        }
+        if (count($investor_list) === 0) return 0;
+
+        $count = 0;
+        foreach ($investor_list as $key => $user_id) {
+            $rs = $this->get_estatement_investor($user_id, $sdate, $edate);
+            if ($rs) {
+                $count++;
+                $rs = $this->get_estatement_investor_detail($user_id, $sdate, $edate);
+                if ($rs) $count++;
+            }
+        }
+        return $count;
+    }
+
+    function script_create_borrower_estatement_content(): int
+    {
+        $day = 2;  // Create estatement content on the second day of every month.
+        $entering_date = get_entering_date();
+        $date = date("Y-m-j", strtotime($entering_date));
+        $estatement_date = date("Y-m-") . $day;
+        if ($date !== $estatement_date) return 0;
+        $first_day = 1;
+        $sdate = date("Y-m-", strtotime($entering_date . ' -1 month')) . $first_day;
+        $next_month_sdate = date("Y-m-d", strtotime($sdate . ' +1 month'));
+        $edate = date("Y-m-d", strtotime($next_month_sdate . ' -1 day'));
+        $exist = $this->CI->user_estatement_model->query_table()->where([
+            "sdate" => $sdate,
+            "edate" => $edate,
+            "investor" => 0,
+        ])
+            ->where_in("type", ["estatement", "estatement_failed"])
+            ->select("user_id")
+            ->get()->result_array();
+        $exist_userid_list = [];
+        foreach ($exist as $key => $value) {
+            $exist_userid_list[] = $value['user_id'];
+        }
+
+        if (count($exist_userid_list) > 0) {
+            echo("有資料，排除掉已經處理過的");
+            $borrower_list = $this->get_borrower_user_list_without_exist($sdate, $edate, $exist_userid_list);
+        }
+        else {
+            echo("沒資料，全部都要處理");
+            $borrower_list = $this->get_borrower_user_list($sdate, $edate);
+        }
+        if (count($borrower_list) === 0) return 0;
+
+        $count = 0;
+        foreach ($borrower_list as $key => $user_id) {
+            $rs = $this->get_estatement_borrower($user_id, $sdate, $edate);
+            if ($rs) $count++;
+        }
+        return $count;
+    }
+
     function script_re_create_estatement_content($user_id,$start,$end,$investor=0,$detail=0){
         $count = 0;
         $sdate = date("Y-m-d",strtotime($start));
@@ -1125,6 +1340,96 @@ class Estatement_lib{
             $count++;
         }
         return $count;
+    }
+
+    private function get_target_month_dict(string $year = '', string $month = ''): array
+    {
+        if (intval($year) <= 0) {
+            $year = date('Y');
+        }
+        if (!in_array(intval($month), range(1, 12))) {
+            $month = date('m');
+        }
+        $entering_date = "$year-$month-1";
+        $sdate = $entering_date;
+        $next_month_sdate = date("Y-m-d", strtotime($sdate . ' +1 month'));
+        $edate = date("Y-m-d", strtotime($next_month_sdate . ' -1 day'));
+
+        return [
+            "sdate" => $sdate,
+            "edate" => $edate,
+        ];
+    }
+
+    public function script_create_investor_estatement_content_count_status(string $year = '', string $month = ''): void
+    {
+        $date_dict = $this->get_target_month_dict($year, $month);
+        $sdate = $date_dict['sdate'];
+        $edate = $date_dict['edate'];
+
+        $exist = $this->CI->user_estatement_model->query_table()
+            ->select("user_id")
+            ->where([
+                "sdate" => $sdate,
+                "edate" => $edate,
+                "investor" => 1,
+            ])
+            ->where_in("type", ["estatement", "estatement_failed"])
+            ->get()->result_array();
+
+        $exist_userid_list = [];
+        foreach ($exist as $key => $value) {
+            $exist_userid_list[] = $value['user_id'];
+        }
+        $total_done = count($exist_userid_list);
+
+        if ($total_done > 0) {
+            $total_left = $this->get_investor_user_list_without_exist_total_count($sdate, $edate, $exist_userid_list);
+        } else {
+            $total_left = $this->get_investor_user_list_total_count($sdate, $edate);
+        }
+
+        echo json_encode([
+            "sdate" => $sdate,
+            "edate" => $edate,
+            "done" => $total_done,
+            "left" => $total_left
+        ]);
+    }
+
+    public function script_create_borrower_estatement_content_count_status(string $year, string $month): void
+    {
+        $date_dict = $this->get_target_month_dict($year, $month);
+        $sdate = $date_dict['sdate'];
+        $edate = $date_dict['edate'];
+
+        $exist = $this->CI->user_estatement_model->query_table()->where([
+            "sdate" => $sdate,
+            "edate" => $edate,
+            "investor" => 0,
+        ])
+            ->where_in("type", ["estatement", "estatement_failed"])
+            ->select("user_id")
+            ->get()->result_array();
+
+        $exist_userid_list = [];
+        foreach ($exist as $key => $value) {
+            $exist_userid_list[] = $value['user_id'];
+        }
+
+        $total_done = count($exist_userid_list);
+        if ($total_done > 0){
+            $total_left = $this->get_borrower_user_list_without_exist_total_count($sdate, $edate, $exist_userid_list);
+        }
+        else{
+            $total_left = $this->get_borrower_user_list_total_count($sdate, $edate);
+        }
+        echo json_encode([
+            "sdate" => $sdate,
+            "edate" => $edate,
+            "done" => $total_done,
+            "left" => $total_left
+        ]);
     }
 }
 

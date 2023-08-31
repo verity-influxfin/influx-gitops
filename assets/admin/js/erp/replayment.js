@@ -166,6 +166,26 @@ var app = new Vue({
             }).finally(() => {
                 this.is_waiting_response = false
             })
+        },
+        downloadAllInvestmentExcel() {
+            let today = new Date();
+            let filename = `assets_${today.getFullYear()}${(today.getMonth() + 1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}`
+            
+            // 經由 php 請求外部一直失敗，找不出原因，所以先暫定寫死 IP 取正式站本攤表資料
+            axios.get(`https://p2p-orm.influxfin.com/all_stack_replayment_schedule/excel`, { responseType: 'blob' })
+            .then((res) => {
+                console.log(res)
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `${filename}.xlsx`); 
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }
     }
 })

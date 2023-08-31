@@ -9818,58 +9818,135 @@ define({
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
-                            "field": "parttime",
+                            "optional": true,
+                            "field": "income",
                             "description": "<p>打工收入</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
-                            "field": "allowance",
+                            "optional": true,
+                            "field": "incomeStudent",
                             "description": "<p>零用錢收入</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "scholarship",
                             "description": "<p>獎學金收入</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "other_income",
                             "description": "<p>其他收入</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "restaurant",
                             "description": "<p>餐飲支出</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "transportation",
                             "description": "<p>交通支出</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
+                            "field": "telegraph_expense",
+                            "description": "<p>網路電信支出</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
                             "field": "entertainment",
                             "description": "<p>娛樂支出</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "other_expense",
                             "description": "<p>其他支出</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "rent_expenses",
+                            "description": "<p>租金</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "educational_expenses",
+                            "description": "<p>教育</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "insurance_expenses",
+                            "description": "<p>保險</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "social_expenses",
+                            "description": "<p>社交</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "long_assure_monthly_payment",
+                            "description": "<p>房貸</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "mid_assure_monthly_payment",
+                            "description": "<p>車貸</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "credit_monthly_payment",
+                            "description": "<p>信貸</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "student_loans_monthly_payment",
+                            "description": "<p>學貸</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "credit_card_monthly_payment",
+                            "description": "<p>信用卡</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "other_private_borrowing",
+                            "description": "<p>其他民間借款</p>"
                         },
                         {
                             "group": "Parameter",
@@ -22591,6 +22668,136 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/product/list"
+                }
+            ]
+        },
+
+        {
+            "type": "get",
+            "url": "/v2/product/blackList",
+            "title": "借款方 確認黑名單結果是否禁止申貸",
+            "version": "0.2.0",
+            "name": "GETProductBlackList",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "description": "<p>確認黑名單結果是否禁止申貸</p>",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "product_id",
+                            "description": "<p>產品ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "sub_product_id",
+                            "description": "<p>子產品ID</p>"
+                        },
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "valid",
+                            "description": "<p>Valid</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n\t\"result\":\"SUCCESS\",\n\t\"data\":{\n\t\t\"valid\": true\n\t}\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "204",
+                            "description": "<p>該使用者沒有黑名單紀錄</p>"
+                        },
+
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "204",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"204\"\n}",
+                        "type": "Object"
+                    },
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/blackList"
                 }
             ]
         },
@@ -49805,6 +50012,87 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/website/credit_department"
+                }
+            ]
+        },        {
+            "type": "get",
+            "url": "/v2/website/department",
+            "title": "取得系所清單",
+            "version": "0.2.0",
+            "name": "Get_Department",
+            "group": "Website",
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"list\": [\n" +
+                            "           \"台北海洋科技大學\": {\n" +
+                            "                \"city\": \"新北市\",\n" +
+                            "                \"shortName\": \"TUMT\",\n" +
+                            "                \"fullName\": \"Taipei University of Marine Technology\",\n" +
+                            "                \"discipline\": {\n" +
+                            "                    \"其他學門\": [\n" +
+                            "                        \"海空物流與行銷系(淡水校本部)\",\n" +
+                            "                        \"旅遊管理系(淡水校本部)\",\n" +
+                            "                        \"健康促進與銀髮保健系(淡水校本部)\",\n" +
+                            "                        \"餐飲管理系(士林校區)\",\n" +
+                            "                        \"健康照顧社會工作系(淡水校本部)\",\n" +
+                            "                        \"食品科技與行銷系(士林校區)\",\n" +
+                            "                        \"時尚造型設計管理系寵物美容設計組(淡水校本部)\",\n" +
+                            "                        \"海洋運動休閒系(士林校區)\",\n" +
+                            "                        \"海洋休閒觀光系(士林校區)\",\n" +
+                            "                        \"時尚造型設計管理系整體造型設計組(淡水校本部)\",\n" +
+                            "                        \"表演藝術系(淡水校本部)\",\n" +
+                            "                        \"數位遊戲與動畫設計系(淡水校本部)\",\n" +
+                            "                        \"視覺傳達設計系(淡水校本部)\"\n" +
+                            "                    ]\n" +
+                            "                }\n" +
+                            "            },\n" +
+                            "        ]\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "401",
+                            "description": "<p>未授權的請求</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "401",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"data\": {},\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Website.php",
+            "groupTitle": "Website",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/website/department"
                 }
             ]
         },

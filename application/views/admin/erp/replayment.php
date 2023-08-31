@@ -5,7 +5,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">ERP 帳務 - 本攤表v2</h1>
+            <h1 class="page-header">ERP 帳務 - 本金攤還表</h1>
         </div>
     </div>
     <div class="row">
@@ -13,10 +13,10 @@
             <div>
                 <ul class="nav nav-tabs" id="myTabs" role="tablist">
                     <li role="presentation" class="active">
-                        <a role="tab" data-toggle="tab" aria-controls="test2" aria-expanded="true" @click="tab='tab1'">併表</a>
+                        <a role="tab" data-toggle="tab" aria-controls="test2" aria-expanded="true" @click="tab='tab1'">投資人本金攤還表</a>
                     </li>
                     <li role="presentation">
-                        <a role="tab" data-toggle="tab" aria-controls="test1" aria-expanded="false" @click="tab='tab2'">債權</a>
+                        <a role="tab" data-toggle="tab" aria-controls="test1" aria-expanded="false" @click="tab='tab2'">本金攤還表底稿</a>
                     </li>
                 </ul>
             </div>
@@ -75,6 +75,7 @@
                                         <th>應收利息</th>
                                         <th>本金餘額</th>
                                         <th>逾期本金餘額</th>
+                                        <th>應收延滯息</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="is_waiting_response">
@@ -102,6 +103,7 @@
                                                 <td class="text-right">{{ amount(row.interest_receivable) }}</td>
                                                 <td class="text-right">{{ amount(row.principal_balance) }}</td>
                                                 <td class="text-right">{{ amount(row.delay_principal_balance) }}</td>
+                                                <td class="text-right">{{ amount(row.receivable_delay_interest_int) }}</td>
                                             </tr>
                                         </template>
                                         <!-- <tr>
@@ -118,14 +120,14 @@
             <div class="panel panel-default" v-show="tab == 'tab1'">
                 <div class="panel-heading clearfix">
                     <form class="form-inline" ref="search-form" @submit.prevent="doSearchLatest">
-                        <div class="row alert alert-info m-3">
+                        <!-- <div class="row alert alert-info m-3">
                             <div class="col-lg-12">
                                 <div>
                                     投資人 ID ,債權 ID 串列 擇一輸入，若兩者皆輸入，則以投資人ID為主<br />
                                     債權 ID 串列以 ',' 分隔，如: 3,4,5
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group">
@@ -140,15 +142,18 @@
                                     <label class="sr-only" for="investor_id">投資人 ID</label>
                                     <input type="text" class="form-control" id="investor_id" name="investor_id" v-model="searchform.user_id_int" placeholder="投資人 ID">
                                 </div>
-                                <div class="form-group w-25">
+                                <!-- <div class="form-group w-25">
                                     <label class="sr-only" for="investor_id">債權 ID 串列</label>
                                     <input type="text" class="form-control" id="investment_id_int_list_str" name="investment_id_int_list_str" v-model="searchform.investment_id_int_list_str" placeholder="債權 ID 串列">
-                                </div>
+                                </div> -->
                                 <button type="submit" class="btn btn-primary" :disabled="is_waiting_response">
                                     <i class="fa fa-search"></i> 搜尋
                                 </button>
-                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadExcelLatest">
+                                <button class="btn btn-primary" type="button" :disabled="is_waiting_response" @click="downloadExcelLatest">
                                     <i class="fa fa-file-excel-o"></i> 檔案下載
+                                </button>
+                                <button class="btn btn-primary pull-right" type="button" :disabled="is_waiting_response" @click="downloadAllInvestmentExcel">
+                                    <i class="fa fa-file-excel-o"></i> 全平台本金攤還表下載
                                 </button>
                             </div>
                         </div>
@@ -162,7 +167,7 @@
                                     <tr class="info" style="position: sticky;top: 0px;">
                                         <th colspan="99">
                                             <div class="d-flex aic">
-                                                <div class="mr-4">一般本攤表</div>
+                                                <div class="mr-4">正常案本金攤還表</div>
                                                 <button class="btn btn-default" @click="hide = !hide">
                                                     <i class="fa" :class="eyeIcon"></i>
                                                 </button>
@@ -203,7 +208,7 @@
                                     <tr class="info" style="position: sticky;top: 0px;">
                                         <th colspan="99">
                                             <div class="d-flex aic">
-                                                <div class="mr-4">逾期本攤表</div>
+                                                <div class="mr-4">逾期案本金攤還表</div>
                                                 <button class="btn btn-default" @click="hide = !hide">
                                                     <i class="fa" :class="eyeIcon"></i>
                                                 </button>
@@ -214,6 +219,7 @@
                                         <th>日期</th>
                                         <th>應收利息</th>
                                         <th>逾期本金餘額</th>
+                                        <th>應收延滯息</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="is_waiting_response">
@@ -232,6 +238,7 @@
                                             <td style="padding-left: 1em;">{{ row.date }}</td>
                                             <td class="text-right">{{ amount(row.interest_receivable) }}</td>
                                             <td class="text-right">{{ amount(row.delay_principal_balance) }}</td>
+                                            <td class="text-right">{{ amount(row.receivable_delay_interest_int) }}</td>
                                         </tr>
                                     </template>
                                 </tbody>

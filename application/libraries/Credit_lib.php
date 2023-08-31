@@ -979,7 +979,7 @@ class Credit_lib{
 							asort($school_data[$school_name]['score']);
 							foreach ($school_data[$school_name]['score'] as $s) {
 								$point += $s;
-								$score_history[] = '大學科系加分: ' . $school_department . '(不在列表取該校科系最低加分) = ' . $schoolDepartmentPoint;
+								$score_history[] = '大學科系加分: ' . $school_department . '(不在列表取該校科系最低加分) = ' . $s;
 								break;
 							}
 						}

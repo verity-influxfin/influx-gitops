@@ -384,9 +384,24 @@ class Transfer_lib{
 					}
 				}
 			}
-			if($transfers->expire_time < time()){
-				$this->cancel_transfer($transfers);
-			}
+            $currentTime = time();
+            if ($transfers->expire_time < $currentTime) {
+//                echo "，$transfers->id 已過期<br/>";
+                $this->cancel_transfer($transfers);
+                return true;
+            }
+////            echo "，$transfers->id 未過期<br/>";
+//            if ($transfer_investments && $ended) {
+////                echo "，$transfers->id 未過期且有 transfer_investments<br/>";
+////                echo "，準備放行前status：$transfers->status<br/>";
+//                try {
+//                    print_r(["id"=>$transfers->id]);
+//                    $this->CI->load->library('Transaction_lib');
+//                    $this->CI->transaction_lib->transfer_success($transfers->id);
+//                } catch (Exception $e) {
+//                    throw new Exception(print_r([$e->getMessage(),'$transfers'=>$transfers], true));
+//                }
+//            }
 			return true;
 		}
 		return false;
@@ -509,14 +524,55 @@ class Transfer_lib{
                     $this->CI->transfer_model->update($value->id,['script_status'=>$script]);
                     $value->combination!=0?array_push($combination_ids, $value->combination):null;
                     $success = $this->CI->transaction_lib->transfer_success($value->id,0);
-                }
-                if($success){
-                    $count++;
+                    if($success){
+                        $count++;
+                    }
                 }
             }
 		}
 		return $count;
 	}
+    public function script_transfer_success_v2(){
+        $script  	= 14;
+        $count 		= 0;
+        $ids		= [];
+        $transfers 	= $this->CI->transfer_model->limit(15)->get_many_by([
+            'status'		=> 1,
+            'script_status'	=> 0
+        ]);
+
+        if(empty($transfers)){
+            return $count;
+        }
+
+        $this->CI->load->library('Transaction_lib');
+
+        $combination_ids = [];
+
+        $need_update_transfer_ids = [];
+
+        foreach ($transfers as $transfer) {
+
+            $combination_id = $transfer->combination;
+            $transfer_id = $transfer->id;
+            if (in_array($combination_id, $combination_ids)) {
+                continue;
+            }
+            if ($combination_id != 0) {
+                $combination_ids[] = $combination_id;
+            }
+            $need_update_transfer_ids[] = $transfer_id;
+        }
+        $this->CI->transfer_model->update_many($need_update_transfer_ids, ['script_status' => $script]);
+
+        foreach ($need_update_transfer_ids as $transfer_id){
+            $success = $this->CI->transaction_lib->transfer_success($transfer_id, 0);
+            if ($success) {
+                $count++;
+            }
+        }
+        return $count;
+    }
 
 	public function check_combination($target_id,$new_investment){
 		if($new_investment!=0){
