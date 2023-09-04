@@ -1947,7 +1947,7 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [18, 35],
-                'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000',
+                'description' => '須提供有效學生證<br>可申請額度<br>3,000-150,000',
                 'secondInstance' => FALSE,
                 'checkOwner' => FALSE
             ]
@@ -2018,7 +2018,7 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [18, 45],
-                'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000',
+                'description' => '須提供工作證明<br>可申請額度<br>1,000-500,000',
                 'checkOwner' => false,
                 'secondInstance' => FALSE,
             ]
