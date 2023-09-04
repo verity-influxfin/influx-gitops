@@ -229,7 +229,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'allow_age_range' => [18, 35],
-        'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000',
+        'description' => '須提供有效學生證<br>可申請額度<br>3,000-150,000',
         'checkOwner' => FALSE
     ],
     2 => [
@@ -1160,7 +1160,7 @@ $config['sub_product_list'] = [
                 'visul_id' => 'NS1P1',
                 'name' => '學生工程師貸',
                 'product_id' => '1:1',
-                'loan_range_s' => 5000,
+                'loan_range_s' => 3000,
                 'loan_range_e' => 150000,
                 'interest_rate_s' => 5,
                 'interest_rate_e' => 20,
@@ -1201,7 +1201,7 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [18, 35],
-                'description' => '須提供有效學生證<br>可申請額度<br>5,000-150,000',
+                'description' => '須提供有效學生證<br>可申請額度<br>3,000-150,000',
                 'checkOwner' => false,
             ],
             2 => [
@@ -1857,7 +1857,7 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [18, 35],
-                'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000',
+                'description' => '須提供有效學生證<br>可申請額度<br>3,000-150,000',
                 'secondInstance' => FALSE,
             ]
         ],
@@ -1927,7 +1927,7 @@ $config['sub_product_list'] = [
                 'dealer' => [],
                 'multi_target' => 0,
                 'allow_age_range' => [18, 45],
-                'description' => '*毋須提供相關佐證',
+                'description' => '須提供工作證明<br>可申請額度<br>1,000-500,000',
                 'checkOwner' => false,
                 'secondInstance' => FALSE,
             ]
