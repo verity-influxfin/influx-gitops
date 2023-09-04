@@ -549,6 +549,9 @@
 								</div>
 							</div>
 						</div>
+                        <button id="credit-original-info-modal-btn" class="btn btn-info mr-2" type="button" data-toggle="modal" data-target="#credit-original-info-modal" disabled>
+                            查看分數額度組成原因
+                        </button>
 					</div>
 				</div>
 			</div>
@@ -956,6 +959,7 @@
 								</td>
 							</tr>
 						</table>
+                        <div id="credit-info-message"></div>
 					</div>
 				</div>
 				<div class="panel-body">
@@ -1179,6 +1183,24 @@
             </div>
 		</div>
 	</div>
+    <div class="modal fade" id="credit-original-info-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title">分數額度組成原因</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="original-remark"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	<!-- /.row -->
 </div>
 </div>
@@ -1583,7 +1605,7 @@
             $(`#2_fixed_amount`).attr({
                 "max": case_aprove_item.creditLineInfo.fixed_amount_max,
                 "min": case_aprove_item.creditLineInfo.fixed_amount_min,
-                "onblur": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
+                "oninput": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
                     `else if(value<=${case_aprove_item.creditLineInfo.fixed_amount_min}){value=${case_aprove_item.creditLineInfo.fixed_amount_min}}`
             });
         }
@@ -1648,7 +1670,7 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
-        $('#2_fixed_amount').on('blur', function () {
+        $('#2_fixed_amount').change(function () {
             let fixed_amount = parseInt($(this).val());
             if (fixed_amount <= 0) {
                 return;
@@ -1990,8 +2012,16 @@
 			$("#" + prefix + "credit-points").text(credit.points);
 			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
 			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
+            if (!isReEvaluated) {
+                $("#credit-original-info-modal-btn").removeAttr('disabled');
+                credit.remark?.scoreHistory?.forEach(function (item) {
+                    $("<div>").text(item).appendTo("#original-remark");
+                });
+            }
 		}
-
+        function fillCreditMessage(message) {
+            $("#credit-info-message").text(message);
+        }
 		function fillFakeVerifications(type, show = true) {
 			var tableId = "#" + type + "-verifications";
 			for (var i = 0; i < 3; i++) {
@@ -2271,6 +2301,7 @@
 				beforeSend: function () {
 					changeReevaluationLoading(true);
 					clearCreditInfo(true);
+                    fillCreditMessage('');
 				},
 				complete: function () {
 					changeReevaluationLoading(false);
@@ -2285,8 +2316,10 @@
 					}
 
 					let creditJson = response.response.credits;
+                    let message = response.response.message;
 					credit = new Credit(creditJson);
 					fillCreditInfo(credit, true);
+                    fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
 				}
