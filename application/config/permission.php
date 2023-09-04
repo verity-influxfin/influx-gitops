@@ -124,6 +124,7 @@ $config['permission'] = [
             'obligations' => ['name' => '全部列表(New)'],
             'waiting_transfer' => ['name' => '債轉待收購'],
             'waiting_transfer_success' => ['name' => '債轉待放款'],
+            'transfer_sheet_success' => ['name' => '債轉移轉成功'],
             'bidding' => ['name' => '已投標'],
         ],
         'detail' => [
@@ -134,7 +135,10 @@ $config['permission'] = [
             'obligations' => ['model' => 'Transfer', 'submodel' => 'obligations', 'action' => 'read'],
             'waiting_transfer' => ['model' => 'Transfer', 'submodel' => 'waiting_transfer', 'action' => 'read'],
             'waiting_transfer_success' => ['model' => 'Transfer', 'submodel' => 'waiting_transfer_success', 'action' => 'read'],
+            'transfer_sheet_success' => ['model' => 'Transfer', 'submodel' => 'transfer_sheet_success', 'action' => 'read'],
             'bidding' => ['model' => 'Transfer', 'submodel' => 'bidding', 'action' => 'read'],
+            'get_transfer_success' => ['model' => 'Transfer', 'submodel' => 'transfer_sheet_success', 'action' => 'read'],
+            'transfer_sheet_spreadsheet' => ['model' => 'Transfer', 'submodel' => 'transfer_sheet_success', 'action' => 'read'],
             'assets_export_new' => ['model' => 'Transfer', 'submodel' => 'obligations', 'action' => 'read'],
             'transfer_assets_export' => ['model' => 'Transfer', 'submodel' => 'index', 'action' => 'read'],
             'obligation_assets_export' => ['model' => 'Transfer', 'submodel' => 'obligations', 'action' => 'read'],
