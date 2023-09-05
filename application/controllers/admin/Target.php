@@ -790,9 +790,9 @@ class Target extends MY_Admin_Controller {
                         // 上班族貸款
                         if (in_array($product_id, [3, 4])) {
                             $product = $this->config->item('product_list')[$product_id];
-                            if ($product['condition_rate']['salary_below'] >= $content->monthly_repayment) {
+                            if ($product['condition_rate']['salary_below'] >= $content->monthly_repayment * 10000) {
                                 $credit["amount"] = $target->loan_amount;
-                                if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment) {
+                                if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment * 1000) {
                                     $message = "該會員薪資低於4萬，負債大於22倍，系統給定信用額度為0~3000元；若需調整請至「額度調整 1000~20000」之欄位填寫額度";
                                 }
                                 else {
