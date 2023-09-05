@@ -451,8 +451,8 @@ class Target_lib
                                     // 上班族貸款
                                     if (in_array($product_id, [3, 4])) {
                                         $product = $this->CI->config->item('product_list')[$product_id];
-                                        if ($product['condition_rate']['salary_below'] > $content->monthly_repayment) {
-                                            if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment) {
+                                        if ($product['condition_rate']['salary_below'] > $content->monthly_repayment * 1000) {
+                                            if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment * 1000) {
                                                 // 高於22倍，0~3000之間
                                                 $range_min = 0;
                                                 $range_max = 3000;
