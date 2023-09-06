@@ -425,8 +425,8 @@ class Target_lib
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
 
 
-                                // 「上班族貸」新戶額度調整
-                                if (in_array($product_id, [3, 4])) {
+                                // 「上班族貸」新戶額度調整，已進入二審不處理
+                                if (in_array($product_id, [3, 4]) && $target->status !== TARGET_WAITING_APPROVE && $target->sub_status !== TARGET_SUBSTATUS_SECOND_INSTANCE) {
                                     $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15]);
                                     if (!isset($certification)) {
                                         $this->remark_target($target->id, '沒有有效的還款力計算結果');
