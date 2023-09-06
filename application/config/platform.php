@@ -593,17 +593,20 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATIONJUDICIAL,
             CERTIFICATION_INVESTIGATIONA11,
             CERTIFICATION_COMPANYEMAIL,
+            CERTIFICATION_SIMPLIFICATIONJOB,
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
         ],
         // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
-            CERTIFICATION_JUDICIALGUARANTEE,
-            CERTIFICATION_SIMPLIFICATIONJOB,
-            CERTIFICATION_PASSBOOKCASHFLOW_2
+//            CERTIFICATION_JUDICIALGUARANTEE,
+//            CERTIFICATION_SIMPLIFICATIONJOB,
+//            CERTIFICATION_PASSBOOKCASHFLOW_2
         ],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
             CERTIFICATION_SIMPLIFICATIONJOB,
-            CERTIFICATION_PASSBOOKCASHFLOW_2
+//            CERTIFICATION_PASSBOOKCASHFLOW_2,
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
         ],
         'certifications_stage' => [
             [
@@ -2056,17 +2059,20 @@ $config['sub_product_list'] = [
                     CERTIFICATION_INVESTIGATIONJUDICIAL,
                     CERTIFICATION_INVESTIGATIONA11,
                     CERTIFICATION_COMPANYEMAIL,
+                    CERTIFICATION_SIMPLIFICATIONJOB,
+                    CERTIFICATION_SIMPLIFICATIONFINANCIAL,
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
-                    CERTIFICATION_JUDICIALGUARANTEE,
-                    CERTIFICATION_SIMPLIFICATIONJOB,
-                    CERTIFICATION_PASSBOOKCASHFLOW_2
+//                    CERTIFICATION_JUDICIALGUARANTEE,
+//                    CERTIFICATION_SIMPLIFICATIONJOB,
+//                    CERTIFICATION_PASSBOOKCASHFLOW_2
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                     CERTIFICATION_SIMPLIFICATIONJOB,
-                    CERTIFICATION_PASSBOOKCASHFLOW_2
+                    CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+//                    CERTIFICATION_PASSBOOKCASHFLOW_2,
                 ],
                 'certifications_stage' => [
                     [
@@ -2123,17 +2129,20 @@ $config['sub_product_list'] = [
                     CERTIFICATION_INCOMESTATEMENT,
                     CERTIFICATION_BUSINESSTAX,
                     CERTIFICATION_COMPANYEMAIL,
+                    CERTIFICATION_SIMPLIFICATIONJOB,
+                    CERTIFICATION_SIMPLIFICATIONFINANCIAL,
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
                 'option_certifications' => [
-                    CERTIFICATION_JUDICIALGUARANTEE,
-                    CERTIFICATION_SIMPLIFICATIONJOB,
-                    CERTIFICATION_PASSBOOKCASHFLOW_2
+                    // CERTIFICATION_JUDICIALGUARANTEE,
+                    // CERTIFICATION_SIMPLIFICATIONJOB,
+                    // CERTIFICATION_PASSBOOKCASHFLOW_2
                 ],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                     CERTIFICATION_SIMPLIFICATIONJOB,
-                    CERTIFICATION_PASSBOOKCASHFLOW_2
+                    CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+                    // CERTIFICATION_PASSBOOKCASHFLOW_2,
                 ],
                 'certifications_stage' => [
                     [
