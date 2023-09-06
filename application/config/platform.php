@@ -593,6 +593,8 @@ $config['product_list'] = [
             CERTIFICATION_COMPANYEMAIL,
             CERTIFICATION_SIMPLIFICATIONJOB,
             CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+            CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_BUSINESSTAX,
         ],
         // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
@@ -618,6 +620,8 @@ $config['product_list'] = [
                 CERTIFICATION_INCOMESTATEMENT,
                 CERTIFICATION_INVESTIGATIONJUDICIAL,
                 CERTIFICATION_COMPANYEMAIL,
+                CERTIFICATION_INVESTIGATIONA11,
+                CERTIFICATION_BUSINESSTAX,
             ]
         ],
         'check_associates_certs' => TRUE,
