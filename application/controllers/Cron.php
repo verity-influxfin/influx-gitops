@@ -1134,7 +1134,7 @@ class Cron extends CI_Controller
         $loan_amount = $target->loan_amount;
         $interest_rate = $target->interest_rate;
         $contract_data = ['', $user_id, $loan_amount, $interest_rate, ''];
-        $param['contract_id'] = $this->CI->contract_lib->sign_contract($contract_type, $contract_data);
+        $param['contract_id'] = $this->contract_lib->sign_contract($contract_type, $contract_data);
         $param['remark'] = '';//清空remark
         $rs = $this->target_model->update($target_id, $param);
 
