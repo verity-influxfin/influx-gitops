@@ -2159,7 +2159,7 @@ class Sales extends MY_Admin_Controller {
             {
                 $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE, 'msg' => '找不到對應的推薦碼'))->send();
             }
-            $user_qrcode_update_param = ['status' => PROMOTE_STATUS_PENDING_TO_SENT];
+            $user_qrcode_update_param = ['status' => PROMOTE_STATUS_PENDING_TO_SENT, 'sub_status' => PROMOTE_SUB_STATUS_DEFAULT];
             $this->user_qrcode_model->update_by(['id' => $apply_info->user_qrcode_id], $user_qrcode_update_param);
             // 寫 log
             $this->load->model('log/log_user_qrcode_model');
