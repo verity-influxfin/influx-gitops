@@ -125,7 +125,7 @@ class S3_lib {
             });
             //排除 unknown 資料夾
             foreach ($arrayIterator as $object) {
-                if ($object['LastModified'] < (new DateTime())->modify('-11 days')) {
+                if ($object['LastModified'] < (new DateTime())->modify('-1 days')) {
                     continue;
                 }
                 $overlook_file = strpos($object['Key'], 'unknown/');
