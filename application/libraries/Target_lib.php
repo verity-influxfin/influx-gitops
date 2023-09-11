@@ -436,6 +436,8 @@ class Target_lib
                                     if ($is_new_user) {
                                         //已進入二審不處理
                                         if ($target->status == TARGET_WAITING_APPROVE && $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE) {
+                                            $param['loan_amount'] = $target->loan_amount;
+                                            $param['platform_fee'] = $target->platform_fee;
                                             goto FORCE_SECOND_INSTANCE;
                                         }
                                         $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15, 'status' => 1, 'certificate_status' => 1]);
