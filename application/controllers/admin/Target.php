@@ -2548,3 +2548,4 @@ class Target extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 }
+?>
