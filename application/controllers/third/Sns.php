@@ -129,6 +129,7 @@ class Sns extends REST_Controller {
         }
 
         foreach ($list as $s3_url) {
+            try {
             $filename=$this->s3_lib->public_get_filename($s3_url,S3_BUCKET_MAILBOX);
             $detail['filename'] = $filename;
             $file_content = file_get_contents('s3://'.S3_BUCKET_MAILBOX.'/'.$filename);
@@ -270,6 +271,12 @@ class Sns extends REST_Controller {
             $detail['remark'] = "郵件沒處理";
             $detail['actions'] = ['None'];
             $this->record_mailbox_log($detail);
+
+            } catch (Exception $e) {
+                $detail['remark'] = json_encode($e->getMessage(),JSON_UNESCAPED_UNICODE);
+                $detail['actions'] = ['Exception'];
+                $this->record_mailbox_log($detail);
+            }
         }
         return true;
     }
