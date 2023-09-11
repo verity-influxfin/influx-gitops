@@ -425,24 +425,8 @@ class Target_lib
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
 
 
-                                // 「上班族貸」新戶額度調整，已進入二審不處理
-                                if (in_array($product_id, [3, 4]) && $target->status != TARGET_WAITING_APPROVE && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE) {
-                                    $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15, 'status' => 1, 'certificate_status' => 1]);
-                                    if (!isset($certification)) {
-                                        $this->remark_target($target->id, '沒有有效的還款力計算結果');
-                                        goto FORCE_SECOND_INSTANCE;
-                                    }
-                                    if ($certification->status != 1) {
-                                        $this->remark_target($target->id, '沒有驗證成功的還款力計算結果');
-                                        goto FORCE_SECOND_INSTANCE;
-                                    }
-
-                                    $content = json_decode($certification->content);
-                                    if (!isset($content->monthly_repayment) || !isset($content->total_repayment)) {
-                                        $this->remark_target($target->id, '沒有有效的還款力計算結果，缺少monthly_repayment 或 total_repayment');
-                                        goto FORCE_SECOND_INSTANCE;
-                                    }
-                                    $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
+                                // 「上班族貸」新戶額度調整
+                                if (in_array($product_id, [3, 4])) {
                                     // Todo: “新戶” (無申貸成功紀錄者) 且薪水四萬以下
                                     $past_targets = $this->CI->target_model->get_many_by([
                                         'user_id' => $user_id,
@@ -450,6 +434,26 @@ class Target_lib
                                     ]);
                                     $is_new_user = count($past_targets) == 0;
                                     if ($is_new_user) {
+                                        //已進入二審不處理
+                                        if ($target->status == TARGET_WAITING_APPROVE && $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE) {
+                                            goto FORCE_SECOND_INSTANCE;
+                                        }
+                                        $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15, 'status' => 1, 'certificate_status' => 1]);
+                                        if (!isset($certification)) {
+                                            $this->remark_target($target->id, '沒有有效的還款力計算結果');
+                                            goto FORCE_SECOND_INSTANCE;
+                                        }
+                                        if ($certification->status != 1) {
+                                            $this->remark_target($target->id, '沒有驗證成功的還款力計算結果');
+                                            goto FORCE_SECOND_INSTANCE;
+                                        }
+                                        $content = json_decode($certification->content);
+                                        if (!isset($content->monthly_repayment) || !isset($content->total_repayment)) {
+                                            $this->remark_target($target->id, '沒有有效的還款力計算結果，缺少monthly_repayment 或 total_repayment');
+                                            goto FORCE_SECOND_INSTANCE;
+                                        }
+                                        $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
+
                                         $product_id = $target->product_id;
                                         $product = $this->CI->config->item('product_list')[$product_id];
                                         if ($product['condition_rate']['salary_below'] > $content->monthly_repayment * 1000) {
