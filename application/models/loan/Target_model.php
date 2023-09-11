@@ -1244,11 +1244,27 @@ class Target_model extends MY_Model
             ->where('csr.admin_id <>', SYSTEM_ADMIN_ID)
             ->get_compiled_select(NULL, TRUE);
 
+        $sub_query3 = $this->db
+            ->select('name')
+            ->select('id')
+            ->from('p2p_admin.admins')
+            ->get_compiled_select(NULL, True);
+
+        $sub_query4 = $this->db
+        ->select('ad.name')
+        ->select('tcl.target_id')
+        ->from('p2p_log.targets_change_log as tcl')
+        ->join("($sub_query3) ad", 'ad.id = tcl.change_admin', 'JOIN')
+        ->where('tcl.status = 9')
+        ->get_compiled_select(NULL, TRUE);
+
             $this->_database
             ->select('t.*')
             ->select('a.name AS credit_sheet_reviewer')
+            ->select('b.name AS fail_target_reviewer')
             ->from('p2p_loan.targets t')
-            ->join("({$sub_query2}) a", 'a.target_id = t.id', 'LEFT');
+            ->join("({$sub_query2}) a", 'a.target_id = t.id', 'LEFT')
+            ->join("({$sub_query4}) b", 'b.target_id = t.id', 'LEFT');
         if ( ! empty($target_condition))
         {
             $this->_set_where([$target_condition]);

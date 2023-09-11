@@ -587,9 +587,11 @@ class Target_lib
                                         $creditSheet->setFinalReviewerLevel($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM);
                                 }
 
-                                if ($rs && $msg) {
+                                if ($rs ) {
                                     $creditSheet->archive($credit);
-                                    $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
+                                    if($opinion == '一審通過' && $msg){
+                                        $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
+                                    }
                                 }
                                 $this->insert_change_log($target->id, $param);
                                 return true;
