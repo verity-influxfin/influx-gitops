@@ -174,6 +174,10 @@ class Target extends MY_Admin_Controller {
 						$list[$key]->bank_account_verify = $tmp[$value->user_id]['bank_account_verify'];
                     }
 
+                    if($value->status==9 && $value->remark!='系統自動取消'){
+                        $value->credit_sheet_reviewer = $value->fail_target_reviewer;
+                    }
+
                     if(!isset($tmp[$value->user_id]['school'])||!isset($tmp[$value->user_id]['company'])) {
                         $get_meta = $this->user_meta_model->get_many_by([
                             'meta_key' => ['school_name', 'school_department','job_company'],
@@ -2544,4 +2548,3 @@ class Target extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 }
-?>
