@@ -121,7 +121,8 @@ class Sns extends REST_Controller {
 
     public function credit_post()
     {
-        $list = $this->s3_lib->get_mailbox_list();
+//        $list = $this->s3_lib->get_mailbox_list();
+        $list = $this->s3_lib->get_mailbox_today_list();
 
         if (empty($list)) {
             return true;
