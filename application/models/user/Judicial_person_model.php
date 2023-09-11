@@ -56,7 +56,7 @@ class Judicial_person_model extends MY_Model
             $cert_governmentauthorities_info = $this->user_certification_model->get_by([
                 'user_id' => $user_id,
                 'certification_id' => CERTIFICATION_GOVERNMENTAUTHORITIES,
-                'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_PENDING_TO_REVIEW]
+                'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_FAILED, CERTIFICATION_STATUS_PENDING_TO_REVIEW]
             ]);
             if ( ! empty($cert_governmentauthorities_info))
             {
