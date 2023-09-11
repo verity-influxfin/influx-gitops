@@ -130,150 +130,149 @@ class Sns extends REST_Controller {
 
         foreach ($list as $s3_url) {
             try {
-            $filename=$this->s3_lib->public_get_filename($s3_url,S3_BUCKET_MAILBOX);
-            $detail['filename'] = $filename;
-            $file_content = file_get_contents('s3://'.S3_BUCKET_MAILBOX.'/'.$filename);
-            if(!$file_content) {
-                $detail['get_file_content'] = false;
+                $filename = $this->s3_lib->public_get_filename($s3_url, S3_BUCKET_MAILBOX);
+                $detail['filename'] = $filename;
+                $file_content = file_get_contents('s3://' . S3_BUCKET_MAILBOX . '/' . $filename);
+                if (!$file_content) {
+                    $detail['get_file_content'] = false;
 
-                $detail['remark'] = "沒有 file_content，不處理";
-                $detail['actions'] = ['None'];
-                $this->record_mailbox_log($detail);
-                continue;
-            }
-            $detail['get_file_content'] = true;
+                    $detail['remark'] = "沒有 file_content，不處理";
+                    $detail['actions'] = ['None'];
+                    $this->record_mailbox_log($detail);
+                    continue;
+                }
+                $detail['get_file_content'] = true;
 
-            $parser = new PhpMimeMailParser\Parser();
-            $parser->setText($file_content);
-            $headers = $parser->getHeaders();
-            $mail_from = $headers['x-original-sender'] ?? '';
-            if($mail_from == '') {
-                $mail_from = $parser->getAddresses('from');
-                $mail_from = isset($mail_from[0]) ? $mail_from[0]['address'] : "";
-            }
-            $detail['mail_from'] = $mail_from;
+                $parser = new PhpMimeMailParser\Parser();
+                $parser->setText($file_content);
+                $headers = $parser->getHeaders();
+                $mail_from = $headers['x-original-sender'] ?? '';
+                if ($mail_from == '') {
+                    $mail_from = $parser->getAddresses('from');
+                    $mail_from = isset($mail_from[0]) ? $mail_from[0]['address'] : "";
+                }
+                $detail['mail_from'] = $mail_from;
 
-            $mail_title = $parser->getHeader('subject');
-            $detail['mail_title'] = $mail_title;
+                $mail_title = $parser->getHeader('subject');
+                $detail['mail_title'] = $mail_title;
 
-            $re_investigation_mail=strpos($mail_title, '聯合徵信申請');
-            $detail['re_investigation_mail'] = $re_investigation_mail;
+                $re_investigation_mail = strpos($mail_title, '聯合徵信申請');
+                $detail['re_investigation_mail'] = $re_investigation_mail;
 
-            $re_job_mail=strpos($mail_title, '工作認證申請');
-            $detail['re_job_mail'] = $re_job_mail;
+                $re_job_mail = strpos($mail_title, '工作認證申請');
+                $detail['re_job_mail'] = $re_job_mail;
 
-            $attachments = $parser->getAttachments();
-            $certification_id=($re_job_mail===false)? 9:10;
-            $detail['certification_id'] = $certification_id;
+                $attachments = $parser->getAttachments();
+                $certification_id = ($re_job_mail === false) ? 9 : 10;
+                $detail['certification_id'] = $certification_id;
 
-            $cert_info = $this->user_certification_model->order_by('created_at', 'desc')
-                ->get_by([
-                    'investor' => USER_BORROWER,
-                    'certification_id' => CERTIFICATION_EMAIL,
-                    'status' => CERTIFICATION_STATUS_SUCCEED,
-                    "TRIM(BOTH '\"' FROM LOWER(JSON_EXTRACT(`content`, '$.email'))) = " => strtolower($mail_from)
-                ]);
-            if (!isset($cert_info) || ($re_investigation_mail === false && $re_job_mail === false)) {
-                // 沒有找到對應使用者和勞保聯徵標題關鍵字
-                $detail['remark']="沒有找到對應使用者和勞保聯徵標題關鍵字，轉為不明檔案";
+                $cert_info = $this->user_certification_model->order_by('created_at', 'desc')
+                    ->get_by([
+                        'investor' => USER_BORROWER,
+                        'certification_id' => CERTIFICATION_EMAIL,
+                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                        "TRIM(BOTH '\"' FROM LOWER(JSON_EXTRACT(`content`, '$.email'))) = " => strtolower($mail_from)
+                    ]);
+                if (!isset($cert_info) || ($re_investigation_mail === false && $re_job_mail === false)) {
+                    // 沒有找到對應使用者和勞保聯徵標題關鍵字
+                    $detail['remark'] = "沒有找到對應使用者和勞保聯徵標題關鍵字，轉為不明檔案";
 
-                $actions = $this->process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
-                $detail['actions'] = $actions;
-                $this->record_mailbox_log($detail);
-                continue;
-            }
-
-            $info = $this->user_certification_model->order_by('created_at', 'desc')->limit(3)->get_many_by(['user_id' => $cert_info->user_id, 'investor' => USER_BORROWER, 'certification_id' => $certification_id]);
-            if (empty($info)) {
-                $detail['remark'] = "no user_certification，轉為不明檔案";
-
-                $actions = $this->process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
-                $detail['actions'] = $actions;
-                $this->record_mailbox_log($detail);
-                continue;
-            }
-
-            if (!empty($attachments)) {
-                // 非圖片或PDF格式的檔案 或 認證項目是成功/失敗狀態者 轉為不明檔案
-                $detail['remark'] = "";
-
-                $mime = get_mime_by_extension($attachments[0]->getFileName());
-                if ((is_image($mime) || is_pdf($mime))
-                    && !in_array($info[0]->status, [CERTIFICATION_STATUS_SUCCEED,CERTIFICATION_STATUS_FAILED])
-                ) {
-                    $detail['remark'] = "有附件，夾帶附件為支援的格式，且認證項目不是驗證成功/驗證失敗，處理檔案";
-
-                    $result = $this->process_mail($info, $attachments, $cert_info, $s3_url, $certification_id);
-                    $actions = $result ? ['process_mail'] : ['process_mail failed'];
+                    $actions = $this->process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
                     $detail['actions'] = $actions;
                     $this->record_mailbox_log($detail);
                     continue;
                 }
 
-                if(!in_array($info[0]->status, [1,2,4])) {
-                    $detail['remark'] = "有附件, 認證項目不是驗證成功/驗證失敗/未上傳文件，轉為不明檔案";
+                $info = $this->user_certification_model->order_by('created_at', 'desc')->limit(3)->get_many_by(['user_id' => $cert_info->user_id, 'investor' => USER_BORROWER, 'certification_id' => $certification_id]);
+                if (empty($info)) {
+                    $detail['remark'] = "no user_certification，轉為不明檔案";
 
-                    $remark           = $info[0]->remark!=''?json_decode($info[0]->remark,true):[];
-                    $remark['fail']   = "夾帶附件為不支援的格式";
-                    $this->user_certification_model->update_by(['id' => $info[0]->id], [
-                        'status' => 3,
-                        'remark'    => json_encode($remark)
-                    ]);
-                }
-                if ($detail['remark'] == "") {
-                    $detail['remark'] = "有附件, 認證項目是驗證成功/驗證失敗/未上傳文件，轉為不明檔案";
-                }
-
-                $actions = $this->process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
-                $detail['actions'] = $actions;
-                $this->record_mailbox_log($detail);
-                continue;
-            }
-
-            if (
-                ($drive = strpos($file_content, 'https://drive.google.com/')) !== false
-                ||
-                ((count($info) >= 3) && $info[0]->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
-            ) {
-                if($info[0]->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE){
-                    // 沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工
-                    $detail['remark'] = "沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工";
-
-                    $remark           = $info[0]->remark!=''?json_decode($info[0]->remark,true):[];
-                    $remark['fail']   = $drive !== false ? "該附件由Google雲端夾帶，需人工檢驗" : "收信無附件次數達三次，請人工檢驗";
-                    $this->user_certification_model->update_by(['id' => $info[0]->id], [
-                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
-                        'remark'    => json_encode($remark)
-                    ]);
-                    $result = $this->process_mail($info, null, $cert_info, $s3_url, $certification_id);
-                    $actions = $result ? ['process_mail with no attachments'] : ['process_mail failed with no attachments'];
+                    $actions = $this->process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
                     $detail['actions'] = $actions;
                     $this->record_mailbox_log($detail);
+                    continue;
                 }
-                continue;
-            }
 
-            // 針對沒有附件的徵信項才退
-            $content = json_decode($info[0]->content, TRUE);
-            if ( ! $content['mail_file_status'])
-            {
-                $detail['remark'] = "沒附件直接失敗，直接刪除檔案";
+                if (!empty($attachments)) {
+                    // 非圖片或PDF格式的檔案 或 認證項目是成功/失敗狀態者 轉為不明檔案
+                    $detail['remark'] = "";
 
-                // 沒附件直接失敗
-                $this->certification_lib->set_failed($info[0]->id, '資料缺少附件', TRUE);
-                $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
+                    $mime = get_mime_by_extension($attachments[0]->getFileName());
+                    if ((is_image($mime) || is_pdf($mime))
+                        && !in_array($info[0]->status, [CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_FAILED])
+                    ) {
+                        $detail['remark'] = "有附件，夾帶附件為支援的格式，且認證項目不是驗證成功/驗證失敗，處理檔案";
 
-                $detail['actions'] = ['public_delete_s3object'];
+                        $result = $this->process_mail($info, $attachments, $cert_info, $s3_url, $certification_id);
+                        $actions = $result ? ['process_mail'] : ['process_mail failed'];
+                        $detail['actions'] = $actions;
+                        $this->record_mailbox_log($detail);
+                        continue;
+                    }
+
+                    if (!in_array($info[0]->status, [1, 2, 4])) {
+                        $detail['remark'] = "有附件, 認證項目不是驗證成功/驗證失敗/未上傳文件，轉為不明檔案";
+
+                        $remark = $info[0]->remark != '' ? json_decode($info[0]->remark, true) : [];
+                        $remark['fail'] = "夾帶附件為不支援的格式";
+                        $this->user_certification_model->update_by(['id' => $info[0]->id], [
+                            'status' => 3,
+                            'remark' => json_encode($remark)
+                        ]);
+                    }
+                    if ($detail['remark'] == "") {
+                        $detail['remark'] = "有附件, 認證項目是驗證成功/驗證失敗/未上傳文件，轉為不明檔案";
+                    }
+
+                    $actions = $this->process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
+                    $detail['actions'] = $actions;
+                    $this->record_mailbox_log($detail);
+                    continue;
+                }
+
+                if (
+                    ($drive = strpos($file_content, 'https://drive.google.com/')) !== false
+                    ||
+                    ((count($info) >= 3) && $info[0]->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
+                ) {
+                    if ($info[0]->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE) {
+                        // 沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工
+                        $detail['remark'] = "沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工";
+
+                        $remark = $info[0]->remark != '' ? json_decode($info[0]->remark, true) : [];
+                        $remark['fail'] = $drive !== false ? "該附件由Google雲端夾帶，需人工檢驗" : "收信無附件次數達三次，請人工檢驗";
+                        $this->user_certification_model->update_by(['id' => $info[0]->id], [
+                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                            'remark' => json_encode($remark)
+                        ]);
+                        $result = $this->process_mail($info, null, $cert_info, $s3_url, $certification_id);
+                        $actions = $result ? ['process_mail with no attachments'] : ['process_mail failed with no attachments'];
+                        $detail['actions'] = $actions;
+                        $this->record_mailbox_log($detail);
+                    }
+                    continue;
+                }
+
+                // 針對沒有附件的徵信項才退
+                $content = json_decode($info[0]->content, TRUE);
+                if (!$content['mail_file_status']) {
+                    $detail['remark'] = "沒附件直接失敗，直接刪除檔案";
+
+                    // 沒附件直接失敗
+                    $this->certification_lib->set_failed($info[0]->id, '資料缺少附件', TRUE);
+                    $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
+
+                    $detail['actions'] = ['public_delete_s3object'];
+                    $this->record_mailbox_log($detail);
+                    continue;
+                }
+
+                $detail['remark'] = "郵件沒處理";
+                $detail['actions'] = ['None'];
                 $this->record_mailbox_log($detail);
-                continue;
-            }
-
-            $detail['remark'] = "郵件沒處理";
-            $detail['actions'] = ['None'];
-            $this->record_mailbox_log($detail);
 
             } catch (Exception $e) {
-                $detail['remark'] = json_encode($e->getMessage(),JSON_UNESCAPED_UNICODE);
+                $detail['remark'] = json_encode($e->getMessage(), JSON_UNESCAPED_UNICODE);
                 $detail['actions'] = ['Exception'];
                 $this->record_mailbox_log($detail);
             }
