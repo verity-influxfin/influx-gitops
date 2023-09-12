@@ -107,7 +107,7 @@
     $(document).ready(function () {
         const url = new URL(location.href);
         const urlParams = new URLSearchParams(url.search);
-        let stage = urlParams.get('stage') || 0;
+        let stage = urlParams.get('stage') || 2;
         let product = urlParams.get('product') || '1';
         const stage_title_list = ['身份驗證', '收件檢核', '審核中'];
 
