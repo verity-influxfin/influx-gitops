@@ -6401,37 +6401,37 @@ define({
                         }, {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "CompName",
                             "description": "<p>公司名稱</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "CompId",
                             "description": "<p>統一編號</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "CompDate",
                             "description": "<p>戳章日期</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "CompCapital",
                             "description": "<p>公司資本額</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "CompRegAddress",
                             "description": "<p>公司登記地址</p>"
                         }, {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "PrName",
                             "description": "<p>負責人姓名</p>"
                         }, {
