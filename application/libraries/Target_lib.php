@@ -434,12 +434,6 @@ class Target_lib
                                     ]);
                                     $is_new_user = count($past_targets) == 0;
                                     if ($is_new_user) {
-                                        //已進入二審不處理
-                                        if ($target->status == TARGET_WAITING_APPROVE && $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE) {
-                                            $param['loan_amount'] = $target->loan_amount;
-                                            $param['platform_fee'] = $target->platform_fee;
-                                            goto FORCE_SECOND_INSTANCE;
-                                        }
                                         $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15, 'status' => 1, 'certificate_status' => 1]);
                                         if (!isset($certification)) {
                                             $this->remark_target($target->id, '沒有有效的還款力計算結果');
@@ -459,11 +453,18 @@ class Target_lib
                                         $product_id = $target->product_id;
                                         $product = $this->CI->config->item('product_list')[$product_id];
                                         if ($product['condition_rate']['salary_below'] > $content->monthly_repayment * 1000) {
+                                            //已進入二審不處理
+                                            if ($target->status == TARGET_WAITING_APPROVE && $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE) {
+                                                $param['loan_amount'] = $target->loan_amount;
+                                                $param['platform_fee'] = $target->platform_fee;
+                                                goto FORCE_SECOND_INSTANCE;
+                                            }
                                             if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment * 1000) {
                                                 // 高於22倍，0~3000之間
                                                 $range_min = 0;
                                                 $range_max = 3000;
-                                            } else {
+                                            }
+                                            else {
                                                 // 低於22倍，額度在3000~10000之間
                                                 $range_min = 3000;
                                                 $range_max = 10000;
@@ -474,11 +475,8 @@ class Target_lib
 
                                             $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
                                             $param['platform_fee'] = $platform_fee;
-
                                             goto FORCE_SECOND_INSTANCE;
                                         }
-
-
                                     }
                                 }
 
