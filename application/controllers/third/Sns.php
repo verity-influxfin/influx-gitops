@@ -203,6 +203,11 @@ class Sns extends REST_Controller {
                     ) {
                         $detail['remark'] = "有附件，夾帶附件為支援的格式，且認證項目不是驗證成功/驗證失敗，處理檔案";
 
+                        $remark = $info[0]->remark != '' ? json_decode($info[0]->remark, true) : [];
+                        $remark['process_mail'] = 1;
+                        $this->user_certification_model->update_by(['id' => $info[0]->id], [
+                            'remark' => json_encode($remark)
+                        ]);
                         $result = $this->process_mail($info, $attachments, $cert_info, $s3_url, $certification_id);
                         $actions = $result ? ['process_mail'] : ['process_mail failed'];
                         $detail['actions'] = $actions;
