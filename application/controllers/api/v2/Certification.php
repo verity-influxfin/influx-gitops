@@ -3990,23 +3990,16 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['governmentauthorities_image'];
-            foreach ($fields as $field)
-            {
-                if (empty($input[$field]))
-                {
+            $fields = ['governmentauthorities_image', 'CompName', 'CompId', 'CompDate', 'CompCapital', 'CompRegAddress', 'PrName'];
+            foreach ($fields as $field) {
+                if (!isset($input[$field]) && (!($field === 'CompId') || strlen($input['CompId']) != 8)) {
                     $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-                }
-                else
-                {
-                    $content[$field] = $input[$field];
                 }
             }
 
-            if (strlen($input['CompId']) != 8)
-            {
-                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-            }
+            $content = $input;
+            $content['skbank_form'] = $input;
+            unset($content['skbank_form']['governmentauthorities_image']);
 
             $file_fields = ['governmentauthorities_image'];
             //多個檔案欄位
@@ -4034,31 +4027,31 @@ class Certification extends REST_Controller {
             }
 
             // 寫入使用者手填資料
-            $content['compName'] = $input['CompName'] ?? '';
-            $content['compId'] = $input['CompId'] ?? '';
-            $content['compDate'] = $input['CompDate'] ?? '';
-            $content['compCapital'] = $input['CompCapital'] ?? '';
-            $content['compRegAddress'] = $input['CompRegAddress'] ?? '';
-            $content['prName'] = $input['PrName'] ?? '';
-            $content['principalId'] = $input['PrincipalId'] ?? '';
-            for ($i = ord('A'); $i <= ord('G'); $i++)
-            {
-                $content['director' . chr($i) . 'Id'] = $input['Director' . chr($i) . 'Id'] ?? '';;
-                $content['director' . chr($i) . 'Name'] = $input['Director' . chr($i) . 'Name'] ?? '';;
-            }
+//            $content['compName'] = $input['CompName'] ?? '';
+//            $content['compId'] = $input['CompId'] ?? '';
+//            $content['compDate'] = $input['CompDate'] ?? '';
+//            $content['compCapital'] = $input['CompCapital'] ?? '';
+//            $content['compRegAddress'] = $input['CompRegAddress'] ?? '';
+//            $content['prName'] = $input['PrName'] ?? '';
+//            $content['principalId'] = $input['PrincipalId'] ?? '';
+//            for ($i = ord('A'); $i <= ord('G'); $i++)
+//            {
+//                $content['director' . chr($i) . 'Id'] = $input['Director' . chr($i) . 'Id'] ?? '';;
+//                $content['director' . chr($i) . 'Name'] = $input['Director' . chr($i) . 'Name'] ?? '';;
+//            }
 
             // 商業司爬蟲
             $company_user_info = $this->user_model->get_by(array( 'id' => $this->user_info->id ));
-            if ($company_user_info && ! empty($content['compId']))
+            if ($company_user_info && ! empty($content['CompId']))
             {
                 $this->load->library('scraper/Findbiz_lib');
-                $resp = $this->findbiz_lib->getFindBizStatus($content['compId']);
+                $resp = $this->findbiz_lib->getFindBizStatus($content['CompId']);
                 if ( ! isset($resp['response']['result']['status']) || ($resp['response']['result']['status'] != 'failure' && $resp['response']['result']['status'] != 'finished'))
                 {
                     // 爬蟲沒打過重打一次
                     if ($resp && isset($resp['status']) && $resp['status'] == self::HTTP_NO_CONTENT)
                     {
-                        $this->findbiz_lib->requestFindBizData($content['compId']);
+                        $this->findbiz_lib->requestFindBizData($content['CompId']);
                     }
                 }
             }
