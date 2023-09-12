@@ -241,18 +241,31 @@ class Sns extends REST_Controller {
                     ((count($info) >= 3) && $info[0]->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
                 ) {
                     if ($info[0]->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE) {
-                        // 沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工
-                        $detail['remark'] = "沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工";
-
                         $remark = $info[0]->remark != '' ? json_decode($info[0]->remark, true) : [];
-                        $remark['fail'] = $drive !== false ? "該附件由Google雲端夾帶，需人工檢驗" : "收信無附件次數達三次，請人工檢驗";
-                        $this->user_certification_model->update_by(['id' => $info[0]->id], [
-                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
-                            'remark' => json_encode($remark)
-                        ]);
+                        if (isset($remark['process_mail']) && $remark['process_mail'] == 1) {
+                            $detail['remark'] = "不需要處理，已經處理過了";
+                            $detail['actions'] = ['already process_mail'];
+
+                            $remark['fail'] = '';
+                        } else {
+                            // 沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工
+                            $detail['remark'] = "沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工";
+
+                            $remark['fail'] = $drive !== false ? "該附件由Google雲端夾帶，需人工檢驗" : "收信無附件次數達三次，請人工檢驗";
+                            $this->user_certification_model->update_by(['id' => $info[0]->id], [
+                                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                                'remark' => json_encode($remark)
+                            ]);
+                        }
+
                         $result = $this->process_mail($info, null, $cert_info, $s3_url, $certification_id);
-                        $actions = $result ? ['process_mail with no attachments'] : ['process_mail failed with no attachments'];
-                        $detail['actions'] = $actions;
+                        if (!isset($detail['actions'])) {
+                            $detail['actions'] = [];
+                        }
+                        $detail['actions'] [] = $result ?
+                            'process_mail with no attachments' :
+                            'process_mail failed with no attachments';
+
                         $this->record_mailbox_log($detail);
                     }
                     continue;
