@@ -103,7 +103,42 @@ class S3_lib {
 		} else {
 			return null;
 		}
-	}
+    }
+
+    public function get_mailbox_today_list()
+    {
+        $data_list = array();
+        $url_list = array();
+        $bucket = S3_BUCKET_MAILBOX;
+        try {
+            $list = $this->client_us2->listObjects(array('Bucket' => $bucket));
+        } catch (S3Exception $e) {
+            echo '洽工程師 檢查連線問題';
+            exit();
+        }
+        if (!empty($list['Contents'])) {
+            $arrayIterator = new \ArrayIterator($list->toArray()['Contents']);
+            $arrayIterator->uasort(function ($a, $b) {
+                $itemADate = (new DateTime($a['LastModified']));
+                $itemBDate = (new DateTime($b['LastModified']));
+                return $itemADate < $itemBDate;
+            });
+            //排除 unknown 資料夾
+            foreach ($arrayIterator as $object) {
+                if ($object['LastModified'] < (new DateTime())->modify('-1 days')) {
+                    continue;
+                }
+                $overlook_file = strpos($object['Key'], 'unknown/');
+                if (($object['Key'] !== 'AMAZON_SES_SETUP_NOTIFICATION') && ($overlook_file === false)) {
+                    $url_list[] = $this->client_us2->getObjectUrl($bucket, $object['Key']);
+                }
+
+            };
+            return $url_list;
+        } else {
+            return null;
+        }
+    }
 
 	public function public_delete_s3object($s3_url,$bucket=AZURE_S3_BUCKET)
 	{
