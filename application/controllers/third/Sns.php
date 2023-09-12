@@ -330,18 +330,17 @@ class Sns extends REST_Controller {
     private function process_mail($info, $attachments, $cert_info, $s3_url, $certification_id): bool
     {
         if (!isset($attachments)) {
-            return false;
-        }
-        $name = ($certification_id === 9) ? 'investigation' : 'job';
-        $rs = $this->s3_lib->credit_mail_pdf($attachments, $cert_info->user_id, $name, 'user_upload/' . $cert_info->user_id);
-        if (empty($rs)) {
-            log_message('error',json_encode(['function_name'=>'credit_mail_pdf','message'=>'failed']));
-            return false;
-        }
-        $rs = $this->certification_lib->save_mail_url($info['0'], $rs['url'], $rs['is_valid_pdf']);
-        if (empty($rs)) {
-            log_message('error',json_encode(['function_name'=>'save_mail_url','message'=>'failed']));
-            return false;
+            $name = ($certification_id === 9) ? 'investigation' : 'job';
+            $rs = $this->s3_lib->credit_mail_pdf($attachments, $cert_info->user_id, $name, 'user_upload/' . $cert_info->user_id);
+            if (empty($rs)) {
+                log_message('error', json_encode(['function_name' => 'credit_mail_pdf', 'message' => 'failed']));
+                return false;
+            }
+            $rs = $this->certification_lib->save_mail_url($info['0'], $rs['url'], $rs['is_valid_pdf']);
+            if (empty($rs)) {
+                log_message('error', json_encode(['function_name' => 'save_mail_url', 'message' => 'failed']));
+                return false;
+            }
         }
         $rs = $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
         if (!$rs){
