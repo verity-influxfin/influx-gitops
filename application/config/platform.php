@@ -5,47 +5,47 @@ $config['role_permission'] = [
         'name' => '角色-貸後權限',
         'permission' => [
             'Passbook' => [
-            'display' => [
-                'validator' => [
-                    'className' =>'RequestValidator\PostLoan\VirtualPassbookValidator',
-                    'parameters' => ['virtual_account' => '*']
-                ],
-                'menu_display' => false,
-            ]
+                'display' => [
+                    'validator' => [
+                        'className' => 'RequestValidator\PostLoan\VirtualPassbookValidator',
+                        'parameters' => ['virtual_account' => '*']
+                    ],
+                    'menu_display' => false,
+                ]
             ],
             'User' => [
-                'display' =>  [
+                'display' => [
                     'validator' => [
-                        'className' =>'RequestValidator\PostLoan\UserValidator',
+                        'className' => 'RequestValidator\PostLoan\UserValidator',
                         'parameters' => ['id' => '*']
                     ],
                     'menu_display' => false,
                 ]
             ],
             'Target' => [
-                'edit' =>  [
+                'edit' => [
                     'validator' => [
-                        'className' =>'RequestValidator\PostLoan\TargetValidator',
+                        'className' => 'RequestValidator\PostLoan\TargetValidator',
                         'parameters' => ['id' => '*']
                     ],
                 ],
                 'index?delay=1&status=5' => [
                     'validator' => [
-                        'className' =>'RequestValidator\ValidatorBase',
+                        'className' => 'RequestValidator\ValidatorBase',
                         'parameters' => ['status' => [5], 'delay' => 1]
                     ],
                 ],
                 'transaction_display' => [
                     'validator' => [
-                        'className' =>'RequestValidator\PostLoan\TargetValidator',
+                        'className' => 'RequestValidator\PostLoan\TargetValidator',
                         'parameters' => ['id' => '*']
                     ],
                 ]
             ],
             'Risk' => [
-                'index?investor=0&company=0' =>  [
+                'index?investor=0&company=0' => [
                     'validator' => [
-                        'className' =>'RequestValidator\ValidatorBase',
+                        'className' => 'RequestValidator\ValidatorBase',
                         'parameters' => ['investor' => 0, 'company' => 0],
                     ],
                     'role_parameters' => [
@@ -56,7 +56,7 @@ $config['role_permission'] = [
             'Certification' => [
                 'user_certification_edit' => [
                     'validator' => [
-                        'className' =>'RequestValidator\PostLoan\CertificationValidator',
+                        'className' => 'RequestValidator\PostLoan\CertificationValidator',
                         'parameters' => ['id' => '*'],
                     ],
                 ]
@@ -65,11 +65,11 @@ $config['role_permission'] = [
     ],
     'Bankdata' => [
         'name' => '角色-新光微企貸收件檢核表',
-        'permission' =>[
+        'permission' => [
             'Bankdata' => [
                 'report' => [
                     'validator' => [
-                        'className' =>'RequestValidator\ValidatorBase',
+                        'className' => 'RequestValidator\ValidatorBase',
                         'parameters' => ['id' => '*'],
                     ],
                     'menu_display' => false,
@@ -79,11 +79,11 @@ $config['role_permission'] = [
     ],
     'Creditmanagementtable' => [
         'name' => '角色-授審表',
-        'permission' =>[
+        'permission' => [
             'Bankdata' => [
                 'report' => [
                     'validator' => [
-                        'className' =>'RequestValidator\ValidatorBase',
+                        'className' => 'RequestValidator\ValidatorBase',
                         'parameters' => ['id' => '*'],
                     ],
                     'menu_display' => false,
@@ -1965,7 +1965,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_COMPANYEMAIL,
                     CERTIFICATION_JUDICIALGUARANTEE,
                 ],
-                'instalment' => [12,24,36],
+                'instalment' => [12, 24, 36],
                 'repayment' => [1],
                 'targetData' => [],
                 'weight' => [],
@@ -2100,7 +2100,7 @@ $config['sub_product_list'] = [
 
 $config['app_product_totallist'] = [
     'nature' => ['LS1', 'NS1', 'LF1', 'DS2'],
-    'company' => ['DS2','LJ2'],
+    'company' => ['DS2', 'LJ2'],
 ];
 
 $config['stage_option_cer'] = [2, 8, 9, 10];
@@ -2467,7 +2467,7 @@ $config['certifications_msg'] = [
         '請提供監護人之佐證資料，如：戶口名簿等政府單位核發文件',
     ],
     CERTIFICATION_EMAIL => [],
-    CERTIFICATION_FINANCIAL> [],
+    CERTIFICATION_FINANCIAL > [],
     CERTIFICATION_DIPLOMA => [
         '畢業證書錯誤',
         '您的身份非平台服務範圍，我們無法提供服務給您，造成不便，敬請見諒！',
@@ -2556,11 +2556,13 @@ abstract class NotificationTargetCategory
     const Loan = 2;
     const All = 3;
 }
+
 abstract class NotificationType
 {
     const Manual = 1;
     const RoutineReminder = 2;
 }
+
 abstract class NotificationStatus
 {
     const Pending = 0;
@@ -2591,20 +2593,20 @@ $config['externalCooperation'] = [PRODUCT_SK_MILLION_SMEG];
 
 //個人資料表
 $config['cer_profile'] = [
-    'RealPr' => ['登記負責人','配偶','甲保證人','乙保證人'],
-    'IsPrSpouseGu' => ['是','否'],
-    'PrEduLevel' => ['A'=>'國小','B'=>'國中','C'=>'高中職','D'=>'專科','E'=>'大學','F'=>'碩士','G'=>'博士','H'=>'無'],
-    'OthRealPrRelWithPr' => ['A'=>'配偶','B'=>'血親','C'=>'姻親','D'=>'股東','E'=>'朋友','F'=>'本人','G'=>'其他','H'=>'與經營有關之借戶職員'],
-    'GuOneRelWithPr' => ['A'=>'配偶','B'=>'血親','C'=>'姻親','D'=>'股東','E'=>'朋友','F'=>'本人','G'=>'其他','H'=>'與經營有關之借戶職員'],
-    'GuOneCompany' => ['A'=>'公家機關','B'=>'上市櫃公司','C'=>'專業人士','D'=>'借戶','E'=>'其他民營企業','F'=>'無'],
-    'GuTwoRelWithPr' => ['A'=>'配偶','B'=>'血親','C'=>'姻親','D'=>'股東','E'=>'朋友','F'=>'本人','G'=>'其他','H'=>'與經營有關之借戶職員'],
-    'GuTwoCompany' => ['A'=>'公家機關','B'=>'上市櫃公司','C'=>'專業人士','D'=>'借戶','E'=>'其他民營企業','F'=>'無'],
+    'RealPr' => ['登記負責人', '配偶', '甲保證人', '乙保證人'],
+    'IsPrSpouseGu' => ['是', '否'],
+    'PrEduLevel' => ['A' => '國小', 'B' => '國中', 'C' => '高中職', 'D' => '專科', 'E' => '大學', 'F' => '碩士', 'G' => '博士', 'H' => '無'],
+    'OthRealPrRelWithPr' => ['A' => '配偶', 'B' => '血親', 'C' => '姻親', 'D' => '股東', 'E' => '朋友', 'F' => '本人', 'G' => '其他', 'H' => '與經營有關之借戶職員'],
+    'GuOneRelWithPr' => ['A' => '配偶', 'B' => '血親', 'C' => '姻親', 'D' => '股東', 'E' => '朋友', 'F' => '本人', 'G' => '其他', 'H' => '與經營有關之借戶職員'],
+    'GuOneCompany' => ['A' => '公家機關', 'B' => '上市櫃公司', 'C' => '專業人士', 'D' => '借戶', 'E' => '其他民營企業', 'F' => '無'],
+    'GuTwoRelWithPr' => ['A' => '配偶', 'B' => '血親', 'C' => '姻親', 'D' => '股東', 'E' => '朋友', 'F' => '本人', 'G' => '其他', 'H' => '與經營有關之借戶職員'],
+    'GuTwoCompany' => ['A' => '公家機關', 'B' => '上市櫃公司', 'C' => '專業人士', 'D' => '借戶', 'E' => '其他民營企業', 'F' => '無'],
 ];
 //公司資料表
 $config['cer_profilejudicial'] = [
-    'IsBizRegAddrSelfOwn' => ['非自有','自有'],
-    'BizRegAddrOwner' => ['A'=>'企業','B'=>'負責人','C'=>'負責人配偶'],
-    'IsBizAddrEqToBizRegAddr' => ['不同於營業登記地址','同營業登記地址'],
+    'IsBizRegAddrSelfOwn' => ['非自有', '自有'],
+    'BizRegAddrOwner' => ['A' => '企業', 'B' => '負責人', 'C' => '負責人配偶'],
+    'IsBizAddrEqToBizRegAddr' => ['不同於營業登記地址', '同營業登記地址'],
 ];
 
 // 推薦碼需要的徵信項目

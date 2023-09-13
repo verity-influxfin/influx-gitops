@@ -3645,8 +3645,8 @@ class Certification extends REST_Controller {
                     foreach($list as $k => $v){
                         $content[$field][] = $v->url;
                     }
-										// 變卡為圖片多對一ID,需額外存取 group id
-										$content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
+                    // 變卡為圖片多對一ID,需額外存取 group id
+                    $content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
                 }else{
                     $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
                 }
