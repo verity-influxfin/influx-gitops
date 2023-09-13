@@ -436,16 +436,16 @@ class Target_lib
                                     if ($is_new_user) {
                                         $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15, 'status' => 1]);
                                         if (!isset($certification)) {
-                                            $this->remark_target($target->id, '沒有有效的還款力計算結果');
+                                            $this->memo_target($target->id, '沒有有效的還款力計算結果');
                                             goto FORCE_SECOND_INSTANCE;
                                         }
                                         if ($certification->status != 1) {
-                                            $this->remark_target($target->id, '沒有驗證成功的還款力計算結果');
+                                            $this->memo_target($target->id, '沒有驗證成功的還款力計算結果');
                                             goto FORCE_SECOND_INSTANCE;
                                         }
                                         $content = json_decode($certification->content);
                                         if (!isset($content->monthly_repayment) || !isset($content->total_repayment)) {
-                                            $this->remark_target($target->id, '沒有有效的還款力計算結果，缺少monthly_repayment 或 total_repayment');
+                                            $this->memo_target($target->id, '沒有有效的還款力計算結果，缺少monthly_repayment 或 total_repayment');
                                             goto FORCE_SECOND_INSTANCE;
                                         }
                                         $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
@@ -679,13 +679,13 @@ class Target_lib
         return false;
     }
 
-    private function remark_target($target_id, $remark)
+    private function memo_target($target_id, $message)
     {
-        $param = [
-            'remark' => $remark,
-        ];
-        $this->CI->target_model->update($target_id, $param);
-        $this->insert_change_log($target_id, $param);
+        $target = $this->CI->target_model->get_by(['id' => $target_id]);
+        $memo = isNull($target->memo) ? [] : json_decode($target->memo, true);
+        $memo['repayment_msg'] = $message;
+        $this->CI->target_model->update($target_id, ['memo' => $memo]);
+//        $this->insert_change_log($target_id, ['memo' => $memo]);
     }
 
     public function target_verify_success($target = [], $admin_id = 0, $param = [], $user_id = 0)
