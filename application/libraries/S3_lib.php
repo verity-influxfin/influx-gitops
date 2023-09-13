@@ -183,8 +183,9 @@ class S3_lib {
         $is_valid_pdf = 1;
 
 		try {
-			if (!$attachments)
-				return '';
+			if (!$attachments) {
+                return [];
+            }
 			$dir = 'pdf/';
 
 			foreach ($attachments as $attachment) {
