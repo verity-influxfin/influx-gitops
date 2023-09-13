@@ -128,7 +128,7 @@ class S3_lib {
                 if ($object['LastModified'] < (new DateTime())->modify('-1 days')) {
                     continue;
                 }
-                $overlook_file = strpos($object['Key'], 'unknown/');
+                $overlook_file = strpos($object['Key'], 'unknown/') || strpos($object['Key'], 'failed/');
                 if (($object['Key'] !== 'AMAZON_SES_SETUP_NOTIFICATION') && ($overlook_file === false)) {
                     $url_list[] = $this->client_us2->getObjectUrl($bucket, $object['Key']);
                 }
