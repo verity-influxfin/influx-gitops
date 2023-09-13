@@ -1996,23 +1996,19 @@ class Certification_lib{
 		return false;
 	}
 
-    public function save_mail_url($info = array(), $url, $is_valid_pdf)
+    public function save_mail_url($info = array(), $url, $is_valid_pdf): bool
     {
         $content = json_decode($info->content, TRUE);
         $content['pdf_file'] = $url;
         $content['is_valid_pdf'] = $is_valid_pdf;
+        $mail_file_status = $url ? 1 : 0;
+        $content['mail_file_status'] = $mail_file_status;
 
-		if($url){
-			$content['mail_file_status'] = 1;
-		}else{
-			$content['mail_file_status'] = 0;
-		}
-
-		$this->CI->user_certification_model->update($info->id, array(
-			'content'=>json_encode($content)
-		));
-		return true;
-	}
+        $this->CI->user_certification_model->update($info->id, array(
+            'content' => json_encode($content)
+        ));
+        return (bool)$mail_file_status;
+    }
 
 	// to do : 待加入並合併普匯微企e秒貸
 	public function job_verify($info = array(),$url=null): bool
