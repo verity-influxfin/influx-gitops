@@ -350,8 +350,8 @@ class Sns extends REST_Controller {
                 log_message('error', json_encode(['function_name' => 'credit_mail_pdf', 'message' => $message]));
                 return false;
             }
-            $rs = $this->certification_lib->save_mail_url($info['0'], $rs['url'], $rs['is_valid_pdf']);
-            if (empty($rs)) {
+            $save_rs = $this->certification_lib->save_mail_url($info['0'], $pdf_rs['url'], $pdf_rs['is_valid_pdf']);
+            if (!$save_rs) {
                 log_message('error', json_encode(['function_name' => 'save_mail_url', 'message' => 'failed']));
                 return false;
             }
