@@ -344,9 +344,10 @@ class Sns extends REST_Controller {
     {
         if (!isset($attachments)) {
             $name = ($certification_id === 9) ? 'investigation' : 'job';
-            $rs = $this->s3_lib->credit_mail_pdf($attachments, $cert_info->user_id, $name, 'user_upload/' . $cert_info->user_id);
-            if (empty($rs)) {
-                log_message('error', json_encode(['function_name' => 'credit_mail_pdf', 'message' => 'failed']));
+            $pdf_rs = $this->s3_lib->credit_mail_pdf($attachments, $cert_info->user_id, $name, 'user_upload/' . $cert_info->user_id);
+            if (empty($pdf_rs) || (isset($pdf_rs['url']) && $pdf_rs['url'] == '')) {
+                $message = !isset($pdf_rs['url']) || $pdf_rs['url'] == '' ? 'failed no url' : 'failed';
+                log_message('error', json_encode(['function_name' => 'credit_mail_pdf', 'message' => $message]));
                 return false;
             }
             $rs = $this->certification_lib->save_mail_url($info['0'], $rs['url'], $rs['is_valid_pdf']);
