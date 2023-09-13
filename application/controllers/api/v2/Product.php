@@ -1921,6 +1921,7 @@ class Product extends REST_Controller {
             if($targets->user_id != $user_id){
                 $associates_target = $this->target_lib->get_associates_target_list($this->user_info->id, $target_id);
                 if ($associates_target) {
+                    # 案件關係人取消成為關係人
                     if($associates_target->associate['status'] == 0 && !$associates_target->associate['owner']){
                         $this->load->model('loan/target_associate_model');
                         $this->target_associate_model->update_by([
@@ -1932,7 +1933,10 @@ class Product extends REST_Controller {
                         $this->response(array('result' => 'SUCCESS'));
                     }
                 }
-                $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
+                # 負責人個人帳號可以取消企金案件，不應回傳 APPLY_NO_PERMISSION
+                if ($associates_target && !$associates_target->associate['owner']) {
+                    $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
+                }
             }
 
             if(in_array($targets->status,[
