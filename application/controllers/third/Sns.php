@@ -356,10 +356,10 @@ class Sns extends REST_Controller {
                 return false;
             }
         }
-        $rs = $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
-        if (!$rs){
-            log_message('error',json_encode(['function_name'=>'public_delete_s3object','message'=>'failed']));
-            throw new Exception('public_delete_s3object failed');
+        $failed_rs = $this->s3_lib->failed_mail($s3_url, S3_BUCKET_MAILBOX);
+        if (!$failed_rs){
+            log_message('error',json_encode(['function_name'=>'failed_mail','message'=>'failed']));
+            throw new Exception('failed_mail failed');
         }
         return true;
     }
