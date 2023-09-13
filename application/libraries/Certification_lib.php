@@ -2001,12 +2001,8 @@ class Certification_lib{
         $content = json_decode($info->content, TRUE);
         $content['pdf_file'] = $url;
         $content['is_valid_pdf'] = $is_valid_pdf;
-
-		if($url){
-			$content['mail_file_status'] = 1;
-		}else{
-			$content['mail_file_status'] = 0;
-		}
+        $mail_file_status = $url ? 1 : 0;
+        $content['mail_file_status'] = $mail_file_status;
 
 		$this->CI->user_certification_model->update($info->id, array(
 			'content'=>json_encode($content)
