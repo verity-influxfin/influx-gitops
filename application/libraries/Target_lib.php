@@ -426,7 +426,7 @@ class Target_lib
 
 
                                 // 「上班族貸」新戶額度調整
-                                if (in_array($product_id, [3, 4])) {
+                                if (in_array($product_id, [3, 4]) && !$renew) {
                                     // Todo: “新戶” (無申貸成功紀錄者) 且薪水四萬以下
                                     $past_targets = $this->CI->target_model->get_many_by([
                                         'user_id' => $user_id,
