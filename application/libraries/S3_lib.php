@@ -143,11 +143,16 @@ class S3_lib {
 	public function public_delete_s3object($s3_url,$bucket=AZURE_S3_BUCKET)
 	{
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
-		$result= $this->client_us2->deleteObject(array(
-			'Bucket' 		=> $bucket,
-			'Key'    		=> $key
-		));
-        return true;
+        try {
+            $result = $this->client_us2->deleteObject(array(
+                'Bucket' => $bucket,
+                'Key' => $key
+            ));
+            return true;
+        }catch (Exception $e){
+            error_log("public_delete_s3object: {$e->getMessage()}, ($s3_url)");
+            return false;
+        }
 	}
 
 	public function public_get_filename($s3_url,$bucket=S3_BUCKET_MAILBOX)
@@ -162,12 +167,17 @@ class S3_lib {
 		$filename = $this->public_get_filename($s3_url,$bucket);
 		$content  = file_get_contents('s3://'.$bucket.'/'.$filename);
 		if($content) {
-			$result = $this->client_us2->putObject(array(
-				'Bucket' => $bucket,
-				'Key' => 'unknown/' . $key,
-				'Body' => $content
-			));
-            return true;
+            try {
+                $result = $this->client_us2->putObject(array(
+                    'Bucket' => $bucket,
+                    'Key' => 'unknown/' . $key,
+                    'Body' => $content
+                ));
+                return true;
+            } catch (Exception $e) {
+                error_log("unknown_mail: {$e->getMessage()}, ($s3_url)");
+                return false;
+            }
 		}else{
 			error_log("unknown_mail: The resource can't be accessed. ($s3_url)");
 			echo "unknown_mail: The resource can't be accessed. ($s3_url)";
