@@ -434,7 +434,7 @@ class Target_lib
                                     ]);
                                     $is_new_user = count($past_targets) == 0;
                                     if ($is_new_user) {
-                                        $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15, 'status' => 1, 'certificate_status' => 1]);
+                                        $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15, 'status' => 1]);
                                         if (!isset($certification)) {
                                             $this->remark_target($target->id, '沒有有效的還款力計算結果');
                                             goto FORCE_SECOND_INSTANCE;
