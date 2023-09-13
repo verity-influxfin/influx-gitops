@@ -685,7 +685,7 @@ class Target_lib
     private function memo_target($target_id, $message)
     {
         $target = $this->CI->target_model->get_by(['id' => $target_id]);
-        $memo = isNull($target->memo) ? [] : json_decode($target->memo, true);
+        $memo = is_null($target->memo) ? [] : json_decode($target->memo, true);
         $memo['repayment_msg'] = $message;
         $this->CI->target_model->update($target_id, ['memo' => $memo]);
 //        $this->insert_change_log($target_id, ['memo' => $memo]);
