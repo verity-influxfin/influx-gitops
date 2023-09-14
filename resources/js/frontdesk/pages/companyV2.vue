@@ -97,13 +97,13 @@
           </div>
           <div class="intro-group-item-text d-md-block d-none">
             <div>
-              透過<span class="color-primary">P2P點對點技術</span
+              透過<span class="color-primary">點對點技術</span
               >，進行大量、小額、分散式借貸投資
             </div>
             <div>及債權轉讓，保護借款人資訊，保障投資人權益。</div>
           </div>
           <div class="intro-group-item-text d-md-none d-block">
-            透過<span class="color-primary">P2P點對點技術</span
+            透過<span class="color-primary">點對點技術</span
             >，進行大量、小額、分散式借貸投資及債權轉讓，保護借款人資訊，保障投資人權益。
           </div>
         </div>
