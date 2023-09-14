@@ -342,7 +342,7 @@ class Sns extends REST_Controller {
      */
     private function process_mail($info, $attachments, $cert_info, $s3_url, $certification_id): bool
     {
-        if (!isset($attachments)) {
+        if (isset($attachments)) {
             $name = ($certification_id === 9) ? 'investigation' : 'job';
             $pdf_rs = $this->s3_lib->credit_mail_pdf($attachments, $cert_info->user_id, $name, 'user_upload/' . $cert_info->user_id);
             if (empty($pdf_rs) || (isset($pdf_rs['url']) && $pdf_rs['url'] == '')) {
