@@ -2,7 +2,7 @@
   <div class="investment">
     <div class="banner">
       <h1 class="banner-title">普匯債權投資</h1>
-      <h2 class="banner-title">P2P認購債權 公開透明安全</h2>
+      <h2 class="banner-title">認購債權 公開透明安全</h2>
       <img
         src="@/asset/images/investment/investment-banner.png"
         class="w-100 d-md-block d-none"
@@ -48,7 +48,7 @@
             <div class="product-row-title">1. 債權投資</div>
             <div class="product-row-intro">
               <div>
-                P2P金融科技媒合，不受營業時間影響，隨時下單小額、分散，低風險、高報酬
+                金融科技資金媒合，不受營業時間影響，隨時下單小額、分散，低風險、高報酬
               </div>
             </div>
             <div class="product-row-item">

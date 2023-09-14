@@ -148,7 +148,7 @@ let routers = [
     { path: '/companycooperation', component: companyCooperation },
     { path: '/feedback', component: feedback },
     { path: '/event', component: event },
-    { path: '/skbank', component: skbank },
+    // { path: '/skbank', component: skbank }, // 因與新光銀行廣告投放合作結束，所以拔除該頁面
     { path: '/obank', component: obank },
     { path: '/charitable',component:ntu},
     { path: '/charitable-status', component: charitableStatus},
