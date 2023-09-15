@@ -198,6 +198,7 @@ class Certification_lib{
             {
                 $user_qrcode_update_param = [
                     'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+                    'sub_status' => PROMOTE_SUB_STATUS_DEFAULT,
                 ];
                 $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], $user_qrcode_update_param);
                 $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", CERTIFICATION_STATUS_FAILED);
