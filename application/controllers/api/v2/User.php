@@ -2978,6 +2978,7 @@ END:
                 // 檢查該提交的徵信項是否已審核成功
                 if (count($doneCertifications) != count($promote_cert_list))
                 {
+                    $change_sub_status_pending_to_default = true;
                     throw new Exception('徵信項未全數審核成功', CERTIFICATION_NOT_ACTIVE);
                 }
             }
@@ -3038,12 +3039,52 @@ END:
             else
             {
                 $trans_rollback();
+                $change_sub_status_pending_to_default = true;
+                throw new Exception('徵信項審核失敗');
                 $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
             }
         }
         catch (Exception $e)
         {
             $trans_rollback();
+
+            if (isset($change_sub_status_pending_to_default) && $change_sub_status_pending_to_default) {
+                $user_qrcode_update_param = ['status' => PROMOTE_STATUS_PENDING_TO_SENT, 'sub_status' => PROMOTE_SUB_STATUS_DEFAULT];
+                $rs = $this->user_qrcode_model->update($user_qrcode->id, $user_qrcode_update_param);
+                // 寫 log
+                $this->load->model('log/log_user_qrcode_model');
+                $user_qrcode_update_param['user_qrcode_id'] = $user_qrcode->id;
+                $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+                if (!$rs) {
+                    $this->response(['result' => 'ERROR',
+                        'error' => INSERT_ERROR,
+                        'msg' => 'QR code更新失敗'
+                    ]);
+                }
+
+                if (isset($is_appointed) && $is_appointed) {
+                    $qrcode_apply = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $user_qrcode->id, 'status !=' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
+                    if (!isset($qrcode_apply)) {
+                        $this->response(['result' => 'ERROR',
+                            'error' => INSERT_ERROR,
+                            'msg' => '沒有找到特約申請'
+                        ]);
+                        return;
+                    }
+                    $user_qrcode_apply_update_param = ['status' => PROMOTE_REVIEW_STATUS_WITHDRAW];
+                    $rs = $this->user_qrcode_apply_model->update($qrcode_apply->id, $user_qrcode_apply_update_param);
+                    if (!$rs) {
+                        $this->response(['result' => 'ERROR',
+                            'error' => INSERT_ERROR,
+                            'msg' => '特約申請更新失敗'
+                        ]);
+                    }
+
+                    $this->user_qrcode_apply_model->trans_commit();
+                }
+                $this->user_qrcode_model->trans_commit();
+            }
+
             $this->response(['result' => 'ERROR',
                 'error' => empty($e->getCode()) ? INSERT_ERROR : $e->getCode(),
                 'msg' => $e->getMessage()
