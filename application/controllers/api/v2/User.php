@@ -3011,13 +3011,16 @@ END:
             $rs = TRUE;
             if (count($doneCertifications) === count($promote_cert_list))
             {
-                if ($company == USER_NOT_COMPANY && isset($doneCertifications[CERTIFICATION_IDENTITY]))
+                if ($company == USER_NOT_COMPANY)
                 {
-                    $rs = $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDENTITY], FALSE);
+                    $certificationId = CERTIFICATION_IDENTITY;
                 }
-                else if ($company == USER_IS_COMPANY && isset($doneCertifications[CERTIFICATION_JUDICIALGUARANTEE]))
+                else if ($company == USER_IS_COMPANY)
                 {
-                    $rs = $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_JUDICIALGUARANTEE], FALSE);
+                    $certificationId = CERTIFICATION_JUDICIALGUARANTEE;
+                }
+                if (isset($doneCertifications[$certificationId])) {
+                    $rs = $this->certification_lib->verify_promote_code($doneCertifications[$certificationId], FALSE);
                 }
             }
 
