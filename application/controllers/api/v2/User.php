@@ -3009,15 +3009,11 @@ END:
 
             PROMOTE_CODE_VERIFY:
             $rs = TRUE;
-            if (count($doneCertifications) === count($promote_cert_list))
-            {
-                if ($company == USER_NOT_COMPANY)
-                {
+            if (count($doneCertifications) === count($promote_cert_list)) {
+                if ($company == USER_NOT_COMPANY) {
                     $certificationId = CERTIFICATION_IDENTITY;
                     $certificationName = '實名認證';
-                }
-                else if ($company == USER_IS_COMPANY)
-                {
+                } else if ($company == USER_IS_COMPANY) {
                     $certificationId = CERTIFICATION_JUDICIALGUARANTEE;
                     $certificationName = '公司授權核實';
                 }
@@ -3027,10 +3023,9 @@ END:
                     throw new Exception("{$certificationName}未審核成功", CERTIFICATION_NOT_ACTIVE);
                 }
 
-                    $rs = $this->certification_lib->verify_promote_code($doneCertifications[$certificationId], FALSE);
+                $rs = $this->certification_lib->verify_promote_code($doneCertifications[$certificationId], FALSE);
 
-            }
-            else {
+            } else {
                 $change_sub_status_pending_to_default = true;
                 throw new Exception('徵信項未全數審核成功', CERTIFICATION_NOT_ACTIVE);
             }
