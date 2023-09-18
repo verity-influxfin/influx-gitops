@@ -3544,6 +3544,12 @@ END:
             $data['status'] = intval($user_qrcode_info['status']);
             $data['start_time'] = $user_qrcode_info['start_time'];
             $data['expired_time'] = $user_qrcode_info['end_time'];
+            if (intval($user_qrcode_info['status']) === 4 && intval($user_qrcode_info['sub_status']) === 1 && $user_qrcode_info['contract_id']) {
+                $contract = $this->contract_lib->get_contract($user_qrcode_info['contract_id'], [], FALSE);
+                if ($contract) {
+                    $data['contract'] = $contract['content'];
+                }
+            }
 
             $this->load->model('user/user_subcode_model');
             $user_subcode_info = $this->user_subcode_model->as_array()->order_by('created_at', 'desc')->get_many_by([
