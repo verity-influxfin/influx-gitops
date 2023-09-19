@@ -116,6 +116,10 @@
                                         <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerName"></td>
                                     </tr>
                                     <tr>
+                                        <td><span>財務主管電話</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerTel"></td>
+                                    </tr>
+                                    <tr>
                                         <td><span>財務主管分機</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerExt"></td>
                                     </tr>
@@ -591,6 +595,10 @@
                                     <tr>
                                         <td><span>財務主管姓名</span></td>
                                         <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>財務主管電話</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.financialOfficerTel"></td>
                                     </tr>
                                     <tr>
                                         <td><span>財務主管分機</span></td>
@@ -1163,6 +1171,7 @@
                     compFax: '',
                     compContactExt: '',
                     financialOfficerName: '',
+                    financialOfficerTel: '',
                     financialOfficerExt: '',
                     changeOwner: '',
                     changeOwnerYearStart: '',
