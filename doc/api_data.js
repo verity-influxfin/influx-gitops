@@ -8460,6 +8460,12 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
+                            "field": "financialOfficerTel",
+                            "description": "<p>企業財務主管電話</p>"
+                        }, {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
                             "field": "financialOfficerExt",
                             "description": "<p>企業財務主管分機</p>"
                         }, {
