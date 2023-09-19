@@ -4893,8 +4893,9 @@ class Certification extends REST_Controller {
             'compFax',                  // 企業聯絡人傳真
             'compContact',              // 企業聯絡人職稱
             'compEmail',                // 企業Email
-            'financialOfficerName',     // 企業財務主管姓名
-            'financialOfficerExt',      // 企業財務主管分機
+            'financialOfficerName',       // 企業財務主管姓名
+            'financialOfficerTel',        // 企業財務主管電話
+            'financialOfficerExt',        // 企業財務主管分機
             'employeeNum',              // 企業員工人數
             'hasForeignInvestment',     // 是否有海外投資
             'isCovidAffected',          // 受嚴重特殊傳染性肺炎影響之企業
