@@ -4793,24 +4793,31 @@ class Certification extends REST_Controller {
                 }
             }
             if (isset($input['save']) && $input['save']) {
+                // 選填欄位
+                $fields = $this->_get_profilejudicial_field();
+                foreach ($fields as $field) {
+                    if (isset($input[$field])) {
+                        $content[$field] = $input[$field];
+                    }
+                }
                 $param = [
                     'user_id' => $user_id,
                     'certification_id' => $certification_id,
                     'investor' => $investor,
-                    'content' => json_encode($input),
+                    'content' => json_encode($content),
                     'status' => 4,
                 ];
 
                 if ( ! empty($cer_exists)) {
                     $input = (object)array_merge((array)json_decode($cer_exists->content), (array)$input);
                     $rs = $this->user_certification_model->update($cer_exists->id, [
-                        'content' => json_encode($input),
+                        'content' => json_encode($content),
                     ]);
                 } else {
                     if ( ! empty($last_cert))
                     {
                         $rs = $this->user_certification_model->update($last_cert->id, [
-                            'content' => json_encode($input)
+                            'content' => json_encode($content)
                         ]);
                     }
                     else
