@@ -1862,5 +1862,17 @@ class Certification extends MY_Admin_Controller {
     {
         return ['result' => FALSE, 'msg' => $msg];
     }
+
+	public function income_statement_ocr_page() {
+		$get = $this->input->get(NULL, TRUE);
+		$id = isset($get['id']) ? intval($get['id']) : 0;
+		$info = $this->user_certification_model->get($id);
+		$page_data['data'] = $info->content;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title', $this->menu);
+		$this->load->view('admin/certification/incomestatement_ocr', $page_data);
+		$this->load->view('admin/_footer');
+	}
 }
 ?>

@@ -63,6 +63,29 @@
                                 </form>
                             </div>
                             <div class="form-group">
+                                <label>損益表 OCR 辨識結果</label>
+                                <br>  
+                                <? isset($content['ocr_parser']['content']) && !is_array($content['ocr_parser']['content']) ? $content['ocr_parser']['content'] = array($content['ocr_parser']['content']) : '';
+                                if(!empty($content['ocr_parser']['content'])) { 
+                                    foreach ($content['ocr_parser']['content'] as $key => $value) { 
+                                        if ($value['docType'] == 'INCOME_STATEMENT') { ?>
+                                            <a class="mr-5" href="/admin/certification/income_statement_ocr_page?id=<? echo $data->id; ?>&type=INCOME_STATEMENT&year=<? echo $value['cell_dict']['end_date_yyy']; ?>"><? echo $value['cell_dict']['end_date_yyy']; ?> 年</a>
+                                    <?  }
+                                    } 
+                                } ?>
+                                <br><br>
+                                <!-- <label>資產負債表 OCR 辨識結果</label>
+                                <br> 
+                                <? isset($content['ocr_parser']['content']) && !is_array($content['ocr_parser']['content']) ? $content['ocr_parser']['content'] = array($content['ocr_parser']['content']) : '';
+                                if(!empty($content['ocr_parser']['content'])) { 
+                                    foreach ($content['ocr_parser']['content'] as $key => $value) { 
+                                        if ($value['docType'] == 'BALANCE_SHEET') { ?>
+                                            <a class="mr-5" href="/admin/certification/income_statement_ocr_page?id=<? echo $data->id; ?>&type=BALANCE_SHEET&year=<? echo $value['cell_dict']['yyy_str']; ?>"><? echo $value['cell_dict']['yyy_str']; ?> 年</a>
+                                    <?  }
+                                    } 
+                                } ?> -->
+                            </div>
+                            <div class="form-group">
                               <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
                               foreach ($ocr['url'] as $key => $value) { ?>
                                   <label><a href="<?= isset($value) ? $value : ''; ?>" target="_blank">前往編輯頁面</a></label>
