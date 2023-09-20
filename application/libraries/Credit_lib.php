@@ -1426,6 +1426,78 @@ class Credit_lib{
 		}
 		return false;
 	}
+    //取得信用評分(從credit_sheet對應的credit取得)
+    public function get_target_credit($user_id,$product_id,$sub_product_id=0,$target_id = 0,$target=false ){
+        $target_info = $this->CI->target_model->get_by(['id' => $target_id]);
+        if(!$target_info){
+            return false;
+        }
+        $this->CI->load->model('loan/credit_sheet_model');
+        $credit_sheet = $this->CI->credit_sheet_model->get_by(['target_id' => $target_id]);
+        if(!$credit_sheet){
+            return false;
+        }
+
+        if ($target && is_array($target))
+        {
+            $target = json_decode(json_encode($target));
+        }
+        if($user_id && $product_id){
+            $param = ['id' => $credit_sheet->credit_id];
+
+            // 申貸額度若要共用，需要為同產品(product_id)、同期間(instalment)
+            if (isset($target->instalment) && is_numeric($target->instalment))
+            {
+                $param['instalment'] = $target->instalment;
+            }
+
+            $rs 	= $this->CI->credit_model->order_by('created_at','desc')->get_by($param);
+            if($rs){
+                $data = [
+                    'id'         => intval($rs->id),
+                    'level'		 => intval($rs->level),
+                    'points'	 => intval($rs->points),
+                    'amount'	 => intval($rs->amount),
+                    'instalment' => intval($rs->instalment),
+                    'created_at' => intval($rs->created_at),
+                    'remark'     => $rs->remark,
+                    'expire_time'=> intval($rs->expire_time),
+                    'sub_product_id' => (int) $rs->sub_product_id,
+                ];
+                if($target){
+                    $data['rate'] = $this->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id,$target);
+                    // 期數不同的評分要重新跑
+                    if($target->instalment != $rs->instalment)
+                        return FALSE;
+
+                    $this->CI->load->library('target_lib');
+                    if ($this->CI->target_lib->is_sub_loan($target->target_no) === TRUE &&
+                        $target->product_id === PRODUCT_ID_STUDENT)
+                    {
+                        return $data;
+                    }
+                }
+
+                $info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
+                if (isset($info->meta_value) && in_array($product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER]))
+                {
+                    $school_points_data = $this->get_school_point($info->meta_value);
+                    $school_config = $this->CI->config->item('school_points');
+                    // #2779: 命中黑名單學校給予固定信評為10、固定額度3,000元
+                    if (in_array($info->meta_value, $school_config['lock_school']))
+                    {
+                        $this->get_lock_school_amount($product_id, $sub_product_id, $data, $target);
+                    }
+                    elseif (empty($school_points_data['point']))
+                    {
+                        $data['amount'] = 0;
+                    }
+                }
+                return $data;
+            }
+        }
+        return false;
+    }
 
     public function get_lock_school_amount($product_id, $sub_product_id, &$data, $target = FALSE)
     {
