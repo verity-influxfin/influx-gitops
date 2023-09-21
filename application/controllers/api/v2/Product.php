@@ -3491,7 +3491,7 @@ class Product extends REST_Controller {
             }
             $target_data = json_decode($target->target_data, TRUE);
             $target_data['deed_image'] = $image;
-            $param['target_data'] = json_encode($target_data, JSON_FORCE_OBJECT);
+            $param['target_data'] = json_encode($target_data);
         }
 
         $this->load->library('loanmanager/product_lib');
