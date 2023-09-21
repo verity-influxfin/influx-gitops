@@ -329,6 +329,24 @@ class Target_lib
             $product_id = $target->product_id;
             $sub_product_id = $target->sub_product_id;
 
+            if ($product_id == 5) {
+                $certifications_to_check = [
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
+                ];
+                foreach ($certifications_to_check as $certification_id) {
+                    $certification = $this->CI->user_certification_model->get_by([
+                        'user_id' => $user_id,
+                        'certification_id' => $certification_id,
+                        'status' => 1
+                    ]);
+
+                    if (empty($certification)) {
+                        return false;
+                    }
+                }
+            }
+
             $product_info = $product_list[$product_id];
             if ($this->is_sub_product($product_info, $sub_product_id)) {
                 $product_info = $this->trans_sub_product($product_info, $sub_product_id);
