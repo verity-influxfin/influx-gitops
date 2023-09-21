@@ -1825,8 +1825,8 @@ class Target_lib
         $allow_stage_cer = [1, 3];
         if ($targets && !empty($targets)) {
             foreach ($targets as $key => $value) {
-                // todo: 只放學生貸進新架構，剩餘的等之後開發好再說
-                if ($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0)
+                // todo: 只放學生貸、不動產融資進新架構，剩餘的等之後開發好再說
+                if (($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0) || $value->product_id == PRODUCT_ID_HOME_LOAN)
                 {
                     $approve_factory = new Approve_factory();
                     $approve_instance = $approve_factory->get_instance_by_model_data($value);
@@ -2593,7 +2593,7 @@ class Target_lib
             'instalment' => $sub_product['instalment'],
             'repayment' => $sub_product['repayment'],
             'targetData' => $sub_product['targetData'],
-            'secondInstance' => $sub_product['secondInstance'],
+            'secondInstance' => $sub_product['secondInstance'] ?? FALSE,
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => $product['checkOwner'] ?? FALSE,
@@ -2793,6 +2793,24 @@ class Target_lib
                             $temp['addspouse'] = false;
                         }
                     }
+                    if (isset($user_info))
+                    {
+                        $this->CI->load->helper('user_meta_helper');
+                        $email = get_email_to($user_info, BORROWER);
+                    }
+                    if (empty($email))
+                    {
+                        $associate_content = json_decode($value->content, TRUE);
+                        if (json_last_error() !== JSON_ERROR_NONE)
+                        {
+                            $email = NULL;
+                        }
+                        else
+                        {
+                            $email = ! empty($associate_content['mail']) ? $associate_content['mail'] : NULL;
+                        }
+                    }
+
                     $data = [
                         'user_id' => $user_id,
                         'name' => $name,
@@ -2803,6 +2821,8 @@ class Target_lib
                         'guarantor' => ($value->guarantor == 1),
                         'self' => $self,
                         'certification' => $certification,
+                        'relationship' => $value->relationship ?? NULL,
+                        'email' => $email
                     ];
                     $guarantor_type = [
                        2 => 'A',
@@ -3165,7 +3185,12 @@ class Target_lib
 
     public function get_individual_product_ids(): array
     {
-        return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
+        return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER, PRODUCT_ID_HOME_LOAN];
+    }
+
+    public function get_home_loan_product_ids():array
+    {
+        return [PRODUCT_ID_HOME_LOAN];
     }
 
     public function get_product_id_by_tab($tabname): array
@@ -3174,6 +3199,8 @@ class Target_lib
         {
             case PRODUCT_TAB_ENTERPRISE:
                 return $this->get_enterprise_product_ids();
+            case PRODUCT_TAB_HOME_LOAN:
+                return $this->get_home_loan_product_ids();
             case PRODUCT_TAB_INDIVIDUAL:
             default:
                 return $this->get_individual_product_ids();

@@ -2,6 +2,11 @@
 
 namespace Approve_target;
 
+use Approve_target\Credit\Product_home_loan_appliances;
+use Approve_target\Credit\Product_home_loan_renovation;
+use Approve_target\Credit\Product_home_loan_short;
+use Approve_target\Credit\Product_student;
+
 class Approve_factory
 {
     private $CI;
@@ -39,7 +44,7 @@ class Approve_factory
                     switch ($target['sub_product_id'])
                     {
                         case 0: // 學生貸
-                            $instance = new \Approve_target\Credit\Product_student($target);
+                            $instance = new Product_student($target);
                             break;
                         case 1: // 學生工程師貸
                             break;
@@ -51,6 +56,20 @@ class Approve_factory
                         case 0: // 上班族貸
                             break;
                         case 1: // 上班族工程師貸
+                            break;
+                    }
+                    break;
+                case PRODUCT_ID_HOME_LOAN:
+                    switch ($target['sub_product_id'])
+                    {
+                        case SUB_PRODUCT_ID_HOME_LOAN_SHORT:
+                            $instance = new Product_home_loan_short($target);
+                            break;
+                        case SUB_PRODUCT_ID_HOME_LOAN_RENOVATION:
+                            $instance = new Product_home_loan_renovation($target);
+                            break;
+                        case SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES:
+                            $instance = new Product_home_loan_appliances($target);
                             break;
                     }
                     break;

@@ -111,12 +111,23 @@ function verify_fraud_pdf($pdf_url): array
     return [$cert_status, $details];
 }
 
+function get_domicile($address)
+{
+    $domicile = '';
+    preg_match('/([\x{4e00}-\x{9fa5}]+)(縣|市)/u', str_replace('台', '臺', $address), $matches);
+    if ( ! empty($matches))
+    {
+        $domicile = $matches[1];
+    }
+    return $domicile;
+}
+
 /**
  * 確認是否為法人徵信項
  * @param $certification_id
  * @return bool
  */
-function is_judicial_certification($certification_id): bool
+function is_judicial_certification(int $certification_id): bool
 {
     if ($certification_id < CERTIFICATION_FOR_JUDICIAL)
     {

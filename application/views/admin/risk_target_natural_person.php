@@ -79,6 +79,15 @@
                         <li role="presentation" data-product="3:9999">
                             <a href="javascript:void(0)" role="tab" data-toggle="tab">上班族簡易速貸</a>
                         </li>
+                        <li role="presentation" data-product="5:10">
+                            <a href="javascript:void(0)" role="tab" data-toggle="tab">不動產融資(購房不足額)</a>
+                        </li>
+                        <li role="presentation" data-product="5:11">
+                            <a href="javascript:void(0)" role="tab" data-toggle="tab">不動產融資(房屋裝修款)</a>
+                        </li>
+                        <li role="presentation" data-product="5:12">
+                            <a href="javascript:void(0)" role="tab" data-toggle="tab">不動產融資(添購傢俱家電)</a>
+                        </li>
                     </ul>
                 </div>
                 <table class="" style="text-align: center;">

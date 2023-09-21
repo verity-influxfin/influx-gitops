@@ -234,4 +234,45 @@ class Gcis_lib
         }
     }
 
+    /**
+     * 取得法人基本資料 (會同時檢查公司與商行的資料)
+     * @param $account_no
+     * @return array|string[]
+     */
+    public function get_company_president_info($account_no)
+    {
+        $result = [
+            'company_name' => '', // 公司名稱
+            'responsible_name' => '', // 負責人名稱
+            'company_last_change_date' => '', // 戳章日期 (最後核准變更日期)
+            'company_capital' => '', // 實收資本額
+            'company_address' => '', // 公司所在地
+        ];
+
+        // 公司資料
+        $company_info = $this->account_info($account_no);
+        if ( ! empty($company_info))
+        {
+            empty($company_info['Company_Name']) ?: $result['company_name'] = $company_info['Company_Name'];
+            empty($company_info['Responsible_Name']) ?: $result['responsible_name'] = $company_info['Responsible_Name'];
+            empty($company_info['Change_Of_Approval_Data']) ?: $result['company_last_change_date'] = $company_info['Change_Of_Approval_Data'];
+            empty($company_info['Paid_In_Capital_Amount']) ?: $result['company_capital'] = $company_info['Paid_In_Capital_Amount'];
+            empty($company_info['Company_Location']) ?: $result['company_address'] = $company_info['Company_Location'];
+            goto END;
+        }
+
+        // 商行資料
+        $president_info = $this->account_info_businesss($account_no);
+        if ( ! empty($president_info))
+        {
+            empty($president_info['Business_Name']) ?: $result['company_name'] = $president_info['Business_Name'];
+            empty($president_info['Responsible_Name']) ?: $result['responsible_name'] = $president_info['Responsible_Name'];
+            empty($president_info['Business_Last_Change_Date']) ?: $result['company_last_change_date'] = $president_info['Business_Last_Change_Date'];
+            empty($president_info['Business_Register_Funds']) ?: $result['company_capital'] = $president_info['Business_Register_Funds'];
+            empty($president_info['Business_Address']) ?: $result['company_address'] = $president_info['Business_Address'];
+        }
+
+        END:
+        return $result;
+    }
 }

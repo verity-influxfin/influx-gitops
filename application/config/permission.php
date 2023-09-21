@@ -160,6 +160,7 @@ $config['permission'] = [
             'credit' => ['name' => '信評管理'],
             'credit_management' => ['name' => '授信審核表'],
             'black_list' => ['name' => '黑名單列表'],
+            'booking_timetable' => ['name' => '入屋現勘/遠端視訊預約時間']
         ],
         'permission' => [
             'natural_person' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
@@ -178,6 +179,10 @@ $config['permission'] = [
             'push_audit' => ['model' => 'Target', 'submodel' => 'index', 'action' => 'update'],
             'push_audit_add' => ['model' => 'Target', 'submodel' => 'index', 'action' => 'update'],
             'judicial_associates' => ['model' => 'Risk', 'submodel' => 'juridical_person', 'action' => 'read'],
+            'booking_timetable' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'read'],
+            'get_booking_timetable' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'read'],
+            'create_booking' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'update'],
+            'site_survey_booking' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'read'],
         ],
     ],
     'Passbook' => [
@@ -250,6 +255,7 @@ $config['permission'] = [
             'get_data' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
             'approve' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'waiting_bidding_report' => ['model' => 'Target', 'submodel' => 'waiting_bidding', 'action' => 'read'],
+            'get_structural_data' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'read'],
         ],
     ],
     'Certification' => [
@@ -289,6 +295,7 @@ $config['permission'] = [
             'user_bankaccount_list' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
             'save_company_cert' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'income_statement_ocr_page' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read']
+            'recheck_land_and_building_transactions_ocr_parser' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
         ],
     ],
     'Scraper' => [
