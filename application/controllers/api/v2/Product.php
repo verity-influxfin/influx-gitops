@@ -3489,7 +3489,7 @@ class Product extends REST_Controller {
             if (!$image) {
                 $this->response(array('result' => 'ERROR, upload deed_image failed', 'error' => INPUT_NOT_CORRECT));
             }
-            $target_data = json_decode($target->target_data, TRUE);
+            $target_data = json_decode($target->target_data, true);
             $target_data['deed_image'] = $image;
             $param['target_data'] = json_encode($target_data);
         }
