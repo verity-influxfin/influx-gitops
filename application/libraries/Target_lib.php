@@ -424,35 +424,45 @@ class Target_lib
                                 $approve_target_result = new \Approve_target\Approve_target_result($target->status, $target->sub_status);
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
 
-                                $certification = $this->CI->user_certification_model->get_by(['user_id' => $user_id, 'certification_id' => 15]);
-                                if (!isset($certification)) {
-                                    $this->remark_target($target->id, '沒有有效的還款力計算結果');
-                                    goto FORCE_SECOND_INSTANCE;
-                                }
-                                if ($certification->status != 1){
-                                    $this->remark_target($target->id, '沒有驗證成功的還款力計算結果');
-                                    goto FORCE_SECOND_INSTANCE;
-                                }
 
-                                $content = json_decode($certification->content);
-                                if (!isset($content->monthly_repayment) || !isset($content->total_repayment)) {
-                                    $this->remark_target($target->id, '沒有有效的還款力計算結果，缺少monthly_repayment 或 total_repayment');
-                                    goto FORCE_SECOND_INSTANCE;
-                                }
-                                $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
-                                // Todo: “新戶” (無申貸成功紀錄者) 且薪水四萬以下
-                                $past_targets = $this->CI->target_model->get_many_by([
-                                    'user_id' => $user_id,
-                                    'status' => [5, 10],
-                                ]);
-                                $is_new_user = count($past_targets) == 0;
-                                if ($is_new_user) {
-                                    $product_id = $target->product_id;
-                                    // 上班族貸款
-                                    if (in_array($product_id, [3, 4])) {
+                                // 「上班族貸」新戶額度調整
+                                if (in_array($product_id, [3, 4]) && !$renew) {
+                                    // Todo: “新戶” (無申貸成功紀錄者) 且薪水四萬以下
+                                    $past_targets = $this->CI->target_model->get_many_by([
+                                        'user_id' => $user_id,
+                                        'status' => [5, 10],
+                                    ]);
+                                    $is_new_user = count($past_targets) == 0;
+                                    if ($is_new_user) {
+                                        $certification = $this->CI->user_certification_model->get_by([
+                                            'user_id' => $user_id,
+                                            'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
+                                            'status' => 1]);
+                                        if (!isset($certification)) {
+                                            $this->memo_target($target->id, '沒有有效的還款力計算結果');
+                                            goto FORCE_SECOND_INSTANCE;
+                                        }
+                                        if ($certification->status != 1) {
+                                            $this->memo_target($target->id, '沒有驗證成功的還款力計算結果');
+                                            goto FORCE_SECOND_INSTANCE;
+                                        }
+                                        $content = json_decode($certification->content);
+                                        if (!isset($content->monthly_repayment) || !isset($content->total_repayment)) {
+                                            $this->memo_target($target->id, '沒有有效的還款力計算結果，缺少monthly_repayment 或 total_repayment');
+                                            goto FORCE_SECOND_INSTANCE;
+                                        }
+                                        $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
+
+                                        $product_id = $target->product_id;
                                         $product = $this->CI->config->item('product_list')[$product_id];
-                                        if ($product['condition_rate']['salary_below'] > $content->monthly_repayment) {
-                                            if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment) {
+                                        if ($product['condition_rate']['salary_below'] > $content->monthly_repayment * 1000) {
+                                            //已進入二審不處理
+                                            if ($target->status == TARGET_WAITING_APPROVE && $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE) {
+                                                $param['loan_amount'] = $target->loan_amount;
+                                                $param['platform_fee'] = $target->platform_fee;
+                                                goto FORCE_SECOND_INSTANCE;
+                                            }
+                                            if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment * 1000) {
                                                 // 高於22倍，0~3000之間
                                                 $range_min = 0;
                                                 $range_max = 3000;
@@ -468,12 +478,11 @@ class Target_lib
 
                                             $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
                                             $param['platform_fee'] = $platform_fee;
-
                                             goto FORCE_SECOND_INSTANCE;
                                         }
-
                                     }
                                 }
+
                                 // todo: 暫時將「學生貸」、「上班族貸」轉二審
                                 if ( ! $subloan_status &&
                                     ! $renew &&
@@ -579,9 +588,11 @@ class Target_lib
                                         $creditSheet->setFinalReviewerLevel($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM);
                                 }
 
-                                if ($rs && $msg) {
+                                if ($rs ) {
                                     $creditSheet->archive($credit);
-                                    $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
+                                    if($opinion == '一審通過' && $msg){
+                                        $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
+                                    }
                                 }
                                 $this->insert_change_log($target->id, $param);
                                 return true;
@@ -671,13 +682,13 @@ class Target_lib
         return false;
     }
 
-    private function remark_target($target_id, $remark)
+    private function memo_target($target_id, $message)
     {
-        $param = [
-            'remark' => $remark,
-        ];
-        $this->CI->target_model->update($target_id, $param);
-        $this->insert_change_log($target_id, $param);
+        $target = $this->CI->target_model->get_by(['id' => $target_id]);
+        $memo = is_null($target->memo) ? [] : json_decode($target->memo, true);
+        $memo['repayment_msg'] = $message;
+        $this->CI->target_model->update($target_id, ['memo' => $memo]);
+//        $this->insert_change_log($target_id, ['memo' => $memo]);
     }
 
     public function target_verify_success($target = [], $admin_id = 0, $param = [], $user_id = 0)

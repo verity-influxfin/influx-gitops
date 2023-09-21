@@ -1103,4 +1103,52 @@ class Cron extends CI_Controller
         $this->estatement_lib->script_create_borrower_estatement_content_count_status($year, $month);
         die();
     }
+
+    public function set_target_contract()//臨時需求，補合約書
+    {
+        $target_id = $this->input->get('target_id');
+
+        $target = $this->target_model->get($target_id);
+
+        if (!$target) {
+            echo json_encode(['result' => 'FAIL', 'error' => '找不到此筆資料'], JSON_UNESCAPED_UNICODE);
+            die;
+        }
+        if ($target->status != 1) {
+            echo json_encode(['result' => 'FAIL', 'error' => '非待簽約狀態'], JSON_UNESCAPED_UNICODE);
+            die;
+        }
+        if ($target->contract_id) {
+            echo json_encode(['result' => 'FAIL', 'error' => '已經有合約'], JSON_UNESCAPED_UNICODE);
+            die;
+        }
+        if (!isset($target->loan_amount)) {
+            echo json_encode(['result' => 'FAIL', 'error' => '未設定借款金額'], JSON_UNESCAPED_UNICODE);
+            die;
+        }
+        if (!isset($target->interest_rate)) {
+            echo json_encode(['result' => 'FAIL', 'error' => '未設定利率'], JSON_UNESCAPED_UNICODE);
+            die;
+        }
+
+
+        $this->load->library('Contract_lib');
+
+        $contract_type = 'lend';
+
+        $user_id = $target->user_id;
+        $loan_amount = $target->loan_amount;
+        $interest_rate = $target->interest_rate;
+        $contract_data = ['', $user_id, $loan_amount, $interest_rate, ''];
+        $param['contract_id'] = $this->contract_lib->sign_contract($contract_type, $contract_data);
+        $param['remark'] = '';//清空remark
+        $rs = $this->target_model->update($target_id, $param);
+
+        if (!$rs) {
+            $this->CI->json_output->setStatusCode(400)->send(['error' => '更新失敗'], JSON_UNESCAPED_UNICODE);
+            die;
+        }
+        echo json_encode(['result' => 'SUCCESS', 'target' => $rs], JSON_UNESCAPED_UNICODE);
+        die;
+    }
 }

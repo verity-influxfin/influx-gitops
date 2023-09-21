@@ -103,16 +103,61 @@ class S3_lib {
 		} else {
 			return null;
 		}
-	}
+    }
+
+    public function get_mailbox_today_list()
+    {
+        $data_list = array();
+        $url_list = array();
+        $bucket = S3_BUCKET_MAILBOX;
+        try {
+            $list = $this->client_us2->listObjects(array('Bucket' => $bucket));
+        } catch (S3Exception $e) {
+            echo '洽工程師 檢查連線問題';
+            exit();
+        }
+        if (!empty($list['Contents'])) {
+            $arrayIterator = new \ArrayIterator($list->toArray()['Contents']);
+            $arrayIterator->uasort(function ($a, $b) {
+                $itemADate = (new DateTime($a['LastModified']));
+                $itemBDate = (new DateTime($b['LastModified']));
+                return $itemADate < $itemBDate;
+            });
+            //排除 unknown 資料夾
+            foreach ($arrayIterator as $object) {
+                if ($object['LastModified'] < (new DateTime())->modify('-1 days')) {
+                    continue;
+                }
+                $overlook_file_unknown = strpos($object['Key'], 'unknown/');
+                $overlook_file_failed = strpos($object['Key'], 'failed/');
+                if (
+                    ($object['Key'] !== 'AMAZON_SES_SETUP_NOTIFICATION')
+                    && ($overlook_file_unknown === false)
+                    && ($overlook_file_failed === false)
+                ) {
+                    $url_list[] = $this->client_us2->getObjectUrl($bucket, $object['Key']);
+                }
+
+            }
+            return $url_list;
+        } else {
+            return null;
+        }
+    }
 
 	public function public_delete_s3object($s3_url,$bucket=AZURE_S3_BUCKET)
 	{
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
-		$result= $this->client_us2->deleteObject(array(
-			'Bucket' 		=> $bucket,
-			'Key'    		=> $key
-		));
-        return true;
+        try {
+            $result = $this->client_us2->deleteObject(array(
+                'Bucket' => $bucket,
+                'Key' => $key
+            ));
+            return true;
+        }catch (Exception $e){
+            error_log("public_delete_s3object: {$e->getMessage()}, ($s3_url)");
+            return false;
+        }
 	}
 
 	public function public_get_filename($s3_url,$bucket=S3_BUCKET_MAILBOX)
@@ -127,18 +172,46 @@ class S3_lib {
 		$filename = $this->public_get_filename($s3_url,$bucket);
 		$content  = file_get_contents('s3://'.$bucket.'/'.$filename);
 		if($content) {
-			$result = $this->client_us2->putObject(array(
-				'Bucket' => $bucket,
-				'Key' => 'unknown/' . $key,
-				'Body' => $content
-			));
-            return true;
+            try {
+                $result = $this->client_us2->putObject(array(
+                    'Bucket' => $bucket,
+                    'Key' => 'unknown/' . $key,
+                    'Body' => $content
+                ));
+                return true;
+            } catch (Exception $e) {
+                error_log("unknown_mail: {$e->getMessage()}, ($s3_url)");
+                return false;
+            }
 		}else{
 			error_log("unknown_mail: The resource can't be accessed. ($s3_url)");
 			echo "unknown_mail: The resource can't be accessed. ($s3_url)";
             return false;
 		}
 	}
+    public function failed_mail($s3_url,$bucket=S3_BUCKET_MAILBOX)
+    {
+        $key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
+        $filename = $this->public_get_filename($s3_url,$bucket);
+        $content  = file_get_contents('s3://'.$bucket.'/'.$filename);
+        if($content) {
+            try {
+                $result = $this->client_us2->putObject(array(
+                    'Bucket' => $bucket,
+                    'Key' => 'failed/' . $key,
+                    'Body' => $content
+                ));
+                return true;
+            } catch (Exception $e) {
+                error_log("failed_mail: {$e->getMessage()}, ($s3_url)");
+                return false;
+            }
+        }else{
+            error_log("failed_mail: The resource can't be accessed. ($s3_url)");
+            echo "failed_mail: The resource can't be accessed. ($s3_url)";
+            return false;
+        }
+    }
 	public function credit_mail_pdf($attachments, $user_id = 0, $name = 'credit', $type = 'test') : array
 	{
 		$images = [];
@@ -148,8 +221,9 @@ class S3_lib {
         $is_valid_pdf = 1;
 
 		try {
-			if (!$attachments)
-				return '';
+			if (!$attachments) {
+                return [];
+            }
 			$dir = 'pdf/';
 
 			foreach ($attachments as $attachment) {

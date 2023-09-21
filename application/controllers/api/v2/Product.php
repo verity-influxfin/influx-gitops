@@ -1632,7 +1632,8 @@ class Product extends REST_Controller {
                 $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target);
             }
 
-                $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id, $target);
+//                $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id, $target);
+                $credit = $this->credit_lib->get_target_credit($user_id, $target->product_id, $target->sub_product_id, $target_id, $target);
             if (isset($credit['amount']))
             {
                 $this->load->library('credit_lib');

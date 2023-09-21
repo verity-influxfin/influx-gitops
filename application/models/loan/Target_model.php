@@ -465,14 +465,54 @@ class Target_model extends MY_Model
 			switch ($key) {
 				case 'tsearch': //搜尋(使用者代號(UserID)/姓名/身份證字號/案號)
 					if (!empty($input['tsearch'])) {
-						$this->db
-							->join('p2p_user.users u', 'u.id=t.user_id')
-							->group_start()
-							->like('u.id', $input['tsearch'])
-							->or_like('u.name', $input['tsearch'])
-							->or_like('u.id_number', $input['tsearch'])
-							->or_like('t.target_no', $input['tsearch'])
-							->group_end();
+                        $this->db->join('p2p_user.users u', 'u.id=t.user_id');
+                        $this->db->group_start();
+                        $tsearch = $input['tsearch'];
+                        if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
+                        {
+                            $user_ids = [];
+                            $name = $this->user_model->get_many_by(array(
+                                'name like '    => '%'.$tsearch.'%',
+                                'status'	    => 1
+                            ));
+                            if($name){
+                                foreach($name as $k => $v){
+                                    $user_ids[] = $v->id;
+                                }
+                            }
+                            else
+                            {
+                                $user_ids[] = 0;
+                            }
+                            $this->db->like('u.id', $user_ids);
+                        }else{
+                            if(preg_match_all('/[A-Za-z]/', $tsearch)==1){
+                                $user_ids=[];
+                                $id_number	= $this->user_model->get_many_by(array(
+                                    'id_number  like'	=> '%'.$tsearch.'%',
+                                    'status'	        => 1
+                                ));
+                                if($id_number){
+                                    foreach($id_number as $k => $v){
+                                        $user_ids[] = $v->id;
+                                    }
+                                }
+                                else
+                                {
+                                    $user_ids[] = 0;
+                                }
+
+                                $this->db->like('u.id', $user_ids);
+                            }
+                            elseif(preg_match_all('/\D/', $tsearch)==0){
+                                $this->db->like('u.id', $tsearch);
+                            }
+                            else{
+//                                $where['target_no like'] = '%'.$tsearch.'%';
+                                $this->db->like('t.target_no', $tsearch);
+                            }
+                        }
+                        $this->db->group_end();
 					}
 					break;
 				case 'sdate': //從
@@ -610,14 +650,47 @@ class Target_model extends MY_Model
             switch ($key) {
                 case 'tsearch': //搜尋(使用者代號(UserID)/姓名/身份證字號/案號)
                     if (!empty($input['tsearch'])) {
-                        $this->db
-                            ->join('p2p_user.users u', 'u.id=t.user_id')
-                            ->group_start()
-                            ->like('u.id', $input['tsearch'])
-                            ->or_like('u.name', $input['tsearch'])
-                            ->or_like('u.id_number', $input['tsearch'])
-                            ->or_like('t.target_no', $input['tsearch'])
-                            ->group_end();
+                        $this->db->join('p2p_user.users u', 'u.id=t.user_id');
+                        $this->db->group_start();
+                        $tsearch = $input['tsearch'];
+                        if (preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch)) {
+                            $user_ids = [];
+                            $name = $this->user_model->get_many_by(array(
+                                'name like ' => '%' . $tsearch . '%',
+                                'status' => 1
+                            ));
+                            if ($name) {
+                                foreach ($name as $k => $v) {
+                                    $user_ids[] = $v->id;
+                                }
+                            } else {
+                                $user_ids[] = 0;
+                            }
+                            $this->db->like('u.id', $user_ids);
+                        } else {
+                            if (preg_match_all('/[A-Za-z]/', $tsearch) == 1) {
+                                $user_ids = [];
+                                $id_number = $this->user_model->get_many_by(array(
+                                    'id_number  like' => '%' . $tsearch . '%',
+                                    'status' => 1
+                                ));
+                                if ($id_number) {
+                                    foreach ($id_number as $k => $v) {
+                                        $user_ids[] = $v->id;
+                                    }
+                                } else {
+                                    $user_ids[] = 0;
+                                }
+
+                                $this->db->like('u.id', $user_ids);
+                            } elseif (preg_match_all('/\D/', $tsearch) == 0) {
+                                $this->db->like('u.id', $tsearch);
+                            } else {
+//                                $where['target_no like'] = '%'.$tsearch.'%';
+                                $this->db->like('t.target_no', $tsearch);
+                            }
+                        }
+                        $this->db->group_end();
                     }
                     break;
                 case 'sdate': //從
@@ -1289,11 +1362,27 @@ class Target_model extends MY_Model
             ->where('csr.admin_id <>', SYSTEM_ADMIN_ID)
             ->get_compiled_select(NULL, TRUE);
 
+        $sub_query3 = $this->db
+            ->select('name')
+            ->select('id')
+            ->from('p2p_admin.admins')
+            ->get_compiled_select(NULL, True);
+
+        $sub_query4 = $this->db
+        ->select('ad.name')
+        ->select('tcl.target_id')
+        ->from('p2p_log.targets_change_log as tcl')
+        ->join("($sub_query3) ad", 'ad.id = tcl.change_admin', 'JOIN')
+        ->where('tcl.status = 9')
+        ->get_compiled_select(NULL, TRUE);
+
             $this->_database
             ->select('t.*')
             ->select('a.name AS credit_sheet_reviewer')
+            ->select('b.name AS fail_target_reviewer')
             ->from('p2p_loan.targets t')
-            ->join("({$sub_query2}) a", 'a.target_id = t.id', 'LEFT');
+            ->join("({$sub_query2}) a", 'a.target_id = t.id', 'LEFT')
+            ->join("({$sub_query4}) b", 'b.target_id = t.id', 'LEFT');
         if ( ! empty($target_condition))
         {
             $this->_set_where([$target_condition]);

@@ -2,15 +2,21 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH . '/libraries/MY_Admin_Controller.php');
+use GuzzleHttp\Client;
 
 class Transfer extends MY_Admin_Controller
 {
+    private $p2p_orm_client;
 
     protected $edit_method = array('assets_export', 'amortization_export', 'transfer_success', 'transfer_cancel', 'combination_transfer_cancel', 'assets_list');
 
     public function __construct()
     {
         parent::__construct();
+        $this->p2p_orm_client = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST'),
+            'timeout' => 300,
+        ]);
         $this->load->model('loan/investment_model');
         $this->load->model('loan/transfer_model');
         $this->load->model('loan/transfer_investment_model');
@@ -837,6 +843,64 @@ class Transfer extends MY_Admin_Controller
         }
     }
 
+    /**
+     * 取得債權明細 -- 移轉成功
+     * 
+     * @created_at      2023-08-24
+     * @created_by      Howard
+     */
+    public function transfer_sheet_success()
+    {
+        $this->load->view(
+            'admin/transfer/transfer_sheet_success',
+            $data = [
+                'menu'      => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts'   => [
+                    '/assets/admin/js/transfer/transfer_sheet.js',
+                    'https://cdn.jsdelivr.net/npm/vue@2.6.14',
+                    'https://unpkg.com/axios/dist/axios.min.js'
+                ]
+            ]
+        );
+    }
+
+    /**
+     * 債權明細 -- 移轉成功 資料
+     * 
+     * @created_at      2023-08-24
+     * @created_by      Howard
+     */
+    public function get_transfer_success()
+    {
+        $data = $this->p2p_orm_client->request('GET', 'transfer_sheet', [
+            'query' => $this->input->get()
+        ])->getBody()->getContents();
+        echo $data;
+        die();
+    }
+
+    /**
+     * 債權明細 -- 移轉成功 excel
+     * 
+     * @created_at                   2023-08-25
+     * @created_by                   Howard
+     */
+    public function transfer_sheet_spreadsheet()
+    {
+
+        $res = $this->p2p_orm_client->request('GET', 'transfer_sheet/excel', [
+            'query' => $this->input->get()
+        ]);
+        $des = $res->getHeader('content-disposition')[0];
+        $data = $res->getBody()->getContents();
+        // create download file by data
+        header('content-type: application/octet-stream');
+        header('content-disposition:' . $des);
+        header('content-length: ' . strlen($data));
+        echo $data;
+        die();
+    }
 
     public function assets_list()
     {

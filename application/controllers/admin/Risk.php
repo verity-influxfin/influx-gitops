@@ -133,18 +133,11 @@ class Risk extends MY_Admin_Controller {
             {
                 $user_status = $this->target_model->get_old_user([$target->user_id], $target->created_at);
                 $user_status = array_column($user_status, 'user_from', 'user_from');
-                if (isset($user_status[$target->user_id]))
-                {
-                    $user_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
-                        admin_url('User/display?id=' . $target->user_id) . '" >' .
-                        $target->user_id . ' 舊戶</a>';
-                }
-                else
-                {
-                    $user_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
-                        admin_url('User/display?id=' . $target->user_id) . '" >' .
-                        $target->user_id . ' 新戶</a>';
-                }
+
+                $user_type = isset($user_status[$target->user_id]) ? '舊戶' : '新戶';
+                $href = admin_url("User/display?id={$target->user_id}");
+                $text = "{$target->user_id} {$user_type}";
+                $user_list[$target->user_id]['user_name'] = "<a class=\"fancyframe\" href=\"{$href}\" >{$text}</a>";
 
                 // 撈user每個徵信項的最新狀態
                 $tmp = $this->certification_lib->get_last_status($target->user_id, BORROWER, USER_NOT_COMPANY, $target, FALSE, TRUE, TRUE);

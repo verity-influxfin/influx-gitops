@@ -174,6 +174,10 @@ class Target extends MY_Admin_Controller {
 						$list[$key]->bank_account_verify = $tmp[$value->user_id]['bank_account_verify'];
                     }
 
+                    if($value->status==9 && $value->remark!='系統自動取消'){
+                        $value->credit_sheet_reviewer = $value->fail_target_reviewer;
+                    }
+
                     if(!isset($tmp[$value->user_id]['school'])||!isset($tmp[$value->user_id]['company'])) {
                         $get_meta = $this->user_meta_model->get_many_by([
                             'meta_key' => ['school_name', 'school_department','job_company'],
@@ -802,9 +806,9 @@ class Target extends MY_Admin_Controller {
                         // 上班族貸款
                         if (in_array($product_id, [3, 4])) {
                             $product = $this->config->item('product_list')[$product_id];
-                            if ($product['condition_rate']['salary_below'] >= $content->monthly_repayment) {
+                            if ($product['condition_rate']['salary_below'] > $content->monthly_repayment * 1000) {
                                 $credit["amount"] = $target->loan_amount;
-                                if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment) {
+                                if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment * 1000) {
                                     $message = "該會員薪資低於4萬，負債大於22倍，系統給定信用額度為0~3000元；若需調整請至「額度調整 1000~20000」之欄位填寫額度";
                                 }
                                 else {
