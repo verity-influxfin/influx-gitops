@@ -74,6 +74,16 @@
 										<? } ?>
 									</div> -->
 									<div class="form-group">
+										<label>驗證結果</label>
+										<?
+											if($remark && isset($remark['verify_result']) && is_array($remark['verify_result'])){
+												foreach($remark['verify_result'] as $verify_result){
+													echo'<p style="color:red;">'.$verify_result.'</p>';
+												}
+											}
+										?>
+									</div>
+									<div class="form-group">
 										<label>備註</label>
 										<?
 										if ($remark) {
