@@ -329,7 +329,7 @@ class Target_lib
             $product_id = $target->product_id;
             $sub_product_id = $target->sub_product_id;
 
-            if ($product_id == 5) {
+            if ($product_id == PRODUCT_ID_HOME_LOAN) {
                 $certifications_to_check = [
                     CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
                     CERTIFICATION_SITE_SURVEY_VIDEO,

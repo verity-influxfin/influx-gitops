@@ -1473,7 +1473,7 @@ class Qrcode_lib
 
 您及{$subcode_master_qrcode_name}可隨時提出將您回復為一般經銷商之身分；經特約通路商確認同意後，即可轉為一般經銷商。
 
-具體分潤內容請洽(個人/公司名稱)，是否同意？";
+具體分潤內容請洽{$subcode_master_qrcode_name}，是否同意？";
                 break;
             case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE:
                 $result['status'] = $subcode_status;

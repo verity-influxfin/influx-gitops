@@ -4784,6 +4784,7 @@ class Certification extends REST_Controller {
             $last_cert = $this->user_certification_model->order_by('created_at', 'DESC')->get_by([
                 'user_id' => $user_id,
                 'certification_id' => $certification_id,
+                'status !='=> CERTIFICATION_STATUS_FAILED,
             ]);
             if ( ! empty($last_cert))
             {
