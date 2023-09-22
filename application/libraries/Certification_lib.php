@@ -206,6 +206,11 @@ class Certification_lib{
                 $this->CI->load->model('log/log_user_qrcode_model');
                 $user_qrcode_update_param['user_qrcode_id'] = $promoteCode->id;
                 $this->CI->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+                $this->CI->load->model('user/user_qrcode_apply_model');
+                $apply_info = $this->CI->user_qrcode_apply_model->get_by(['user_qrcode_id' => $promoteCode->id, 'status != ' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
+                if ($apply_info){
+                    $this->CI->user_qrcode_apply_model->update_by(['id' => $apply_info->id], ['status' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
+                }
             }
             else
             {
