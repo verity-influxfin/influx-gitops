@@ -1025,11 +1025,11 @@ class Repayment extends REST_Controller {
                     'investor'		=> 0,
                     'user_id'		=> $user_id
                 ];
-                $this->CI->load->model('user/virtual_account_model');
-                $virtual_account = $this->CI->virtual_account_model->get_by($virtualAccountParm);
+                $this->load->model('user/virtual_account_model');
+                $virtual_account = $this->virtual_account_model->get_by($virtualAccountParm);
         
                 if($virtual_account){
-                    $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+                    $funds = $this->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
                     $virtual_account_balance = $funds['total'] - $funds['frozen'];
                 }else{
                     $this->response(['result' => 'ERROR','error' => NOT_ENOUGH_FUNDS]);
@@ -1055,12 +1055,13 @@ class Repayment extends REST_Controller {
                 }
                 foreach ($list as $k => $target) {
                     $rs = $this->prepayment_lib->apply_prepayment($target);
-                    if($rs){
-                        $this->response(['result' => 'SUCCESS']);
-                    }else{
-                        $this->response(['result' => 'ERROR','error' => NOT_ENOUGH_FUNDS]);
-                    }
                 }
+                if($rs){
+                        $this->response(['result' => 'SUCCESS']);
+                        
+                    }else{
+                        $this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
+                    }
             }
         }
         $this->response(['result' => 'ERROR','error' => APPLY_NOT_EXIST]);
