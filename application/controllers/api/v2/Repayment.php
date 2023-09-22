@@ -961,6 +961,111 @@ class Repayment extends REST_Controller {
 		$this->response(['result' => 'ERROR','error' => APPLY_NOT_EXIST]);
     }
 
+    /**
+     * @api {post} /v2/repayment/prepayment_list/:id 借款方 申請提前還款
+     * @apiVersion 0.2.0
+     * @apiName PostRepaymentPrepayment
+     * @apiGroup Repayment
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {String} id Targets ID，用「,」分割Target的id
+     * @apiDescription 只有正常還款的狀態才可申請，逾期或寬限期內都將不通過
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS"
+     *    }
+     *
+     * @apiUse IsInvestor
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     *
+     * @apiError 404 此申請不存在
+     * @apiErrorExample {Object} 404
+     *     {
+     *       "result": "ERROR",
+     *       "error": "404"
+     *     }
+     *
+     * @apiError 405 對此申請無權限
+     * @apiErrorExample {Object} 405
+     *     {
+     *       "result": "ERROR",
+     *       "error": "405"
+     *     }
+     *
+     * @apiError 407 目前狀態無法完成此動作
+     * @apiErrorExample {Object} 407
+     *     {
+     *       "result": "ERROR",
+     *       "error": "407"
+     *     }
+     *
+     * @apiError 903 已申請提前還款或產品轉換
+     * @apiErrorExample {Object} 903
+     *     {
+     *       "result": "ERROR",
+     *       "error": "903"
+     *     }
+     */
+    public function prepayment_list_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+
+        if(isset($input['target_id'])){
+            $target_ids = explode(',', $input['target_id']);
+            $list = $this->target_model->get_many_by([
+                'id' => $target_ids,
+            ]);
+            if ($list && count($list) == count($target_ids)) {
+
+                $virtualAccountParm = [
+                    'status'		=> 1,
+                    'investor'		=> 0,
+                    'user_id'		=> $user_id
+                ];
+                $this->CI->load->model('user/virtual_account_model');
+                $virtual_account = $this->CI->virtual_account_model->get_by($virtualAccountParm);
+        
+                if($virtual_account){
+                    $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+                    $virtual_account_balance = $funds['total'] - $funds['frozen'];
+                }else{
+                    $this->response(['result' => 'ERROR','error' => NOT_ENOUGH_FUNDS]);
+                }
+                foreach ($list as $k => $target) {
+    
+                    if($target->status != 5 || $target->delay_days > 0 || $target->script_status != 0){
+                        $this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
+                    }
+    
+                    if($target->user_id != $user_id){
+                        $this->response(['result' => 'ERROR','error' => APPLY_NO_PERMISSION]);
+                    }
+    
+                    if(!in_array($target->sub_status,[0,8,10])){
+                        $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
+                    }
+                    $info = $this->prepayment_lib->get_prepayment_info($target);
+                    $virtual_account_balance -= intval($info['total']);
+                    if($virtual_account_balance < 0 || empty($info)){
+                        $this->response(['result' => 'ERROR','error' => NOT_ENOUGH_FUNDS]);
+                    }
+                }
+                foreach ($list as $k => $target) {
+                    $rs = $this->prepayment_lib->apply_prepayment($target);
+                    if($rs){
+                        $this->response(['result' => 'SUCCESS']);
+                    }else{
+                        $this->response(['result' => 'ERROR','error' => NOT_ENOUGH_FUNDS]);
+                    }
+                }
+            }
+        }
+        $this->response(['result' => 'ERROR','error' => APPLY_NOT_EXIST]);
+    }
+
 	/**
      * @api {get} /v2/repayment/contract/:id 借款方 合約列表
 	 * @apiName GetRepaymentContract

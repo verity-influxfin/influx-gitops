@@ -35313,6 +35313,159 @@ define({
         },
         {
             "type": "post",
+            "url": "/v2/repayment/prepayment_list",
+            "title": "借款方 申請多筆清算/提前還款",
+            "version": "0.2.0",
+            "name": "PostRepaymentPrepayment_list",
+            "group": "Repayment",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID(以逗號隔開)</p>"
+                        }
+                    ]
+                }
+            },
+            "description": "<p>只有正常還款的狀態才可申請，逾期或寬限期內都將不通過</p>",
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "   {\n\t\t\"result\":\"SUCCESS\"\n   }",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "404",
+                            "description": "<p>此申請不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "405",
+                            "description": "<p>對此申請無權限</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "407",
+                            "description": "<p>目前狀態無法完成此動作</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "211",
+                            "description": "<p>可用餘額不足</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "903",
+                            "description": "<p>已申請提前還款或產品轉換</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "207",
+                            "description": "<p>非借款端登入</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "404",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "405",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "407",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "903",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"903\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "207",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Repayment.php",
+            "groupTitle": "Repayment",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/repayment/prepayment_list/"
+                }
+            ]
+        },
+        {
+            "type": "post",
             "url": "/v2/repayment/withdraw",
             "title": "借款方 提領申請",
             "version": "0.2.0",
