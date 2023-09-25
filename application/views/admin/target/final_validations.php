@@ -1600,15 +1600,12 @@
                     `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 		}
-
         if (case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_min") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_max")) {
             originalAmount = case_aprove_item.creditLineInfo.fixed_amount_max;
             $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
             $(`#2_fixed_amount`).attr({
                 "max": case_aprove_item.creditLineInfo.fixed_amount_max,
                 "min": case_aprove_item.creditLineInfo.fixed_amount_min,
-                "oninput": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
-                    `else if(value<=${case_aprove_item.creditLineInfo.fixed_amount_min}){value=${case_aprove_item.creditLineInfo.fixed_amount_min}}`
             });
         }
 
@@ -1678,6 +1675,20 @@
                 return;
             }
             $('div.opinion_button button.score').prop('disabled', true);
+        });
+        $('#2_fixed_amount').blur(function () {
+            let fixed_amount = parseInt($(this).val());
+            if (fixed_amount < 0) {
+                return;
+            }
+            if(fixed_amount>0 && fixed_amount<1000){
+                fixed_amount = 1000;
+            }
+            if(fixed_amount>case_aprove_item.creditLineInfo.fixed_amount_max){
+                fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
+                console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
+            }
+            $('#2_fixed_amount').val(fixed_amount);
             $('#credit_test_fixed_amount').val(fixed_amount);
         });
 		var brookesiaData = [];
