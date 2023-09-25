@@ -1459,6 +1459,12 @@ class Qrcode_lib
 
         switch ($subcode_status)
         {
+            case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT:
+                unset($result['id']);
+                unset($result['status']);
+                $result['title'] = '拒絕成為二級經銷商';
+                $result['description'] = "{$subcode_master_qrcode_name}，已拒絕成為二級經銷商。";
+                break;
             case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ:
                 $result['status'] = $subcode_status;
                 $result['title'] = '退出二級經銷商';
