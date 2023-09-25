@@ -3159,7 +3159,7 @@ END:
                     }
                     $this->user_subcode_model->update($subcode_info['id'], [
                         'status' => PROMOTE_SUBCODE_STATUS_DISABLED,
-                        'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT
+                        'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT
                     ]);
                     break;
                 case 'read':
@@ -3840,6 +3840,15 @@ END:
                 {
                     case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD:
                         $data['subcode_status'] = $subcode_sub_status; // 特約通路商新增二級經銷商，待一般經銷商同意成為二級經銷商
+                        break;
+                    case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT:
+                        $user_name = $this->user_qrcode_model->get_user_name_by_id($data['user_id']);
+                        $data['subcode_status'] = $subcode_sub_status; // 拒絕特約通路商成為二級經銷商，待特約經銷商閱讀
+                        $data['message'] = $this->qrcode_lib->get_subcode_dialogue_content($data['subcode_id'], $user_name, PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT);
+                        $this->user_subcode_model->update($data['subcode_id'], [
+                            'status' => PROMOTE_SUBCODE_STATUS_DISABLED,
+                            'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT
+                        ]);
                         break;
                     default:
                         unset($data);
