@@ -1491,6 +1491,9 @@
 
 				let currentTargetJson = response.response.target;
 				target = new Target(currentTargetJson);
+                $('#2_fixed_amount').val(parseInt(currentTargetJson.available_amount))
+                $('#credit_test_fixed_amount').val(parseInt(currentTargetJson.available_amount));
+
 				fillCurrentTargetInfo(target)
 				!$.isEmptyObject(target.targetData) ? fillCurrentTargetData(target.targetData, target.productTargetData, target.creditTargetData) : '';
 
