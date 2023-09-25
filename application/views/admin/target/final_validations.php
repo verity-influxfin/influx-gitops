@@ -1042,7 +1042,7 @@
 									<span>：</span>
 								</span>
                                 <span style="width:70%;"><input id="2_fixed_amount" type="number" value="0" min="0" step="1"
-                                                                disabled></span>
+                                                                disabled><button id="original-amount-btn">使用原額度</button></span>
                             </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
@@ -1436,6 +1436,7 @@
 		var modifiedPoints = null;
 		var targetInfoAjaxLock = false;
 		var relatedUserAjaxLock = false;
+        var originalAmount = 0;
 		$('#blockUserId').val(userId);
 		$('#blackLink').prop('href', `/admin/Risk/black_list?id=${userId}`)
 		const t = $('#antifraud').DataTable({
@@ -1601,6 +1602,7 @@
 		}
 
         if (case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_min") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_max")) {
+            originalAmount = case_aprove_item.creditLineInfo.fixed_amount_max;
             $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
             $(`#2_fixed_amount`).attr({
                 "max": case_aprove_item.creditLineInfo.fixed_amount_max,
@@ -2410,6 +2412,11 @@
                     $(item).prop('disabled', false);
                 }
             });
+        });
+        
+        $('#original-amount-btn').click(function () {
+            $('#2_fixed_amount').val(originalAmount)
+            $('#credit_test_fixed_amount').val(originalAmount);
         });
 	});
 
