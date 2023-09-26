@@ -766,6 +766,8 @@ $config['visul_id_des'] = [
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5002_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5002_full.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -776,6 +778,16 @@ $config['visul_id_des'] = [
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
+    ],
+    'TOLJ3' => [
+    'name' => '信保專案融資',
+    'description' => '企業融資 專案啟動',
+    'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5003_thumbnail.jpg',
+    'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5003_full.jpg',
+    'url' => '',
+    'status' => 1
     ],
     'NSL1' => [
         'name' => '3S名校貸',
@@ -806,6 +818,8 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>不論是夢想實現，還是生活急需，<br/>我們集結了各大學校友、老師，<br/>專門投資借貸同學在學期間的資金需求。</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student_full.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -822,6 +836,8 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:14px;color:white\'>進入社會工作了，臨時有急缺？<br/>沒有煩人的「專員」打擾，<br/>只有AI 24小時online滿足您的資金需求！</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker_full.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -838,6 +854,8 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:14px;color:white\'>不論是學生/上班族，<br/>只要是資訊/資工/資管相關科系，<br/>我們特別提供給您優惠利率，<br/>隨時隨地，只要打開APP，資金到手。</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer_full.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -886,6 +904,8 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:14px;color:white\'>車輛融資專案<br/>提供便利資金融通</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2_full.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -930,6 +950,16 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>安心成家 圓夢最後一哩路</span><br><span style=\'font-size:14px;color:#4a4a4a\'>20~45歲信用良好者有穩定薪資收入</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TOH1' => [
+        'name' => '房產消費貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>安心成家 圓夢最後一哩路</span><br><span style=\'font-size:14px;color:#4a4a4a\'>20~45歲信用良好者有穩定薪資收入</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_house_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_house_full.jpg',
         'url' => '',
         'status' => 1
     ],
