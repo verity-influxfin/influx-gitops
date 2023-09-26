@@ -1528,7 +1528,7 @@ class Product extends REST_Controller {
             }
             else
             {
-                $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target, $user_id);
+                $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target);
             }
 
             if(!empty($certification_list)){
