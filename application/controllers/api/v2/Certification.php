@@ -144,6 +144,7 @@ class Certification extends REST_Controller {
 		    $sort = $this->config->item('certifications_sort');
 		    $new_list = [];
 
+            $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target);
             $exist_target_submitted = $this->target_lib->exist_approving_target_submitted($user_id);
             $is_judicial = (int) $this->user_info->company_status === 1;
 		    foreach ($sort as $key => $value){
@@ -161,6 +162,10 @@ class Certification extends REST_Controller {
                         $certification_list[$value]['certification_id'] = NULL;
                         $certification_list[$value]['remark'] = NULL;
                         $certification_list[$value]['content'] = NULL;
+                    }
+                    if (in_array($value, $skip_certification_ids))
+                    {
+                        $certification_list[$value]['user_status'] = CERTIFICATION_STATUS_SUCCEED;
                     }
                     $new_list[$value] = $certification_list[$value];
                 }
