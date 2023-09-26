@@ -971,6 +971,16 @@ $config['visul_id_des'] = [
         'url' => '',
         'status' => 1
     ],
+    'TOHL1' => [
+        'name' => '購房貸，貸你滿足',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供建物所有權狀、購屋合約上傳</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_house_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_house_full.jpg',
+        'url' => '',
+        'status' => 1
+    ],
     'HL2' => [
         'name' => '房屋裝修款，貸你夢想',
         'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供建物所有權狀、裝潢合約上傳</span>',
@@ -2321,8 +2331,8 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['LS1', 'NS1', 'LF1', 'DS2'],
-    'company' => ['DS2', 'LJ2', 'LJ3'],
+    'nature' => ['LS1', 'LF1','NS1', 'HL1'],//banner取圖H1沒有在 sub_product_list，所以先放HL1，前端控制跳到H
+    'company' => ['LJ2', 'LJ3'],
 ];
 
 $config['stage_option_cer'] = [2, 8, 9, 10];
