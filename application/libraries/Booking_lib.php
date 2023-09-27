@@ -220,8 +220,12 @@ class Booking_lib
                 return ['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT];
             }
 
-            $this->client->request('DELETE', "booking/{$booking_id}");
+            $request = $this->client->request('DELETE', "booking/{$booking_id}");
 
+            if ($request->getStatusCode() != 200)
+            {
+                return ['result' => 'ERROR', 'error' => '取消預約失敗'];
+            }
             return ['result' => 'SUCCESS'];
         }
         catch (Exception|\GuzzleHttp\Exception\GuzzleException $e)
