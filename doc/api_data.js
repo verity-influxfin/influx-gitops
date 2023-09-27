@@ -49073,7 +49073,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "action",
-                            "description": "<p>行為：<br/>agree：一般經銷商同意成為二級經銷商<br/>reject：一般經銷商拒絕成為二級經銷商<br/>read：二級經銷商已閱讀退出二級經銷商的訊息</p>"
+                            "description": "<p>行為：<br/>agree：一般經銷商同意成為二級經銷商<br/>reject：一般經銷商拒絕成為二級經銷商<br/>read：二級經銷商已閱讀退出二級經銷商的訊息<br/>read_reject：特級經銷商已閱讀一般經銷商拒絕成為二級經銷商</p>"
                         }
                     ]
                 }
