@@ -1961,16 +1961,16 @@ class Product extends REST_Controller {
                     TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET,
                     11
                     ])){
-                    $rs = $this->target_lib->cancel_target($targets,$user_id,$this->user_info->phone);
-                if ($targets->product_id == 5 &&
-                    in_array($targets->sub_product_id, [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES])
-                ) {
-                    $cancel_booking_result = $this->cancel_booking_and_certification($targets->user_id);
-                    if (!$cancel_booking_result) {
-                        $this->response(array('result' => 'ERROR', 'error' => '取消預約時間失敗'));
+                $rs = $this->target_lib->cancel_target($targets, $user_id, $this->user_info->phone);
+                if ($rs) {
+                    if ($targets->product_id == 5 &&
+                        in_array($targets->sub_product_id, [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES])
+                    ) {
+                        $cancel_booking_result = $this->cancel_booking_and_certification($targets->user_id);
+                        if (!$cancel_booking_result) {
+                            $this->response(array('result' => 'ERROR', 'error' => '取消預約時間失敗'));
+                        }
                     }
-                }
-                if($rs){
                     $this->response(array('result' => 'SUCCESS'));
                 }
             }
@@ -1988,7 +1988,7 @@ class Product extends REST_Controller {
     private function cancel_booking_and_certification(int $userId): bool
     {
         $this->load->model('user/user_certification_model');
-        $certification = $this->CI->user_certification_model->get_by([
+        $certification = $this->user_certification_model->get_by([
             'user_id' => $userId,
             'certification_id' => CERTIFICATION_SITE_SURVEY_BOOKING,
             'status' => 1
@@ -2012,7 +2012,7 @@ class Product extends REST_Controller {
             return false;
         }
 
-        $result = $this->CI->user_certification_model->update($certification->id, ['status' => 2]);
+        $result = $this->user_certification_model->update($certification->id, ['status' => 2]);
         if (!$result) {
             // 如果更新認證記錄失敗，返回失敗
             return false;
