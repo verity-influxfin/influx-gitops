@@ -128,6 +128,7 @@ defined('PROMOTE_CODE_NOT_APPLY') or define('PROMOTE_CODE_NOT_APPLY', 228); // �
 defined('PROMOTE_CODE_NOT_GENERAL') or define('PROMOTE_CODE_NOT_GENERAL', 229); // 非一般經銷商
 defined('PROMOTE_CODE_NOT_APPOINTED') or define('PROMOTE_CODE_NOT_APPOINTED', 230); // 非特約通路商
 defined('PROMOTE_SUBCODE_NOT_EXIST') or define('PROMOTE_SUBCODE_NOT_EXIST', 231); // 該推薦碼 subcode 不存在
+defined('PROMOTE_DUPLICATE_INVITE') or define('PROMOTE_DUPLICATE_INVITE', 232); // 該二級經銷商邀請中
 
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301);
