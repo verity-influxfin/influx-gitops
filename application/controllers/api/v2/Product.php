@@ -162,7 +162,13 @@ class Product extends REST_Controller {
         $visul_id_des          = $this->config->item('visul_id_des');
         $sub_product_list      = $this->config->item('sub_product_list');
         $certification = $this->config->item('certifications');
-        $company = isset($this->user_info->company)?$this->user_info->company:false;
+
+        if ($this->get('type') == "company") {
+            $company = true;
+        } else {
+            $company = isset($this->user_info->company) ? $this->user_info->company : false;
+        }
+
         // if($company){
         //     $this->load->model('user/judicial_person_model');
         //     $selling_type = $this->judicial_person_model->get_by(array('company_user_id'=>$this->user_info->id))->selling_type;
