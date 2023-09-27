@@ -1988,6 +1988,7 @@ class Product extends REST_Controller {
     private function cancel_booking_and_certification(int $userId): bool
     {
         $this->load->model('user/user_certification_model');
+        $this->load->library('booking_lib');
         $certification = $this->user_certification_model->get_by([
             'user_id' => $userId,
             'certification_id' => CERTIFICATION_SITE_SURVEY_BOOKING,
