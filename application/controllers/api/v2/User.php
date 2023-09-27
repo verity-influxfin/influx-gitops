@@ -3175,6 +3175,20 @@ END:
                         'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT
                     ]);
                     break;
+                case 'read_reject':
+                    $user_qrcode_info = $this->user_qrcode_model->as_array()->get($subcode_info['master_user_qrcode_id']);
+                    if ($subcode_info['status'] != PROMOTE_SUBCODE_STATUS_DISABLED ||
+                    $subcode_info['sub_status'] != PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT ||
+                    $this->user_info->id != $user_qrcode_info['user_id']
+                    )
+                    {
+                        throw new Exception('未有此 subcode 申請', PROMOTE_SUBCODE_NOT_EXIST);
+                    }
+                    $this->user_subcode_model->update($subcode_info['id'], [
+                        'status' => PROMOTE_SUBCODE_STATUS_DISABLED,
+                        'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT
+                    ]);
+                    break;
                 default:
                     throw new Exception('參數錯誤', INPUT_NOT_CORRECT);
             }
@@ -3845,10 +3859,6 @@ END:
                         $user = $this->user_model->get($data['user_id']);
                         $data['subcode_status'] = $subcode_sub_status; // 拒絕特約通路商成為二級經銷商，待特約經銷商閱讀
                         $data['message'] = $this->qrcode_lib->get_subcode_dialogue_content($data['subcode_id'], $user->name, PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT);
-                        $this->user_subcode_model->update($data['subcode_id'], [
-                            'status' => PROMOTE_SUBCODE_STATUS_DISABLED,
-                            'sub_status' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT
-                        ]);
                         break;
                     default:
                         unset($data);
