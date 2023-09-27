@@ -1962,6 +1962,14 @@ class Product extends REST_Controller {
                     11
                     ])){
                     $rs = $this->target_lib->cancel_target($targets,$user_id,$this->user_info->phone);
+                if ($targets->product_id == 5 &&
+                    in_array($targets->sub_product_id, [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES])
+                ) {
+                    $cancel_booking_result = $this->cancel_booking_and_certification($targets->user_id);
+                    if (!$cancel_booking_result) {
+                        $this->response(array('result' => 'ERROR', 'error' => '取消預約時間失敗'));
+                    }
+                }
                 if($rs){
                     $this->response(array('result' => 'SUCCESS'));
                 }
