@@ -610,6 +610,15 @@ class Target extends MY_Admin_Controller {
 			$target = $this->target_model->get($id);
             if ($this->target_lib->reject($target,$this->login_info->id,$remark))
             {
+                if ($target->product_id == 5 &&
+                    in_array($target->sub_product_id, [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES])
+                ) {
+                    $cancel_booking_result = $this->target_lib->cancel_booking_and_certification($target->user_id);
+                    if (!$cancel_booking_result) {
+                        echo '更新失敗，取消預約時間失敗';
+                        die();
+                    }
+                }
                 echo '更新成功';
             }
             else
