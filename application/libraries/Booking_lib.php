@@ -191,7 +191,7 @@ class Booking_lib
 
             if ( ! empty($result['_id']))
             {
-                return ['result' => 'SUCCESS'];
+                return ['result' => 'SUCCESS', 'data' => $result];
             }
             if ( ! empty($result['detail']) && $request->getStatusCode() == 400)
             {

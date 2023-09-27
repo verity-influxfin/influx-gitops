@@ -5946,6 +5946,7 @@ class Certification extends REST_Controller {
             $this->response($booking_response);
         }
 
+        $content['booking_response'] = $booking_response['data'];
         $param = [
             'user_id' => $user_id,
             'certification_id' => $certification_id,
