@@ -1966,7 +1966,7 @@ class Product extends REST_Controller {
                     if ($targets->product_id == 5 &&
                         in_array($targets->sub_product_id, [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES])
                     ) {
-                        $cancel_booking_result = $this->cancel_booking_and_certification($targets->user_id);
+                        $cancel_booking_result = $this->target_lib->cancel_booking_and_certification($targets->user_id);
                         if (!$cancel_booking_result) {
                             $this->response(array('result' => 'ERROR', 'error' => '取消預約時間失敗'));
                         }
@@ -1979,49 +1979,6 @@ class Product extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 
-    /**
-     * 退「屋現勘/遠端視訊預約時間認證」 and 子系統取消預約時段
-     *
-     * @param int $userId 用戶ID
-     * @return bool 成功取消預訂並更新認證記錄返回 true，否則返回 false。
-     */
-    private function cancel_booking_and_certification(int $userId): bool
-    {
-        $this->load->model('user/user_certification_model');
-        $this->load->library('booking_lib');
-        $certification = $this->user_certification_model->get_by([
-            'user_id' => $userId,
-            'certification_id' => CERTIFICATION_SITE_SURVEY_BOOKING,
-            'status' => 1
-        ]);
-
-        if (!$certification) {
-            // 如果找不到相應的認證記錄，視為成功取消
-            return true;
-        }
-
-        $content = json_decode($certification->content, true);
-        if (!isset($content['booking_response'])|| !isset($content['booking_response']['_id'])) {
-            // 如果找不到預訂ID，視為成功取消
-            return true;
-        }
-        $bookingId = $content['booking_response']['_id'];
-
-        $response = $this->booking_lib->cancel_booking($bookingId);
-        if (!isset($response['result']) || $response['result'] != 'SUCCESS') {
-            // 如果取消預訂失敗，返回失敗
-            return false;
-        }
-
-        $result = $this->user_certification_model->update($certification->id, ['status' => 2]);
-        if (!$result) {
-            // 如果更新認證記錄失敗，返回失敗
-            return false;
-        }
-
-        // 成功取消預訂並更新認證記錄
-        return true;
-    }
 
     public function changerate_post()
     {
