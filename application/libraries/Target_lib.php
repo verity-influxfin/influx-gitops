@@ -3387,15 +3387,13 @@ class Target_lib
 
         $content = json_decode($certification->content, true);
 
-        if (!isset($content['booking_response'])|| !isset($content['booking_response']['_id'])) {
-            // 如果找不到預訂ID，視為成功取消
-            return true;
-        }
-        $bookingId = $content['booking_response']['_id'];
-        $response = $this->CI->booking_lib->cancel_booking($bookingId);
-        if (!isset($response['result']) || $response['result'] != 'SUCCESS') {
-            // 如果取消預訂失敗，返回失敗
-            return false;
+        if (isset($content['booking_response']['_id'])) {
+            $bookingId = $content['booking_response']['_id'];
+            $response = $this->CI->booking_lib->cancel_booking($bookingId);
+            if (!isset($response['result']) || $response['result'] != 'SUCCESS') {
+                // 如果取消預訂失敗，返回失敗
+                return false;
+            }
         }
 
         $result = $this->CI->user_certification_model->update($certification->id, ['status' => 2]);
