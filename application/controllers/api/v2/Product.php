@@ -3190,7 +3190,7 @@ class Product extends REST_Controller {
             if ($param['product_id'] == 5 &&
                 in_array($param['sub_product_id'], [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES])
             ) {
-                $cancel_booking_result = $this->cancel_booking_and_certification($param['user_id']);
+                $cancel_booking_result = $this->target_lib->cancel_booking_and_certification($param['user_id']);
                 if (!$cancel_booking_result) {
                     $this->response(array('result' => 'ERROR', 'error' => '取消預約時間失敗'));
                 }
