@@ -1988,7 +1988,7 @@ class Product extends REST_Controller {
     private function cancel_booking_and_certification(int $userId): bool
     {
         $this->load->model('user/user_certification_model');
-        $certification = $this->CI->user_certification_model->get_by([
+        $certification = $this->user_certification_model->get_by([
             'user_id' => $userId,
             'certification_id' => CERTIFICATION_SITE_SURVEY_BOOKING,
             'status' => 1
@@ -2012,7 +2012,7 @@ class Product extends REST_Controller {
             return false;
         }
 
-        $result = $this->CI->user_certification_model->update($certification->id, ['status' => 2]);
+        $result = $this->user_certification_model->update($certification->id, ['status' => 2]);
         if (!$result) {
             // 如果更新認證記錄失敗，返回失敗
             return false;
