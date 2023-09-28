@@ -3657,6 +3657,19 @@ END:
                 'user_id' => $subcode_user_id,
                 'status !=' => PROMOTE_STATUS_DISABLED
             ]);
+
+            // 判斷是否正在邀請及已經被邀請過
+            $existingSubcode = $this->user_subcode_model->get_by([
+                'master_user_qrcode_id' => $master_user_qrcode->id,
+                'user_qrcode_id' => (int) $subcode_info['id'],
+                'status' => 0,
+                'sub_status' => 2
+            ]);
+            if (!empty($existingSubcode))
+            {
+                $this->response(['result' => 'ERROR', 'error' => PROMOTE_DUPLICATE_INVITE, 'msg' => '該二級經銷商邀請中']);
+            }
+
             if (empty($subcode_info))
             {
                 $this->response(['result' => 'ERROR', 'error' => PROMOTE_SUBCODE_NOT_EXIST]);

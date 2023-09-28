@@ -49457,6 +49457,12 @@ define({
                             "optional": false,
                             "field": "231",
                             "description": "<p>找不到合法的 subcode 紀錄</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "232",
+                            "description": "<p>該二級經銷商邀請中</p>"
                         }
                     ]
                 },
@@ -49484,6 +49490,11 @@ define({
                     {
                         "title": "231",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"231\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "232",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"232\"\n}",
                         "type": "Object"
                     }
                 ]
