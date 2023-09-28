@@ -3040,6 +3040,7 @@ class Certification extends REST_Controller {
                 $content[$year] = (int) $input[$year] - 1911;
             }
 
+            $content['skbank_form'] = $input;
             $param = [
                 'user_id' => $user_id,
                 'certification_id' => $certification_id,
@@ -3333,6 +3334,7 @@ class Certification extends REST_Controller {
                     $content[$key] = $item->url;
                 });
             }
+            $content['skbank_form'] = $input;
 
             $param		= [
                 'user_id'			=> $user_id,
@@ -4679,14 +4681,14 @@ class Certification extends REST_Controller {
             $tmp_content = $content;
 
 			// 使用者手填資料
-            $content = [
+            $content['skbank_form'] = [
 				'ReportTime' => isset($input['ReportTime']) ? $input['ReportTime'] : '',
 				'CompName' => isset($input['CompName']) ? $input['CompName'] : '',
 				'range' => isset($input['range']) ? $input['range'] : '',
 			];
 			foreach($input as $k=>$v){
 				if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k)){
-					$content[$k] = $v;
+					$content['skbank_form'][$k] = $v;
 				}
 			}
 
