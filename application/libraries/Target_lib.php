@@ -501,10 +501,10 @@ class Target_lib
                                     }
                                 }
 
-                                // todo: 暫時將「學生貸」、「上班族貸」轉二審
+                                // todo: 暫時將「學生貸」、「上班族貸」、「房貸」轉二審
                                 if ( ! $subloan_status &&
                                     ! $renew &&
-                                    in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_STUDENT]) &&
+                                    in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_HOME_LOAN]) &&
                                     $target->status == TARGET_WAITING_APPROVE &&
                                     $target->sub_status == TARGET_SUBSTATUS_NORNAL)
                                 {
@@ -532,14 +532,14 @@ class Target_lib
                                         ! $product_info['secondInstance']
                                         && ! $second_instance_check
                                         && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
-                                        // 依照產品部門需求，上班族暫時全部強制進待二審
-                                        && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
+                                        // 依照產品部門需求，「上班族貸」、「房貸」暫時全部強制進待二審
+                                        && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER, PRODUCT_ID_HOME_LOAN])
                                         || $renew
                                         || $evaluation_status
                                         // ----(S)
-                                        // todo: 將「學生貸」、「上班族貸」轉二審，不應有額度就 approve
+                                        // todo: 將「學生貸」、「上班族貸」、「房貸」轉二審，不應有額度就 approve
                                         // || $creditSheet->hasCreditLine()
-                                        || ($creditSheet->hasCreditLine() && ! in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN]))
+                                        || ($creditSheet->hasCreditLine() && ! in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_HOME_LOAN]))
                                         // ----(E)
                                     )
                                     || $subloan_status
