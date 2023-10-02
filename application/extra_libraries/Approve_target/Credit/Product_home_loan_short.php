@@ -7,7 +7,7 @@ use Approve_target\Trait_check_product\Check_applicant_age;
 /**
  * 核可 信用貸款
  *
- * 產品：不動產融資 購房不足額
+ * 產品：房產消費貸 購房貸
  * 產品ID：5 (PRODUCT_ID_HOME_LOAN)
  * 子產品ID：10 (SUB_PRODUCT_ID_HOME_LOAN_SHORT)
  */
