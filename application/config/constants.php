@@ -430,9 +430,9 @@ defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000
 defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002);      // 普匯信保專案融資
 
 defined('PRODUCT_FOR_JUDICIAL') or define('PRODUCT_FOR_JUDICIAL', 1000); //法人產品ID範圍
-defined('PRODUCT_TAB_INDIVIDUAL') or define('PRODUCT_TAB_INDIVIDUAL', 'individual'); // 個金產品類型名稱 (除不動產融資)
+defined('PRODUCT_TAB_INDIVIDUAL') or define('PRODUCT_TAB_INDIVIDUAL', 'individual'); // 個金產品類型名稱 (除房產消費貸)
 defined('PRODUCT_TAB_ENTERPRISE') or define('PRODUCT_TAB_ENTERPRISE', 'enterprise'); // 企金產品類型名稱
-defined('PRODUCT_TAB_HOME_LOAN') or define('PRODUCT_TAB_HOME_LOAN', 'home_loan'); // 不動產融資產品類型名稱
+defined('PRODUCT_TAB_HOME_LOAN') or define('PRODUCT_TAB_HOME_LOAN', 'home_loan'); // 房產消費貸產品類型名稱
 
 // sub-product
 defined('SUB_PRODUCT_GENERAL') or define('SUB_PRODUCT_GENERAL', 0); // 一般貸款
