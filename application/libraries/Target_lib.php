@@ -1843,7 +1843,7 @@ class Target_lib
         $allow_stage_cer = [1, 3];
         if ($targets && !empty($targets)) {
             foreach ($targets as $key => $value) {
-                // todo: 只放學生貸、不動產融資進新架構，剩餘的等之後開發好再說
+                // todo: 只放學生貸、房產消費貸進新架構，剩餘的等之後開發好再說
                 if (($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0) || $value->product_id == PRODUCT_ID_HOME_LOAN)
                 {
                     $approve_factory = new Approve_factory();

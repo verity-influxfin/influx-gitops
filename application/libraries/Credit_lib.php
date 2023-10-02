@@ -687,7 +687,7 @@ class Credit_lib{
 		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target);
 	}
 
-    // 不動產融資
+    // 房產消費貸
     private function approve_5($user_id, $product_id, $sub_product_id, $expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target)
     {
         // todo: 上班族貸信評會修改，到時候要記得也改這邊
