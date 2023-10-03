@@ -1124,22 +1124,28 @@ class Estatement_lib{
 						"investor"	=> $estatement->investor,
 						"sdate"		=> $estatement->sdate,
 						"edate"		=> $estatement->edate,
+                        "url !="    => '',
 					));
-					if($estatement_detail){
-						$estatement_detail_url = $estatement_detail->url;
-						$this->CI->user_estatement_model->update($estatement_detail->id,array("status"=>1));
-					}else{
-						$estatement_detail_url = "";
+                    if (!isset($estatement_detail) || !isset($estatement_detail->url) || !$estatement_detail->url) {
+                        return false;
 					}
+
 					$y = date("Y",strtotime($estatement->sdate));
 					$m = date("m",strtotime($estatement->sdate));
-					$this->CI->user_estatement_model->update($estatement_id,array("status"=>1));
 					$estatement_url  		= $estatement->url;
 					$investor_status=$user_info->investor_status;
 					$title = '【普匯金融科技交易對帳單】';
 					$invest_report_desc = $estatement->investor == USER_INVESTOR ? '<br>普匯官網查看<a href="https://www.influxfin.com/invest-report">投資人報告書</a>' : '';
 					$content = '親愛的 '.$user_info->name.' '.($user_info->sex=='M'?'先生':($user_info->sex=='F'?'小姐':'')).'您好：<br> 　　此為您'.$y.'年'.$m.'月帳戶交易對帳單，請您核對確認。<br>若有疑問請洽Line@客服，我們將竭誠為您服務。'.$invest_report_desc.'<br>普匯金融科技有限公司　敬上 <br><p style="color:red;font-size:14px;">＊附件綜合對帳單已設為加密信件，開啟密碼個人戶為身分證字號(英文字母請輸入大寫)，公司戶為統一編號。</p>';
-					return $this->CI->sendemail->email_file_estatement($user_info->email,$title,$content,$estatement_url,$estatement_detail_url,$investor_status);
+
+                    $send_result = $this->CI->sendemail->email_file_estatement($user_info->email,$title,$content,$estatement_url,$estatement_detail_url,$investor_status);
+                    if(!$send_result){
+                        return false;
+                    }
+
+                    $this->CI->user_estatement_model->update($estatement_detail->id,array("status"=>1));
+					$this->CI->user_estatement_model->update($estatement_id,array("status"=>1));
+					return true;
 				}
             }
             else if ($estatement && $estatement->type == 'promote_code')
