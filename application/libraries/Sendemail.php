@@ -187,6 +187,22 @@ class Sendemail
 			}
 
 			$rs = $this->CI->email->send();
+
+            $this->CI->load->model('log/log_send_email_model');
+                $insert_data = [
+                    'email_to' => $email,
+                    'email_from' => GMAIL_SMTP_ACCOUNT,
+                    'subject' => $title,
+                    'content' => json_encode([
+                        'content' => $content,
+                        'email' => $this->CI->email->_attachments,
+                    ], JSON_UNESCAPED_UNICODE),
+                    'sent_status' => $rs ? 1 : 0
+                ];
+            $this->CI->log_send_email_model->insert($insert_data);
+
+
+
 			return boolval($rs);
 		}
 	}
