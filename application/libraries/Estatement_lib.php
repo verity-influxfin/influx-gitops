@@ -1118,20 +1118,25 @@ class Estatement_lib{
 			if($estatement && $estatement->type=='estatement'){
 				$user_info = $this->CI->user_model->get($estatement->user_id);
 				if($user_info && $user_info->name && $user_info->email){
-					$estatement_detail = $this->CI->user_estatement_model->get_by(array(
-						"type"		=> "estatementdetail",
-						"user_id"	=> $estatement->user_id,
-						"investor"	=> $estatement->investor,
-						"sdate"		=> $estatement->sdate,
-						"edate"		=> $estatement->edate,
-                        "url !="    => '',
-                        "status"    => 0,
-					));
-                    if (!isset($estatement_detail) || !isset($estatement_detail->url) || !$estatement_detail->url) {
-                        return false;
-					}
+                    $estatement_detail_url = '';
 
-                    $estatement_detail_url 	= $estatement_detail->url;
+                    if ($estatement->investor == USER_INVESTOR) {
+                        // 投資人對帳單才需要檢查明細
+                        $estatement_detail = $this->CI->user_estatement_model->get_by(array(
+                            "type"		=> "estatementdetail",
+                            "user_id"	=> $estatement->user_id,
+                            "investor"	=> $estatement->investor,
+                            "sdate"		=> $estatement->sdate,
+                            "edate"		=> $estatement->edate,
+                            "url !="    => '',
+                            "status"    => 0,
+                        ));
+                        if (!isset($estatement_detail) || !isset($estatement_detail->url) || !$estatement_detail->url) {
+                            return false;
+                        }
+                        $estatement_detail_url = $estatement_detail->url;
+                    }
+
 					$y = date("Y",strtotime($estatement->sdate));
 					$m = date("m",strtotime($estatement->sdate));
 					$estatement_url  		= $estatement->url;
@@ -1145,7 +1150,9 @@ class Estatement_lib{
                         return false;
                     }
 
-                    $this->CI->user_estatement_model->update($estatement_detail->id,array("status"=>1));
+                    if (isset($estatement_detail)) {
+                            $this->CI->user_estatement_model->update($estatement_detail->id, array("status" => 1));
+                    }
 					$this->CI->user_estatement_model->update($estatement_id,array("status"=>1));
 					return true;
 				}
