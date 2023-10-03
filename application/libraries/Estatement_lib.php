@@ -1125,6 +1125,7 @@ class Estatement_lib{
 						"sdate"		=> $estatement->sdate,
 						"edate"		=> $estatement->edate,
                         "url !="    => '',
+                        "status"    => 0,
 					));
                     if (!isset($estatement_detail) || !isset($estatement_detail->url) || !$estatement_detail->url) {
                         return false;
