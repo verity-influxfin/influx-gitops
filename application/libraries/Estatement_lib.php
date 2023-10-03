@@ -1186,7 +1186,7 @@ class Estatement_lib{
 		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
 			"url !="	=> "",
 			"status"	=> 0,
-            "type !="=> "estatement_failed"
+            "type"=> "estatement"
 		));
 		$count = 0;
 		if($list){
