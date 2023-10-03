@@ -195,7 +195,7 @@ class Sendemail
                     'subject' => $title,
                     'content' => json_encode([
                         'content' => $content,
-                        'email' => $this->CI->email->_attachments,
+                        'data' => $this->CI->email->print_debugger()
                     ], JSON_UNESCAPED_UNICODE),
                     'sent_status' => $rs ? 1 : 0
                 ];
