@@ -1042,7 +1042,7 @@
 									<span>：</span>
 								</span>
                                 <span style="width:70%;"><input id="2_fixed_amount" type="number" value="0" min="0" step="1"
-                                                                disabled></span>
+                                                                disabled><button id="original-amount-btn">使用原額度</button></span>
                             </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
@@ -1436,6 +1436,7 @@
 		var modifiedPoints = null;
 		var targetInfoAjaxLock = false;
 		var relatedUserAjaxLock = false;
+        var originalAmount = 0;
 		$('#blockUserId').val(userId);
 		$('#blackLink').prop('href', `/admin/Risk/black_list?id=${userId}`)
 		const t = $('#antifraud').DataTable({
@@ -1490,6 +1491,9 @@
 
 				let currentTargetJson = response.response.target;
 				target = new Target(currentTargetJson);
+                $('#2_fixed_amount').val(parseInt(currentTargetJson.available_amount))
+                $('#credit_test_fixed_amount').val(parseInt(currentTargetJson.available_amount));
+
 				fillCurrentTargetInfo(target)
 				!$.isEmptyObject(target.targetData) ? fillCurrentTargetData(target.targetData, target.productTargetData, target.creditTargetData) : '';
 
@@ -1599,14 +1603,12 @@
                     `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 		}
-
         if (case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_min") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_max")) {
+            originalAmount = case_aprove_item.creditLineInfo.fixed_amount_max;
             $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
             $(`#2_fixed_amount`).attr({
                 "max": case_aprove_item.creditLineInfo.fixed_amount_max,
                 "min": case_aprove_item.creditLineInfo.fixed_amount_min,
-                "oninput": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
-                    `else if(value<=${case_aprove_item.creditLineInfo.fixed_amount_min}){value=${case_aprove_item.creditLineInfo.fixed_amount_min}}`
             });
         }
 
@@ -1676,6 +1678,20 @@
                 return;
             }
             $('div.opinion_button button.score').prop('disabled', true);
+        });
+        $('#2_fixed_amount').blur(function () {
+            let fixed_amount = parseInt($(this).val());
+            if (fixed_amount < 0) {
+                return;
+            }
+            if(fixed_amount>0 && fixed_amount<1000){
+                fixed_amount = 1000;
+            }
+            if(fixed_amount>case_aprove_item.creditLineInfo.fixed_amount_max){
+                fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
+                console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
+            }
+            $('#2_fixed_amount').val(fixed_amount);
             $('#credit_test_fixed_amount').val(fixed_amount);
         });
 		var brookesiaData = [];
@@ -2410,6 +2426,11 @@
                     $(item).prop('disabled', false);
                 }
             });
+        });
+        
+        $('#original-amount-btn').click(function () {
+            $('#2_fixed_amount').val(originalAmount)
+            $('#credit_test_fixed_amount').val(originalAmount);
         });
 	});
 
