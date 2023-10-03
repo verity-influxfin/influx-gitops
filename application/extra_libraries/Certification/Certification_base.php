@@ -227,9 +227,10 @@ abstract class Certification_base implements Certification_definition
      * 審核失敗
      * @param bool $sys_check
      * @param string $msg
+     * @param bool $approve 用來判斷是否為 approve_target使用
      * @return bool
      */
-    public function set_failure(bool $sys_check, string $msg = ''): bool
+    public function set_failure(bool $sys_check, string $msg = '', bool $approve = TRUE): bool
     {
         $this->_get_related_product();
         $pre_flag = $this->pre_failure($sys_check);
@@ -260,6 +261,10 @@ abstract class Certification_base implements Certification_definition
 
             $rs = $this->CI->user_certification_model->update($this->certification['id'], $param);
 
+            if ($rs && !$approve)
+            {
+                return TRUE;
+            }
             $post_flag = $this->post_failure($sys_check);
             $notified = $this->failure_notification();
 

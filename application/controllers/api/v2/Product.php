@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(APPPATH.'/libraries/REST_Controller.php');
 
 use Certification\Certification_factory;
+use CertificationResult\IdentityCertificationResult;
+use CertificationResult\MessageDisplay;
 
 class Product extends REST_Controller {
 
@@ -997,7 +999,98 @@ class Product extends REST_Controller {
                 $this->load->model('log/log_usercertification_model');
                 $this->log_usercertification_model->insert_many($insert_params);
             }
+            $check_id_card = FALSE;
+            $identity_cert = $this->user_certification_model->get_by([
+                'investor' => BORROWER,
+                'status' => CERTIFICATION_STATUS_SUCCEED,
+                'user_id' => $user_id,
+                'certification_id' => CERTIFICATION_IDENTITY
+            ]);
+            if ($identity_cert)
+            {
+                // Avoid checking for the same target too many times.
+                $this->load->model('log/log_integration_model');
+                $api_verify_log = $this->log_integration_model->order_by('created_at', 'DESC')->get_by([
+                    'user_certification_id' => $identity_cert->id
+                ]);
+                if ( ! empty($api_verify_log))
+                {
+                    $current_time = date('Y-m-d H:i:s');
+                    $one_day_ago = date("Y-m-d H:i:s", strtotime($current_time.' -1 day'));
+                    if ($api_verify_log->created_at < $one_day_ago)
+                    {
+                        $check_id_card = TRUE;
+                    }
+                }
+                if ($check_id_card)
+                {
+                    $identity_content = json_decode($identity_cert->content, TRUE);
+                    $remark = json_decode($identity_cert->remark, TRUE);
+                    $err_msg = $remark['error'] ?? '';
+                    $result = $this->certification_lib->verify_id_card_info(
+                        $identity_cert->id, $identity_content, $err_msg, $remark['OCR'] ?? []
+                    );
 
+                    // Update user_certification.
+                    $to_update = ['content' => json_encode($identity_content, JSON_INVALID_UTF8_IGNORE)];
+                    if ($err_msg)
+                    {
+                        $remark['error'] = $err_msg;
+                        $to_update['remark'] = json_encode($remark, JSON_INVALID_UTF8_IGNORE);
+                    }
+                    $this->user_certification_model->update($identity_cert->id, $to_update);
+
+                    if ($result[0] && $result[1])  // Existed id card info is wrong.
+                    {
+                        $this->load->model('log/log_usercertification_model');
+                        $this->log_usercertification_model->insert([
+                            'user_certification_id'	=> $identity_cert->id,
+                            'status'				=> CERTIFICATION_STATUS_FAILED,
+                            'change_admin'			=> SYSTEM_ADMIN_ID,
+                        ]);
+                        $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+                        $rs = $cert_helper->set_failure(TRUE, IdentityCertificationResult::$RIS_CHECK_FAILED_MESSAGE, FALSE);
+                        if ($rs === TRUE)
+                        {
+                            $this->user_certification_model->update($identity_cert->id, [
+                                'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT
+                            ]);
+                        }
+                        else
+                        {
+                            log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
+                        }
+                    }
+                    elseif ($result[0] === FALSE && $result[1] === TRUE)
+                    {
+                        $this->load->model('log/log_usercertification_model');
+                        $this->log_usercertification_model->insert([
+                            'user_certification_id' => $identity_cert->id,
+                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                            'change_admin' => SYSTEM_ADMIN_ID,
+                        ]);
+                        $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+
+                        $cert_helper->result->addMessage(IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE . '，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                        $remark = $cert_helper->remark;
+                        $remark['verify_result'] = $cert_helper->result->getAllMessage(MessageDisplay::Backend);
+                        $remark['verify_result_json'] = $cert_helper->result->jsonDump();
+
+                        $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
+                        if ($rs === TRUE)
+                        {
+                            $this->user_certification_model->update($identity_cert->id, [
+                                'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT,
+                                'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE),
+                            ]);
+                        }
+                        else
+                        {
+                            log_message('error', "實名認證 user_certification {$identity_cert->id} 轉人工失敗");
+                        }
+                    }
+                }
+            }
             if(method_exists($this, $method)){
                 $this->$method($param,$product,$input);
             }
