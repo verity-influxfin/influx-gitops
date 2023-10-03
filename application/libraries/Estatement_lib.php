@@ -1131,6 +1131,7 @@ class Estatement_lib{
                         return false;
 					}
 
+                    $estatement_detail_url 	= $estatement_detail->url;
 					$y = date("Y",strtotime($estatement->sdate));
 					$m = date("m",strtotime($estatement->sdate));
 					$estatement_url  		= $estatement->url;
