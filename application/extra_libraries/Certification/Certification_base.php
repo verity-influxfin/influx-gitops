@@ -256,6 +256,11 @@ abstract class Certification_base implements Certification_definition
             if ( ! empty($msg))
             {
                 $this->remark['fail'] = $msg;
+                
+                if (!$approve)
+                {
+                    $this->remark['failed_type_list'] = [1, 2, 3, 4];
+                }
                 $param['remark'] = json_encode($this->remark);
             }
 
