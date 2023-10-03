@@ -187,12 +187,7 @@ class Sendemail
 			}
 
 			$rs = $this->CI->email->send();
-
-			if($rs){
-				return true;
-			}else{
-				return false;
-			}
+			return boolval($rs);
 		}
 	}
 
