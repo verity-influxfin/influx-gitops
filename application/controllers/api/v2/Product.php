@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(APPPATH.'/libraries/REST_Controller.php');
 
 use Certification\Certification_factory;
+use Certification\Cert_identity;
 use CertificationResult\IdentityCertificationResult;
 use CertificationResult\MessageDisplay;
 
@@ -999,6 +1000,7 @@ class Product extends REST_Controller {
                 $this->load->model('log/log_usercertification_model');
                 $this->log_usercertification_model->insert_many($insert_params);
             }
+            // 正式環境下檢查實名認證，資訊不對就退認證項
             if (ENVIRONMENT === 'production')
             {
                 $check_id_card = FALSE;
@@ -1050,8 +1052,7 @@ class Product extends REST_Controller {
                                 'status'				=> CERTIFICATION_STATUS_FAILED,
                                 'change_admin'			=> SYSTEM_ADMIN_ID,
                             ]);
-                            $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
-                            $rs = $cert_helper->set_failure(TRUE, IdentityCertificationResult::$RIS_CHECK_FAILED_MESSAGE, FALSE);
+                            $rs = \Certification\Cert_identity::set_failed_for_apply($identity_cert, IdentityCertificationResult::$RIS_CHECK_FAILED_MESSAGE);
                             if ($rs === TRUE)
                             {
                                 $this->user_certification_model->update($identity_cert->id, [

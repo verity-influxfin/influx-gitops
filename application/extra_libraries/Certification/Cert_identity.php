@@ -279,6 +279,39 @@ class Cert_identity extends Certification_base
     }
 
     /**
+    * 起案前戶役政比對資訊有誤退掉實名認證項
+    * @param $identity_cert 認證項
+    * @param string $msg
+    * @return bool
+    */
+    public static function set_failed_for_apply($identity_cert, string $msg = ''): bool
+    {
+        $CI = &get_instance();
+        $CI->load->model('user/user_certification_model');
+
+        $param = [
+            'status' => CERTIFICATION_STATUS_FAILED,
+            'sys_check' => SYSTEM_ADMIN_ID,
+        ];
+        if ($identity_cert->expired_timestamp)
+        {
+            $param['expire_time'] = $identity_cert->expired_timestamp;
+        }
+        if ( ! empty($msg))
+        {
+            $identity_cert->remark['fail'] = $msg;
+            $identity_cert->remark['failed_type_list'] = [1, 2, 3, 4];
+            $param['remark'] = json_encode($identity_cert->remark);
+        }
+        $rs = $CI->user_certification_model->update($identity_cert->id, $param);
+        if ($rs)
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    /**
      * 審核失敗前處理函數
      * @param $sys_check
      * @return bool
