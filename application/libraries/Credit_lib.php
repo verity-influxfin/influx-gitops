@@ -1450,7 +1450,7 @@ class Credit_lib{
             return false;
         }
         $this->CI->load->model('loan/credit_sheet_model');
-        $credit_sheet = $this->CI->credit_sheet_model->get_by(['target_id' => $target_id]);
+        $credit_sheet = $this->CI->credit_sheet_model->get_by(['target_id' => $target_id, 'credit_id !=' => 0, 'status !=' => 0,]);
         if(!$credit_sheet){
             return false;
         }
