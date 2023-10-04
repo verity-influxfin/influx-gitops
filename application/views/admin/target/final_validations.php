@@ -1491,8 +1491,6 @@
 
 				let currentTargetJson = response.response.target;
 				target = new Target(currentTargetJson);
-                $('#2_fixed_amount').val(parseInt(currentTargetJson.available_amount))
-                $('#credit_test_fixed_amount').val(parseInt(currentTargetJson.available_amount));
 
 				fillCurrentTargetInfo(target)
 				!$.isEmptyObject(target.targetData) ? fillCurrentTargetData(target.targetData, target.productTargetData, target.creditTargetData) : '';
@@ -1542,6 +1540,11 @@
 				fillTargetMeta(response.response.target_meta);
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
+
+                if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
+                    $('#2_fixed_amount').val(parseInt(currentTargetJson.available_amount))
+                    $('#credit_test_fixed_amount').val(parseInt(currentTargetJson.available_amount));
+                }
 
                 if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
                     $('.fixed_amount_block').css('display', 'none');
