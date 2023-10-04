@@ -288,20 +288,22 @@ class Cert_identity extends Certification_base
     {
         $CI = &get_instance();
         $CI->load->model('user/user_certification_model');
+        $certification = json_decode(json_encode($identity_cert), TRUE);
+        $remark = empty($certification['remark'])
+            ? []
+            : (is_string($certification['remark'])
+                ? json_decode($certification['remark'], TRUE)
+                : $certification['remark']);
 
         $param = [
             'status' => CERTIFICATION_STATUS_FAILED,
             'sys_check' => SYSTEM_ADMIN_ID,
         ];
-        if ($identity_cert->expired_timestamp)
-        {
-            $param['expire_time'] = $identity_cert->expired_timestamp;
-        }
         if ( ! empty($msg))
         {
-            $identity_cert->remark['fail'] = $msg;
-            $identity_cert->remark['failed_type_list'] = [1, 2, 3, 4];
-            $param['remark'] = json_encode($identity_cert->remark);
+            $remark['fail'] = $msg;
+            $remark['failed_type_list'] = [1, 2, 3, 4];
+            $param['remark'] = json_encode($remark);
         }
         $rs = $CI->user_certification_model->update($identity_cert->id, $param);
         if ($rs)

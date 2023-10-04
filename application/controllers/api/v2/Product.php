@@ -1001,7 +1001,7 @@ class Product extends REST_Controller {
                 $this->log_usercertification_model->insert_many($insert_params);
             }
             // 正式環境下檢查實名認證，資訊不對就退認證項
-            if (ENVIRONMENT === 'development')
+            if (ENVIRONMENT === 'production')
             {
                 $check_id_card = FALSE;
                 $identity_cert = $this->user_certification_model->get_by([
