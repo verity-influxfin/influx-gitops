@@ -8,6 +8,7 @@ class Version extends REST_Controller {
     {
         parent::__construct();
         $this->load->model('log/log_version_model');
+        $this->load->model('user/user_version_update_model');
     }
 
     public function ver_get()
@@ -21,9 +22,16 @@ class Version extends REST_Controller {
             'app_name' => $get['app'],
             'platform' => $get['platform']
         ]);
+        if (isset($get['user_id'])){
+            $version_for_user = $this->user_version_update_model->get_by([
+                'user_id'  => $get['user_id'],
+                'app' => $get['app'],
+                'platform' => $get['platform']
+            ]);
+        }
         if (!empty($version)) {
             $data = array(
-                'version'     => $version -> version,
+                'version'     => !empty($version_for_user) ? $version_for_user -> allow_version : (ENVIRONMENT == 'production' ? $version -> version : 'all'),
                 'description' => $version -> description,
                 'events'      => "linePointBox,stepProduct,oppo,skipFB,jv2,livingvoicecheck,childDonate"
             );
