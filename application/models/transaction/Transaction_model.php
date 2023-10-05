@@ -423,6 +423,29 @@ class Transaction_model extends MY_Model
     }
 
     /**
+     * 取得貸款人每期還款總額與期間
+     * @param $target_id
+     * @return mixed
+     */
+    public function get_repayment_schedule($target_id)
+    {
+        $this->db->select('id')
+            ->from('`p2p_transaction`.`transactions`')
+            ->where('status', TRANSACTION_STATUS_TO_BE_PAID)
+            ->where('target_id', $target_id)
+            ->where_in('source', [SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST,
+                SOURCE_AR_DAMAGE, SOURCE_AR_DELAYINTEREST]);
+        $sub_query = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('instalment_no, limit_date, SUM(amount) as amount')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join("({$sub_query}) as `r`", "`tra`.`id` = `r`.`id`")
+            ->order_by('limit_date', 'ASC')
+            ->group_by('limit_date');
+        return $this->db->get()->result_array();
+    }
+
+    /**
      * 取得每個月的風險指標
      * @param $year : 年份
      * @param $month : 月份

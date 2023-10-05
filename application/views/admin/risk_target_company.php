@@ -288,6 +288,8 @@
                                         echo $printHtml;
                                         ?>
                                         <?if(isset($input['investor']) && $input['investor'] == 0){
+                                            ?>
+                                            <th>DD查核</th><?php
                                             if($isExternalCoop){
                                                 if(!isset($input['target_id'])){
                                                     echo '<th>授信審核表</th>';
@@ -295,6 +297,7 @@
                                                     echo '<th></th>';
                                                 }else{
                                                     echo '<th>收件檢核表</th>';
+                                                    echo '<th>徵信報告</th>';
                                                     echo '<th>圖片上傳資料</th>';
                                                 }
                                             }else{
@@ -420,6 +423,19 @@
                                                             echo '</td>';
                                                         }
                                                     }
+                                                    ?>
+                                                    <td>
+                                                    <?php if ($value->dd_edit_done === TRUE) { ?>
+                                                        <a target="_blank" href="/admin/target/meta?id=<?= $value->id ?>">
+                                                            <button type="button" class="btn btn-success btn-circle nhide"><i class="fa fa-check"></i></button>
+                                                        </a>
+                                                        <span class="sword" style="display:none">完成</span>
+                                                    <?php } else { ?>
+                                                        <a target="_blank"
+                                                           href="/admin/target/meta?id=<?= $value->id ?>"
+                                                           class="btn btn-default btn-md nhide">驗證<?= $value->dd_edit_done; ?></a>
+                                                    <?php } ?>
+                                                    </td><?php
                                                     if(isset($input['company']) && $input['company'] == 1){ ?>
                                                     <? if($isExternalCoop){ ?>
                                                             <? if(!isset($input['target_id'])){ ?>
@@ -434,6 +450,7 @@
                                                         if (!isset($input['target_id'])) {
                                                             echo '<td><button class="btn btn-primary btn-warning manual_handling" onclick=""' .(in_array($value->status, [TARGET_BANK_LOAN, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED]) ?'disabled':' '). ' data-target_id='.$value->id.'>轉人工</button></td>';
                                                         }else{
+                                                            echo '<td><a class="btn btn-primary" href="/admin/CertificationReport/report?target_id='.($value->id??"").'" target="_blank" >查看<br />徵信報告</a></td>';
                                                             echo '<td><button class="btn btn-primary btn-info" onclick="" >圖片資料</button></td>';
                                                         }
                                                     }else{
