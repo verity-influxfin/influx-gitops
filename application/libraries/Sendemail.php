@@ -188,11 +188,33 @@ class Sendemail
 
 			$rs = $this->CI->email->send();
 
-			if($rs){
-				return true;
-			}else{
-				return false;
-			}
+            $this->CI->load->model('log/log_send_email_model');
+
+            try {
+                $reflection = new ReflectionClass($this->CI->email);
+                $property = $reflection->getProperty('_attachments');
+                $property->setAccessible(true); // 將屬性設為可訪問
+                $propertyValue = $property->getValue($this->CI->email);
+                $propertyValue = array_map(function ($item) {
+                    return $item['name'];
+                }, $propertyValue);
+            } catch (ReflectionException $e) {
+                $propertyValue = [];
+            }
+
+            $insert_data = [
+                'email_to' => $email,
+                'email_from' => GMAIL_SMTP_ACCOUNT,
+                'subject' => $title,
+                'content' => json_encode([
+                    'content' => $content,
+                    'attachments' => $propertyValue
+                ]),
+                'sent_status' => $rs ? 1 : 0
+            ];
+            $result = $this->CI->log_send_email_model->insert($insert_data);
+
+			return boolval($rs);
 		}
 	}
 

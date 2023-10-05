@@ -1151,4 +1151,33 @@ class Cron extends CI_Controller
         echo json_encode(['result' => 'SUCCESS', 'target' => $rs], JSON_UNESCAPED_UNICODE);
         die;
     }
+
+
+    public function send_estatement_pdf_to_target_user()
+    {
+        $this->load->library('Estatement_lib');
+        $this->load->model('user/user_estatement_model');
+		$input 	= $this->input->get();
+        $user_id = $input['user_id'] ?? 0;
+        $sdate = $input['sdate'] ?? '';
+        if(!$user_id || !$sdate){
+            die('params error');
+        }
+        $estatement = $this->user_estatement_model->get_by(array(
+            "url !=" => "",
+//            "status" => 0, //不管有沒有處理過
+            "type" => "estatement",
+            'user_id' => $user_id,
+            'sdate' => $sdate
+        ));
+        if (!$estatement) {
+            die('no estatement');
+        }
+        $rs = $this->estatement_lib->send_estatement($estatement->id);
+        if (!$rs) {
+            die('send_estatement fail');
+        }
+        die('send_estatement success');
+    }
+
 }
