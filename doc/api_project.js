@@ -14,6 +14,7 @@ define({
     "PostUserRegister",
     "PostUserCompanyRegister",
     "PostUserLogin",
+    "PostUserLoginNewApp",
     "PostUserBind",
     "PostUserSociallogin",
     "GetUserInfo",
