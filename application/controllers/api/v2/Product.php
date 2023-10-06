@@ -1052,7 +1052,7 @@ class Product extends REST_Controller {
                                 'status'				=> CERTIFICATION_STATUS_FAILED,
                                 'change_admin'			=> SYSTEM_ADMIN_ID,
                             ]);
-                            $rs = \Certification\Cert_identity::set_failed_for_apply($identity_cert, IdentityCertificationResult::$RIS_CHECK_FAILED_MESSAGE);
+                            $rs = \Certification\Cert_identity::set_failed_for_apply($identity_cert, $result[2]);
                             if ($rs === TRUE)
                             {
                                 $this->user_certification_model->update($identity_cert->id, [
