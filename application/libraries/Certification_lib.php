@@ -3722,7 +3722,6 @@ class Certification_lib{
                 // face++
                 $this->CI->load->library('faceplusplus_lib');
 
-                $identity_cer->content['person_image'] = 'https://www.faceplusplus.com/demo/images/demo-pic10.jpg';
                 $identity_cer_face = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image']);
 
                 $signing_face = $this->CI->faceplusplus_lib->get_face_token($url);
