@@ -3755,6 +3755,7 @@ class Certification_lib{
                     $person_compare[] = $this->CI->faceplusplus_lib->token_compare($identity_cer_face[1][0], $signing_face[1][0], $user_id, $cer_id);
                     //confidence 0.0~100.0
                     $remark['face'] = [$person_compare[0], $person_compare[1]];
+                    // 根據azure的定義，confidence >= 50 face_flag為true
                     $remark['face_flag'] = [$person_compare[0] >= 50, $person_compare[1] >= 50];
                     return $remark;
 
