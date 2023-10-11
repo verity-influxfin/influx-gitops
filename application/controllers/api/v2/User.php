@@ -10,7 +10,7 @@ class User extends REST_Controller {
     {
         parent::__construct();
         $method 		= $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous'];
+        $nonAuthMethods = ['register','registerphone','login','login_new_app','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -514,8 +514,223 @@ END:
         $this->response($result);
     }
 
+    /**
+    * @api {post} /v2/user/login_new_app 新版會員 用戶登入
+	 * @apiVersion 0.3.0
+	 * @apiName PostUserLoginNewApp
+     * @apiGroup User
+     * @apiParam {String} phone 手機號碼
+     * @apiParam {String{9,}} company_user_id 帳號(目前僅開放法人身份)
+     * @apiParam {String{6..50}} password 密碼
+	 * @apiParam {Number=0,1} [investor=0] 1:投資端 0:借款端
+     *
+     * @apiSuccess {Object} result SUCCESS
+	 * @apiSuccess {String} token request_token
+	 * @apiSuccess {Number} first_time 是否首次本端
+	 * @apiSuccess {String} expiry_time token時效
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
+     *      	"expiry_time": "1522673418",
+	 * 			"first_time": 1
+     *      }
+     *    }
+	 * @apiUse InputError
+	 * @apiUse BlockUser
+     *
+     * @apiError 302 會員不存在
+     * @apiErrorExample {Object} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
+     *
+     * @apiError 304 密碼錯誤
+     * @apiErrorExample {Object} 304
+     *     {
+     *       "result": "ERROR",
+     *       "error": "304"
+     *     }
+	 *
+	 * @apiError 312 密碼長度錯誤
+     * @apiErrorExample {Object} 312
+     *     {
+     *       "result": "ERROR",
+     *       "error": "312"
+     *     }
+	 *
+     */
+    public function login_new_app_post()
+    {
+		$input = $this->input->post(NULL, TRUE);
+        $fields 	= ['phone','password'];
+        $device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
+        $location   = isset($input['location'])?trim($input['location']):'';
+        $os			= isset($input['os'])?trim($input['os']):'';
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+        }
+
+		if(strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password'])> PASSWORD_LENGTH_MAX ){
+			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
+		}
+
+		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
+
+        // 自然人或法人判斷
+        if ( ! empty($input['company_user_id']))
+        {
+            // 法人
+            $user_info = $this->user_model->get_by([
+                'user_id' => sha1($input['company_user_id']),
+                'phone' => $input['phone'],
+                'company_status' => 1
+            ]);
+        }
+        elseif ( ! empty($input['tax_id']))
+        { // todo: 因官網尚未同步 APP 以「手機＋帳號＋密碼」登入，故保留原登入方式
+            // 法人
+            $user_info = $this->user_model->get_by([
+                'id_number' => $input['tax_id'],
+                'phone' => $input['phone'],
+                'company_status' => 1
+            ]);
+        }
+        else {
+            // 自然人
+            $user_info = $this->user_model->get_by([
+                'phone' => $input['phone'],
+                'company_status' => 0
+            ]);
+        }
+		if($user_info){
+            //判斷鎖定狀態並解除
+            $this->load->library('user_lib');
+            $unblock_status = $this->user_lib->unblock_user($user_info->id);
+            if($unblock_status){
+                $user_info->block_status = 0;
+            }
+            if($user_info->block_status == 3) {
+                $this->response(array('result' => 'ERROR','error' => SYSTEM_BLOCK_USER ));
+            } elseif ($user_info->block_status == 2) {
+                $this->response(array('result' => 'ERROR','error' => TEMP_BLOCK_USER ));
+            }
+
+			if(sha1($input['password'])==$user_info->password){
+
+				if($user_info->block_status != 0){
+				    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+				}
+
+                $appIdentity = $this->input->request_headers()['User-Agent']??"";
+				if(strpos($appIdentity,"PuHey") !== FALSE) {
+                    if ($investor == 1 && $user_info->app_investor_status == 0) {
+                        $user_info->app_investor_status = 1;
+                        $this->user_model->update($user_info->id, array('app_investor_status' => 1));
+                    }else if ($investor == 0 && $user_info->app_status == 0) {
+                        $user_info->app_status = 1;
+                        $this->user_model->update($user_info->id, array('app_status' => 1));
+                    }
+                }
+
+				$first_time = 0;
+				if($investor==1 && $user_info->investor_status==0){
+					$user_info->investor_status = 1;
+					$this->user_model->update($user_info->id,array('investor_status'=>1));
+					$first_time = 1;
+
+				}else if($investor==0 && $user_info->status==0){
+					$user_info->status = 1;
+					$this->user_model->update($user_info->id,array('status'=>1));
+					$first_time = 1;
+				}
+
+                // 負責人
+                $is_charge = 0;
+                if (isset($input['company_user_id']) || isset($input['tax_id']))
+                {
+                    $this->load->model('user/judicial_person_model');
+                    $charge_person = $this->judicial_person_model->check_valid_charge_person($user_info->id_number, $user_info->id);
+                    if ($charge_person) {
+                        $userData = $this->user_model->get($charge_person->user_id);
+                        $userData ? $is_charge = 1 : '';
+                    }
+
+                    // 針對法人進行法人與負責人的綁定
+                    $this->load->model('user/user_meta_model');
+                    $rs = $this->user_meta_model->get_by(['user_id' => $user_info->id, 'meta_key' => 'company_responsible_user_id']);
+                    if ( ! isset($rs))
+                    {
+                        $responsible_user_info = $this->user_model->get_by([
+                            'phone' => $input['phone'],
+                            'company_status' => 0
+                        ]);
+                        if(isset($responsible_user_info))
+                        {
+                            $company_meta = [
+                                [
+                                    'user_id' => $user_info->id,
+                                    'meta_key' => 'company_responsible_user_id',
+                                    'meta_value' => $responsible_user_info->id,
+                                ]
+                            ];
+
+                            $this->user_meta_model->insert_many($company_meta);
+                        }
+                    }
+                } else {
+                    // TODO: 自然人登入，是否需關聯其法人負責人
+                }
+
+				$token = (object) [
+					'id'			=> $user_info->id,
+					'phone'			=> $user_info->phone,
+					'auth_otp'		=> get_rand_token(),
+					'expiry_time'	=> time() + REQUEST_TOKEN_EXPIRY,
+					'investor'		=> $investor,
+                    'company'       => (isset($input['company_user_id']) || isset($input['tax_id'])) ? 1 : 0,
+					'incharge'		=> $is_charge,
+					'agent'			=> 0,
+				];
+				$request_token 		= AUTHORIZATION::generateUserToken($token);
+				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
+
+				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id,$location,$os);
+
+				if($first_time){
+					$this->load->library('notification_lib');
+					$this->notification_lib->first_login($user_info->id,$investor);
+				}
+				$this->response([
+					'result' => 'SUCCESS',
+					'data' 	 => [
+						'token' 		=> $request_token,
+						'expiry_time'	=> $token->expiry_time,
+						'first_time'	=> $first_time,
+					]
+				]);
+			}else{
+                $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id,$location,$os);
+				$this->response([
+				    'result' => 'ERROR',
+                    'error'  => PASSWORD_ERROR,
+                    'data'   => [
+                        'remind_count' => $remind_count,
+                    ]
+                ]);
+			}
+		}else{
+			$this->insert_login_log($input['phone'],$investor,0,0,$device_id,$location,$os);
+			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
+		}
+	}
+
 	/**
-     * @api {post} /v2/user/login 會員 用戶登入
+     * @api {post} /v2/user/login 舊版會員 用戶登入
 	 * @apiVersion 0.2.0
 	 * @apiName PostUserLogin
      * @apiGroup User
