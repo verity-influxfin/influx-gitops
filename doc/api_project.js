@@ -13,6 +13,7 @@ define({
     "PostUserRegisterphone",
     "PostUserRegister",
     "PostUserLogin",
+    "PostUserLoginNewApp",
     "PostUserBind",
     "PostUserSociallogin",
     "GetUserInfo",
