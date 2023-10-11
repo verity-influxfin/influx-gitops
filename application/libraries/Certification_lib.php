@@ -3730,6 +3730,8 @@ class Certification_lib{
 
                 $remark['memo']['first_count'] = $signing_face_count;
                 if ($signing_face_count == 0) {
+                    // Todo: 2023-10-11 azure 暫時改回 face++
+                    // $rotate = $this->face_rotate($url, $user_id);
                     $rotate = $this->face_rotate($url, $user_id, 'faceplusplus');
                     $remark['memo']['first_rotate'] = $rotate;
                     if ($rotate) {
