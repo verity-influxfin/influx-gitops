@@ -993,8 +993,28 @@ $config['visul_id_des'] = [
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5002_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5002_full.jpg',
         'url' => '',
         'status' => 1
+    ],
+    'LJ3' => [
+        'name' => '信保專案融資',
+        'description' => '企業融資 專案啟動',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TOLJ3' => [
+    'name' => '信保專案融資',
+    'description' => '企業融資 專案啟動',
+    'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5003_thumbnail.jpg',
+    'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5003_full.jpg',
+    'url' => '',
+    'status' => 1
     ],
     'NSL1' => [
         'name' => '3S名校貸',
@@ -1141,6 +1161,58 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供裝潢合約上傳</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'H1' => [
+        'name' => '房產消費貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>安心成家 圓夢最後一哩路</span><br><span style=\'font-size:14px;color:#4a4a4a\'>20~45歲信用良好者有穩定薪資收入</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TOH1' => [
+        'name' => '房產消費貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>安心成家 圓夢最後一哩路</span><br><span style=\'font-size:14px;color:#4a4a4a\'>20~45歲信用良好者有穩定薪資收入</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_house_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_house_full.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'HL1' => [
+        'name' => '購房貸，貸你滿足',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供建物所有權狀、購屋合約上傳</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TOHL1' => [
+        'name' => '購房貸，貸你滿足',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供建物所有權狀、購屋合約上傳</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_house_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_house_full.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'HL2' => [
+        'name' => '房屋裝修款，貸你夢想',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供建物所有權狀、裝潢合約上傳</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'HL3' => [
+        'name' => '添購傢俱家電，貸你溫馨',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>*須提供建物所有權狀、添購傢俱家電憑證</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -2099,8 +2171,8 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['LS1', 'NS1', 'LF1', 'DS2'],
-    'company' => ['DS2', 'LJ2'],
+    'nature' => ['LS1', 'LF1','NS1', 'HL1'],//banner取圖H1沒有在 sub_product_list，所以先放HL1，前端控制跳到H
+    'company' => ['LJ2', 'LJ3'],
 ];
 
 $config['stage_option_cer'] = [2, 8, 9, 10];

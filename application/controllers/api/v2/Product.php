@@ -424,6 +424,8 @@ class Product extends REST_Controller {
                         'visul' => $id,
                         'name' => $visul_id_des['TO'.$id]['name'],
                         'icon' => $visul_id_des['TO'.$id]['icon'],
+                        'bannerThumbnail' => $visul_id_des['TO' . $id]['bannerThumbnail'] ?? '',
+                        'bannerFull' => $visul_id_des['TO' . $id]['bannerFull'] ?? '',
                         'identity' => $listData[$id],
                         'description' => $visul_id_des['TO'.$id]['description'],
                         'url' => $visul_id_des['TO'.$id]['url'],
