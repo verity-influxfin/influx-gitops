@@ -782,7 +782,7 @@ class Credit_lib{
         // 好友數>100且較3個月前增加10%以上
         $data_follow_count = (int) ($data['follow_count'] ?? 0);
         $data_followers_grow_rate_in_3month = (double) ($data['followers_grow_rate_in_3month'] ?? 0);
-        if ($data_follow_count > 100 && $data_followers_grow_rate_in_3month >= 0.1 )
+        if ($this->CI->target_model->chk_exist_by_status(['user_id' => $user_id, 'product_id' => [PRODUCT_ID_HOME_LOAN], 'status' => [TARGET_REPAYMENTING, TARGET_REPAYMENTED]]) && $data_follow_count > 100 && $data_followers_grow_rate_in_3month >= 0.1)
         {
             $social_total_score += (300 * 0.5);
             $social_score_history[] = '好友數>100且較3個月前增加10%以上: 300 * 0.5';
