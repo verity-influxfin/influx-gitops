@@ -592,7 +592,32 @@ class Page extends CI_Controller
         $body = new Google_Service_AnalyticsReporting_GetReportsRequest();
         $body->setReportRequests([$request]);
         $reports = $analytics->reports->batchGet($body);
-        return $reports[0]->getData()->getRows()[0]->getMetrics()[0]->getValues()[0];
+
+        if (empty($reports)) {
+            return 0;
+        }
+        
+        $data = $reports[0]->getData();
+        if (!$data) {
+            return 0;
+        }
+
+        $totals = $data->getTotals();
+        if (empty($totals) || $totals[0]->getValues()[0] < 1) {
+            return 0;
+        }
+    
+        $rows = $data->getRows();
+        if (empty($rows)) {
+            return 0;
+        }
+    
+        $metrics = $rows[0]->getMetrics();
+        if (empty($metrics) || empty($metrics[0]->getValues())) {
+            return 0;
+        }
+
+        return $metrics[0]->getValues()[0];
     }
 
     // 取得 google play 的報表資料
