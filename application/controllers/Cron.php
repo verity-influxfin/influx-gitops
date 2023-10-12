@@ -1174,4 +1174,97 @@ class Cron extends CI_Controller
         die('send_estatement success');
     }
 
+    public function re_verify_signing_face()
+    {
+        // 找到待上架的target
+        $this->load->model('loan/target_model');
+        $targets = $this->db->from('p2p_loan.targets')
+        ->where('status', 2)
+        ->where_in('product_id', [1, 3])
+            ->where('target_no not like', 'SSM%')
+            ->where('target_no not like', 'STS%')
+            ->where('target_no not like', 'STIS%')
+            ->where('target_no not like', 'FGIS%')
+            ->where('DATE(FROM_UNIXTIME(created_at)) >=', '2023-10-07')
+            ->order_by('updated_at', 'asc')
+            ->limit(1)
+            ->get()
+            ->result();
+
+        if (empty($targets)) {
+            die('no target');
+        }
+
+        $this->load->library('certification_lib');
+        $this->load->library('target_lib');
+        $this->load->model('user/user_bankaccount_model');
+
+        // 重新驗證簽署人臉
+        foreach ($targets as $target) {
+
+            //檢查金融卡綁定 NO_BANK_ACCOUNT
+            $bank_account = $this->user_bankaccount_model->get_by([
+                'status'    => 1,
+                'investor'    => 0,
+                //'verify'	=> 0,
+                'user_id'    => $target->user_id
+            ]);
+            if (empty($bank_account)) {
+                // 特殊需求，不要自動退件
+                $param['status'] = 2;
+                $this->target_model->update($target->id, $param);
+            }
+
+            $targetData = json_decode($target->target_data);
+
+            $faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $target->person_image);
+
+            if (!isset($faceDetect_res['error'])) {
+                // veify_signing_face 發生錯誤
+                $param['status'] = $target->status;
+                $this->target_model->update($target->id, $param);
+                continue;
+            }
+
+            if ($faceDetect_res['error'] == '') {
+                // 驗證成功
+
+                $target->status = TARGET_WAITING_VERIFY;
+
+                // 更新驗證log
+                $targetData->autoVerifyLog[] = [
+                    'faceDetect' => $faceDetect_res,
+                    'res' => TARGET_WAITING_BIDDING,
+                    'verify_at' => time()
+                ];
+                $param['target_data'] = json_encode($targetData);
+                $this->target_lib->target_verify_success($target, 0, $param);
+            } else {
+                //驗證失敗
+
+                // 更新驗證log
+                $targetData->autoVerifyLog[] = [
+                    'faceDetect' => $faceDetect_res,
+                    'res' => TARGET_WAITING_SIGNING,
+                    'verify_at' => time()
+                ];
+                $param['target_data'] = json_encode($targetData);
+
+                // 特殊需求，不要自動退件
+                $param['status'] = 2;
+
+                $this->target_model->update($target->id, $param);
+            }
+        }
+
+        $target = $this->target_model->get($targets[0]->id);
+
+        $this->output
+            ->set_status_header(200)
+            ->set_content_type('application/json', 'utf-8')
+            ->set_output(json_encode($target, JSON_UNESCAPED_SLASHES))
+            ->_display();
+
+        die();
+    }
 }
