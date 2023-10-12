@@ -867,6 +867,21 @@ class Credit_lib{
         $param['amount'] = round($param['amount'] * ($instalment_modifier_list[$instalment] ?? 1));
         $this->scoreHistory[] = '借款期數' . $instalment . '期: 額度 * ' . ($instalment_modifier_list[$instalment] ?? 1);
 
+        // 舊客戶加碼
+        $this->CI->load->model('loan/target_model');
+        $has_delayed = $this->CI->target_model->count_by([
+            'user_id' => $param['user_id'],
+            'delay_days>' => 0,
+        ]);
+        if ($has_delayed === 0) {
+            $markup_amount = $this->get_markup_amount($param['user_id']);
+            if (!empty($markup_amount)) {
+                $max_key = max(array_keys($markup_amount));
+                $max_times = $max_key / 100;
+                $param['amount'] = $param['amount'] * $max_times;
+                $this->scoreHistory[] = "舊客戶加碼：<br/>額度 * {$max_times} 倍，因符合其中一條件：" . implode('、', $markup_amount[$max_key]);
+            }
+        }
         // 依各子產品調整最高額度
         $this->CI->load->model('user/user_certification_model');
         switch ($sub_product_id)
