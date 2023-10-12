@@ -1254,9 +1254,7 @@ class Cron extends CI_Controller
                 ];
                 $param['target_data'] = json_encode($targetData);
 
-                // 特殊需求，不要自動退件
-                $param['status'] = 2;
-
+                // update後會更新updated_at，下一次就不會再抓到這筆了
                 $this->target_model->update($target->id, $param);
             }
         }
