@@ -1183,6 +1183,7 @@ class Cron extends CI_Controller
         $targets = $this->db->from('p2p_loan.targets')
         ->where('status', 2)
         ->where_in('product_id', [1, 3])
+            ->where('target_no not like', '%NS%')
             ->where('target_no not like', 'SSM%')
             ->where('target_no not like', 'STS%')
             ->where('target_no not like', 'STIS%')
