@@ -13,6 +13,13 @@ define({
                         {
                             "group": "Parameter",
                             "type": "String",
+                            "optional": true,
+                            "field": "user_id",
+                            "description": "User ID"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
                             "optional": false,
                             "field": "app",
                             "description": "<p>程式名稱-> 0:[APP_INVEST] 1:[APP_BORROW] 2:[APP_SELLER]</p>"
