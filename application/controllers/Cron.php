@@ -1185,7 +1185,7 @@ class Cron extends CI_Controller
             ->where('target_no not like', 'STS%')
             ->where('target_no not like', 'STIS%')
             ->where('target_no not like', 'FGIS%')
-            ->where('DATE(FROM_UNIXTIME(created_at)) >=', '2023-10-07')
+            ->where('DATE(FROM_UNIXTIME(created_at)) >=', '2023-09-01')
             ->order_by('updated_at', 'asc')
             ->limit(1)
             ->get()
