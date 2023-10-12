@@ -3756,7 +3756,6 @@ class Certification_lib{
                     $remark['face'] = [$person_compare[0], $person_compare[1]];
                     // 根據azure的定義，confidence >= 50 face_flag為true
                     $remark['face_flag'] = [$person_compare[0] >= 50, $person_compare[1] >= 50];
-                    return $remark;
 
                     if ($remark['face'][0] < 90 || $remark['face'][1] < 90) {
                         $this->CI->load->library('Faceplusplus_lib');
