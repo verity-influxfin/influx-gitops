@@ -757,7 +757,7 @@ class Credit_lib{
             }
 
             if (isset($data['investigation_credit_rate'])) {
-                $investigation_credit_rate_point = $this->get_investigation_rate_point(intval($data['investigation_credit_rate']));
+                $investigation_credit_rate_point = $this->get_investigation_rate_point(intval($data['investigation_credit_rate']), $data['investigation_has_using_credit_card'] ?? 0);
                 $total += $investigation_credit_rate_point;
                 $this->scoreHistory[] = '聯徵信用卡使用率: ' . $investigation_credit_rate_point;
             }
