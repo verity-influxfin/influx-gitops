@@ -1213,6 +1213,7 @@ class Cron extends CI_Controller
                 // 特殊需求，不要自動退件
                 $param['status'] = 2;
                 $this->target_model->update($target->id, $param);
+                continue;
             }
 
             $targetData = json_decode($target->target_data);
