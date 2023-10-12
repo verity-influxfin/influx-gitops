@@ -2179,8 +2179,14 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['LS1', 'LF1','NS1', 'HL1'],//banner取圖H1沒有在 sub_product_list，所以先放HL1，前端控制跳到H
-    'company' => ['LJ2', 'LJ3'],
+    // Todo: 2023/10/12 目前先用舊的版本，之後要改成新的
+    // 新版
+    // 'nature' => ['LS1', 'LF1', 'NS1', 'HL1'],//banner取圖H1沒有在 sub_product_list，所以先放HL1，前端控制跳到H
+    // 'company' => ['LJ2', 'LJ3'],
+    
+    // 舊版
+    'nature' => ['LS1', 'NS1', 'LF1', 'DS2'],
+    'company' => ['DS2', 'LJ2'],
 ];
 
 $config['stage_option_cer'] = [2, 8, 9, 10];
