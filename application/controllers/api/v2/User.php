@@ -10,7 +10,7 @@ class User extends REST_Controller {
     {
         parent::__construct();
         $method 		= $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','login_new_app', 'sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous', 'check_phone', 'company_list'];
+        $nonAuthMethods = ['register','registerphone','login','login_new_app', 'sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous', 'check_phone'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -4620,23 +4620,30 @@ END:
     public function company_list_get()
     {
         // 用自然人手機＋自然人密碼，取得相同負責人(意即相同手機號碼)的公司清單
-        $input = $this->input->get(NULL, TRUE);
-        if (empty($input['phone']) || empty($input['password']))
-        {
-            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
-        }
+        //     $input = $this->input->get(NULL, TRUE);
+        //     if (empty($input['phone']) || empty($input['password']))
+        //     {
+        //         $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        //     }
 
-        $user_exist = $this->user_model->count_by([
-            'phone' => $input['phone'],
-            'password' => sha1($input['password']),
-            'company_status' => USER_NOT_COMPANY
-        ]);
-        if (empty($user_exist))
-        {
-            $this->response(['result' => 'ERROR', 'error' => USER_NOT_EXIST]);
-        }
+        //     $user_exist = $this->user_model->count_by([
+        //         'phone' => $input['phone'],
+        //         'password' => sha1($input['password']),
+        //         'company_status' => USER_NOT_COMPANY
+        //     ]);
+        //     if (empty($user_exist))
+        //     {
+        //         $this->response(['result' => 'ERROR', 'error' => USER_NOT_EXIST]);
+        //     }
+        //     $this->load->library('user_lib');
+        //     $company_list = $this->user_lib->get_company_list_with_identity_status($input['phone']);
+
+        //     $this->response(['result' => 'SUCCESS', 'data' => ['company_list' => $company_list]]);
+        // }
+
+        // 改成直接使用token取得user_info
         $this->load->library('user_lib');
-        $company_list = $this->user_lib->get_company_list_with_identity_status($input['phone']);
+        $company_list = $this->user_lib->get_company_list_with_identity_status($this->user_info->phone);
 
         $this->response(['result' => 'SUCCESS', 'data' => ['company_list' => $company_list]]);
     }
