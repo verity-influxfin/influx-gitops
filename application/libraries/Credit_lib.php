@@ -962,6 +962,44 @@ class Credit_lib{
 
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
 
+        // 檢查二審額度調整
+        if (isset($approvalExtra)) {
+            $fixed_amount = $approvalExtra->get_fixed_amount();
+            if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE) {
+                goto SKIP_FIXED_AMOUNT;
+            }
+            // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
+            // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
+            $old_credit = $this->CI->credit_model->get_by([
+                'user_id' => $user_id,
+                'product_id' => $product_id,
+                'sub_product_id' => $sub_product_id,
+                'instalment' => $instalment
+            ]);
+
+            if (!empty($old_credit) && isset($old_credit->amount)) {
+                if ($fixed_amount == $old_credit->amount) {
+                    $param['amount'] = $old_credit->amount;
+                    $param['level'] = $old_credit->level;
+                    $param['points'] = $old_credit->points;
+                } elseif ($fixed_amount < $old_credit->amount) {
+                    $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
+                    $param['amount'] = $fixed_amount;
+                    $param['level'] = 9;
+                    $param['points'] = $credit_level_config[$param['level']]['start'];
+                }
+            }
+
+            $tmp_remark = json_decode($param['remark'], TRUE);
+            if (isset($tmp_remark['scoreHistory'])) {
+                $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
+                $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
+                $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
+            }
+            $param['remark'] = json_encode($tmp_remark);
+        }
+        SKIP_FIXED_AMOUNT:
+
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion())
         {
             return $param;
