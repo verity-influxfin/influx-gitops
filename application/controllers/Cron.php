@@ -1210,40 +1210,43 @@ class Cron extends CI_Controller
                 'user_id'    => $target->user_id
             ]);
             if (empty($bank_account)) {
-                // 特殊需求，不要自動退件
+                // 案件狀態更新，特殊需求，不要自動退件
                 $param['status'] = 2;
+                // update後會更新updated_at，下一次就不會再抓到這筆了
                 $this->target_model->update($target->id, $param);
                 continue;
             }
 
-            $targetData = json_decode($target->target_data);
 
             $faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $target->person_image);
-
             if (!isset($faceDetect_res['error'])) {
                 // veify_signing_face 發生錯誤
                 $param['status'] = $target->status;
+                // update後會更新updated_at，下一次就不會再抓到這筆了
                 $this->target_model->update($target->id, $param);
                 continue;
             }
-
             if ($faceDetect_res['error'] == '') {
-                // 驗證成功
-
+                // 驗證成功，案件狀態更新
                 $target->status = TARGET_WAITING_VERIFY;
 
                 // 更新驗證log
+                $targetData = json_decode($target->target_data);
                 $targetData->autoVerifyLog[] = [
                     'faceDetect' => $faceDetect_res,
                     'res' => TARGET_WAITING_BIDDING,
                     'verify_at' => time()
                 ];
                 $param['target_data'] = json_encode($targetData);
+
+                // update後會更新updated_at，下一次就不會再抓到這筆了
                 $this->target_lib->target_verify_success($target, 0, $param);
             } else {
-                //驗證失敗
+                //驗證失敗，案件狀態更新，特殊需求，不要自動退件
+                $param['status'] = 2;
 
                 // 更新驗證log
+                $targetData = json_decode($target->target_data);
                 $targetData->autoVerifyLog[] = [
                     'faceDetect' => $faceDetect_res,
                     'res' => TARGET_WAITING_SIGNING,
