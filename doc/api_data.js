@@ -48238,20 +48238,13 @@ define({
             "group": "User",
             "parameter": {
                 "fields": {
-                    "Parameter": [
+                    "Header": [
                         {
-                            "group": "Parameter",
+                            "group": "Header",
                             "type": "String",
                             "optional": false,
-                            "field": "phone",
-                            "description": "<p>手機號碼</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "password",
-                            "description": "<p>(自然人)密碼</p>"
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
                         }
                     ]
                 }
