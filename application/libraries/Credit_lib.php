@@ -722,9 +722,12 @@ class Credit_lib{
         }
         else
         {
-            $point = 250;
-            $total += $point;
-            $this->scoreHistory[] = "無提交最高學歷得分: {$point}";
+            $school_list = $this->CI->config->item('school_points');
+            $school_points_list = array_column($school_list['school_points'], 'points', 'points');
+            $min_points = min($school_points_list);
+            $normal_coef = 0.3;
+            $total += $min_points * $normal_coef;
+            $this->scoreHistory[] = "無提交最高學歷得分: {$min_points} * {$normal_coef}";
         }
 
         // 財務評分
@@ -754,7 +757,7 @@ class Credit_lib{
             }
 
             if (isset($data['investigation_credit_rate'])) {
-                $investigation_credit_rate_point = $this->get_investigation_rate_point(intval($data['investigation_credit_rate']));
+                $investigation_credit_rate_point = $this->get_investigation_rate_point(intval($data['investigation_credit_rate']), $data['investigation_has_using_credit_card'] ?? 0);
                 $total += $investigation_credit_rate_point;
                 $this->scoreHistory[] = '聯徵信用卡使用率: ' . $investigation_credit_rate_point;
             }
@@ -779,7 +782,7 @@ class Credit_lib{
         // 好友數>100且較3個月前增加10%以上
         $data_follow_count = (int) ($data['follow_count'] ?? 0);
         $data_followers_grow_rate_in_3month = (double) ($data['followers_grow_rate_in_3month'] ?? 0);
-        if ($data_follow_count > 100 && $data_followers_grow_rate_in_3month >= 0.1 )
+        if ($this->CI->target_model->chk_exist_by_status(['user_id' => $user_id, 'product_id' => [PRODUCT_ID_HOME_LOAN], 'status' => [TARGET_REPAYMENTING, TARGET_REPAYMENTED]]) && $data_follow_count > 100 && $data_followers_grow_rate_in_3month >= 0.1)
         {
             $social_total_score += (300 * 0.5);
             $social_score_history[] = '好友數>100且較3個月前增加10%以上: 300 * 0.5';
@@ -864,6 +867,21 @@ class Credit_lib{
         $param['amount'] = round($param['amount'] * ($instalment_modifier_list[$instalment] ?? 1));
         $this->scoreHistory[] = '借款期數' . $instalment . '期: 額度 * ' . ($instalment_modifier_list[$instalment] ?? 1);
 
+        // 舊客戶加碼
+        $this->CI->load->model('loan/target_model');
+        $has_delayed = $this->CI->target_model->count_by([
+            'user_id' => $param['user_id'],
+            'delay_days>' => 0,
+        ]);
+        if ($has_delayed === 0) {
+            $markup_amount = $this->get_markup_amount($param['user_id']);
+            if (!empty($markup_amount)) {
+                $max_key = max(array_keys($markup_amount));
+                $max_times = $max_key / 100;
+                $param['amount'] = $param['amount'] * $max_times;
+                $this->scoreHistory[] = "舊客戶加碼：<br/>額度 * {$max_times} 倍，因符合其中一條件：" . implode('、', $markup_amount[$max_key]);
+            }
+        }
         // 依各子產品調整最高額度
         $this->CI->load->model('user/user_certification_model');
         switch ($sub_product_id)
@@ -943,6 +961,44 @@ class Credit_lib{
         $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
+
+        // 檢查二審額度調整
+        if (isset($approvalExtra)) {
+            $fixed_amount = $approvalExtra->get_fixed_amount();
+            if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE) {
+                goto SKIP_FIXED_AMOUNT;
+            }
+            // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
+            // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
+            $old_credit = $this->CI->credit_model->get_by([
+                'user_id' => $user_id,
+                'product_id' => $product_id,
+                'sub_product_id' => $sub_product_id,
+                'instalment' => $instalment
+            ]);
+
+            if (!empty($old_credit) && isset($old_credit->amount)) {
+                if ($fixed_amount == $old_credit->amount) {
+                    $param['amount'] = $old_credit->amount;
+                    $param['level'] = $old_credit->level;
+                    $param['points'] = $old_credit->points;
+                } elseif ($fixed_amount < $old_credit->amount) {
+                    $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
+                    $param['amount'] = $fixed_amount;
+                    $param['level'] = 9;
+                    $param['points'] = $credit_level_config[$param['level']]['start'];
+                }
+            }
+
+            $tmp_remark = json_decode($param['remark'], TRUE);
+            if (isset($tmp_remark['scoreHistory'])) {
+                $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
+                $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
+                $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
+            }
+            $param['remark'] = json_encode($tmp_remark);
+        }
+        SKIP_FIXED_AMOUNT:
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion())
         {
