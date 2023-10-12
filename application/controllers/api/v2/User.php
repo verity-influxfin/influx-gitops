@@ -10,7 +10,7 @@ class User extends REST_Controller {
     {
         parent::__construct();
         $method 		= $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','login_new_app', 'sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous', 'check_phone', 'company_list'];
+        $nonAuthMethods = ['register','registerphone','login','login_new_app', 'sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous', 'check_phone'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
