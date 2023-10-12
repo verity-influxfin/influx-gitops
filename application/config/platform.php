@@ -993,8 +993,28 @@ $config['visul_id_des'] = [
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5002_thumbnail.jpg',
+        'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5002_full.jpg',
         'url' => '',
         'status' => 1
+    ],
+    'LJ3' => [
+        'name' => '信保專案融資',
+        'description' => '企業融資 專案啟動',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TOLJ3' => [
+    'name' => '信保專案融資',
+    'description' => '企業融資 專案啟動',
+    'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    'bannerThumbnail' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5003_thumbnail.jpg',
+    'bannerFull' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_1002_5003_full.jpg',
+    'url' => '',
+    'status' => 1
     ],
     'NSL1' => [
         'name' => '3S名校貸',
