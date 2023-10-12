@@ -1178,16 +1178,19 @@ class Cron extends CI_Controller
     {
         // 找到待上架的target
         $this->load->model('loan/target_model');
+        
+        $batch = 1;
         $targets = $this->db->from('p2p_loan.targets')
         ->where('status', 2)
         ->where_in('product_id', [1, 3])
+            ->where('target_no not like', '%NS%')
             ->where('target_no not like', 'SSM%')
             ->where('target_no not like', 'STS%')
             ->where('target_no not like', 'STIS%')
             ->where('target_no not like', 'FGIS%')
             ->where('DATE(FROM_UNIXTIME(created_at)) >=', '2023-09-01')
             ->order_by('updated_at', 'asc')
-            ->limit(1)
+            ->limit($batch)
             ->get()
             ->result();
 
