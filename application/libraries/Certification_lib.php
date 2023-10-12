@@ -1784,16 +1784,23 @@ class Certification_lib{
 				$image_data = ob_get_contents();
 				ob_end_clean();
 
-				if($system=='azure'){
-				    $this->CI->load->library('Azure_lib');
-                    $count  = count($this->CI->azure_lib->detect($url,$user_id));
-                }
-				else{
-                    $base64 = base64_encode($image_data);
-                    $this->CI->load->library('faceplusplus_lib');
-                    $token = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,$user_id,$cer_id);
-                    $count = is_array($token) ? count($token) : 0;
-                }
+                // Todo: 2023-10-11 azure 暫時改回 face++
+                // if($system=='azure'){
+                //     $this->CI->load->library('Azure_lib');
+                //     $count  = count($this->CI->azure_lib->detect($url,$user_id));
+                // }
+                // else{
+                //     $base64 = base64_encode($image_data);
+                //     $this->CI->load->library('faceplusplus_lib');
+                //     $token = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,$user_id,$cer_id);
+                //     $count = is_array($token) ? count($token) : 0;
+                // }
+
+                $base64 = base64_encode($image_data);
+                $this->CI->load->library('faceplusplus_lib');
+                $token = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64, $user_id, $cer_id);
+                $count = is_array($token) ? count($token) : 0;
+                
                 if($count){
                     $this->CI->load->library('s3_upload');
                     $url = $this->CI->s3_upload->image_by_data($image_data, basename($url), $user_id, 'id_card', 'rotate');
@@ -3443,13 +3450,26 @@ class Certification_lib{
                 // && (isset($diploma_cer->content['school']) && !preg_match('/\(自填\)/', $diploma_cer->content['school']))
             ) {
                 $cer_id = $identity_cer->id;
-                $this->CI->load->library('Azure_lib');
-                $identity_cer_face = $this->CI->azure_lib->detect($identity_cer->content['person_image'], $user_id, $cer_id);
-                $signing_face = $this->CI->azure_lib->detect($url, $user_id, $cer_id);
+                // Todo: 2023-10-11 azure 暫時改回 face++
+                // Azure
+                // $this->CI->load->library('Azure_lib');
+                // $identity_cer_face = $this->CI->azure_lib->detect($identity_cer->content['person_image'], $user_id, $cer_id);
+                // $signing_face = $this->CI->azure_lib->detect($url, $user_id, $cer_id);
+                // $signing_face_count = count($signing_face);
+
+                // face++
+                $this->CI->load->library('faceplusplus_lib');
+
+                $identity_cer_face = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image']);
+
+                $signing_face = $this->CI->faceplusplus_lib->get_face_token($url);
                 $signing_face_count = count($signing_face);
+
                 $remark['memo']['first_count'] = $signing_face_count;
                 if ($signing_face_count == 0) {
-                    $rotate = $this->face_rotate($url, $user_id);
+                    // Todo: 2023-10-11 azure 暫時改回 face++
+                    // $rotate = $this->face_rotate($url, $user_id);
+                    $rotate = $this->face_rotate($url, $user_id, 'faceplusplus');
                     $remark['memo']['first_rotate'] = $rotate;
                     if ($rotate) {
                         $identity_cer->content['person_image'] = $rotate['url'];
@@ -3457,10 +3477,24 @@ class Certification_lib{
                     }
                 }
                 if ($signing_face_count >= 2 && $signing_face_count <= 3) {
-                    $person_compare[] = $this->CI->azure_lib->verify($identity_cer_face[0]['faceId'], $signing_face[0]['faceId'], $user_id, $cer_id);
-                    $person_compare[] = $this->CI->azure_lib->verify($identity_cer_face[1]['faceId'], $signing_face[1]['faceId'], $user_id, $cer_id);
-                    $remark['face'] = [$person_compare[0]['confidence'] * 100, $person_compare[1]['confidence'] * 100];
-                    $remark['face_flag'] = [$person_compare[0]['isIdentical'], $person_compare[1]['isIdentical']];
+
+                    // Todo: 2023-10-11 azure 暫時改回 face++
+                    // Azure
+                    // $person_compare[] = $this->CI->azure_lib->verify($identity_cer_face[0]['faceId'], $signing_face[0]['faceId'], $user_id, $cer_id);
+                    // $person_compare[] = $this->CI->azure_lib->verify($identity_cer_face[1]['faceId'], $signing_face[1]['faceId'], $user_id, $cer_id);
+                    // confidence 0.0~1.0
+                    // $remark['face'] = [$person_compare[0]['confidence'] * 100, $person_compare[1]['confidence'] * 100];
+                    // isIdentical true/false, https://learn.microsoft.com/en-us/rest/api/faceapi/face/verify-face-to-face?tabs=HTTP
+                    // $remark['face_flag'] = [$person_compare[0]['isIdentical'], $person_compare[1]['isIdentical']];
+
+                    // face++
+                    $person_compare[] = $this->CI->faceplusplus_lib->token_compare($identity_cer_face[0][0], $signing_face[0][0], $user_id, $cer_id);
+                    $person_compare[] = $this->CI->faceplusplus_lib->token_compare($identity_cer_face[1][0], $signing_face[1][0], $user_id, $cer_id);
+                    //confidence 0.0~100.0
+                    $remark['face'] = [$person_compare[0], $person_compare[1]];
+                    // 根據azure的定義，confidence >= 50 face_flag為true
+                    $remark['face_flag'] = [$person_compare[0] >= 50, $person_compare[1] >= 50];
+
                     if ($remark['face'][0] < 90 || $remark['face'][1] < 90) {
                         $this->CI->load->library('Faceplusplus_lib');
                         $identity_cer_token = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image'], $user_id, $cer_id);
