@@ -164,7 +164,9 @@ class Gcis_lib
             throw new Exception("商業司API回應異常",RESPONSE_ERROR);
         if(!$this->business_is_incorporation($rs['Company_Status_Desc']))
             throw new Exception("公司不是正常設立狀態",NOT_INCORPORATION);
-        return $name === $rs['Responsible_Name'];
+
+        // 因為部分公司負責人名稱會包含英文，故改用 str_contains
+        return str_contains($rs['Responsible_Name'], $name);
     }
 
     /**
