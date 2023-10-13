@@ -2566,6 +2566,30 @@ class Certification extends REST_Controller {
                 'status' => CERTIFICATION_STATUS_NOT_COMPLETED,
             ]);
             if (isset($input['save']) && $input['save']) {
+                $allowed_keys = [
+                    'business_image', 'license_image',
+                    'financial_image', 'auxiliary_image',
+                    'passbook_cover_image', 'passbook_image',
+                    'passbook_image', 'income_prove_image'
+                ];
+
+                $image_id_urls_map = [];
+
+                foreach ($allowed_keys as $key) {
+                    if (!isset($input[$key]) || empty($input[$key])) {
+                        continue;
+                    }
+                    $image_ids = explode(',', $input[$key]);
+                    $logs = $this->log_image_model->get_many_by([
+                        'id'        => $image_ids,
+                        'user_id'    => $user_id,
+                    ]);
+                    foreach ($logs as $log) {
+                        $image_id_urls_map[$log->id] = $log->url;
+                    }
+                }
+                $input['image_id_urls'] = $image_id_urls_map;
+
                 $param = [
                     'user_id' => $user_id,
                     'certification_id' => $certification_id,
