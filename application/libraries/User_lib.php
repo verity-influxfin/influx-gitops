@@ -1317,4 +1317,142 @@ class User_lib {
 
         return $data;
     }
+
+    /**
+     * 檢查是否有相同統編之使用者存在
+     * @param $tax_id : 統編 (users.id_number)
+     * @return array
+     */
+    public function get_exist_company_user_id($tax_id): array
+    {
+        $this->CI->load->model('user/user_model');
+        $result = $this->CI->user_model->get_exit_judicial_person($tax_id);
+        return ['id' => $result['user_id']];
+    }
+
+    /**
+     * 以手機號碼取得相同負責人之公司資訊
+     * @param $phone : 手機號碼 (users.phone)
+     * @return array
+     */
+    public function get_all_certificated_companies_by_phone($phone): array
+    {
+        $companies_info = $this->CI->user_model->as_array()->get_many_by([
+            'phone' => $phone,
+            'company_status' => USER_IS_COMPANY,
+            'status' => 1
+        ]);
+
+        if (empty($companies_info))
+        {
+            return [];
+        }
+
+        $result = [];
+        foreach ($companies_info as $single_company)
+        {
+            $result[] = [
+                'id' => $single_company['id'],
+                'name' => $single_company['name'], // 公司名稱
+                'tax' => $single_company['id_number'], // 統一編號
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * 檢查使用者帳號的有效性
+     * @param $user_id : 使用者帳號
+     * @param $tax_id : 統一編號
+     * @throws Exception
+     */
+    public function check_user_id_validation($user_id, $tax_id)
+    {
+        // 檢查帳號格式
+        $this->check_user_id_format($user_id);
+        // 檢查帳號是否存在
+        $this->check_distinct_user_id($user_id, $tax_id);
+    }
+
+    /**
+     * 檢查使用者帳號格式
+     * @param $user_id : 使用者帳號
+     * @return void
+     * @throws Exception
+     */
+    public function check_user_id_format($user_id)
+    {
+        if ( ! preg_match("/(?=.{9})(?=.*[A-Z])(?=.*[a-z])(?=.*\d)/", $user_id))
+        {
+            throw new Exception('帳號格式有誤', USER_ID_FORMAT_ERROR);
+        }
+    }
+
+    /**
+     * 檢查使用者帳號是否存在
+     * @param $user_id : 使用者帳號
+     * @param $tax_id : 統一編號
+     * @return void
+     * @throws Exception
+     */
+    public function check_distinct_user_id($user_id, $tax_id)
+    {
+        $this->CI->load->model('user/user_model');
+        $company_user_id_exist = $this->CI->user_model->check_user_id_exist($user_id, $tax_id);
+        if ( ! empty($company_user_id_exist))
+        {
+            throw new Exception('公司帳號已存在，請使用其他公司帳號', USER_ID_EXIST);
+        }
+    }
+
+    /**
+     * 檢查密碼
+     * @param $password : 密碼
+     * @return void
+     * @throws Exception
+     */
+    public function check_password($password)
+    {
+        if (strlen($password) < PASSWORD_LENGTH || strlen($password) > PASSWORD_LENGTH_MAX)
+        {
+            throw new Exception('密碼長度有誤', PASSWORD_LENGTH_ERROR);
+        }
+    }
+
+    /**
+     * 檢查統一編號
+     * @param $tax_id : 統一編號
+     * @return void
+     * @throws Exception
+     */
+    public function check_tax_id($tax_id)
+    {
+        // 檢查統編
+        if (strlen($tax_id) != 8)
+        {
+            throw new Exception('統編長度有誤', TAX_ID_LENGTH_ERROR);
+        }
+    }
+
+    // 取得相同負責人的公司列表，及其負責人實名的情況
+    // 0:未提交 1:已通過 2:審核中
+    public function get_company_list_with_identity_status($phone)
+    {
+        $this->CI->load->model('user/user_model');
+        $result = $this->CI->user_model->get_company_list_with_identity_status($phone);
+        array_walk($result, function (&$element) {
+            switch ($element['status'])
+            {
+                case NULL:
+                    $element['status'] = 0;
+                    break;
+                case CERTIFICATION_STATUS_SUCCEED:
+                    $element['status'] = 1;
+                    break;
+                default:
+                    $element['status'] = 2;
+            }
+        });
+        return $result;
+    }
 }
