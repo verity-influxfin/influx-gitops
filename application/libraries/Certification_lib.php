@@ -742,7 +742,7 @@ class Certification_lib{
      * Use 戶役政 API to verify ID card info.
      * @param $user_certification_id : id of user_certification with certification_id == CERTIFICATION_IDENTITY
      * @param $identity_content : array version of the corresponding user_certification.content
-     * @return [$risVerified, $risVerificationFailed] : [TRUE, TRUE] means [呼叫戶役政 API 成功, 身分證資料有誤]
+     * @return [$risVerified, $risVerificationFailed, $param['checkIdCardApplyFormat']] : [TRUE, TRUE, Message] means [呼叫戶役政 API 成功, 身分證資料有誤, 戶役政回應的內容]
      */
     public function verify_id_card_info($user_certification_id, array &$identity_content, &$error_message, $ocr_info=[]): array
     {
@@ -832,20 +832,17 @@ class Certification_lib{
                 $param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
 
                 $risVerified = TRUE;
-                if (in_array($result['response']['response']['rowData']['responseData']['checkIdCardApply'], [2,3,4])) {
+                if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] != 1) {
+                    $error_message .= "{$msg_prefix}[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
                     $risVerificationFailed = TRUE;
                 } else {
-                    if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] != 1)
-                    {
-                        $error_message .= "{$msg_prefix}[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
-                    }
                     $risVerificationFailed = FALSE;
                 }
             }
             $identity_content['id_card_api'] = $result['response'];
         }
         $this->CI->log_integration_model->insert($param);
-        return [$risVerified, $risVerificationFailed];
+        return [$risVerified, $risVerificationFailed, $param['checkIdCardApplyFormat']];
     }
 
     // 實名認證
