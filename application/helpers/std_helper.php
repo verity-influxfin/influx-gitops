@@ -556,7 +556,8 @@ function curl_post_json(string $url, array $data = array(), array $header = arra
 	function strip_ROC_date_word($date) {
 		preg_match('/民?國?([0-9]{2,3})(年|-|\/)(0?[1-9]|1[012])(月|-|\/)(0?[1-9]|[12][0-9]|3[01])(日?)$/u', $date, $regex_result);
 		if(!empty($regex_result)) {
-			$date = $regex_result[1].$regex_result[3].$regex_result[5];
+            // 2023/10/13 民國年去「0」，如：0851013 => 851013，1010103 => 1010103
+			$date = intval($regex_result[1]).$regex_result[3].$regex_result[5];
 		}
 		return $date;
 	}
