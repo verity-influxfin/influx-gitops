@@ -18,13 +18,20 @@ class Qrcode_lib
      * 取得 promote_code 的合約格式對應內容
      * @param string $type_name
      * @param string $name
+     * @param string $id_number
      * @param string $address
      * @param array $settings
      * @param string $contract_date
      * @return array
      */
-    public function get_contract_format_content(string $type_name, string $name = '', string $address = '', array $settings = [], string $contract_date = ''): array
+    public function get_contract_format_content(string $type_name, string $name = '', string $id_number = '', string $address = '', array $settings = [], string $contract_date = ''): array
     {
+        $regexResult = [];
+        $time = time();
+        $contract_year = (string)(date('Y', $time) - 1911);
+        $contract_month = (string)date('m', $time);
+        $contract_day = (string)date('d', $time);
+
         if ( ! empty($contract_date))
         {
             preg_match('/(\d+)\-(\d+)\-(\d+)/', $contract_date, $regexResult);
@@ -36,17 +43,17 @@ class Qrcode_lib
             }
         }
 
-        if (empty($contract_date))
-        {
-            $time = time();
-            $contract_year = date('Y', $time) - 1911;
-            $contract_month = date('m', $time);
-            $contract_day = date('d', $time);
-        }
+        $next_year = (string)((int)$contract_year+1);
+
 
         switch ($type_name)
         {
             case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
                 return [$name, $contract_year, $contract_month, $contract_day,
                     $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
                     $settings['reward']['product']['small_enterprise']['amount'] ?? 0,
@@ -55,26 +62,274 @@ class Qrcode_lib
                 break;
             case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
                 return [$name, $contract_year, $contract_month, $contract_day,
-                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['investor_percent'] ?? 0,
-                    $settings['reward']['collaboration_person']['amount'] ?? 0, $settings['reward']['collaboration_enterprise']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['student']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0,
                     $name, $name, $address,
                     $contract_year, $contract_month, $contract_day];
                 break;
+            case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+                break;
+            case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise2']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['amount'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+                break;
+            case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0, $settings['reward']['product']['small_enterprise2']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['borrower_percent'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+                break;
+            case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise2']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['amount'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0, $settings['reward']['product']['small_enterprise2']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['borrower_percent'] ?? 0,
+                    $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise2']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['amount'] ?? 0,
+                    $name, $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0, $settings['reward']['product']['small_enterprise2']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['borrower_percent'] ?? 0,
+                    $name, $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['amount'] ?? 0, $settings['reward']['product']['salary_man']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['amount'] ?? 0, $settings['reward']['product']['small_enterprise2']['amount'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['amount'] ?? 0,
+                    $name, $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
+            case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+                return [$name, $contract_year, $contract_month, $contract_day, $next_year, $contract_month, $contract_day,
+                    $settings['reward']['full_member']['amount'] ?? 0,  $settings['reward']['download']['amount'] ?? 0,
+                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise']['borrower_percent'] ?? 0, $settings['reward']['product']['small_enterprise2']['borrower_percent'] ?? 0,
+                    $settings['reward']['product']['small_enterprise3']['borrower_percent'] ?? 0,
+                    $name, $name, $id_number, $address,
+                    $contract_year, $contract_month, $contract_day];
         }
         return [];
+    }
+
+    /**
+     * 更新 QRCode 合約值
+     * @param $user_qrcode
+     * @param array $new_contract_data
+     * @return false|mixed
+     */
+    public function get_finish_contract_cloze($user_qrcode, array $new_contract_data)
+    {
+        $this->CI->load->model('loan/contract_model');
+        $contract_info = $this->CI->contract_model->as_array()->get($user_qrcode->contract_id);
+
+        $contract_content = json_decode($contract_info['content'], TRUE);
+        if (json_last_error() !== JSON_ERROR_NONE)
+        {
+            return false;
+        }
+
+        $contract_type = $this->get_contract_type_by_alias($user_qrcode->alias);
+
+        switch ($contract_type)
+        {
+            case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[7] = $contract_content[8] = $new_contract_data['name'];
+                empty($new_contract_data['address']) ?: $contract_content[9] = $new_contract_data['address'];
+                break;
+            case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[8] = $contract_content[9] = $new_contract_data['name'];
+                empty($new_contract_data['address']) ?: $contract_content[10] = $new_contract_data['address'];
+                break;
+            case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[12] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[13] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[14] = $new_contract_data['address'];
+                break;
+            case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[15] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[16] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[17] = $new_contract_data['address'];
+                break;
+            case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[14] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[15] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[16] = $new_contract_data['address'];
+                break;
+            case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[12] = $contract_content[13] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[14] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[15] = $new_contract_data['address'];
+                break;
+            case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+                empty($new_contract_data['name']) ?: $contract_content[0] = $contract_content[14] = $contract_content[15] = $new_contract_data['name'];
+                empty($new_contract_data['id_number']) ?: $contract_content[16] = $new_contract_data['id_number'];
+                empty($new_contract_data['address']) ?: $contract_content[17] = $new_contract_data['address'];
+                break;
+        }
+        return $contract_content;
+    }
+
+    /**
+     * 取得 promote_code 的合約格式
+     * @param string $type_name
+     * @param array $content
+     * @param string $format_symbol
+     * @return array
+     */
+    public function get_contract_format(string $type_name, array $content=[], string $format_symbol=''): array
+    {
+
+        $time = time();
+        $contract_year = (string)(date('Y', $time) - 1911);
+        $contract_month = (string)date('m', $time);
+        $contract_day = (string)date('d', $time);
+        $next_year = (string)((int)$contract_year+1);
+        $content_list = $content;
+
+        switch ($type_name)
+        {
+            case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+                $input_start = 4;
+                $input_end = 6;
+                $content_list[4] = 'student_reward_amount';
+                $content_list[5] = 'salary_man_reward_amount';
+                $content_list[6] = 'small_enterprise_reward_amount';
+                break;
+            case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
+                $input_start = 4;
+                $input_end = 7;
+                $content_list[4] = 'student_reward_amount';
+                $content_list[5] = 'student_platform_fee';
+                $content_list[6] = 'small_enterprise_reward_amount';
+                $content_list[7] = 'small_enterprise_platform_fee';
+                break;
+            case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 11;
+                $content_list[7] = 'full_member';
+                $content_list[8] = 'download';
+                $content_list[9] = 'student_reward_amount';
+                $content_list[10] = 'salary_man_reward_amount';
+                $content_list[11] = 'small_enterprise_reward_amount';
+                break;
+            case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 11;
+                $content_list[7] = 'student_reward_amount';
+                $content_list[8] = 'salary_man_reward_amount';
+                $content_list[9] = 'small_enterprise_reward_amount';
+                $content_list[10] = 'small_enterprise2_reward_amount';
+                $content_list[11] = 'small_enterprise3_reward_amount';
+                break;
+            case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 11;
+                $content_list[7] = 'student_platform_fee';
+                $content_list[8] = 'salary_man_platform_fee';
+                $content_list[9] = 'small_enterprise_platform_fee';
+                $content_list[10] = 'small_enterprise2_platform_fee';
+                $content_list[11] = 'small_enterprise3_platform_fee';
+                break;
+            case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 13;
+                $content_list[7] = 'full_member';
+                $content_list[8] = 'download';
+                $content_list[9] = 'student_reward_amount';
+                $content_list[10] = 'salary_man_reward_amount';
+                $content_list[11] = 'small_enterprise_reward_amount';
+                $content_list[12] = 'small_enterprise2_reward_amount';
+                $content_list[13] = 'small_enterprise3_reward_amount';
+                break;
+            case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+                $input_start = 7;
+                $input_end = 13;
+                $content_list[7] = 'full_member';
+                $content_list[8] = 'download';
+                $content_list[9] = 'student_platform_fee';
+                $content_list[10] = 'salary_man_platform_fee';
+                $content_list[11] = 'small_enterprise_platform_fee';
+                $content_list[12] = 'small_enterprise2_platform_fee';
+                $content_list[13] = 'small_enterprise3_platform_fee';
+                break;
+            default:
+                $input_start = 0;
+                $input_end = 0;
+                break;
+        }
+
+        if ( ! empty($format_symbol))
+        {
+            for ($i = $input_start; $i <= $input_end; $i++)
+            {
+                $content_list[$i] = $format_symbol . $content_list[$i] . $format_symbol;
+            }
+        }
+        return ['content' => $content_list, 'input_start' => $input_start, 'input_end' => $input_end];
     }
 
     public function get_contract_type_by_alias($alias): string
     {
         $this->CI->load->model('user/qrcode_setting_model');
-        $contract_type_name = '';
-        if ($alias == $this->CI->qrcode_setting_model->generalCaseAliasName)
+        switch ($alias)
         {
-            $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
-        }
-        else if ($alias == $this->CI->qrcode_setting_model->appointedCaseAliasName)
-        {
-            $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
+            case $this->CI->qrcode_setting_model->generalCaseAliasName:
+                $contract_type_name = PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME;
+                break;
+            case $this->CI->qrcode_setting_model->appointedCaseAliasName:
+                $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
+                break;
+            default:
+                $contract_type_name = $alias;
+                break;
         }
         return $contract_type_name;
     }
@@ -361,10 +616,27 @@ class Qrcode_lib
         return $this->CI->user_estatement_model->insert_many($param);
     }
 
+    /**
+     * 依 QRCode 設定的 alias 判斷是否為法人之申請
+     * @param string $alias : qrcode_setting.alias
+     * @return bool
+     */
     public function is_company(string $alias): bool
     {
         $this->CI->load->model('user/qrcode_setting_model');
-        return $alias == $this->CI->qrcode_setting_model->appointedCaseAliasName;
+        switch ($alias)
+        {
+            case $this->CI->qrcode_setting_model->generalCaseAliasName:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+                return FALSE;
+            case $this->CI->qrcode_setting_model->appointedCaseAliasName:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+                return TRUE;
+        }
+        return FALSE;
     }
 
     /**
@@ -447,6 +719,10 @@ class Qrcode_lib
 
             $subcode_rs = $this->CI->user_subcode_model->update_by(['id' => $subcode->id], $subcode_param);
             $qrcode_rs = $this->CI->user_qrcode_model->update_by(['id' => $subcode->user_qrcode_id], $qrcode_param);
+            // 寫 log
+            $this->CI->load->model('log/log_user_qrcode_model');
+            $this->CI->log_user_qrcode_model->insert_log(array_merge($qrcode_param, ['user_qrcode_id' => $subcode->user_qrcode_id]));
+
             if ( ! $subcode_rs || ! $qrcode_rs ||
                 $this->CI->user_qrcode_model->trans_status() === FALSE ||
                 $this->CI->user_subcode_model->trans_status() === FALSE)
@@ -529,7 +805,7 @@ class Qrcode_lib
             $main_qrcode_ids[] = $main_qrcode['info']['id'];
         }
         $this->CI->load->model('user/user_subcode_model');
-        $subcode_list = $this->CI->user_subcode_model->get_subcode_list($main_qrcode_ids);
+        $subcode_list = $this->CI->user_subcode_model->get_subcode_list($main_qrcode_ids, ['us.status' => PROMOTE_SUBCODE_STATUS_AVAILABLE], ['status !=' => PROMOTE_STATUS_DISABLED]);
         $subcode_list = array_column($subcode_list, NULL, 'user_qrcode_id');
 
         $this->CI->load->library('qrcode_lib');
@@ -537,7 +813,8 @@ class Qrcode_lib
 
         if ( ! empty($subcode_list))
         {
-            $where = ['id' => array_values($user_qrcode_id_list)];
+            $where = ['id' => array_values($user_qrcode_id_list),
+                'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY, PROMOTE_STATUS_CAN_SIGN_CONTRACT]];
             $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where,
                 $start_date, $end_date, $limit, $offset, $filter_delayed);
         }
@@ -709,9 +986,15 @@ class Qrcode_lib
 
         $where = ['user_id' => $master_user_id, 'status' => [PROMOTE_STATUS_AVAILABLE],
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
-        
-        // $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
-        list($_subcode_reward_list, $_subcode_list, $_main_qrcode_reward_list) = $this->CI->qrcode_lib->get_promoted_reward_info($where, '', '', 0, 0, FALSE, TRUE, TRUE);
+
+//        $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
+        $promoted_reward_info = $this->CI->qrcode_lib->get_promoted_reward_info($where, '', '', 0, 0, FALSE, TRUE, TRUE);
+        if (empty($promoted_reward_info))
+        {
+            throw new \Exception('該推薦碼不存在', PROMOTE_CODE_NOT_EXIST);
+        }
+
+        list($_subcode_reward_list, $_subcode_list, $_main_qrcode_reward_list) = $promoted_reward_info;
         foreach ($_subcode_reward_list as $_subcode_reward) {
             $_user_qrcode_id = $_subcode_reward['info']['id'];
             $_main_qrcode_id = $_subcode_list[$_user_qrcode_id]['master_user_qrcode_id'];
@@ -768,18 +1051,18 @@ class Qrcode_lib
 
         $where = [];
         $where['user_id'] = $master_user_id;
-        $where['status'] = [PROMOTE_STATUS_AVAILABLE];
+        $where['status'] = [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY, PROMOTE_STATUS_CAN_SIGN_CONTRACT];
         $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
         // $user_qrcode_list = $this->CI->qrcode_lib->get_promoted_reward_info($where, $start_time ?? '', $end_time ?? '', 0, 0, FALSE, FALSE);
         $user_qrcode_list = array_merge($_main_qrcode_reward_list, $_subcode_reward_list);
 
-        $user_subcode_list = $this->CI->qrcode_lib->get_subcode_list($master_user_id, [], ['status' => PROMOTE_STATUS_AVAILABLE]);
+        $user_subcode_list = $this->get_subcode_list($master_user_id, ['us.status' => PROMOTE_SUBCODE_STATUS_AVAILABLE], ['status !=' => PROMOTE_STATUS_DISABLED]);
         $user_subcode_list = array_column($user_subcode_list, NULL, 'user_qrcode_id');
 
         foreach ($user_qrcode_list as $user_qrcode)
         {
-            if ( ! isset($user_qrcode) || empty($user_qrcode) ||
+            if (empty($user_qrcode) ||
                 ! isset($user_qrcode['info']['subcode_flag']) || $user_qrcode['info']['subcode_flag'] == IS_NOT_PROMOTE_SUBCODE)
             {
                 continue;
@@ -814,7 +1097,7 @@ class Qrcode_lib
             ];
             foreach (array_keys($this->CI->user_lib->rewardCategories) as $category)
             {
-                if ( ! isset($user_qrcode[$category]) || empty($user_qrcode[$category]))
+                if (empty($user_qrcode[$category]))
                 {
                     continue;
                 }
@@ -822,6 +1105,10 @@ class Qrcode_lib
                 foreach ($user_qrcode[$category] as $value)
                 {
                     $formattedMonth = date("Y-m", strtotime($value['loan_date']));
+                    if(!isset($list[$formattedMonth])){
+                        continue;
+                    }
+
                     $list[$formattedMonth][$user_qrcode_id][$category]['count'] += 1;
                     $list[$formattedMonth][$user_qrcode_id]['list'][] = [
                         'loan_date' => $value['loan_date'],
@@ -838,6 +1125,10 @@ class Qrcode_lib
                 foreach ($collaboration_list as $value)
                 {
                     $formattedMonth = date("Y-m", strtotime($value['loan_time']));
+                    if(!isset($list[$formattedMonth])){
+                        continue;
+                    }
+
                     $list[$formattedMonth][$user_qrcode_id]['collaboration'][$collaborator_id]['count'] += 1;
                 }
             }
@@ -846,6 +1137,10 @@ class Qrcode_lib
             foreach ($user_qrcode['fullMember'] as $value)
             {
                 $formattedMonth = date("Y-m", strtotime($value['created_at']));
+                if(!isset($list[$formattedMonth])){
+                    continue;
+                }
+
                 $list[$formattedMonth][$user_qrcode_id]['full_member_count'] += 1;
             }
 
@@ -853,6 +1148,10 @@ class Qrcode_lib
             foreach ($user_qrcode['registered'] as $value)
             {
                 $formattedMonth = date('Y-m', strtotime($value['created_at']));
+                if(!isset($list[$formattedMonth])){
+                    continue;
+                }
+
                 $list[$formattedMonth][$user_qrcode_id]['registered_count'] += 1;
             }
         }
@@ -942,5 +1241,253 @@ class Qrcode_lib
         }
 
         return array_replace($main_qrcode_reward_list, $subcode_reward_list);
+    }
+
+    /**
+     * 是否是特約商類型（需審核）
+     * @param $alias
+     * @return bool
+     */
+    public function is_appointed_type($alias): bool
+    {
+        switch ($alias)
+        {
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+                return FALSE;
+            case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+            case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+            case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+            case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+                return TRUE;
+        }
+        return FALSE;
+    }
+
+    /**
+     * 確認使用者身份是否可申請推薦碼
+     * @param $contract_type
+     * @param bool $company
+     * @return bool
+     */
+    public function has_apply_permission($contract_type, bool $company = FALSE): bool
+    {
+        if ($company)
+        {
+            switch ($contract_type)
+            {
+                case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME:
+                case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
+                case PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME:
+                case PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME:
+                case PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME:
+                case PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+                case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL:
+                    return TRUE;
+            }
+        }
+        else
+        {
+            switch ($contract_type)
+            {
+                case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME:
+                case PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL:
+                case PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL:
+                    return TRUE;
+            }
+        }
+        return FALSE;
+    }
+
+    /**
+     * 產生一般經銷商 (法人/自然人) 的 QRCode
+     * @param $user_id : 使用者 ID
+     * @param $investor : 投資人/借款人
+     * @param bool $company : 是否為公司戶
+     * @return false|string
+     * @throws Exception
+     */
+    public function generate_general_qrcode($user_id, $investor, bool $company)
+    {
+        $this->CI->load->library('contract_lib');
+        $this->CI->load->library('user_lib');
+        $this->CI->load->model('user/qrcode_setting_model');
+
+        // 取得一般經銷商的 QRCode 設定
+        $alias_name = $company === TRUE
+            ? PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL
+            : PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL;
+        $qrcode_settings = $this->CI->qrcode_setting_model->get_by(['alias' => $alias_name]);
+        if ( ! isset($qrcode_settings))
+        {
+            throw new Exception('QRCode 產生失敗', INSERT_ERROR);
+        }
+
+        // 產生 QRCode 本 code
+        $promote_code = $this->CI->user_lib->get_promote_code($qrcode_settings->length, $qrcode_settings->prefix);
+
+        // 產生 QRCode 合約
+        $settings = json_decode($qrcode_settings->settings, TRUE);
+        $settings['certification_id'] = []; // 一般經銷商在註冊時，即產生 QRCode，因此無通過的徵信項可寫入
+        $settings['description'] = $qrcode_settings->description;
+        $settings['investor'] = $investor;
+        $contract_type_name = $this->get_contract_type_by_alias($qrcode_settings->alias);
+        $contract = $this->get_contract_format_content($contract_type_name, '', '', '', $settings);
+
+        // 簽約
+        $contract_id = $this->CI->contract_lib->sign_contract($contract_type_name, $contract);
+
+        // 新增 QRCode 資料進資料庫
+        $start_time = date('Y-m-d H:i:s');
+        $end_time = date('Y-m-d H:i:s', strtotime('+ 6 month'));
+        $insert_param = [
+            'user_id' => $user_id,
+            'alias' => $alias_name,
+            'promote_code' => $promote_code,
+            'contract_id' => $contract_id,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'contract_end_time' => $end_time,
+            'settings' => json_encode($settings),
+            'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+        ];
+        $rs = $this->CI->user_qrcode_model->insert($insert_param);
+        $this->CI->load->model('log/log_user_qrcode_model');
+        $insert_param['user_qrcode_id'] = $rs;
+        $this->CI->log_user_qrcode_model->insert_log($insert_param);
+
+        if ( ! $rs)
+        {
+            return FALSE;
+        }
+        return $promote_code;
+    }
+
+    /**
+     * 產生特約通路商 (法人/自然人) 的 QRCode
+     * @param $user_id : 使用者 ID
+     * @param $investor : 投資人/借款人
+     * @param bool $company : 是否為公司戶
+     * @param $alias_name
+     * @return false|string
+     * @throws Exception
+     */
+    public function generate_appointed_qrcode($user_id, $investor, bool $company, $alias_name)
+    {
+        $this->CI->load->library('contract_lib');
+        $this->CI->load->library('user_lib');
+        $this->CI->load->model('user/qrcode_setting_model');
+
+        // 檢查是否為特約通路商之方案
+        if ($this->is_appointed_type($alias_name) === FALSE)
+        {
+            throw new Exception('非特約通路商之設定，不得更改方案', INPUT_NOT_CORRECT);
+        }
+
+        // 取得特約通路商的 QRCode 設定
+        $qrcode_settings = $this->CI->qrcode_setting_model->get_by(['alias' => $alias_name]);
+        if ( ! isset($qrcode_settings))
+        {
+            throw new Exception('QRCode 產生失敗', INSERT_ERROR);
+        }
+
+        // 產生 QRCode 本 code
+        $promote_code = $this->CI->user_lib->get_promote_code($qrcode_settings->length, $qrcode_settings->prefix);
+
+        // 產生 QRCode 合約
+        $settings = json_decode($qrcode_settings->settings, TRUE);
+        $settings['certification_id'] = []; // 一般經銷商在註冊時，即產生 QRCode，因此無通過的徵信項可寫入
+        $settings['description'] = $qrcode_settings->description;
+        $settings['investor'] = $investor;
+        $contract_type_name = $this->get_contract_type_by_alias($qrcode_settings->alias);
+        $contract = $this->get_contract_format_content($contract_type_name, '', '', '', $settings);
+
+        // 簽約
+        $contract_id = $this->CI->contract_lib->sign_contract($contract_type_name, $contract);
+
+        // 新增 QRCode 資料進資料庫
+        $start_time = date('Y-m-d H:i:s');
+        $end_time = date('Y-m-d H:i:s', strtotime('+ 6 month'));
+        $insert_param = [
+            'user_id' => $user_id,
+            'alias' => $alias_name,
+            'promote_code' => $promote_code,
+            'contract_id' => $contract_id,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'contract_end_time' => $end_time,
+            'settings' => json_encode($settings),
+            'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+        ];
+        $rs = $this->CI->user_qrcode_model->insert($insert_param);
+        $this->CI->load->model('log/log_user_qrcode_model');
+        $insert_param['user_qrcode_id'] = $rs;
+        $this->CI->log_user_qrcode_model->insert_log($insert_param);
+
+        if ( ! $rs)
+        {
+            return FALSE;
+        }
+        return $promote_code;
+    }
+
+    public function get_subcode_dialogue_content($subcode_id, $subcode_master_qrcode_name, $subcode_status)
+    {
+        $result = [
+            'id' => $subcode_id,
+            'title' => '',
+            'description' => '',
+            'status' => 0
+        ];
+
+        $subcode_status = (int) $subcode_status;
+
+        switch ($subcode_status)
+        {
+            case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT:
+                unset($result['id']);
+                unset($result['status']);
+                $result['title'] = '拒絕成為二級經銷商';
+                $result['description'] = "{$subcode_master_qrcode_name}，已拒絕成為二級經銷商。";
+                break;
+            case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ:
+                $result['status'] = $subcode_status;
+                $result['title'] = '退出二級經銷商';
+                $result['description'] = "普匯特約通路商{$subcode_master_qrcode_name}，已將您的二級經銷商權限移除，您現在為一般經銷商，可繼續透過您的QR code分享賺外快。";
+                break;
+            case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD:
+                $result['status'] = $subcode_status;
+                $result['title'] = '確認成為二級經銷商';
+                $result['description'] = "普匯特約通路商{$subcode_master_qrcode_name}，透過您的會員id，邀請您成為二級經銷商。
+
+二級經銷商分享成功之案件，均併入特約通路商計算，並享{$subcode_master_qrcode_name}和普匯合作之分潤規則。
+
+您及{$subcode_master_qrcode_name}可隨時提出將您回復為一般經銷商之身分；經特約通路商確認同意後，即可轉為一般經銷商。
+
+具體分潤內容請洽{$subcode_master_qrcode_name}，是否同意？";
+                break;
+            case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE:
+                $result['status'] = $subcode_status;
+                $result['title'] = '是否確認退出二級經銷商';
+                $result['description'] = '申請送出後，待您的特約通路商確認即可回復一般經銷商身分。';
+                break;
+        }
+
+        return $result;
     }
 }

@@ -132,7 +132,7 @@ class Judicialperson_lib{
         }
 		$this->CI->load->model('user/judicial_person_model');
         $judicial_person_info = $this->CI->judicial_person_model->get_by([
-            'company_user_id' => $info->user_id,
+            'company_user_id' => $info->user_id ?? $info['user_id'] ?? 0,
             'status' => 0,
         ]);
 
