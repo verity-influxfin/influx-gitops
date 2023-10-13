@@ -1448,7 +1448,7 @@ class User_lib {
         $company_user_id_exist = $this->CI->user_model->check_user_id_exist($user_id, $tax_id);
         if ( ! empty($company_user_id_exist))
         {
-            throw new Exception('帳號已申請過', USER_ID_EXIST);
+            throw new Exception('公司帳號已存在，請使用其他公司帳號', USER_ID_EXIST);
         }
     }
 
