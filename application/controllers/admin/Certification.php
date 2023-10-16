@@ -342,7 +342,9 @@ class Certification extends MY_Admin_Controller {
                             }
                             if (!empty($file_type))
                             {
-                                $page_data['ocr']['upload_page'] = $this->_upload_page($info, [], ['.pdf']);
+                                // (2023-10-16) 土地建物謄本，不能上傳圖片('image/*,.heic,.heif')，只能上傳pdf
+                                $use_default_file_type = $info->certification_id != CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS;
+                                $page_data['ocr']['upload_page'] = $this->_upload_page($info, [], ['.pdf'], $use_default_file_type);
                             }
                             else
                             {
