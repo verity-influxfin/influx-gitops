@@ -823,9 +823,11 @@ class Certification extends MY_Admin_Controller {
      * @param array $additional_file_type
      * @return mixed
      */
-    private function _upload_page($certification_info, array $extra_info = [], array $additional_file_type = [])
+    private function _upload_page($certification_info, array $extra_info = [], array $additional_file_type = [], bool $use_default_file_type = true)
     {
-        $file_type = $this->_get_default_upload_file_type();
+        if ($use_default_file_type) {
+            $file_type = $this->_get_default_upload_file_type();
+        }
         if ( ! empty($additional_file_type))
         {
             $file_type .= ',' . implode(',', $additional_file_type);
