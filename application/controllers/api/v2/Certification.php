@@ -2585,7 +2585,21 @@ class Certification extends REST_Controller {
                         'user_id'    => $user_id,
                     ]);
                     foreach ($logs as $log) {
-                        $image_id_urls_map[$log->id] = $log->url;
+                        $path_info = pathinfo($log->url);
+                        if (empty($path_info['basename'])) {
+                            continue;
+                        }
+                        $newImageUrl = $this->s3_upload->public_image_by_data(
+                            file_get_contents($log->url),
+                            FRONT_S3_BUCKET,
+                            $user_id,
+                            [
+                                'type' => 'tmp/' . $user_id,
+                                'name' => md5($path_info['basename']) . '.jpg',
+                            ]
+                        );
+                        $public_url = str_replace(S3_BUCKET, FRONT_CDN_URL, $newImageUrl);
+                        $image_id_urls_map[$log->id] = $public_url;
                     }
                 }
                 $input['image_id_urls'] = $image_id_urls_map;
