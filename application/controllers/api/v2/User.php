@@ -2816,6 +2816,16 @@ END:
                     $this->response(array('result' => 'ERROR', 'error' => BLOCK_USER));
                 }
 
+                // 負責人 or 代理人？
+                $is_charge = 0;
+                if ($company == 1) {
+                    $this->load->model('user/judicial_person_model');
+                    $charge_person = $this->judicial_person_model->check_valid_charge_person($user_info->id_number, $user_info->id);
+                    if ($charge_person && ($this->user_model->get($charge_person->user_id))) {
+                        $is_charge = 1;
+                    }
+                }
+
                 $token = (object)[
                     'id' => $user_info->id,
                     'phone' => $user_info->phone,
@@ -2823,7 +2833,7 @@ END:
                     'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
                     'investor' => $investor,
                     'company' => $company,
-                    'incharge' => 0,
+                    'incharge' => $is_charge,
                     'agent' => 0,
                 ];
                 $request_token = AUTHORIZATION::generateUserToken($token);
