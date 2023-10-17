@@ -137,217 +137,535 @@
       <div class="block-content">
         <div class="h1">一支手機</div>
         <h2 class="h2">助你幸福成家 資金的事交給普匯</h2>
-        <div class="swiper">
-          <!-- Additional required wrapper -->
-          <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide">
-              <div class="swiper-left swiper-text-1">
-                <div>量身製定資金需求</div>
-                <div>提供您更滿意的貸款</div>
+
+        <div class="diagram-swiper-full">
+          <div class="swiper">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+              <!-- Slides -->
+
+              <!-- step-1 -->
+              <div class="swiper-slide">
+                <div class="swiper-left swiper-text-1">
+                  <div>量身製定資金需求</div>
+                  <div>提供您更滿意的貸款</div>
+                </div>
+                <img
+                  src="@/asset/images/houseloan/step-1-1.jpg"
+                  class="step-img"
+                />
+                <img
+                  src="@/asset/images/houseloan/step-1-2.jpg"
+                  class="step-img"
+                />
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 1：</div>
+                  <div class="swiper-step-info">• 選擇「申貸專案」</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 選擇「借款金額與期數」</div>
+                </div>
               </div>
-              <img
-                src="@/asset/images/houseloan/step-1-1.jpg"
-                class="step-img"
-              />
-              <img
-                src="@/asset/images/houseloan/step-1-2.jpg"
-                class="step-img"
-              />
-              <div class="swiper-step">
-                <div class="swiper-step-title">Step 1：</div>
-                <div class="swiper-step-info">• 選擇「申貸專案」</div>
-                <div class="swiper-step-next"></div>
-                <div class="swiper-step-info">• 選擇「借款金額與期數」</div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="swiper-left">
-                <div class="swiper-text-1">需要準備什麼資料？</div>
-                <button
-                  class="swiper-text-2 btn btn-link"
-                  @click="showCheckLists.a = !showCheckLists.a"
-                >
-                  Check list
-                </button>
-                <transition name="fade">
-                  <div class="check-list-content" v-show="showCheckLists.a">
-                    <div class="swiper-text-3">•雙證件</div>
-                    <div class="swiper-text-3">•銀行存款金融卡</div>
-                    <div class="swiper-text-3">•工作收入證明</div>
-                    <div class="swiper-text-info">
-                      <div>(1)勞保異動明細</div>
-                      <div>(2)近三個月薪資憑證</div>
-                      <div>(3)近三個月存摺封面與內頁</div>
-                      <div>(4)近年度扣繳憑單</div>
+
+              <!-- step-2 -->
+              <div class="swiper-slide">
+                <div class="swiper-left">
+                  <div class="swiper-text-1">需要準備什麼資料？</div>
+                  <button
+                    class="swiper-text-2 btn btn-link"
+                    @click="showCheckLists.a = !showCheckLists.a"
+                  >
+                    Check list
+                  </button>
+                  <transition name="fade">
+                    <div class="check-list-content" v-show="showCheckLists.a">
+                      <div class="swiper-text-3">•雙證件</div>
+                      <div class="swiper-text-3">•銀行存款金融卡</div>
+                      <div class="swiper-text-3">•工作收入證明</div>
+                      <div class="swiper-text-info">
+                        <div>(1)勞保異動明細</div>
+                        <div>(2)近三個月薪資憑證</div>
+                        <div>(3)近三個月存摺封面與內頁</div>
+                        <div>(4)近年度扣繳憑單</div>
+                      </div>
+                      <div class="swiper-text-3">•個人聯徵信用報告</div>
+                      <a
+                        href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=92&pid=73&docid=54"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="swiper-text-link"
+                        >如何申請聯徵？</a
+                      >
                     </div>
-                    <div class="swiper-text-3">•個人聯徵信用報告</div>
-                    <a
-                      href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=92&pid=73&docid=54"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="swiper-text-link"
-                      >如何申請聯徵？</a
+                  </transition>
+                </div>
+                <img
+                  src="@/asset/images/houseloan/step-2-1.jpg"
+                  class="step-img"
+                />
+                <img
+                  src="@/asset/images/houseloan/step-2-2.jpg"
+                  class="step-img"
+                />
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 2：</div>
+                  <div class="swiper-step-info">• 完成「身分驗證」</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 完成其他資料提供</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">
+                    • 上傳「聯合徵信報告所需資料」
+                  </div>
+                </div>
+              </div>
+
+              <!-- step-3 -->
+              <div class="swiper-slide">
+                <div class="swiper-left">
+                  <div class="swiper-text-1">需要準備什麼資料？</div>
+                  <div>購房貸</div>
+                  <button
+                    class="swiper-text-2 btn btn-link"
+                    @click="
+                      () => {
+                        showCheckLists.b = !showCheckLists.b
+                        if (showCheckLists.b) {
+                          showStep2Image = 1
+                          showCheckLists.c = false
+                          showCheckLists.d = false
+                        }
+                      }
+                    "
+                  >
+                    Check list
+                  </button>
+                  <transition name="fade">
+                    <div
+                      class="check-list-content mb-3"
+                      v-show="showCheckLists.b"
                     >
-                  </div>
-                </transition>
-              </div>
-              <img
-                src="@/asset/images/houseloan/step-2-1.jpg"
-                class="step-img"
-              />
-              <img
-                src="@/asset/images/houseloan/step-2-2.jpg"
-                class="step-img"
-              />
-              <div class="swiper-step">
-                <div class="swiper-step-title">Step 2：</div>
-                <div class="swiper-step-info">• 完成「身分驗證」</div>
-                <div class="swiper-step-next"></div>
-                <div class="swiper-step-info">• 完成其他資料提供</div>
-                <div class="swiper-step-next"></div>
-                <div class="swiper-step-info">
-                  • 上傳「聯合徵信報告所需資料」
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="swiper-left">
-                <div class="swiper-text-1">需要準備什麼資料？</div>
-                <div>購房貸</div>
-                <button
-                  class="swiper-text-2 btn btn-link"
-                  @click="showCheckLists.b = !showCheckLists.b"
-                >
-                  Check list
-                </button>
-                <transition name="fade">
-                  <div
-                    class="check-list-content mb-3"
-                    v-show="showCheckLists.b"
+                      <div class="swiper-text-3">•購房合約</div>
+                      <div class="swiper-text-3">•購房發票(選填)</div>
+                      <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
+                    </div>
+                  </transition>
+                  <div>房屋裝修款</div>
+                  <button
+                    class="swiper-text-2 btn btn-link"
+                    @click="
+                      () => {
+                        showCheckLists.c = !showCheckLists.c
+                        if (showCheckLists.c) {
+                          showStep2Image = 2
+                          showCheckLists.b = false
+                          showCheckLists.d = false
+                        }
+                      }
+                    "
                   >
-                    <div class="swiper-text-3">•購房合約</div>
-                    <div class="swiper-text-3">•購房發票(選填)</div>
-                    <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
-                  </div>
-                </transition>
-                <div>房屋裝修款</div>
-                <button
-                  class="swiper-text-2 btn btn-link"
-                  @click="showCheckLists.c = !showCheckLists.c"
-                >
-                  Check list
-                </button>
-                <transition name="fade">
-                  <div
-                    class="check-list-content mb-3"
-                    v-show="showCheckLists.c"
+                    Check list
+                  </button>
+                  <transition name="fade">
+                    <div
+                      class="check-list-content mb-3"
+                      v-show="showCheckLists.c"
+                    >
+                      <div class="swiper-text-3">•房屋所有權狀</div>
+                      <div class="swiper-text-3">•裝修合約</div>
+                      <div class="swiper-text-3">•裝修發票(選填)</div>
+                      <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
+                    </div>
+                  </transition>
+                  <div>添購傢俱家電</div>
+                  <button
+                    class="swiper-text-2 btn btn-link"
+                    @click="
+                      () => {
+                        showCheckLists.d = !showCheckLists.d
+                        if (showCheckLists.d) {
+                          showStep2Image = 3
+                          showCheckLists.b = false
+                          showCheckLists.c = false
+                        }
+                      }
+                    "
                   >
-                    <div class="swiper-text-3">•房屋所有權狀</div>
-                    <div class="swiper-text-3">•裝修合約</div>
-                    <div class="swiper-text-3">•裝修發票(選填)</div>
-                    <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
-                  </div>
-                </transition>
-                <div>添購傢俱家電</div>
-                <button
-                  class="swiper-text-2 btn btn-link"
-                  @click="showCheckLists.d = !showCheckLists.d"
-                >
-                  Check list
-                </button>
-                <transition name="fade">
-                  <div class="check-list-content" v-show="showCheckLists.d">
-                    <div class="swiper-text-3">•房屋所有權狀</div>
-                    <div class="swiper-text-3">•傢俱家電合約或發票收據</div>
-                    <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
-                  </div>
-                </transition>
-              </div>
-              <img
-                src="@/asset/images/houseloan/step-3-1.jpg"
-                class="step-img"
-              />
-              <img
-                src="@/asset/images/houseloan/step-3-2.jpg"
-                class="step-img"
-              />
-              <div class="swiper-step">
-                <div class="swiper-step-title">Step 3：</div>
-                <div class="swiper-step-info">• 完成「購屋或房屋」資料提供</div>
-                <div class="swiper-step-next"></div>
-                <div class="swiper-step-info">
-                  • 完成「入屋現勘/遠端視訊」預約
+                    Check list
+                  </button>
+                  <transition name="fade">
+                    <div class="check-list-content" v-show="showCheckLists.d">
+                      <div class="swiper-text-3">•房屋所有權狀</div>
+                      <div class="swiper-text-3">•傢俱家電合約或發票收據</div>
+                      <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
+                    </div>
+                  </transition>
                 </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="swiper-left swiper-text-1">
-                <div class="swiper-text-1">
-                  <div>全台第一</div>
-                  <div>AI自動審核風控系統</div>
-                  <div class="swiper-text-3">
-                    <div>•運用金融科技</div>
-                    <div>•快速辨識驗證資訊</div>
-                    <div>•提供最安全無人化</div>
-                    <div>•FinTech借貸服務</div>
+
+                <template id="img-group">
+                  <img
+                    v-show="showStep2Image == 1"
+                    src="@/asset/images/houseloan/step-3-1-1.jpg"
+                    class="step-img"
+                  />
+                  <img
+                    v-show="showStep2Image == 2"
+                    src="@/asset/images/houseloan/step-3-1-2.jpg"
+                    class="step-img"
+                  />
+                  <img
+                    v-show="showStep2Image == 3"
+                    src="@/asset/images/houseloan/step-3-1-3.jpg"
+                    class="step-img"
+                  />
+                  <img
+                    src="@/asset/images/houseloan/step-3-2.jpg"
+                    class="step-img"
+                  />
+                </template>
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 3：</div>
+                  <div class="swiper-step-info">
+                    • 完成「購屋或房屋」資料提供
+                  </div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">
+                    • 完成「入屋現勘/遠端視訊」預約
                   </div>
                 </div>
               </div>
-              <img
-                src="@/asset/images/houseloan/step-4-1.jpg"
-                class="step-img"
-              />
-              <img
-                src="@/asset/images/houseloan/step-4-2.jpg"
-                class="step-img"
-              />
-              <div class="swiper-step">
-                <div class="swiper-step-title">Step 4：</div>
-                <div class="swiper-step-info">• 取得核准額度</div>
-                <div class="swiper-step-next"></div>
-                <div class="swiper-step-info">• 輸入借款金額</div>
-                <div class="swiper-step-next"></div>
-                <div class="swiper-step-info">• 線上簽約</div>
-                <div class="swiper-step-info text-danger pl-3">
-                  *購房貸簽約流程須提供房屋所有權狀
+
+              <!-- step-4 -->
+              <div class="swiper-slide">
+                <div class="swiper-left swiper-text-1">
+                  <div class="swiper-text-1">
+                    <div>全台第一</div>
+                    <div>AI自動審核風控系統</div>
+                    <div class="swiper-text-3">
+                      <div>•運用金融科技</div>
+                      <div>•快速辨識驗證資訊</div>
+                      <div>•提供最安全無人化</div>
+                      <div>•FinTech借貸服務</div>
+                    </div>
+                  </div>
+                </div>
+                <img
+                  src="@/asset/images/houseloan/step-4-1.jpg"
+                  class="step-img"
+                />
+                <img
+                  src="@/asset/images/houseloan/step-4-2.jpg"
+                  class="step-img"
+                />
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 4：</div>
+                  <div class="swiper-step-info">• 取得核准額度</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 輸入借款金額</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 線上簽約</div>
+                  <div class="swiper-step-info text-danger pl-3">
+                    *購房貸簽約流程須提供房屋所有權狀
+                  </div>
+                </div>
+              </div>
+
+              <!-- step-5 -->
+              <div class="swiper-slide">
+                <div class="swiper-left">
+                  <div class="swiper-text-1">超速資金媒合效率</div>
+                  <div class="swiper-slogan">
+                    <div>最快<span class="em">1</span>小時</div>
+                    <div>立馬到帳！</div>
+                  </div>
+                </div>
+                <img
+                  src="@/asset/images/houseloan/step-5-1.jpg"
+                  class="step-img"
+                />
+                <img
+                  src="@/asset/images/houseloan/step-5-2.jpg"
+                  class="step-img"
+                />
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 5：</div>
+                  <div class="swiper-step-info">• 案件上架</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 快速媒合</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 立即到帳</div>
                 </div>
               </div>
             </div>
-            <div class="swiper-slide slide-5">
-              <div class="swiper-left">
-                <div class="swiper-text-1">超速資金媒合效率</div>
-                <div class="swiper-slogan">
-                  <div>最快<span class="em">1</span>小時</div>
-                  <div>立馬到帳！</div>
-                </div>
-              </div>
-              <img
-                src="@/asset/images/houseloan/step-5-1.jpg"
-                class="step-img"
-              />
-              <div class="swiper-step">
-                <div class="swiper-step-title">Step 5：</div>
-                <div class="swiper-step-info">• 案件上架</div>
-                <div class="swiper-step-next"></div>
-                <div class="swiper-step-info">• 快速媒合</div>
-                <div class="swiper-step-next"></div>
-                <div class="swiper-step-info">• 立即到帳</div>
-              </div>
-            </div>
+            <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
           </div>
-          <!-- If we need pagination -->
-          <div class="swiper-pagination"></div>
-          <!-- If we need navigation buttons -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
+        </div>
+        <div class="diagram-swiper-mobile">
+          <div class="swiper">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+              <!-- Slides -->
+              <!-- step-1 -->
+              <div class="swiper-slide">
+                <img
+                  src="@/asset/images/houseloan/step-1-1.jpg"
+                  class="step-img"
+                />
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 1：</div>
+                  <div class="swiper-step-info">• 選擇「申貸專案」</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 選擇「借款金額與期數」</div>
+                </div>
+                <div class="swiper-left swiper-text-1">
+                  <div>量身製定資金需求</div>
+                  <div>提供您更滿意的貸款</div>
+                </div>
+                <img
+                  src="@/asset/images/houseloan/step-1-2.jpg"
+                  class="step-img"
+                />
+              </div>
+              <!-- step-2 -->
+              <div class="swiper-slide">
+                <img
+                  src="@/asset/images/houseloan/step-2-1.jpg"
+                  class="step-img"
+                />
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 2：</div>
+                  <div class="swiper-step-info">• 完成「身分驗證」</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 完成其他資料提供</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">
+                    • 上傳「聯合徵信報告所需資料」
+                  </div>
+                </div>
+                <div class="swiper-left">
+                  <div class="swiper-text-1">需要準備什麼資料？</div>
+                  <button
+                    class="swiper-text-2 btn btn-link"
+                    @click="showCheckLists.a = !showCheckLists.a"
+                  >
+                    Check list
+                  </button>
+                  <transition name="fade">
+                    <div class="check-list-content" v-show="showCheckLists.a">
+                      <div class="swiper-text-3">•雙證件</div>
+                      <div class="swiper-text-3">•銀行存款金融卡</div>
+                      <div class="swiper-text-3">•工作收入證明</div>
+                      <div class="swiper-text-info">
+                        <div>(1)勞保異動明細</div>
+                        <div>(2)近三個月薪資憑證</div>
+                        <div>(3)近三個月存摺封面與內頁</div>
+                        <div>(4)近年度扣繳憑單</div>
+                      </div>
+                      <div class="swiper-text-3">•個人聯徵信用報告</div>
+                      <a
+                        href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=92&pid=73&docid=54"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="swiper-text-link"
+                        >如何申請聯徵？</a
+                      >
+                    </div>
+                  </transition>
+                </div>
+                <img
+                  src="@/asset/images/houseloan/step-2-2.jpg"
+                  class="step-img"
+                />
+              </div>
+              <!-- step-3 -->
+              <div class="swiper-slide">
+                <template id="img-group">
+                  <img
+                    v-show="showStep2Image == 1"
+                    src="@/asset/images/houseloan/step-3-1-1.jpg"
+                    class="step-img"
+                  />
+                  <img
+                    v-show="showStep2Image == 2"
+                    src="@/asset/images/houseloan/step-3-1-2.jpg"
+                    class="step-img"
+                  />
+                  <img
+                    v-show="showStep2Image == 3"
+                    src="@/asset/images/houseloan/step-3-1-3.jpg"
+                    class="step-img"
+                  />
+                </template>
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 3：</div>
+                  <div class="swiper-step-info">
+                    • 完成「購屋或房屋」資料提供
+                  </div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">
+                    • 完成「入屋現勘/遠端視訊」預約
+                  </div>
+                </div>
+                <div class="swiper-left">
+                  <div class="swiper-text-1">需要準備什麼資料？</div>
+                  <div>購房貸</div>
+                  <button
+                    class="swiper-text-2 btn btn-link"
+                    @click="
+                      () => {
+                        showCheckLists.b = !showCheckLists.b
+                        if (showCheckLists.b) {
+                          showStep2Image = 1
+                          showCheckLists.c = false
+                          showCheckLists.d = false
+                        }
+                      }
+                    "
+                  >
+                    Check list
+                  </button>
+                  <transition name="fade">
+                    <div
+                      class="check-list-content mb-3"
+                      v-show="showCheckLists.b"
+                    >
+                      <div class="swiper-text-3">•購房合約</div>
+                      <div class="swiper-text-3">•購房發票(選填)</div>
+                      <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
+                    </div>
+                  </transition>
+                  <div>房屋裝修款</div>
+                  <button
+                    class="swiper-text-2 btn btn-link"
+                    @click="
+                      () => {
+                        showCheckLists.c = !showCheckLists.c
+                        if (showCheckLists.c) {
+                          showStep2Image = 2
+                          showCheckLists.b = false
+                          showCheckLists.d = false
+                        }
+                      }
+                    "
+                  >
+                    Check list
+                  </button>
+                  <transition name="fade">
+                    <div
+                      class="check-list-content mb-3"
+                      v-show="showCheckLists.c"
+                    >
+                      <div class="swiper-text-3">•房屋所有權狀</div>
+                      <div class="swiper-text-3">•裝修合約</div>
+                      <div class="swiper-text-3">•裝修發票(選填)</div>
+                      <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
+                    </div>
+                  </transition>
+                  <div>添購傢俱家電</div>
+                  <button
+                    class="swiper-text-2 btn btn-link"
+                    @click="
+                      () => {
+                        showCheckLists.d = !showCheckLists.d
+                        if (showCheckLists.d) {
+                          showStep2Image = 3
+                          showCheckLists.b = false
+                          showCheckLists.c = false
+                        }
+                      }
+                    "
+                  >
+                    Check list
+                  </button>
+                  <transition name="fade">
+                    <div class="check-list-content" v-show="showCheckLists.d">
+                      <div class="swiper-text-3">•房屋所有權狀</div>
+                      <div class="swiper-text-3">•傢俱家電合約或發票收據</div>
+                      <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
+                    </div>
+                  </transition>
+                </div>
+                <img
+                  src="@/asset/images/houseloan/step-3-2.jpg"
+                  class="step-img"
+                />
+              </div>
+              <!-- step-4 -->
+              <div class="swiper-slide">
+                <img
+                  src="@/asset/images/houseloan/step-4-1.jpg"
+                  class="step-img"
+                />
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 4：</div>
+                  <div class="swiper-step-info">• 取得核准額度</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 輸入借款金額</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 線上簽約</div>
+                  <div class="swiper-step-info text-danger pl-3">
+                    *購房貸簽約流程須提供房屋所有權狀
+                  </div>
+                </div>
+                <div class="swiper-left swiper-text-1">
+                  <div class="swiper-text-1">
+                    <div>全台第一</div>
+                    <div>AI自動審核風控系統</div>
+                    <div class="swiper-text-3">
+                      <div>•運用金融科技</div>
+                      <div>•快速辨識驗證資訊</div>
+                      <div>•提供最安全無人化</div>
+                      <div>•FinTech借貸服務</div>
+                    </div>
+                  </div>
+                </div>
+                <img
+                  src="@/asset/images/houseloan/step-4-2.jpg"
+                  class="step-img"
+                />
+              </div>
+              <!-- step-5 -->
+              <div class="swiper-slide">
+                <img
+                  src="@/asset/images/houseloan/step-5-1.jpg"
+                  class="step-img"
+                />
+                <div class="swiper-step">
+                  <div class="swiper-step-title">Step 5：</div>
+                  <div class="swiper-step-info">• 案件上架</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 快速媒合</div>
+                  <div class="swiper-step-next"></div>
+                  <div class="swiper-step-info">• 立即到帳</div>
+                </div>
+                <div class="swiper-left">
+                  <div class="swiper-text-1">超速資金媒合效率</div>
+                  <div class="swiper-slogan">
+                    <div>最快<span class="em">1</span>小時</div>
+                    <div>立馬到帳！</div>
+                  </div>
+                </div>
+                <img
+                  src="@/asset/images/houseloan/step-5-2.jpg"
+                  class="step-img"
+                />
+              </div>
+            </div>
+            <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
         </div>
       </div>
     </div>
     <div class="product-feature">
       <div class="block-content">
         <div class="h1">產品特色</div>
-        <h2 class="h2">方便、安全、隱私，您申辦貸款的首選</h2>
+        <h2 class="h2">簡單、快速、安全又隱私，您申辦貸款的首選</h2>
         <div class="product-feature-grid">
           <div
             class="product-feature-item"
@@ -457,8 +775,8 @@
 
 <script>
 import featureCard from '../component/index/featureCard'
-import AlesisProject from "../component/alesis/AlesisProject";
-import houseSuit from "../component/houseSuit";
+import AlesisProject from '../component/alesis/AlesisProject'
+import houseSuit from '../component/houseSuit'
 
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
@@ -468,18 +786,19 @@ export default {
   components: {
     featureCard,
     AlesisProject,
-    houseSuit
+    houseSuit,
   },
   data() {
     return {
       userId: '',
       userIdDisabled: false,
       showCheckLists: {
-        a: false,
+        a: true,
         b: false,
         c: false,
         d: false,
-      }
+      },
+      showStep2Image: 1,
     }
   },
   mounted() {
@@ -1443,6 +1762,30 @@ $color__background--primary: #f3f9fc;
         }
       }
     }
+  }
+}
+.diagram-swiper-mobile {
+  width: 100%;
+  @media (max-width: 768px) {
+    // 在螢幕寬度小於等於768px時應用的樣式（手機版）
+    display: block;
+  }
+
+  @media (min-width: 769px) {
+    // 在螢幕寬度大於768px時應用的樣式（桌面版）
+    display: none;
+  }
+}
+.diagram-swiper-full {
+  width: 100%;
+  @media (max-width: 768px) {
+    // 在螢幕寬度小於等於768px時應用的樣式（手機版）
+    display: none;
+  }
+
+  @media (min-width: 769px) {
+    // 在螢幕寬度大於768px時應用的樣式（桌面版）
+    display: block;
   }
 }
 </style>
