@@ -238,6 +238,8 @@ class Gcis_lib
         switch ($status_name) {
             case '核准設立':
                 return TRUE;
+            case '核准登記':
+                return TRUE;
             default:
                 return FALSE;
         }
