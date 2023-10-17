@@ -24,6 +24,7 @@
             <div class="article-title">
               <div class="em">一支手機搞定貸款：</div>
             </div>
+            <div class="article-info">
               <div class="article-info-content">
                 <div>•提供添購傢俱家電合約與發票</div>
                 <div>•不動產所有權狀</div>
@@ -92,6 +93,12 @@
               <div class="em">一支手機搞定貸款：</div>
             </div>
             <div class="article-info">
+              <div class="article-info-content">
+                <div>•提供添購傢俱家電合約與發票</div>
+                <div>•不動產所有權狀</div>
+                <div>•即可申貸合約或發票金額</div>
+                <div>8成資金，最高100萬</div>
+              </div>
               <div class="mt-4 article-info-btn">
                 <a href="/borrowLink" target="_blank">
                   <button class="btn btn-outline-primary">立即申辦</button>
@@ -161,11 +168,7 @@ export default {
           left: 0;
           width: 50%;
           height: 2px;
-          background: linear-gradient(
-            90deg,
-            #4086c9,
-            #7ac1ea
-          );
+          background: linear-gradient(90deg, #4086c9, #7ac1ea);
           border-radius: 2px;
           box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
         }
