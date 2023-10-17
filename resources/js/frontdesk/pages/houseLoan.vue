@@ -5,12 +5,12 @@
         <div class="swiper-slide">
           <img
             src="@/asset/images/houseloan/houseloan-banner.jpg"
-            alt="購房貸"
+            alt="房產消費貸"
             class="img-fluid d-sm-block d-none w-100"
           />
           <img
             src="@/asset/images/houseloan/houseloan-banner-1-phone.jpg"
-            alt="購房貸"
+            alt="房產消費貸"
             class="img-fluid d-sm-none d-block w-100"
           />
         </div>
@@ -29,24 +29,24 @@
         <div class="swiper-slide">
           <img
             src="@/asset/images/houseloan/houseloan-banner-3.jpg"
-            alt="購房貸"
+            alt="房屋裝修款"
             class="img-fluid d-sm-block d-none w-100"
           />
           <img
             src="@/asset/images/houseloan/houseloan-banner-3-phone.jpg"
-            alt="購房貸"
+            alt="房屋裝修款"
             class="img-fluid d-sm-none d-block w-100"
           />
         </div>
         <div class="swiper-slide">
           <img
             src="@/asset/images/houseloan/houseloan-banner-4.jpg"
-            alt="購房貸"
+            alt="添購傢俱家電"
             class="img-fluid d-sm-block d-none w-100"
           />
           <img
             src="@/asset/images/houseloan/houseloan-banner-4-phone.jpg"
-            alt="購房貸"
+            alt="添購傢俱家電"
             class="img-fluid d-sm-none d-block w-100"
           />
         </div>
