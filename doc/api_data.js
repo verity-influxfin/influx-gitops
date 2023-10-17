@@ -48793,16 +48793,410 @@ define({
                         }
                     ]
                 },
-                "examples": [
+                examples: [
                     {
-                        "title": "SUCCESS",
-                        "content": "{\n" +
-                            "    \"result\": \"SUCCESS\",\n" +
-                            "    \"data\": {\n        \"promote_name\": \"特約方案\",\n        \"promote_alias\": \"appointed\",\n        \"promote_code\": \"URLP3AN2\",\n        \"promote_url\": \"https://event.influxfin.com/R/url?p=URLP3AN2\",\n        \"promote_qrcode\": \"https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=https%3A%2F%2Fevent.influxfin.com%2FR%2Furl%3Fp%3DURLP3AN2&chs=500x500\",\n        \"start_time\": \"2021-07-16 11:53:03\",\n        \"expired_time\": \"2022-11-16 11:53:03\",\n        \"contract\": \"立書人\r\n        普匯金融科技股份有限公司\t(以下簡稱甲方)\r\n\r\n        王大明                   (以下簡稱乙方)\r\n        -- 以下略過 --\n        中華民國 110 年 11 月 16 日\",\n        \"status\": 1,\n        \"total_reward_amount\": 1927,\n        \"overview\": {\n            \"fullMemberCount\": 4,\n            \"loanedCount\": {\n                \"student\": 3,\n                \"salary_man\": 1,\n                \"small_enterprise\": 1\n            },\n            \"rewardAmount\": {\n                \"student\": 12,\n                \"salary_man\": 15,\n                \"small_enterprise\": 1100\n            },\n            \"collaboration\": [\n                {\n                    \"detail\": [],\n                    \"count\": 4,\n                    \"rewardAmount\": 800,\n                    \"collaborator\": \"王道銀行\"\n                },\n                {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0,\n                    \"collaborator\": \"凱基銀行\"\n                },\n                {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0,\n                    \"collaborator\": \"上海銀行\"\n                }\n            ]\n        },\n        \"detail_list\": {\n            \"2021-07\": {\n                \"registered\": [],\n                \"registeredCount\": 0,\n                \"fullMember\": [],\n                \"fullMemberCount\": 0,\n                \"fullMemberRewardAmount\": 0,\n                \"student\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"salary_man\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"small_enterprise\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"collaboration\": [\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"王道銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"凱基銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"上海銀行\"\n                    }\n                ]\n            },\n            \"2021-08\": {\n                \"registered\": [],\n                \"registeredCount\": 0,\n                \"fullMember\": [],\n                \"fullMemberCount\": 0,\n                \"fullMemberRewardAmount\": 0,\n                \"student\": {\n                    \"detail\": [\n                        {\n                            \"id\": \"841055\",\n                            \"user_id\": \"47174\",\n                            \"product_id\": \"1\",\n                            \"loan_amount\": \"10000\",\n                            \"loan_date\": \"2021-08-02\"\n                        }\n                    ],\n                    \"count\": 1,\n                    \"rewardAmount\": 0\n                },\n                \"salary_man\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"small_enterprise\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"collaboration\": [\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"王道銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"凱基銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"上海銀行\"\n                    }\n                ]\n            },\n            \"2021-09\": {\n                \"registered\": [\n                    {\n                        \"user_id\": \"47174\",\n                        \"created_at\": \"2021-09-20 00:00:01\"\n                    },\n                    {\n                        \"user_id\": \"47295\",\n                        \"created_at\": \"2021-09-28 17:05:01\"\n                    }\n                ],\n                \"registeredCount\": 2,\n                \"fullMember\": [\n                    {\n                        \"user_id\": \"47174\",\n                        \"created_at\": \"2021-09-20 00:00:01\"\n                    },\n                    {\n                        \"user_id\": \"47295\",\n                        \"created_at\": \"2021-09-28 17:05:01\"\n                    }\n                ],\n                \"fullMemberCount\": 2,\n                \"fullMemberRewardAmount\": 0,\n                \"student\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"salary_man\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"small_enterprise\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"collaboration\": [\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"王道銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"凱基銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"上海銀行\"\n                    }\n                ]\n            },\n            \"2021-10\": {\n                \"registered\": [\n                    {\n                        \"user_id\": \"47304\",\n                        \"created_at\": \"2021-10-01 13:47:25\"\n                    }\n                ],\n                \"registeredCount\": 1,\n                \"fullMember\": [\n                    {\n                        \"user_id\": \"47304\",\n                        \"created_at\": \"2021-10-01 13:47:25\"\n                    }\n                ],\n                \"fullMemberCount\": 1,\n                \"fullMemberRewardAmount\": 0,\n                \"student\": {\n                    \"detail\": [\n                        {\n                            \"id\": \"1000103\",\n                            \"user_id\": \"47304\",\n                            \"product_id\": \"1\",\n                            \"loan_amount\": \"6000\",\n                            \"loan_date\": \"2021-10-28\"\n                        }\n                    ],\n                    \"count\": 1,\n                    \"rewardAmount\": 0\n                },\n                \"salary_man\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"small_enterprise\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"collaboration\": [\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"王道銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"凱基銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"上海銀行\"\n                    }\n                ]\n            },\n            \"2021-11\": {\n                \"registered\": [\n                    {\n                        \"user_id\": \"47348\",\n                        \"created_at\": \"2021-11-01 13:56:51\"\n                    }\n                ],\n                \"registeredCount\": 1,\n                \"fullMember\": [\n                    {\n                        \"user_id\": \"47348\",\n                        \"created_at\": \"2021-11-01 13:56:51\"\n                    }\n                ],\n                \"fullMemberCount\": 1,\n                \"fullMemberRewardAmount\": 0,\n                \"student\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"salary_man\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"small_enterprise\": {\n                    \"detail\": [\n                        {\n                            \"id\": \"1000267\",\n                            \"user_id\": \"47348\",\n                            \"product_id\": \"1002\",\n                            \"loan_amount\": \"0\",\n                            \"loan_date\": \"2021-11-30\"\n                        }\n                    ],\n                    \"count\": 1,\n                    \"rewardAmount\": 1100\n                },\n                \"collaboration\": [\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"王道銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"凱基銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"上海銀行\"\n                    }\n                ]\n            },\n            \"2021-12\": {\n                \"registered\": [],\n                \"registeredCount\": 0,\n                \"fullMember\": [],\n                \"fullMemberCount\": 0,\n                \"fullMemberRewardAmount\": 0,\n                \"student\": {\n                    \"detail\": [\n                        {\n                            \"id\": \"1000345\",\n                            \"user_id\": \"47295\",\n                            \"product_id\": \"1\",\n                            \"loan_amount\": \"13000\",\n                            \"loan_date\": \"2021-12-09\"\n                        }\n                    ],\n                    \"count\": 1,\n                    \"rewardAmount\": 0\n                },\n                \"salary_man\": {\n                    \"detail\": [\n                        {\n                            \"id\": \"1000354\",\n                            \"user_id\": \"47295\",\n                            \"product_id\": \"3\",\n                            \"loan_amount\": \"32000\",\n                            \"loan_date\": \"2021-12-09\"\n                        }\n                    ],\n                    \"count\": 1,\n                    \"rewardAmount\": 0\n                },\n                \"small_enterprise\": {\n                    \"detail\": [],\n                    \"count\": 0,\n                    \"rewardAmount\": 0\n                },\n                \"collaboration\": [\n                    {\n                        \"detail\": [\n                            {\n                                \"loan_time\": \"2021-12-07 12:00:00\"\n                            },\n                            {\n                                \"loan_time\": \"2021-12-07 12:00:00\"\n                            },\n                            {\n                                \"loan_time\": \"2021-12-07 12:00:00\"\n                            },\n                            {\n                                \"loan_time\": \"2021-12-09 12:00:00\"\n                            }\n                        ],\n                        \"count\": 4,\n                        \"rewardAmount\": 800,\n                        \"collaborator\": \"王道銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"凱基銀行\"\n                    },\n                    {\n                        \"detail\": [],\n                        \"count\": 0,\n                        \"rewardAmount\": 0,\n                        \"collaborator\": \"上海銀行\"\n                    }\n                ]\n            }\n        }\n    }\n" +
+                        title: "SUCCESS",
+                        content:
+                            "{\n" +
+                            '    "result": "SUCCESS",\n' +
+                            '    "data": {\n' +
+                            '       "promote_name": "特約方案",\n' +
+                            '       "promote_alias": "appointed",\n' +
+                            '       "promote_code": "URLP3AN2",\n' +
+                            '       "promote_url": "https://event.influxfin.com/R/url?p=URLP3AN2",\n' +
+                            '       "promote_qrcode": "https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=https%3A%2F%2Fevent.influxfin.com%2FR%2Furl%3Fp%3DURLP3AN2&chs=500x500",\n' +
+                            '       "start_time": "2021-07-16 11:53:03",\n' +
+                            '       "expired_time": "2022-11-16 11:53:03",\n' +
+                            '       "contract": "立書人\r\n' +
+                            "       普匯金融科技股份有限公司\t(以下簡稱甲方)\r\n\r\n" +
+                            "       王大明                   (以下簡稱乙方)\r\n" +
+                            "       -- 以下略過 --\n" +
+                            '       中華民國 110 年 11 月 16 日",\n' +
+                            '       "status": 1,\n' +
+                            '       "total_reward_amount": 1927,\n' +
+                            '       "overview": {\n' +
+                            '           "fullMemberCount": 4,\n' +
+                            '           "loanedCount": {\n' +
+                            '               "student": 3,\n' +
+                            '               "salary_man": 1,\n' +
+                            '               "small_enterprise": 1\n' +
+                            "           },\n" +
+                            '           "rewardAmount": {\n' +
+                            '               "student": 12,\n' +
+                            '               "salary_man": 15,\n' +
+                            '               "small_enterprise": 1100\n' +
+                            "           },\n" +
+                            '           "collaboration": [\n' +
+                            "               {\n" +
+                            '                   "detail": [],\n' +
+                            '                   "count": 4,\n' +
+                            '                   "rewardAmount": 800,\n' +
+                            '                   "collaborator": "王道銀行"\n' +
+                            "               },\n" +
+                            "               {\n" +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0,\n' +
+                            '                   "collaborator": "凱基銀行"\n' +
+                            "               },\n" +
+                            "               {\n" +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0,\n' +
+                            '                   "collaborator": "上海銀行"\n' +
+                            "               }\n" +
+                            "           ]\n" +
+                            "       },\n" +
+                            '       "detail_list": {\n' +
+                            '           "2021-07": {\n' +
+                            '               "registered": [],\n' +
+                            '               "registeredCount": 0,\n' +
+                            '               "fullMember": [],\n' +
+                            '               "fullMemberCount": 0,\n' +
+                            '               "fullMemberRewardAmount": 0,\n' +
+                            '               "student": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "salary_man": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "small_enterprise": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "collaboration": [\n' +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "王道銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "凱基銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "上海銀行"\n' +
+                            "                   }\n" +
+                            "               ]\n" +
+                            "           },\n" +
+                            '           "2021-08": {\n' +
+                            '               "registered": [],\n' +
+                            '               "registeredCount": 0,\n' +
+                            '               "fullMember": [],\n' +
+                            '               "fullMemberCount": 0,\n' +
+                            '               "fullMemberRewardAmount": 0,\n' +
+                            '               "student": {\n' +
+                            '                   "detail": [\n' +
+                            "                       {\n" +
+                            '                           "id": "841055",\n' +
+                            '                           "user_id": "47174",\n' +
+                            '                           "product_id": "1",\n' +
+                            '                           "loan_amount": "10000",\n' +
+                            '                           "loan_date": "2021-08-02"\n' +
+                            "                       }\n" +
+                            "                   ],\n" +
+                            '                   "count": 1,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "salary_man": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "small_enterprise": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "collaboration": [\n' +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "王道銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "凱基銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "上海銀行"\n' +
+                            "                   }\n" +
+                            "               ]\n" +
+                            "           },\n" +
+                            '           "2021-09": {\n' +
+                            '               "registered": [\n' +
+                            "                   {\n" +
+                            '                       "user_id": "47174",\n' +
+                            '                       "created_at": "2021-09-20 00:00:01"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "user_id": "47295",\n' +
+                            '                       "created_at": "2021-09-28 17:05:01"\n' +
+                            "                   }\n" +
+                            "               ],\n" +
+                            '               "registeredCount": 2,\n' +
+                            '               "fullMember": [\n' +
+                            "                   {\n" +
+                            '                       "user_id": "47174",\n' +
+                            '                       "created_at": "2021-09-20 00:00:01"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "user_id": "47295",\n' +
+                            '                       "created_at": "2021-09-28 17:05:01"\n' +
+                            "                   }\n" +
+                            "               ],\n" +
+                            '               "fullMemberCount": 2,\n' +
+                            '               "fullMemberRewardAmount": 0,\n' +
+                            '               "student": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "salary_man": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "small_enterprise": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "collaboration": [\n' +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "王道銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "凱基銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "上海銀行"\n' +
+                            "                   }\n" +
+                            "               ]\n" +
+                            "           },\n" +
+                            '           "2021-10": {\n' +
+                            '               "registered": [\n' +
+                            "                   {\n" +
+                            '                       "user_id": "47304",\n' +
+                            '                       "created_at": "2021-10-01 13:47:25"\n' +
+                            "                   }\n" +
+                            "               ],\n" +
+                            '               "registeredCount": 1,\n' +
+                            '               "fullMember": [\n' +
+                            "                   {\n" +
+                            '                       "user_id": "47304",\n' +
+                            '                       "created_at": "2021-10-01 13:47:25"\n' +
+                            "                   }\n" +
+                            "               ],\n" +
+                            '               "fullMemberCount": 1,\n' +
+                            '               "fullMemberRewardAmount": 0,\n' +
+                            '               "student": {\n' +
+                            '                   "detail": [\n' +
+                            "                       {\n" +
+                            '                           "id": "1000103",\n' +
+                            '                           "user_id": "47304",\n' +
+                            '                           "product_id": "1",\n' +
+                            '                           "loan_amount": "6000",\n' +
+                            '                           "loan_date": "2021-10-28"\n' +
+                            "                       }\n" +
+                            "                   ],\n" +
+                            '                   "count": 1,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "salary_man": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "small_enterprise": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "collaboration": [\n' +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "王道銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "凱基銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "上海銀行"\n' +
+                            "                   }\n" +
+                            "               ]\n" +
+                            "           },\n" +
+                            '           "2021-11": {\n' +
+                            '               "registered": [\n' +
+                            "                   {\n" +
+                            '                       "user_id": "47348",\n' +
+                            '                       "created_at": "2021-11-01 13:56:51"\n' +
+                            "                   }\n" +
+                            "               ],\n" +
+                            '               "registeredCount": 1,\n' +
+                            '               "fullMember": [\n' +
+                            "                   {\n" +
+                            '                       "user_id": "47348",\n' +
+                            '                       "created_at": "2021-11-01 13:56:51"\n' +
+                            "                   }\n" +
+                            "               ],\n" +
+                            '               "fullMemberCount": 1,\n' +
+                            '               "fullMemberRewardAmount": 0,\n' +
+                            '               "student": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "salary_man": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "small_enterprise": {\n' +
+                            '                   "detail": [\n' +
+                            "                       {\n" +
+                            '                           "id": "1000267",\n' +
+                            '                           "user_id": "47348",\n' +
+                            '                           "product_id": "1002",\n' +
+                            '                           "loan_amount": "0",\n' +
+                            '                           "loan_date": "2021-11-30"\n' +
+                            "                       }\n" +
+                            "                   ],\n" +
+                            '                   "count": 1,\n' +
+                            '                   "rewardAmount": 1100\n' +
+                            "               },\n" +
+                            '               "collaboration": [\n' +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "王道銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "凱基銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "上海銀行"\n' +
+                            "                   }\n" +
+                            "               ]\n" +
+                            "           },\n" +
+                            '           "2021-12": {\n' +
+                            '               "registered": [],\n' +
+                            '               "registeredCount": 0,\n' +
+                            '               "fullMember": [],\n' +
+                            '               "fullMemberCount": 0,\n' +
+                            '               "fullMemberRewardAmount": 0,\n' +
+                            '               "student": {\n' +
+                            '                   "detail": [\n' +
+                            "                       {\n" +
+                            '                           "id": "1000345",\n' +
+                            '                           "user_id": "47295",\n' +
+                            '                           "product_id": "1",\n' +
+                            '                           "loan_amount": "13000",\n' +
+                            '                           "loan_date": "2021-12-09"\n' +
+                            "                       }\n" +
+                            "                   ],\n" +
+                            '                   "count": 1,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "salary_man": {\n' +
+                            '                   "detail": [\n' +
+                            "                       {\n" +
+                            '                           "id": "1000354",\n' +
+                            '                           "user_id": "47295",\n' +
+                            '                           "product_id": "3",\n' +
+                            '                           "loan_amount": "32000",\n' +
+                            '                           "loan_date": "2021-12-09"\n' +
+                            "                       }\n" +
+                            "                   ],\n" +
+                            '                   "count": 1,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "small_enterprise": {\n' +
+                            '                   "detail": [],\n' +
+                            '                   "count": 0,\n' +
+                            '                   "rewardAmount": 0\n' +
+                            "               },\n" +
+                            '               "collaboration": [\n' +
+                            "                   {\n" +
+                            '                       "detail": [\n' +
+                            "                           {\n" +
+                            '                               "loan_time": "2021-12-07 12:00:00"\n' +
+                            "                           },\n" +
+                            "                           {\n" +
+                            '                               "loan_time": "2021-12-07 12:00:00"\n' +
+                            "                           },\n" +
+                            "                           {\n" +
+                            '                               "loan_time": "2021-12-07 12:00:00"\n' +
+                            "                           },\n" +
+                            "                           {\n" +
+                            '                               "loan_time": "2021-12-09 12:00:00"\n' +
+                            "                           }\n" +
+                            "                       ],\n" +
+                            '                       "count": 4,\n' +
+                            '                       "rewardAmount": 800,\n' +
+                            '                       "collaborator": "王道銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "凱基銀行"\n' +
+                            "                   },\n" +
+                            "                   {\n" +
+                            '                       "detail": [],\n' +
+                            '                       "count": 0,\n' +
+                            '                       "rewardAmount": 0,\n' +
+                            '                       "collaborator": "上海銀行"\n' +
+                            "                   }\n" +
+                            "               ]\n" +
+                            "           }\n" +
+                            "       }\n" +
+                            "   }\n" +
                             "}",
-                        "type": "Object"
-                    }
-                ]
+                        type: "Object",
+                    },
+                ],
             },
             "filename": "application/controllers/api/v2/User.php",
             "groupTitle": "User",
