@@ -176,8 +176,7 @@
                                                     <a href="/engineerLoan" class="link-text">資訊工程師貸</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <div class="link-text">房屋貸款</div>
-                                                    <div class="link-coming-soon">(coming soon)</div>
+                                                    <a href="/houseloan" class="link-text">房屋貸款</a>
                                                 </div>
                                             </div>
                                         </div>
