@@ -205,5 +205,9 @@ interface Certification_definition
      */
     public function can_re_submit(): bool;
 
+    /**
+     * 驗證結束後處理函數
+     * @return bool
+     */
     public function post_verify(): bool;
 }

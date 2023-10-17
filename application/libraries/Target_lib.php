@@ -329,6 +329,24 @@ class Target_lib
             $product_id = $target->product_id;
             $sub_product_id = $target->sub_product_id;
 
+            if ($product_id == PRODUCT_ID_HOME_LOAN) {
+                $certifications_to_check = [
+                    CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                    CERTIFICATION_SITE_SURVEY_VIDEO,
+                ];
+                foreach ($certifications_to_check as $certification_id) {
+                    $certification = $this->CI->user_certification_model->get_by([
+                        'user_id' => $user_id,
+                        'certification_id' => $certification_id,
+                        'status' => 1
+                    ]);
+
+                    if (empty($certification)) {
+                        return false;
+                    }
+                }
+            }
+
             $product_info = $product_list[$product_id];
             if ($this->is_sub_product($product_info, $sub_product_id)) {
                 $product_info = $this->trans_sub_product($product_info, $sub_product_id);
@@ -483,10 +501,10 @@ class Target_lib
                                     }
                                 }
 
-                                // todo: 暫時將「學生貸」、「上班族貸」轉二審
+                                // todo: 暫時將「學生貸」、「上班族貸」、「房貸」轉二審
                                 if ( ! $subloan_status &&
                                     ! $renew &&
-                                    in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_STUDENT]) &&
+                                    in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_HOME_LOAN]) &&
                                     $target->status == TARGET_WAITING_APPROVE &&
                                     $target->sub_status == TARGET_SUBSTATUS_NORNAL)
                                 {
@@ -514,14 +532,14 @@ class Target_lib
                                         ! $product_info['secondInstance']
                                         && ! $second_instance_check
                                         && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
-                                        // 依照產品部門需求，上班族暫時全部強制進待二審
-                                        && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
+                                        // 依照產品部門需求，「上班族貸」、「房貸」暫時全部強制進待二審
+                                        && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER, PRODUCT_ID_HOME_LOAN])
                                         || $renew
                                         || $evaluation_status
                                         // ----(S)
-                                        // todo: 將「學生貸」、「上班族貸」轉二審，不應有額度就 approve
+                                        // todo: 將「學生貸」、「上班族貸」、「房貸」轉二審，不應有額度就 approve
                                         // || $creditSheet->hasCreditLine()
-                                        || ($creditSheet->hasCreditLine() && ! in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN]))
+                                        || ($creditSheet->hasCreditLine() && ! in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_HOME_LOAN]))
                                         // ----(E)
                                     )
                                     || $subloan_status
@@ -687,7 +705,7 @@ class Target_lib
         $target = $this->CI->target_model->get_by(['id' => $target_id]);
         $memo = is_null($target->memo) ? [] : json_decode($target->memo, true);
         $memo['repayment_msg'] = $message;
-        $this->CI->target_model->update($target_id, ['memo' => $memo]);
+        $this->CI->target_model->update($target_id, ['memo' => json_encode($memo)]);
 //        $this->insert_change_log($target_id, ['memo' => $memo]);
     }
 
@@ -1825,8 +1843,10 @@ class Target_lib
         $allow_stage_cer = [1, 3];
         if ($targets && !empty($targets)) {
             foreach ($targets as $key => $value) {
+                // todo: 只放學生貸、房產消費貸進新架構，剩餘的等之後開發好再說
+                // if (($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0) || $value->product_id == PRODUCT_ID_HOME_LOAN)
                 // todo: 只放學生貸進新架構，剩餘的等之後開發好再說
-                if ($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0)
+                if (($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0) )
                 {
                     $approve_factory = new Approve_factory();
                     $approve_instance = $approve_factory->get_instance_by_model_data($value);
@@ -2593,7 +2613,7 @@ class Target_lib
             'instalment' => $sub_product['instalment'],
             'repayment' => $sub_product['repayment'],
             'targetData' => $sub_product['targetData'],
-            'secondInstance' => $sub_product['secondInstance'],
+            'secondInstance' => $sub_product['secondInstance'] ?? FALSE,
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => $product['checkOwner'] ?? FALSE,
@@ -2793,6 +2813,24 @@ class Target_lib
                             $temp['addspouse'] = false;
                         }
                     }
+                    if (isset($user_info))
+                    {
+                        $this->CI->load->helper('user_meta_helper');
+                        $email = get_email_to($user_info, BORROWER);
+                    }
+                    if (empty($email))
+                    {
+                        $associate_content = json_decode($value->content, TRUE);
+                        if (json_last_error() !== JSON_ERROR_NONE)
+                        {
+                            $email = NULL;
+                        }
+                        else
+                        {
+                            $email = ! empty($associate_content['mail']) ? $associate_content['mail'] : NULL;
+                        }
+                    }
+
                     $data = [
                         'user_id' => $user_id,
                         'name' => $name,
@@ -2803,6 +2841,8 @@ class Target_lib
                         'guarantor' => ($value->guarantor == 1),
                         'self' => $self,
                         'certification' => $certification,
+                        'relationship' => $value->relationship ?? NULL,
+                        'email' => $email
                     ];
                     $guarantor_type = [
                        2 => 'A',
@@ -3165,7 +3205,12 @@ class Target_lib
 
     public function get_individual_product_ids(): array
     {
-        return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
+        return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER, PRODUCT_ID_HOME_LOAN];
+    }
+
+    public function get_home_loan_product_ids():array
+    {
+        return [PRODUCT_ID_HOME_LOAN];
     }
 
     public function get_product_id_by_tab($tabname): array
@@ -3174,6 +3219,8 @@ class Target_lib
         {
             case PRODUCT_TAB_ENTERPRISE:
                 return $this->get_enterprise_product_ids();
+            case PRODUCT_TAB_HOME_LOAN:
+                return $this->get_home_loan_product_ids();
             case PRODUCT_TAB_INDIVIDUAL:
             default:
                 return $this->get_individual_product_ids();
@@ -3318,5 +3365,46 @@ class Target_lib
     {
         $subloan_list = $this->CI->config->item('subloan_list');
         return (bool) preg_match('/' . $subloan_list . '/', $target_no);
+    }
+        /**
+     * 退「屋現勘/遠端視訊預約時間認證」 and 子系統取消預約時段
+     *
+     * @param int $userId 用戶ID
+     * @return bool 成功取消預訂並更新認證記錄返回 true，否則返回 false。
+     */
+    public function cancel_booking_and_certification(int $userId): bool
+    {
+        $this->CI->load->model('user/user_certification_model');
+        $this->CI->load->library('booking_lib');
+        $certification = $this->CI->user_certification_model->get_by([
+            'user_id' => $userId,
+            'certification_id' => CERTIFICATION_SITE_SURVEY_BOOKING,
+            'status' => 1
+        ]);
+
+        if (!$certification) {
+            // 如果找不到相應的認證記錄，視為成功取消
+            return true;
+        }
+
+        $content = json_decode($certification->content, true);
+
+        if (isset($content['booking_response']['_id'])) {
+            $bookingId = $content['booking_response']['_id'];
+            $response = $this->CI->booking_lib->cancel_booking($bookingId);
+            if (!isset($response['result']) || $response['result'] != 'SUCCESS') {
+                // 如果取消預訂失敗，返回失敗
+                return false;
+            }
+        }
+
+        $result = $this->CI->user_certification_model->update($certification->id, ['status' => 2]);
+        if (!$result) {
+            // 如果更新認證記錄失敗，返回失敗
+            return false;
+        }
+
+        // 成功取消預訂並更新認證記錄
+        return true;
     }
 }
