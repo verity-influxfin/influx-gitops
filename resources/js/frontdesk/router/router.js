@@ -52,13 +52,15 @@ import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
 import smeg from '../pages/BusinessLoan/smeg'
 import SelfieAuth from '../pages/selfieAuth.vue'
+import houseLoan from '../pages/houseLoan'
 
-let routers = [
+const routers = [
   { path: '*', redirect: '/' },
   { path: '/', component: index },
   { path: '/borrow', component: borrow },
   { path: '/workLoan', component: workLoan },
   { path: '/collegeLoan', component: collegeLoan },
+  { path: '/houseLoan', component: houseLoan },
   { path: '/faq', component: faq },
   { path: '/risk', component: risk },
   { path: '/projects', component: projects },
