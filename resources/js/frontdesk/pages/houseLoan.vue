@@ -50,6 +50,18 @@
             class="img-fluid d-sm-none d-block w-100"
           />
         </div>
+        <div class="swiper-slide">
+          <img
+            src="@/asset/images/houseloan/houseloan-banner-5.jpg"
+            alt="購房貸"
+            class="img-fluid d-sm-block d-none w-100"
+          />
+          <img
+            src="@/asset/images/houseloan/houseloan-banner-5-phone.jpg"
+            alt="購房貸"
+            class="img-fluid d-sm-none d-block w-100"
+          />
+        </div>
       </div>
       <div class="swiper-pagination"></div>
     </div>
