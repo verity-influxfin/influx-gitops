@@ -48855,14 +48855,66 @@ define({
                             '               "fullMemberCount": 0,\n' +
                             '               "fullMemberRewardAmount": 0,\n' +
                             '               "student": {\n' +
-                            '                   "detail": [],\n' +
-                            '                   "count": 0,\n' +
-                            '                   "rewardAmount": 0\n' +
+                            '                   "detail": [\n'+
+                            '                       {\n'+
+                            '                       "id": "1003792",\n'+
+                            '                       "user_id": "1001035",\n'+
+                            '                       "product_id": "1",\n'+
+                            '                       "loan_amount": "81000",\n'+
+                            '                       "loan_date": "2021-07-22"\n'+
+                            '                       }\n'+
+                            '                   ],\n' +
+                            '                   "count": 1,\n' +
+                            '                   "rewardAmount": 806\n' +
+                            '                    "targets": {\n' +
+                            '                        "1003792": {\n' +
+                            '                            "0": {\n' +
+                            '                                "enteringDate": "2021-07-22",\n' +
+                            '                                "rewardAmount": 777\n' +
+                            "                            },\n" +
+                            '                            "rewardAmount": 777,\n' +
+                            '                            "1": {\n' +
+                            '                                "enteringDate": "2021-07-22",\n' +
+                            '                                "borrowerPlatformFee": "2430",\n' +
+                            '                                "rewardAmount": 29\n' +
+                            "                            },\n" +
+                            '                            "borrowerPlatformFee": 2430\n' +
+                            "                        }\n" +
+                            "                   }\n" +
                             "               },\n" +
                             '               "salary_man": {\n' +
-                            '                   "detail": [],\n' +
-                            '                   "count": 0,\n' +
-                            '                   "rewardAmount": 0\n' +
+                            '                   "detail": [\n'+
+                            '                       {\n'+
+                            '                       "id": "1003795",\n'+
+                            '                       "user_id": "1001034",\n'+
+                            '                       "product_id": "3",\n'+
+                            '                       "loan_amount": "105000",\n'+
+                            '                       "loan_date": "2021-07-22"\n'+
+                            '                       }\n'+
+                            '                   ],\n' +
+                            '                   "count": 1,\n' +
+                            '                   "rewardAmount": 939\n' +
+                            '                    "targets": {\n' +
+                            '                        "1003795": {\n' +
+                            '                            "0": {\n' +
+                            '                                "enteringDate": "2021-07-22",\n' +
+                            '                                "rewardAmount": 888\n' +
+                            "                            },\n" +
+                            '                            "rewardAmount": 888,\n' +
+                            '                            "1": {\n' +
+                            '                                "enteringDate": "2021-07-22",\n' +
+                            '                                "borrowerPlatformFee": "4200",\n' +
+                            '                                "rewardAmount": 50\n' +
+                            "                            },\n" +
+                            '                            "borrowerPlatformFee": 4200\n' +
+                            '                            "2": {\n' +
+                            '                                "enteringDate": "2021-07-22",\n' +
+                            '                                "borrowerPlatformFee": "48",\n' +
+                            '                                "rewardAmount": 1\n' +
+                            "                            },\n" +
+                            '                            "borrowerPlatformFee": 48\n' +
+                            "                        }\n" +
+                            "                   }\n" +
                             "               },\n" +
                             '               "small_enterprise": {\n' +
                             '                   "detail": [],\n' +
