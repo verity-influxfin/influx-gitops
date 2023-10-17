@@ -336,7 +336,6 @@
                                                 <div class="link-item">
                                                     <a class="link-text" href="/blog">小學堂文章</a>
                                                 </div>
-                                                @foreach ($latestArticles as $latestArticle)
                                                 <div class="link-item">
                                                     <a class="link-text" href="/vlog?q=share">小學堂影音</a>
                                                 </div>
