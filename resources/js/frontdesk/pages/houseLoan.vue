@@ -120,7 +120,7 @@
               <div class="suit-title">適用對象</div>
               <div class="suit-underline d-md-none"></div>
             </div>
-            <div class="suit-item">•20~45歲</div>
+            <div class="suit-item">•18~45歲</div>
             <div class="suit-item">•信用良好（無催收/呆帳紀錄）</div>
             <div class="suit-item">•穩定收入之公民</div>
             <div class="suit-item">•具買賣、裝修合約及不動產</div>
