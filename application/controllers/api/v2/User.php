@@ -3185,8 +3185,10 @@ END:
                             ]);
                         }
                     }
-
-                    $this->response(['result' => 'SUCCESS', 'data' => [], 'msg' => $msg]);
+                    // Todo: 2023-10-18調整，舊版app不會執行2階段認證，之後需要拿掉
+                    if ($input['new_app']) {
+                        $this->response(['result' => 'SUCCESS', 'data' => [], 'msg' => $msg]);
+                    }
                 }
 
                 // 檢查該提交的徵信項是否已審核成功
