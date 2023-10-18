@@ -49636,6 +49636,13 @@ define({
                             "optional": true,
                             "field": "appointed",
                             "description": "<p>是否變更為特約通路商</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Boolean",
+                            "optional": true,
+                            "field": "new_app",
+                            "description": "<p>是否為新版app(2023-10-18調整)</p>"
                         }
                     ]
                 }
