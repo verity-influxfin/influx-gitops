@@ -243,6 +243,7 @@
                       class="check-list-content mb-3"
                       v-show="showCheckLists.b"
                     >
+                      <div class="swiper-text-3">•房屋所有權狀</div>
                       <div class="swiper-text-3">•購房合約</div>
                       <div class="swiper-text-3">•購房發票(選填)</div>
                       <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
@@ -531,6 +532,7 @@
                       class="check-list-content mb-3"
                       v-show="showCheckLists.b"
                     >
+                      <div class="swiper-text-3">•房屋所有權狀</div>
                       <div class="swiper-text-3">•購房合約</div>
                       <div class="swiper-text-3">•購房發票(選填)</div>
                       <div class="swiper-text-3">•入屋現勘/遠端視訊</div>
