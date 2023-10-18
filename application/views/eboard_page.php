@@ -359,7 +359,7 @@
 					drawTable3()
 					drawReal()
 					drawGeo()
-					setTimeout(()=>{getData}, 300000)
+					setTimeout(()=>{getData()}, 300000)
 				})
 			}
 
