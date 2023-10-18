@@ -746,7 +746,7 @@
           <div class="d-md-none d-block">已有數萬位使用者取得資金</div>
           <div class="d-md-none d-block">您還在等什麼？</div>
         </h2>
-        <div class="row no-gutters swiper-row">
+        <div class="no-gutters swiper-row">
           <div class="swiper">
             <!-- Additional required wrapper -->
             <div class="swiper-wrapper">
