@@ -103,17 +103,21 @@ abstract class Approve_base implements Approve_interface
             goto END;
         }
 
-        // 檢查是否命中反詐欺
-        switch ($this->check_brookesia())
-        {
-            case self::BROOKESIA_BLOCK:
-                goto END;
-            case self::BROOKESIA_CLEAR:
-                break;
-            case self::BROOKESIA_SECOND_INSTANCE:
-            default:
-                $match_brookesia = TRUE;
+        // 2023-10-19 所有產轉都不用檢查是否命中反詐欺
+        if (!$subloan_status) {
+            // 檢查是否命中反詐欺
+            switch ($this->check_brookesia())
+            {
+                case self::BROOKESIA_BLOCK:
+                    goto END;
+                case self::BROOKESIA_CLEAR:
+                    break;
+                case self::BROOKESIA_SECOND_INSTANCE:
+                default:
+                    $match_brookesia = TRUE;
+            }
         }
+
         $user_checked = $this->CI->brookesia_lib->is_user_checked($this->target_user_id, $this->target['id']);
         if ($user_checked === FALSE)
         {
