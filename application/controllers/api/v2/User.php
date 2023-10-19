@@ -3429,6 +3429,70 @@ END:
 
     }
 
+
+    public function promote_code_new_get()
+    {
+        $user_id = $this->user_info->id;
+        $input = $this->input->get(NULL, TRUE);
+
+        $promote_code = $input['promote_code'] ?? '';
+        if (!$promote_code) {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+        }
+
+        $start_date = $input['start_date'] ?? '';
+        // 檢查日期格式 YYYY-MM-DD
+        if ($start_date && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $start_date)) {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+        }
+        $end_date = $input['end_date'] ?? '';
+        // 檢查日期格式 YYYY-MM-DD
+        if ($end_date && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $end_date)) {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+        }
+
+        $url = '';
+        $request_result = curl_get($url);
+
+
+
+        //        {
+        //  "award_info": {
+        //    "student_count": 10,
+        //    "salary_man_count": 20,
+        //    "small_enterprise_count": 30,
+        //    "promote_count": 100,
+        //    "student_amount": 1000,
+        //    "salary_man_amount": 2000,
+        //    "small_enterprise_amount": 3000
+        //    "promote_amount": 10000,
+        //  },
+        //  "range_list": [
+        //    "2023-01-01",
+        //    "2023-02-01",
+        //    "2023-03-01"
+        //  ],
+        //  "contract": "這是合約內容的範例文字。"
+        //}
+        $result = [
+            "award_info" => [
+                "student_count" => 10,
+                "salary_man_count" => 20,
+                "small_enterprise_count" => 30,
+                "promote_count" => 100,
+                "student_amount" => 1000,
+                "salary_man_amount" => 2000,
+                "small_enterprise_amount" => 3000,
+                "promote_amount" => 10000,
+            ],
+            "range_list" => [],
+            "contract" => "",
+        ];
+        $this->response(array('result' => 'SUCCESS', 'data' => $result));
+        $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+
+    }
+
     public function promote_code_get($action = '')
     {
         $this->load->model('user/user_model');
