@@ -3673,6 +3673,12 @@ $data['has_spouse'] = FALSE;
             $user = $this->user_model->get($user_id);
 
             $spreadsheet = $this->spreadsheet_lib->load($title_rows, $data_rows);
+
+            //check dir is exist
+            $dir = 'tmp';
+            if (!is_dir($dir)) {
+                mkdir($dir, 0777, true);
+            }
             $filepath = 'tmp/subcode_' . round(microtime(true) * 1000) .'.xlsx';
 
             $this->spreadsheet_lib->save($filepath, $spreadsheet);
