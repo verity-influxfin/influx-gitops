@@ -1374,6 +1374,8 @@ class Target_model extends MY_Model
         ->from('p2p_log.targets_change_log as tcl')
         ->join("($sub_query3) ad", 'ad.id = tcl.change_admin', 'JOIN')
         ->where('tcl.status = 9')
+        // 只需要去一次log紀錄就好
+        ->group_by('tcl.target_id')
         ->get_compiled_select(NULL, TRUE);
 
             $this->_database
