@@ -3430,7 +3430,7 @@ END:
     }
 
 
-    public function promote_code_new_get()
+    public function promote_performance_get()
     {
         $user_id = $this->user_info->id;
         $input = $this->input->get(NULL, TRUE);

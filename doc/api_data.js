@@ -48644,10 +48644,10 @@ define({
         },
         {
             "type": "get",
-            "url": "/v2/user/promote_code_new",
-            "title": "會員 推薦碼 new",
+            "url": "/v2/user/promote_performance",
+            "title": "會員 推薦績效",
             "version": "0.2.0",
-            "name": "GetUserPromoteCodeNew",
+            "name": "GetUserPromotePerformance",
             "group": "User",
             "header": {
                 "fields": {
@@ -48805,7 +48805,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/user/promote_code_new"
+                    "url": "/api/v2/user/promote_performance"
                 }
             ],
             "error": {
