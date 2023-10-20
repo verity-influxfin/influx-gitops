@@ -1553,9 +1553,14 @@
                     let new_date = new Date(user.birthday);
                     let eligible_year = 35;
                     new_date.setFullYear(new_date.getFullYear() + eligible_year);
-                    if (new_date <= today) {
+                    if (response.response?.new_or_old === '新戶' && new_date <= today) {
                         $('.fixed_amount_block input').prop('disabled', true);
                         $('#2_fixed_amount').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
+                        $('#2_score').prop('disabled', true);
+                        $('#2_score').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
+                        $('#original-amount-btn').css('display', 'none');
+                    } else {
+                        $('#original-amount-btn').prop('disabled', false);
                     }
                 }
 			},
