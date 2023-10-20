@@ -101,7 +101,7 @@ class Creditmanagement extends MY_Admin_Controller
      * @apiSuccess {Object} result
      */
     public function approve() {
-        if(!isset($this->inputData['group']) || !isset($this->inputData['score']) || !isset($this->inputData['opinion'])) {
+        if (!isset($this->inputData['target_id']) || !isset($this->inputData['group']) || !isset($this->inputData['score']) || !isset($this->inputData['opinion'])) {
             $this->json_output->setStatusCode(400)->setResponse(['lack of parameter'])->send();
         }
 
