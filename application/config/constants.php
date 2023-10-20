@@ -776,7 +776,7 @@ defined('PROMOTE_SUBCODE_SUB_STATUS_DEFAULT') OR define('PROMOTE_SUBCODE_SUB_STA
 defined('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE') OR define('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE', 1); // 二級經銷商申請退出 (待特約通路商同意)
 defined('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD') OR define('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD', 2); // 特約通路商加入二級經銷商 (待其同意成為二級經銷商)
 defined('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ') OR define('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ', 3); // 特約通路商刪除二級經銷商，待二級經銷商閱讀 (即便二級經銷商未閱讀，刪除關係依然生效)
-defined('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT') OR define('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT', 4); // 拒絕特約通路商成為二級經銷商，待特約經銷商閱讀 (即便特約經銷商未閱讀，拒絕關係依然生效)
+defined('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT') OR define('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT', 4); // 受邀方拒絕特約通路商成為二級經銷商，待特約經銷商閱讀 (即便特約經銷商未閱讀，拒絕關係依然生效)')
 
 defined('CHARITY_RECEIPT_TYPE_SINGLE_PAPER') OR define('CHARITY_RECEIPT_TYPE_SINGLE_PAPER', 0);
 
