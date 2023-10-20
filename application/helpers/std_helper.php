@@ -560,7 +560,7 @@ function curl_post_json(string $url, array $data = array(), array $header = arra
 			$date = $regex_result[1].$regex_result[3].$regex_result[5];
 		}
         // 2023/10/13 民國年去「0」，如：0851013 => 851013，1010103 => 1010103
-		return intval($date);
+		return strval(intval($date));
 	}
 
 	function pagination_config($config=[]) {
