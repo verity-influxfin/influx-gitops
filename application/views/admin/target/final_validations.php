@@ -1041,8 +1041,15 @@
 									<span class="amount_range"></span>
 									<span>：</span>
 								</span>
-                                <span style="width:70%;"><input id="2_fixed_amount" type="number" value="0" min="0" step="1"
-                                                                disabled><button id="original-amount-btn">使用原額度</button></span>
+                                <span style="width:70%;">
+                                    <input id="2_fixed_amount" type="number" value="0" min="0" step="1" disabled>
+                                </span>
+                            </div>
+                            <div>
+                                <span style="width:30%;"></span>
+                                <span style="width:70%;">
+                                    <button type="button" id="original-amount-btn" disabled>使用原額度</button>
+                                </span>
                             </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
