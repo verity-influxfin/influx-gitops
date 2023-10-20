@@ -508,11 +508,18 @@ class Certification extends REST_Controller {
 			//必填欄位
 			$fields 	= ['id_number','id_card_date','id_card_place','birthday','name','address'];
 			foreach ($fields as $field) {
-				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}else{
-					$content[$field] = $input[$field];
-				}
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                }
+                if (
+                    in_array($field,
+                        ['name', 'id_number', 'id_card_date', 'id_card_place', 'birthday', 'address', 'SpouseName']
+                    ) && !is_string($input[$field])
+                ) {
+                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                }
+
+                $content[$field] = $input[$field];
 			}
 
             $content['id_card_date'] = strip_ROC_date_word($content['id_card_date']);
