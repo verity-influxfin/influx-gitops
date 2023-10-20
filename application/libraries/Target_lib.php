@@ -1848,6 +1848,19 @@ class Target_lib
                 // todo: 只放學生貸進新架構，剩餘的等之後開發好再說
                 if (($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0) )
                 {
+                    // 迴圈當下重新確認是否狀態一樣
+                    $this_target = $this->CI->target_model->get_by([
+                        'id' => $value->id,
+                        'status' => [TARGET_WAITING_APPROVE, TARGET_ORDER_WAITING_VERIFY],
+                    ]);
+
+                    // 如果沒有這筆資料，就跳過
+                    if (!$this_target) {
+                        continue;
+                    }
+                    // $value 取代成重新取得的資料
+                    $value = $this_target;
+
                     $approve_factory = new Approve_factory();
                     $approve_instance = $approve_factory->get_instance_by_model_data($value);
                     if ($approve_instance->approve(FALSE) === TRUE)
@@ -1870,6 +1883,22 @@ class Target_lib
                 $subloan_list = $this->CI->config->item('subloan_list');
                 foreach ($list as $product_id => $targets) {
                     foreach ($targets as $target_id => $value) {
+                        // 迴圈當下重新確認是否狀態一樣
+                        $this_target = $this->CI->target_model->get_by([
+                            'id' => $value->id,
+                            'status' => [TARGET_WAITING_APPROVE, TARGET_ORDER_WAITING_VERIFY],
+                        ]);
+
+                        // 如果沒有這筆資料，就跳過
+                        if (!$this_target) {
+                            // 因為前面有把這筆資料的 script_status 改成 4，所以這裡要改回 0
+                            $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+                            continue;
+                        }
+
+                        // $value 取代成重新取得的資料
+                        $value = $this_target;
+
                     	if(!array_key_exists($value->product_id, $product_list))
                         {
                             $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
