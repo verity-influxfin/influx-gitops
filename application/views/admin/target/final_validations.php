@@ -1032,8 +1032,9 @@
 									<span class="score_range"></span>
 									<span>：</span>
 								</span>
-								<span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1"
-										disabled></span>
+								<span style="width:70%;">
+                                    <input id="2_score" type="number" value="0" min="0" step="1" disabled>
+                                </span>
 							</div>
                             <div class="fixed_amount_block">
 								<span style="width:30%;">
