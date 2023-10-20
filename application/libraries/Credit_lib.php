@@ -609,6 +609,7 @@ class Credit_lib{
         if (isset($approvalExtra))
         {
             $fixed_amount = $approvalExtra->get_fixed_amount();
+            $fixed_amount = floor($fixed_amount / 1000) * 1000;
             if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE)
             {
                 goto SKIP_FIXED_AMOUNT;
