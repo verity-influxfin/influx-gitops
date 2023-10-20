@@ -640,7 +640,8 @@ class Credit_lib{
                 'user_id' => $user_id,
                 'product_id' => $product_id,
                 'sub_product_id' => $sub_product_id,
-                'instalment' => $instalment
+                'instalment' => $instalment,
+                'status' => 1,
             ]);
 
             if (!empty($old_credit) && isset($old_credit->amount)) {
