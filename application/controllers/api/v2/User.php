@@ -3451,8 +3451,8 @@ END:
             $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
         }
 
-        $url = '';
-        $request_result = curl_get($url);
+        // $url = '';
+        // $request_result = curl_get($url);
 
 
 
@@ -3485,8 +3485,12 @@ END:
                 "small_enterprise_amount" => 3000,
                 "promote_amount" => 10000,
             ],
-            "range_list" => [],
-            "contract" => "",
+            "range_list" => [
+                "2023-01",
+                "2023-02",
+                "2023-03"
+            ],
+            "contract" => "這是合約內容的範例文字。",
         ];
         $this->response(array('result' => 'SUCCESS', 'data' => $result));
         $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
