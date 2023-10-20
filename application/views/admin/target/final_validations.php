@@ -1550,8 +1550,9 @@
                 fillTopSpecialList(response.response.special_list);
 
                 if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
-                    $('#2_fixed_amount').val(parseInt(currentTargetJson.available_amount))
-                    $('#credit_test_fixed_amount').val(parseInt(currentTargetJson.available_amount));
+                    // 額度調整預設為原額度
+                    $('#2_fixed_amount').val(parseInt(credit.amount))
+                    $('#credit_test_fixed_amount').val(parseInt(credit.amount));
                 }
 
                 if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
