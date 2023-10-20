@@ -2355,6 +2355,8 @@
                     fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
+                    $('#2_fixed_amount').val(parseInt(credit.amount))
+                    $('#credit_test_fixed_amount').val(parseInt(credit.amount));
 				}
 			});
 		});
