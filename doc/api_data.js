@@ -48644,6 +48644,195 @@ define({
         },
         {
             "type": "get",
+            "url": "/v2/user/promote_code_new",
+            "title": "會員 推薦碼 new",
+            "version": "0.2.0",
+            "name": "GetUserPromoteCodeNew",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "promote_code",
+                            "description": "<p>promote_code</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "start_date",
+                            "description": "<p>開始日期(YYYY-MM-DD)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "end_date",
+                            "description": "<p>結束日期(YYYY-MM-DD)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "award_info",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Integer",
+                            "optional": false,
+                            "field": "award_info.student_count",
+                            "description": "<p>學生貸案件數</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Integer",
+                            "optional": false,
+                            "field": "award_info.salary_man_count",
+                            "description": "<p>上班族貸案件數</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Integer",
+                            "optional": false,
+                            "field": "award_info.small_enterprise_count",
+                            "description": "<p>企業貸案件數</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Integer",
+                            "optional": false,
+                            "field": "award_info.promote_count",
+                            "description": "<p>推薦註冊數</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Integer",
+                            "optional": true,
+                            "field": "award_info.student_amount",
+                            "description": "<p>學生貸金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Integer",
+                            "optional": true,
+                            "field": "award_info.salary_man_amount",
+                            "description": "<p>上班族貸金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Integer",
+                            "optional": true,
+                            "field": "award_info.small_enterprise_amount",
+                            "description": "<p>企業貸金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Integer",
+                            "optional": true,
+                            "field": "award_info.promote_amount",
+                            "description": "<p>推薦金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Array[String]",
+                            "optional": false,
+                            "field": "range_list",
+                            "description": "<p>月份範圍['YYYY-MM']</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "contract",
+                            "description": "<p>合約內容</p>"
+                        },
+                    ]
+                },
+                examples: [
+                    {
+                        title: "SUCCESS",
+                        content:
+                            "{\n" +
+                            '\t"result": "SUCCESS",\n' +
+                            '\t"data": {\n' +
+                            '\t\t"award_info": {\n' +
+                            '\t\t\t"student_count": 10,\n' +
+                            '\t\t\t"salary_man_count": 20,\n' +
+                            '\t\t\t"small_enterprise_count": 30,\n' +
+                            '\t\t\t"promote_count": 100,\n' +
+                            '\t\t\t"student_amount": 1000,\n' +
+                            '\t\t\t"salary_man_amount": 2000,\n' +
+                            '\t\t\t"small_enterprise_amount": 3000\n' +
+                            '\t\t\t"promote_amount": 10000\n' +
+                            '\t\t\t},\n' +
+                            '\t\t"range_list": [\n' +
+                            '\t\t\t"2023-01",\n' +
+                            '\t\t\t"2023-02",\n' +
+                            '\t\t\t"2023-03"\n' +
+                            '\t\t\t],\n' +
+                            '\t\t"contract": "這是合約內容的範例文字。"\n' +
+                            '\t\t}\n'+
+                            "}",
+                        type: "Object",
+                    },
+                ],
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/promote_code_new"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n" +
+                            "\t\"result\": \"ERROR\",\n" +
+                            "\t\"error\": \"200\"\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "get",
             "url": "/v2/user/promote_code",
             "title": "會員 推薦碼",
             "version": "0.2.0",
