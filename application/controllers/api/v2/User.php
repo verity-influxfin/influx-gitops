@@ -3453,11 +3453,39 @@ END:
             $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
         }
 
-        // $url = '';
-        // $request_result = curl_get($url);
-        $this->response(array('result' => 'SUCCESS', 'data' => $result));
-        $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+        $base_uri = getenv('ENV_ERP_HOST');
+        if (!$base_uri) {
+            $this->response(array('result' => 'ERROR', 'error' => '507'));
+        }
 
+        $client = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST'),
+            'timeout' => 300,
+        ]);
+        try {
+            $res = $client->request('GET', '/user_qrcode/promote_performance', [
+                'query' => [
+                    'user_id' => $user_id,
+                    'objective_promote_code' => $promote_code
+                ]
+            ]);
+            $content = $res->getBody()->getContents();
+            $json = json_decode($content, true);
+            $this->response(array('result' => 'SUCCESS', 'data' => $json));
+
+        }catch (RequestException $e) {
+            $detail = '';
+            if ($e->hasResponse()) {
+                $responseBody = $e->getResponse()->getBody()->getContents();
+                $json = json_decode($responseBody, true);
+                if ($e->getResponse()->getStatusCode() == 422) {
+                    $detail = $json['detail'][0]['msg'] ?? ''; // 取得錯誤訊息
+                } else {
+                    $detail = $json['detail'] ?? '';
+                }
+            }
+            $this->response(array('result' => 'ERROR', 'error' => $detail));
+        }
     }
 
     public function promote_code_get($action = '')
