@@ -503,7 +503,7 @@ $config['product_list'] = [
         'hiddenMainProduct' => FALSE,
         'hiddenSubProduct' => FALSE,
         'allow_age_range' => [20, 45],
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿18歲的工作人士均可申請</span>',
         'checkOwner' => FALSE,
     ],
     1000 => [
@@ -825,7 +825,7 @@ $config['visul_id_des'] = [
     ],
     'LF1' => [
         'name' => '上班族貸',
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:16px;color:black;font-weight: 900;\'><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>快速滿足您的資金需求</span><br><span style=\'font-size:16px;color:black;font-weight: 900;\'><span style=\'font-size:14px;color:#4a4a4a\'>年滿18歲的工作人士均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'url' => '',

@@ -31,7 +31,7 @@ define({
     "PostUserChangeCompanyToken",
     "PostUserContact",
     "GetUserPromote",
-    "GetUserPromoteCodeNew",
+    "GetUserPromotePerformance",
     "GetUserPromoteCode",
     "GetUserPromoteCodeSubcodeContract",
     "GetUserPromoteCodeSubcodeDetailList",
