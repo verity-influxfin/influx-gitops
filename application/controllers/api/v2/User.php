@@ -3455,52 +3455,6 @@ END:
 
         // $url = '';
         // $request_result = curl_get($url);
-
-
-
-        //        {
-        //  "award_info": {
-        //    "student_count": 10,
-        //    "salary_man_count": 20,
-        //    "small_enterprise_count": 30,
-        //    "promote_count": 100,
-        //    "student_amount": 1000,
-        //    "salary_man_amount": 2000,
-        //    "small_enterprise_amount": 3000
-        //    "promote_amount": 10000,
-        //  },
-        //  "range_list": [
-        //    "2023-01-01",
-        //    "2023-02-01",
-        //    "2023-03-01"
-        //  ],
-        //  "contract": "這是合約內容的範例文字。"
-        //}
-        $result = [
-            "award_info" => [
-                "student_count" => 10,
-                "salary_man_count" => 20,
-                "small_enterprise_count" => 30,
-                "promote_count" => 100,
-                "student_amount" => 1000,
-                "salary_man_amount" => 2000,
-                "small_enterprise_amount" => 3000,
-                "promote_amount" => 10000,
-            ],
-            "range_list" => [
-                "2023-01",
-                "2023-02",
-                "2023-03",
-                "2023-04",
-                "2023-05",
-                "2023-06",
-                "2023-07",
-                "2023-08",
-                "2023-09",
-                "2023-10",
-            ],
-            "contract" => "這是合約內容的範例文字。",
-        ];
         $this->response(array('result' => 'SUCCESS', 'data' => $result));
         $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
 
