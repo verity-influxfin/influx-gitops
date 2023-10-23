@@ -2452,6 +2452,16 @@
             $('#credit_test_fixed_amount').val(originalAmount);
         });
 	});
+        // 二審意見額度調整
+        const setEvaluationAmount = (amount) => {
+            $('#2_fixed_amount').val(amount)
+            $('#credit_test_fixed_amount').val(amount);
+        }
+
+        // 使用原額度
+        const resetEvaluationAmountAmountTOriginal = () => {
+            setEvaluationAmount(originalAmount);
+        }
 
 	const v = new Vue({
 		el: '#page-wrapper',
