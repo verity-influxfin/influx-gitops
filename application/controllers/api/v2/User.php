@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(APPPATH.'libraries/REST_Controller.php');
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class User extends REST_Controller {
 
@@ -3451,57 +3453,39 @@ END:
             $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
         }
 
-        // $url = '';
-        // $request_result = curl_get($url);
+        $base_uri = getenv('ENV_ERP_HOST');
+        if (!$base_uri) {
+            $this->response(array('result' => 'ERROR', 'error' => '507'));
+        }
 
+        $client = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST'),
+            'timeout' => 300,
+        ]);
+        try {
+            $res = $client->request('GET', '/user_qrcode/promote_performance', [
+                'query' => [
+                    'user_id' => $user_id,
+                    'objective_promote_code' => $promote_code
+                ]
+            ]);
+            $content = $res->getBody()->getContents();
+            $json = json_decode($content, true);
+            $this->response(array('result' => 'SUCCESS', 'data' => $json));
 
-
-        //        {
-        //  "award_info": {
-        //    "student_count": 10,
-        //    "salary_man_count": 20,
-        //    "small_enterprise_count": 30,
-        //    "promote_count": 100,
-        //    "student_amount": 1000,
-        //    "salary_man_amount": 2000,
-        //    "small_enterprise_amount": 3000
-        //    "promote_amount": 10000,
-        //  },
-        //  "range_list": [
-        //    "2023-01-01",
-        //    "2023-02-01",
-        //    "2023-03-01"
-        //  ],
-        //  "contract": "這是合約內容的範例文字。"
-        //}
-        $result = [
-            "award_info" => [
-                "student_count" => 10,
-                "salary_man_count" => 20,
-                "small_enterprise_count" => 30,
-                "promote_count" => 100,
-                "student_amount" => 1000,
-                "salary_man_amount" => 2000,
-                "small_enterprise_amount" => 3000,
-                "promote_amount" => 10000,
-            ],
-            "range_list" => [
-                "2023-01",
-                "2023-02",
-                "2023-03",
-                "2023-04",
-                "2023-05",
-                "2023-06",
-                "2023-07",
-                "2023-08",
-                "2023-09",
-                "2023-10",
-            ],
-            "contract" => "這是合約內容的範例文字。",
-        ];
-        $this->response(array('result' => 'SUCCESS', 'data' => $result));
-        $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
-
+        }catch (RequestException $e) {
+            $detail = '';
+            if ($e->hasResponse()) {
+                $responseBody = $e->getResponse()->getBody()->getContents();
+                $json = json_decode($responseBody, true);
+                if ($e->getResponse()->getStatusCode() == 422) {
+                    $detail = $json['detail'][0]['msg'] ?? ''; // 取得錯誤訊息
+                } else {
+                    $detail = $json['detail'] ?? '';
+                }
+            }
+            $this->response(array('result' => 'ERROR', 'error' => $detail));
+        }
     }
 
     public function promote_code_get($action = '')
