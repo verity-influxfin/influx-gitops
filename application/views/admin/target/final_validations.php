@@ -1551,8 +1551,7 @@
 
                 if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
                     // 額度調整預設為原額度
-                    $('#2_fixed_amount').val(parseInt(credit.amount))
-                    $('#credit_test_fixed_amount').val(parseInt(credit.amount));
+                    setEvaluationAmount(parseInt(credit.amount));
                 }
 
                 if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
@@ -1708,8 +1707,7 @@
                 fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
                 console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
             }
-            $('#2_fixed_amount').val(fixed_amount);
-            $('#credit_test_fixed_amount').val(fixed_amount);
+            setEvaluationAmount(fixed_amount);
         });
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
@@ -2355,8 +2353,7 @@
                     fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
-                    $('#2_fixed_amount').val(parseInt(credit.amount))
-                    $('#credit_test_fixed_amount').val(parseInt(credit.amount));
+                    setEvaluationAmount(parseInt(credit.amount));
 				}
 			});
 		});
@@ -2447,11 +2444,6 @@
             });
         });
         
-        $('#original-amount-btn').click(function () {
-            $('#2_fixed_amount').val(originalAmount)
-            $('#credit_test_fixed_amount').val(originalAmount);
-        });
-	});
         // 二審意見額度調整
         const setEvaluationAmount = (amount) => {
             $('#2_fixed_amount').val(amount)
@@ -2462,6 +2454,9 @@
         const resetEvaluationAmountAmountTOriginal = () => {
             setEvaluationAmount(originalAmount);
         }
+
+        $('#original-amount-btn').click(resetEvaluationAmountAmountTOriginal);
+    });
 
 	const v = new Vue({
 		el: '#page-wrapper',
