@@ -1707,7 +1707,7 @@
                 fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
                 console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
             }
-            setEvaluationAmount(fixed_amount);
+            setEvaluationAmountAndResetScore(fixed_amount);
         });
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
@@ -2353,7 +2353,7 @@
                     fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
-                    setEvaluationAmount(parseInt(credit.amount));
+                    setEvaluationAmountAndResetScore(parseInt(credit.amount));
 				}
 			});
 		});
@@ -2464,7 +2464,7 @@
         
         // 使用原額度
         const resetEvaluationAmountAmountTOriginal = () => {
-            setEvaluationAmount(originalAmount);
+            setEvaluationAmountAndResetScore(originalAmount);
         }
 
         $('#original-amount-btn').click(resetEvaluationAmountAmountTOriginal);
