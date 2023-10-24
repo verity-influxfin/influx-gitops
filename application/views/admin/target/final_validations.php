@@ -2443,7 +2443,13 @@
                 }
             });
         });
-        
+
+        // 二審意見分數調整
+        const setEvaluationScore = (score) => {
+            $('#2_score').val(score);
+            $('#credit_test').val(score);
+        }
+
         // 二審意見額度調整
         const setEvaluationAmount = (amount) => {
             $('#2_fixed_amount').val(amount)
