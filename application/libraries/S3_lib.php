@@ -107,15 +107,17 @@ class S3_lib {
 
     public function get_mailbox_today_list(): array
     {
-        $url_list = array();
+        $url_list = [];
         $bucket = S3_BUCKET_MAILBOX;
         $continuationToken = null;
         $filter_unknown_failed_list = [];
+
         try {
             $today = new DateTime('today', new DateTimeZone('Asia/Taipei'));
         } catch (Exception $e) {
             return $url_list;
         }
+
         try {
             do {
                 $params = [
@@ -125,38 +127,25 @@ class S3_lib {
 
                 $list = $this->client_us2->listObjectsV2($params);
 
-                // 更新 ContinuationToken 以获取下一页的对象
                 $continuationToken = $list['NextContinuationToken'] ?? null;
-                try {
-                    if (empty($list['Contents'])) {
-                        throw new Exception('empty Contents');
+                foreach ($list['Contents'] as $object) {
+                    if (
+                        // AMAZON_SES_SETUP_NOTIFICATION 不處理
+                        $object['Key'] === 'AMAZON_SES_SETUP_NOTIFICATION' ||
+                        // unknown 資料夾不處理
+                        strpos($object['Key'], 'unknown/') !== false ||
+                        // failed 資料夾不處理
+                        strpos($object['Key'], 'failed/') !== false ||
+                        // 沒有 LastModified 欄位不處理
+                        empty($object['LastModified']) ||
+                        // 今天之前的信件不處理
+                        (new DateTime($object['LastModified'], new DateTimeZone('UTC')))
+                            ->setTimezone(new DateTimeZone('Asia/Taipei')) < $today
+                    ) {
+                        continue;
                     }
-                    //排除 unknown、failed 資料夾、超過今天的資料
-                    foreach ($list['Contents'] as $object) {
 
-                        if ($object['Key'] === 'AMAZON_SES_SETUP_NOTIFICATION') {
-                            throw new Exception('is AMAZON_SES_SETUP_NOTIFICATION');
-                        }
-                        $overlook_file_unknown = strpos($object['Key'], 'unknown/');
-                        if ($overlook_file_unknown) {
-                            throw new Exception('in /unknown');
-                        }
-                        $overlook_file_failed = strpos($object['Key'], 'failed/');
-                        if ($overlook_file_failed) {
-                            throw new Exception('in /failed');
-                        }
-                        if (empty($object['LastModified'])) {
-                            throw new Exception('empty LastModified');
-                        }
-                        $object_last_modified = (new DateTime($object['LastModified']))
-                            ->setTimezone(new DateTimeZone('Asia/Taipei'));
-                        if ($object_last_modified < $today) {
-                            throw new Exception('LastModified < today');
-                        }
-                        $filter_unknown_failed_list[] = $object;
-                    }
-                } catch (Exception $e) {
-                    continue;
+                    $filter_unknown_failed_list[] = $object;
                 }
             } while (!empty($continuationToken));
 
