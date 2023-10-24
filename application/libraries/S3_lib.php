@@ -105,18 +105,26 @@ class S3_lib {
 		}
     }
 
-    public function get_mailbox_today_list(): array
+    private function get_mailbox_date_range_list(string $start_date = '', string $end_date = ''): array
     {
-        $url_list = [];
-        $bucket = S3_BUCKET_MAILBOX;
-        $continuationToken = null;
-        $filter_unknown_failed_list = [];
+        if ($start_date === '') {
+            return [];
+        }
 
         try {
-            $today = new DateTime('today', new DateTimeZone('Asia/Taipei'));
+            $_start_date = (new DateTime($start_date, new DateTimeZone('Asia/Taipei')))->setTime(0, 0, 0);
+            if ($end_date != '') {
+                $_end_date = (new DateTime($end_date, new DateTimeZone('Asia/Taipei')))->setTime(23, 59, 59);
+            }
         } catch (Exception $e) {
-            return $url_list;
+            return [];
         }
+
+        $bucket = S3_BUCKET_MAILBOX;
+        $continuationToken = null;
+
+        $url_list = [];
+        $filter_unknown_failed_list = [];
 
         try {
             do {
@@ -136,11 +144,18 @@ class S3_lib {
                         strpos($object['Key'], 'unknown/') !== false ||
                         // failed 資料夾不處理
                         strpos($object['Key'], 'failed/') !== false ||
-                        // 沒有 LastModified 欄位不處理
-                        empty($object['LastModified']) ||
-                        // 今天之前的信件不處理
-                        (new DateTime($object['LastModified'], new DateTimeZone('UTC')))
-                            ->setTimezone(new DateTimeZone('Asia/Taipei')) < $today
+                        empty($object['LastModified'])
+                    ) {
+                        continue;
+                    }
+
+                    $last_modified = (new DateTime($object['LastModified'], new DateTimeZone('UTC')))
+                        ->setTimezone(new DateTimeZone('Asia/Taipei'));
+                    if (
+                        // start_date之前的信件不處理
+                        $last_modified < $_start_date ||
+                        // end_date之後的信件不處理
+                        isset($_end_date) && ($last_modified > $_end_date)
                     ) {
                         continue;
                     }
@@ -166,8 +181,16 @@ class S3_lib {
             echo '洽工程師 檢查連線問題';
             exit();
         }
-
         return $url_list;
+    }
+    public function get_mailbox_today_list(): array
+    {
+        $start_date = 'today';
+        try {
+            return $this->get_mailbox_date_range_list($start_date);
+        } catch (Exception $e) {
+            return [];
+        }
     }
 
 	public function public_delete_s3object($s3_url,$bucket=AZURE_S3_BUCKET)
