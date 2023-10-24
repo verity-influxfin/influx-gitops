@@ -3188,7 +3188,7 @@ END:
                         }
                     }
                     // Todo: 2023-10-18調整，舊版app不會執行2階段認證，之後需要拿掉
-                    if ($input['new_app']) {
+                    if ($input['new_app'] ?? false) {
                         $this->response(['result' => 'SUCCESS', 'data' => [], 'msg' => $msg]);
                     }
                 }
