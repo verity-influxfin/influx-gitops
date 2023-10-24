@@ -117,27 +117,32 @@ class S3_lib {
             exit();
         }
         if (!empty($list['Contents'])) {
-            $arrayIterator = new \ArrayIterator($list->toArray()['Contents']);
-            $arrayIterator->uasort(function ($a, $b) {
-                $itemADate = (new DateTime($a['LastModified']));
-                $itemBDate = (new DateTime($b['LastModified']));
-                return $itemADate < $itemBDate;
-            });
-            //排除 unknown 資料夾
-            foreach ($arrayIterator as $object) {
-                if ($object['LastModified'] < (new DateTime())->modify('-1 days')) {
-                    continue;
-                }
+            $filter_unknown_failed_list = [];
+            $today = new DateTime('today', new DateTimeZone('Asia/Taipei'));
+            //排除 unknown、failed 資料夾、超過今天的資料
+            foreach ($list['Contents'] as $object) {
                 $overlook_file_unknown = strpos($object['Key'], 'unknown/');
                 $overlook_file_failed = strpos($object['Key'], 'failed/');
                 if (
                     ($object['Key'] !== 'AMAZON_SES_SETUP_NOTIFICATION')
                     && ($overlook_file_unknown === false)
                     && ($overlook_file_failed === false)
+                    && (new DateTime($object['LastModified']))->setTimezone(new DateTimeZone('Asia/Taipei')) >= $today
                 ) {
-                    $url_list[] = $this->client_us2->getObjectUrl($bucket, $object['Key']);
+                    $filter_unknown_failed_list[] = $object;
                 }
+            }
 
+            // 新到舊排序
+            $arrayIterator = new \ArrayIterator($filter_unknown_failed_list);
+            $arrayIterator->uasort(function ($a, $b) {
+                $itemADate = (new DateTime($a['LastModified']));
+                $itemBDate = (new DateTime($b['LastModified']));
+                return $itemADate < $itemBDate;
+            });
+
+            foreach ($arrayIterator as $object) {
+                $url_list[] = $this->client_us2->getObjectUrl($bucket, $object['Key']);
             }
             return $url_list;
         } else {
