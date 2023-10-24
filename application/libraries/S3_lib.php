@@ -107,32 +107,62 @@ class S3_lib {
 
     public function get_mailbox_today_list()
     {
-        $data_list = array();
         $url_list = array();
         $bucket = S3_BUCKET_MAILBOX;
+        $continuationToken = null;
+        $filter_unknown_failed_list = [];
         try {
-            $list = $this->client_us2->listObjects(array('Bucket' => $bucket));
-        } catch (S3Exception $e) {
-            echo '洽工程師 檢查連線問題';
-            exit();
-        }
-        if (!empty($list['Contents'])) {
-            $filter_unknown_failed_list = [];
             $today = new DateTime('today', new DateTimeZone('Asia/Taipei'));
-            //排除 unknown、failed 資料夾、超過今天的資料
-            foreach ($list['Contents'] as $object) {
-                $overlook_file_unknown = strpos($object['Key'], 'unknown/');
-                $overlook_file_failed = strpos($object['Key'], 'failed/');
-                if (
-                    ($object['Key'] !== 'AMAZON_SES_SETUP_NOTIFICATION')
-                    && ($overlook_file_unknown === false)
-                    && ($overlook_file_failed === false)
-                    && (new DateTime($object['LastModified']))->setTimezone(new DateTimeZone('Asia/Taipei')) >= $today
-                ) {
-                    $filter_unknown_failed_list[] = $object;
-                }
-            }
+        } catch (Exception $e) {
+            return $url_list;
+        }
+        try {
+            do {
+                $params = [
+                    'Bucket' => $bucket,
+                    'ContinuationToken' => $continuationToken,
+                ];
 
+                $list = $this->client_us2->listObjectsV2($params);
+
+                // 更新 ContinuationToken 以获取下一页的对象
+                $continuationToken = $list['NextContinuationToken'] ?? null;
+                try {
+                    if (empty($list['Contents'])) {
+                        throw new Exception('empty Contents');
+                    }
+                    //排除 unknown、failed 資料夾、超過今天的資料
+                    foreach ($list['Contents'] as $object) {
+
+                        if ($object['Key'] === 'AMAZON_SES_SETUP_NOTIFICATION') {
+                            throw new Exception('is AMAZON_SES_SETUP_NOTIFICATION');
+                        }
+                        $overlook_file_unknown = strpos($object['Key'], 'unknown/');
+                        if ($overlook_file_unknown) {
+                            throw new Exception('in /unknown');
+                        }
+                        $overlook_file_failed = strpos($object['Key'], 'failed/');
+                        if ($overlook_file_failed) {
+                            throw new Exception('in /failed');
+                        }
+                        if (empty($object['LastModified'])) {
+                            throw new Exception('empty LastModified');
+                        }
+                        $object_last_modified = (new DateTime($object['LastModified']))
+                            ->setTimezone(new DateTimeZone('Asia/Taipei'));
+                        if ($object_last_modified < $today) {
+                            throw new Exception('LastModified < today');
+                        }
+                        $filter_unknown_failed_list[] = $object;
+                    }
+                } catch (Exception $e) {
+                    continue;
+                }
+            } while (!empty($continuationToken));
+
+            if (empty($filter_unknown_failed_list)) {
+                return null;
+            }
             // 新到舊排序
             $arrayIterator = new \ArrayIterator($filter_unknown_failed_list);
             $arrayIterator->uasort(function ($a, $b) {
@@ -140,14 +170,15 @@ class S3_lib {
                 $itemBDate = (new DateTime($b['LastModified']));
                 return $itemADate < $itemBDate;
             });
-
             foreach ($arrayIterator as $object) {
                 $url_list[] = $this->client_us2->getObjectUrl($bucket, $object['Key']);
             }
-            return $url_list;
-        } else {
-            return null;
+        } catch (S3Exception $e) {
+            echo '洽工程師 檢查連線問題';
+            exit();
         }
+
+        return $url_list;
     }
 
 	public function public_delete_s3object($s3_url,$bucket=AZURE_S3_BUCKET)
