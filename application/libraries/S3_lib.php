@@ -105,7 +105,7 @@ class S3_lib {
 		}
     }
 
-    public function get_mailbox_today_list()
+    public function get_mailbox_today_list(): array
     {
         $url_list = array();
         $bucket = S3_BUCKET_MAILBOX;
@@ -161,7 +161,7 @@ class S3_lib {
             } while (!empty($continuationToken));
 
             if (empty($filter_unknown_failed_list)) {
-                return null;
+                return [];
             }
             // 新到舊排序
             $arrayIterator = new \ArrayIterator($filter_unknown_failed_list);
