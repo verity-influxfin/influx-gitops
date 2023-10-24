@@ -105,44 +105,69 @@ class S3_lib {
 		}
     }
 
-    public function get_mailbox_today_list()
+    public function get_mailbox_today_list(): array
     {
-        $data_list = array();
-        $url_list = array();
+        $url_list = [];
         $bucket = S3_BUCKET_MAILBOX;
+        $continuationToken = null;
+        $filter_unknown_failed_list = [];
+
         try {
-            $list = $this->client_us2->listObjects(array('Bucket' => $bucket));
-        } catch (S3Exception $e) {
-            echo '洽工程師 檢查連線問題';
-            exit();
+            $today = new DateTime('today', new DateTimeZone('Asia/Taipei'));
+        } catch (Exception $e) {
+            return $url_list;
         }
-        if (!empty($list['Contents'])) {
-            $arrayIterator = new \ArrayIterator($list->toArray()['Contents']);
+
+        try {
+            do {
+                $params = [
+                    'Bucket' => $bucket,
+                    'ContinuationToken' => $continuationToken,
+                ];
+
+                $list = $this->client_us2->listObjectsV2($params);
+
+                $continuationToken = $list['NextContinuationToken'] ?? null;
+                foreach ($list['Contents'] as $object) {
+                    if (
+                        // AMAZON_SES_SETUP_NOTIFICATION 不處理
+                        $object['Key'] === 'AMAZON_SES_SETUP_NOTIFICATION' ||
+                        // unknown 資料夾不處理
+                        strpos($object['Key'], 'unknown/') !== false ||
+                        // failed 資料夾不處理
+                        strpos($object['Key'], 'failed/') !== false ||
+                        // 沒有 LastModified 欄位不處理
+                        empty($object['LastModified']) ||
+                        // 今天之前的信件不處理
+                        (new DateTime($object['LastModified'], new DateTimeZone('UTC')))
+                            ->setTimezone(new DateTimeZone('Asia/Taipei')) < $today
+                    ) {
+                        continue;
+                    }
+
+                    $filter_unknown_failed_list[] = $object;
+                }
+            } while (!empty($continuationToken));
+
+            if (empty($filter_unknown_failed_list)) {
+                return [];
+            }
+            // 新到舊排序
+            $arrayIterator = new \ArrayIterator($filter_unknown_failed_list);
             $arrayIterator->uasort(function ($a, $b) {
                 $itemADate = (new DateTime($a['LastModified']));
                 $itemBDate = (new DateTime($b['LastModified']));
                 return $itemADate < $itemBDate;
             });
-            //排除 unknown 資料夾
             foreach ($arrayIterator as $object) {
-                if ($object['LastModified'] < (new DateTime())->modify('-1 days')) {
-                    continue;
-                }
-                $overlook_file_unknown = strpos($object['Key'], 'unknown/');
-                $overlook_file_failed = strpos($object['Key'], 'failed/');
-                if (
-                    ($object['Key'] !== 'AMAZON_SES_SETUP_NOTIFICATION')
-                    && ($overlook_file_unknown === false)
-                    && ($overlook_file_failed === false)
-                ) {
-                    $url_list[] = $this->client_us2->getObjectUrl($bucket, $object['Key']);
-                }
-
+                $url_list[] = $this->client_us2->getObjectUrl($bucket, $object['Key']);
             }
-            return $url_list;
-        } else {
-            return null;
+        } catch (S3Exception $e) {
+            echo '洽工程師 檢查連線問題';
+            exit();
         }
+
+        return $url_list;
     }
 
 	public function public_delete_s3object($s3_url,$bucket=AZURE_S3_BUCKET)

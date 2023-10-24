@@ -121,7 +121,7 @@ class Sns extends REST_Controller {
 
     public function credit_post()
     {
-//        $list = $this->s3_lib->get_mailbox_list();
+        //        $list = $this->s3_lib->get_mailbox_list();
         $list = $this->s3_lib->get_mailbox_today_list();
 
         if (empty($list)) {
@@ -262,7 +262,7 @@ class Sns extends REST_Controller {
                         if (!isset($detail['actions'])) {
                             $detail['actions'] = [];
                         }
-                        $detail['actions'] [] = $result ?
+                        $detail['actions'][] = $result ?
                             'process_mail with no attachments' :
                             'process_mail failed with no attachments';
 
@@ -288,7 +288,6 @@ class Sns extends REST_Controller {
                 $detail['remark'] = "郵件沒處理";
                 $detail['actions'] = ['None'];
                 $this->record_mailbox_log($detail);
-
             } catch (Exception $e) {
                 $detail['remark'] = json_encode($e->getMessage(), JSON_UNESCAPED_UNICODE);
                 $detail['actions'] = ['Exception'];
