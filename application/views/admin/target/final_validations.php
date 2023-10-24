@@ -2456,6 +2456,12 @@
             $('#credit_test_fixed_amount').val(amount);
         }
 
+        // 二審意見額度調整，並設定分數為0
+        const setEvaluationAmountAndResetScore = (amount) => {
+            setEvaluationAmount(amount);
+            setEvaluationScore(0);
+        }
+        
         // 使用原額度
         const resetEvaluationAmountAmountTOriginal = () => {
             setEvaluationAmount(originalAmount);
