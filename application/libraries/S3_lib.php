@@ -192,6 +192,15 @@ class S3_lib {
             return [];
         }
     }
+    public function get_mailbox_day_before_today_list($day): array
+    {
+        try {
+            $start_date = $end_date = (new DateTime('today', new DateTimeZone('Asia/Taipei')))->modify("-{$day} days")->format('Y-m-d');
+            return $this->get_mailbox_date_range_list($start_date, $end_date);
+        } catch (Exception $e) {
+            return [];
+        }
+    }
 
 	public function public_delete_s3object($s3_url,$bucket=AZURE_S3_BUCKET)
 	{
