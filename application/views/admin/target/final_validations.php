@@ -1688,6 +1688,9 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
+        $("#2_score").blur(() => {
+            setEvaluationAmount(0);
+        })
         $('#2_fixed_amount').change(function () {
             let fixed_amount = parseInt($(this).val());
             if (fixed_amount <= 0) {
