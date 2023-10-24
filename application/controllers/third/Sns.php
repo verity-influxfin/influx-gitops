@@ -124,7 +124,7 @@ class Sns extends REST_Controller {
         //        $list = $this->s3_lib->get_mailbox_list();
 
         $input = $this->input->post(null, true);
-        if(isset($input['days']) && $input['days'] > 0){
+        if(isset($input['day']) && $input['day'] > 0){
             $list = $this->s3_lib->get_mailbox_day_before_today_list($input['day']);
         }else{
             $list = $this->s3_lib->get_mailbox_today_list();
