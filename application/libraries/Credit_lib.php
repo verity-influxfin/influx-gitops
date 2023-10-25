@@ -942,7 +942,7 @@ class Credit_lib{
                     return false;
                 }
                 $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, true);
-                if (empty($user_cert_content_contract['admin_edit']['contract_amount']) || true) {
+                if (empty($user_cert_content_contract['admin_edit']['contract_amount'])) {
                     $message = '缺少 審核人員確認 合約金額';
                     $update_certification_status_remark($certification, $message);
                     return false;
