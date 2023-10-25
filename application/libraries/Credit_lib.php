@@ -995,6 +995,9 @@ class Credit_lib{
                     return false;
                 }
                 $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, TRUE);
+                // 傢俱家電合約或發票收據 是取amount
+                // 請參考 appliance_contract_receipt.php，admin_edit的結構有amount、contract_amount 和 receipt_amount
+                // ，但後台人員調整完後，只有表單只有改amount的value，因此以amount為主
                 if(empty($user_cert_content_contract['admin_edit']['amount']) ){
                     $message = '缺少 審核人員確認 金額' ;
                     $update_certification_status_remark($certification, $message);
