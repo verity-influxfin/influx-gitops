@@ -410,8 +410,53 @@ class User extends REST_Controller {
 
             // 新增法人帳號
             if ($tax_id_exist) {
-                // 法人註冊改 POST api/v2/user/register_company
-                goto END;
+                // 新版app法人註冊改 POST api/v2/user/register_company
+                // 建立法人帳號
+                $new_company_user_param = [
+                    'phone' => $input['phone'],
+                    'id_number' => $input['tax_id'],
+                    'password' => $input['password'],
+                    // 啟用法人
+                    'company_status' => 1,
+                    'auth_otp' => $opt_token,
+                    'name' => $company_info['company_name'] ?? '',
+                ];
+                $new_id = $this->user_model->insert($new_company_user_param);
+
+                if ($new_id)
+                {
+                    $this->load->model('user/user_certification_model');
+                    $this->user_certification_model->insert([
+                        'user_id' => $new_id,
+                        'certification_id' => CERTIFICATION_TARGET_APPLY,
+                        'investor' => USER_INVESTOR,
+                        'content' => '',
+                        'remark' => '',
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+                    ]);
+                }
+
+                // 若該法人之自然人帳號不存在，則自動建立其自然人帳號
+                $company_user_already_exist = $this->user_model->get_by([
+                    'phone' => $input['phone'],
+                    // 法人狀態: 0=未啟用
+                    'company_status' => 0
+                ]);
+                if (!$company_user_already_exist) {
+                    $responsible_user_id = $this->user_model->insert($new_account_data);
+                }else{
+                    $responsible_user_id = $company_user_already_exist->id;
+                }
+
+                $company_meta = [
+                    [
+                        'user_id' => $new_id,
+                        'meta_key' => 'company_responsible_user_id',
+                        'meta_value' => (int)$responsible_user_id,
+                    ]
+                    ];
+                $this->load->model('user/user_meta_model');
+                $this->user_meta_model->insert_many($company_meta);
             // 新增自然人帳號
             } else {
                 $new_id = $this->user_model->insert($new_account_data);
