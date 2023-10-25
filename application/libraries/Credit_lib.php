@@ -977,8 +977,6 @@ class Credit_lib{
                     intval($user_cert_content_receipt['admin_edit']['receipt_amount'])
                 );
 
-                echo "return false";
-                return false;
 
                 // 最高借款金額不得超過該筆買賣合約或發票金額之8成
                 $param['amount'] = min($param['amount'], ($tmp_amount * 0.8));
