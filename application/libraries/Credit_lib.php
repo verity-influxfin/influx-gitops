@@ -692,6 +692,13 @@ class Credit_lib{
     // 房產消費貸
     private function approve_5($user_id, $product_id, $sub_product_id, $expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target)
     {
+        $this->CI->load->model('user/user_certification_model');
+        $update_certification_status_remark = function ($certification, $message = '') {
+            $certification_id = $certification->id;
+            $certification_remark = json_decode($certification->remark, true);
+            $certification_remark['credit_lib_approve_5'] = $message;
+            $this->CI->user_certification_model->update($certification_id, ['status' => 3, 'remark' => json_encode($certification_remark, JSON_UNESCAPED_UNICODE)]);
+        };
         // todo: 上班族貸信評會修改，到時候要記得也改這邊
         $total = 0;
         $param = [
