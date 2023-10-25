@@ -70,7 +70,18 @@ $user_id = $data->user_id ?? '';
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <h1>圖片/檔案</h1>
+                            <?php
+                            if (!empty($content['transactions_image'])
+                                && empty($content['pdf']) && empty($ocr['upload_page'])
+                            ) {
+                                $upload_title = '圖片';
+                            } elseif (!empty($content['pdf']) || !empty($ocr['upload_page'])) {
+                                $upload_title = '檔案';
+                            } else {
+                                $upload_title = '圖片/檔案';
+                            }
+                            ?>
+                            <h1><?= $upload_title ?></h1>
                             <fieldset>
                                 <div class="form-group">
                                     <label>土地建物謄本</label><br>
