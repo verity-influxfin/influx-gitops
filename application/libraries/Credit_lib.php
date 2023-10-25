@@ -896,16 +896,28 @@ class Credit_lib{
         switch ($sub_product_id)
         {
             case SUB_PRODUCT_ID_HOME_LOAN_SHORT:
-                // 取得徵信項
+                // 取得徵信項，購屋合約
                 $user_cert_info_contract = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_HOUSE_CONTRACT);
-                if (empty($user_cert_info_contract[0]->content))
-                {
-                    break;
+                $certification = $this->CI->user_certification_model->get_by(
+                    [
+                        'user_id' => $user_id,
+                        'investor' => 0,
+                        'status' => 1,
+                        'certification_id' => CERTIFICATION_HOUSE_CONTRACT,
+                        'investor' => USER_BORROWER
+                    ]
+                );
+                if (empty($user_cert_info_contract[0]->content)) {
+
+                    $message = '缺少 content';
+                    $update_certification_status_remark($certification, $message);
+                    return false;
                 }
                 $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, TRUE);
-                if (empty($user_cert_content_contract['admin_edit']['down_payment']))
-                {
-                    break;
+                if (empty($user_cert_content_contract['admin_edit']['down_payment'])) {
+                    $message =  '缺少 審核人員確認 頭款/訂金金額';
+                    $update_certification_status_remark($certification, $message);
+                    return false;
                 }
 
                 // 最高借款金額不得超過該筆買賣合約頭期款之9成
@@ -913,33 +925,95 @@ class Credit_lib{
                 break;
             case SUB_PRODUCT_ID_HOME_LOAN_RENOVATION:
                 // 取得徵信項
+                // 24 裝修合約
                 $user_cert_info_contract = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_RENOVATION_CONTRACT);
-                $user_cert_info_receipt = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_RENOVATION_RECEIPT);
-                if (empty($user_cert_info_contract[0]->content) && empty($user_cert_info_receipt[0]->content))
-                {
-                    break;
-                }
-                $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, TRUE);
-                $user_cert_content_receipt = json_decode($user_cert_info_receipt[0]->content, TRUE);
-                $tmp_amount = min(
-                    (int) ($user_cert_content_contract['admin_edit']['contract_amount'] ?? 0),
-                    (int) ($user_cert_content_receipt['admin_edit']['receipt_amount'] ?? 0)
+                $certification = $this->CI->user_certification_model->get_by(
+                    [
+                        'user_id' => $user_id,
+                        'investor' => 0,
+                        'status' => 1,
+                        'certification_id' => CERTIFICATION_RENOVATION_CONTRACT,
+                        'investor' => USER_BORROWER
+                    ]
                 );
+                if (empty($user_cert_info_contract[0]->content)) {
+                    $message = '缺少 content';
+                    $update_certification_status_remark($certification, $message);
+                    return false;
+                }
+                $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, true);
+                if (empty($user_cert_content_contract['admin_edit']['contract_amount']) || true) {
+                    $message = '缺少 審核人員確認 合約金額';
+                    $update_certification_status_remark($certification, $message);
+                    return false;
+                }
+
+                // 25 裝修發票
+                $user_cert_info_receipt = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_RENOVATION_RECEIPT);
+                $certification_receipt = $this->CI->user_certification_model->get_by(
+                    [
+                        'user_id' => $user_id,
+                        'investor' => 0,
+                        'status' => 1,
+                        'certification_id' => CERTIFICATION_RENOVATION_RECEIPT,
+                        'investor' => USER_BORROWER
+                    ]
+                );
+                if (empty($user_cert_info_receipt[0]->content)) {
+                    $message = '缺少 content';
+                    $update_certification_status_remark($certification, $message);
+                    return false;
+                }
+                $user_cert_content_receipt = json_decode($user_cert_info_receipt[0]->content, true);
+                if (empty($user_cert_content_receipt['admin_edit']['receipt_amount'])) {
+                    $message = '缺少 審核人員確認 發票金額';
+                    $update_certification_status_remark($certification_receipt, $message);
+                    return false;
+                }
+                // 如果後台審核送出時，沒有填寫合約金額、合約簽訂日，content不會有admin_edit這個key
+                // 如果最終amount為0，這裡是其中原因
+                $tmp_amount = min(
+                    intval($user_cert_content_contract['admin_edit']['contract_amount']),
+                    intval($user_cert_content_receipt['admin_edit']['receipt_amount'])
+                );
+
+                echo "return false";
+                return false;
 
                 // 最高借款金額不得超過該筆買賣合約或發票金額之8成
                 $param['amount'] = min($param['amount'], ($tmp_amount * 0.8));
                 break;
             case SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES:
-                // 取得徵信項
+                // 取得徵信項，傢俱家電合約或發票收據
                 $user_cert_info_contract = $this->CI->user_certification_model->get_content($user_id, CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT);
-                if (empty($user_cert_info_contract[0]->content))
-                {
-                    break;
+                $certification = $this->CI->user_certification_model->get_by(
+                    [
+                        'user_id' => $user_id,
+                        'investor' => 0,
+                        'status' => 1,
+                        'certification_id' => CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT,
+                        'investor' => USER_BORROWER
+                    ]
+                );
+                if (empty($user_cert_info_contract[0]->content)) {
+                    $message = '缺少 content';
+                    $update_certification_status_remark($certification, $message);
+                    return false;
                 }
                 $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, TRUE);
+                if(empty($user_cert_content_contract['admin_edit']['contract_amount']) ){
+                    $message = '缺少 審核人員確認 合約金額' ;
+                    $update_certification_status_remark($certification, $message);
+                    return false;
+                }
+                if (empty($user_cert_content_contract['admin_edit']['receipt_amount'])) {
+                    $message = '缺少 審核人員確認 發票金額';
+                    $update_certification_status_remark($certification, $message);
+                    return false;
+                }
                 $tmp_amount = min(
-                    (int) ($user_cert_content_contract['admin_edit']['contract_amount'] ?? 0),
-                    (int) ($user_cert_content_contract['admin_edit']['receipt_amount'] ?? 0)
+                    (int)($user_cert_content_contract['admin_edit']['contract_amount']),
+                    (int)($user_cert_content_contract['admin_edit']['receipt_amount'])
                 );
 
                 // 最高借款金額不得超過該筆買賣合約或發票金額之8成
