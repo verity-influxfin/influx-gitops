@@ -4833,4 +4833,9 @@ END:
         END:
         $this->response($result);
     }
+
+    public function header_test_post()
+    {
+        $this->response(array('result' => 'SUCCESS', 'data' => ['header' => $this->input->request_headers()]));
+    }
 }
