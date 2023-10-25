@@ -995,20 +995,12 @@ class Credit_lib{
                     return false;
                 }
                 $user_cert_content_contract = json_decode($user_cert_info_contract[0]->content, TRUE);
-                if(empty($user_cert_content_contract['admin_edit']['contract_amount']) ){
-                    $message = '缺少 審核人員確認 合約金額' ;
+                if(empty($user_cert_content_contract['admin_edit']['amount']) ){
+                    $message = '缺少 審核人員確認 金額' ;
                     $update_certification_status_remark($certification, $message);
                     return false;
                 }
-                if (empty($user_cert_content_contract['admin_edit']['receipt_amount'])) {
-                    $message = '缺少 審核人員確認 發票金額';
-                    $update_certification_status_remark($certification, $message);
-                    return false;
-                }
-                $tmp_amount = min(
-                    (int)($user_cert_content_contract['admin_edit']['contract_amount']),
-                    (int)($user_cert_content_contract['admin_edit']['receipt_amount'])
-                );
+                $tmp_amount = (int)($user_cert_content_contract['admin_edit']['amount']);
 
                 // 最高借款金額不得超過該筆買賣合約或發票金額之8成
                 $param['amount'] = min($param['amount'], ($tmp_amount * 0.8));
