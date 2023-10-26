@@ -3508,12 +3508,20 @@ END:
             'base_uri' => getenv('ENV_ERP_HOST'),
             'timeout' => 300,
         ]);
+        $param = [
+            'user_id' => $user_id,
+            'objective_promote_code' => $promote_code,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ];
+        // 移除空字串的鍵值對
+        $param = array_filter($param, function ($value) {
+            return $value !== '';
+        });
+
         try {
             $res = $client->request('GET', '/user_qrcode/promote_performance', [
-                'query' => [
-                    'user_id' => $user_id,
-                    'objective_promote_code' => $promote_code
-                ]
+                'query' => $param
             ]);
             $content = $res->getBody()->getContents();
             $json = json_decode($content, true);
