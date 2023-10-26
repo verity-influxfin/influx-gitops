@@ -943,8 +943,8 @@ END:
 				if($user_info->block_status != 0){
 				    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 				}
-
-                $appIdentity = $_SERVER['HTTP_USER_AGENT']??"";
+                $this->load->library('user_agent');
+                $appIdentity = $this->agent->agent_string() ?? "";
 				if(strpos($appIdentity,"PuHey") !== FALSE) {
                     if ($investor == 1 && $user_info->app_investor_status == 0) {
                         $user_info->app_investor_status = 1;
@@ -1148,8 +1148,8 @@ END:
                  if($user_info->block_status != 0){
                      $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
                  }
- 
-                 $appIdentity = $_SERVER['HTTP_USER_AGENT']??"";
+                 $this->load->library('user_agent');
+                 $appIdentity = $this->agent->agent_string() ?? "";
                  if(strpos($appIdentity,"PuHey") !== FALSE) {
                      if ($investor == 1 && $user_info->app_investor_status == 0) {
                          $user_info->app_investor_status = 1;
@@ -2103,7 +2103,8 @@ END:
         }
 
         // 判斷交換 token 的來源
-        $app_identity = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        $this->load->library('user_agent');
+        $app_identity = $this->agent->agent_string() ?? "";
         $investor = isset($this->user_info->investor) && $this->user_info->investor ? 1 : 0;
         if (strpos($app_identity, 'PuHey') !== FALSE)
         {
