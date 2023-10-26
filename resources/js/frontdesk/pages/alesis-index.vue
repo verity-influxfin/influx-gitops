@@ -5,18 +5,11 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <a
-                class="swiper-slide"
-                href="https://www.accupass.com/event/2305220851151825102540"
-                target="_blank"
-              >
+              <a class="swiper-slide" href="https://www.accupass.com/event/2305220851151825102540" target="_blank">
                 <div class="row no-gutters">
                   <div class="col-12">
-                    <img
-                      src="@/asset/images/index/header/ai-forum-banner-mobile.png"
-                      class="img-fluid d-block mx-auto header-shadow"
-                      style="margin: 25px;"
-                    />
+                    <img src="@/asset/images/index/header/ai-forum-banner-mobile.png"
+                      class="img-fluid d-block mx-auto header-shadow" style="margin: 25px;" />
                   </div>
                 </div>
               </a>
@@ -29,17 +22,11 @@
               <a class="swiper-slide" href="/collegeLoan" target="_blank">
                 <collegeloan-header />
               </a>
-              <a
-                class="swiper-slide"
-                href="https://www.influxfin.com/articlepage?q=news-8202"
-                target="_blank"
-              >
+              <a class="swiper-slide" href="https://www.influxfin.com/articlepage?q=news-8202" target="_blank">
                 <div class="row no-gutters mt-4">
                   <div class="col-12">
-                    <img
-                      src="@/asset/images/index/header/header-csr-phone.jpg"
-                      class="img-fluid d-block mx-auto header-shadow"
-                    />
+                    <img src="@/asset/images/index/header/header-csr-phone.jpg"
+                      class="img-fluid d-block mx-auto header-shadow" />
                   </div>
                 </div>
               </a>
@@ -74,17 +61,11 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <a
-                class="swiper-slide"
-                href="https://www.accupass.com/event/2305220851151825102540"
-                target="_blank"
-              >
+              <a class="swiper-slide" href="https://www.accupass.com/event/2305220851151825102540" target="_blank">
                 <div class="row no-gutters">
                   <div class="col-12">
-                    <img
-                      src="@/asset/images/index/header/ai-forum-banner.png"
-                      class="img-fluid d-block mx-auto header-shadow"
-                    />
+                    <img src="@/asset/images/index/header/ai-forum-banner.png"
+                      class="img-fluid d-block mx-auto header-shadow" />
                   </div>
                 </div>
               </a>
@@ -100,17 +81,10 @@
               <div class="swiper-slide">
                 <collegeloan-header />
               </div>
-              <a
-                class="swiper-slide"
-                href="https://www.influxfin.com/articlepage?q=news-8202"
-                target="_blank"
-              >
+              <a class="swiper-slide" href="https://www.influxfin.com/articlepage?q=news-8202" target="_blank">
                 <div class="row no-gutters">
                   <div class="col-12">
-                    <img
-                      src="@/asset/images/index/header/header-csr.jpg"
-                      class="w-100 img-fluid header-shadow"
-                    />
+                    <img src="@/asset/images/index/header/header-csr.jpg" class="w-100 img-fluid header-shadow" />
                   </div>
                 </div>
               </a>
@@ -154,35 +128,19 @@
                 </div>
                 <div class="card-content">
                   <router-link to="/workLoan" class="card-link clickable">
-                    <img
-                      src="@/asset/images/work_outline_black.svg"
-                      alt="上班族貸"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/work_outline_black.svg" alt="上班族貸" class="card-link-img" />
                     <div class="card-link-text">上班族貸</div>
                   </router-link>
                   <router-link to="/collegeLoan" class="card-link clickable">
-                    <img
-                      src="@/asset/images/edit_black.svg"
-                      alt="學生貸"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/edit_black.svg" alt="學生貸" class="card-link-img" />
                     <div class="card-link-text">學生貸</div>
                   </router-link>
                   <router-link to="/engineerLoan" class="card-link clickable">
-                    <img
-                      src="@/asset/images/settings_black.svg"
-                      alt="資訊工程師貸"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/settings_black.svg" alt="資訊工程師貸" class="card-link-img" />
                     <div class="card-link-text">資訊工程師貸</div>
                   </router-link>
                   <div class="card-link">
-                    <img
-                      src="@/asset/images/house_black.svg"
-                      alt="房屋貸款"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/house_black.svg" alt="房屋貸款" class="card-link-img" />
                     <div class="card-link-text">房屋貸款</div>
                   </div>
                 </div>
@@ -208,40 +166,21 @@
                 </div>
                 <div class="card-content">
                   <div class="card-link">
-                    <img
-                      src="@/asset/images/paid_black.svg"
-                      alt="企業主速貸"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/paid_black.svg" alt="企業主速貸" class="card-link-img" />
                     <div class="card-link-text">企業主速貸</div>
                   </div>
                   <div class="card-link">
-                    <img
-                      src="@/asset/images/perm_identity_black.svg"
-                      alt="新創/網紅/SOHO"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/perm_identity_black.svg" alt="新創/網紅/SOHO" class="card-link-img" />
                     <div class="card-link-text" style="font-size: 14.2px">
                       新創/網紅/SOHO
                     </div>
                   </div>
-                  <router-link
-                    to="/business-loan/smeg"
-                    class="card-link clickable"
-                  >
-                    <img
-                      src="@/asset/images/collections_bookmark_black.svg"
-                      alt="信保專案"
-                      class="card-link-img"
-                    />
+                  <router-link to="/business-loan/smeg" class="card-link clickable">
+                    <img src="@/asset/images/collections_bookmark_black.svg" alt="信保專案" class="card-link-img" />
                     <div class="card-link-text">信保專案</div>
                   </router-link>
                   <div class="card-link">
-                    <img
-                      src="@/asset/images/paid_black.svg"
-                      alt="中小企業信貸"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/paid_black.svg" alt="中小企業信貸" class="card-link-img" />
                     <div class="card-link-text">中小企業信貸</div>
                   </div>
                 </div>
@@ -258,11 +197,7 @@
                 </div>
                 <div class="card-content">
                   <router-link to="/charitable" class="card-link clickable">
-                    <img
-                      src="@/asset/images/volunteer_activism_black.svg"
-                      alt="慈善公益"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/volunteer_activism_black.svg" alt="慈善公益" class="card-link-img" />
                     <div class="card-link-text">台大兒醫</div>
                   </router-link>
                 </div>
@@ -281,19 +216,11 @@
                 </div>
                 <div class="card-content">
                   <div class="card-link">
-                    <img
-                      src="@/asset/images/paid_black.svg"
-                      alt="美賣店商"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/paid_black.svg" alt="美賣店商" class="card-link-img" />
                     <div class="card-link-text">美賣店商</div>
                   </div>
                   <div class="card-link">
-                    <img
-                      src="@/asset/images/collections_bookmark_black.svg"
-                      alt="醫美分期"
-                      class="card-lin k-img"
-                    />
+                    <img src="@/asset/images/collections_bookmark_black.svg" alt="醫美分期" class="card-lin k-img" />
                     <div class="card-link-text">醫美分期</div>
                   </div>
                 </div>
@@ -310,35 +237,19 @@
                 </div>
                 <div class="card-content">
                   <router-link to="/investment" class="card-link clickable">
-                    <img
-                      src="@/asset/images/paid_black.svg"
-                      alt="債權投資"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/paid_black.svg" alt="債權投資" class="card-link-img" />
                     <div class="card-link-text">債權投資</div>
                   </router-link>
                   <router-link to="/transfer" class="card-link clickable">
-                    <img
-                      src="@/asset/images/paid_black.svg"
-                      alt="債權轉讓"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/paid_black.svg" alt="債權轉讓" class="card-link-img" />
                     <div class="card-link-text">債權轉讓</div>
                   </router-link>
                   <router-link to="/investment#ai" class="card-link clickable">
-                    <img
-                      src="@/asset/images/smart_toy_black.svg"
-                      alt="AI智能投資"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/smart_toy_black.svg" alt="AI智能投資" class="card-link-img" />
                     <div class="card-link-text">AI智能投資</div>
                   </router-link>
                   <router-link to="/risk" class="card-link clickable">
-                    <img
-                      src="@/asset/images/description_black.svg"
-                      alt="風險報告書"
-                      class="card-link-img"
-                    />
+                    <img src="@/asset/images/description_black.svg" alt="風險報告書" class="card-link-img" />
                     <div class="card-link-text">風險報告書</div>
                   </router-link>
                 </div>
@@ -361,11 +272,7 @@
             </div>
           </div>
         </div>
-        <div
-          class="block-info concept-2"
-          data-aos="fade-left"
-          data-aos-duration="2000"
-        >
+        <div class="block-info concept-2" data-aos="fade-left" data-aos-duration="2000">
           <div class="op">
             集人才：開發創新科技，建構AI無人自動化，打造最有溫度的金融新生態，呈現綠色金融科技新環境。
           </div>
@@ -390,11 +297,7 @@
         </div>
       </div>
       <div class="wave">
-        <img
-          class="img-fluid w-100"
-          src="@/asset/images/index/bg-white-wave.svg"
-          alt=""
-        />
+        <img class="img-fluid w-100" src="@/asset/images/index/bg-white-wave.svg" alt="" />
       </div>
     </div>
     <div class="index-loan section">
@@ -402,11 +305,7 @@
         <div class="block-title">一支手機，完成貸款</div>
         <div class="block-info">隨借隨貸，安全零距離</div>
         <div class="row no-gutters loan-imgs">
-          <img
-            id="img58"
-            class="img-fluid d-sm-block d-none"
-            src="@/asset/images/index/img58.png"
-          />
+          <img id="img58" class="img-fluid d-sm-block d-none" src="@/asset/images/index/img58.png" />
           <div id="img56">
             <div class="position-relative text-center">
               <div class="card tip-card tip-1">
@@ -425,21 +324,13 @@
               </div>
             </div>
           </div>
-          <img
-            id="img57"
-            class="img-fluid d-sm-block d-none"
-            src="@/asset/images/index/img57.png"
-          />
+          <img id="img57" class="img-fluid d-sm-block d-none" src="@/asset/images/index/img57.png" />
         </div>
       </div>
     </div>
     <div class="index-service section">
       <div class="wave reverse">
-        <img
-          src="@/asset/images/index/bg-white-wave.svg"
-          class="img-fluid w-100"
-          alt=""
-        />
+        <img src="@/asset/images/index/bg-white-wave.svg" class="img-fluid w-100" alt="" />
       </div>
       <div class="block-content">
         <div class="block-title">我們的服務</div>
@@ -480,10 +371,7 @@
       </div>
       <div class="block-content row no-gutters">
         <div class="col-sm-6 col-12 d-flex align-items-center">
-          <img
-            src="@/asset/images/index/img60.png"
-            class="img-fluid p-sm-5 p-2"
-          />
+          <img src="@/asset/images/index/img60.png" class="img-fluid p-sm-5 p-2" />
         </div>
         <div class="col-sm-6 col-12 fin-left">
           <div class="block-title">台灣金融科技融資領導品牌</div>
@@ -557,11 +445,7 @@
           </div>
         </div>
         <div class="col-sm-6 col-12 d-flex align-items-center">
-          <img
-            src="@/asset/images/index/cart_shopping_3d_render_10 1.png"
-            class="img-fluid p-sm-4 p-1"
-            alt=""
-          />
+          <img src="@/asset/images/index/cart_shopping_3d_render_10 1.png" class="img-fluid p-sm-4 p-1" alt="" />
         </div>
       </div>
     </div>
@@ -581,11 +465,7 @@
               <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img
-                      class="img-fluid"
-                      src="@/asset/images/index/handshake2.png"
-                      alt=""
-                    />
+                    <img class="img-fluid" src="@/asset/images/index/handshake2.png" alt="" />
                   </div>
                   <div class="card-title">新光金控創投入資</div>
                   <div class="card-divider"></div>
@@ -599,11 +479,7 @@
               <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img
-                      class="img-fluid"
-                      src="@/asset/images/index/link-1.png"
-                      alt=""
-                    />
+                    <img class="img-fluid" src="@/asset/images/index/link-1.png" alt="" />
                   </div>
                   <div class="card-title">獲得多家銀行搶先合作</div>
                   <div class="card-divider"></div>
@@ -615,11 +491,7 @@
               <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img
-                      class="img-fluid"
-                      src="@/asset/images/index/dating-app-1.png"
-                      alt=""
-                    />
+                    <img class="img-fluid" src="@/asset/images/index/dating-app-1.png" alt="" />
                   </div>
                   <div class="card-title">最年輕化的借貸APP</div>
                   <div class="card-divider"></div>
@@ -631,11 +503,7 @@
               <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img
-                      class="img-fluid"
-                      src="@/asset/images/index/planet-earth-1.png"
-                      alt=""
-                    />
+                    <img class="img-fluid" src="@/asset/images/index/planet-earth-1.png" alt="" />
                   </div>
                   <div class="card-title">ESG綠色金融科技平台</div>
                   <div class="card-divider"></div>
@@ -661,24 +529,12 @@
           <div class="block-content-info">我們的成績</div>
         </div>
         <div class="row no-gutters counter-row">
-          <alesis-counter
-            image="/images/alesis-registered.svg"
-            header="累積註冊用戶"
-            :number="indexCounter.memberCount"
-            unit="人"
-          ></alesis-counter>
-          <alesis-counter
-            image="/images/alesis-totalmoney.svg"
-            header="累積媒合金額"
-            :number="indexCounter.totalLoanAmount"
-            unit="元"
-          ></alesis-counter>
-          <alesis-counter
-            image="/images/alesis-totalapproved.svg"
-            header="累積成交筆數"
-            :number="indexCounter.transactionCount"
-            unit="筆"
-          ></alesis-counter>
+          <alesis-counter image="/images/alesis-registered.svg" header="累積註冊用戶" :number="indexCounter.memberCount"
+            unit="人"></alesis-counter>
+          <alesis-counter image="/images/alesis-totalmoney.svg" header="累積媒合金額" :number="indexCounter.totalLoanAmount"
+            unit="元"></alesis-counter>
+          <alesis-counter image="/images/alesis-totalapproved.svg" header="累積成交筆數" :number="indexCounter.transactionCount"
+            unit="筆"></alesis-counter>
         </div>
       </div>
       <div class="charity">
@@ -694,60 +550,30 @@
               <div class="info-content">
                 普匯攜手愛心大使「張鈞甯」、愛心主持「鍾欣凌」，共同協助台大兒醫、台大兒醫健康基金會聯合勸募，透過普匯捐款系統，即使捐款100元也能幫助兒童們健康，我們邀請您一起投入捐款，找回孩子們健康，創造更美好的台灣環境。
               </div>
-              <img
-                class="img-fluid img-1251 d-sm-none d-block"
-                src="@/asset/images/index/Group1251.png"
-              />
+              <img class="img-fluid img-1251 d-sm-none d-block" src="@/asset/images/index/Group1251.png" />
               <div class="img-group">
                 <div class="img-item">
-                  <img
-                    src="@/asset/images/index/J1.jpg"
-                    alt=""
-                    class="img-fluid"
-                  />
+                  <img src="@/asset/images/index/J1.jpg" alt="" class="img-fluid" />
                 </div>
                 <div class="img-item">
-                  <img
-                    src="@/asset/images/index/J2.jpg"
-                    alt=""
-                    class="img-fluid"
-                  />
+                  <img src="@/asset/images/index/J2.jpg" alt="" class="img-fluid" />
                 </div>
                 <div class="img-item">
-                  <img
-                    src="@/asset/images/index/J3.jpg"
-                    alt=""
-                    class="img-fluid"
-                  />
+                  <img src="@/asset/images/index/J3.jpg" alt="" class="img-fluid" />
                 </div>
                 <div class="img-item">
-                  <img
-                    src="@/asset/images/index/J4.jpg"
-                    alt=""
-                    class="img-fluid"
-                  />
+                  <img src="@/asset/images/index/J4.jpg" alt="" class="img-fluid" />
                 </div>
                 <div class="img-item">
-                  <img
-                    src="@/asset/images/index/J5.jpg"
-                    alt=""
-                    class="img-fluid"
-                  />
+                  <img src="@/asset/images/index/J5.jpg" alt="" class="img-fluid" />
                 </div>
                 <div class="img-item">
-                  <img
-                    src="@/asset/images/index/J6.jpg"
-                    alt=""
-                    class="img-fluid"
-                  />
+                  <img src="@/asset/images/index/J6.jpg" alt="" class="img-fluid" />
                 </div>
               </div>
             </div>
             <div class="col-sm-auto col-12 d-sm-block d-none">
-              <img
-                class="img-fluid img-1251"
-                src="@/asset/images/index/Group1251.png"
-              />
+              <img class="img-fluid img-1251" src="@/asset/images/index/Group1251.png" />
             </div>
           </div>
         </div>
@@ -777,11 +603,7 @@
                   <div>提供完整資訊，有助提高額度</div>
                 </div>
                 <div class="step-content-img">
-                  <img
-                    class="img-fluid"
-                    src="@/asset/images/index/loan-step-1.png"
-                    alt=""
-                  />
+                  <img class="img-fluid" src="@/asset/images/index/loan-step-1.png" alt="" />
                 </div>
               </div>
               <div class="step-content-2">
@@ -791,11 +613,7 @@
                   <div>根據您的身分選擇適合的專案</div>
                 </div>
                 <div class="step-content-img">
-                  <img
-                    class="img-fluid"
-                    src="@/asset/images/index/loan-step-2.png"
-                    alt=""
-                  />
+                  <img class="img-fluid" src="@/asset/images/index/loan-step-2.png" alt="" />
                 </div>
               </div>
               <div class="step-content-3">
@@ -805,11 +623,7 @@
                   <div>AI數據分析審核，全程無人打擾</div>
                 </div>
                 <div class="step-content-img">
-                  <img
-                    class="img-fluid"
-                    src="@/asset/images/index/loan-step-3.png"
-                    alt=""
-                  />
+                  <img class="img-fluid" src="@/asset/images/index/loan-step-3.png" alt="" />
                 </div>
               </div>
               <div class="step-content-4">
@@ -819,11 +633,7 @@
                   <div>審核成功後，立即上架幫您媒合投資人</div>
                 </div>
                 <div class="step-content-img">
-                  <img
-                    class="img-fluid"
-                    src="@/asset/images/index/loan-step-4.png"
-                    alt=""
-                  />
+                  <img class="img-fluid" src="@/asset/images/index/loan-step-4.png" alt="" />
                 </div>
               </div>
               <div class="step-content-5">
@@ -833,11 +643,7 @@
                   <div>24小時收到款項</div>
                 </div>
                 <div class="step-content-img">
-                  <img
-                    class="img-fluid"
-                    src="@/asset/images/index/loan-step-5.png"
-                    alt=""
-                  />
+                  <img class="img-fluid" src="@/asset/images/index/loan-step-5.png" alt="" />
                 </div>
               </div>
             </div>
@@ -870,11 +676,7 @@
                   <div>進入我的資產</div>
                 </div>
                 <div class="step-content-img">
-                  <img
-                    class="img-fluid"
-                    src="@/asset/images/index/invest-step-1.png"
-                    alt=""
-                  />
+                  <img class="img-fluid" src="@/asset/images/index/invest-step-1.png" alt="" />
                 </div>
               </div>
               <div class="step-content-2">
@@ -883,11 +685,7 @@
                   <div>選擇單筆/打包出售</div>
                 </div>
                 <div class="step-content-img">
-                  <img
-                    class="img-fluid"
-                    src="@/asset/images/index/invest-step-2.png"
-                    alt=""
-                  />
+                  <img class="img-fluid" src="@/asset/images/index/invest-step-2.png" alt="" />
                 </div>
               </div>
               <div class="step-content-3">
@@ -897,11 +695,7 @@
                   <div>詳閱轉讓協議書</div>
                 </div>
                 <div class="step-content-img">
-                  <img
-                    class="img-fluid"
-                    src="@/asset/images/index/invest-step-3.png"
-                    alt=""
-                  />
+                  <img class="img-fluid" src="@/asset/images/index/invest-step-3.png" alt="" />
                 </div>
               </div>
               <div class="step-content-4">
@@ -910,11 +704,7 @@
                   <div>上架成功，等待媒合</div>
                 </div>
                 <div class="step-content-img">
-                  <img
-                    class="img-fluid"
-                    src="@/asset/images/index/invest-step-4.png"
-                    alt=""
-                  />
+                  <img class="img-fluid" src="@/asset/images/index/invest-step-4.png" alt="" />
                 </div>
               </div>
             </div>
@@ -999,39 +789,24 @@
             <div class="swiper-slide">
               <div class="row no-gutters user-comment">
                 <div class="col-auto">
-                  <iframe
-                    width="360"
-                    height="230px"
-                    src="https://www.youtube.com/embed/VTJB7c1fS-4"
-                    title="YouTube video player"
-                    frameborder="0"
+                  <iframe width="360" height="230px" src="https://www.youtube.com/embed/VTJB7c1fS-4"
+                    title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                  >
+                    allowfullscreen>
                   </iframe>
                 </div>
                 <div class="col-auto mx-5 d-sm-block d-none">
-                  <iframe
-                    width="360"
-                    height="230"
-                    src="https://www.youtube.com/embed/YkZyp5iSgxs"
-                    title="YouTube video player"
-                    frameborder="0"
+                  <iframe width="360" height="230" src="https://www.youtube.com/embed/YkZyp5iSgxs"
+                    title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                  >
+                    allowfullscreen>
                   </iframe>
                 </div>
                 <div class="col-auto d-sm-block d-none">
-                  <iframe
-                    width="360"
-                    height="230"
-                    src="https://www.youtube.com/embed/ewEoWAjkbGs"
-                    title="YouTube video player"
-                    frameborder="0"
+                  <iframe width="360" height="230" src="https://www.youtube.com/embed/ewEoWAjkbGs"
+                    title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                  >
+                    allowfullscreen>
                   </iframe>
                 </div>
               </div>
@@ -1044,133 +819,56 @@
       </div>
       <div class="row align-items-center media">
         <div class="col-sm col-auto">
-          <a
-            class="項目"
+          <a class="項目"
             href="https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/a645f762048f5f425d0f0a8486f34612.png"
-              alt="Yahoo!新聞"
-            />
+            target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/a645f762048f5f425d0f0a8486f34612.png"
+              alt="Yahoo!新聞" />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a
-            class="項目"
-            href="http://n.yam.com/Article/20180803346949"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/1JHY1QOLYPF0.png"
-              alt="蕃薯藤"
-            />
+          <a class="項目" href="http://n.yam.com/Article/20180803346949" target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/1JHY1QOLYPF0.png" alt="蕃薯藤" />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a
-            class="項目"
-            href="https://www.nownews.com/news/20180807/2798010/"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/Now_News_logo.png"
-              alt="今日新聞"
-            />
+          <a class="項目" href="https://www.nownews.com/news/20180807/2798010/" target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/Now_News_logo.png" alt="今日新聞" />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a
-            class="項目"
-            href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/logo-chinatimes2019.png"
-              alt="中時電子報"
-            />
+          <a class="項目" href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv" target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo-chinatimes2019.png" alt="中時電子報" />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a
-            class="項目"
-            href="https://www.wealth.com.tw/home/articles/20567"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/logo-red.png"
-              alt="財訊"
-            />
+          <a class="項目" href="https://www.wealth.com.tw/home/articles/20567" target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo-red.png" alt="財訊" />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a
-            class="項目"
-            href="https://news.cnyes.com/news/id/4267004"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/logo-cn-yes-1.png"
-              alt="鉅亨網"
-            />
+          <a class="項目" href="https://news.cnyes.com/news/id/4267004" target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo-cn-yes-1.png" alt="鉅亨網" />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a
-            class="項目"
-            href="https://www.gvm.com.tw/article/71426"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/logo_gvm.svg"
-              alt="遠見"
-            />
+          <a class="項目" href="https://www.gvm.com.tw/article/71426" target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo_gvm.svg" alt="遠見" />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a
-            class="項目"
-            href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/logo300_90.png"
-              alt="工商時報"
-            />
+          <a class="項目" href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198" target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo300_90.png" alt="工商時報" />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a
-            class="項目"
-            href="https://www.setn.com/News.aspx?NewsID=792990"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/logo_setn.png"
-              alt="三立新聞網"
-            />
+          <a class="項目" href="https://www.setn.com/News.aspx?NewsID=792990" target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo_setn.png" alt="三立新聞網" />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a
-            class="項目"
-            href="https://www.cna.com.tw/postwrite/detail/279030"
-            target="_blank"
-          >
-            <img
-              class="圖片 img-fluid d-block mx-auto"
-              src="/images/media/logo_cna.png"
-              alt="中央通訊社"
-            />
+          <a class="項目" href="https://www.cna.com.tw/postwrite/detail/279030" target="_blank">
+            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo_cna.png" alt="中央通訊社" />
           </a>
         </div>
       </div>
@@ -1309,7 +1007,7 @@ export default {
       switch (page) {
         case 1:
           // 最後上班日 ~ 休假第二天 || 休假第三天 ~ 開工後一天
-          return ( now > date1 && now < date3 )|| ( now > date4 && now < date5)
+          return (now > date1 && now < date3) || (now > date4 && now < date5)
         case 2:
           // 最後上班日後 ~ 開工後一天
           return now > date1 && now < date5
@@ -1333,10 +1031,12 @@ export default {
   max-width: 1400px;
   margin: 0 auto;
 }
-.header-shadow{
+
+.header-shadow {
   border-radius: 12px;
   box-shadow: 0 6px 6px 0 rgb(0 0 0 / 20%);
 }
+
 .wave {
   position: absolute;
   bottom: 0;
@@ -1344,49 +1044,60 @@ export default {
   width: 100%;
   height: 100px;
   overflow: hidden;
+
   &.reverse {
     top: 0;
     right: -30px;
     transform: rotate(180deg);
   }
 }
+
 .z-5 {
   z-index: 5;
 }
+
 .index-intro {
   .block-content {
     max-width: 1400px;
   }
+
   background-image: url('~images/index/index-header-bg.jpg');
   background-position: bottom;
   padding: 100px 0 15px;
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 850px;
+
   .intro-content {
     .sw-headers {
       min-height: 300px;
       max-width: 1300px;
       z-index: 0;
+
       .swiper-slide {
         // padding: 0 45px;
         color: white;
         overflow: hidden;
       }
+
       .swiper-button-prev,
       .swiper-button-next {
         color: #707070;
         top: 180px;
+
         &::after {
           font-size: 28px;
         }
       }
+
       .speech {
         flex-wrap: nowrap;
+
         .text-bg {
           height: 245px;
           width: 472px;
         }
+
         .solgan {
           margin-top: 100px;
           font-style: normal;
@@ -1395,6 +1106,7 @@ export default {
           letter-spacing: 0.04em;
           color: #393939;
         }
+
         .speech-cover {
           left: 60px;
           position: relative;
@@ -1402,12 +1114,15 @@ export default {
           top: -50px;
         }
       }
+
       .general {
         flex-wrap: nowrap;
+
         .text-bg {
           height: 245px;
           width: 472px;
         }
+
         .solgan {
           margin-top: 100px;
           font-style: normal;
@@ -1416,6 +1131,7 @@ export default {
           letter-spacing: 0.04em;
           color: #393939;
         }
+
         .man {
           left: 350px;
           position: relative;
@@ -1424,10 +1140,12 @@ export default {
         }
       }
     }
+
     .intro-products {
       position: relative;
       top: -190px;
       margin-bottom: -190px;
+
       .group {
         display: grid;
         margin: 15px auto;
@@ -1437,22 +1155,28 @@ export default {
         gap: 20px;
       }
     }
+
     .product-item {
       &.item-1 .card {
         background-image: url('~images/index/product-bg-1.jpg');
       }
+
       &.item-2 .card {
         background-image: url('~images/index/product-bg-2.jpg');
       }
+
       &.item-3 .card {
         background-image: url('~images/index/product-bg-3.jpg');
       }
+
       &.item-4 .card {
         background-image: url('~images/index/product-bg-4.jpg');
       }
+
       &.item-5 .card {
         background-image: url('~images/index/product-bg-5.jpg');
       }
+
       .card {
         box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.36);
         padding: 16px 32px;
@@ -1463,6 +1187,7 @@ export default {
         background-position: top -15px right;
         height: 100%;
       }
+
       .card-title {
         font-weight: 700;
         font-style: normal;
@@ -1471,12 +1196,14 @@ export default {
         margin-bottom: 0;
         color: #083a6e;
       }
+
       .card-hr {
         margin: 2px 0;
         background: #ddeafa;
         height: 2px;
         width: 40px;
       }
+
       .card-sub {
         font-style: normal;
         font-weight: 500;
@@ -1485,6 +1212,7 @@ export default {
         margin-bottom: 5px;
         color: #036eb7;
       }
+
       .card-info {
         font-style: normal;
         font-weight: 400;
@@ -1493,12 +1221,14 @@ export default {
         color: #393939;
         opacity: 0.75;
       }
+
       .card-content {
         display: grid;
         grid-template-columns: 172px 1fr;
         margin-top: 10px;
         gap: 12px;
       }
+
       .card-link {
         background: rgba(255, 255, 255, 0.8);
         border: 2px solid #7ac1ea;
@@ -1508,21 +1238,26 @@ export default {
         align-items: center;
         max-width: 172px;
         margin-left: 0;
+
         &.clickable {
           cursor: pointer;
           transition: all 0.3s;
+
           &:hover {
             background: #7ac1ea;
+
             .card-link-text {
               color: #fff;
             }
           }
         }
+
         &-img {
           width: 24px;
           height: 24px;
           margin-right: 8px;
         }
+
         &-text {
           font-style: normal;
           font-weight: 400;
@@ -1534,6 +1269,7 @@ export default {
     }
   }
 }
+
 .index-concept {
   position: relative;
   padding: 40px 80px;
@@ -1542,8 +1278,10 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   height: 1044px;
+
   .block-content {
     padding: 0 50px;
+
     .block-title {
       font-weight: 500;
       font-size: 56px;
@@ -1552,6 +1290,7 @@ export default {
       color: #e6f5ff;
       text-align: center;
     }
+
     .block-title-2 {
       color: #e6f5ff;
       text-align: center;
@@ -1559,12 +1298,14 @@ export default {
       line-height: 1.4;
       margin: 40px 0;
     }
+
     .block-info {
       display: flex;
       align-items: flex-start;
       font-size: 20px;
       color: #fff;
       line-height: 2.5;
+
       &.concept-1::before {
         display: inline-block;
         content: '「普」';
@@ -1573,6 +1314,7 @@ export default {
         font-size: 40px;
         line-height: 45px;
       }
+
       &.concept-2::before {
         display: inline-block;
         content: '「匯」';
@@ -1582,20 +1324,24 @@ export default {
         line-height: 45px;
       }
     }
+
     .op {
       opacity: 0.56;
     }
+
     .em {
       font-size: 32px;
       color: #fff;
       opacity: 1;
     }
+
     .f-yellow {
       color: #ffe200;
       opacity: 1;
     }
   }
 }
+
 .index-loan {
   position: relative;
   padding: 30px 70px;
@@ -1603,11 +1349,13 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   height: 1063px;
+
   .block-title {
     color: #036eb7;
     font-size: 56px;
     text-align: center;
   }
+
   .block-info {
     color: #036eb7;
     font-size: 40px;
@@ -1615,22 +1363,27 @@ export default {
     opacity: 0.64;
     text-align: center;
   }
+
   .loan-imgs {
     padding: 35px 0;
     position: relative;
     height: 900px;
+
     #img56 {
       display: block;
       margin: auto;
+
       .img56-img {
         width: 380px;
       }
     }
+
     #img58 {
       left: -50px;
       bottom: -12px;
       position: absolute;
     }
+
     #img57 {
       top: -20px;
       right: -232px;
@@ -1638,23 +1391,28 @@ export default {
       transform: rotate(-7.93deg);
     }
   }
+
   .tip-card {
     &.tip-1 {
       right: -155px;
       top: 200px;
     }
+
     &.tip-2 {
       left: -144px;
       top: 400px;
     }
+
     position: absolute;
     border: none;
     width: 300px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
+
     .card-container {
       padding: 8px 26px;
     }
+
     .tip {
       position: initial;
       text-align: center;
@@ -1663,43 +1421,52 @@ export default {
     }
   }
 }
+
 @keyframes service {
   3% {
     right: -125px;
     opacity: 0.4;
     filter: alpha(opacity=20);
   }
+
   20% {
     right: 145px;
     opacity: 1;
     filter: alpha(opacity=0);
   }
+
   45% {
     right: 145px;
     opacity: 0;
     filter: alpha(opacity=0);
   }
 }
+
 @keyframes service-img {
   0% {
     top: 0px;
   }
+
   50% {
     top: 30px;
   }
+
   100% {
     top: 0;
   }
 }
+
 .index-service {
   position: relative;
   padding: 100px 70px 20px;
   background: linear-gradient(180.82deg, #036eb7 0.7%, #ffffff 92.77%);
+
   .block-title {
     color: #fff;
     font-size: 56px;
     text-align: center;
   }
+
   .block-info {
     color: #fff;
     font-size: 40px;
@@ -1707,10 +1474,12 @@ export default {
     opacity: 0.64;
     text-align: center;
   }
+
   .service-imgs {
     padding: 15px 0 190px;
     position: relative;
     overflow: hidden;
+
     #service-1 {
       animation: service-img 4s linear infinite;
       position: relative;
@@ -1718,6 +1487,7 @@ export default {
       margin: 0 auto;
       height: 500px;
     }
+
     #service-2 {
       position: absolute;
       display: block;
@@ -1726,6 +1496,7 @@ export default {
       left: 400px;
       height: 400px;
     }
+
     #s1 {
       position: absolute;
       left: 253px;
@@ -1734,6 +1505,7 @@ export default {
       line-height: 26px;
       color: #ffffff;
     }
+
     #s2 {
       position: absolute;
       right: 178px;
@@ -1742,6 +1514,7 @@ export default {
       line-height: 26px;
       color: #ffffff;
     }
+
     #s3 {
       position: absolute;
       left: 188px;
@@ -1750,6 +1523,7 @@ export default {
       line-height: 26px;
       color: #ffffff;
     }
+
     #s4 {
       position: absolute;
       right: 210px;
@@ -1760,19 +1534,24 @@ export default {
     }
   }
 }
+
 .index-tech {
   padding: 20px 50px;
+
   .tech-left {
     padding-left: 80px;
   }
+
   .fin-left {
     padding-left: 30px;
   }
+
   .block-content-header-title {
     color: #036eb7;
     font-size: 56px;
     text-align: center;
   }
+
   .block-content-header-info {
     color: #036eb7;
     font-size: 40px;
@@ -1780,11 +1559,13 @@ export default {
     opacity: 0.64;
     text-align: center;
   }
+
   .block-title {
     color: #036eb7;
     font-size: 48px;
     text-align: left;
   }
+
   .block-info {
     color: #036eb7;
     font-size: 30px;
@@ -1792,54 +1573,68 @@ export default {
     opacity: 0.64;
     text-align: left;
   }
+
   .step-container {
     margin: 15px auto;
     position: relative;
   }
+
   .step-content-1 {
     width: 435px;
     padding: 0 15px 10px 0;
+
     .step-content-title::before {
       content: '1';
     }
   }
+
   .step-content-2 {
     width: 435px;
     padding: 0 15px 10px 0;
+
     .step-content-title::before {
       content: '2';
     }
+
     .step-content-info {
       border-left: 5px solid #f29600;
     }
   }
+
   .step-content-3 {
     width: 435px;
     padding: 0 15px 10px 0;
+
     .step-content-title::before {
       content: '3';
     }
   }
+
   .step-content-4 {
     width: 435px;
     padding: 0 15px 10px 0;
+
     .step-content-title::before {
       content: '4';
     }
+
     .step-content-info {
       border-left: 5px solid #f29600;
       opacity: 1;
     }
+
     .op {
       opacity: 0.56;
     }
   }
+
   .step-content-title {
     padding-left: 42px;
     font-style: normal;
     font-weight: 700;
     font-size: 40px;
     color: #023d64;
+
     &::before {
       background: #036fb7;
       border-radius: 50%;
@@ -1853,6 +1648,7 @@ export default {
       width: 60px;
     }
   }
+
   .content-title-style {
     font-style: normal;
     font-weight: 700;
@@ -1860,6 +1656,7 @@ export default {
     color: #023d64;
     margin-bottom: 15px;
   }
+
   .step-content-info {
     margin: 15px 0;
     padding-left: 42px;
@@ -1871,17 +1668,21 @@ export default {
     border-left: 5px solid #036fb7;
   }
 }
+
 .index-cert {
   padding: 64px;
   background: #f3f9fc;
+
   .cert-swiper {
     overflow: initial;
   }
+
   .block-title {
     color: #036eb7;
     font-size: 56px;
     text-align: center;
   }
+
   .block-info {
     color: #036eb7;
     font-size: 40px;
@@ -1889,19 +1690,23 @@ export default {
     opacity: 0.64;
     text-align: center;
   }
+
   .cert-cards {
     display: flex;
     margin-top: 60px;
     justify-content: center;
     gap: 20px;
+
     .card {
       width: 330px;
       border: none;
       box-shadow: 0px 4px 12px rgba(21, 91, 153, 0.16);
       border-radius: 16px;
+
       .card-body {
         padding: 24px;
       }
+
       .card-cover {
         width: 84px;
         margin: 0 auto 16px;
@@ -1909,6 +1714,7 @@ export default {
         background: #cdeafe;
         border-radius: 6px;
       }
+
       .card-title {
         font-style: normal;
         font-weight: 700;
@@ -1916,12 +1722,14 @@ export default {
         text-align: center;
         color: #023d64;
       }
+
       .card-divider {
         width: 39px;
         margin: 8px auto;
         border-bottom: 3px solid #036fb7;
         border-radius: 100px;
       }
+
       .card-text {
         font-style: normal;
         font-weight: 400;
@@ -1941,12 +1749,14 @@ export default {
     font-size: 56px;
     text-align: center;
   }
+
   .product-step-head-title {
     font-style: normal;
     font-weight: 700;
     font-size: 56px;
     text-align: center;
   }
+
   .block-content-info {
     color: #036eb7;
     font-size: 40px;
@@ -1954,9 +1764,11 @@ export default {
     opacity: 0.64;
     text-align: center;
   }
+
   .counter-row {
     justify-content: space-evenly;
   }
+
   .steps {
     height: 1000px;
     background-position: center;
@@ -1964,34 +1776,42 @@ export default {
     background-repeat: no-repeat;
     background-image: url('~images/index/step-bg.png');
   }
+
   .step-container {
     display: grid;
     grid-template-columns: 1fr 32px 1fr;
     padding: 60px;
     gap: 20px;
+
     .loan {
       .step-head-title {
         color: #036fb7;
       }
+
       .step-content-1 {
         width: 275px;
         padding: 0 15px 10px 30px;
         border-left: 5px solid #036fb7;
+
         .step-content-title::before {
           content: '1';
         }
+
         .step-content-img {
           opacity: 1;
           z-index: 3;
         }
       }
+
       .step-content-2 {
         width: 275px;
         padding: 0 15px 10px 30px;
         border-left: 5px solid #036fb7;
+
         .step-content-title::before {
           content: '2';
         }
+
         &:hover,
         &:focus-within {
           .step-content-img {
@@ -2002,13 +1822,16 @@ export default {
           }
         }
       }
+
       .step-content-3 {
         width: 275px;
         padding: 0 15px 10px 30px;
         border-left: 5px solid #036fb7;
+
         .step-content-title::before {
           content: '3';
         }
+
         &:hover,
         &:focus-within {
           .step-content-img {
@@ -2019,13 +1842,16 @@ export default {
           }
         }
       }
+
       .step-content-4 {
         width: 275px;
         padding: 0 15px 10px 30px;
         border-left: 5px solid #036fb7;
+
         .step-content-title::before {
           content: '4';
         }
+
         &:hover,
         &:focus-within {
           .step-content-img {
@@ -2036,12 +1862,15 @@ export default {
           }
         }
       }
+
       .step-content-5 {
         width: 275px;
         padding: 0 15px 10px 30px;
+
         .step-content-title::before {
           content: '5';
         }
+
         &:hover,
         &:focus-within {
           .step-content-img {
@@ -2052,6 +1881,7 @@ export default {
           }
         }
       }
+
       .solgan {
         border-radius: 16px;
         border: 1px solid #036fb7;
@@ -2061,41 +1891,50 @@ export default {
         padding: 14px;
         text-align: center;
         width: 210px;
+
         .em {
           font-size: 28px;
           color: #036eb7;
         }
+
         .sm {
           font-size: 14px;
           opacity: 0.8;
         }
       }
     }
+
     .invest {
       .step-head-title {
         color: #f29500;
       }
+
       .step-content-1 {
         width: 275px;
         padding: 0 15px 40px 30px;
         border-left: 5px solid #f29500;
+
         .step-content-title::before {
           content: '1';
           background: #f29500;
         }
+
         .step-content-img {
           opacity: 1;
           z-index: 3;
         }
       }
+
       .step-content-2 {
         width: 275px;
         padding: 0 15px 40px 30px;
         border-left: 5px solid #f29500;
+
         .step-content-title::before {
           content: '2';
           background: #f29500;
         }
+
         &:hover,
         &:focus-within {
           .step-content-img {
@@ -2106,14 +1945,17 @@ export default {
           }
         }
       }
+
       .step-content-3 {
         width: 275px;
         padding: 0 15px 25px 30px;
         border-left: 5px solid #f29500;
+
         .step-content-title::before {
           content: '3';
           background: #f29500;
         }
+
         &:hover,
         &:focus-within {
           .step-content-img {
@@ -2124,13 +1966,16 @@ export default {
           }
         }
       }
+
       .step-content-4 {
         width: 275px;
         padding: 0 15px 10px 30px;
+
         .step-content-title::before {
           content: '4';
           background: #f29500;
         }
+
         &:hover,
         &:focus-within {
           .step-content-img {
@@ -2141,6 +1986,7 @@ export default {
           }
         }
       }
+
       .solgan {
         border-radius: 16px;
         border: 1px solid #036fb7;
@@ -2150,22 +1996,26 @@ export default {
         padding: 14px;
         text-align: center;
         width: 210px;
+
         .em {
           font-size: 28px;
           color: #036eb7;
         }
+
         .sm {
           font-size: 14px;
           opacity: 0.8;
         }
       }
     }
+
     .step-head-title {
       font-weight: 700;
       font-size: 32px;
       text-align: center;
       letter-spacing: 0.2px;
     }
+
     .step-head-info {
       margin-top: 8px;
       font-weight: 700;
@@ -2173,6 +2023,7 @@ export default {
       text-align: center;
       color: #393939;
     }
+
     .step-main {
       margin-top: 45px;
       position: relative;
@@ -2180,11 +2031,13 @@ export default {
       flex-direction: column;
       align-items: flex-end;
     }
+
     .divide {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
       .circle {
         width: 32px;
         height: 32px;
@@ -2193,11 +2046,13 @@ export default {
         border-radius: 50%;
       }
     }
+
     .step-content-title {
       font-style: normal;
       font-weight: 700;
       font-size: 24px;
       color: #036fb7;
+
       &::before {
         background: #036fb7;
         border-radius: 50%;
@@ -2211,6 +2066,7 @@ export default {
         width: 36px;
       }
     }
+
     .step-content-info {
       font-weight: 400;
       font-size: 16px;
@@ -2218,6 +2074,7 @@ export default {
       color: #023d64;
       opacity: 0.56;
     }
+
     .step-content-img {
       top: 0;
       left: 15px;
@@ -2228,9 +2085,11 @@ export default {
     }
   }
 }
+
 .charity {
   padding: 64px;
   background: #f3f9fc;
+
   .block-title {
     margin-top: 0;
     font-weight: 500;
@@ -2238,6 +2097,7 @@ export default {
     color: #036fb7;
     text-align: center;
   }
+
   .block-info {
     color: #036fb7;
     font-size: 40px;
@@ -2246,10 +2106,12 @@ export default {
     opacity: 0.64;
     text-align: center;
   }
+
   .info-title {
     font-size: 32px;
     color: #023d64;
   }
+
   .info-content {
     margin: 12px 0 32px;
     font-size: 18px;
@@ -2257,23 +2119,28 @@ export default {
     color: #023d64;
     opacity: 0.64;
   }
+
   .img-group {
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 15px;
+
     .img-item {
       transition: transform 0.5s ease;
     }
+
     .img-item:hover {
       transform: scale(2.5);
     }
   }
+
   .img-1251 {
     height: 505px;
     margin-left: 15px;
   }
 }
+
 /**
     user experience
 */
@@ -2293,27 +2160,33 @@ export default {
     letter-spacing: 0.2px;
     color: #fff;
   }
+
   .block-info {
     font-size: 24px;
     line-height: 35px;
     text-align: center;
     color: #393939;
   }
+
   .user-comment {
     margin-top: 100px;
     justify-content: center;
+
     .comment-card {
       width: 360px;
       padding: 10px;
+
       .star {
         color: #f3cd03;
       }
+
       .portrait {
         width: 56px;
         border-radius: 50%;
       }
     }
   }
+
   .media {
     position: absolute;
     padding: 20px;
@@ -2321,15 +2194,18 @@ export default {
     width: 101%;
     left: 15px;
     background: rgba($color: #8c97af, $alpha: 0.5);
+
     .圖片 {
       height: 48px;
     }
   }
+
   .ue-prev,
   .ue-next {
     top: 215px;
   }
 }
+
 @media (max-width: 1060px) {
   .index-intro .intro-content .sw-headers .general .man {
     transform: scale(0.8);
@@ -2341,53 +2217,66 @@ export default {
   .index-intro .intro-content .intro-products {
     margin-top: 160px !important;
   }
+
   .block-content {
     margin: 0 auto;
   }
+
   .wave {
     position: absolute;
     bottom: initial;
     height: 100px;
     overflow: hidden;
+
     &.reverse {
       top: -40px;
       transform: rotate(180deg);
     }
   }
+
   .index-intro {
     background-image: none;
     padding: 0;
     height: auto;
+
     .intro-content {
       background-image: url('~images/index/header-bg-phone.jpg');
       background-position: initial;
       background-size: cover;
       background-repeat: no-repeat;
+
       .sw-headers {
         min-height: 300px;
+
         .swiper-slide {
           padding: 0 25px;
           color: white;
         }
+
         .swiper-button-prev,
         .swiper-button-next {
           color: #fff;
+
           &::after {
             font-size: 20px;
           }
         }
+
         .speech {
           padding-top: 20px;
           flex-wrap: wrap;
+
           .text-bg {
             margin-top: 0;
             height: 210px;
             width: 178px;
           }
+
           .solgan {
             margin-top: 100px;
             font-size: 14px;
           }
+
           .speech-cover {
             left: 0;
             top: -260px;
@@ -2395,17 +2284,21 @@ export default {
             height: 258px;
           }
         }
+
         .general {
           flex-wrap: wrap;
           padding-top: 20px;
+
           .text-bg {
             height: 104px;
             width: 215px;
           }
+
           .solgan {
             margin-top: 182px;
             font-size: 14px;
           }
+
           .man {
             left: 136px;
             position: relative;
@@ -2414,11 +2307,13 @@ export default {
           }
         }
       }
+
       .intro-products {
         margin-top: -10px;
         padding-bottom: 60px;
         top: -260px;
         margin-bottom: -300px;
+
         .group {
           display: grid;
           margin: 15px;
@@ -2427,34 +2322,42 @@ export default {
           gap: 18px;
         }
       }
+
       .product-item {
         .card {
           padding: 16px 14px;
           overflow: hidden;
         }
+
         .card-title {
           font-size: 26px;
         }
+
         .card-hr {
           width: 40px;
         }
+
         .card-sub {
           font-size: 17px;
           line-height: 1.4;
         }
+
         .card-content {
           grid-template-columns: 155px 1fr;
           gap: 11px;
           margin-top: 12px;
         }
+
         .card-link {
           padding: 6px;
           max-width: 155px;
+
           &-img {
             width: 20px;
             height: 20px;
             margin-right: 4px;
           }
+
           &-text {
             font-size: 17px;
             line-height: 1.4;
@@ -2463,33 +2366,40 @@ export default {
       }
     }
   }
+
   .index-concept {
     position: relative;
     padding: 30px 10px;
     background-image: url('~images/index/concept-bg.png');
     height: auto;
+
     .block-content {
       padding: 0 0 50px;
+
       .block-title {
         font-size: 28px;
         line-height: 1.4;
         margin: 0 0 20px;
       }
+
       .block-title-2 {
         font-size: 20px;
         line-height: 1.4;
         margin: 0 0 20px;
       }
+
       .block-info {
         display: flex;
         align-items: flex-start;
         font-size: 14px;
         line-height: 1.5;
+
         &.concept-1::before {
           content: '「普」';
           font-size: 20px;
           line-height: 14px;
         }
+
         &.concept-2::before {
           display: inline-block;
           content: '「匯」';
@@ -2497,34 +2407,42 @@ export default {
           line-height: 14px;
         }
       }
+
       .op {
         margin-bottom: 10px;
       }
+
       .em {
         font-size: 20px;
       }
     }
   }
+
   .index-loan {
     padding: 20px 0;
     background-image: url('~images/index/index-phone-bg.png');
     background-repeat: no-repeat;
     background-size: cover;
     height: 600px;
+
     .block-title {
       font-size: 28px;
     }
+
     .block-info {
       font-size: 18px;
       margin-top: 8px;
     }
+
     .loan-imgs {
       padding: 35px 0;
       position: relative;
       height: auto;
+
       #img56 .img56-img {
         width: 210px;
       }
+
       //   #img58 {
       //     left: -50px;
       //     bottom: -12px;
@@ -2538,61 +2456,75 @@ export default {
       //     transform: rotate(-7.93deg);
       //   }
     }
+
     .tip-card {
       &.tip-1 {
         right: -40px;
         top: 128px;
       }
+
       &.tip-2 {
         left: -40px;
         top: 280px;
       }
+
       width: 160px;
+
       .card-container {
         padding: 8px 12px;
       }
+
       .tip {
         font-size: 14px;
       }
     }
   }
+
   @keyframes service {
     3% {
       right: -125px;
       opacity: 0.4;
       filter: alpha(opacity=20);
     }
+
     20% {
       right: 145px;
       opacity: 1;
       filter: alpha(opacity=0);
     }
+
     45% {
       right: 145px;
       opacity: 0;
       filter: alpha(opacity=0);
     }
   }
+
   @keyframes service-img {
     0% {
       top: 0px;
     }
+
     50% {
       top: 30px;
     }
+
     100% {
       top: 0;
     }
   }
+
   .index-service {
     position: relative;
     padding: 75px 0 25px;
     background: linear-gradient(180.82deg, #036eb7 13.7%, #ffffff 99.77%);
+
     .block-title {
       color: #fff;
       font-size: 32px;
       text-align: center;
     }
+
     .block-info {
       color: #fff;
       font-size: 20px;
@@ -2600,10 +2532,12 @@ export default {
       opacity: 0.64;
       text-align: center;
     }
+
     .service-imgs {
       padding: 15px 0 130px;
       position: relative;
       overflow: hidden;
+
       #service-1 {
         margin-top: 15px;
         animation: none;
@@ -2611,6 +2545,7 @@ export default {
         margin: 0 auto;
         height: auto;
       }
+
       #service-2 {
         position: absolute;
         display: block;
@@ -2619,6 +2554,7 @@ export default {
         left: 0px;
         height: 260px;
       }
+
       #s1 {
         left: 20px;
         top: 20px;
@@ -2626,6 +2562,7 @@ export default {
         line-height: 1.6;
         width: 70px;
       }
+
       #s2 {
         position: absolute;
         right: 3px;
@@ -2634,6 +2571,7 @@ export default {
         line-height: 1.6;
         width: 100px;
       }
+
       #s3 {
         position: absolute;
         left: 15px;
@@ -2642,6 +2580,7 @@ export default {
         line-height: 1.6;
         width: 100px;
       }
+
       #s4 {
         position: absolute;
         right: 3px;
@@ -2652,73 +2591,93 @@ export default {
       }
     }
   }
+
   .index-tech {
     padding: 0 30px;
+
     .tech-left {
       padding-left: 30px;
     }
+
     .block-content-header-title {
       font-size: 28px;
     }
+
     .block-content-header-info {
       font-size: 18px;
       width: 256px;
       margin: 8px auto;
     }
+
     .block-title {
       font-size: 20px;
     }
+
     .block-info {
       font-size: 16px;
       margin-top: 8px;
     }
+
     .step-container {
       margin: 15px auto;
       padding: 0 10px;
       position: relative;
     }
+
     .step-content-1 {
       width: 100%;
       padding: 0;
+
       .step-content-title::before {
         content: '1';
       }
     }
+
     .step-content-2 {
       width: 100%;
       padding: 0;
+
       .step-content-title::before {
         content: '2';
       }
+
       .step-content-info {
         border-left: 5px solid #f29600;
       }
     }
+
     .step-content-3 {
       width: 100%;
       padding: 0;
+
       .step-content-title::before {
         content: '3';
       }
     }
+
     .step-content-4 {
       width: 100%;
       padding: 0;
+
       .step-content-title::before {
         content: '4';
       }
+
       .step-content-info {
         border-left: 5px solid #f29600;
         opacity: 1;
       }
+
       .op {
         opacity: 0.56;
       }
     }
+
     .step-content-title {
       padding-left: 30px;
       font-size: 18px;
       line-height: 36px;
+
       &::before {
         background: #036fb7;
         color: #fff;
@@ -2728,6 +2687,7 @@ export default {
         width: 36px;
       }
     }
+
     .content-title-style {
       font-style: normal;
       font-weight: 700;
@@ -2736,66 +2696,82 @@ export default {
       color: #036fb7;
       margin-bottom: 10px;
     }
+
     .step-content-info {
       font-size: 12px;
       line-height: 1.4;
       padding-left: 24px;
     }
   }
+
   .index-cert {
     padding: 36px;
+
     .cert-swiper {
       overflow: initial;
     }
+
     .block-title {
       font-size: 28px;
     }
+
     .block-info {
       font-size: 18px;
       margin-top: 6px;
     }
+
     .cert-cards {
       flex-direction: column;
       margin-top: 20px;
       gap: 20px;
+
       .card {
         width: 100%;
         border: none;
+
         .card-body {
           padding: 22px;
         }
+
         .card-cover {
           width: 68px;
           margin: 0 auto 12px;
           padding: 8px;
         }
+
         .card-title {
           font-size: 18px;
         }
+
         .card-text {
           font-size: 14px;
         }
       }
     }
   }
+
   .product-step {
     .product-step-head-title {
       font-size: 28px;
     }
+
     .block-title {
       margin-top: 30px;
       color: #036eb7;
       font-size: 28px;
       text-align: center;
     }
+
     .block-content-info {
       font-size: 18px;
       margin: 8px 0;
     }
+
     .counter-row {
       flex-direction: column;
       gap: 15px;
     }
+
     .steps {
       height: auto;
       background-position: center;
@@ -2803,34 +2779,42 @@ export default {
       background-repeat: no-repeat;
       background-image: url('~images/index/step-bg.png');
     }
+
     .step-container {
       display: grid;
       grid-template-columns: 1fr;
       padding: 20px 0;
       gap: 20px;
+
       .loan {
         .step-head-title {
           color: #036fb7;
         }
+
         .step-content-1 {
           width: 160px;
           padding: 0 10px 8px 24px;
           border-left: 5px solid #036fb7;
+
           .step-content-title::before {
             content: '1';
           }
+
           .step-content-img {
             opacity: 1;
             z-index: 3;
           }
         }
+
         .step-content-2 {
           width: 160px;
           padding: 0 10px 8px 24px;
           border-left: 5px solid #036fb7;
+
           .step-content-title::before {
             content: '2';
           }
+
           &:hover,
           &:focus-within {
             .step-content-img {
@@ -2841,13 +2825,16 @@ export default {
             }
           }
         }
+
         .step-content-3 {
           width: 160px;
           padding: 0 10px 8px 24px;
           border-left: 5px solid #036fb7;
+
           .step-content-title::before {
             content: '3';
           }
+
           &:hover,
           &:focus-within {
             .step-content-img {
@@ -2858,13 +2845,16 @@ export default {
             }
           }
         }
+
         .step-content-4 {
           width: 160px;
           padding: 0 10px 8px 24px;
           border-left: 5px solid #036fb7;
+
           .step-content-title::before {
             content: '4';
           }
+
           &:hover,
           &:focus-within {
             .step-content-img {
@@ -2875,12 +2865,15 @@ export default {
             }
           }
         }
+
         .step-content-5 {
           width: 160px;
           padding: 0 10px 8px 24px;
+
           .step-content-title::before {
             content: '5';
           }
+
           &:hover,
           &:focus-within {
             .step-content-img {
@@ -2891,44 +2884,54 @@ export default {
             }
           }
         }
+
         .solgan {
           font-size: 18px;
           margin: 30px auto;
           padding: 14px;
           width: 180px;
+
           .em {
             font-size: 24px;
           }
+
           .sm {
             font-size: 12px;
           }
         }
       }
+
       .invest {
         .step-head-title {
           color: #f29500;
         }
+
         .step-content-1 {
           width: 160px;
           padding: 0 15px 40px 30px;
           border-left: 5px solid #f29500;
+
           .step-content-title::before {
             content: '1';
             background: #f29500;
           }
+
           .step-content-img {
             opacity: 1;
             z-index: 3;
           }
         }
+
         .step-content-2 {
           width: 160px;
           padding: 0 15px 40px 30px;
           border-left: 5px solid #f29500;
+
           .step-content-title::before {
             content: '2';
             background: #f29500;
           }
+
           &:hover,
           &:focus-within {
             .step-content-img {
@@ -2939,14 +2942,17 @@ export default {
             }
           }
         }
+
         .step-content-3 {
           width: 160px;
           padding: 0 15px 25px 30px;
           border-left: 5px solid #f29500;
+
           .step-content-title::before {
             content: '3';
             background: #f29500;
           }
+
           &:hover,
           &:focus-within {
             .step-content-img {
@@ -2957,13 +2963,16 @@ export default {
             }
           }
         }
+
         .step-content-4 {
           width: 160px;
           padding: 0 15px 10px 30px;
+
           .step-content-title::before {
             content: '4';
             background: #f29500;
           }
+
           &:hover,
           &:focus-within {
             .step-content-img {
@@ -2974,26 +2983,32 @@ export default {
             }
           }
         }
+
         .solgan {
           font-size: 18px;
           margin: 30px auto;
           padding: 14px;
           width: 180px;
+
           .em {
             font-size: 24px;
           }
+
           .sm {
             font-size: 12px;
           }
         }
       }
+
       .step-head-title {
         font-size: 18px;
       }
+
       .step-head-info {
         margin-top: 8px;
         font-size: 12px;
       }
+
       .step-main {
         margin-top: 25px;
         display: flex;
@@ -3001,13 +3016,16 @@ export default {
         flex-direction: column;
         align-items: flex-end;
       }
+
       .divide {
         display: none;
       }
+
       .step-content-title {
         font-size: 18px;
         line-height: 2;
         color: #036fb7;
+
         &::before {
           right: 140px;
           font-size: 18px;
@@ -3015,9 +3033,11 @@ export default {
           width: 36px;
         }
       }
+
       .step-content-info {
         font-size: 12px;
       }
+
       .step-content-img {
         top: 30px;
         left: 0;
@@ -3028,41 +3048,52 @@ export default {
       }
     }
   }
+
   .charity {
     padding: 32px 0;
+
     .block-title {
       font-size: 28px;
     }
+
     .block-info {
       font-size: 18px;
       margin-bottom: 10px;
     }
+
     .info-title {
       font-size: 18px;
       text-align: center;
     }
+
     .info-content {
       margin: 12px 0 12px;
       font-size: 12px;
       line-height: 1.3;
     }
+
     .img-group {
       display: grid;
       grid-template-rows: 1fr 1fr;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 15px;
       position: relative;
+
       .img-item {
+
         &:hover,
         &:focus-within {
+
           &:nth-child(1),
           &:nth-child(4) {
             transform: scale(3.27) translate(38px, 0);
           }
+
           &:nth-child(2),
           &:nth-child(5) {
             transform: scale(3.27);
           }
+
           &:nth-child(3),
           &:nth-child(6) {
             transform: scale(3.27) translate(-38px, 0);
@@ -3070,12 +3101,14 @@ export default {
         }
       }
     }
+
     .img-1251 {
       height: auto;
       margin-left: 0;
       margin-bottom: 15px;
     }
   }
+
   /**
     user experience
 */
@@ -3083,26 +3116,32 @@ export default {
     position: relative;
     height: 575px;
     background-position: top;
+
     .block-title {
       margin-top: 24px;
       font-size: 28px;
       line-height: 1.4;
     }
+
     .block-info {
       font-size: 18px;
       line-height: 1.2;
     }
+
     .user-comment {
       margin-top: 50px;
       justify-content: center;
+
       .comment-card {
         width: 270px;
         padding: 10px;
+
         .portrait {
           width: 40px;
         }
       }
     }
+
     .media {
       position: absolute;
       padding: 20px;
@@ -3110,15 +3149,16 @@ export default {
       width: 101%;
       left: 15px;
       background: rgba($color: #8c97af, $alpha: 0.5);
+
       .圖片 {
         height: 32px;
         max-width: initial;
       }
     }
+
     .ue-prev,
     .ue-next {
       top: 175px;
     }
   }
-}
-</style>
+}</style>
