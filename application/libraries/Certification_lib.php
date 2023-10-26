@@ -3191,6 +3191,8 @@ class Certification_lib{
         }
 
         $validateCertificationList = call_user_func_array('array_merge', $certificationsStageList);
+        // 房貸選填認證項被退件certificate_status需要轉1，下次起案才能重新提交
+        $option_cert = array_diff($option_cert, array(CERTIFICATION_HOUSE_RECEIPT, CERTIFICATION_RENOVATION_RECEIPT));
         $validateCertificationList = array_diff($validateCertificationList, $option_cert);
         $doneCertifications = array_reduce($userCertifications, function ($list, $item) {
             if ( ! isset($list[$item->certification_id]))
