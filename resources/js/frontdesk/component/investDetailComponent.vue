@@ -699,13 +699,13 @@ export default {
         }
       }
 
-      @media screen and(max-width:1023px) {
+      @media screen and (max-width:1023px) {
         .invert-deatil-card {
           width: 46%;
         }
       }
 
-      @media screen and(max-width:767px) {
+      @media screen and (max-width:767px) {
         .invert-deatil-card {
           width: 94%;
         }
@@ -838,7 +838,7 @@ export default {
       line-height: 64px;
     }
 
-    @media screen and(max-width:767px) {
+    @media screen and (max-width:767px) {
       div {
         padding: 0px 5px;
       }

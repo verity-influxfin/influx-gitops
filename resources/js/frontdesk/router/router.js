@@ -123,11 +123,11 @@ let routers = [
                 props: true,
                 component: businessEnd
             },
-            {
-                name: 'smeg',
-                path: 'smeg',
-                component: smeg
-            }
+            // {
+            //     name: 'smeg',
+            //     path: 'smeg',
+            //     component: smeg
+            // }
         ]
     },
     {

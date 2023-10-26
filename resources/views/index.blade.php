@@ -210,10 +210,16 @@
                                         <div class="function-list-content enterprise">
                                             <div class="function-list-items ">
                                                 <div class="link-title">普惠金融 貸你滿足</div>
-                                                <div class="link-item">
+                                                {{-- <div class="link-item">
                                                     <a href="/business-loan/smeg" class="link-text">
                                                         <div>信保專案</div>
                                                     </a>
+                                                </div> --}}
+                                                <div class="link-item">
+                                                    <div class="link-text">
+                                                        <div>信保專案</div>
+                                                        <div class="link-coming-soon">(coming soon)</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -407,7 +413,8 @@
                             </div>
                             <a href="/business-loan">企業融資</a>
                         </div>
-                        <a href="/business-loan/smeg" class="item">中小企業融資(信保)</a>
+                        {{-- <a href="/business-loan/smeg" class="item">中小企業融資(信保)</a> --}}
+                        <div class="item -disabled">中小企業融資(信保) (coming soon)</div>
                         <div class="item -disabled">企業主速貸 (coming soon)</div>
                         <div class="item -disabled">中小企業信貸 (coming soon)</div>
                     </div>
@@ -499,7 +506,8 @@
                         <div class="item">
                             <div class="header">企業融資</div>
                             <div class="list">
-                                <a href="/business-loan/smeg" class="text-white">中小企業融資(信保)</a>
+                                {{-- <a href="/business-loan/smeg" class="text-white">中小企業融資(信保)</a> --}}
+                                <div class="text-white">中小企業融資(信保)</div>
                                 <div class="text-white">企業主速貸</div>
                                 <div class="text-white">中小企業信貸</div>
                             </div>
