@@ -410,8 +410,53 @@ class User extends REST_Controller {
 
             // 新增法人帳號
             if ($tax_id_exist) {
-                // 法人註冊改 POST api/v2/user/register_company
-                goto END;
+                // 新版app法人註冊改 POST api/v2/user/register_company
+                // 建立法人帳號
+                $new_company_user_param = [
+                    'phone' => $input['phone'],
+                    'id_number' => $input['tax_id'],
+                    'password' => $input['password'],
+                    // 啟用法人
+                    'company_status' => 1,
+                    'auth_otp' => $opt_token,
+                    'name' => $company_info['company_name'] ?? '',
+                ];
+                $new_id = $this->user_model->insert($new_company_user_param);
+
+                if ($new_id)
+                {
+                    $this->load->model('user/user_certification_model');
+                    $this->user_certification_model->insert([
+                        'user_id' => $new_id,
+                        'certification_id' => CERTIFICATION_TARGET_APPLY,
+                        'investor' => USER_INVESTOR,
+                        'content' => '',
+                        'remark' => '',
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+                    ]);
+                }
+
+                // 若該法人之自然人帳號不存在，則自動建立其自然人帳號
+                $company_user_already_exist = $this->user_model->get_by([
+                    'phone' => $input['phone'],
+                    // 法人狀態: 0=未啟用
+                    'company_status' => 0
+                ]);
+                if (!$company_user_already_exist) {
+                    $responsible_user_id = $this->user_model->insert($new_account_data);
+                }else{
+                    $responsible_user_id = $company_user_already_exist->id;
+                }
+
+                $company_meta = [
+                    [
+                        'user_id' => $new_id,
+                        'meta_key' => 'company_responsible_user_id',
+                        'meta_value' => (int)$responsible_user_id,
+                    ]
+                    ];
+                $this->load->model('user/user_meta_model');
+                $this->user_meta_model->insert_many($company_meta);
             // 新增自然人帳號
             } else {
                 $new_id = $this->user_model->insert($new_account_data);
@@ -898,8 +943,8 @@ END:
 				if($user_info->block_status != 0){
 				    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 				}
-
-                $appIdentity = $this->input->request_headers()['User-Agent']??"";
+                $this->load->library('user_agent');
+                $appIdentity = $this->agent->agent_string() ?? "";
 				if(strpos($appIdentity,"PuHey") !== FALSE) {
                     if ($investor == 1 && $user_info->app_investor_status == 0) {
                         $user_info->app_investor_status = 1;
@@ -1103,8 +1148,8 @@ END:
                  if($user_info->block_status != 0){
                      $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
                  }
- 
-                 $appIdentity = $this->input->request_headers()['User-Agent']??"";
+                 $this->load->library('user_agent');
+                 $appIdentity = $this->agent->agent_string() ?? "";
                  if(strpos($appIdentity,"PuHey") !== FALSE) {
                      if ($investor == 1 && $user_info->app_investor_status == 0) {
                          $user_info->app_investor_status = 1;
@@ -2058,7 +2103,8 @@ END:
         }
 
         // 判斷交換 token 的來源
-        $app_identity = $this->input->request_headers()['User-Agent'] ?? '';
+        $this->load->library('user_agent');
+        $app_identity = $this->agent->agent_string() ?? "";
         $investor = isset($this->user_info->investor) && $this->user_info->investor ? 1 : 0;
         if (strpos($app_identity, 'PuHey') !== FALSE)
         {
@@ -3462,12 +3508,20 @@ END:
             'base_uri' => getenv('ENV_ERP_HOST'),
             'timeout' => 300,
         ]);
+        $param = [
+            'user_id' => $user_id,
+            'objective_promote_code' => $promote_code,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ];
+        // 移除空字串的鍵值對
+        $param = array_filter($param, function ($value) {
+            return $value !== '';
+        });
+
         try {
             $res = $client->request('GET', '/user_qrcode/promote_performance', [
-                'query' => [
-                    'user_id' => $user_id,
-                    'objective_promote_code' => $promote_code
-                ]
+                'query' => $param
             ]);
             $content = $res->getBody()->getContents();
             $json = json_decode($content, true);
@@ -4787,5 +4841,10 @@ END:
 
         END:
         $this->response($result);
+    }
+
+    public function header_test_post()
+    {
+        $this->response(array('result' => 'SUCCESS', 'data' => ['header' => $this->input->request_headers()]));
     }
 }

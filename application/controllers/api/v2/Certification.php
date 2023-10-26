@@ -895,7 +895,7 @@ class Certification extends REST_Controller {
 				));
 
 				if($user_school && $user_school->meta_value==$content['school']){
-					$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTID_EXIST ));
+					$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTID_EXIST, 'msg' => '此學號已被使用過'));
 				}
 			}
 
@@ -1384,7 +1384,7 @@ class Certification extends REST_Controller {
 			}
 
             if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT,'msg' => '緊急聯絡人姓名格式錯誤'));
             }
             if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
