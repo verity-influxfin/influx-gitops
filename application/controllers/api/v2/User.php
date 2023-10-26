@@ -2571,7 +2571,7 @@ END:
 			if($image){
 				$data['image_id'] = $image;
 			}else{
-				$this->response(array('result' => 'ERROR','error' => 123 ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}else{
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
