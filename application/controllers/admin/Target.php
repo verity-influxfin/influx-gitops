@@ -1115,10 +1115,17 @@ class Target extends MY_Admin_Controller {
                 ],
             ];
 
+            $past_targets = $this->target_model->get_many_by([
+                'user_id' => $user->id,
+                'status' => [5, 10],
+            ]);
+            // 這裡新戶的算法只要看 是否放款過的用戶
+            $is_new_user = count($past_targets) == 0;
             $this->load->library('output/loan/target_output', ['data' => $targets]);
 			$response = [
 				"target" => $this->current_target_output->toOne(),
 				"user" => $this->user_output->toOne(true),
+                'new_or_old' => $is_new_user ? '新戶' : '舊戶',
 				"credits" => $this->credit_output->toOneWithRemark(),
 				"verifications" => $this->verifications_output->toMany(),
 				"bank_accounts" => $this->bank_account_output->toMany(),
