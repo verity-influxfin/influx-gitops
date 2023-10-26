@@ -175,10 +175,14 @@
                       新創/網紅/SOHO
                     </div>
                   </div>
-                  <router-link to="/business-loan/smeg" class="card-link clickable">
+                  <!-- <router-link to="/business-loan/smeg" class="card-link clickable">
                     <img src="@/asset/images/collections_bookmark_black.svg" alt="信保專案" class="card-link-img" />
                     <div class="card-link-text">信保專案</div>
-                  </router-link>
+                  </router-link> -->
+                  <div class="card-link">
+                    <img src="@/asset/images/collections_bookmark_black.svg" alt="信保專案" class="card-link-img" />
+                    <div class="card-link-text">信保專案</div>
+                  </div>
                   <div class="card-link">
                     <img src="@/asset/images/paid_black.svg" alt="中小企業信貸" class="card-link-img" />
                     <div class="card-link-text">中小企業信貸</div>
@@ -3161,4 +3165,5 @@ export default {
       top: 175px;
     }
   }
-}</style>
+}
+</style>
