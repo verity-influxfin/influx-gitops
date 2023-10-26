@@ -944,7 +944,7 @@ END:
 				    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 				}
 
-                $appIdentity = $this->input->request_headers()['User-Agent']??"";
+                $appIdentity = $_SERVER['HTTP_USER_AGENT']??"";
 				if(strpos($appIdentity,"PuHey") !== FALSE) {
                     if ($investor == 1 && $user_info->app_investor_status == 0) {
                         $user_info->app_investor_status = 1;
@@ -1149,7 +1149,7 @@ END:
                      $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
                  }
  
-                 $appIdentity = $this->input->request_headers()['User-Agent']??"";
+                 $appIdentity = $_SERVER['HTTP_USER_AGENT']??"";
                  if(strpos($appIdentity,"PuHey") !== FALSE) {
                      if ($investor == 1 && $user_info->app_investor_status == 0) {
                          $user_info->app_investor_status = 1;
@@ -2103,7 +2103,7 @@ END:
         }
 
         // 判斷交換 token 的來源
-        $app_identity = $this->input->request_headers()['User-Agent'] ?? '';
+        $app_identity = $_SERVER['HTTP_USER_AGENT'] ?? '';
         $investor = isset($this->user_info->investor) && $this->user_info->investor ? 1 : 0;
         if (strpos($app_identity, 'PuHey') !== FALSE)
         {
