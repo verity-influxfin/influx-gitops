@@ -1032,8 +1032,9 @@
 									<span class="score_range"></span>
 									<span>：</span>
 								</span>
-								<span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1"
-										disabled></span>
+								<span style="width:70%;">
+                                    <input id="2_score" type="number" value="0" min="0" step="1" disabled>
+                                </span>
 							</div>
                             <div class="fixed_amount_block">
 								<span style="width:30%;">
@@ -1041,8 +1042,15 @@
 									<span class="amount_range"></span>
 									<span>：</span>
 								</span>
-                                <span style="width:70%;"><input id="2_fixed_amount" type="number" value="0" min="0" step="1"
-                                                                disabled><button id="original-amount-btn">使用原額度</button></span>
+                                <span style="width:70%;">
+                                    <input id="2_fixed_amount" type="number" value="0" min="0" step="1" disabled>
+                                </span>
+                            </div>
+                            <div>
+                                <span style="width:30%;"></span>
+                                <span style="width:70%;">
+                                    <button type="button" id="original-amount-btn" disabled>使用原額度</button>
+                                </span>
                             </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
@@ -1542,8 +1550,8 @@
                 fillTopSpecialList(response.response.special_list);
 
                 if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
-                    $('#2_fixed_amount').val(parseInt(currentTargetJson.available_amount))
-                    $('#credit_test_fixed_amount').val(parseInt(currentTargetJson.available_amount));
+                    // 額度調整預設為原額度
+                    setEvaluationAmount(parseInt(credit.amount));
                 }
 
                 if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
@@ -1553,9 +1561,14 @@
                     let new_date = new Date(user.birthday);
                     let eligible_year = 35;
                     new_date.setFullYear(new_date.getFullYear() + eligible_year);
-                    if (new_date <= today) {
+                    if (response.response?.new_or_old === '新戶' && new_date <= today) {
                         $('.fixed_amount_block input').prop('disabled', true);
                         $('#2_fixed_amount').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
+                        $('#2_score').prop('disabled', true);
+                        $('#2_score').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
+                        $('#original-amount-btn').css('display', 'none');
+                    } else {
+                        $('#original-amount-btn').prop('disabled', false);
                     }
                 }
 			},
@@ -1675,6 +1688,9 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
+        $("#2_score").blur(() => {
+            setEvaluationAmount(0);
+        })
         $('#2_fixed_amount').change(function () {
             let fixed_amount = parseInt($(this).val());
             if (fixed_amount <= 0) {
@@ -1694,8 +1710,7 @@
                 fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
                 console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
             }
-            $('#2_fixed_amount').val(fixed_amount);
-            $('#credit_test_fixed_amount').val(fixed_amount);
+            setEvaluationAmountAndResetScore(fixed_amount);
         });
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
@@ -2341,6 +2356,7 @@
                     fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
+                    setEvaluationAmountAndResetScore(parseInt(credit.amount));
 				}
 			});
 		});
@@ -2430,12 +2446,32 @@
                 }
             });
         });
+
+        // 二審意見分數調整
+        const setEvaluationScore = (score) => {
+            $('#2_score').val(score);
+            $('#credit_test').val(score);
+        }
+
+        // 二審意見額度調整
+        const setEvaluationAmount = (amount) => {
+            $('#2_fixed_amount').val(amount)
+            $('#credit_test_fixed_amount').val(amount);
+        }
+
+        // 二審意見額度調整，並設定分數為0
+        const setEvaluationAmountAndResetScore = (amount) => {
+            setEvaluationAmount(amount);
+            setEvaluationScore(0);
+        }
         
-        $('#original-amount-btn').click(function () {
-            $('#2_fixed_amount').val(originalAmount)
-            $('#credit_test_fixed_amount').val(originalAmount);
-        });
-	});
+        // 使用原額度
+        const resetEvaluationAmountAmountTOriginal = () => {
+            setEvaluationAmountAndResetScore(originalAmount);
+        }
+
+        $('#original-amount-btn').click(resetEvaluationAmountAmountTOriginal);
+    });
 
 	const v = new Vue({
 		el: '#page-wrapper',
