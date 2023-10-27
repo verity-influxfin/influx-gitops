@@ -2357,9 +2357,6 @@
                     fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
-                    if (productId != <?=PRODUCT_ID_STUDENT?>) {
-                        setEvaluationAmountAndResetScore(parseInt(credit.amount));
-                    }
 				}
 			});
 		});
