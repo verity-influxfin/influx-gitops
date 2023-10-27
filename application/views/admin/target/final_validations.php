@@ -2351,6 +2351,7 @@
 
 					let creditJson = response.response.credits;
                     let message = response.response.message;
+                    let productId = creditJson.product.id;
 					credit = new Credit(creditJson);
 					fillCreditInfo(credit, true);
                     fillCreditMessage(message);
