@@ -839,6 +839,43 @@ class Sales extends MY_Admin_Controller {
 
             $list = array_slice($fullPromoteList, $offset, $config['per_page']);
 
+            $client = new Client([
+                'base_uri' => getenv('ENV_ERP_HOST'),
+                'timeout' => 300,
+            ]);
+            foreach ($list as $key => $item){
+                $param = [
+                    'user_id' => $item['info']['user_id'] ?? '',
+                    'objective_promote_code' => $item['info']['promote_code'] ?? '',
+                    'start_date' => $input['sdate'] ?? '',
+                    'end_date' => $input['edate'] ?? '',
+                ];
+                // 移除空字串的鍵值對
+                $param = array_filter($param, function ($value) {
+                    return $value !== '';
+                });
+
+                try {
+                    $res = $client->request('GET', '/user_qrcode/promote_performance', [
+                        'query' => $param
+                    ]);
+                    $content = $res->getBody()->getContents();
+                    $json = json_decode($content, true);
+                    $list[$key]['api'] = $json;
+                }catch (RequestException $e) {
+                    $detail = '';
+                    if ($e->hasResponse()) {
+                        $responseBody = $e->getResponse()->getBody()->getContents();
+                        $json = json_decode($responseBody, true);
+                        if ($e->getResponse()->getStatusCode() == 422) {
+                            $detail = $json['detail'][0]['msg'] ?? ''; // 取得錯誤訊息
+                        } else {
+                            $detail = $json['detail'] ?? '';
+                        }
+                    }
+                    $list[$key]['api'] = ['status' => 'error', 'detail' => $detail];
+                }
+            }
             $qrcodeSettingList = $this->qrcode_setting_model->get_all();
             $alias_list = ['all' => "全部方案"];
             $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
