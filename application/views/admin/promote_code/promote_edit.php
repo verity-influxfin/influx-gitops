@@ -80,7 +80,15 @@
 		return true;
 	}
 </script>
+<?php
 
+$studentRewardAmount = $data['api']['award_info']['student_amount'] ?? 0;
+$salaryManRewardAmount = $data['api']['award_info']['salary_man_amount'] ?? 0;
+$smallEnterpriseAmount = $data['api']['award_info']['small_enterprise_amount'] ?? 0;
+$totalRewardAmount = $studentRewardAmount + $salaryManRewardAmount + $smallEnterpriseAmount;
+
+
+?>
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
@@ -203,7 +211,10 @@
                                                 <p class="form-control-static">學生貸獎金</p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static"><?= isset($data['rewardAmount'])?$data['rewardAmount']['student']??"":"" ?></p>
+                                                <p class="form-control-static">
+                                                    <?php //= isset($data['rewardAmount'])?$data['rewardAmount']['student']??"":"" ?>
+                                                    <?= $studentRewardAmount ?>
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -223,7 +234,10 @@
                                                 <p class="form-control-static">上班族貸獎金</p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static"><?= isset($data['rewardAmount'])?$data['rewardAmount']['salary_man']??"":"" ?></p>
+                                                <p class="form-control-static">
+                                                    <?php //= isset($data['rewardAmount'])?$data['rewardAmount']['salary_man']??"":"" ?>
+                                                    <?= $salaryManRewardAmount ?>
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -243,7 +257,10 @@
                                                 <p class="form-control-static">微企貸獎金</p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static"><?= isset($data['rewardAmount'])?$data['rewardAmount']['small_enterprise']??"":"" ?></p>
+                                                <p class="form-control-static">
+                                                    <?php //= isset($data['rewardAmount'])?$data['rewardAmount']['small_enterprise']??"":"" ?>
+                                                    <?= $smallEnterpriseAmount ?>
+                                                </p>
                                             </td>
                                         </tr>
                                         <?php
@@ -284,7 +301,10 @@
                                                 <p class="form-control-static">累積總獎金</p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static"><?= $data['totalRewardAmount']??"" ?></p>
+                                                <p class="form-control-static">
+                                                    <?php //= $data['totalRewardAmount']??"" ?>
+                                                    <?= $totalRewardAmount ?>
+                                                </p>
                                             </td>
                                         </tr>
 									</tbody>
@@ -365,7 +385,10 @@
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <input type="text" disabled style="width: 120px" class="form-control number" data-category="salary_man" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['amount']??"":"" ?>">
+<!--                                                    <input type="text" disabled style="width: 120px" class="form-control number" data-category="salary_man" data-type="amount" value="--><?php //= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['amount']??"":"" ?><!--">-->
+                                                    <input type="text" disabled style="width: 120px"
+                                                           class="form-control number" data-category="salary_man"
+                                                           data-type="amount" value="<?= $salaryManRewardAmount ?>">
                                                 </td>
                                             </tr>
                                             <tr style="background-color:#f5f5f5;">
@@ -375,7 +398,11 @@
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <input type="text" disabled style="width: 120px" class="form-control number" data-category="student" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['amount']??"":"" ?>">
+<!--                                                    <input type="text" disabled style="width: 120px" class="form-control number" data-category="student" data-type="amount" value="--><?php //= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['amount']??"":"" ?><!--">-->
+                                                    <input type="text" disabled style="width: 120px"
+                                                           class="form-control number" data-category="student"
+                                                           data-type="amount"
+                                                           value="<?= $studentRewardAmount ?>">
                                                 </td>
                                             </tr>
                                             <tr style="background-color:#f5f5f5;">
@@ -385,7 +412,10 @@
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <input type="text" disabled style="width: 120px" class="form-control number" data-category="small_enterprise" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['small_enterprise'])?$data['info']['settings']['reward']['product']['small_enterprise']['amount']??"0":"0" ?>">
+<!--                                                    <input type="text" disabled style="width: 120px" class="form-control number" data-category="small_enterprise" data-type="amount" value="--><?php //= isset($data['info']) && isset($data['info']['settings']['reward']['product']['small_enterprise']) ? $data['info']['settings']['reward']['product']['small_enterprise']['amount'] ?? "0" : "0" ?><!--">-->
+                                                    <input type="text" disabled style="width: 120px"
+                                                           class="form-control number" data-category="small_enterprise"
+                                                           data-type="amount" value="<?= $smallEnterpriseAmount ?>">
                                                 </td>
                                             </tr>
                                         <? } ?>
