@@ -8,6 +8,9 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+
 class Sales extends MY_Admin_Controller {
 	
 	protected $edit_method = array('promote_reward_loan');
