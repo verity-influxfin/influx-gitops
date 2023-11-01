@@ -943,8 +943,8 @@ END:
 				if($user_info->block_status != 0){
 				    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 				}
-
-                $appIdentity = $this->input->request_headers()['User-Agent']??"";
+                $this->load->library('user_agent');
+                $appIdentity = $this->agent->agent_string() ?? "";
 				if(strpos($appIdentity,"PuHey") !== FALSE) {
                     if ($investor == 1 && $user_info->app_investor_status == 0) {
                         $user_info->app_investor_status = 1;
@@ -1148,8 +1148,8 @@ END:
                  if($user_info->block_status != 0){
                      $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
                  }
- 
-                 $appIdentity = $this->input->request_headers()['User-Agent']??"";
+                 $this->load->library('user_agent');
+                 $appIdentity = $this->agent->agent_string() ?? "";
                  if(strpos($appIdentity,"PuHey") !== FALSE) {
                      if ($investor == 1 && $user_info->app_investor_status == 0) {
                          $user_info->app_investor_status = 1;
@@ -2103,7 +2103,8 @@ END:
         }
 
         // 判斷交換 token 的來源
-        $app_identity = $this->input->request_headers()['User-Agent'] ?? '';
+        $this->load->library('user_agent');
+        $app_identity = $this->agent->agent_string() ?? "";
         $investor = isset($this->user_info->investor) && $this->user_info->investor ? 1 : 0;
         if (strpos($app_identity, 'PuHey') !== FALSE)
         {
@@ -3507,12 +3508,20 @@ END:
             'base_uri' => getenv('ENV_ERP_HOST'),
             'timeout' => 300,
         ]);
+        $param = [
+            'user_id' => $user_id,
+            'objective_promote_code' => $promote_code,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ];
+        // 移除空字串的鍵值對
+        $param = array_filter($param, function ($value) {
+            return $value !== '';
+        });
+
         try {
             $res = $client->request('GET', '/user_qrcode/promote_performance', [
-                'query' => [
-                    'user_id' => $user_id,
-                    'objective_promote_code' => $promote_code
-                ]
+                'query' => $param
             ]);
             $content = $res->getBody()->getContents();
             $json = json_decode($content, true);
@@ -4188,11 +4197,11 @@ END:
                     case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD:
                         $data['subcode_status'] = $subcode_sub_status; // 特約通路商新增二級經銷商，待一般經銷商同意成為二級經銷商
                         break;
-                    case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT:
-                        $user = $this->user_model->get($data['user_id']);
-                        $data['subcode_status'] = $subcode_sub_status; // 拒絕特約通路商成為二級經銷商，待特約經銷商閱讀
-                        $data['message'] = $this->qrcode_lib->get_subcode_dialogue_content($data['subcode_id'], $user->name, PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT);
-                        break;
+                    // case PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT:
+                    //     $user = $this->user_model->get($data['user_id']);
+                    //     $data['subcode_status'] = $subcode_sub_status; // 拒絕特約通路商成為二級經銷商，待特約經銷商閱讀
+                    //     $data['message'] = $this->qrcode_lib->get_subcode_dialogue_content($data['subcode_id'], $user->name, PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT);
+                    //     break;
                     default:
                         unset($data);
                 }
@@ -4832,5 +4841,10 @@ END:
 
         END:
         $this->response($result);
+    }
+
+    public function header_test_post()
+    {
+        $this->response(array('result' => 'SUCCESS', 'data' => ['header' => $this->input->request_headers()]));
     }
 }

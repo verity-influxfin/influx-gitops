@@ -1688,6 +1688,9 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
+        $("#2_score").blur(() => {
+            setEvaluationAmount(0);
+        })
         $('#2_fixed_amount').change(function () {
             let fixed_amount = parseInt($(this).val());
             if (fixed_amount <= 0) {
@@ -1707,7 +1710,7 @@
                 fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
                 console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
             }
-            setEvaluationAmount(fixed_amount);
+            setEvaluationAmountAndResetScore(fixed_amount);
         });
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
@@ -2353,7 +2356,7 @@
                     fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
-                    setEvaluationAmount(parseInt(credit.amount));
+                    setEvaluationAmountAndResetScore(parseInt(credit.amount));
 				}
 			});
 		});
@@ -2443,16 +2446,28 @@
                 }
             });
         });
-        
+
+        // 二審意見分數調整
+        const setEvaluationScore = (score) => {
+            $('#2_score').val(score);
+            $('#credit_test').val(score);
+        }
+
         // 二審意見額度調整
         const setEvaluationAmount = (amount) => {
             $('#2_fixed_amount').val(amount)
             $('#credit_test_fixed_amount').val(amount);
         }
 
+        // 二審意見額度調整，並設定分數為0
+        const setEvaluationAmountAndResetScore = (amount) => {
+            setEvaluationAmount(amount);
+            setEvaluationScore(0);
+        }
+        
         // 使用原額度
         const resetEvaluationAmountAmountTOriginal = () => {
-            setEvaluationAmount(originalAmount);
+            setEvaluationAmountAndResetScore(originalAmount);
         }
 
         $('#original-amount-btn').click(resetEvaluationAmountAmountTOriginal);
