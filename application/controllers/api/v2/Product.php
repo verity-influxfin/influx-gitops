@@ -2707,7 +2707,7 @@ class Product extends REST_Controller {
 
         //同登入的電話號碼(不可加入自己)
         if($content["phone"] == $this->user_info->phone){
-            $this->response(['result' => 'ERROR', 'error' => NO_ALLOW_CHARGE]);
+            $this->response(['result' => 'ERROR', 'error' => NO_ALLOW_CHARGE, 'msg' => '不可與登入的電話號碼相同']);
         }
 
         if(
