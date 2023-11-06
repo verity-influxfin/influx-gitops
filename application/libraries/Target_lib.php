@@ -1843,8 +1843,19 @@ class Target_lib
         $allow_stage_cer = [1, 3];
         if ($targets && !empty($targets)) {
             foreach ($targets as $key => $value) {
-                // todo: 只放學生貸、房產消費貸進新架構，剩餘的等之後開發好再說
-                // if (($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0) || $value->product_id == PRODUCT_ID_HOME_LOAN)
+                // 迴圈當下重新確認是否狀態一樣
+                $this_target = $this->CI->target_model->get_by([
+                    'id' => $value->id,
+                    'status' => [TARGET_WAITING_APPROVE, TARGET_ORDER_WAITING_VERIFY],
+                ]);
+
+                // 如果沒有這筆資料，就跳過
+                if (!$this_target) {
+                    continue;
+                }
+                // $value 取代成重新取得的資料
+                $value = $this_target;
+
                 // todo: 只放學生貸進新架構，剩餘的等之後開發好再說
                 if (($value->product_id == PRODUCT_ID_STUDENT && $value->sub_product_id == 0) )
                 {
