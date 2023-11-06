@@ -12,7 +12,7 @@ class User extends REST_Controller {
     {
         parent::__construct();
         $method 		= $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','login_new_app', 'sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous', 'check_phone'];
+        $nonAuthMethods = ['register','registerphone','login','login_new_app', 'sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud', 'user_behavior', 'charity_institutions','donate_anonymous', 'check_phone','create_qrcode'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -186,6 +186,27 @@ class User extends REST_Controller {
         } else {
             $this->response(array('result' => 'ERROR','error' => SMS_SEND_FAIL ));
         }
+    }
+
+    /**
+     * @param int $user_id
+     * @param int $investor
+     * @param bool $company
+     * @return bool
+     * @throws Exception
+     */
+    private function create_qrcode(int $user_id, int $investor, bool $company): bool
+    {
+        // 產生 QRCode
+        $this->load->library('qrcode_lib');
+        $promote_code = $this->qrcode_lib->generate_general_qrcode($user_id, $investor, $company);
+        if (!$promote_code) {
+            log_message('error', "user_qrcode insert failed for user {$user_id}.");
+            throw new Exception('QRCode 新增失敗', INSERT_ERROR);
+        }
+        $this->user_model->update($user_id, ['my_promote_code' => $promote_code]);
+
+        return true;
     }
 
 	/**
@@ -480,14 +501,7 @@ class User extends REST_Controller {
                     try
                     {
                         // Generate promote code.
-                        $this->load->library('qrcode_lib');
-                        $promote_code = $this->qrcode_lib->generate_general_qrcode($new_id, $input['investor'], FALSE);
-                        if ( ! $promote_code)
-                        {
-                            log_message('error', "user_qrcode insert failed for user {$new_id}.");
-                            throw new Exception('QRCode 新增失敗', INSERT_ERROR);
-                        }
-                        $this->user_model->update($new_id, ['my_promote_code' => $promote_code]);
+                        $this->create_qrcode($new_id, $input['investor'], FALSE);
                     }
                     catch (Exception $e)
                     {
@@ -722,13 +736,7 @@ END:
                 ]);
 
                 // 產生 QRCode
-                $this->load->library('qrcode_lib');
-                $promote_code = $this->qrcode_lib->generate_general_qrcode($new_id, $input['investor'], TRUE);
-                if ( ! $promote_code)
-                {
-                    throw new Exception('QRCode 新增失敗', INSERT_ERROR);
-                }
-                $this->user_model->update($new_id, ['my_promote_code' => $promote_code]);
+                $this->create_qrcode($new_id, $input['investor'], TRUE);
 
                 // 回傳創建帳號成功之token
                 $token = (object) [
@@ -4846,5 +4854,60 @@ END:
     public function header_test_post()
     {
         $this->response(array('result' => 'SUCCESS', 'data' => ['header' => $this->input->request_headers()]));
+    }
+
+
+    private function access_pass()
+    {
+        $list = [
+            '114.34.161.233' //公司內網IP
+        ];
+        foreach ($list as $ip) {
+            if (preg_match('/\.\*$/', $ip)) {
+                list($main, $sub) = explode('.*', $ip);
+                if (stripos(get_ip(), $main) !== false) {
+                    return true;
+                }
+            }
+            if (get_ip() == $ip) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     */
+    public function create_qrcode_post(): bool
+    {
+        if (!$this->access_pass()) {
+            show_404();
+        }
+        $input = $this->input->post(NULL, TRUE);
+
+        $this->load->library('form_validation');
+        $this->form_validation->set_data($input);
+        $this->form_validation->set_rules('user_id', 'user_id', 'required|integer|greater_than[0]');
+        $this->form_validation->set_rules('investor', 'investor', 'required|integer|in_list[0,1]');
+        $this->form_validation->set_rules('company', 'company', 'required|integer|in_list[0,1]');
+        $this->form_validation->set_error_delimiters('', '');
+        if (!$this->form_validation->run()) {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+        }
+
+        $user_id = intval($input['user_id']);
+        $user_existed = $this->user_model->get($user_id);
+        if (empty($user_existed)) {
+            $this->response(array('result' => 'ERROR', 'error' => USER_NOT_EXIST));
+        }
+
+        $investor = intval($input['investor']);
+        $company = boolval($input['company']);
+        try {
+            $result = $this->create_qrcode($user_id, $investor, $company);
+            $this->response(array('result' => 'SUCCESS', 'data' => ['result' => $result]));
+        } catch (Exception $e) {
+            $this->response(array('result' => 'ERROR', 'error' => $e->getCode(), 'msg' => $e->getMessage()));
+        }
     }
 }
