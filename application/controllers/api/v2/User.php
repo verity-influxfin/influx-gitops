@@ -188,6 +188,27 @@ class User extends REST_Controller {
         }
     }
 
+    /**
+     * @param int $user_id
+     * @param int $investor
+     * @param bool $company
+     * @return bool
+     * @throws Exception
+     */
+    private function create_qrcode(int $user_id, int $investor, bool $company): bool
+    {
+        // 產生 QRCode
+        $this->load->library('qrcode_lib');
+        $promote_code = $this->qrcode_lib->generate_general_qrcode($user_id, $investor, $company);
+        if (!$promote_code) {
+            log_message('error', "user_qrcode insert failed for user {$user_id}.");
+            throw new Exception('QRCode 新增失敗', INSERT_ERROR);
+        }
+        $this->user_model->update($user_id, ['my_promote_code' => $promote_code]);
+
+        return true;
+    }
+
 	/**
      * @api {post} /v2/user/register 會員 註冊
 	 * @apiVersion 0.2.0
@@ -480,14 +501,7 @@ class User extends REST_Controller {
                     try
                     {
                         // Generate promote code.
-                        $this->load->library('qrcode_lib');
-                        $promote_code = $this->qrcode_lib->generate_general_qrcode($new_id, $input['investor'], FALSE);
-                        if ( ! $promote_code)
-                        {
-                            log_message('error', "user_qrcode insert failed for user {$new_id}.");
-                            throw new Exception('QRCode 新增失敗', INSERT_ERROR);
-                        }
-                        $this->user_model->update($new_id, ['my_promote_code' => $promote_code]);
+                        $this->create_qrcode($new_id, $input['investor'], FALSE);
                     }
                     catch (Exception $e)
                     {
@@ -722,13 +736,7 @@ END:
                 ]);
 
                 // 產生 QRCode
-                $this->load->library('qrcode_lib');
-                $promote_code = $this->qrcode_lib->generate_general_qrcode($new_id, $input['investor'], TRUE);
-                if ( ! $promote_code)
-                {
-                    throw new Exception('QRCode 新增失敗', INSERT_ERROR);
-                }
-                $this->user_model->update($new_id, ['my_promote_code' => $promote_code]);
+                $this->create_qrcode($new_id, $input['investor'], TRUE);
 
                 // 回傳創建帳號成功之token
                 $token = (object) [
