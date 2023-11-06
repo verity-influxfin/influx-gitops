@@ -8,6 +8,9 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+
 class Sales extends MY_Admin_Controller {
 	
 	protected $edit_method = array('promote_reward_loan');
@@ -836,6 +839,43 @@ class Sales extends MY_Admin_Controller {
 
             $list = array_slice($fullPromoteList, $offset, $config['per_page']);
 
+            $client = new Client([
+                'base_uri' => getenv('ENV_ERP_HOST'),
+                'timeout' => 300,
+            ]);
+            foreach ($list as $key => $item){
+                $param = [
+                    'user_id' => $item['info']['user_id'] ?? '',
+                    'objective_promote_code' => $item['info']['promote_code'] ?? '',
+                    'start_date' => $input['sdate'] ?? '',
+                    'end_date' => $input['edate'] ?? '',
+                ];
+                // 移除空字串的鍵值對
+                $param = array_filter($param, function ($value) {
+                    return $value !== '';
+                });
+
+                try {
+                    $res = $client->request('GET', '/user_qrcode/promote_performance', [
+                        'query' => $param
+                    ]);
+                    $content = $res->getBody()->getContents();
+                    $json = json_decode($content, true);
+                    $list[$key]['api'] = $json;
+                }catch (RequestException $e) {
+                    $detail = '';
+                    if ($e->hasResponse()) {
+                        $responseBody = $e->getResponse()->getBody()->getContents();
+                        $json = json_decode($responseBody, true);
+                        if ($e->getResponse()->getStatusCode() == 422) {
+                            $detail = $json['detail'][0]['msg'] ?? ''; // 取得錯誤訊息
+                        } else {
+                            $detail = $json['detail'] ?? '';
+                        }
+                    }
+                    $list[$key]['api'] = ['status' => 'error', 'detail' => $detail];
+                }
+            }
             $qrcodeSettingList = $this->qrcode_setting_model->get_all();
             $alias_list = ['all' => "全部方案"];
             $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
@@ -873,6 +913,42 @@ class Sales extends MY_Admin_Controller {
         $list = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'] ?? '', $input['edate'] ?? '');
         $page_data['collaborator_list'] = json_decode(json_encode($this->qrcode_collaborator_model->get_all(['status' => 1])), TRUE) ?? [];
         $page_data['data'] = reset($list);
+
+        $client = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST'),
+            'timeout' => 300,
+        ]);
+        $param = [
+            'user_id' => $page_data['data']['info']['user_id'] ?? '',
+            'objective_promote_code' => $page_data['data']['info']['promote_code'] ?? '',
+            'start_date' => $input['sdate'] ?? '',
+            'end_date' => $input['edate'] ?? '',
+        ];
+        // 移除空字串的鍵值對
+        $param = array_filter($param, function ($value) {
+            return $value !== '';
+        });
+
+        try {
+            $res = $client->request('GET', '/user_qrcode/promote_performance', [
+                'query' => $param
+            ]);
+            $content = $res->getBody()->getContents();
+            $json = json_decode($content, true);
+            $page_data['data']['api'] = $json;
+        }catch (RequestException $e) {
+            $detail = '';
+            if ($e->hasResponse()) {
+                $responseBody = $e->getResponse()->getBody()->getContents();
+                $json = json_decode($responseBody, true);
+                if ($e->getResponse()->getStatusCode() == 422) {
+                    $detail = $json['detail'][0]['msg'] ?? ''; // 取得錯誤訊息
+                } else {
+                    $detail = $json['detail'] ?? '';
+                }
+            }
+            $page_data['data']['api'] = ['status' => 'error', 'detail' => $detail];
+        }
 
         $contract = $this->contract_lib->get_contract(isset($page_data['data']['info']) ? $page_data['data']['info']['contract_id'] : 0, [], FALSE);
         $page_data['contract'] = $contract ? htmlentities($contract['content']) : "";
@@ -1513,9 +1589,15 @@ class Sales extends MY_Admin_Controller {
                 'settings' => json_encode($formula_list),
                 'admin_id' => $this->login_info->id,
             ]);
-            $this->user_qrcode_model->update_by(['id' => $qrcode_id], [
+            $user_qrcode_update_param = [
                 'settings' => json_encode($settings)
-            ]);
+            ];
+            $this->user_qrcode_model->update_by(['id' => $qrcode_id], $user_qrcode_update_param);
+            // 寫 log
+            $this->load->model('log/log_user_qrcode_model');
+            $user_qrcode_update_param['user_qrcode_id'] = $qrcode_id;
+            $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
             $this->json_output->setStatusCode(200)->setResponse(['success' => TRUE, 'msg' => "修改成功。"])->send();
         }
 
@@ -1744,12 +1826,17 @@ class Sales extends MY_Admin_Controller {
             $contract_format = $this->contract_format_model->order_by('created_at', 'desc')->get_by(['id' => $review_list['contract_format_id']]);
             $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($review_list['alias']);
             $contract_content = json_decode($review_list['contract_content'], TRUE);
-            $content = $this->qrcode_lib->get_contract_format_content($contract_type_name, $contract_content[0] ?? '', $contract_content[10] ?? '', []);
-            $list['content'] = array_slice(json_decode($review_list['contract_content'], TRUE) ?? [], 4, 4);
-            $content[4] = '%platform_fee%';
-            $content[5] = '%interest%';
-            $content[6] = '%collaboration_person%';
-            $content[7] = '%collaboration_enterprise%';
+
+            $format_setting = $this->qrcode_lib->get_contract_format($contract_type_name, $contract_content, '%');
+            $format_setting_without_format = $this->qrcode_lib->get_contract_format($contract_type_name, $contract_content);
+            $content = $format_setting['content'];
+
+            $list['content'] = array_combine(
+                array_slice($format_setting_without_format['content'],
+                $format_setting['input_start'], $format_setting['input_end']-$format_setting['input_start']+1),
+                array_slice(json_decode($review_list['contract_content'], TRUE) ?? [],
+                    $format_setting['input_start'], $format_setting['input_end']-$format_setting['input_start']+1)
+            );
             $list['contract'] = '';
             if (isset($contract_format->content))
             {
@@ -1919,11 +2006,12 @@ class Sales extends MY_Admin_Controller {
     public function promote_modify_contract()
     {
         $this->load->library('output/json_output');
+        $this->load->library('qrcode_lib');
         $this->load->model('user/user_qrcode_apply_model');
 
         $input = $this->input->post(NULL, TRUE);
         $data = [];
-        $fields = ['qrcode_apply_id', 'platform_fee', 'interest', 'collaboration_person', 'collaboration_enterprise'];
+        $fields = ['qrcode_apply_id'];
 
         foreach ($fields as $field)
         {
@@ -1943,13 +2031,23 @@ class Sales extends MY_Admin_Controller {
         {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
         }
+        $this->load->model('user/user_qrcode_model');
+        $user_qrcode = $this->user_qrcode_model->get_by(['id' => $apply_info->user_qrcode_id]);
+        if ( ! isset($user_qrcode))
+        {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '找不到對應的qrcode資料'))->send();
+        }
+
+        $contract_type = $this->qrcode_lib->get_contract_type_by_alias($user_qrcode->alias);
+        $format_setting = $this->qrcode_lib->get_contract_format($contract_type);
+        $fields = array_flip($format_setting['content']);
         $contract_content = json_decode($apply_info->contract_content, TRUE);
-        $fields = ['platform_fee' => 4, 'interest' => 5, 'collaboration_person' => 6, 'collaboration_enterprise' => 7];
+
         foreach ($fields as $field => $idx)
         {
-            if (isset($data[$field]))
+            if (isset($input[$field]))
             {
-                $contract_content[$idx] = $data[$field];
+                $contract_content[$idx] = $input[$field];
             }
         }
         $rs = $this->user_qrcode_apply_model->update_by(['id' => $data['qrcode_apply_id']],
@@ -2024,6 +2122,7 @@ class Sales extends MY_Admin_Controller {
         $this->load->library('notification_lib');
         $this->load->library('user_lib');
         $this->load->library('contract_lib');
+        $this->load->library('qrcode_lib');
         $input = $this->input->post(NULL, TRUE);
         $apply_info = $this->user_qrcode_apply_model->get_by(['id' => $input['qrcode_apply_id'], 'status' => PROMOTE_REVIEW_STATUS_SUCCESS]);
         if (isset($apply_info))
@@ -2037,16 +2136,59 @@ class Sales extends MY_Admin_Controller {
 
             $contract_content = json_decode($apply_info->contract_content, TRUE);
             $this->contract_lib->update_contract($qrcode_code->contract_id, $contract_content);
-            $content = array_slice($contract_content, 4, 4);
 
-            foreach ($this->user_lib->appointedRewardCategories as $category)
+            $contract_type = $this->qrcode_lib->get_contract_type_by_alias($qrcode_code->alias);
+            $format_setting = $this->qrcode_lib->get_contract_format($contract_type);
+            $fields = array_flip($format_setting['content']);
+            foreach ($fields as $field => $idx)
             {
-                $settings['reward']['product'][$category]['borrower_percent'] = (float) $content[0] ?? 0;
-                $settings['reward']['product'][$category]['investor_percent'] = (float) $content[1] ?? 0;
+                switch ($field) {
+                    case 'student_reward_amount':
+                        $settings['reward']['product']['student']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'salary_man_reward_amount':
+                        $settings['reward']['product']['salary_man']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise_reward_amount':
+                        $settings['reward']['product']['small_enterprise']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise2_reward_amount':
+                        $settings['reward']['product']['small_enterprise2']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise3_reward_amount':
+                        $settings['reward']['product']['small_enterprise3']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'student_platform_fee':
+                        $settings['reward']['product']['student']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'salary_man_platform_fee':
+                        $settings['reward']['product']['salary_man']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise_platform_fee':
+                        $settings['reward']['product']['small_enterprise']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise2_platform_fee':
+                        $settings['reward']['product']['small_enterprise2']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'small_enterprise3_platform_fee':
+                        $settings['reward']['product']['small_enterprise3']['borrower_percent'] = (float) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'full_member':
+                        $settings['reward']['full_member']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                    case 'download':
+                        $settings['reward']['download']['amount'] = (int) $contract_content[$idx] ?? 0;
+                        break;
+                }
             }
-            $settings['reward']['collaboration_person'] = ['amount' => (int) $content[2] ?? 0];
-            $settings['reward']['collaboration_enterprise'] = ['amount' => (int) $content[3] ?? 0];
-            $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], ['settings' => json_encode($settings)]);
+
+            $user_qrcode_update_param = ['settings' => json_encode($settings),
+                'status' => PROMOTE_STATUS_CAN_SIGN_CONTRACT];
+            $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], $user_qrcode_update_param);
+            // 寫 log
+            $this->load->model('log/log_user_qrcode_model');
+            $user_qrcode_update_param['user_qrcode_id'] = $qrcode_code->id;
+            $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
 
             $this->load->model('user/user_certification_model');
             $this->load->library('certification_lib');
@@ -2093,7 +2235,13 @@ class Sales extends MY_Admin_Controller {
             {
                 $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE, 'msg' => '找不到對應的推薦碼'))->send();
             }
-            $this->user_qrcode_model->update_by(['id' => $apply_info->user_qrcode_id], ['status' => PROMOTE_STATUS_PENDING_TO_SENT]);
+            $user_qrcode_update_param = ['status' => PROMOTE_STATUS_PENDING_TO_SENT, 'sub_status' => PROMOTE_SUB_STATUS_DEFAULT];
+            $this->user_qrcode_model->update_by(['id' => $apply_info->user_qrcode_id], $user_qrcode_update_param);
+            // 寫 log
+            $this->load->model('log/log_user_qrcode_model');
+            $user_qrcode_update_param['user_qrcode_id'] = $apply_info->user_qrcode_id;
+            $this->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
             $settings = json_decode($qrcode_code->settings, TRUE);
             if (isset($settings) && isset($settings['investor']))
             {
@@ -2210,6 +2358,10 @@ class Sales extends MY_Admin_Controller {
         }
 
         $rs = $this->user_qrcode_model->update_by(['id' => $where['user_qrcode_id']], $param);
+        // 寫 log
+        $this->load->model('log/log_user_qrcode_model');
+        $this->log_user_qrcode_model->insert_log(array_merge($param, ['user_qrcode_id' => $where['user_qrcode_id']]));
+
         if ( ! $rs)
         {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();

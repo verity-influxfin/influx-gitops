@@ -173,6 +173,17 @@ N                                                <?
                                                 <?= !empty($data->person_image) ? "<a href='" . $data->person_image . "' data-fancybox='images'><img src='" . $data->person_image . "' style='width:30%;'></a>" : ""; ?>
                                             </td>
                                         </tr>
+                                    <?php if ($data->product_id == 5 && $data->sub_product_id == 10) { ?>
+                                        <tr>
+                                            <td><p class="form-control-static">房屋所有權狀照片</p></td>
+                                            <td colspan="3">
+                                                <?php if (!empty(json_decode($data->target_data, true)) && isset(json_decode($data->target_data, true)['deed_image'])) {
+                                                    $deed_image_url = json_decode($data->target_data, true)['deed_image'];
+                                                    echo "<a href='$deed_image_url' data-fancybox='images'><img alt='' src='$deed_image_url' style='width:30%;'></a>";
+                                                } ?>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
                                         <? if(isset($autoVerifyLog)){ ?>
                                         <tr><td rowspan="3"><p class="form-control-static">簽約照臉部辨識</p></td></tr>
                                             <?

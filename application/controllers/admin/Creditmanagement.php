@@ -232,6 +232,8 @@ class Creditmanagement extends MY_Admin_Controller
     private function _chk_certification($target_id)
     {
         $response = $this->target_model->get($target_id);
+        $this->load->library('loanmanager/product_lib');
+        $product_certs = $this->product_lib->get_product_certs_by_product_id($response->product_id, $response->sub_product_id, []);
 
         if ( ! isset($response->product_id) || ! isset($response->sub_product_id))
         {
@@ -255,11 +257,16 @@ class Creditmanagement extends MY_Admin_Controller
         // 必填的驗證項
         if (isset($product_detail['backend_option_certifications']))
         { // 過濾掉[後台]上選填的徵信項
-            $certification_need_chk = array_diff($product_detail['certifications'], $product_detail['backend_option_certifications']);
+            $certification_need_chk = array_diff($product_certs, $product_detail['backend_option_certifications']);
         }
         else
         {
-            $certification_need_chk = $product_detail['certifications'];
+            $certification_need_chk = $product_certs;
+        }
+        $this->load->library('certification_lib');
+        if($this->certification_lib->associate_certs_are_succeed($response) == FALSE)
+        {
+            return ['result' => FALSE, 'msg' => '尚有自然關係人未完成'];
         }
 
         foreach ($certification_need_chk as $certification_id)
