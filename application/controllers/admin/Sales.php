@@ -8,6 +8,9 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+
 class Sales extends MY_Admin_Controller {
 	
 	protected $edit_method = array('promote_reward_loan');
@@ -836,6 +839,43 @@ class Sales extends MY_Admin_Controller {
 
             $list = array_slice($fullPromoteList, $offset, $config['per_page']);
 
+            $client = new Client([
+                'base_uri' => getenv('ENV_ERP_HOST'),
+                'timeout' => 300,
+            ]);
+            foreach ($list as $key => $item){
+                $param = [
+                    'user_id' => $item['info']['user_id'] ?? '',
+                    'objective_promote_code' => $item['info']['promote_code'] ?? '',
+                    'start_date' => $input['sdate'] ?? '',
+                    'end_date' => $input['edate'] ?? '',
+                ];
+                // 移除空字串的鍵值對
+                $param = array_filter($param, function ($value) {
+                    return $value !== '';
+                });
+
+                try {
+                    $res = $client->request('GET', '/user_qrcode/promote_performance', [
+                        'query' => $param
+                    ]);
+                    $content = $res->getBody()->getContents();
+                    $json = json_decode($content, true);
+                    $list[$key]['api'] = $json;
+                }catch (RequestException $e) {
+                    $detail = '';
+                    if ($e->hasResponse()) {
+                        $responseBody = $e->getResponse()->getBody()->getContents();
+                        $json = json_decode($responseBody, true);
+                        if ($e->getResponse()->getStatusCode() == 422) {
+                            $detail = $json['detail'][0]['msg'] ?? ''; // 取得錯誤訊息
+                        } else {
+                            $detail = $json['detail'] ?? '';
+                        }
+                    }
+                    $list[$key]['api'] = ['status' => 'error', 'detail' => $detail];
+                }
+            }
             $qrcodeSettingList = $this->qrcode_setting_model->get_all();
             $alias_list = ['all' => "全部方案"];
             $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
@@ -873,6 +913,42 @@ class Sales extends MY_Admin_Controller {
         $list = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'] ?? '', $input['edate'] ?? '');
         $page_data['collaborator_list'] = json_decode(json_encode($this->qrcode_collaborator_model->get_all(['status' => 1])), TRUE) ?? [];
         $page_data['data'] = reset($list);
+
+        $client = new Client([
+            'base_uri' => getenv('ENV_ERP_HOST'),
+            'timeout' => 300,
+        ]);
+        $param = [
+            'user_id' => $page_data['data']['info']['user_id'] ?? '',
+            'objective_promote_code' => $page_data['data']['info']['promote_code'] ?? '',
+            'start_date' => $input['sdate'] ?? '',
+            'end_date' => $input['edate'] ?? '',
+        ];
+        // 移除空字串的鍵值對
+        $param = array_filter($param, function ($value) {
+            return $value !== '';
+        });
+
+        try {
+            $res = $client->request('GET', '/user_qrcode/promote_performance', [
+                'query' => $param
+            ]);
+            $content = $res->getBody()->getContents();
+            $json = json_decode($content, true);
+            $page_data['data']['api'] = $json;
+        }catch (RequestException $e) {
+            $detail = '';
+            if ($e->hasResponse()) {
+                $responseBody = $e->getResponse()->getBody()->getContents();
+                $json = json_decode($responseBody, true);
+                if ($e->getResponse()->getStatusCode() == 422) {
+                    $detail = $json['detail'][0]['msg'] ?? ''; // 取得錯誤訊息
+                } else {
+                    $detail = $json['detail'] ?? '';
+                }
+            }
+            $page_data['data']['api'] = ['status' => 'error', 'detail' => $detail];
+        }
 
         $contract = $this->contract_lib->get_contract(isset($page_data['data']['info']) ? $page_data['data']['info']['contract_id'] : 0, [], FALSE);
         $page_data['contract'] = $contract ? htmlentities($contract['content']) : "";
