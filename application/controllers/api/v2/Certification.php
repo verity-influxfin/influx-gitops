@@ -3064,14 +3064,15 @@ class Certification extends REST_Controller {
                 'realEstateMortgage', 'hasCreditFlaws'];
 
             // 必填欄位
-            $fields = ['prMobileNo', 'prEmail', 'prInChargeYear', 'prStartYear', 'prEduLevel'];
-            foreach ($fields as $field)
-            {
-                if (empty($input[$field]))
-                {
-                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-                }
-            }
+            // 2023-11-08 註解掉因為舊版app會沒有對應的參數
+            // $fields = ['prMobileNo', 'prEmail', 'prInChargeYear', 'prStartYear', 'prEduLevel'];
+            // foreach ($fields as $field)
+            // {
+            //     if (empty($input[$field]))
+            //     {
+            //         $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            //     }
+            // }
             $content = array_intersect_key($input, array_flip($save_fields));
 
             // 年份
