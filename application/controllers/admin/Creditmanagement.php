@@ -135,7 +135,7 @@ class Creditmanagement extends MY_Admin_Controller
         }
         // 如果調整過分數、調整過額度，則檢查是否為新用戶、是否年滿35歲
         if ((isset($this->inputData['score']) && $this->inputData['score'] != 0)
-            || (isset($this->inputData['fixed_amount']) && $this->inputData['fixed_amount'] != $credit->loan_amount)
+            || (isset($this->inputData['fixed_amount']) && $this->inputData['fixed_amount'] != $credit->amount)
         ) {
             // 檢查使用者是否為新用戶
             $user_id = $this->target_model->get_user_id_by_id($this->inputData['target_id']);
