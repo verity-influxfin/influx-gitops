@@ -655,17 +655,26 @@ class Target_lib
                                         }
                                     }
                                 } else {
-                                    $this->approve_target_fail($user_id, $target);
+                                    $failed_condition = ['matchBrookesia' => $matchBrookesia, 'allow' => $allow];
+                                    $this->approve_target_fail($user_id, $target, false, '',
+                                        $failed_condition);
                                 }
                             }
                         } else {
-                            $this->approve_target_fail($user_id, $target);
+                            $failed_condition = ['loan_amount' => $loan_amount,
+                                'loan_range_s' => $product_info['loan_range_s'], 'subloan_status' => $subloan_status];
+                            $this->approve_target_fail($user_id, $target, false, '',
+                                $failed_condition);
                         }
                     } else {
-                        $this->approve_target_fail($user_id, $target, ($user_current_credit_amount != 0 ? true : false));
+                        $failed_condition = ['user_current_credit_amount' => $user_current_credit_amount,
+                            'subloan_status' => $subloan_status];
+                        $this->approve_target_fail($user_id, $target, ($user_current_credit_amount != 0 ? true : false),
+                            '', $failed_condition);
                     }
                 } else {
-                    $this->approve_target_fail($user_id, $target);
+                    $failed_condition = ['interest_rate' => $interest_rate];
+                    $this->approve_target_fail($user_id, $target, false, '', $failed_condition);
                 }
                 //return $rs;
             }
@@ -673,14 +682,18 @@ class Target_lib
         return false;
     }
 
-    private function approve_target_fail($user_id, $target, $maxAmountAlarm = false , $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務')
+    private function approve_target_fail($user_id, $target, $maxAmountAlarm = false , $remark = '', $failed_condition = [])
     {
-        if($remark == '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務')
-            $remark .= ($maxAmountAlarm ? '.' : '。');
+        if ($remark == '') {
+            $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務' . ($maxAmountAlarm ? '.' : '。');
+        }
+        $memo = json_decode($target->memo, true) ?? [];
+        $memo['failed_condition'] = $failed_condition;
         $param = [
             'loan_amount' => 0,
             'status' => '9',
             'remark' => $remark,
+            'memo' => json_encode($memo, JSON_UNESCAPED_UNICODE),
         ];
         $this->CI->target_model->update($target->id, $param);
         $this->insert_change_log($target->id, $param);
