@@ -673,10 +673,11 @@ class Target_lib
         return false;
     }
 
-    private function approve_target_fail($user_id, $target, $maxAmountAlarm = false , $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務')
+    private function approve_target_fail($user_id, $target, $maxAmountAlarm = false , $remark = '', $failed_condition = [])
     {
-        if($remark == '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務')
-            $remark .= ($maxAmountAlarm ? '.' : '。');
+        if ($remark == '') {
+            $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務' . ($maxAmountAlarm ? '.' : '。');
+        }
         $param = [
             'loan_amount' => 0,
             'status' => '9',
