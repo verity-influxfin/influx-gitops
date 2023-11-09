@@ -655,17 +655,26 @@ class Target_lib
                                         }
                                     }
                                 } else {
-                                    $this->approve_target_fail($user_id, $target);
+                                    $failed_condition = ['matchBrookesia' => $matchBrookesia, 'allow' => $allow];
+                                    $this->approve_target_fail($user_id, $target, false, '',
+                                        $failed_condition);
                                 }
                             }
                         } else {
-                            $this->approve_target_fail($user_id, $target);
+                            $failed_condition = ['loan_amount' => $loan_amount,
+                                'loan_range_s' => $product_info['loan_range_s'], 'subloan_status' => $subloan_status];
+                            $this->approve_target_fail($user_id, $target, false, '',
+                                $failed_condition);
                         }
                     } else {
-                        $this->approve_target_fail($user_id, $target, ($user_current_credit_amount != 0 ? true : false));
+                        $failed_condition = ['user_current_credit_amount' => $user_current_credit_amount,
+                            'subloan_status' => $subloan_status];
+                        $this->approve_target_fail($user_id, $target, ($user_current_credit_amount != 0 ? true : false),
+                            '', $failed_condition);
                     }
                 } else {
-                    $this->approve_target_fail($user_id, $target);
+                    $failed_condition = ['interest_rate' => $interest_rate];
+                    $this->approve_target_fail($user_id, $target, false, '', $failed_condition);
                 }
                 //return $rs;
             }
