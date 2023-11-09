@@ -373,7 +373,7 @@ class Certification extends MY_Admin_Controller {
 				if ($permission_granted >= 3){
 					$info = $this->user_certification_model->get($id);
 					$content = json_decode($info->content,true);
-					$content['salary'] = $post['salary'];
+					$content['admin_salary'] = $post['salary'];
 					$this->user_certification_model->update($id,['content'=>json_encode($content)]);
 					$param = [
 						'user_id'		=> $info->user_id,
