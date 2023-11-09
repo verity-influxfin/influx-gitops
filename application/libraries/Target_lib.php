@@ -678,10 +678,13 @@ class Target_lib
         if ($remark == '') {
             $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務' . ($maxAmountAlarm ? '.' : '。');
         }
+        $memo = json_decode($target->memo, true) ?? [];
+        $memo['failed_condition'] = $failed_condition;
         $param = [
             'loan_amount' => 0,
             'status' => '9',
             'remark' => $remark,
+            'memo' => json_encode($memo, JSON_UNESCAPED_UNICODE),
         ];
         $this->CI->target_model->update($target->id, $param);
         $this->insert_change_log($target->id, $param);
