@@ -368,49 +368,54 @@ class Certification extends MY_Admin_Controller {
             }
 
             if(!empty($post['salary'])){
-                $id = $post['id'];
-                $info = $this->user_certification_model->get($id);
-                $content = json_decode($info->content,true);
-                $content['salary'] = $post['salary'];
-                $this->user_certification_model->update($id,['content'=>json_encode($content)]);
-                $param = [
-                    'user_id'		=> $info->user_id,
-                    'meta_key' 		=> 'job_salary',
-                ];
-                $this->user_meta_model->update_by($param,['meta_value'	=> $content['salary']]);
+				$permission_granted = $this->permission_granted['target']['waiting_evaluation']['action']['granted'];
+				$id = $post['id'];
+				if ($permission_granted >= 3){
+					$info = $this->user_certification_model->get($id);
+					$content = json_decode($info->content,true);
+					$content['salary'] = $post['salary'];
+					$this->user_certification_model->update($id,['content'=>json_encode($content)]);
+					$param = [
+						'user_id'		=> $info->user_id,
+						'meta_key' 		=> 'job_salary',
+					];
+					$this->user_meta_model->update_by($param,['meta_value'	=> $content['salary']]);
 
-                //失效信評分數
-                $this->load->model('loan/credit_model');
-                $credit_list = $this->credit_model->get_many_by([
-                    'user_id'    =>$info->user_id,
-                    'product_id' =>[3,4],
-                    'status'     => 1
-                ]);
-                foreach($credit_list as $ckey => $cvalue){
-					//信用低落
-                    if(!in_array($cvalue->level,[11,12,13])){
-                        $this->credit_model->update_by(
-                            ['id'    => $cvalue->id],
-                            ['status'=> 0]
-                        );
-                    }
-                }
+					//失效信評分數
+					$this->load->model('loan/credit_model');
+					$credit_list = $this->credit_model->get_many_by([
+						'user_id'    =>$info->user_id,
+						'product_id' =>[3,4],
+						'status'     => 1
+					]);
+					foreach($credit_list as $ckey => $cvalue){
+						//信用低落
+						if(!in_array($cvalue->level,[11,12,13])){
+							$this->credit_model->update_by(
+								['id'    => $cvalue->id],
+								['status'=> 0]
+							);
+						}
+					}
 
-                //退案件狀態
-                $this->load->library('target_lib');
-                $targets = $this->target_model->get_many_by(array(
-                    'user_id'   => $info->user_id,
-                    'product_id' =>[3,4],
-                    'status'	=> array(1,2)
-                ));
-                if($targets){
-                    $this->load->library('Target_lib');
-                    foreach ($targets as $value)
-                    {
-                        $this->target_lib->withdraw_target_to_unapproved($value, 0, $this->login_info->id, 0);
-                    }
-                }
-                alert('更新成功','user_certification_edit?id='.$id);
+					//退案件狀態
+					$this->load->library('target_lib');
+					$targets = $this->target_model->get_many_by(array(
+						'user_id'   => $info->user_id,
+						'product_id' =>[3,4],
+						'status'	=> array(1,2)
+					));
+					if($targets){
+						$this->load->library('Target_lib');
+						foreach ($targets as $value)
+						{
+							$this->target_lib->withdraw_target_to_unapproved($value, 0, $this->login_info->id, 0);
+						}
+					}
+					alert('更新成功','user_certification_edit?id='.$id);
+				}else{
+					alert('無權限修改','user_certification_edit?id='.$id);
+				}
             }elseif(!empty($post['name'])){
 				$id = $post['id'];
 				$info = $this->user_certification_model->get($id);
