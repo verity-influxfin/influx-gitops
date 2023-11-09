@@ -119,12 +119,27 @@ class Creditmanagement extends MY_Admin_Controller
         // 檢查是否有此案件
         $target = $this->target_model->get($this->inputData['target_id']);
         if(!isset($target)){
-                $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無次案件'])->send();
+                $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此案件'])->send();
         }
 
+        $this->load->model('loan/credit_sheet_model');
+        $this->load->model('loan/credit_model');
+
+        $credit_sheet = $this->credit_sheet_model->get_by([
+            'target_id' => $target->id,
+            'status' => 1]);
+        if (!isset($credit_sheet)) {
+            $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此額度關聯'])->send();
+        }
+        $credit = $this->credit_model->get_by([
+            'id'=>$credit_sheet->credit_id,
+        ]);
+        if(!isset($credit)){
+                $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此額度'])->send();
+        }
         // 如果調整過分數、調整過額度，則檢查是否為新用戶、是否年滿35歲
         if ((isset($this->inputData['score']) && $this->inputData['score'] != 0)
-            || (isset($this->inputData['fixed_amount']) && $this->inputData['fixed_amount'] != $target->loan_amount)
+            || (isset($this->inputData['fixed_amount']) && $this->inputData['fixed_amount'] != $credit->loan_amount)
         ) {
             // 檢查使用者是否為新用戶
             $user_id = $this->target_model->get_user_id_by_id($this->inputData['target_id']);
