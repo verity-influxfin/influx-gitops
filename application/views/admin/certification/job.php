@@ -163,10 +163,10 @@
 									</div>
                                     <? if($data->status==1){?>
                                     <div class="form-group">
-                                        <label>月薪</label><br />
-                                        <p class="form-control-static"><?=isset($content['admin_salary'])?$content['admin_salary']:""?></p>
                                         <label>用戶自填月薪</label><br />
-                                        <p class="form-control-static"><?=isset($content['salary'])?$content['salary']:""?></p>
+                                        <p class="form-control-static"><?=isset($content['salary'])?$content['salary']:""?></p><br />
+                                        <label>最終確認月薪</label><br />
+                                        <p class="form-control-static"><?=isset($content['admin_salary'])?$content['admin_salary']:""?></p>
                                     </div>
                                     <div class="form-group">
                                         <label>專業證書是否有效</label><br />
