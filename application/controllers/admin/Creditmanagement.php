@@ -122,17 +122,13 @@ class Creditmanagement extends MY_Admin_Controller
                 $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此案件'])->send();
         }
 
-        $this->load->model('loan/credit_sheet_model');
         $this->load->model('loan/credit_model');
-
-        $credit_sheet = $this->credit_sheet_model->get_by([
-            'target_id' => $target->id,
-            'status' => 1]);
-        if (!isset($credit_sheet)) {
-            $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此額度關聯'])->send();
-        }
         $credit = $this->credit_model->get_by([
-            'id'=>$credit_sheet->credit_id,
+            'user_id'=>$target->user_id,
+            'product_id'=>$target->product_id,
+            'sub_product_id'=>$target->sub_product_id,
+            'instalment'=>$target->instalment,
+            'status'=>1
         ]);
         if(!isset($credit)){
                 $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此額度'])->send();
