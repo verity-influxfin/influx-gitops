@@ -4038,12 +4038,13 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields = ['governmentauthorities_image', 'CompName', 'CompId', 'CompDate', 'CompCapital', 'CompRegAddress', 'PrName'];
-            foreach ($fields as $field) {
-                if (!isset($input[$field]) && (!($field === 'CompId') || strlen($input['CompId']) != 8)) {
-                    $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-                }
-            }
+            // 20231109 因應新舊版並存，暫時將必填檢查移除
+            // $fields = ['governmentauthorities_image', 'CompName', 'CompId', 'CompDate', 'CompCapital', 'CompRegAddress', 'PrName'];
+            // foreach ($fields as $field) {
+            //     if (!isset($input[$field]) && (!($field === 'CompId') || strlen($input['CompId']) != 8)) {
+            //         $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            //     }
+            // }
 
             $content = $input;
             $content['skbank_form'] = $input;
