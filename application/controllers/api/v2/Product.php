@@ -2028,7 +2028,7 @@ class Product extends REST_Controller {
                 $associates_target = $this->target_lib->get_associates_target_list($this->user_info->id, $target_id);
                 if ($associates_target) {
                     # 案件關係人取消成為關係人
-                    if($associates_target->associate['status'] == 0 && !$associates_target->associate['owner']){
+                    if(in_array($associates_target->associate['status'], array(0, 1)) && !$associates_target->associate['owner']){
                         $this->load->model('loan/target_associate_model');
                         $this->target_associate_model->update_by([
                             'target_id' => $target_id,
