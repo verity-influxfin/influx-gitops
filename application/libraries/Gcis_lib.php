@@ -164,7 +164,16 @@ class Gcis_lib
             throw new Exception("商業司API回應異常",RESPONSE_ERROR);
         if(!$this->business_is_incorporation($rs['Company_Status_Desc']))
             throw new Exception("公司不是正常設立狀態",NOT_INCORPORATION);
-        return $name === $rs['Responsible_Name'];
+        
+        // 因爲部分公司負責人名稱會包含空白，故做相應處理
+        $rs['Responsible_Name'] = str_replace(' ', '', $rs['Responsible_Name']);
+        $rs['Responsible_Name'] = str_replace('　', '', $rs['Responsible_Name']);
+
+        $name = str_replace(' ', '', $name);
+        $name = str_replace('　', '', $name);
+
+        // 因為部分公司負責人名稱會包含英文，故改用 str_contains
+        return str_contains($rs['Responsible_Name'], $name);
     }
 
     /**
@@ -229,9 +238,52 @@ class Gcis_lib
         switch ($status_name) {
             case '核准設立':
                 return TRUE;
+            case '核准登記':
+                return TRUE;
             default:
                 return FALSE;
         }
     }
 
+    /**
+     * 取得法人基本資料 (會同時檢查公司與商行的資料)
+     * @param $account_no
+     * @return array|string[]
+     */
+    public function get_company_president_info($account_no)
+    {
+        $result = [
+            'company_name' => '', // 公司名稱
+            'responsible_name' => '', // 負責人名稱
+            'company_last_change_date' => '', // 戳章日期 (最後核准變更日期)
+            'company_capital' => '', // 實收資本額
+            'company_address' => '', // 公司所在地
+        ];
+
+        // 公司資料
+        $company_info = $this->account_info($account_no);
+        if ( ! empty($company_info))
+        {
+            empty($company_info['Company_Name']) ?: $result['company_name'] = $company_info['Company_Name'];
+            empty($company_info['Responsible_Name']) ?: $result['responsible_name'] = $company_info['Responsible_Name'];
+            empty($company_info['Change_Of_Approval_Data']) ?: $result['company_last_change_date'] = $company_info['Change_Of_Approval_Data'];
+            empty($company_info['Paid_In_Capital_Amount']) ?: $result['company_capital'] = $company_info['Paid_In_Capital_Amount'];
+            empty($company_info['Company_Location']) ?: $result['company_address'] = $company_info['Company_Location'];
+            goto END;
+        }
+
+        // 商行資料
+        $president_info = $this->account_info_businesss($account_no);
+        if ( ! empty($president_info))
+        {
+            empty($president_info['Business_Name']) ?: $result['company_name'] = $president_info['Business_Name'];
+            empty($president_info['Responsible_Name']) ?: $result['responsible_name'] = $president_info['Responsible_Name'];
+            empty($president_info['Business_Last_Change_Date']) ?: $result['company_last_change_date'] = $president_info['Business_Last_Change_Date'];
+            empty($president_info['Business_Register_Funds']) ?: $result['company_capital'] = $president_info['Business_Register_Funds'];
+            empty($president_info['Business_Address']) ?: $result['company_address'] = $president_info['Business_Address'];
+        }
+
+        END:
+        return $result;
+    }
 }

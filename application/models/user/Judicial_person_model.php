@@ -38,7 +38,7 @@ class Judicial_person_model extends MY_Model
     }
 
     // 判斷該統編是否已存在且被歸戶成功
-    public function check_valid_charge_person($tax_id='')
+    public function check_valid_charge_person($tax_id = '', $user_id = '')
     {
         $charge_person = false;
 
@@ -48,6 +48,20 @@ class Judicial_person_model extends MY_Model
         ]);
         if ($judicial_person) {
             return $judicial_person;
+        }
+
+        if ( ! empty($user_id))
+        {
+            $this->load->model('user/user_certification_model');
+            $cert_governmentauthorities_info = $this->user_certification_model->get_by([
+                'user_id' => $user_id,
+                'certification_id' => CERTIFICATION_GOVERNMENTAUTHORITIES,
+                'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_FAILED, CERTIFICATION_STATUS_PENDING_TO_REVIEW]
+            ]);
+            if ( ! empty($cert_governmentauthorities_info))
+            {
+                return $cert_governmentauthorities_info;
+            }
         }
 
         return false;
