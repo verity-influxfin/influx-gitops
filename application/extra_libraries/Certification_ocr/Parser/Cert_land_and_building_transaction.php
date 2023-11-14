@@ -42,7 +42,7 @@ class Cert_land_and_building_transaction extends Ocr_parser_base
      */
     protected function get_ocr_port(): string
     {
-        return getenv('CERT_OCR_HOME_LOAN_PORT');
+        return CERT_OCR_HOME_LOAN_PORT;
     }
 
     /**
@@ -167,7 +167,7 @@ class Cert_land_and_building_transaction extends Ocr_parser_base
         {
             $building_address = $this->get_building_address();
 
-            $get_api_url = 'http://' . $this->get_ocr_ip() . ':' . getenv('CERT_OCR_HOME_LOAN_BOOKING_PORT');
+            $get_api_url = 'http://' . $this->get_ocr_ip() . ':' . CERT_OCR_HOME_LOAN_BOOKING_PORT;
             $request = (new Client(['base_uri' => $get_api_url]))
                 ->request('GET', '/home_consumer_loan/appraisal', [
                     'headers' => [

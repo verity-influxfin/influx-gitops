@@ -16,7 +16,7 @@ class Booking_lib
     {
         $this->CI = &get_instance();
 
-        $api_url = 'http://' . getenv('CERT_OCR_IP') . ':' . getenv('CERT_OCR_HOME_LOAN_BOOKING_PORT');
+        $api_url = 'http://' . getenv('CERT_OCR_IP') . ':' . CERT_OCR_HOME_LOAN_BOOKING_PORT;
         $this->client = new Client(['base_uri' => $api_url]);
     }
 

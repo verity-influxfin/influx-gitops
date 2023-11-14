@@ -686,6 +686,8 @@ defined('ENV_NOTIFICATION_REQUEST_URL')  OR define('ENV_NOTIFICATION_REQUEST_URL
 
 // 普匯OCR子系統
 defined('INFLUX_OCR_ENDPOINT')      OR define('INFLUX_OCR_ENDPOINT'     , getenv('ENV_INFLUX_OCR_ENDPOINT'));
+defined('CERT_OCR_HOME_LOAN_BOOKING_PORT')      OR define('CERT_OCR_HOME_LOAN_BOOKING_PORT'     , getenv('CERT_OCR_HOME_LOAN_BOOKING_PORT'));
+defined('CERT_OCR_HOME_LOAN_PORT')      OR define('CERT_OCR_HOME_LOAN_PORT'     , getenv('CERT_OCR_HOME_LOAN_PORT'));
 
 // legal document automatically
 defined('ENV_ANUBIS_ENDPOINT')  OR define('ENV_ANUBIS_ENDPOINT' , getenv('ENV_ANUBIS_ENDPOINT'));
