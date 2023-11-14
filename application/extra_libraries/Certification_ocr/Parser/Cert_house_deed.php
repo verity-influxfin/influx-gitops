@@ -35,7 +35,7 @@ class Cert_house_deed extends Ocr_parser_base
      */
     protected function get_ocr_port(): string
     {
-        return getenv('CERT_OCR_HOME_LOAN_PORT');
+        return CERT_OCR_HOME_LOAN_PORT;
     }
 
     /**
