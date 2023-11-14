@@ -1,5 +1,3 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 <style>
     .sk-input {
         width : 100%;
@@ -63,114 +61,328 @@
                                     ?>
                                 </p>
                             </div>
-                            <div class="form-group">
-                                <div>
-                                    <ul class="nav nav-tabs" id="skbank_form_tab" role="tablist">
-                                        <li role="presentation" class="active">
-                                            <a href="#Pr" role="tab" data-toggle="tab" aria-expanded="true">負責人</a>
+                            <form id="app1" class="form-group" @submit.prevent="doSubmit">
+                                <ul class="nav nav-tabs nav-justified mb-1">
+                                    <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-kgibank'}"><a @click="changeTab('tab-kgibank')">凱基</a></li>
+                                </ul>
+                                <div id="tab-skbank" v-show="tab==='tab-skbank'">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" :class="{'active': subTab === 'Pr'}">
+                                            <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
                                         </li>
-                                        <li role="presentation">
-                                            <a href="#Spouse" role="tab" data-toggle="tab" aria-expanded="false">配偶</a>
+                                        <li role="presentation" :class="{'active': subTab === 'Spouse'}">
+                                            <a @click="changeSubTab('Spouse')" data-toggle="tab" aria-expanded="false">配偶</a>
                                         </li>
-                                        <li role="presentation">
-                                            <a href="#GuOne" role="tab" data-toggle="tab" aria-expanded="false">保證人甲</a>
-                                        </li>
-                                        <li role="presentation">
-                                            <a href="#GuTwo" role="tab" data-toggle="tab" aria-expanded="false">保證人乙</a>
+                                        <li role="presentation" :class="{'active': subTab === 'GuOne'}">
+                                            <a @click="changeSubTab('GuOne')" data-toggle="tab" aria-expanded="false">保證人</a>
                                         </li>
                                     </ul>
-                                </div>
-                                <div class="table-responsive" id="Pr">
-                                    <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                    <div class="table-responsive Pr">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
-                                                <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>負責人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="PrJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
-                                                <tr><td><span>負責人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="PrCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
-                                                <tr><td><span>負責人聯徵J01資料年月</span></td><td><input class="sk-input" type="text" name="PrJCICDataDate"></td></tr>
-                                                <tr><td><span>負責人銀行借款餘額(現金卡)</span></td><td><input class="sk-input" type="text" name="PrBal_CashCard"></td></tr>
-                                                <tr><td><span>負責人銀行借款餘額(信用卡)</span></td><td><input class="sk-input" type="text" name="PrBal_CreditCard"></td></tr>
-                                                <tr><td><span>負責人銀行借款餘額(短放)</span></td><td><input class="sk-input" type="text" name="PrBal_ShortTermLn"></td></tr>
-                                                <tr><td><span>負責人銀行借款餘額(中放)</span></td><td><input class="sk-input" type="text" name="PrBal_MidTermLn"></td></tr>
-                                                <tr><td><span>負責人銀行借款餘額(長放)</span></td><td><input class="sk-input" type="text" name="PrBal_LongTermLn"></td></tr>
-                                                <tr><td><span>負責人銀行借款餘額(短擔)</span></td><td><input class="sk-input" type="text" name="PrBal_ShortTermGuar"></td></tr>
-                                                <tr><td><span>負責人銀行借款餘額(中擔)</span></td><td><input class="sk-input" type="text" name="PrBal_MidTermLnGuar"></td></tr>
-                                                <tr><td><span>負責人銀行借款餘額(長擔)</span></td><td><input class="sk-input" type="text" name="PrBal_LongTermLnGuar"></td></tr>
-                                                <tr><td><span>負責人擔任其他企業負責人之企業統編</span></td><td><input class="sk-input" type="text" name="PrBeingOthCompPrId"></td></tr>
-                                                <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                                <tr style="text-align: center;">
+                                                    <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-票債信情形是否異常</span></td>
+                                                    <td><select v-model="formData.prDebtLog" class="table-input sk-input form-control">
+                                                            <option :value="'1'">1:是</option>
+                                                            <option :value="'0'">0:否</option>
+                                                        </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-聯徵J02資料年月</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prJ02YM"
+                                                        placeholder="格式:YYYYMM"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-信用評分</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prCreditPoint">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-授信總餘額</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prCreditTotalAmount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-現金卡張數</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prCashCardQty"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-現金卡可動用額度</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prCashCardAvailLimit"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-現金卡餘額合計</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prCashCardTotalBalance"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-最近一週或一個月還款有無延遲紀錄</span></td>
+                                                    <td><select v-model="formData.prHasWeekMonthDelay" class="table-input sk-input form-control">
+                                                            <option :value="'1'">1:有</option>
+                                                            <option :value="'0'">0:無</option>
+                                                        </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-信用卡張數</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prCreditCardQty"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-信用卡可動用額度</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prCreditCardAvailAmount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-信用卡餘額合計</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prCreditCardTotalBalance"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-最近三個月內還款有無延遲紀錄</span></td>
+                                                    <td><select v-model="formData.prHasLastThreeMonthDelay" class="table-input sk-input form-control">
+                                                            <option :value="'1'">1:有</option>
+                                                            <option :value="'0'">0:無</option>
+                                                        </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>負責人聯徵-擔任其他企業負責人之企業統編</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.prBeingOthCompPrId"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
-                                    </form>
-                                </div>
-                                <div class="table-responsive" id="Spouse">
-                                    <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                    </div>
+                                    <div class="table-responsive Spouse">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
-                                                <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>配偶聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="SpouseJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
-                                                <tr><td><span>配偶聯徵信用評分</span></td><td><input class="sk-input" type="text" name="SpouseCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
-                                                <tr><td><span>配偶聯徵J01資料年月</span></td><td><input class="sk-input" type="text" name="SpouseJCICDataDate"></td></tr>
-                                                <tr><td><span>配偶銀行借款餘額(現金卡)</span></td><td><input class="sk-input" type="text" name="SpouseBal_CashCard"></td></tr>
-                                                <tr><td><span>配偶銀行借款餘額(信用卡)</span></td><td><input class="sk-input" type="text" name="SpouseBal_CreditCard"></td></tr>
-                                                <tr><td><span>配偶銀行借款餘額(短放)</span></td><td><input class="sk-input" type="text" name="SpouseBal_ShortTermLn"></td></tr>
-                                                <tr><td><span>配偶銀行借款餘額(中放)</span></td><td><input class="sk-input" type="text" name="SpouseBal_MidTermLn"></td></tr>
-                                                <tr><td><span>配偶銀行借款餘額(長放)</span></td><td><input class="sk-input" type="text" name="SpouseBal_LongTermLn"></td></tr>
-                                                <tr><td><span>配偶銀行借款餘額(短擔)</span></td><td><input class="sk-input" type="text" name="SpouseBal_ShortTermGuar"></td></tr>
-                                                <tr><td><span>配偶銀行借款餘額(中擔)</span></td><td><input class="sk-input" type="text" name="SpouseBal_MidTermLnGuar"></td></tr>
-                                                <tr><td><span>配偶銀行借款餘額(長擔)</span></td><td><input class="sk-input" type="text" name="SpouseBal_LongTermLnGuar"></td></tr>
-                                                <tr><td><span>配偶擔任其他企業負責人之企業統編</span></td><td><input class="sk-input" type="text" name="SpouseBeingOthCompPrId"></td></tr>
-                                                <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                                <tr style="text-align: center;">
+                                                    <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>配偶聯徵-票債信情形是否異常</span></td>
+                                                    <td><select v-model="formData.spouseDebtLog" class="table-input sk-input form-control">
+                                                            <option :value="'1'">1:是</option>
+                                                            <option :value="'0'">0:否</option>
+                                                        </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>配偶聯徵-聯徵J02資料年月</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.spouseJ02YM"
+                                                               placeholder="格式:YYYYMM"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>配偶聯徵-信用評分</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.spouseCreditPoint">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>配偶聯徵-授信總餘額</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.spouseCreditTotalAmount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>配偶聯徵-信用卡餘額合計</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.spouseCreditCardTotalBalance"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>配偶聯徵-擔任其他企業負責人之企業統編</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.spouseBeingOthCompPrId">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
-                                    </form>
-                                </div>
-                                <div class="table-responsive" id="GuOne">
-                                    <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                    </div>
+                                    <div class="table-responsive GuOne">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
-                                                <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>甲保證人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="GuOneJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
-                                                <tr><td><span>甲保證人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="GuOneCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
-                                                <tr><td><span>甲保證人聯徵J01資料年月</span></td><td><input class="sk-input" type="text" name="GuOneJCICDataDate"></td></tr>
-                                                <tr><td><span>甲保證人銀行借款餘額(現金卡)</span></td><td><input class="sk-input" type="text" name="GuOneBal_CashCard"></td></tr>
-                                                <tr><td><span>甲保證人銀行借款餘額(信用卡)</span></td><td><input class="sk-input" type="text" name="GuOneBal_CreditCard"></td></tr>
-                                                <tr><td><span>甲保證人銀行借款餘額(短放)</span></td><td><input class="sk-input" type="text" name="GuOneBal_ShortTermLn"></td></tr>
-                                                <tr><td><span>甲保證人銀行借款餘額(中放)</span></td><td><input class="sk-input" type="text" name="GuOneBal_MidTermLn"></td></tr>
-                                                <tr><td><span>甲保證人銀行借款餘額(長放)</span></td><td><input class="sk-input" type="text" name="GuOneBal_LongTermLn"></td></tr>
-                                                <tr><td><span>甲保證人銀行借款餘額(短擔)</span></td><td><input class="sk-input" type="text" name="GuOneBal_ShortTermGuar"></td></tr>
-                                                <tr><td><span>甲保證人銀行借款餘額(中擔)</span></td><td><input class="sk-input" type="text" name="GuOneBal_MidTermLnGuar"></td></tr>
-                                                <tr><td><span>甲保證人銀行借款餘額(長擔)</span></td><td><input class="sk-input" type="text" name="GuOneBal_LongTermLnGuar"></td></tr>
-                                                <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                            <tr style="text-align: center;">
+                                                <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>保證人聯徵-票債信情形是否異常</span></td>
+                                                <td><select v-model="formData.guarantorDebtLog" class="table-input sk-input form-control">
+                                                        <option :value="'1'">1:是</option>
+                                                        <option :value="'0'">0:否</option>
+                                                    </select></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>保證人聯徵-聯徵J02資料年月</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.guarantorJ02YM"
+                                                           placeholder="格式:YYYYMM"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>保證人聯徵-信用評分</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.guarantorCreditPoint">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
-                                    </form>
+                                    </div>
                                 </div>
-                                <div class="table-responsive" id="GuTwo">
-                                    <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                <div id="tab-kgibank" v-show="tab==='tab-kgibank'">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" :class="{'active': subTab === 'Pr'}">
+                                            <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
+                                        </li>
+                                        <li role="presentation" :class="{'active': subTab === 'Spouse'}">
+                                            <a @click="changeSubTab('Spouse')" data-toggle="tab" aria-expanded="false">配偶</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a @click="changeSubTab('GuOne')" data-toggle="tab" aria-expanded="false">保證人</a>
+                                        </li>
+                                    </ul>
+                                    <div class="table-responsive Pr">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
-                                                <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>乙保證人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="GuTwoJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
-                                                <tr><td><span>乙保證人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="GuTwoCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
-                                                <tr><td><span>乙保證人聯徵J01資料年月</span></td><td><input class="sk-input" type="text" name="GuTwoJCICDataDate"></td></tr>
-                                                <tr><td><span>乙保證人銀行借款餘額(現金卡)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_CashCard"></td></tr>
-                                                <tr><td><span>乙保證人銀行借款餘額(信用卡)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_CreditCard"></td></tr>
-                                                <tr><td><span>乙保證人銀行借款餘額(短放)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_ShortTermLn"></td></tr>
-                                                <tr><td><span>乙保證人銀行借款餘額(中放)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_MidTermLn"></td></tr>
-                                                <tr><td><span>乙保證人銀行借款餘額(長放)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_LongTermLn"></td></tr>
-                                                <tr><td><span>乙保證人銀行借款餘額(短擔)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_ShortTermGuar"></td></tr>
-                                                <tr><td><span>乙保證人銀行借款餘額(中擔)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_MidTermLnGuar"></td></tr>
-                                                <tr><td><span>乙保證人銀行借款餘額(長擔)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_LongTermLnGuar"></td></tr>
-                                                <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                            <tr style="text-align: center;">
+                                                <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-票債信情形是否異常</span></td>
+                                                <td><select v-model="formData.prDebtLog" class="table-input sk-input form-control">
+                                                        <option :value="'1'">1:是</option>
+                                                        <option :value="'0'">0:否</option>
+                                                    </select></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-聯徵J02資料年月</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prJ02YM"
+                                                           placeholder="格式:YYYYMM"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-信用評分</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prCreditPoint">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-授信總餘額</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prCreditTotalAmount"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-現金卡張數</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prCashCardQty"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-現金卡可動用額度</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prCashCardAvailLimit"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-現金卡餘額合計</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prCashCardTotalBalance"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-最近一週或一個月還款有無延遲紀錄</span></td>
+                                                <td><select v-model="formData.prHasWeekMonthDelay" class="table-input sk-input form-control">
+                                                        <option :value="'1'">1:有</option>
+                                                        <option :value="'0'">0:無</option>
+                                                    </select></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-信用卡張數</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prCreditCardQty"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-信用卡可動用額度</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prCreditCardAvailAmount"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-信用卡餘額合計</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prCreditCardTotalBalance"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-最近三個月內還款有無延遲紀錄</span></td>
+                                                <td><select v-model="formData.prHasLastThreeMonthDelay" class="table-input sk-input form-control">
+                                                        <option :value="'1'">1:有</option>
+                                                        <option :value="'0'">0:無</option>
+                                                    </select></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>負責人聯徵-擔任其他企業負責人之企業統編</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.prBeingOthCompPrId"></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
-                                    </form>
+                                    </div>
+                                    <div class="table-responsive Spouse">
+                                        <table class="table table-striped table-bordered table-hover dataTable">
+                                            <tbody>
+                                            <tr style="text-align: center;">
+                                                <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>配偶聯徵-票債信情形是否異常</span></td>
+                                                <td><select v-model="formData.spouseDebtLog" class="table-input sk-input form-control">
+                                                        <option :value="'1'">1:是</option>
+                                                        <option :value="'0'">0:否</option>
+                                                    </select></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>配偶聯徵-聯徵J02資料年月</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.spouseJ02YM"
+                                                           placeholder="格式:YYYYMM"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>配偶聯徵-信用評分</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.spouseCreditPoint">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>配偶聯徵-擔任其他企業負責人之企業統編</span></td>
+                                                <td><input class="sk-input form-control" type="text" v-model="formData.spouseBeingOthCompPrId">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="table-responsive GuOne">
+                                        <table class="table table-striped table-bordered table-hover dataTable">
+                                            <tbody>
+                                                <tr style="text-align: center;">
+                                                    <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>保證人聯徵-票債信情形是否異常</span></td>
+                                                    <td><select v-model="formData.guarantorDebtLog" class="table-input sk-input form-control">
+                                                            <option :value="'1'">1:是</option>
+                                                            <option :value="'0'">0:否</option>
+                                                        </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>保證人聯徵-聯徵J02資料年月</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.guarantorJ02YM"
+                                                               placeholder="格式:YYYYMM"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span>保證人聯徵-信用評分</span></td>
+                                                    <td><input class="sk-input form-control" type="text" v-model="formData.guarantorCreditPoint">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                             <div class="form-group">
                               <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
                               foreach ($ocr['url'] as $key => $value) { ?>
@@ -199,7 +411,7 @@
                             <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                 <fieldset>
                                     <div class="form-group">
-                                        <select id="status" name="status" class="form-control" onchange="check_fail();">
+                                        <select id="status" name="status" v-model="formData.status" class="form-control" onchange="check_fail();">
                                             <? foreach ($status_list as $key => $value) { ?>
                                                 <option value="<?= $key ?>"
                                                         <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
@@ -223,7 +435,7 @@
                                                value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : ""; ?>"
                                                style="background-color:white!important;display:none" disabled="false">
                                     </div>
-                                    <button type="submit" class="btn btn-primary">送出</button>
+                                    <button id="status-submit" type="submit" class="btn btn-primary" style="display: none;">送出</button>
                                 </fieldset>
                             </form>
                         </div>
@@ -276,42 +488,82 @@
 </div>
 <!-- /#page-wrapper -->
 <script>
-$('select').selectize({
-    sortField: 'text',
-});
-$(document).ready(function() {
-    $.ajax({
-        type: "GET",
-        url: `/admin/certification/getSkbank?id=<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>`,
-        dataType: "json",
-        success: function (response) {
-            if(response.status.code == 200 && response.response != ''){
-                Object.keys(response.response).forEach(function(key) {
-                    console.log(key);
-                    console.log(response.response[key]);
-                    if($(`[name='${key}']`).length){
-                        if($(`[name='${key}']`).is("input")){
-                            $(`[name='${key}']`).val(response.response[key]);
-                        }else{
-                            let $select = $(`[name='${key}']`).selectize();
-                            let selectize = $select[0].selectize;
-                            selectize.setValue(selectize.search(response.response[key]).items[0].id);
-                        }
-                    }
-                })
-            }else{
-                console.log(response);
+    const data_status = '<?php echo $data->status ?? 0; ?>';
+    const cert_status_spouse_associate = '<?php echo CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE; ?>';
+    if (data_status === cert_status_spouse_associate)
+    {
+        $('#status').attr('disabled', true);
+    } else {
+        $(`#status option[value=${cert_status_spouse_associate}]`).attr('disabled', true);
+        $('#status-submit').css('display', '');
+    }
+
+    const v = new Vue({
+        el: '#app1',
+        data() {
+            return {
+                tab: 'tab-skbank',
+                subTab: data_status === cert_status_spouse_associate ? 'Spouse' : 'Pr',
+                pageId: '',
+                formData: {
+                    prDebtLog: '',
+                    prJ02YM: '',
+                    prCreditPoint: '',
+                    prCreditTotalAmount: '',
+                    prCashCardQty: '',
+                    prCashCardAvailLimit: '',
+                    prCashCardTotalBalance: '',
+                    prHasWeekMonthDelay: '',
+                    prCreditCardQty: '',
+                    prCreditCardAvailAmount: '',
+                    prCreditCardTotalBalance: '',
+                    prHasLastThreeMonthDelay: '',
+                    prBeingOthCompPrId: '',
+                    spouseDebtLog: '',
+                    spouseJ02YM: '',
+                    spouseCreditPoint: '',
+                    spouseBeingOthCompPrId: '',
+                    guarantorDebtLog: '',
+                    guarantorJ02YM: '',
+                    guarantorCreditPoint: '',
+                    tab2Input: '',
+                    tab3Input: '',
+                }
             }
         },
-        error: function(error) {
-          alert(error);
-        }
-    });
-    $('#skbank_form_tab a').click(function (e) {
-        let show_id = $(this).attr("href");
-        $(".table-responsive").hide()
-        $(show_id).show()
+        mounted() {
+            const url = new URL(location.href);
+            this.changeTab('tab-skbank')
+            this.pageId = url.searchParams.get('id');
+            this.getData()
+        },
+        methods: {
+            changeTab(tab) {
+                this.tab = tab
+                this.changeSubTab(this.subTab)
+            },
+            changeSubTab(show_id) {
+                $(".table-responsive").hide()
+                $(`#${this.tab} .${show_id}`).show()
+            },
+            doSubmit() {
+                return axios.post('/admin/certification/save_company_cert', {
+                    ...this.formData,
+                    id: this.pageId
+                }).then(({ data }) => {
+                    alert(data.result)
+                    location.reload()
+                })
+            },
+            getData() {
+                axios.get('/admin/certification/getSkbank', {
+                    params: {
+                        id: this.pageId
+                    }
+                }).then(({ data }) => {
+                    mergeDeep(this.formData, data.response)
+                })
+            }
+        },
     })
-    $( "#skbank_form_tab :first-child :first-child" ).trigger( "click" );
-});
 </script>

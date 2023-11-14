@@ -123,6 +123,12 @@ defined('NO_RESPONSIBLE_USER_BIND') or define('NO_RESPONSIBLE_USER_BIND', 224); 
 defined('NO_RESPONSIBLE_IDENTITY') or define('NO_RESPONSIBLE_IDENTITY', 225); // 法人沒有通過負責人實名 by news
 defined('PROMOTE_CODE_NOT_EXIST') or define('PROMOTE_CODE_NOT_EXIST', 226); // 該推薦碼不存在
 defined('LOW_WITHDRAW_AMOUNT') or define('LOW_WITHDRAW_AMOUNT', 227); // 提領金額過低
+defined('GO_GET_EMAIL_VERIFICATION') or define('GO_GET_EMAIL_VERIFICATION', 227); // 請至信箱收信驗證
+defined('PROMOTE_CODE_NOT_APPLY') or define('PROMOTE_CODE_NOT_APPLY', 228); // 推薦碼尚未按下「立即申請」
+defined('PROMOTE_CODE_NOT_GENERAL') or define('PROMOTE_CODE_NOT_GENERAL', 229); // 非一般經銷商
+defined('PROMOTE_CODE_NOT_APPOINTED') or define('PROMOTE_CODE_NOT_APPOINTED', 230); // 非特約通路商
+defined('PROMOTE_SUBCODE_NOT_EXIST') or define('PROMOTE_SUBCODE_NOT_EXIST', 231); // 該推薦碼 subcode 不存在
+defined('PROMOTE_DUPLICATE_INVITE') or define('PROMOTE_DUPLICATE_INVITE', 232); // 該二級經銷商邀請中
 
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301);
@@ -147,6 +153,9 @@ defined('CONNECTION_ERROR')                OR define('CONNECTION_ERROR'         
 defined('CHARITY_INVALID_AMOUNT')       OR define('CHARITY_INVALID_AMOUNT'      , 318); //無效的慈善捐款金額
 defined('CHARITY_ILLEGAL_AMOUNT')       OR define('CHARITY_ILLEGAL_AMOUNT'      , 321); // 因AMC防制法規定：捐款金額超過500,000元請洽客服。
 defined('CHARITY_RECORD_NOT_FOUND')     OR define('CHARITY_RECORD_NOT_FOUND'    , 322); // 捐款紀錄不存在
+defined('USER_TAX_ID_PHONE_UNMATCHED')  OR define('USER_TAX_ID_PHONE_UNMATCHED' , 323); // (法人忘記密碼)統編與電話不同
+defined('USER_ID_FORMAT_ERROR')         OR define('USER_ID_FORMAT_ERROR'        , 324); // 帳號格式有誤
+defined('USER_ID_EXIST')                OR define('USER_ID_EXIST'               , 325); // 帳號重複
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
@@ -171,6 +180,7 @@ defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);
 defined('PICTURE_NOT_EXIST')  		OR define('PICTURE_NOT_EXIST'		, 423);
 defined('PRODUCT_HAS_NO_CREDIT') or define('PRODUCT_HAS_NO_CREDIT', 424); // 該產品已無額度，不起新案
 defined('BLACK_LIST_APPLY_PRODUCT') OR define('BLACK_LIST_APPLY_PRODUCT', 426);
+defined('PRODUCT_CANNOT_BOOK_TIME') or define('PRODUCT_CANNOT_BOOK_TIME', 427); // 無法預約時段
 
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501);
@@ -207,6 +217,15 @@ defined('CERTIFICATION_FINANCIALWORKER')   OR define('CERTIFICATION_FINANCIALWOR
 defined('CERTIFICATION_REPAYMENT_CAPACITY') or define('CERTIFICATION_REPAYMENT_CAPACITY', 15); // 還款力
 defined('CERTIFICATION_CRIMINALRECORD') OR define('CERTIFICATION_CRIMINALRECORD'     , 20);
 defined('CERTIFICATION_SOCIAL_INTELLIGENT') or define('CERTIFICATION_SOCIAL_INTELLIGENT', 21); // 名校貸社交帳號
+defined('CERTIFICATION_HOUSE_CONTRACT') or define('CERTIFICATION_HOUSE_CONTRACT', 22); // 購屋合約
+defined('CERTIFICATION_HOUSE_RECEIPT') or define('CERTIFICATION_HOUSE_RECEIPT', 23); // 購屋發票
+defined('CERTIFICATION_RENOVATION_CONTRACT') or define('CERTIFICATION_RENOVATION_CONTRACT', 24); // 裝修合約
+defined('CERTIFICATION_RENOVATION_RECEIPT') or define('CERTIFICATION_RENOVATION_RECEIPT', 25); // 裝修發票
+defined('CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT') or define('CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT', 26); // 傢俱家電合約或發票收據
+defined('CERTIFICATION_HOUSE_DEED') or define('CERTIFICATION_HOUSE_DEED', 27); // 房屋所有權狀
+defined('CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS') or define('CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS', 28); // 土地建物謄本
+defined('CERTIFICATION_SITE_SURVEY_VIDEO') or define('CERTIFICATION_SITE_SURVEY_VIDEO', 29); // 入屋現勘/遠端視訊影片
+defined('CERTIFICATION_SITE_SURVEY_BOOKING') or define('CERTIFICATION_SITE_SURVEY_BOOKING', 30); // 入屋現勘/遠端視訊預約時間
 
 defined('CERTIFICATION_SIMPLIFICATIONFINANCIAL') or define('CERTIFICATION_SIMPLIFICATIONFINANCIAL', 500);
 defined('CERTIFICATION_SIMPLIFICATIONJOB') or define('CERTIFICATION_SIMPLIFICATIONJOB', 501);
@@ -256,6 +275,8 @@ defined('CERTIFICATION_STATUS_NOT_COMPLETED') OR define('CERTIFICATION_STATUS_NO
 defined('CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION') OR define('CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION', 5);
 // 已驗證資料真實性待使用者送出審核 -> 送出審核後會變為待驗證
 defined('CERTIFICATION_STATUS_AUTHENTICATED') OR define('CERTIFICATION_STATUS_AUTHENTICATED', 6);
+// 等待配偶歸戶
+defined('CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE') OR define('CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE', 7);
 
 // 資料格式有誤
 defined('CERTIFICATION_SUBSTATUS_WRONG_FORMAT') OR define('CERTIFICATION_SUBSTATUS_WRONG_FORMAT', 1);
@@ -329,6 +350,9 @@ defined('TARGET_SUBSTATUS_LAW_DEBT_COLLECTION') OR define('TARGET_SUBSTATUS_LAW_
 defined('TARGET_SCRIPT_STATUS_NOT_IN_USE') or define('TARGET_SCRIPT_STATUS_NOT_IN_USE', 0);  // Not in use by any script(跑批)
 defined('TARGET_SCRIPT_STATUS_APPROVE_TARGET') or define('TARGET_SCRIPT_STATUS_APPROVE_TARGET', 4);  // 正在跑批 approve_target
 
+defined('TARGET_MSG_NOT_CREDIT_STANDARD') OR define('TARGET_MSG_NOT_CREDIT_STANDARD', '未符合信保標準');
+defined('TARGET_MSG_BANK_NOT_APPROVED') OR define('TARGET_MSG_BANK_NOT_APPROVED', '銀行未核准');
+
 // Target certificate_status
 defined('TARGET_CERTIFICATE_DEFAULT') OR define('TARGET_CERTIFICATE_DEFAULT', 0); // 預設，尚未一鍵送出
 defined('TARGET_CERTIFICATE_SUBMITTED') OR define('TARGET_CERTIFICATE_SUBMITTED', 1); // 已一鍵送出，信用評估中
@@ -387,18 +411,28 @@ defined('FOREX_CAR_DEALER') or define('FOREX_CAR_DEALER', 2); //外匯車商
 defined('BORROWER') or define('BORROWER', '0');
 defined('INVESTOR') or define('INVESTOR', '1');
 
+// product['type'] : 類型
 defined('PRODUCT_TYPE_NORMAL') or define('PRODUCT_TYPE_NORMAL', 1);                 // 一般貸類型
 defined('PRODUCT_TYPE_ORDER') or define('PRODUCT_TYPE_ORDER', 2);                   // 消費貸類型
+
+// product['identity'] : 身份
+defined('PRODUCT_IDENTITY_STUDENT') or define('PRODUCT_IDENTITY_STUDENT', 1);         // 學生
+defined('PRODUCT_IDENTITY_WORKER') or define('PRODUCT_IDENTITY_WORKER', 2);           // 上班族
+defined('PRODUCT_IDENTITY_CORPORATION') or define('PRODUCT_IDENTITY_CORPORATION', 3); // 法人
+
+// product['id']
 defined('PRODUCT_ID_STUDENT') or define('PRODUCT_ID_STUDENT', 1);                   // 學生貸
 defined('PRODUCT_ID_STUDENT_ORDER') or define('PRODUCT_ID_STUDENT_ORDER', 2);       // 學生手機貸款
 defined('PRODUCT_ID_SALARY_MAN') or define('PRODUCT_ID_SALARY_MAN', 3);             // 上班族貸
 defined('PRODUCT_ID_SALARY_MAN_ORDER') or define('PRODUCT_ID_SALARY_MAN_ORDER', 4); // 上班族消費貸
-defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000); //外匯車商
-defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002); //普匯微企e秒貸(新光)
+defined('PRODUCT_ID_HOME_LOAN') or define('PRODUCT_ID_HOME_LOAN', 5);               // 房貸
+defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000);  // 外匯車商
+defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002);      // 普匯信保專案融資
 
 defined('PRODUCT_FOR_JUDICIAL') or define('PRODUCT_FOR_JUDICIAL', 1000); //法人產品ID範圍
-defined('PRODUCT_TAB_INDIVIDUAL') or define('PRODUCT_TAB_INDIVIDUAL', 'individual'); // 個金產品類型名稱
+defined('PRODUCT_TAB_INDIVIDUAL') or define('PRODUCT_TAB_INDIVIDUAL', 'individual'); // 個金產品類型名稱 (除房產消費貸)
 defined('PRODUCT_TAB_ENTERPRISE') or define('PRODUCT_TAB_ENTERPRISE', 'enterprise'); // 企金產品類型名稱
+defined('PRODUCT_TAB_HOME_LOAN') or define('PRODUCT_TAB_HOME_LOAN', 'home_loan'); // 房產消費貸產品類型名稱
 
 // sub-product
 defined('SUB_PRODUCT_GENERAL') or define('SUB_PRODUCT_GENERAL', 0); // 一般貸款
@@ -406,6 +440,11 @@ defined('SUBPRODUCT_INTELLIGENT_STUDENT') or define('SUBPRODUCT_INTELLIGENT_STUD
 defined('SUB_PRODUCT_ID_SALARY_MAN_CAR') or define('SUB_PRODUCT_ID_SALARY_MAN_CAR', 7); // 上班族貸(購車)
 defined('SUB_PRODUCT_ID_SALARY_MAN_HOUSE') or define('SUB_PRODUCT_ID_SALARY_MAN_HOUSE', 8); // 上班族貸(購房)
 defined('SUB_PRODUCT_ID_SALARY_MAN_RENOVATION') or define('SUB_PRODUCT_ID_SALARY_MAN_RENOVATION', 9); // 上班族貸(裝修)
+defined('SUB_PRODUCT_ID_HOME_LOAN_SHORT') or define('SUB_PRODUCT_ID_HOME_LOAN_SHORT', 10); // 房貸(不足額)
+defined('SUB_PRODUCT_ID_HOME_LOAN_RENOVATION') or define('SUB_PRODUCT_ID_HOME_LOAN_RENOVATION', 11); // 房貸(裝修)
+defined('SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES') or define('SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES', 12); // 房貸(家電)
+defined('SUB_PRODUCT_ID_SK_MILLION') or define('SUB_PRODUCT_ID_SK_MILLION', 5002); // 普匯信保專案融資(微企貸)
+defined('SUB_PRODUCT_ID_CREDIT_INSURANCE') or define('SUB_PRODUCT_ID_CREDIT_INSURANCE', 5003); // 普匯信保專案融資(擴大信保)
 
 defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN'		, 1000); //最小投資額
 defined('TARGET_AMOUNT_MAX_COMPANY') or define('TARGET_AMOUNT_MAX_COMPANY', 500000); // 法人最大投資額
@@ -518,6 +557,10 @@ defined('VESTA_ENDPOINT')           OR define('VESTA_ENDPOINT'          , getenv
 defined('SKBANK_API_SOURCE')        OR define('SKBANK_API_SOURCE'       , getenv('ENV_SKBANK_API_SOURCE'));
 defined('SKBANK_LOAN_ENDPOINT')     OR define('SKBANK_LOAN_ENDPOINT'    , getenv('ENV_SKBANK_LOAN_ENDPOINT'));
 
+//凱基
+defined('KGIBANK_LOAN_ENDPOINT')     OR define('KGIBANK_LOAN_ENDPOINT'    , getenv('ENV_KGIBANK_LOAN_ENDPOINT'));
+defined('KGIBANK_LOAN_KEYID')     OR define('KGIBANK_LOAN_KEYID'    , getenv('ENV_KGIBANK_LOAN_KEYID'));
+
 //台新
 defined('TAISHIN_VIRTUAL_CODE')     OR define('TAISHIN_VIRTUAL_CODE'	, getenv('ENV_TAISHIN_VIRTUAL_CODE'));
 defined('TAISHIN_CUST_ACCNO')     OR define('TAISHIN_CUST_ACCNO'	, getenv('ENV_TAISHIN_CUST_ACCNO'));
@@ -617,6 +660,7 @@ defined('UnknownMethod')  	            OR define('UnknownMethod'		        , 360)
 defined('ItemNotFound')  	            OR define('ItemNotFound'		        , 361);//商品不存在
 defined('ApplyFail')  	                OR define('ApplyFail'		            , 362);//訂單建立失敗
 defined('CooperationAccountNotFound') OR define('CooperationAccountNotFound' , 363);//法人帳號不存在
+defined('SUB_SYSTEM_REQUEST_ERROR') OR define('SUB_SYSTEM_REQUEST_ERROR' , 364); // 無法訪問子系統
 
 defined('COOPER_ID')   			OR define('COOPER_ID'				, getenv('ENV_COOPER_ID'));
 defined('COOPER_KEY')   			OR define('COOPER_KEY'				, getenv('ENV_COOPER_KEY'));
@@ -642,6 +686,8 @@ defined('ENV_NOTIFICATION_REQUEST_URL')  OR define('ENV_NOTIFICATION_REQUEST_URL
 
 // 普匯OCR子系統
 defined('INFLUX_OCR_ENDPOINT')      OR define('INFLUX_OCR_ENDPOINT'     , getenv('ENV_INFLUX_OCR_ENDPOINT'));
+defined('CERT_OCR_HOME_LOAN_BOOKING_PORT')      OR define('CERT_OCR_HOME_LOAN_BOOKING_PORT'     , getenv('CERT_OCR_HOME_LOAN_BOOKING_PORT'));
+defined('CERT_OCR_HOME_LOAN_PORT')      OR define('CERT_OCR_HOME_LOAN_PORT'     , getenv('CERT_OCR_HOME_LOAN_PORT'));
 
 // legal document automatically
 defined('ENV_ANUBIS_ENDPOINT')  OR define('ENV_ANUBIS_ENDPOINT' , getenv('ENV_ANUBIS_ENDPOINT'));
@@ -683,11 +729,17 @@ defined('USER_BORROWER') OR define('USER_BORROWER', 0);
 defined('USER_INVESTOR') OR define('USER_INVESTOR', 1);
 
 // promote code
-defined('PROMOTE_STATUS_DISABLED') OR define('PROMOTE_STATUS_DISABLED', 0);
-defined('PROMOTE_STATUS_AVAILABLE') OR define('PROMOTE_STATUS_AVAILABLE', 1);
-defined('PROMOTE_STATUS_PENDING_TO_SENT') OR define('PROMOTE_STATUS_PENDING_TO_SENT', 2);
-defined('PROMOTE_STATUS_PENDING_TO_VERIFY') OR define('PROMOTE_STATUS_PENDING_TO_VERIFY', 3);
+// status
+defined('PROMOTE_STATUS_DISABLED') OR define('PROMOTE_STATUS_DISABLED', 0); // 失效
+defined('PROMOTE_STATUS_AVAILABLE') OR define('PROMOTE_STATUS_AVAILABLE', 1); // 啟用 (可提領)
+defined('PROMOTE_STATUS_PENDING_TO_SENT') OR define('PROMOTE_STATUS_PENDING_TO_SENT', 2); // 待送出審核
+defined('PROMOTE_STATUS_PENDING_TO_VERIFY') OR define('PROMOTE_STATUS_PENDING_TO_VERIFY', 3); // 審核中
 defined('PROMOTE_STATUS_CAN_SIGN_CONTRACT') OR define('PROMOTE_STATUS_CAN_SIGN_CONTRACT', 4);
+
+// sub_status
+defined('PROMOTE_SUB_STATUS_DEFAULT') OR define('PROMOTE_SUB_STATUS_DEFAULT', 0); // 預設狀態
+defined('PROMOTE_SUB_STATUS_EMAIL_SUCCESS') OR define('PROMOTE_SUB_STATUS_EMAIL_SUCCESS', 1); // 申請成功
+defined('PROMOTE_SUB_STATUS_PENDING_TO_VERIFY_EMAIL') OR define('PROMOTE_SUB_STATUS_PENDING_TO_VERIFY_EMAIL', 2); // 送出申請，待驗證
 
 defined('PROMOTE_COLLABORATOR_DISABLED') OR define('PROMOTE_COLLABORATOR_DISABLED', 0);
 defined('PROMOTE_COLLABORATOR_AVAILABLE') OR define('PROMOTE_COLLABORATOR_AVAILABLE', 1);
@@ -700,7 +752,33 @@ defined('PROMOTE_REWARD_STATUS_TO_BE_PAID') OR define('PROMOTE_REWARD_STATUS_TO_
 defined('PROMOTE_REWARD_STATUS_PAID_OFF') OR define('PROMOTE_REWARD_STATUS_PAID_OFF', 2);
 
 defined('PROMOTE_GENERAL_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_CONTRACT_TYPE_NAME', "qrcode_general");
+defined('PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME', "qrcode_general_v2");
+defined('PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL') OR define('PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_NATURAL', "qrcode_general_v2_natural"); // 一般經銷商 (自然人)
+defined('PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL') OR define('PROMOTE_GENERAL_V2_CONTRACT_TYPE_NAME_JUDICIAL', "qrcode_general_v2_judicial"); // 一般經銷商 (法人)
 defined('PROMOTE_APPOINTED_CONTRACT_TYPE_NAME') OR define('PROMOTE_APPOINTED_CONTRACT_TYPE_NAME', "qrcode_appointed");
+defined('PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL') OR define('PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_NATURAL', "qrcode_appointed_v2_natural"); // 特約通路商 (自然人)
+defined('PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL') OR define('PROMOTE_APPOINTED_V2_CONTRACT_TYPE_NAME_JUDICIAL', "qrcode_appointed_v2_judicial"); // 特約通路商 (法人)
+
+defined('PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_FULL_V1_CONTRACT_TYPE_NAME', "qrcode_general_full");
+defined('PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_AMT_V1_CONTRACT_TYPE_NAME', "qrcode_general_amount");
+defined('PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_PERCT_V1_CONTRACT_TYPE_NAME', "qrcode_general_percent");
+defined('PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_FULL_AMT_V1_CONTRACT_TYPE_NAME', "qrcode_general_full_amount");
+defined('PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_FULL_PERCT_V1_CONTRACT_TYPE_NAME', "qrcode_general_full_percent");
+defined('PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME') OR define('PROMOTE_APPOINTED_AMT_CONTRACT_TYPE_NAME', "qrcode_appointed_amount");
+defined('PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME') OR define('PROMOTE_APPOINTED_PERCT_CONTRACT_TYPE_NAME', "qrcode_appointed_percent");
+defined('PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME') OR define('PROMOTE_APPOINTED_FULL_AMT_CONTRACT_TYPE_NAME', "qrcode_appointed_full_amount");
+defined('PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME') OR define('PROMOTE_APPOINTED_FULL_PERCT_CONTRACT_TYPE_NAME', "qrcode_appointed_full_percent");
+
+// subcode
+// status
+defined('PROMOTE_SUBCODE_STATUS_DISABLED') OR define('PROMOTE_SUBCODE_STATUS_DISABLED', 0); // 失效
+defined('PROMOTE_SUBCODE_STATUS_AVAILABLE') OR define('PROMOTE_SUBCODE_STATUS_AVAILABLE', 1); // 啟用
+// sub_status
+defined('PROMOTE_SUBCODE_SUB_STATUS_DEFAULT') OR define('PROMOTE_SUBCODE_SUB_STATUS_DEFAULT', 0); // 預設狀態
+defined('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE') OR define('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE', 1); // 二級經銷商申請退出 (待特約通路商同意)
+defined('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD') OR define('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD', 2); // 特約通路商加入二級經銷商 (待其同意成為二級經銷商)
+defined('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ') OR define('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ', 3); // 特約通路商刪除二級經銷商，待二級經銷商閱讀 (即便二級經銷商未閱讀，刪除關係依然生效)
+defined('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT') OR define('PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_REJECT', 4); // 受邀方拒絕特約通路商成為二級經銷商，待特約經銷商閱讀 (即便特約經銷商未閱讀，拒絕關係依然生效)')
 
 defined('CHARITY_RECEIPT_TYPE_SINGLE_PAPER') OR define('CHARITY_RECEIPT_TYPE_SINGLE_PAPER', 0);
 
@@ -751,6 +829,7 @@ defined('PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP') OR define('PROMOTE_REVIEW_ST
 defined('PROMOTE_REVIEW_STATUS_SUCCESS') OR define('PROMOTE_REVIEW_STATUS_SUCCESS', 1);
 defined('PROMOTE_REVIEW_STATUS_WITHDRAW') OR define('PROMOTE_REVIEW_STATUS_WITHDRAW', 2);
 defined('PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW') OR define('PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW', 3);
+// subcode_flag
 defined('IS_NOT_PROMOTE_SUBCODE') OR define('IS_NOT_PROMOTE_SUBCODE', 0);
 defined('IS_PROMOTE_SUBCODE') OR define('IS_PROMOTE_SUBCODE', 1);
 // target_associates table status
@@ -811,3 +890,7 @@ defined('MAPPING_MSG_NO_BANK_NUM_KGIBANK') or define('MAPPING_MSG_NO_BANK_NUM_KG
 defined('INDUSTRY_CODE_MANUFACTURING') or define('INDUSTRY_CODE_MANUFACTURING', 1);
 defined('INDUSTRY_CODE_MERCHANDISING_SECTOR') or define('INDUSTRY_CODE_MERCHANDISING_SECTOR', 2);
 defined('INDUSTRY_CODE_SERVICE') or define('INDUSTRY_CODE_SERVICE', 3);
+
+// 企金產品對應的送件檢核表目錄
+defined('VIEW_SUB_PRODUCT_ID_SK_MILLION') or define('VIEW_SUB_PRODUCT_ID_SK_MILLION', 'sk_million');
+defined('VIEW_SUB_PRODUCT_ID_CREDIT_INSURANCE') or define('VIEW_SUB_PRODUCT_ID_CREDIT_INSURANCE', 'credit_insurance');

@@ -20,7 +20,9 @@ class PersonalCreditSheet extends CreditSheetBase {
 
     // 允許承作的產品類別列表
     public const ALLOW_PRODUCT_LIST = [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER,
-        PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
+        PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER,
+        PRODUCT_ID_HOME_LOAN
+    ];
 
     // 最終核准層次
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
@@ -141,6 +143,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             case PRODUCT_ID_STUDENT:
                 return -1500;
             case PRODUCT_ID_SALARY_MAN:
+            case PRODUCT_ID_HOME_LOAN:
                 return -1000;
             default:
                 return 0;
@@ -154,6 +157,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             case PRODUCT_ID_STUDENT:
                 return 2000;
             case PRODUCT_ID_SALARY_MAN:
+            case PRODUCT_ID_HOME_LOAN:
                 return 1000;
             default:
                 return 0;
@@ -166,6 +170,8 @@ class PersonalCreditSheet extends CreditSheetBase {
         {
             case PRODUCT_ID_SALARY_MAN:
                 return 1000;
+            case PRODUCT_ID_HOME_LOAN:
+                return 30000;
             default:
                 return 0;
         }
@@ -176,12 +182,15 @@ class PersonalCreditSheet extends CreditSheetBase {
         switch ($product_id)
         {
             case PRODUCT_ID_SALARY_MAN:
+            case PRODUCT_ID_HOME_LOAN:
                 $this->CI->load->library('credit_lib');
                 $credit = $this->CI->credit_lib->get_credit($this->user->id, $product_id, $this->target->sub_product_id);
                 if (isset($credit) && isset($credit['amount']) && $credit['amount'] > 20000) {
                     return $credit['amount'];
                 }
-                return 20000;
+                return $product_id == PRODUCT_ID_HOME_LOAN ? 1000000 : 20000;
+            // case PRODUCT_ID_HOME_LOAN:
+            //     return 1000000;
             default:
                 return 0;
         }
