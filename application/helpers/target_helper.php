@@ -47,22 +47,6 @@ function convertARSourceToChargeSource($ARSource) : int {
 }
 
 /**
- * 確認是否有待核可案件已一鍵送出
- * @param $user_id
- * @return mixed
- */
-function exist_approving_target_submitted($user_id)
-{
-    $CI =& get_instance();
-    $CI->load->model('loan/target_model');
-    return $CI->target_model->chk_exist_by_status([
-        'user_id' => $user_id,
-        'status' => TARGET_WAITING_APPROVE,
-        'certificate_status' => [TARGET_CERTIFICATE_SUBMITTED, TARGET_CERTIFICATE_RE_SUBMITTING]
-    ]);
-}
-
-/**
  * 確認待核可案件的提交狀態是否已提交過一次
  * @param int $target_status
  * @param int $target_cert_status : 提交狀態 (target.certificate_status)
@@ -80,5 +64,17 @@ function chk_target_submitted(int $target_status, int $target_cert_status): bool
             return TRUE;
         default:
             return FALSE;
+    }
+}
+
+function get_bank_prefix($bank_num): string
+{
+    switch ($bank_num) {
+        case MAPPING_MSG_NO_BANK_NUM_KGIBANK:
+            return 'kgibank';
+        case MAPPING_MSG_NO_BANK_NUM_SKBANK:
+        default:
+            return 'skbank';
+
     }
 }

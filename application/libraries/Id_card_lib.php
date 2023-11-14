@@ -131,6 +131,37 @@ class Id_card_lib {
 	 * )
 	 */
 	public function send_request($personId = '', $applyCode = '初發', $applyYyymmdd = '', $issueSiteId = '', $userId="inFlux001"){
+		
+		// 若為測試環境，戶役政回傳驗證通過，以利測試進行（測試站實名多為假資料）
+		if (ENVIRONMENT == 'development') {
+			$result = [
+				'status' => '200',
+				'response' => [
+					'request' =>[
+						'personId' => $personId,
+						'applyCode' => $applyCode,
+						'applyYyymmdd' => $applyYyymmdd,
+						'issueSiteId' => $issueSiteId
+					],
+					'response'=>[
+						'rowData' => [
+							"httpCode" => "200",
+							"httpMessage" => "OK",
+							"rdCode" => "RS7009",
+					"rdMessage" => "查詢作業完成",
+							"responseData" => [
+								"checkIdCardApply" => "1"
+							]
+						],
+						'checkIdCardApplyFormat' => '國民身分證資料與檔存資料相符'
+					],
+				]
+			];
+
+			return $result;
+		}
+
+
 		$result = [
 			'status' => '500',
 			'response' => [

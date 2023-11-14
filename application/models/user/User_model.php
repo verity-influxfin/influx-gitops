@@ -39,6 +39,7 @@ class User_model extends MY_Model
 	protected function before_data_c($data)
     {
 		$data['password'] 	= sha1($data['password']);
+        ! isset($data['user_id']) ?: $data['user_id'] = sha1($data['user_id']);
         $data['created_at'] = $data['updated_at'] = time();
         $data['created_ip'] = $data['updated_ip'] = get_ip();
         return $data;
@@ -49,6 +50,10 @@ class User_model extends MY_Model
 		if(isset($data['password']) && !empty($data['password'])){
 			$data['password'] 	= sha1($data['password']);
 		}
+        if (isset($data['user_id']) && ! empty($data['user_id']))
+        {
+            $data['user_id'] = sha1($data['user_id']);
+        }
 		
 		if(isset($data['transaction_password']) && !empty($data['transaction_password'])){
 			$data['transaction_password'] 	= sha1($data['transaction_password']);
