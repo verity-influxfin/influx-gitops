@@ -171,14 +171,23 @@ class Sns extends REST_Controller {
                 $attachments = $parser->getAttachments();
                 $certification_id = ($re_job_mail === false) ? 9 : 10;
                 $detail['certification_id'] = $certification_id;
+                $where = [
+                    'investor' => USER_BORROWER,
+                    'certification_id' => CERTIFICATION_EMAIL,
+                    'status' => CERTIFICATION_STATUS_SUCCEED,
+                    "TRIM(BOTH '\"' FROM LOWER(JSON_EXTRACT(`content`, '$.email'))) = " => strtolower($mail_from)
+                ];
 
+                $text = $parser->getMessageBody('text');
+                // 如果回信內容有改記得回來改這邊
+                $pattern = ($re_job_mail === false) ? '/親愛的(\d+)/' : '/使用者編號 (\d+)/';
+                if (preg_match($pattern, $text, $matches)) {
+
+                    $userId = $matches[1];
+                    $where['user_id'] = $userId;
+                }
                 $cert_info = $this->user_certification_model->order_by('created_at', 'desc')
-                    ->get_by([
-                        'investor' => USER_BORROWER,
-                        'certification_id' => CERTIFICATION_EMAIL,
-                        'status' => CERTIFICATION_STATUS_SUCCEED,
-                        "TRIM(BOTH '\"' FROM LOWER(JSON_EXTRACT(`content`, '$.email'))) = " => strtolower($mail_from)
-                    ]);
+                    ->get_by($where);
                 if (!isset($cert_info) || ($re_investigation_mail === false && $re_job_mail === false)) {
                     // 沒有找到對應使用者和勞保聯徵標題關鍵字
                     $detail['remark'] = "沒有找到對應使用者和勞保聯徵標題關鍵字，轉為不明檔案";
