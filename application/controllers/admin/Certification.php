@@ -597,7 +597,7 @@ class Certification extends MY_Admin_Controller {
 					$allowed  = ['return_type', 'mail_file_status'];
 					$filtered = array_filter(
 						$content,
-						fn ($key) => in_array($key, $allowed),
+						function ($key) use ($allowed) {return in_array($key, $allowed);},
 						ARRAY_FILTER_USE_KEY
 					);
 					$content = $filtered;
