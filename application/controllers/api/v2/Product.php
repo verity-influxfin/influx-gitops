@@ -3643,7 +3643,9 @@ class Product extends REST_Controller {
             && $target->sub_status != 8
             && $bank_account->verify == 1) {
             $targetData = json_decode($target->target_data);
-            $faceDetect = !isset($targetData->autoVerifyLog) ?? count($targetData->autoVerifyLog) < 2;
+            $faceDetect = isset($targetData->autoVerifyLog)
+            ? count($targetData->autoVerifyLog) < 2
+            : true;
             if ($faceDetect) {
                 $this->load->library('certification_lib');
                 log_message('debug', '-- Before verify signing face: ' . time() . ' --');
