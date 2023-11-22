@@ -1215,7 +1215,7 @@ class Cron extends CI_Controller
             $bank_account = $this->user_bankaccount_model->get_by([
                 'status'    => 1,
                 'investor'    => 0,
-                //'verify'	=> 0,
+                'verify'	=> 1,
                 'user_id'    => $target->user_id
             ]);
             if (empty($bank_account)) {
