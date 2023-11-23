@@ -568,7 +568,7 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             $input 		= $this->input->post(NULL, TRUE);
-            log_message('INFO', json_encode($input));
+            log_message('debug', json_encode($input));
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
