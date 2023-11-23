@@ -568,6 +568,7 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             $input 		= $this->input->post(NULL, TRUE);
+            log_message('debug', json_encode($input));
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
@@ -647,6 +648,7 @@ class Certification extends REST_Controller {
                 'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
                 'certificate_status' => $this->target_lib->is_associate($user_id) ? 1 : 0
 			);
+            log_message('debug', json_encode($param));
 			$insert = $this->user_certification_model->insert($param);
 			if($insert)
             {
