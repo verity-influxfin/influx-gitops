@@ -936,8 +936,12 @@ class Target_model extends MY_Model
     {
         $this->db->select('source, status, target_id, user_to, amount')
             ->from("`p2p_transaction`.`transactions`")
-            ->where('status', TRANSACTION_STATUS_TO_BE_PAID)
-            ->where('user_to', $userId);
+            ->where('status', TRANSACTION_STATUS_TO_BE_PAID);
+
+        if (!empty($userId)){
+            $this->db->where('user_to', $userId);
+        }
+        
         if ( ! empty($sourceList))
         {
             $this->db->where_in('source', $sourceList);
