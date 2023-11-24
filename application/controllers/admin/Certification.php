@@ -582,6 +582,49 @@ class Certification extends MY_Admin_Controller {
 				$this->user_certification_model->update($id,['content
 				'=>json_encode($content)]);
 				alert('更新成功','user_certification_edit?id='.$id);
+			}elseif(!empty($post['delete_pdf_file'])){
+				$this->load->model('user/user_certification_ocr_task_model');
+				$id = $post['id'];
+				$pdf_file = $post['delete_pdf_file'];
+				$info = $this->user_certification_model->get($id);
+				$content = json_decode($info->content,true);
+				$remark = json_decode($info->remark,true);
+				
+				if ($content['pdf_file'] == $pdf_file){
+					$this->user_certification_model->trans_begin();
+					$this->user_certification_ocr_task_model->trans_begin();
+					
+					$allowed  = ['return_type', 'mail_file_status'];
+					$filtered = array_filter(
+						$content,
+						function ($key) use ($allowed) {return in_array($key, $allowed);},
+						ARRAY_FILTER_USE_KEY
+					);
+					$content = $filtered;
+					$remark = array();
+
+					$this->user_certification_model->update($id,[
+						'content'=>json_encode($content),
+						'remark'=>json_encode($remark, JSON_FORCE_OBJECT)
+					]);
+					$this->user_certification_ocr_task_model->delete_by(['user_certification_id'=>$id]);
+					
+					if ($this->user_certification_model->trans_status() === TRUE &&
+						$this->user_certification_ocr_task_model->trans_status() === TRUE)
+						{
+						$this->user_certification_model->trans_commit();
+						$this->user_certification_ocr_task_model->trans_commit();
+						$this->user_certification_model->update($post['id'], [
+                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+                        ]);
+						alert('更新成功','user_certification_edit?id='.$id);
+					}else{
+						$this->user_certification_model->trans_rollback();
+						$this->user_certification_ocr_task_model->trans_rollback();
+						alert('更新失敗，請洽工程師','user_certification_edit?id='.$id);
+					}
+				}
+
 			}elseif(!empty($post['address'])){
 				$id = $post['id'];
 				$info = $this->user_certification_model->get($id);
