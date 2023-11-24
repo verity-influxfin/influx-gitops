@@ -1946,7 +1946,7 @@ class Product extends REST_Controller {
                 'order_info'            => $order_info,
                 'targetDatas' => $targetDatas,
                 'amount' 			    => intval($target->amount),
-                'loan_amount' 		    => intval($target->loan_amount),
+                'loan_amount'             =>  intval($target->status == 0 ? $target->amount : $target->loan_amount),
                 'platform_fee' 		    => intval($target->platform_fee),
                 'interest_rate' 	    => floatval($target->interest_rate),
                 'instalment' 		    => intval($target->instalment),
