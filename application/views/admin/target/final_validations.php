@@ -1576,6 +1576,21 @@
 				alert('資料載入失敗。請重新整理。');
 			}
 		});
+        $.ajax({
+            type: "GET",
+            url: "/admin/Target/get_credit_message?user_id=" + userId + "&target_id=" + caseId,
+            success:function (response){
+                if(response?.status?.code == 400){
+                    alert('查詢使用者是否薪資低於4萬，負債大於22倍失敗。請重新整理。');
+                    return;
+                }
+                let credit_message = response?.response?.message;
+                fillCreditMessage(credit_message);
+            },
+            error:function (error){
+                alert('查詢使用者是否薪資低於4萬，負債大於22倍，資料載入失敗。請重新整理。');
+            }
+        })
 
 		// 取得案件核貸資料
 		case_aprove_item = get_default_item(caseId);

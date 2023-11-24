@@ -2837,5 +2837,53 @@ class Target extends MY_Admin_Controller
         $this->target_lib->insert_change_log($target->id, $param, 0, $this->login_info->id);
         $this->json_output->setStatusCode(200)->setResponse(['success' => TRUE, 'msg' => '退件成功'])->send();
     }
+    public function get_credit_message()
+    {
+        $input = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+        $this->load->model('loan/target_model');
+        $this->load->model('user/user_certification_model');
+
+        $target_id = $input['target_id'];
+        $target = $this->target_model->get_by(['id' => $target_id]);
+        if ( !isset($target)) {
+            $this->json_output->setStatusCode(400)->setResponse(['error' => 'target not found'])->send();
+        }
+        if($target->loan_amount == 0){
+            $this->json_output->setStatusCode(200)->setResponse(["message" => ""])->send();
+        }
+        $userId = $target->user_id;
+        $past_targets = $this->target_model->get_many_by([
+            'user_id' => $userId,
+            'status' => [5, 10],
+        ]);
+        $is_new_user = count($past_targets) == 0;
+        $message = "";
+        // Todo: “新戶” (無申貸成功紀錄者) 且薪水四萬以下,
+        if ($is_new_user) {
+            $certification = $this->user_certification_model->get_by(['user_id' => $userId, 'certification_id' => 15]);
+            if (isset($certification) && $certification->status == 1) {
+                $content = json_decode($certification->content);
+                if (isset($content->monthly_repayment) && isset($content->total_repayment)) {
+                    $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
+                    $product_id = $target->product_id;
+                    // 上班族貸款
+                    if (in_array($product_id, [3, 4])) {
+                        $product = $this->config->item('product_list')[$product_id];
+                        if ($product['condition_rate']['salary_below'] > $content->monthly_repayment * 1000) {
+                            $credit["amount"] = $target->loan_amount;
+                            if ($liabilitiesWithoutAssureTotalAmount > $content->total_repayment * 1000) {
+                                $message = "該會員薪資低於4萬，負債大於22倍，系統給定信用額度為0~3000元；若需調整請至「額度調整 1000~20000」之欄位填寫額度";
+                            } else {
+                                $message = "該會員薪資低於4萬，負債小於22倍，系統給定信用額度為3000~10000元；若需調整請至「額度調整 1000~20000」之欄位填寫額度";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->json_output->setStatusCode(200)->setResponse(["message" => $message])->send();
+    }
 }
 ?>
