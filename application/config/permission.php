@@ -84,6 +84,7 @@ $config['permission'] = [
             'credits' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'final_validations' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'final_validations_detail' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'read'],
+            'get_credit_message' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'read'],
             'target_loan' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'update'],
             'target_loan_detail' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'read'],
             'subloan_success' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'update'],
