@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="http://www.facebook.com/2008/fbml">
 
 <head>
     <!-- Google Tag Manager -->
     <script>
-        (function(w, d, s, l, i) {
+        (function (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({
                 'gtm.start': new Date().getTime(),
@@ -58,8 +59,10 @@
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="keywords" content="新北產業發展論壇、一金二造三區域、信貸、小額貸款、房貸試算、裝潢貸款、車貸試算、投資、債務整合、p2p金融科技、智慧製造、中小企業、中小企業融資">
-    <meta property="og:description" content="{{ $meta_og_description ?? '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。' }}">
-    <meta name="description" content="{{ $meta_description ?? '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。' }}">
+    <meta property="og:description"
+        content="{{ $meta_og_description ?? '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。' }}">
+    <meta name="description"
+        content="{{ $meta_description ?? '普匯金融科技擁有全台首創風控審核無人化融資系統。普匯提供小額信用貸款申貸服務，資金用途涵蓋購房、購車，或是房屋裝修潢。您可在普匯官網取得貸款額度試算結果！現在就來體驗最新的p2p金融科技吧！除了個人信貸，普匯也提供中小企業融資，幫助業主轉型智慧製造。' }}">
     <meta property="og:site_name" content="inFlux普匯金融科技">
     <meta property="og:title" content="{{ $meta_og_title ?? 'inFlux普匯金融科技' }}">
     <meta name="google-site-verification" content="2arsm3rXMMsobi4wX5akzPpQO6-Q6zgUjqwIT0P9UKo" />
@@ -87,7 +90,7 @@
 
     <!--Facebook Comments-->
     <script>
-        (function(d, s, id) {
+        (function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
             js = d.createElement(s);
@@ -99,9 +102,9 @@
 
     <!-- Facebook Pixel Code -->
     <script>
-        ! function(f, b, e, v, n, t, s) {
+        (function (f, b, e, v, n, t, s) {
             if (f.fbq) return;
-            n = f.fbq = function() {
+            n = f.fbq = function () {
                 n.callMethod ?
                     n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
@@ -115,7 +118,7 @@
             t.src = v;
             s = b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
+        })(window, document, 'script',
             'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '2521369841313676');
         fbq('track', 'PageView');
@@ -140,18 +143,18 @@
     <!-- Event snippet for 借款、投資app下載 conversion page In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
     <!-- 借款：WE5GCNWzgpoCEKXzrcoC 投資：vcdCCJyj_ZkCEKXzrcoC -->
     <script>
-        window.addEventListener("load", function(event) {
-            setTimeout(function() {
-                document.querySelectorAll("a[href*='investLink']").forEach(function(e) {
-                    e.addEventListener('click', function() {
+        window.addEventListener("load", function (event) {
+            setTimeout(function () {
+                document.querySelectorAll("a[href*='investLink']").forEach(function (e) {
+                    e.addEventListener('click', function () {
                         gtag('event', 'conversion', {
                             'send_to': 'AW-692812197/vcdCCJyj_ZkCEKXzrcoC'
                         });
                     });
                 });
 
-                document.querySelectorAll("a[href*='borrowLink']").forEach(function(e) {
-                    e.addEventListener('click', function() {
+                document.querySelectorAll("a[href*='borrowLink']").forEach(function (e) {
+                    e.addEventListener('click', function () {
                         gtag('event', 'conversion', {
                             'send_to': 'AW-692812197/WE5GCNWzgpoCEKXzrcoC'
                         });
@@ -164,7 +167,9 @@
 
 <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{env('APP_ENV') == 'production' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'}}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe
+            src="https://www.googletagmanager.com/ns.html?id={{env('APP_ENV') == 'production' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'}}"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <noscript>
         please turn on your jacascript
@@ -270,20 +275,20 @@
                                 <div class="function-list row no-gutters">
                                     <div class="col-auto d-flex no-gutters">
                                         <div class="function-list-content invest">
-                                        <div class="function-list-items">
-                                            <div class="link-title">小額分散 複利滾投</div>
-                                            <div class="link-item">
-                                                <a href="/investment" class="link-text">債權投資</a>
-                                            </div>
-                                            <div class="link-item">
-                                                <a href="/transfer" class="link-text">債權轉讓</a>
-                                            </div>
-                                            <div class="link-item">
-                                                <a href="/risk" class="link-text">風險報告書</a>
-                                            </div>
-                                            <div class="link-item">
-                                                <a href="/projects" class="link-text">查看案件</a>
-                                            </div>
+                                            <div class="function-list-items">
+                                                <div class="link-title">小額分散 複利滾投</div>
+                                                <div class="link-item">
+                                                    <a href="/investment" class="link-text">債權投資</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/transfer" class="link-text">債權轉讓</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/risk" class="link-text">風險報告書</a>
+                                                </div>
+                                                <div class="link-item">
+                                                    <a href="/projects" class="link-text">查看案件</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -351,6 +356,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- end 小學堂 -->
+                            <!-- selfieauth logo -->
+                            <div class="function-item">
+                                <div class="function-title">
+                                    <a class="link-text" href="/selfieauth">
+                                        【SelfieAuth-持證自拍專利系統】
+                                        <!-- <img src="/images/SelfieAuth-logo.png" alt="SelfieAuth" width="100" /> -->
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- end logo -->
                         </div>
                         <div class="col"></div>
                         <div class="col-auto d-flex">
@@ -358,19 +374,26 @@
                                 <img src="/images/search-icon-blue.svg" alt="">
                             </div>
                             <div class="search-group" :class="{inputing}">
-                                <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText" @keyup.enter="doSearch" />
+                                <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText"
+                                    @keyup.enter="doSearch" />
                                 <div class="clear-icon" @click="doClear">x</div>
                             </div>
                             <div class="item ml-3 d-flex align-items-center">
-                                <button @click="openLoginModal" class="login-btn btn d-none" :class="{'d-block':!flag || flag === 'logout'}">註冊/登入<i class="ml-2 fa fa-arrow-right"></i></button>
-                                <div class="nav-item dropdown d-none" :class="{'d-block':Object.keys(userData).length !== 0}">
-                                    <a class="nav-link dropdown-toggle" style="color: #036EB7;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
+                                <button @click="openLoginModal" class="login-btn btn d-none"
+                                    :class="{'d-block':!flag || flag === 'logout'}">註冊/登入<i
+                                        class="ml-2 fa fa-arrow-right"></i></button>
+                                <div class="nav-item dropdown d-none"
+                                    :class="{'d-block':Object.keys(userData).length !== 0}">
+                                    <a class="nav-link dropdown-toggle" style="color: #036EB7;" href="#"
+                                        data-toggle="dropdown">您好 @{{userData.name}}</a>
                                     <ul class="dropdown-menu" style="min-width: 5rem;">
                                         <li v-if="isInvestor == 0">
-                                            <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
+                                            <router-link class="dropdown-item loan-link"
+                                                to="/loannotification">借款人</router-link>
                                         </li>
                                         <li v-else>
-                                            <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
+                                            <router-link class="dropdown-item invest-link"
+                                                to="/investnotification">投資人</router-link>
                                         </li>
                                         <li v-if="flag === 'login'">
                                             <p class="dropdown-item" @click="logout">登出</p>
@@ -385,7 +408,8 @@
                             <img src="/images/search-icon-blue.svg" alt="">
                         </div>
                         <div class="search-group" :class="{inputing}">
-                            <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText" @keyup.enter="doSearch" />
+                            <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText"
+                                @keyup.enter="doSearch" />
                             <div class="clear-icon" @click="doClear">x</div>
                         </div>
                         <div class="bar icon-hamburger">
@@ -457,7 +481,8 @@
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <a href="/charitable" class="item">慈善公益</a>
                 <div class="item">
-                    <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login-btn btn">註冊/登入<i class="ml-2 fa fa-arrow-right"></i></button>
+                    <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login-btn btn">註冊/登入<i
+                            class="ml-2 fa fa-arrow-right"></i></button>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                         <ul class="dropdown-menu" style="min-width: 5rem;">
@@ -465,7 +490,8 @@
                                 <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
                             </li>
                             <li v-else>
-                                <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
+                                <router-link class="dropdown-item invest-link"
+                                    to="/investnotification">投資人</router-link>
                             </li>
                             <li v-if="flag === 'login'">
                                 <p class="dropdown-item" @click="logout">登出</p>
@@ -565,15 +591,20 @@
                                     <a href="tel:+886225082897" target="_blank">02-2508-2897</a>
                                 </div>
                                 <div class="icon"><img src="/images/alesis-email.svg"></div>
-                                <div class="text"><a href="mailto:service@influxfin.com" target="_blank">service@influxfin.com</a></div>
+                                <div class="text"><a href="mailto:service@influxfin.com"
+                                        target="_blank">service@influxfin.com</a></div>
 
                                 <div class="icon"><img src="/images/alesis-address.svg"></div>
-                                <div class="text"><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank">台北市中山區松江路111號11樓之1</a></div>
+                                <div class="text"><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8"
+                                        target="_blank">台北市中山區松江路111號11樓之1</a></div>
                             </div>
                             <div class="socials">
-                                <a href="https://m.facebook.com/inFluxtw/" target="_blank" class="item"><img src="/images/alesis-facebook.svg"></a>
-                                <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank" class="item"><img src="/images/alesis-line.svg"></a>
-                                <a href="https://www.instagram.com/pop.finance/" target="_blank" class="item"><img src="/images/alesis-instagram.svg"></a>
+                                <a href="https://m.facebook.com/inFluxtw/" target="_blank" class="item"><img
+                                        src="/images/alesis-facebook.svg"></a>
+                                <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank" class="item"><img
+                                        src="/images/alesis-line.svg"></a>
+                                <a href="https://www.instagram.com/pop.finance/" target="_blank" class="item"><img
+                                        src="/images/alesis-instagram.svg"></a>
                             </div>
                         </div>
                     </div>
@@ -597,7 +628,10 @@
                         <a href="/companycooperation" class="item">企業合作</a> |
                         <a href="/promote-code-intro" class="item">推薦有賞</a>
                     </div>
-                    <div class="externals" v-if="isBussinessPage">
+                    <div class="externals" v-if="isSelfieAuthPage">
+                        <a class="item" href="https://lin.ee/zGn3UYp">合作洽詢</a>
+                    </div>
+                    <div class="externals" v-else-if="isBussinessPage">
                         <a class="item" href="/borrowLink">我想申貸</a>
                         <a class="item -invest" href="/investLink">我想投資</a>
                     </div>
@@ -611,7 +645,8 @@
 
 
         <!--<a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>-->
-        <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+            aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div v-if="isReset" id="forgetPwdModal" class="modal-content">
                     <div class="modal-header">
@@ -621,21 +656,26 @@
                     <div class="modal-body">
                         <div class="input-group">
                             <span class="input-group-addon label-text">手機：</span>
-                            <input type="text" class="form-control label-input" placeholder="請輸入綁定之手機號碼" v-model="phone" maxlength="10">
+                            <input type="text" class="form-control label-input" placeholder="請輸入綁定之手機號碼" v-model="phone"
+                                maxlength="10">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text">新密碼：</span>
-                            <input type="password" class="form-control label-input" placeholder="請輸入新密碼" v-model="newPassword" maxlength="50">
+                            <input type="password" class="form-control label-input" placeholder="請輸入新密碼"
+                                v-model="newPassword" maxlength="50">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text">再次輸入新密碼：</span>
-                            <input type="password" class="form-control label-input" placeholder="請再次輸入新密碼" v-model="confirmPassword" maxlength="50">
+                            <input type="password" class="form-control label-input" placeholder="請再次輸入新密碼"
+                                v-model="confirmPassword" maxlength="50">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text">驗證碼：</span>
                             <div class="captcha-row">
-                                <input type="text" class="form-control label-input" placeholder="請輸入6位數驗證碼" v-model="code" maxlength="6">
-                                <button class="btn btn-captcha" @click="getCaptcha('smsloginphone')" v-if="!isSended">取得驗證碼</button>
+                                <input type="text" class="form-control label-input" placeholder="請輸入6位數驗證碼"
+                                    v-model="code" maxlength="6">
+                                <button class="btn btn-captcha" @click="getCaptcha('smsloginphone')"
+                                    v-if="!isSended">取得驗證碼</button>
                                 <div class="btn btn-disable" v-if="isSended">@{{counter}}S有效</div>
                                 <span class="tip" v-if="isSended">驗證碼已寄出</span>
                             </div>
@@ -643,42 +683,54 @@
                     </div>
                     <div class="alert alert-danger" v-if="pwdMessage">@{{pwdMessage}}</div>
                     <div class="modal-footer">
-                        <div v-if="(phone && newPassword && confirmPassword && code) ? false : true" class="btn btn-disable">送出</div>
+                        <div v-if="(phone && newPassword && confirmPassword && code) ? false : true"
+                            class="btn btn-disable">送出</div>
                         <button type="button" v-else class="btn btn-submit" @click="submit">送出</button>
                     </div>
                 </div>
                 <div v-if="!isReset" id="loginModal" class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" @click="clearInterval(timer);">✕</button>
+                        <button type="button" class="close" data-dismiss="modal"
+                            @click="clearInterval(timer);">✕</button>
                         <div class="login-logo"><img src="/images/logo_puhey.svg" class="img-fluid"></div>
                     </div>
                     <div class="modal-body">
                         <div class="input-group" v-if="!loginHideOption">
-                            <button type="button" :class="['btn','btn-switch',{checked:!isCompany}]" @click="switchTag($event)">個人登入</button>
-                            <button type="button" :class="['btn','btn-switch',{checked:isCompany}]" @click="switchTag($event)">企業登入</button>
+                            <button type="button" :class="['btn','btn-switch',{checked:!isCompany}]"
+                                @click="switchTag($event)">個人登入</button>
+                            <button type="button" :class="['btn','btn-switch',{checked:isCompany}]"
+                                @click="switchTag($event)">企業登入</button>
                         </div>
                         <div class="input-group" v-if="isCompany">
                             <span class="input-group-addon label-text">公司統編：</span>
-                            <input type="text" class="form-control label-input" placeholder="請輸入統一編號" autocomplete="off" v-model="businessNum" maxlength="8">
+                            <input type="text" class="form-control label-input" placeholder="請輸入統一編號" autocomplete="off"
+                                v-model="businessNum" maxlength="8">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text">帳號：</span>
-                            <input type="text" class="form-control label-input" placeholder="10位數手機號碼" autocomplete="off" v-model="account" maxlength="10">
+                            <input type="text" class="form-control label-input" placeholder="10位數手機號碼"
+                                autocomplete="off" v-model="account" maxlength="10">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text">密碼：</span>
-                            <input type="password" class="form-control label-input" placeholder="請輸入密碼" autocomplete="off" v-model="password" maxlength="50">
+                            <input type="password" class="form-control label-input" placeholder="請輸入密碼"
+                                autocomplete="off" v-model="password" maxlength="50">
                         </div>
                         <div class="input-group" v-if="!loginHideOption">
                             <span class="input-group-addon label-text"></span>
                             <div class="radio-custom">
-                                <label><input type="radio" name="investor" class="radio-inline" value="0" v-model="investor"><span class="outside"><span class="inside"></span></span>借款人</label>
-                                <label><input type="radio" name="investor" class="radio-inline" value="1" v-model="investor" checked><span class="outside"><span class="inside"></span></span>投資人</label>
+                                <label><input type="radio" name="investor" class="radio-inline" value="0"
+                                        v-model="investor"><span class="outside"><span
+                                            class="inside"></span></span>借款人</label>
+                                <label><input type="radio" name="investor" class="radio-inline" value="1"
+                                        v-model="investor" checked><span class="outside"><span
+                                            class="inside"></span></span>投資人</label>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="chiller_cb">
-                                <input id="rememberAccount" type="checkbox" @click="setAccount" :checked="isRememberAccount">
+                                <input id="rememberAccount" type="checkbox" @click="setAccount"
+                                    :checked="isRememberAccount">
                                 <label for="rememberAccount">記住帳號</label>
                                 <span></span>
                             </div>
@@ -690,7 +742,8 @@
                     <div class="alert alert-danger" v-if="message">@{{message}}</div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-submit" @click="doLogin">登入</button>
-                        <router-link v-if="!isCompany" class="btn btn-register" @click.native="hideLoginModal()" to="/register">會員註冊</router-link>
+                        <router-link v-if="!isCompany" class="btn btn-register" @click.native="hideLoginModal()"
+                            to="/register">會員註冊</router-link>
                     </div>
                 </div>
             </div>
@@ -705,7 +758,9 @@
 <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
 <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>

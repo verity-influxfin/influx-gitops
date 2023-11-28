@@ -1,11 +1,11 @@
 //vuex store
-import state from './store/state';
-import getters from './store/getters';
-import actions from './store/actions';
-import mutations from './store/mutations';
+import state from './store/state'
+import getters from './store/getters'
+import actions from './store/actions'
+import mutations from './store/mutations'
 import enterprise from './store/module/enterprise'
 //vue router
-import routers from './router/router';
+import routers from './router/router'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
@@ -15,44 +15,56 @@ export default () => {
   Vue.use(Vuex)
   Vue.use(VueRouter)
   Vue.use(Vue2TouchEvents)
-  const sessionStoragePlugin = store => {
+  const sessionStoragePlugin = (store) => {
     store.subscribe((mutation, { userData }) => {
-      if (mutation.type === "mutationUserData") {
-        sessionStorage.setItem("flag", Object.keys(userData).length !== 0 ? "login" : "logout");
-        sessionStorage.setItem("loginTime", Object.keys(userData).length !== 0 ? new Date().getTime() : 0);
-        sessionStorage.setItem("userData", JSON.stringify(userData));
-        localStorage.setItem("flag", Object.keys(userData).length !== 0 ? "login" : "logout");
-        localStorage.setItem("loginTime", Object.keys(userData).length !== 0 ? new Date().getTime() : 0);
-        localStorage.setItem("userData", JSON.stringify(userData));
+      if (mutation.type === 'mutationUserData') {
+        sessionStorage.setItem(
+          'flag',
+          Object.keys(userData).length !== 0 ? 'login' : 'logout'
+        )
+        sessionStorage.setItem(
+          'loginTime',
+          Object.keys(userData).length !== 0 ? new Date().getTime() : 0
+        )
+        sessionStorage.setItem('userData', JSON.stringify(userData))
+        localStorage.setItem(
+          'flag',
+          Object.keys(userData).length !== 0 ? 'login' : 'logout'
+        )
+        localStorage.setItem(
+          'loginTime',
+          Object.keys(userData).length !== 0 ? new Date().getTime() : 0
+        )
+        localStorage.setItem('userData', JSON.stringify(userData))
       }
-    });
-  };
+    })
+  }
   // const timeLineMax = new TimelineMax({ paused: true, reversed: true });
 
   const router = new VueRouter({
     routes: routers,
     mode: 'history',
-  });
+  })
 
   router.beforeEach((to, from, next) => {
-    gtag("config", "UA-117279688-9", { page_path: to.path });
-    $(window).scrollTop(0);
-    next();
+    gtag('config', 'UA-117279688-9', { page_path: to.path })
+    $(window).scrollTop(0)
+    next()
     if ($('.navbar-toggler').attr('aria-expanded') === 'true') {
-      $('.navbar-toggler').click();
+      $('.navbar-toggler').click()
     }
-  });
+  })
 
   const store = new Vuex.Store({
     modules: {
-      enterprise
+      enterprise,
     },
     state,
     getters,
     actions,
     mutations,
-    plugins: [sessionStoragePlugin]
-  });
+    plugins: [sessionStoragePlugin],
+  })
 
   return new Vue({
     // el: '#web_index',
@@ -85,13 +97,19 @@ export default () => {
     },
     computed: {
       isInvestor() {
-        return sessionStorage.getItem("userData") ? JSON.parse(sessionStorage.getItem("userData")).investor : "0";
+        return sessionStorage.getItem('userData')
+          ? JSON.parse(sessionStorage.getItem('userData')).investor
+          : '0'
       },
       flag() {
-        return sessionStorage.getItem("flag") ? sessionStorage.getItem("flag") : '';
+        return sessionStorage.getItem('flag')
+          ? sessionStorage.getItem('flag')
+          : ''
       },
       userData() {
-        return sessionStorage.getItem("userData") ? JSON.parse(sessionStorage.getItem("userData")) : {}
+        return sessionStorage.getItem('userData')
+          ? JSON.parse(sessionStorage.getItem('userData'))
+          : {}
       },
       isSearchTextEmpty() {
         const s = this.searchText
@@ -106,262 +124,296 @@ export default () => {
       },
       isBussinessPage() {
         return !location.pathname.includes('/business-loan/sme')
-      }
+      },
+      isSelfieAuthPage() {
+        return location.pathname.toLowerCase().includes('/selfieauth')
+      },
     },
     created() {
-      this.account = $cookies.get('account') ? $cookies.get('account') : '';
-      this.businessNum = $cookies.get('businessNum') ? $cookies.get('businessNum') : '';
-      this.getListData();
+      this.account = $cookies.get('account') ? $cookies.get('account') : ''
+      this.businessNum = $cookies.get('businessNum')
+        ? $cookies.get('businessNum')
+        : ''
+      this.getListData()
     },
     mounted() {
       this.$nextTick(() => {
-
-        let now = new Date();
-        let startDate = new Date('2021-02-01 00:00:00');
-        let endDate = new Date('2021-12-31 00:00:00');
+        let now = new Date()
+        let startDate = new Date('2021-02-01 00:00:00')
+        let endDate = new Date('2021-12-31 00:00:00')
         if (startDate <= now && now < endDate) {
-          $('.greeting').css('display', 'block');
-          setInterval(function () { $('.greeting .left,.greeting .right').toggleClass('shake'); }, 200);
+          $('.greeting').css('display', 'block')
+          setInterval(function () {
+            $('.greeting .left,.greeting .right').toggleClass('shake')
+          }, 200)
         }
-        AOS.init();
-      });
+        AOS.init()
+      })
     },
     watch: {
       phone() {
-        this.phone = this.phone.replace(/[^\d]/g, '');
+        this.phone = this.phone.replace(/[^\d]/g, '')
       },
       businessNum() {
-        this.businessNum = this.businessNum.replace(/[^\d]/g, '');
+        this.businessNum = this.businessNum.replace(/[^\d]/g, '')
       },
       account() {
-        this.account = this.account.replace(/[^\d]/g, '');
+        this.account = this.account.replace(/[^\d]/g, '')
       },
       openLogin() {
         this.openLoginModal()
-      }
+      },
     },
     methods: {
       getListData() {
-        axios.post(`${location.origin}/getListData`)
+        axios
+          .post(`${location.origin}/getListData`)
           .then((res) => {
-            this.menuList = res.data.menuList;
-            this.actionList = res.data.actionList;
+            this.menuList = res.data.menuList
+            this.actionList = res.data.actionList
           })
           .catch((error) => {
-            console.error('getListData 發生錯誤，請稍後再試');
-          });
+            console.error('getListData 發生錯誤，請稍後再試')
+          })
       },
       display() {
         if (timeLineMax.reversed()) {
-          timeLineMax.play();
+          timeLineMax.play()
         } else {
-          timeLineMax.reverse();
+          timeLineMax.reverse()
         }
       },
       backtotop() {
-        $('html').stop().animate({ scrollTop: 0 }, 1000);
-        AOS.refresh();
+        $('html').stop().animate({ scrollTop: 0 }, 1000)
+        AOS.refresh()
       },
       openLoginModal() {
         // 5th
         if (this.$route.path === '/5th-anniversary') {
           this.$store.commit('mutationloginHideOption', true)
         }
-        $(this.$refs.loginForm).modal("show");
+        $(this.$refs.loginForm).modal('show')
       },
       hideLoginModal() {
-        $(this.$refs.loginForm).modal("hide");
+        $(this.$refs.loginForm).modal('hide')
       },
       switchTag(evt) {
         if (!$(evt.target).hasClass('checked')) {
-          this.isCompany = !this.isCompany;
+          this.isCompany = !this.isCompany
         }
       },
       switchForm() {
-        clearInterval(this.timer);
-        this.counter = 180;
-        this.isSended = false;
-        this.isReset = !this.isReset;
+        clearInterval(this.timer)
+        this.counter = 180
+        this.isSended = false
+        this.isReset = !this.isReset
       },
       loginReload(path) {
         // path with Reload
         const reloadPath = ['/invest-report', '/risk']
-        return reloadPath.some(x => x === path)
+        return reloadPath.some((x) => x === path)
       },
       goFeedback() {
-        let { userData, $router } = this;
+        let { userData, $router } = this
 
         if (Object.keys(userData).length === 0) {
-          $(this.$refs.loginForm).modal("show");
-          this.$router.history.pending = { path: '/feedback' };
+          $(this.$refs.loginForm).modal('show')
+          this.$router.history.pending = { path: '/feedback' }
         } else {
-          $router.push("/feedback");
+          $router.push('/feedback')
         }
       },
       doLogin() {
         grecaptcha.ready(() => {
-          grecaptcha.execute('6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3', { action: 'submit' }).then((token) => {
-            axios.post(`${location.origin}/recaptcha`, { token }).then((res) => {
-              if (this.isRememberAccount) {
-                $cookies.set('account', this.account);
-                $cookies.set('investor', this.investor);
-                $cookies.set('businessNum', this.businessNum);
-              } else {
-                $cookies.remove('account');
-                $cookies.remove('investor');
-                $cookies.remove('businessNum');
-              }
-
-              let phone = this.account;
-              let password = this.password;
-              let investor = this.investor;
-
-              let params = { phone, password, investor };
-
-              if (this.isCompany) {
-                let tax_id = this.businessNum;
-                Object.assign(params, { tax_id });
-              }
-
-              axios.post(`${location.origin}/doLogin`, params)
-                .then((res) => {
-                  this.$store.commit('mutationUserData', res.data);
-                  $(this.$refs.loginForm).modal("hide");
-                  // check reload
-                  if (this.loginReload(this.$route.path)) {
-                    location.reload()
-                    return
-                  }
-                  if (this.$router.currentRoute.path == '/recruiting') {
-                    location.reload()
-                    return
-                  }
-                  if (investor === '1') {
-                    this.$router.push('investnotification');
-                  } else {
-                    this.$router.push('loannotification');
-                  }
-
-                  if ($("#loginModal").attr("data-type") == "cardgame") {
-                    let data = {
-                      user_id: localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData"))["id"] : {},
-                    };
-                    axios
-                      .post("/getData", data)
-                      .then((res) => {
-                        this.process = false;
-                        if (!res.data) {
-                          location.replace('/cardgame');
-                        } else {
-                          alert('您已參加過遊戲囉!!');
-                        }
-                      })
-                      .catch((err) => {
-                        console.error(err);
-                      });
-                  } else {
-                    location.reload();
-                  }
-                })
-                .catch((error) => {
-                  let errorsData = error.response.data;
-                  if (errorsData.message) {
-                    let messages = [];
-                    $.each(errorsData.errors, (key, item) => {
-                      item.forEach((message, k) => {
-                        messages.push(message);
-                      });
-                    });
-                    this.message = messages.join('、');
-                  } else {
-                    this.message = `${this.$store.state.loginErrorCode[errorsData.error]}
-                                                 ${errorsData.data ? `剩餘錯誤次數(${errorsData.data.remind_count})` : ''}`;
-                  }
-                });
+          grecaptcha
+            .execute('6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3', {
+              action: 'submit',
             })
-          });
-        });
+            .then((token) => {
+              axios
+                .post(`${location.origin}/recaptcha`, { token })
+                .then((res) => {
+                  if (this.isRememberAccount) {
+                    $cookies.set('account', this.account)
+                    $cookies.set('investor', this.investor)
+                    $cookies.set('businessNum', this.businessNum)
+                  } else {
+                    $cookies.remove('account')
+                    $cookies.remove('investor')
+                    $cookies.remove('businessNum')
+                  }
 
+                  let phone = this.account
+                  let password = this.password
+                  let investor = this.investor
+
+                  let params = { phone, password, investor }
+
+                  if (this.isCompany) {
+                    let tax_id = this.businessNum
+                    Object.assign(params, { tax_id })
+                  }
+
+                  axios
+                    .post(`${location.origin}/doLogin`, params)
+                    .then((res) => {
+                      this.$store.commit('mutationUserData', res.data)
+                      $(this.$refs.loginForm).modal('hide')
+                      // check reload
+                      if (this.loginReload(this.$route.path)) {
+                        location.reload()
+                        return
+                      }
+                      if (this.$router.currentRoute.path == '/recruiting') {
+                        location.reload()
+                        return
+                      }
+                      if (investor === '1') {
+                        this.$router.push('investnotification')
+                      } else {
+                        this.$router.push('loannotification')
+                      }
+
+                      if ($('#loginModal').attr('data-type') == 'cardgame') {
+                        let data = {
+                          user_id: localStorage.getItem('userData')
+                            ? JSON.parse(localStorage.getItem('userData'))['id']
+                            : {},
+                        }
+                        axios
+                          .post('/getData', data)
+                          .then((res) => {
+                            this.process = false
+                            if (!res.data) {
+                              location.replace('/cardgame')
+                            } else {
+                              alert('您已參加過遊戲囉!!')
+                            }
+                          })
+                          .catch((err) => {
+                            console.error(err)
+                          })
+                      } else {
+                        location.reload()
+                      }
+                    })
+                    .catch((error) => {
+                      let errorsData = error.response.data
+                      if (errorsData.message) {
+                        let messages = []
+                        $.each(errorsData.errors, (key, item) => {
+                          item.forEach((message, k) => {
+                            messages.push(message)
+                          })
+                        })
+                        this.message = messages.join('、')
+                      } else {
+                        this.message = `${
+                          this.$store.state.loginErrorCode[errorsData.error]
+                        }
+                                                 ${
+                                                   errorsData.data
+                                                     ? `剩餘錯誤次數(${errorsData.data.remind_count})`
+                                                     : ''
+                                                 }`
+                      }
+                    })
+                })
+            })
+        })
       },
       logout() {
         axios.post(`${location.origin}/logout`).then((res) => {
-          this.$store.commit('mutationUserData', {});
-          location.reload();
-        });
+          this.$store.commit('mutationUserData', {})
+          location.reload()
+        })
       },
       setAccount() {
-        this.isRememberAccount = !this.isRememberAccount;
+        this.isRememberAccount = !this.isRememberAccount
         if (this.isRememberAccount) {
-          $cookies.set('account', this.account);
+          $cookies.set('account', this.account)
         } else {
-          $cookies.remove('account');
+          $cookies.remove('account')
         }
       },
       getCaptcha(type) {
-        let phone = this.phone;
+        let phone = this.phone
 
         if (!phone) {
-          this.pwdMessage = '請輸入手機';
-          return;
+          this.pwdMessage = '請輸入手機'
+          return
         }
 
-        this.counter = 180;
+        this.counter = 180
 
-        axios.post(`${location.origin}/getCaptcha`, { phone, type })
+        axios
+          .post(`${location.origin}/getCaptcha`, { phone, type })
           .then((res) => {
-            this.isSended = true;
-            this.timer = setInterval(() => { this.reciprocal() }, 1000);
+            this.isSended = true
+            this.timer = setInterval(() => {
+              this.reciprocal()
+            }, 1000)
           })
           .catch((error) => {
-            let errorsData = error.response.data;
-            this.pwdMessage = `${this.$store.state.smsErrorCode[errorsData.error]}`;
-          });
+            let errorsData = error.response.data
+            this.pwdMessage = `${
+              this.$store.state.smsErrorCode[errorsData.error]
+            }`
+          })
       },
       submit() {
-        let phone = this.phone;
-        let new_password = this.newPassword;
-        let new_password_confirmation = this.confirmPassword;
-        let code = this.code;
+        let phone = this.phone
+        let new_password = this.newPassword
+        let new_password_confirmation = this.confirmPassword
+        let code = this.code
 
-        axios.post(`${location.origin}/resetPassword`, { phone, new_password, new_password_confirmation, code })
+        axios
+          .post(`${location.origin}/resetPassword`, {
+            phone,
+            new_password,
+            new_password_confirmation,
+            code,
+          })
           .then((res) => {
-            alert('修改成功，請以新密碼登入');
-            location.reload();
+            alert('修改成功，請以新密碼登入')
+            location.reload()
           })
           .catch((error) => {
-            let errorsData = error.response.data;
+            let errorsData = error.response.data
 
             if (errorsData.message) {
-              let messages = [];
+              let messages = []
               $.each(errorsData.errors, (key, item) => {
                 item.forEach((message, k) => {
-                  messages.push(message);
-                });
-              });
-              this.pwdMessage = messages.join('、');
+                  messages.push(message)
+                })
+              })
+              this.pwdMessage = messages.join('、')
             } else {
-              this.pwdMessage = `${this.$store.state.pwdErrorCode[errorsData.error]}`;
+              this.pwdMessage = `${
+                this.$store.state.pwdErrorCode[errorsData.error]
+              }`
             }
-          });
+          })
       },
       reciprocal() {
-        this.counter--;
+        this.counter--
         if (this.counter === 0) {
-          clearInterval(this.timer);
-          this.timer = null;
-          alert('驗證碼失效，請重新申請');
-          location.reload();
+          clearInterval(this.timer)
+          this.timer = null
+          alert('驗證碼失效，請重新申請')
+          location.reload()
         }
       },
       clicked() {
         if (sessionStorage.getItem('flag') === 'login') {
-          this.currentTime = new Date().getTime();
-          let passTime = this.currentTime - sessionStorage.getItem('loginTime');
+          this.currentTime = new Date().getTime()
+          let passTime = this.currentTime - sessionStorage.getItem('loginTime')
 
           if (passTime >= 30 * 60 * 1000 && !this.altered) {
-            this.altered = true;
-            this.logout();
-            alert('連線逾時，請重新登入');
+            this.altered = true
+            this.logout()
+            alert('連線逾時，請重新登入')
           }
         }
       },
@@ -383,7 +435,7 @@ export default () => {
         this.$nextTick(() => {
           this.$refs.search.focus()
         })
-      }
-    }
-  });
+      },
+    },
+  })
 }
