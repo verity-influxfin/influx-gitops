@@ -24,7 +24,8 @@
           :width="isMobile ? 480 : 640"
           height="360"
           v-show="showVideo"
-        ></iframe>
+        >
+        </iframe>
       </div>
       <img
         class="img-fluid"
