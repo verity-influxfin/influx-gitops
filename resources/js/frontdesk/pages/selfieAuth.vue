@@ -26,7 +26,7 @@
           :width="isMobile ? 480 : 640"
           height="360"
           v-show="showVideo"
-          src="https://www.youtube.com/embed/iyNxcXqME-4"
+          src="https://www.youtube.com/embed/iyNxcXqME-4?autoplay=1"
           title="SelfieAuth 數位身分驗證_持證自拍產品發布會"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
