@@ -5,14 +5,21 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <a class="swiper-slide" href="https://www.accupass.com/event/2305220851151825102540" target="_blank">
+              <!-- <a class="swiper-slide" href="https://www.accupass.com/event/2305220851151825102540" target="_blank">
                 <div class="row no-gutters">
                   <div class="col-12">
                     <img src="@/asset/images/index/header/ai-forum-banner-mobile.png"
                       class="img-fluid d-block mx-auto header-shadow" style="margin: 25px;" />
                   </div>
                 </div>
-              </a>
+              </a> -->
+              <div class="swiper-slide">
+                <img
+                  src="@/asset/images/index/header/carousel-auth-mobile.png"
+                  class="img-fluid d-block mx-auto header-shadow"
+                  style="margin: 25px"
+                />
+              </div>
               <div class="swiper-slide">
                 <smegHeader />
               </div>
@@ -61,14 +68,27 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <a class="swiper-slide" href="https://www.accupass.com/event/2305220851151825102540" target="_blank">
+              <!-- <a
+                class="swiper-slide"
+                href="https://www.accupass.com/event/2305220851151825102540"
+                target="_blank"
+              >
                 <div class="row no-gutters">
                   <div class="col-12">
-                    <img src="@/asset/images/index/header/ai-forum-banner.png"
-                      class="img-fluid d-block mx-auto header-shadow" />
+                    <img
+                      src="@/asset/images/index/header/ai-forum-banner.png"
+                      class="img-fluid d-block mx-auto header-shadow"
+                    />
                   </div>
                 </div>
-              </a>
+              </a> -->
+              <div class="swiper-slide">
+                <img
+                  src="@/asset/images/index/header/carousel-auth.png"
+                  class="img-fluid d-block mx-auto header-shadow"
+                  style="margin: 25px"
+                />
+              </div>
               <div class="swiper-slide" v-if="newYearHeader(3)">
                 <newyear-2023-header-3 />
               </div>
@@ -81,10 +101,17 @@
               <div class="swiper-slide">
                 <collegeloan-header />
               </div>
-              <a class="swiper-slide" href="https://www.influxfin.com/articlepage?q=news-8202" target="_blank">
+              <a
+                class="swiper-slide"
+                href="https://www.influxfin.com/articlepage?q=news-8202"
+                target="_blank"
+              >
                 <div class="row no-gutters">
                   <div class="col-12">
-                    <img src="@/asset/images/index/header/header-csr.jpg" class="w-100 img-fluid header-shadow" />
+                    <img
+                      src="@/asset/images/index/header/header-csr.jpg"
+                      class="w-100 img-fluid header-shadow"
+                    />
                   </div>
                 </div>
               </a>
@@ -128,19 +155,35 @@
                 </div>
                 <div class="card-content">
                   <router-link to="/workLoan" class="card-link clickable">
-                    <img src="@/asset/images/work_outline_black.svg" alt="上班族貸" class="card-link-img" />
+                    <img
+                      src="@/asset/images/work_outline_black.svg"
+                      alt="上班族貸"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">上班族貸</div>
                   </router-link>
                   <router-link to="/collegeLoan" class="card-link clickable">
-                    <img src="@/asset/images/edit_black.svg" alt="學生貸" class="card-link-img" />
+                    <img
+                      src="@/asset/images/edit_black.svg"
+                      alt="學生貸"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">學生貸</div>
                   </router-link>
                   <router-link to="/engineerLoan" class="card-link clickable">
-                    <img src="@/asset/images/settings_black.svg" alt="資訊工程師貸" class="card-link-img" />
+                    <img
+                      src="@/asset/images/settings_black.svg"
+                      alt="資訊工程師貸"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">資訊工程師貸</div>
                   </router-link>
                   <div class="card-link">
-                    <img src="@/asset/images/house_black.svg" alt="房屋貸款" class="card-link-img" />
+                    <img
+                      src="@/asset/images/house_black.svg"
+                      alt="房屋貸款"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">房屋貸款</div>
                   </div>
                 </div>
@@ -166,11 +209,19 @@
                 </div>
                 <div class="card-content">
                   <div class="card-link">
-                    <img src="@/asset/images/paid_black.svg" alt="企業主速貸" class="card-link-img" />
+                    <img
+                      src="@/asset/images/paid_black.svg"
+                      alt="企業主速貸"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">企業主速貸</div>
                   </div>
                   <div class="card-link">
-                    <img src="@/asset/images/perm_identity_black.svg" alt="新創/網紅/SOHO" class="card-link-img" />
+                    <img
+                      src="@/asset/images/perm_identity_black.svg"
+                      alt="新創/網紅/SOHO"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text" style="font-size: 14.2px">
                       新創/網紅/SOHO
                     </div>
@@ -180,11 +231,19 @@
                     <div class="card-link-text">信保專案</div>
                   </router-link> -->
                   <div class="card-link">
-                    <img src="@/asset/images/collections_bookmark_black.svg" alt="信保專案" class="card-link-img" />
+                    <img
+                      src="@/asset/images/collections_bookmark_black.svg"
+                      alt="信保專案"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">信保專案</div>
                   </div>
                   <div class="card-link">
-                    <img src="@/asset/images/paid_black.svg" alt="中小企業信貸" class="card-link-img" />
+                    <img
+                      src="@/asset/images/paid_black.svg"
+                      alt="中小企業信貸"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">中小企業信貸</div>
                   </div>
                 </div>
@@ -201,7 +260,11 @@
                 </div>
                 <div class="card-content">
                   <router-link to="/charitable" class="card-link clickable">
-                    <img src="@/asset/images/volunteer_activism_black.svg" alt="慈善公益" class="card-link-img" />
+                    <img
+                      src="@/asset/images/volunteer_activism_black.svg"
+                      alt="慈善公益"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">台大兒醫</div>
                   </router-link>
                 </div>
@@ -220,11 +283,19 @@
                 </div>
                 <div class="card-content">
                   <div class="card-link">
-                    <img src="@/asset/images/paid_black.svg" alt="美賣店商" class="card-link-img" />
+                    <img
+                      src="@/asset/images/paid_black.svg"
+                      alt="美賣店商"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">美賣店商</div>
                   </div>
                   <div class="card-link">
-                    <img src="@/asset/images/collections_bookmark_black.svg" alt="醫美分期" class="card-lin k-img" />
+                    <img
+                      src="@/asset/images/collections_bookmark_black.svg"
+                      alt="醫美分期"
+                      class="card-lin k-img"
+                    />
                     <div class="card-link-text">醫美分期</div>
                   </div>
                 </div>
@@ -241,19 +312,35 @@
                 </div>
                 <div class="card-content">
                   <router-link to="/investment" class="card-link clickable">
-                    <img src="@/asset/images/paid_black.svg" alt="債權投資" class="card-link-img" />
+                    <img
+                      src="@/asset/images/paid_black.svg"
+                      alt="債權投資"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">債權投資</div>
                   </router-link>
                   <router-link to="/transfer" class="card-link clickable">
-                    <img src="@/asset/images/paid_black.svg" alt="債權轉讓" class="card-link-img" />
+                    <img
+                      src="@/asset/images/paid_black.svg"
+                      alt="債權轉讓"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">債權轉讓</div>
                   </router-link>
                   <router-link to="/investment#ai" class="card-link clickable">
-                    <img src="@/asset/images/smart_toy_black.svg" alt="AI智能投資" class="card-link-img" />
+                    <img
+                      src="@/asset/images/smart_toy_black.svg"
+                      alt="AI智能投資"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">AI智能投資</div>
                   </router-link>
                   <router-link to="/risk" class="card-link clickable">
-                    <img src="@/asset/images/description_black.svg" alt="風險報告書" class="card-link-img" />
+                    <img
+                      src="@/asset/images/description_black.svg"
+                      alt="風險報告書"
+                      class="card-link-img"
+                    />
                     <div class="card-link-text">風險報告書</div>
                   </router-link>
                 </div>
@@ -276,7 +363,11 @@
             </div>
           </div>
         </div>
-        <div class="block-info concept-2" data-aos="fade-left" data-aos-duration="2000">
+        <div
+          class="block-info concept-2"
+          data-aos="fade-left"
+          data-aos-duration="2000"
+        >
           <div class="op">
             集人才：開發創新科技，建構AI無人自動化，打造最有溫度的金融新生態，呈現綠色金融科技新環境。
           </div>
@@ -301,7 +392,11 @@
         </div>
       </div>
       <div class="wave">
-        <img class="img-fluid w-100" src="@/asset/images/index/bg-white-wave.svg" alt="" />
+        <img
+          class="img-fluid w-100"
+          src="@/asset/images/index/bg-white-wave.svg"
+          alt=""
+        />
       </div>
     </div>
     <div class="index-loan section">
@@ -309,7 +404,11 @@
         <div class="block-title">一支手機，完成貸款</div>
         <div class="block-info">隨借隨貸，安全零距離</div>
         <div class="row no-gutters loan-imgs">
-          <img id="img58" class="img-fluid d-sm-block d-none" src="@/asset/images/index/img58.png" />
+          <img
+            id="img58"
+            class="img-fluid d-sm-block d-none"
+            src="@/asset/images/index/img58.png"
+          />
           <div id="img56">
             <div class="position-relative text-center">
               <div class="card tip-card tip-1">
@@ -328,13 +427,21 @@
               </div>
             </div>
           </div>
-          <img id="img57" class="img-fluid d-sm-block d-none" src="@/asset/images/index/img57.png" />
+          <img
+            id="img57"
+            class="img-fluid d-sm-block d-none"
+            src="@/asset/images/index/img57.png"
+          />
         </div>
       </div>
     </div>
     <div class="index-service section">
       <div class="wave reverse">
-        <img src="@/asset/images/index/bg-white-wave.svg" class="img-fluid w-100" alt="" />
+        <img
+          src="@/asset/images/index/bg-white-wave.svg"
+          class="img-fluid w-100"
+          alt=""
+        />
       </div>
       <div class="block-content">
         <div class="block-title">我們的服務</div>
@@ -375,7 +482,10 @@
       </div>
       <div class="block-content row no-gutters">
         <div class="col-sm-6 col-12 d-flex align-items-center">
-          <img src="@/asset/images/index/img60.png" class="img-fluid p-sm-5 p-2" />
+          <img
+            src="@/asset/images/index/img60.png"
+            class="img-fluid p-sm-5 p-2"
+          />
         </div>
         <div class="col-sm-6 col-12 fin-left">
           <div class="block-title">台灣金融科技融資領導品牌</div>
@@ -449,7 +559,11 @@
           </div>
         </div>
         <div class="col-sm-6 col-12 d-flex align-items-center">
-          <img src="@/asset/images/index/cart_shopping_3d_render_10 1.png" class="img-fluid p-sm-4 p-1" alt="" />
+          <img
+            src="@/asset/images/index/cart_shopping_3d_render_10 1.png"
+            class="img-fluid p-sm-4 p-1"
+            alt=""
+          />
         </div>
       </div>
     </div>
@@ -469,7 +583,11 @@
               <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img class="img-fluid" src="@/asset/images/index/handshake2.png" alt="" />
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/handshake2.png"
+                      alt=""
+                    />
                   </div>
                   <div class="card-title">新光金控創投入資</div>
                   <div class="card-divider"></div>
@@ -483,7 +601,11 @@
               <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img class="img-fluid" src="@/asset/images/index/link-1.png" alt="" />
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/link-1.png"
+                      alt=""
+                    />
                   </div>
                   <div class="card-title">獲得多家銀行搶先合作</div>
                   <div class="card-divider"></div>
@@ -495,7 +617,11 @@
               <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img class="img-fluid" src="@/asset/images/index/dating-app-1.png" alt="" />
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/dating-app-1.png"
+                      alt=""
+                    />
                   </div>
                   <div class="card-title">最年輕化的借貸APP</div>
                   <div class="card-divider"></div>
@@ -507,7 +633,11 @@
               <div class="card" data-aos="fade-up">
                 <div class="card-body">
                   <div class="card-cover">
-                    <img class="img-fluid" src="@/asset/images/index/planet-earth-1.png" alt="" />
+                    <img
+                      class="img-fluid"
+                      src="@/asset/images/index/planet-earth-1.png"
+                      alt=""
+                    />
                   </div>
                   <div class="card-title">ESG綠色金融科技平台</div>
                   <div class="card-divider"></div>
@@ -533,12 +663,24 @@
           <div class="block-content-info">我們的成績</div>
         </div>
         <div class="row no-gutters counter-row">
-          <alesis-counter image="/images/alesis-registered.svg" header="累積註冊用戶" :number="indexCounter.memberCount"
-            unit="人"></alesis-counter>
-          <alesis-counter image="/images/alesis-totalmoney.svg" header="累積媒合金額" :number="indexCounter.totalLoanAmount"
-            unit="元"></alesis-counter>
-          <alesis-counter image="/images/alesis-totalapproved.svg" header="累積成交筆數" :number="indexCounter.transactionCount"
-            unit="筆"></alesis-counter>
+          <alesis-counter
+            image="/images/alesis-registered.svg"
+            header="累積註冊用戶"
+            :number="indexCounter.memberCount"
+            unit="人"
+          ></alesis-counter>
+          <alesis-counter
+            image="/images/alesis-totalmoney.svg"
+            header="累積媒合金額"
+            :number="indexCounter.totalLoanAmount"
+            unit="元"
+          ></alesis-counter>
+          <alesis-counter
+            image="/images/alesis-totalapproved.svg"
+            header="累積成交筆數"
+            :number="indexCounter.transactionCount"
+            unit="筆"
+          ></alesis-counter>
         </div>
       </div>
       <div class="charity">
@@ -554,30 +696,60 @@
               <div class="info-content">
                 普匯攜手愛心大使「張鈞甯」、愛心主持「鍾欣凌」，共同協助台大兒醫、台大兒醫健康基金會聯合勸募，透過普匯捐款系統，即使捐款100元也能幫助兒童們健康，我們邀請您一起投入捐款，找回孩子們健康，創造更美好的台灣環境。
               </div>
-              <img class="img-fluid img-1251 d-sm-none d-block" src="@/asset/images/index/Group1251.png" />
+              <img
+                class="img-fluid img-1251 d-sm-none d-block"
+                src="@/asset/images/index/Group1251.png"
+              />
               <div class="img-group">
                 <div class="img-item">
-                  <img src="@/asset/images/index/J1.jpg" alt="" class="img-fluid" />
+                  <img
+                    src="@/asset/images/index/J1.jpg"
+                    alt=""
+                    class="img-fluid"
+                  />
                 </div>
                 <div class="img-item">
-                  <img src="@/asset/images/index/J2.jpg" alt="" class="img-fluid" />
+                  <img
+                    src="@/asset/images/index/J2.jpg"
+                    alt=""
+                    class="img-fluid"
+                  />
                 </div>
                 <div class="img-item">
-                  <img src="@/asset/images/index/J3.jpg" alt="" class="img-fluid" />
+                  <img
+                    src="@/asset/images/index/J3.jpg"
+                    alt=""
+                    class="img-fluid"
+                  />
                 </div>
                 <div class="img-item">
-                  <img src="@/asset/images/index/J4.jpg" alt="" class="img-fluid" />
+                  <img
+                    src="@/asset/images/index/J4.jpg"
+                    alt=""
+                    class="img-fluid"
+                  />
                 </div>
                 <div class="img-item">
-                  <img src="@/asset/images/index/J5.jpg" alt="" class="img-fluid" />
+                  <img
+                    src="@/asset/images/index/J5.jpg"
+                    alt=""
+                    class="img-fluid"
+                  />
                 </div>
                 <div class="img-item">
-                  <img src="@/asset/images/index/J6.jpg" alt="" class="img-fluid" />
+                  <img
+                    src="@/asset/images/index/J6.jpg"
+                    alt=""
+                    class="img-fluid"
+                  />
                 </div>
               </div>
             </div>
             <div class="col-sm-auto col-12 d-sm-block d-none">
-              <img class="img-fluid img-1251" src="@/asset/images/index/Group1251.png" />
+              <img
+                class="img-fluid img-1251"
+                src="@/asset/images/index/Group1251.png"
+              />
             </div>
           </div>
         </div>
@@ -607,7 +779,11 @@
                   <div>提供完整資訊，有助提高額度</div>
                 </div>
                 <div class="step-content-img">
-                  <img class="img-fluid" src="@/asset/images/index/loan-step-1.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-1.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-2">
@@ -617,7 +793,11 @@
                   <div>根據您的身分選擇適合的專案</div>
                 </div>
                 <div class="step-content-img">
-                  <img class="img-fluid" src="@/asset/images/index/loan-step-2.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-2.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-3">
@@ -627,7 +807,11 @@
                   <div>AI數據分析審核，全程無人打擾</div>
                 </div>
                 <div class="step-content-img">
-                  <img class="img-fluid" src="@/asset/images/index/loan-step-3.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-3.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-4">
@@ -637,7 +821,11 @@
                   <div>審核成功後，立即上架幫您媒合投資人</div>
                 </div>
                 <div class="step-content-img">
-                  <img class="img-fluid" src="@/asset/images/index/loan-step-4.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-4.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-5">
@@ -647,7 +835,11 @@
                   <div>24小時收到款項</div>
                 </div>
                 <div class="step-content-img">
-                  <img class="img-fluid" src="@/asset/images/index/loan-step-5.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/loan-step-5.png"
+                    alt=""
+                  />
                 </div>
               </div>
             </div>
@@ -680,7 +872,11 @@
                   <div>進入我的資產</div>
                 </div>
                 <div class="step-content-img">
-                  <img class="img-fluid" src="@/asset/images/index/invest-step-1.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-1.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-2">
@@ -689,7 +885,11 @@
                   <div>選擇單筆/打包出售</div>
                 </div>
                 <div class="step-content-img">
-                  <img class="img-fluid" src="@/asset/images/index/invest-step-2.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-2.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-3">
@@ -699,7 +899,11 @@
                   <div>詳閱轉讓協議書</div>
                 </div>
                 <div class="step-content-img">
-                  <img class="img-fluid" src="@/asset/images/index/invest-step-3.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-3.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="step-content-4">
@@ -708,7 +912,11 @@
                   <div>上架成功，等待媒合</div>
                 </div>
                 <div class="step-content-img">
-                  <img class="img-fluid" src="@/asset/images/index/invest-step-4.png" alt="" />
+                  <img
+                    class="img-fluid"
+                    src="@/asset/images/index/invest-step-4.png"
+                    alt=""
+                  />
                 </div>
               </div>
             </div>
@@ -793,24 +1001,39 @@
             <div class="swiper-slide">
               <div class="row no-gutters user-comment">
                 <div class="col-auto">
-                  <iframe width="360" height="230px" src="https://www.youtube.com/embed/VTJB7c1fS-4"
-                    title="YouTube video player" frameborder="0"
+                  <iframe
+                    width="360"
+                    height="230px"
+                    src="https://www.youtube.com/embed/VTJB7c1fS-4"
+                    title="YouTube video player"
+                    frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
+                    allowfullscreen
+                  >
                   </iframe>
                 </div>
                 <div class="col-auto mx-5 d-sm-block d-none">
-                  <iframe width="360" height="230" src="https://www.youtube.com/embed/YkZyp5iSgxs"
-                    title="YouTube video player" frameborder="0"
+                  <iframe
+                    width="360"
+                    height="230"
+                    src="https://www.youtube.com/embed/YkZyp5iSgxs"
+                    title="YouTube video player"
+                    frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
+                    allowfullscreen
+                  >
                   </iframe>
                 </div>
                 <div class="col-auto d-sm-block d-none">
-                  <iframe width="360" height="230" src="https://www.youtube.com/embed/ewEoWAjkbGs"
-                    title="YouTube video player" frameborder="0"
+                  <iframe
+                    width="360"
+                    height="230"
+                    src="https://www.youtube.com/embed/ewEoWAjkbGs"
+                    title="YouTube video player"
+                    frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
+                    allowfullscreen
+                  >
                   </iframe>
                 </div>
               </div>
@@ -823,56 +1046,133 @@
       </div>
       <div class="row align-items-center media">
         <div class="col-sm col-auto">
-          <a class="項目"
+          <a
+            class="項目"
             href="https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html"
-            target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/a645f762048f5f425d0f0a8486f34612.png"
-              alt="Yahoo!新聞" />
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/a645f762048f5f425d0f0a8486f34612.png"
+              alt="Yahoo!新聞"
+            />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a class="項目" href="http://n.yam.com/Article/20180803346949" target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/1JHY1QOLYPF0.png" alt="蕃薯藤" />
+          <a
+            class="項目"
+            href="http://n.yam.com/Article/20180803346949"
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/1JHY1QOLYPF0.png"
+              alt="蕃薯藤"
+            />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a class="項目" href="https://www.nownews.com/news/20180807/2798010/" target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/Now_News_logo.png" alt="今日新聞" />
+          <a
+            class="項目"
+            href="https://www.nownews.com/news/20180807/2798010/"
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/Now_News_logo.png"
+              alt="今日新聞"
+            />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a class="項目" href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv" target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo-chinatimes2019.png" alt="中時電子報" />
+          <a
+            class="項目"
+            href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv"
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/logo-chinatimes2019.png"
+              alt="中時電子報"
+            />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a class="項目" href="https://www.wealth.com.tw/home/articles/20567" target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo-red.png" alt="財訊" />
+          <a
+            class="項目"
+            href="https://www.wealth.com.tw/home/articles/20567"
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/logo-red.png"
+              alt="財訊"
+            />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a class="項目" href="https://news.cnyes.com/news/id/4267004" target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo-cn-yes-1.png" alt="鉅亨網" />
+          <a
+            class="項目"
+            href="https://news.cnyes.com/news/id/4267004"
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/logo-cn-yes-1.png"
+              alt="鉅亨網"
+            />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a class="項目" href="https://www.gvm.com.tw/article/71426" target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo_gvm.svg" alt="遠見" />
+          <a
+            class="項目"
+            href="https://www.gvm.com.tw/article/71426"
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/logo_gvm.svg"
+              alt="遠見"
+            />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a class="項目" href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198" target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo300_90.png" alt="工商時報" />
+          <a
+            class="項目"
+            href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198"
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/logo300_90.png"
+              alt="工商時報"
+            />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a class="項目" href="https://www.setn.com/News.aspx?NewsID=792990" target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo_setn.png" alt="三立新聞網" />
+          <a
+            class="項目"
+            href="https://www.setn.com/News.aspx?NewsID=792990"
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/logo_setn.png"
+              alt="三立新聞網"
+            />
           </a>
         </div>
         <div class="col-sm col-auto">
-          <a class="項目" href="https://www.cna.com.tw/postwrite/detail/279030" target="_blank">
-            <img class="圖片 img-fluid d-block mx-auto" src="/images/media/logo_cna.png" alt="中央通訊社" />
+          <a
+            class="項目"
+            href="https://www.cna.com.tw/postwrite/detail/279030"
+            target="_blank"
+          >
+            <img
+              class="圖片 img-fluid d-block mx-auto"
+              src="/images/media/logo_cna.png"
+              alt="中央通訊社"
+            />
           </a>
         </div>
       </div>
@@ -902,10 +1202,10 @@ export default {
     workloanHeader,
     collegeloanHeader,
     smegHeader,
-    newyear2023Header3
+    newyear2023Header3,
   },
   data: () => ({
-    indexCounter: {}
+    indexCounter: {},
   }),
   created() {
     $('title').text(`首頁 - inFlux普匯金融科技`)
@@ -916,67 +1216,67 @@ export default {
       scrollTrigger: {
         trigger: '.index-loan',
         start: '-300px top',
-        toggleActions: 'play pause resume reset'
+        toggleActions: 'play pause resume reset',
         // markers:true,
       },
       x: -1200,
-      duration: 2
+      duration: 2,
     })
     gsap.from('#img57', {
       scrollTrigger: {
         trigger: '.index-loan',
         start: '-300px top',
-        toggleActions: 'play pause resume reset'
+        toggleActions: 'play pause resume reset',
       },
       x: 1200,
-      duration: 2
+      duration: 2,
     })
     gsap.from('#img56', {
       scrollTrigger: {
         trigger: '.index-loan',
         start: '-300px top',
-        toggleActions: 'play play resume reset'
+        toggleActions: 'play play resume reset',
       },
       y: 1200,
-      duration: 2
+      duration: 2,
     })
     gsap.from('#s1', {
       scrollTrigger: {
         trigger: '.service-imgs',
         start: '-300px top',
-        toggleActions: 'play pause resume reset'
+        toggleActions: 'play pause resume reset',
       },
       y: 1200,
-      duration: 2
+      duration: 2,
     })
     gsap.from('#s2', {
       scrollTrigger: {
         trigger: '.service-imgs',
         start: '-300px top',
-        toggleActions: 'play pause resume reset'
+        toggleActions: 'play pause resume reset',
       },
       x: -1200,
-      duration: 2
+      duration: 2,
     })
     gsap.from('#s3', {
       scrollTrigger: {
         trigger: '.service-imgs',
         start: '-300px top',
-        toggleActions: 'play pause resume reset'
+        toggleActions: 'play pause resume reset',
       },
       x: 1200,
-      duration: 2
+      duration: 2,
     })
     gsap.from('#s4', {
       scrollTrigger: {
         trigger: '.service-imgs',
         start: '-300px top',
-        toggleActions: 'play pause resume reset'
+        toggleActions: 'play pause resume reset',
       },
       y: 1200,
-      duration: 2
+      duration: 2,
     })
-    alesisIndexCounter().then(v => {
+    alesisIndexCounter().then((v) => {
       this.indexCounter = v
     })
     // 用戶體驗
@@ -984,8 +1284,8 @@ export default {
     new Swiper('.swiper-container.user-experience-back', {
       navigation: {
         nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
-      }
+        prevEl: '.swiper-button-prev',
+      },
     })
     // banner
     new Swiper('.sw-headers', {
@@ -1022,8 +1322,8 @@ export default {
           // 休假第二天 ~ 休假第三天
           return now > date3 && now < date4
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -3084,10 +3384,8 @@ export default {
       position: relative;
 
       .img-item {
-
         &:hover,
         &:focus-within {
-
           &:nth-child(1),
           &:nth-child(4) {
             transform: scale(3.27) translate(38px, 0);

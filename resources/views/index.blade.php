@@ -361,7 +361,8 @@
                             <div class="function-item">
                                 <div class="function-title">
                                     <a class="link-text" href="/selfieauth">
-                                        <img src="/images/SelfieAuth-logo.png" alt="SelfieAuth" width="100" />
+                                        【SelfieAuth-持證自拍專利系統】
+                                        <!-- <img src="/images/SelfieAuth-logo.png" alt="SelfieAuth" width="100" /> -->
                                     </a>
                                 </div>
                             </div>
