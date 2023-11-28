@@ -146,7 +146,7 @@
         window.addEventListener("load", function (event) {
             setTimeout(function () {
                 document.querySelectorAll("a[href*='investLink']").forEach(function (e) {
-                    e.addEventListener('click', function  () {
+                    e.addEventListener('click', function () {
                         gtag('event', 'conversion', {
                             'send_to': 'AW-692812197/vcdCCJyj_ZkCEKXzrcoC'
                         });
@@ -356,6 +356,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- end 小學堂 -->
+                            <!-- selfieauth logo -->
+                            <div class="function-item">
+                                <div class="function-title">
+                                    <a class="link-text" href="/selfieauth">
+                                        <img src="/images/SelfieAuth-logo.png" alt="SelfieAuth" width="100" />
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- end logo -->
                         </div>
                         <div class="col"></div>
                         <div class="col-auto d-flex">

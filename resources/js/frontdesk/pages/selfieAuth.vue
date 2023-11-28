@@ -19,13 +19,23 @@
           @click="() => (showVideo = true)"
           v-show="!showVideo"
         />
+        <!-- width="853"
+          height="480"
+           -->
         <iframe
-          src="https://drive.google.com/file/d/1oIWlsrjO5lqEWfoHYauq0kd4UMh4mE8n/preview"
           :width="isMobile ? 480 : 640"
           height="360"
           v-show="showVideo"
+          src="https://www.youtube.com/embed/iyNxcXqME-4"
+          title="SelfieAuth 數位身分驗證_持證自拍產品發布會"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+        <!-- <iframe
+          src="https://drive.google.com/file/d/1oIWlsrjO5lqEWfoHYauq0kd4UMh4mE8n/preview"
         >
-        </iframe>
+        </iframe> -->
       </div>
       <img
         class="img-fluid"
