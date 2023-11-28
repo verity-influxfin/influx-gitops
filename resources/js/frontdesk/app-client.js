@@ -126,7 +126,7 @@ export default () => {
         return !location.pathname.includes('/business-loan/sme')
       },
       isSelfieAuthPage() {
-        return location.pathname.lower().includes('/selfieauth')
+        return location.pathname.toLowerCase().includes('/selfieauth')
       },
     },
     created() {
