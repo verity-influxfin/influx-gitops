@@ -64,6 +64,7 @@
           .slice(2)
       )"
       :key="index"
+      :style="isMobile && index === 3 ? `width:100vw` : ``"
     />
   </div>
 </template>
