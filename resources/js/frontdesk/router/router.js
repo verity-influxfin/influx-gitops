@@ -165,7 +165,7 @@ let routers = [
   { path: '/charitable', component: ntu },
   { path: '/charitable-status', component: charitableStatus },
   { path: '/search', name: 'search', component: search },
-  { path: '/selfieAuth', name: 'selfieAuth', component: SelfieAuth },
+  // { path: '/selfieAuth', name: 'selfieAuth', component: SelfieAuth },
 ]
 
 export default routers

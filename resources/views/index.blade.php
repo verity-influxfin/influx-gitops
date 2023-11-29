@@ -358,14 +358,13 @@
                             </div>
                             <!-- end 小學堂 -->
                             <!-- selfieauth logo -->
-                            <div class="function-item">
+                            <!-- <div class="function-item">
                                 <div class="function-title">
                                     <a class="link-text" href="/selfieauth">
                                         【SelfieAuth-持證自拍專利系統】
-                                        <!-- <img src="/images/SelfieAuth-logo.png" alt="SelfieAuth" width="100" /> -->
                                     </a>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- end logo -->
                         </div>
                         <div class="col"></div>
