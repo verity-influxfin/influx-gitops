@@ -357,16 +357,15 @@
                                 </div>
                             </div>
                             <!-- end 小學堂 -->
-                            <!-- selfieauth logo -->
+                            <!-- selfieauth -->
                             <div class="function-item">
                                 <div class="function-title">
                                     <a class="link-text" href="/selfieauth">
                                         【SelfieAuth-持證自拍專利系統】
-                                        <!-- <img src="/images/SelfieAuth-logo.png" alt="SelfieAuth" width="100" /> -->
                                     </a>
                                 </div>
                             </div>
-                            <!-- end logo -->
+                            <!-- end selfieauth -->
                         </div>
                         <div class="col"></div>
                         <div class="col-auto d-flex">
@@ -480,6 +479,7 @@
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <a href="/charitable" class="item">慈善公益</a>
+                <a href="/selfieauth" class="item">【SelfieAuth-持證自拍專利系統】</a>
                 <div class="item">
                     <button v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login-btn btn">註冊/登入<i
                             class="ml-2 fa fa-arrow-right"></i></button>
