@@ -3519,13 +3519,17 @@ class User extends REST_Controller
             }
         }
 
-        if(!$isNewApp){
+        if (!$isNewApp) {
             $userQrcode = $this->qrcode_lib->get_promoted_reward_info($where);
+        } else {
+            $userQrcode = get_object_vars($user_qrcode);
         }
 
         if (isset($userQrcode) && !empty($userQrcode)) {
-            $userQrcode = reset($userQrcode);
-            $userQrcodeInfo = $userQrcode['info'];
+            if (!$isNewApp) {
+                $userQrcode = reset($userQrcode);
+            }
+            $userQrcodeInfo = $userQrcode; #$userQrcode['info'];
             $settings = $userQrcodeInfo['settings'];
             $promote_code = $userQrcodeInfo['promote_code'];
             $url = 'https://event.influxfin.com/R/url?p=' . $promote_code;
@@ -3682,7 +3686,7 @@ class User extends REST_Controller
                             break;
                     }
                 }
-            } 
+            }
             // else {
             //     // 撈待確認成為二級經銷商的清單
             //     $this->load->model('user/user_subcode_model');
@@ -3740,7 +3744,7 @@ class User extends REST_Controller
                 }
             }
 
-            if($isNewApp){
+            if ($isNewApp) {
                 goto END;
             }
 
@@ -3784,10 +3788,10 @@ class User extends REST_Controller
                         array(
                             'result' => 'SUCCESS',
                             'data' => [
-                                    'total_reward_amount' => $data['total_reward_amount'],
-                                    'overview' => $data['overview'],
-                                    'detail_list' => $data['detail_list'],
-                                ]
+                                'total_reward_amount' => $data['total_reward_amount'],
+                                'overview' => $data['overview'],
+                                'detail_list' => $data['detail_list'],
+                            ]
                         )
                     );
                     break;
@@ -4353,8 +4357,8 @@ class User extends REST_Controller
                 'result' => 'SUCCESS',
                 'error' => INPUT_NOT_CORRECT,
                 'data' => [
-                        'msg' => $error_msg[INPUT_NOT_CORRECT],
-                    ],
+                    'msg' => $error_msg[INPUT_NOT_CORRECT],
+                ],
             ]);
         }
 
@@ -4365,8 +4369,8 @@ class User extends REST_Controller
                 'result' => 'SUCCESS',
                 'error' => CHARITY_RECORD_NOT_FOUND,
                 'data' => [
-                        'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
-                    ],
+                    'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
+                ],
             ]);
         }
 
@@ -4443,16 +4447,16 @@ class User extends REST_Controller
                 'result' => 'SUCCESS',
                 'error' => CHARITY_INVALID_AMOUNT,
                 'data' => [
-                        'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
-                    ],
+                    'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
+                ],
             ]);
         } elseif ($input['amount'] >= 500000) {
             $this->response([
                 'result' => 'SUCCESS',
                 'error' => CHARITY_ILLEGAL_AMOUNT,
                 'data' => [
-                        'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
-                    ],
+                    'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
+                ],
             ]);
         }
 
@@ -4464,9 +4468,9 @@ class User extends REST_Controller
         $institution = $this->charity_institution_model
             ->as_array()
             ->get_by([
-                    'alias' => $alias,
-                    'status' => 1,
-                ]);
+                'alias' => $alias,
+                'status' => 1,
+            ]);
 
         if ($anonymous_id && $institution) {
             $this->response([
@@ -4483,8 +4487,8 @@ class User extends REST_Controller
                 'result' => 'ERROR',
                 'error' => EXIT_ERROR,
                 'data' => [
-                        'msg' => 'generic error',
-                    ],
+                    'msg' => 'generic error',
+                ],
             ]);
         }
     }
@@ -4504,9 +4508,9 @@ class User extends REST_Controller
         $this->response([
             'result' => 'SUCCESS',
             'data' => [
-                    'verify' => (int) ($bank_account->verify ?? 0),
-                    'status' => (int) ($bank_account->status ?? 0),
-                ]
+                'verify' => (int) ($bank_account->verify ?? 0),
+                'status' => (int) ($bank_account->status ?? 0),
+            ]
         ]);
     }
 
