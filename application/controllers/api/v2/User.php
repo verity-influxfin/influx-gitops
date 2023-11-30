@@ -3519,7 +3519,10 @@ class User extends REST_Controller
             }
         }
 
-        $userQrcode = $this->qrcode_lib->get_promoted_reward_info($where);
+        if(!$isNewApp){
+            $userQrcode = $this->qrcode_lib->get_promoted_reward_info($where);
+        }
+
         if (isset($userQrcode) && !empty($userQrcode)) {
             $userQrcode = reset($userQrcode);
             $userQrcodeInfo = $userQrcode['info'];
@@ -3532,7 +3535,9 @@ class User extends REST_Controller
             if (in_array($userQrcodeInfo['status'], [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY, PROMOTE_STATUS_CAN_SIGN_CONTRACT])) {
                 $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id'], [], FALSE);
 
-                if (!$isNewApp) {
+                if ($isNewApp) {
+                    $list = [];
+                } else {
                     // 初始化結構
                     try {
                         $d1 = new DateTime($userQrcodeInfo['start_time']);
@@ -3631,8 +3636,6 @@ class User extends REST_Controller
                         $list[$formattedMonth]['registeredRewardAmount'] += $reward_registered_amount;
                         $data['total_reward_amount'] += $reward_registered_amount;
                     }
-                } else {
-                    $list = [];
                 }
 
                 $data['promote_code'] = $userQrcodeInfo['promote_code'];
@@ -3679,32 +3682,33 @@ class User extends REST_Controller
                             break;
                     }
                 }
-            } else {
-                // 撈待確認成為二級經銷商的清單
-                $this->load->model('user/user_subcode_model');
-                $user_subcode_info = $this->user_subcode_model->get_info_by_user_id($user_id, ['sub_status !=' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT]);
-                if (!empty($user_subcode_info)) {
-                    foreach ($user_subcode_info as $value) {
-                        if (
-                            $value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
-                            $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ
-                        ) { // 特約通路商刪除二級經銷商，待二級經銷商閱讀 (即便二級經銷商未閱讀，刪除關係依然生效)
-                            $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
-                            $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
-                            goto END;
-                        }
+            } 
+            // else {
+            //     // 撈待確認成為二級經銷商的清單
+            //     $this->load->model('user/user_subcode_model');
+            //     $user_subcode_info = $this->user_subcode_model->get_info_by_user_id($user_id, ['sub_status !=' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT]);
+            //     if (!empty($user_subcode_info)) {
+            //         foreach ($user_subcode_info as $value) {
+            //             if (
+            //                 $value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
+            //                 $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ
+            //             ) { // 特約通路商刪除二級經銷商，待二級經銷商閱讀 (即便二級經銷商未閱讀，刪除關係依然生效)
+            //                 $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
+            //                 $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
+            //                 goto END;
+            //             }
 
-                        if (
-                            $value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
-                            $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD
-                        ) { // 特約通路商加入 (待二級經銷商同意)
-                            $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
-                            $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
-                            goto END;
-                        }
-                    }
-                }
-            }
+            //             if (
+            //                 $value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
+            //                 $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD
+            //             ) { // 特約通路商加入 (待二級經銷商同意)
+            //                 $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
+            //                 $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
+            //                 goto END;
+            //             }
+            //         }
+            //     }
+            // }
 
             $data['contract'] = !empty($contract) ? $contract['content'] : $data['contract'];
         } else {
@@ -3734,6 +3738,10 @@ class User extends REST_Controller
                 if ($contract) {
                     $data['contract'] = $contract['content'];
                 }
+            }
+
+            if($isNewApp){
+                goto END;
             }
 
             $this->load->model('user/user_subcode_model');
@@ -3776,10 +3784,10 @@ class User extends REST_Controller
                         array(
                             'result' => 'SUCCESS',
                             'data' => [
-                                'total_reward_amount' => $data['total_reward_amount'],
-                                'overview' => $data['overview'],
-                                'detail_list' => $data['detail_list'],
-                            ]
+                                    'total_reward_amount' => $data['total_reward_amount'],
+                                    'overview' => $data['overview'],
+                                    'detail_list' => $data['detail_list'],
+                                ]
                         )
                     );
                     break;
@@ -4345,8 +4353,8 @@ class User extends REST_Controller
                 'result' => 'SUCCESS',
                 'error' => INPUT_NOT_CORRECT,
                 'data' => [
-                    'msg' => $error_msg[INPUT_NOT_CORRECT],
-                ],
+                        'msg' => $error_msg[INPUT_NOT_CORRECT],
+                    ],
             ]);
         }
 
@@ -4357,8 +4365,8 @@ class User extends REST_Controller
                 'result' => 'SUCCESS',
                 'error' => CHARITY_RECORD_NOT_FOUND,
                 'data' => [
-                    'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
-                ],
+                        'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
+                    ],
             ]);
         }
 
@@ -4435,16 +4443,16 @@ class User extends REST_Controller
                 'result' => 'SUCCESS',
                 'error' => CHARITY_INVALID_AMOUNT,
                 'data' => [
-                    'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
-                ],
+                        'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
+                    ],
             ]);
         } elseif ($input['amount'] >= 500000) {
             $this->response([
                 'result' => 'SUCCESS',
                 'error' => CHARITY_ILLEGAL_AMOUNT,
                 'data' => [
-                    'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
-                ],
+                        'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
+                    ],
             ]);
         }
 
@@ -4456,9 +4464,9 @@ class User extends REST_Controller
         $institution = $this->charity_institution_model
             ->as_array()
             ->get_by([
-                'alias' => $alias,
-                'status' => 1,
-            ]);
+                    'alias' => $alias,
+                    'status' => 1,
+                ]);
 
         if ($anonymous_id && $institution) {
             $this->response([
@@ -4475,8 +4483,8 @@ class User extends REST_Controller
                 'result' => 'ERROR',
                 'error' => EXIT_ERROR,
                 'data' => [
-                    'msg' => 'generic error',
-                ],
+                        'msg' => 'generic error',
+                    ],
             ]);
         }
     }
@@ -4496,9 +4504,9 @@ class User extends REST_Controller
         $this->response([
             'result' => 'SUCCESS',
             'data' => [
-                'verify' => (int) ($bank_account->verify ?? 0),
-                'status' => (int) ($bank_account->status ?? 0),
-            ]
+                    'verify' => (int) ($bank_account->verify ?? 0),
+                    'status' => (int) ($bank_account->status ?? 0),
+                ]
         ]);
     }
 
