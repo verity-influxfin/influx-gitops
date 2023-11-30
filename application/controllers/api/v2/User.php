@@ -2692,9 +2692,11 @@ class User extends REST_Controller
         );
 
         if ($registed) {
-            $insert = $this->user_bio_model->update($registed->id, array(
-                'bio_key' => $bio_key,
-            )
+            $insert = $this->user_bio_model->update(
+                $registed->id,
+                array(
+                    'bio_key' => $bio_key,
+                )
             );
         } else {
             $insert = $this->user_bio_model->insert(
@@ -2798,9 +2800,11 @@ class User extends REST_Controller
                 ];
                 $bio_key = AUTHORIZATION::generateUserToken($ntoken);
 
-                $insert = $this->user_bio_model->update($active->id, array(
-                    'bio_key' => $bio_key,
-                )
+                $insert = $this->user_bio_model->update(
+                    $active->id,
+                    array(
+                        'bio_key' => $bio_key,
+                    )
                 );
 
                 if ($insert) {
@@ -3407,7 +3411,7 @@ class User extends REST_Controller
         }
     }
 
-    public function promote_code_get($action = '')
+    public function promote_code_get(Request $request, $action = '')
     {
         $this->load->model('user/user_model');
         $this->load->model('user/user_qrcode_model');
@@ -3441,6 +3445,10 @@ class User extends REST_Controller
             'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY],
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE
         ];
+
+        // $ua = $request->header('User-Agent', '');
+        // $isNewApp = explode(';', $ua)[1] == 'new_app=1';
+        $isNewApp = true;
 
         if (!empty($action)) {
             switch ($action) {
@@ -3524,102 +3532,107 @@ class User extends REST_Controller
             if (in_array($userQrcodeInfo['status'], [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY, PROMOTE_STATUS_CAN_SIGN_CONTRACT])) {
                 $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id'], [], FALSE);
 
-                // 初始化結構
-                try {
-                    $d1 = new DateTime($userQrcodeInfo['start_time']);
-                    $d2 = new DateTime($userQrcodeInfo['end_time'] >= date("Y-m-d H:i:s") ? date("Y-m-d H:i:s") : $userQrcodeInfo['end_time']);
-                    $start = date_create($d1->format('Y-m-01'));
-                    $end = date_create($d2->format('Y-m-01'));
-                    $diffMonths = $start->diff($end)->m + ($start->diff($end)->y * 12) + ($start->diff($end)->d > 0 ? 1 : 0);
-                } catch (Exception $e) {
-                    $diffMonths = 0;
-                    error_log($e->getMessage());
-                }
-                for ($i = 0; $i <= $diffMonths; $i++) {
-                    $date = date("Y-m", strtotime(date("Y-m", strtotime($userQrcodeInfo['start_time'])) . '+' . $i . ' MONTH'));
-                    $list[$date] = $initList;
-                }
-
-                $keys = array_flip(['loanedCount', 'fullMemberCount']);
-                $data['overview'] = array_intersect_key($userQrcode, $keys);
-                $data['overview']['collaboration'] = $collaboratorInitList;
-                $data['overview']['rewardAmount'] = array_combine(array_keys($this->user_lib->rewardCategories), array_fill(0, count($this->user_lib->rewardCategories), 0));
-
-                // 套用特約方案的每月利息結算之獎金
-                $list = array_replace_recursive($list, $userQrcode['monthly']);
-
-                // 處理產品案件獎金計算
-                $keys = array_flip(['id', 'user_id', 'product_id', 'loan_amount', 'loan_date']);
-                foreach ($this->user_lib->rewardCategories as $category => $productIdList) {
-                    $rewardAmount = 0;
-
-                    if (isset($settings['reward']) && isset($settings['reward']['product'])) {
-                        $rewardAmount = $this->user_lib->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
+                if (!$isNewApp) {
+                    // 初始化結構
+                    try {
+                        $d1 = new DateTime($userQrcodeInfo['start_time']);
+                        $d2 = new DateTime($userQrcodeInfo['end_time'] >= date("Y-m-d H:i:s") ? date("Y-m-d H:i:s") : $userQrcodeInfo['end_time']);
+                        $start = date_create($d1->format('Y-m-01'));
+                        $end = date_create($d2->format('Y-m-01'));
+                        $diffMonths = $start->diff($end)->m + ($start->diff($end)->y * 12) + ($start->diff($end)->d > 0 ? 1 : 0);
+                    } catch (Exception $e) {
+                        $diffMonths = 0;
+                        error_log($e->getMessage());
                     }
-                    if (!isset($userQrcode[$category]) || empty($userQrcode[$category]))
-                        continue;
 
-                    foreach ($userQrcode[$category] as $value) {
-                        $formattedMonth = date("Y-m", strtotime($value['loan_date']));
-                        $list[$formattedMonth][$category]['detail'][] = array_intersect_key($value, $keys);
-                        $list[$formattedMonth][$category]['count'] += 1;
-                        $list[$formattedMonth][$category]['rewardAmount'] += $rewardAmount;
+                    for ($i = 0; $i <= $diffMonths; $i++) {
+                        $date = date("Y-m", strtotime(date("Y-m", strtotime($userQrcodeInfo['start_time'])) . '+' . $i . ' MONTH'));
+                        $list[$date] = $initList;
+                    }
 
-                        if (isset($list[$formattedMonth][$category]['borrowerPlatformFee'])) {
-                            unset($list[$formattedMonth][$category]['borrowerPlatformFee']);
+                    $keys = array_flip(['loanedCount', 'fullMemberCount']);
+                    $data['overview'] = array_intersect_key($userQrcode, $keys);
+                    $data['overview']['collaboration'] = $collaboratorInitList;
+                    $data['overview']['rewardAmount'] = array_combine(array_keys($this->user_lib->rewardCategories), array_fill(0, count($this->user_lib->rewardCategories), 0));
+
+                    // 套用特約方案的每月利息結算之獎金
+                    $list = array_replace_recursive($list, $userQrcode['monthly']);
+
+                    // 處理產品案件獎金計算
+                    $keys = array_flip(['id', 'user_id', 'product_id', 'loan_amount', 'loan_date']);
+                    foreach ($this->user_lib->rewardCategories as $category => $productIdList) {
+                        $rewardAmount = 0;
+
+                        if (isset($settings['reward']) && isset($settings['reward']['product'])) {
+                            $rewardAmount = $this->user_lib->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
                         }
-                        if (isset($list[$formattedMonth][$category]['investorPlatformFee'])) {
-                            unset($list[$formattedMonth][$category]['investorPlatformFee']);
+                        if (!isset($userQrcode[$category]) || empty($userQrcode[$category]))
+                            continue;
+
+                        foreach ($userQrcode[$category] as $value) {
+                            $formattedMonth = date("Y-m", strtotime($value['loan_date']));
+                            $list[$formattedMonth][$category]['detail'][] = array_intersect_key($value, $keys);
+                            $list[$formattedMonth][$category]['count'] += 1;
+                            $list[$formattedMonth][$category]['rewardAmount'] += $rewardAmount;
+
+                            if (isset($list[$formattedMonth][$category]['borrowerPlatformFee'])) {
+                                unset($list[$formattedMonth][$category]['borrowerPlatformFee']);
+                            }
+                            if (isset($list[$formattedMonth][$category]['investorPlatformFee'])) {
+                                unset($list[$formattedMonth][$category]['investorPlatformFee']);
+                            }
+
+                            $data['overview']['rewardAmount'][$category] += $rewardAmount;
+                            $data['total_reward_amount'] += $rewardAmount;
                         }
-
-                        $data['overview']['rewardAmount'][$category] += $rewardAmount;
-                        $data['total_reward_amount'] += $rewardAmount;
                     }
-                }
 
-                // 處理合作資料的計算
-                $keys = array_flip(['loan_time']);
-                foreach ($userQrcode['collaboration'] as $collaboratorId => $collaborationList) {
-                    if (!isset($collaboratorList[$collaboratorId])) {
-                        continue;
+                    // 處理合作資料的計算
+                    $keys = array_flip(['loan_time']);
+                    foreach ($userQrcode['collaboration'] as $collaboratorId => $collaborationList) {
+                        if (!isset($collaboratorList[$collaboratorId])) {
+                            continue;
+                        }
+                        $collaborationRewardAmount = $this->user_lib->getCollaborationRewardAmount($settings['reward'], $collaboratorList[$collaboratorId]['type']);
+                        foreach ($collaborationList as $value) {
+                            $formattedMonth = date("Y-m", strtotime($value['loan_time']));
+                            $list[$formattedMonth]['collaboration'][$collaboratorId]['detail'][] = array_intersect_key($value, $keys);
+                            $list[$formattedMonth]['collaboration'][$collaboratorId]['count'] += 1;
+                            $list[$formattedMonth]['collaboration'][$collaboratorId]['rewardAmount'] += $collaborationRewardAmount;
+                            $data['total_reward_amount'] += $collaborationRewardAmount;
+                            $data['overview']['collaboration'][$collaboratorId]['count'] += 1;
+                            $data['overview']['collaboration'][$collaboratorId]['rewardAmount'] += $collaborationRewardAmount;
+                        }
                     }
-                    $collaborationRewardAmount = $this->user_lib->getCollaborationRewardAmount($settings['reward'], $collaboratorList[$collaboratorId]['type']);
-                    foreach ($collaborationList as $value) {
-                        $formattedMonth = date("Y-m", strtotime($value['loan_time']));
-                        $list[$formattedMonth]['collaboration'][$collaboratorId]['detail'][] = array_intersect_key($value, $keys);
-                        $list[$formattedMonth]['collaboration'][$collaboratorId]['count'] += 1;
-                        $list[$formattedMonth]['collaboration'][$collaboratorId]['rewardAmount'] += $collaborationRewardAmount;
-                        $data['total_reward_amount'] += $collaborationRewardAmount;
-                        $data['overview']['collaboration'][$collaboratorId]['count'] += 1;
-                        $data['overview']['collaboration'][$collaboratorId]['rewardAmount'] += $collaborationRewardAmount;
+
+                    // 將合作資料轉為整數索引陣列
+                    $data['overview']['collaboration'] = array_values($data['overview']['collaboration']);
+                    foreach ($list as $key => $value) {
+                        $list[$key]['collaboration'] = array_values($value['collaboration']);
                     }
-                }
 
-                // 將合作資料轉為整數索引陣列
-                $data['overview']['collaboration'] = array_values($data['overview']['collaboration']);
-                foreach ($list as $key => $value) {
-                    $list[$key]['collaboration'] = array_values($value['collaboration']);
-                }
+                    // 處理下載+註冊會員
+                    $keys = array_flip(['user_id', 'created_at']);
+                    foreach ($userQrcode['fullMember'] as $value) {
+                        $formattedMonth = date("Y-m", strtotime($value['created_at']));
+                        $list[$formattedMonth]['fullMember'][] = array_intersect_key($value, $keys);
+                        $list[$formattedMonth]['fullMemberCount'] += 1;
+                        $list[$formattedMonth]['fullMemberRewardAmount'] += intval($settings['reward']['full_member']['amount']);
+                        $data['total_reward_amount'] += intval($settings['reward']['full_member']['amount']);
+                    }
 
-                // 處理下載+註冊會員
-                $keys = array_flip(['user_id', 'created_at']);
-                foreach ($userQrcode['fullMember'] as $value) {
-                    $formattedMonth = date("Y-m", strtotime($value['created_at']));
-                    $list[$formattedMonth]['fullMember'][] = array_intersect_key($value, $keys);
-                    $list[$formattedMonth]['fullMemberCount'] += 1;
-                    $list[$formattedMonth]['fullMemberRewardAmount'] += intval($settings['reward']['full_member']['amount']);
-                    $data['total_reward_amount'] += intval($settings['reward']['full_member']['amount']);
-                }
-
-                // 處理註冊會員
-                $keys = array_flip(['user_id', 'created_at']);
-                $reward_registered_amount = (int) ($settings['reward']['registered']['amount'] ?? 0);
-                foreach ($userQrcode['registered'] as $value) {
-                    $formattedMonth = date("Y-m", strtotime($value['created_at']));
-                    $list[$formattedMonth]['registered'][] = array_intersect_key($value, $keys);
-                    $list[$formattedMonth]['registeredCount'] += 1;
-                    $list[$formattedMonth]['registeredRewardAmount'] += $reward_registered_amount;
-                    $data['total_reward_amount'] += $reward_registered_amount;
+                    // 處理註冊會員
+                    $keys = array_flip(['user_id', 'created_at']);
+                    $reward_registered_amount = (int) ($settings['reward']['registered']['amount'] ?? 0);
+                    foreach ($userQrcode['registered'] as $value) {
+                        $formattedMonth = date("Y-m", strtotime($value['created_at']));
+                        $list[$formattedMonth]['registered'][] = array_intersect_key($value, $keys);
+                        $list[$formattedMonth]['registeredCount'] += 1;
+                        $list[$formattedMonth]['registeredRewardAmount'] += $reward_registered_amount;
+                        $data['total_reward_amount'] += $reward_registered_amount;
+                    }
+                } else {
+                    $list = [];
                 }
 
                 $data['promote_code'] = $userQrcodeInfo['promote_code'];
@@ -3763,10 +3776,10 @@ class User extends REST_Controller
                         array(
                             'result' => 'SUCCESS',
                             'data' => [
-                                'total_reward_amount' => $data['total_reward_amount'],
-                                'overview' => $data['overview'],
-                                'detail_list' => $data['detail_list'],
-                            ]
+                                    'total_reward_amount' => $data['total_reward_amount'],
+                                    'overview' => $data['overview'],
+                                    'detail_list' => $data['detail_list'],
+                                ]
                         )
                     );
                     break;
@@ -4332,8 +4345,8 @@ class User extends REST_Controller
                 'result' => 'SUCCESS',
                 'error' => INPUT_NOT_CORRECT,
                 'data' => [
-                    'msg' => $error_msg[INPUT_NOT_CORRECT],
-                ],
+                        'msg' => $error_msg[INPUT_NOT_CORRECT],
+                    ],
             ]);
         }
 
@@ -4344,8 +4357,8 @@ class User extends REST_Controller
                 'result' => 'SUCCESS',
                 'error' => CHARITY_RECORD_NOT_FOUND,
                 'data' => [
-                    'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
-                ],
+                        'msg' => $error_msg[CHARITY_RECORD_NOT_FOUND],
+                    ],
             ]);
         }
 
@@ -4422,16 +4435,16 @@ class User extends REST_Controller
                 'result' => 'SUCCESS',
                 'error' => CHARITY_INVALID_AMOUNT,
                 'data' => [
-                    'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
-                ],
+                        'msg' => $error_msg[CHARITY_INVALID_AMOUNT],
+                    ],
             ]);
         } elseif ($input['amount'] >= 500000) {
             $this->response([
                 'result' => 'SUCCESS',
                 'error' => CHARITY_ILLEGAL_AMOUNT,
                 'data' => [
-                    'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
-                ],
+                        'msg' => $error_msg[CHARITY_ILLEGAL_AMOUNT],
+                    ],
             ]);
         }
 
@@ -4443,9 +4456,9 @@ class User extends REST_Controller
         $institution = $this->charity_institution_model
             ->as_array()
             ->get_by([
-                'alias' => $alias,
-                'status' => 1,
-            ]);
+                    'alias' => $alias,
+                    'status' => 1,
+                ]);
 
         if ($anonymous_id && $institution) {
             $this->response([
@@ -4462,8 +4475,8 @@ class User extends REST_Controller
                 'result' => 'ERROR',
                 'error' => EXIT_ERROR,
                 'data' => [
-                    'msg' => 'generic error',
-                ],
+                        'msg' => 'generic error',
+                    ],
             ]);
         }
     }
@@ -4483,9 +4496,9 @@ class User extends REST_Controller
         $this->response([
             'result' => 'SUCCESS',
             'data' => [
-                'verify' => (int) ($bank_account->verify ?? 0),
-                'status' => (int) ($bank_account->status ?? 0),
-            ]
+                    'verify' => (int) ($bank_account->verify ?? 0),
+                    'status' => (int) ($bank_account->status ?? 0),
+                ]
         ]);
     }
 
