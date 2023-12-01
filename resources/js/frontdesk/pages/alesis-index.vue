@@ -5,21 +5,14 @@
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <!-- <a class="swiper-slide" href="https://www.accupass.com/event/2305220851151825102540" target="_blank">
+              <a class="swiper-slide" href="/selfieauth">
                 <div class="row no-gutters">
                   <div class="col-12">
-                    <img src="@/asset/images/index/header/ai-forum-banner-mobile.png"
+                    <img src="@/asset/images/index/header/carousel-auth-mobile.png"
                       class="img-fluid d-block mx-auto header-shadow" style="margin: 25px;" />
                   </div>
                 </div>
-              </a> -->
-              <div class="swiper-slide">
-                <img
-                  src="@/asset/images/index/header/carousel-auth-mobile.png"
-                  class="img-fluid d-block mx-auto header-shadow"
-                  style="margin: 25px"
-                />
-              </div>
+              </a>
               <div class="swiper-slide">
                 <smegHeader />
               </div>
@@ -68,27 +61,19 @@
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
-              <!-- <a
+              <a
                 class="swiper-slide"
-                href="https://www.accupass.com/event/2305220851151825102540"
-                target="_blank"
+                href="/selfieauth"
               >
                 <div class="row no-gutters">
                   <div class="col-12">
                     <img
-                      src="@/asset/images/index/header/ai-forum-banner.png"
+                      src="@/asset/images/index/header/carousel-auth.png"
                       class="img-fluid d-block mx-auto header-shadow"
                     />
                   </div>
                 </div>
-              </a> -->
-              <div class="swiper-slide">
-                <img
-                  src="@/asset/images/index/header/carousel-auth.png"
-                  class="img-fluid d-block mx-auto header-shadow"
-                  style="margin: 25px"
-                />
-              </div>
+              </a>
               <div class="swiper-slide" v-if="newYearHeader(3)">
                 <newyear-2023-header-3 />
               </div>
