@@ -18,7 +18,7 @@
             j.src =
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '{{env('APP_ENV ') == 'production ' ? 'GTM - 5 Z439PW ' : 'GTM - 589 Z9H6 '}}');
+        })(window, document, 'script', 'dataLayer', "{{ env('APP_ENV') == 'production' ? 'GTM-5Q6MCN6' : 'GTM-589Z9H6'}}");
     </script>
     <!-- End Google Tag Manager -->
     @if (Request::path() == '/')
@@ -124,13 +124,13 @@
         fbq('track', 'PageView');
     </script>
     <noscript>
-        <img height="1" width="1" src="https://www.facebook.com/tr?id=2521369841313676&ev=PageView
-    &noscript=1" />
+        <img height="1" width="1" src="https://www.facebook.com/tr?id=2521369841313676&ev=PageView&noscript=1" />
     </noscript>
     <!-- End Facebook Pixel Code -->
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117279688-9"></script>
+    <!-- google ads -->
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -168,7 +168,7 @@
 <body>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe
-            src="https://www.googletagmanager.com/ns.html?id={{env('APP_ENV') == 'production' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'}}"
+            src="https://www.googletagmanager.com/ns.html?id={{env('APP_ENV') == 'production' ? 'GTM-5Q6MCN6' : 'GTM-589Z9H6'}}"
             height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <noscript>
