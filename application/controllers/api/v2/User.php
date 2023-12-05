@@ -407,6 +407,10 @@ class User extends REST_Controller
 
             $opt_token = get_rand_token();
 
+            $this->load->library('user_agent');
+            $appIdentity = $this->agent->agent_string() ?? "";
+            $app_status = (strpos($appIdentity, "PuHey") !== FALSE && $input['investor'] == 0) ? 1 : 0;
+
             // 新自然人帳號資料
             $new_account_data = [
                 'phone' => $input['phone'],
@@ -416,6 +420,7 @@ class User extends REST_Controller
                 'investor_status' => $input['investor'] ? 1 : 0,
                 'my_promote_code' => '',
                 'auth_otp' => $opt_token,
+                'app_status' => $app_status,
             ];
 
 
