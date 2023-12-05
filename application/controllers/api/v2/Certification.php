@@ -853,21 +853,22 @@ class Certification extends REST_Controller {
 			$content	= array();
 
 			//必填欄位
-			$fields 	= [
-				'school',
-				'department',
-				'grade',
-				'student_id',
-				'major',
-				'sip_account',
-				'sip_password'
-			];
-			foreach ($fields as $field) {
+			$fields = array(
+				'school' => '學校名稱',
+				'department' => '系所',
+				'grade' => '年級',
+				'student_id' => '學號',
+				'major' => '學門',
+				'sip_account' => 'SIP帳號',
+				'sip_password' => 'SIP密碼',
+				'graduate_date' => '預計畢業時間'
+			);
+			foreach ($fields as $field => $value) {
 				if (empty($input[$field])) {
 					$this->response(array(
-					    'result'  => 'ERROR',
-                        'error'   => INPUT_NOT_CORRECT,
-                        'err_msg' => $field . 'is empty!'
+						'result'  => 'ERROR',
+						'error'   => INPUT_NOT_CORRECT,
+						'msg' => $value . '不可為空'
                     ));
 				}else{
 					$content[$field] = $input[$field];
