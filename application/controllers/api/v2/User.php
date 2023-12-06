@@ -3451,9 +3451,9 @@ class User extends REST_Controller
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE
         ];
 
-        // $ua = $this->input->get_request_header('User-Agent', '');
-        // $isNewApp = explode(';', $ua)[1] == 'new_app=1';
-        $isNewApp = true;
+        $ua = $this->input->get_request_header('User-Agent', '');
+        $isNewApp = explode(';', $ua)[1] == 'new_app=1';
+        // $isNewApp = true;
 
         if (!empty($action)) {
             switch ($action) {
