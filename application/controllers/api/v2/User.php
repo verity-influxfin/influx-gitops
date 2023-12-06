@@ -3451,9 +3451,9 @@ class User extends REST_Controller
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE
         ];
 
-        // $ua = $this->input->get_request_header('User-Agent', '');
-        // $isNewApp = explode(';', $ua)[1] == 'new_app=1';
-        $isNewApp = true;
+        $ua = $this->input->get_request_header('User-Agent', '');
+        $isNewApp = explode(';', $ua)[1] == 'new_app=1';
+        // $isNewApp = true;
 
         if (!empty($action)) {
             switch ($action) {
@@ -3527,7 +3527,9 @@ class User extends REST_Controller
         if (!$isNewApp) {
             $userQrcode = $this->qrcode_lib->get_promoted_reward_info($where);
         } else {
-            $userQrcode = get_object_vars($user_qrcode);
+            if(isset($user_qrcode) && !empty($user_qrcode)){
+                $userQrcode = get_object_vars($user_qrcode);
+            }
         }
 
         if (isset($userQrcode) && !empty($userQrcode)) {
@@ -3692,32 +3694,32 @@ class User extends REST_Controller
                     }
                 }
             }
-            // else {
-            //     // 撈待確認成為二級經銷商的清單
-            //     $this->load->model('user/user_subcode_model');
-            //     $user_subcode_info = $this->user_subcode_model->get_info_by_user_id($user_id, ['sub_status !=' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT]);
-            //     if (!empty($user_subcode_info)) {
-            //         foreach ($user_subcode_info as $value) {
-            //             if (
-            //                 $value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
-            //                 $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ
-            //             ) { // 特約通路商刪除二級經銷商，待二級經銷商閱讀 (即便二級經銷商未閱讀，刪除關係依然生效)
-            //                 $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
-            //                 $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
-            //                 goto END;
-            //             }
+            else {
+                // 撈待確認成為二級經銷商的清單
+                $this->load->model('user/user_subcode_model');
+                $user_subcode_info = $this->user_subcode_model->get_info_by_user_id($user_id, ['sub_status !=' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT]);
+                if (!empty($user_subcode_info)) {
+                    foreach ($user_subcode_info as $value) {
+                        if (
+                            $value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
+                            $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_READ
+                        ) { // 特約通路商刪除二級經銷商，待二級經銷商閱讀 (即便二級經銷商未閱讀，刪除關係依然生效)
+                            $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
+                            $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
+                            goto END;
+                        }
 
-            //             if (
-            //                 $value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
-            //                 $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD
-            //             ) { // 特約通路商加入 (待二級經銷商同意)
-            //                 $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
-            //                 $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
-            //                 goto END;
-            //             }
-            //         }
-            //     }
-            // }
+                        if (
+                            $value['status'] == PROMOTE_SUBCODE_STATUS_DISABLED &&
+                            $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_ADD
+                        ) { // 特約通路商加入 (待二級經銷商同意)
+                            $user_name = $this->user_qrcode_model->get_user_name_by_id($value['master_user_qrcode_id']);
+                            $data['subcode'] = $this->qrcode_lib->get_subcode_dialogue_content($value['id'], $user_name['name'] ?? '', $value['sub_status']);
+                            goto END;
+                        }
+                    }
+                }
+            }
 
             $data['contract'] = !empty($contract) ? $contract['content'] : $data['contract'];
         } else {
