@@ -19,6 +19,7 @@
         "
         alt="try-it-now-button"
         id="try-it-now-button"
+        @click="tryNow"
       />
     </div>
 
@@ -120,6 +121,11 @@ export default {
       } else {
         this.isMobile = isMobileDevice // 如果窗口宽度较大，根据媒体查询结果来设置isMobile
       }
+    },
+    tryNow() {
+      // 開啟連結，到line客服
+      const url = new URL("https://line.me/R/ti/p/%40kvd1654s");
+      window.open(url.toString(), "_blank");
     },
   },
 }
