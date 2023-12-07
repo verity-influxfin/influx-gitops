@@ -3418,9 +3418,8 @@ class User extends REST_Controller
 
     public function is_new_app($ua = '')
     {
-        $ua = $this->input->get_request_header('User-Agent', '');
-        $ua = explode(';', $ua);
-        $isNewApp = count($ua) > 0 ? $ua[1] == 'new_app=1' : false;
+        $tmp = explode(';', $ua);
+        $isNewApp = count($tmp) > 1 ? $tmp[1] == 'new_app=1' : false;
         // $isNewApp = true;
 
         return $isNewApp;
@@ -3461,7 +3460,7 @@ class User extends REST_Controller
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE
         ];
 
-        $isNewApp = $this->is_new_app();
+        $isNewApp = $this->is_new_app($this->input->get_request_header('User-Agent', ''));
 
         if (!empty($action)) {
             switch ($action) {
@@ -3549,8 +3548,10 @@ class User extends REST_Controller
         if (isset($userQrcode) && !empty($userQrcode)) {
             if (!$isNewApp) {
                 $userQrcode = reset($userQrcode);
+                $userQrcodeInfo = $userQrcode['info'];
+            } else {
+                $userQrcodeInfo = $userQrcode;
             }
-            $userQrcodeInfo = $userQrcode; #$userQrcode['info'];
             $settings = $userQrcodeInfo['settings'];
             $promote_code = $userQrcodeInfo['promote_code'];
             $url = 'https://event.influxfin.com/R/url?p=' . $promote_code;
