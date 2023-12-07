@@ -1,14 +1,27 @@
 <template>
   <div>
-    <img
-      class="img-fluid"
-      :src="
-        require(`../asset/images/selfieAuth/banner${
-          isMobile ? '-mobile' : ''
-        }.png`)
-      "
-      alt="banner"
-    />
+    <div id="image-container">
+      <img
+        class="img-fluid"
+        :src="
+          require(`../asset/images/selfieAuth/banner${
+            isMobile ? '-mobile' : ''
+          }.png`)
+        "
+        alt="banner"
+      />
+      <img
+        class="img-fluid"
+        :src="
+          require(`../asset/images/selfieAuth/try-it-now-button${
+            isMobile ? '-mobile' : ''
+          }.png`)
+        "
+        alt="try-it-now-button"
+        id="try-it-now-button"
+        @click="tryNow"
+      />
+    </div>
 
     <div class="container my-5 d-flex flex-column align-items-center">
       <div id="intro-video">
@@ -109,6 +122,11 @@ export default {
         this.isMobile = isMobileDevice // 如果窗口宽度较大，根据媒体查询结果来设置isMobile
       }
     },
+    tryNow() {
+      // 開啟連結，到line客服
+      const url = new URL("https://line.me/R/ti/p/%40kvd1654s");
+      window.open(url.toString(), "_blank");
+    },
   },
 }
 </script>
@@ -120,6 +138,26 @@ export default {
 
   @media only screen and (max-width: 768px) {
     position: inherit;
+  }
+}
+#image-container {
+  position: relative;
+  display: inline-block;
+  align-items: center;
+}
+#banner {
+  display: block; /* 確保大圖完整顯示 */
+}
+#try-it-now-button {
+  position: absolute;
+  width: calc((320 / 1920) * 100%);
+  bottom: calc((156 / 800) * 100%);
+  left: calc((487 / 1920) * 100%);
+  cursor: pointer;
+  @media only screen and (max-width: 768px) {
+    width: calc((184 / 375) * 100%);
+    left: calc((96 / 375) * 100%);
+    bottom: calc((349/764)*100%);
   }
 }
 </style>
