@@ -3416,6 +3416,16 @@ class User extends REST_Controller
         }
     }
 
+    public function is_new_app($ua = '')
+    {
+        $ua = $this->input->get_request_header('User-Agent', '');
+        $ua = explode(';', $ua);
+        $isNewApp = count($ua) > 0 ? $ua[1] == 'new_app=1' : false;
+        // $isNewApp = true;
+
+        return $isNewApp;
+    }
+
     public function promote_code_get($action = '')
     {
         $this->load->model('user/user_model');
@@ -3451,9 +3461,7 @@ class User extends REST_Controller
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE
         ];
 
-        $ua = $this->input->get_request_header('User-Agent', '');
-        $isNewApp = explode(';', $ua)[1] == 'new_app=1';
-        // $isNewApp = true;
+        $isNewApp = $this->is_new_app();
 
         if (!empty($action)) {
             switch ($action) {
@@ -3483,8 +3491,8 @@ class User extends REST_Controller
                     $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
             }
         }
-        
-        log_message('info', '1'.date('Y-m-d H:i:s'));
+
+        log_message('info', '1' . date('Y-m-d H:i:s'));
         // 建立合作方案的初始化資料結構
         $collaboratorList = json_decode(json_encode($this->qrcode_collaborator_model->get_many_by(['status' => PROMOTE_COLLABORATOR_AVAILABLE])), TRUE) ?? [];
         $collaboratorList = array_column($collaboratorList, NULL, 'id');
@@ -3494,12 +3502,12 @@ class User extends REST_Controller
         }
 
         // 建立各產品的初始化資料結構
-        log_message('info', '2'.date('Y-m-d H:i:s'));
+        log_message('info', '2' . date('Y-m-d H:i:s'));
         $categoryInitList = array_combine(array_keys($this->user_lib->rewardCategories), array_fill(0, count($this->user_lib->rewardCategories), ['detail' => [], 'count' => 0, 'rewardAmount' => 0]));
         $initList = array_merge_recursive(['registered' => [], 'registeredCount' => 0, 'registeredRewardAmount' => 0, 'fullMember' => [], 'fullMemberCount' => 0, 'fullMemberRewardAmount' => 0], $categoryInitList);
         $initList = array_merge_recursive($initList, ['collaboration' => $collaboratorInitList]);
 
-        log_message('info', '3'.date('Y-m-d H:i:s'));
+        log_message('info', '3' . date('Y-m-d H:i:s'));
         $user_qrcode = $this->user_qrcode_model->get_by($where);
         if (isset($user_qrcode)) {
             $alias = $user_qrcode->alias;
@@ -3514,7 +3522,7 @@ class User extends REST_Controller
             }
         }
 
-        log_message('info', '4'.date('Y-m-d H:i:s'));
+        log_message('info', '4' . date('Y-m-d H:i:s'));
         $contract_format = $this->contract_format_model->order_by('created_at', 'desc')->get_by(['type' => $contract_type_name]);
         if (isset($contract_format)) {
             $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias]);
@@ -3528,16 +3536,16 @@ class User extends REST_Controller
             }
         }
 
-        log_message('info', '5'.date('Y-m-d H:i:s'));
+        log_message('info', '5' . date('Y-m-d H:i:s'));
         if (!$isNewApp) {
             $userQrcode = $this->qrcode_lib->get_promoted_reward_info($where);
         } else {
-            if(isset($user_qrcode) && !empty($user_qrcode)){
+            if (isset($user_qrcode) && !empty($user_qrcode)) {
                 $userQrcode = get_object_vars($user_qrcode);
             }
         }
 
-        log_message('info', '6'.date('Y-m-d H:i:s'));
+        log_message('info', '6' . date('Y-m-d H:i:s'));
         if (isset($userQrcode) && !empty($userQrcode)) {
             if (!$isNewApp) {
                 $userQrcode = reset($userQrcode);
@@ -3700,7 +3708,7 @@ class User extends REST_Controller
                     }
                 }
             } else {
-                log_message('info', '7'.date('Y-m-d H:i:s'));
+                log_message('info', '7' . date('Y-m-d H:i:s'));
                 // 撈待確認成為二級經銷商的清單
                 $this->load->model('user/user_subcode_model');
                 $user_subcode_info = $this->user_subcode_model->get_info_by_user_id($user_id, ['sub_status !=' => PROMOTE_SUBCODE_SUB_STATUS_DEFAULT]);
@@ -3726,11 +3734,11 @@ class User extends REST_Controller
                     }
                 }
             }
-            log_message('info', '8'.date('Y-m-d H:i:s'));
+            log_message('info', '8' . date('Y-m-d H:i:s'));
 
             $data['contract'] = !empty($contract) ? $contract['content'] : $data['contract'];
         } else {
-            log_message('info', '9'.date('Y-m-d H:i:s'));
+            log_message('info', '9' . date('Y-m-d H:i:s'));
             $user_qrcode_info = $this->user_qrcode_model->as_array()->get_by([
                 'user_id' => $user_id,
                 'status !=' => PROMOTE_STATUS_DISABLED,
@@ -3772,7 +3780,7 @@ class User extends REST_Controller
             }
 
             foreach ($user_subcode_info as $value) {
-                log_message('info', '10'.date('Y-m-d H:i:s'));
+                log_message('info', '10' . date('Y-m-d H:i:s'));
                 if (
                     $value['status'] == PROMOTE_SUBCODE_STATUS_AVAILABLE &&
                     $value['sub_status'] == PROMOTE_SUBCODE_SUB_STATUS_TEND_TO_LEAVE
@@ -3792,7 +3800,7 @@ class User extends REST_Controller
                 }
             }
         }
-        log_message('info', '11'.date('Y-m-d H:i:s'));
+        log_message('info', '11' . date('Y-m-d H:i:s'));
 
         END:
         if (!empty($action)) {
@@ -3814,7 +3822,7 @@ class User extends REST_Controller
                     break;
             }
         }
-        log_message('info', '12'.date('Y-m-d H:i:s'));
+        log_message('info', '12' . date('Y-m-d H:i:s'));
 
         $this->response(array('result' => 'SUCCESS', 'data' => $data));
     }
