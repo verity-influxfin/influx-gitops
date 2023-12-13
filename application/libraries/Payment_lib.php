@@ -947,8 +947,8 @@ class Payment_lib{
 		$sys_check_20_success = false;
 
 		//比對國泰跟payment結合
-		$bank_txtime=$value['TxDate'].$value['Tr_Time'];
-		$bank_txtime=date("Y-m-d H:i:s",strtotime($bank_txtime));
+		$bank_txtime=$value['TxDate'];
+		$bank_txtime=date("Y-m-d",strtotime($bank_txtime));
 		$bankamount= (int)$value['Amount'];
 		$bankamount= $bankamount-$value['Fee'];//國泰回的資料-手續費
 
@@ -957,7 +957,7 @@ class Payment_lib{
 		$where				= array(
 			"bank_id"   => $value['Beneficiary_BankCode'],
 			"ABS(amount)"   => $bankamount,
-			"tx_datetime"   => $bank_txtime,
+			"DATE(tx_datetime)"   => $bank_txtime,
 			"bank_acc like"		=> '%'.$value['Beneficiary_AccountNo']
 		);
 
@@ -1235,8 +1235,8 @@ class Payment_lib{
 
  		//比對content跟data結合
 		$content=$content['0'];
-		$bank_txtime=$data['TxDate'].$data['Tr_Time'];
-		$bank_txtime=date("Y-m-d H:i:s",strtotime($bank_txtime));
+		$bank_txtime=$data['TxDate'];
+		$bank_txtime=date("Y-m-d",strtotime($bank_txtime));
 		$bankamount= (int)$data['Amount'];//國泰回的資料
 		$bankamount= $bankamount-$data['Fee'];//國泰回的資料-手續費
 
@@ -1246,7 +1246,7 @@ class Payment_lib{
 		$where				= array(
 	      	"bank_id"   => $data['Beneficiary_BankCode'],
 			"ABS(amount)"   => $bankamount,
-			"tx_datetime"   => $bank_txtime,
+			"DATE(tx_datetime)"   => $bank_txtime,
 			"bank_acc like"		=> '%'.$data['Beneficiary_AccountNo']
 		);
 
