@@ -1619,6 +1619,9 @@ class Payment_lib{
             $user_from_company_status_list = call_user_func_array('array_column', [
                 $this->CI->user_model->get_company_status_by_ids($user_from_list), 'company_status', 'id'
             ]);
+            $user_from_company_status_list = array_filter($user_from_company_status_list, function ($status) {
+                return $status != 1;
+            });
 
             if ( ! empty($tax_list))
             {
