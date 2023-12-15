@@ -274,6 +274,46 @@ class User extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 
+    public function sms_verify()
+    {
+        $this->load->model('user/user_model');
+        $this->load->model('user/sms_verify_model');
+
+        $user_id = $this->input->get('user_id');
+        $phone = $this->input->get('phone');
+
+        $verification_code = [];
+
+        if ($user_id || $phone) {
+            if ($user_id) {
+                $user = $this->user_model->get_by('id', $user_id);
+
+                if ($user) {
+                    $verification_code = $this->sms_verify_model
+                        ->order_by('expire_time', 'desc')
+                        ->get_many_by([
+                            'phone' => $user->phone,
+                            'expire_time >=' => time()
+                        ]);
+                }
+            } else {
+                $verification_code = $this->sms_verify_model
+                    ->order_by('expire_time', 'desc')
+                    ->get_many_by([
+                        'phone' => $phone,
+                        'expire_time >=' => time()
+                    ]);
+            }
+        }
+
+        $page_data = ['verification_code' => $verification_code];
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/users_verify_code', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
 	public function block_users() {
 		$input = $this->input->post(NULL, TRUE);
 
