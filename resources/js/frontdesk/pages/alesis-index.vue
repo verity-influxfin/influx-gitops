@@ -1346,9 +1346,6 @@ export default {
 }
 
 .index-intro {
-  .block-content {
-    max-width: 1400px;
-  }
 
   background-image: url('~images/index/index-header-bg.jpg');
   background-position: bottom;
@@ -1437,9 +1434,7 @@ export default {
 
       .group {
         display: grid;
-        margin: 15px auto;
-        max-width: 1300px;
-        grid-template-columns: repeat(3, 1fr);
+        margin: 15px auto;      
         grid-template-rows: 234px 234px;
         gap: 20px;
       }
@@ -2495,14 +2490,22 @@ export default {
   }
 }
 
-@media (max-width: 1060px) {
-  .index-intro .intro-content .sw-headers .general .man {
-    transform: scale(0.8);
-    left: 60px;
+@media (min-width: 1290px) {
+
+  .group{
+    max-width: 1300px;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1290px) {
+  .group {
+    max-width: 1000px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 850px) {
   .index-intro .intro-content .intro-products {
     margin-top: 160px !important;
   }
