@@ -371,6 +371,7 @@ $config['permission'] = [
         'menu' => [
             'index' => ['name' => '會員列表'],
             'blocked_users' => ['name' => '鎖定帳號管理'],
+            'sms_verify' => ['name' => '簡訊驗證'],
         ],
         'detail' => [
             'edit' => '會員詳細內容'
@@ -384,6 +385,7 @@ $config['permission'] = [
             'block_users' => ['model' => 'User', 'submodel' => 'blocked_users', 'action' => 'update'],
             'get_user_notification' => ['model' => 'User', 'submodel' => 'index', 'action' => 'read'],
             'judicialyuan' => ['model' => 'User', 'submodel' => 'index', 'action' => 'update'],
+            'sms_verify' => ['model' => 'User', 'submodel' => 'sms_verify', 'action' => 'read'],
         ],
     ],
     'Admin' => [
