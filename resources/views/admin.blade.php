@@ -45,7 +45,6 @@
     <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/v-calendar.umd.min.js') }}"></script>
     <!-- local -->
     <script type="text/javascript" src="{{ asset('js/backend.js') }}"></script>
 </body>
