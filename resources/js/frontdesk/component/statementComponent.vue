@@ -62,13 +62,10 @@
 </template>
 
 <script>
-import VDatePicker from 'v-calendar/lib/components/date-picker.umd';
 
 export default {
   props: ["list"],
-  components: {
-    VDatePicker,
-  },
+  components: {},
   data: () => ({
     type: "",
     range: {
