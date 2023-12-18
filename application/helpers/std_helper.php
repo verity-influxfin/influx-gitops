@@ -627,4 +627,19 @@ function curl_post_json(string $url, array $data = array(), array $header = arra
             (!empty($backtrace[1]) ? $backtrace[1]['file'] .'(' . $backtrace[1]['line'] : ''));
     }
 
+    //紀錄國泰api詳細資訊，並刪除1年前資料
+    function write_batchno_log($batch_no, $info)
+    {
+        $log_path = "application/logs/batchno_to_cathy/";
+        write_file($log_path. $batch_no.'.xml', $info, "w+");
+        
+        $last_year = strtotime(date("Y-m-d H:i:s")."-1 year");
+        $file_info = get_dir_file_info($log_path);
+
+        foreach ($file_info as $k){
+            if ($k['date'] < $last_year){
+                unlink($k['server_path']);
+            }
+        }
+    }
 ?>
