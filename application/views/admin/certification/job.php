@@ -163,8 +163,10 @@
 									</div>
                                     <? if($data->status==1){?>
                                     <div class="form-group">
-                                        <label>月薪</label><br />
-                                        <p class="form-control-static"><?=isset($content['salary'])?$content['salary']:""?></p>
+                                        <label>用戶自填月薪</label><br />
+                                        <p class="form-control-static"><?=isset($content['salary'])?$content['salary']:""?></p><br />
+                                        <label>最終確認月薪</label><br />
+                                        <p class="form-control-static"><?=isset($content['admin_salary'])?$content['admin_salary']:""?></p>
                                     </div>
                                     <div class="form-group">
                                         <label>專業證書是否有效</label><br />
@@ -173,10 +175,12 @@
                                     <?}else{?>
                                         <form role="form" method="post" action="/admin/certification/user_certification_edit">
                                             <div class="form-group">
-                                                <label>月薪</label><br />
-                                                <input type="text" name="salary" value="<?=isset($content['salary']) ? $content['salary'] : '0' ?>" />
+                                                <label>用戶自填月薪</label><br />
+                                                <p class="form-control-static"><?=isset($content['salary'])?$content['salary']:""?></p><br />
+                                                <label>最終確認月薪</label><br />
+                                                <input type="text" name="salary" value="<?=isset($content['admin_salary']) ? $content['admin_salary'] : '0' ?>" />
                                                 <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
-                                                <input type="hidden" name="from" value="<?=isset($content['salary'])?$content['salary']:"";?>" >
+                                                <input type="hidden" name="from" value="<?=isset($content['admin_salary'])?$content['admin_salary']:"";?>" >
                                             </div>
                                             <button type="submit" class="btn btn-primary">修改月薪</button>
                                         </form><br />
