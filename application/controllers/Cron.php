@@ -691,6 +691,18 @@ class Cron extends CI_Controller
         $this->log_script_model->insert($data);
     }
 
+    public function cancel_target_after_7days_if_name_is_not_verified(){
+        $this->load->model('loan/target_model');
+        $this->load->library('target_lib');
+
+        $target_list = $this->target_model->get_un_verified_name_7days_target_list();
+
+        foreach ($target_list as $index => $target){
+            $this->target_lib->cancel_target($target, $target->user_id, 0);
+            $this->notification_lib->withdraw_invalid_target($target->user_id, 0);
+        }
+    }
+
     public function notice_msg()
     {
         $input = $this->input->get();
