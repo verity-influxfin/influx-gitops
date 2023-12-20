@@ -1312,6 +1312,31 @@ class Target_model extends MY_Model
             ->get()
             ->result_array();
     }
+
+    public function get_un_verified_name_7days_target_list()
+    {
+        $sevenDaysAgo = strtotime('-7 days');
+        $query_target_join_user_cert = $this->db
+            ->from('p2p_loan.targets t')
+            ->select('t.id')
+            ->select('t.user_id')
+            ->select('t.status as target_status')
+            ->select('t.reason')
+            ->select('t.order_id')
+            ->select('t.created_at')
+            ->join('user_certification uc', 'uc.user_id = t.user_id', 'LEFT')
+            ->select('uc.status as certification_status')
+            ->select('uc.certification_id')
+            ->where('t.status', TARGET_WAITING_APPROVE)
+            ->where('uc.certification_id', CERTIFICATION_IDENTITY)
+            ->where('uc.status', CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
+            ->or_where('uc.status', CERTIFICATION_STATUS_FAILED)
+            ->where('t.created_at <=', $sevenDaysAgo)
+            ->get()
+            ->result();
+
+        return $query_target_join_user_cert;
+    }
     
     public function get_targets_with_normal_transactions_count($user_id)
     {
