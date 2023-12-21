@@ -341,7 +341,7 @@
                   <div>驗證、核實並進一步轉換數位虛擬身分</div>
                 </div>
                 <div class="card-content">
-                  <router-link to="/selfieauth" class="card-link clickable">
+                  <router-link to="/selfieauth" class="card-link clickable" style="width:300px !important;max-width:300px !important;">
                     <img
                       src="@/asset/images/selfieauth.svg"
                       alt="SelfieAuth 持證自拍專利系統"
