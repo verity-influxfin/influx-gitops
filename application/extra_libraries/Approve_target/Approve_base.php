@@ -139,7 +139,7 @@ abstract class Approve_base implements Approve_interface
 
         // 檢查是否需要進二審
         $need_second_instance = $this->get_need_second_instance($match_brookesia);
-        if ($this->check_before_second_instance() === TRUE)
+        if ($this->check_before_second_instance())
         {
             if ($need_second_instance === TRUE)
             {
@@ -157,7 +157,7 @@ abstract class Approve_base implements Approve_interface
         }
 
         $status = $this->result->get_status();
-        if ($subloan_status === TRUE && $status === TARGET_WAITING_APPROVE)
+        if ($subloan_status && $status === TARGET_WAITING_APPROVE)
         {
             $status = TARGET_WAITING_SIGNING;
         }
@@ -167,20 +167,20 @@ abstract class Approve_base implements Approve_interface
             case TARGET_WAITING_SIGNING:
             case TARGET_ORDER_WAITING_VERIFY:
                 $res = $this->set_target_success($renew, $subloan_status);
-                if ($res === TRUE)
+                if ($res)
                 {
                     $res = $this->success_notify($subloan_status);
                 }
                 break;
             case TARGET_FAIL:
                 $res = $this->set_target_failure($subloan_status);
-                if ($res === TRUE)
+                if ($res)
                 {
                     $res = $this->failure_notify($subloan_status);
                 }
                 break;
             case TARGET_WAITING_APPROVE:
-                if ($need_second_instance === TRUE)
+                if ($need_second_instance)
                 {
                     $res = $this->set_target_second_instance();
                 }
@@ -206,26 +206,26 @@ abstract class Approve_base implements Approve_interface
     {
         if ($this->result->get_status() === TARGET_FAIL)
         {
-            return FALSE;
+            return false;
         }
-        if ($this->check_need_second_instance_by_product() === TRUE)
+        if ($this->check_need_second_instance_by_product())
         {
-            return TRUE;
+            return true;
         }
-        if ($match_brookesia === TRUE)
+        if ($match_brookesia)
         {
             // 命中反詐欺
-            return TRUE;
+            return true;
         }
-        if (isset($this->product_config['secondInstance']) && $this->product_config['secondInstance'] === TRUE)
+        if (isset($this->product_config['secondInstance']) && $this->product_config['secondInstance'])
         {
             // 產品設定檔設定需二審
-            return TRUE;
+            return true;
         }
 
         // todo: 如果後台二審審核通過也要共用這個架構，再想辦法
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -819,13 +819,9 @@ abstract class Approve_base implements Approve_interface
      */
     public function can_approve(): bool
     {
-        if ($this->is_waiting_approve_status() === TRUE &&
-            $this->is_script_status_not_use() === TRUE &&
-            $this->is_submitted() === TRUE)
-        {
-            return TRUE;
-        }
-        return FALSE;
+        return $this->is_waiting_approve_status() &&
+            $this->is_script_status_not_use() &&
+            $this->is_submitted();
     }
 
     /**
@@ -1162,7 +1158,7 @@ abstract class Approve_base implements Approve_interface
         {
             return $this->CI->notification_lib->approve_target($this->target_user_id, TARGET_WAITING_SIGNING, $this->target, $this->loan_amount, $subloan_status);
         }
-        return TRUE;
+        return true;
     }
 
     /**
