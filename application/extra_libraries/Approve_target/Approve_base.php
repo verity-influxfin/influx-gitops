@@ -836,8 +836,7 @@ abstract class Approve_base implements Approve_interface
      */
     protected function is_script_status_not_use(): bool
     {
-        $affected_row = $this->update_target_script_status();
-        return $affected_row > 0;
+        return $this->update_target_script_status() > 0;
     }
 
     /**
