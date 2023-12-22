@@ -1153,9 +1153,9 @@ abstract class Approve_base implements Approve_interface
      */
     public function success_notify(bool $subloan_status): bool
     {
-        if ($this->target['status'] == TARGET_WAITING_APPROVE)
-        {
-            return $this->CI->notification_lib->approve_target($this->target_user_id, TARGET_WAITING_SIGNING, $this->target, $this->loan_amount, $subloan_status);
+        if ($this->target['status'] == TARGET_WAITING_APPROVE) {
+            return $this->CI->notification_lib->approve_target($this->target_user_id,
+                TARGET_WAITING_SIGNING, $this->target, $this->loan_amount, $subloan_status);
         }
         return true;
     }
@@ -1167,6 +1167,7 @@ abstract class Approve_base implements Approve_interface
      */
     public function failure_notify(bool $subloan_status): bool
     {
-        return $this->CI->notification_lib->approve_target($this->target_user_id, TARGET_FAIL, $this->target, 0, $subloan_status, $this->target['remark']);
+        return $this->CI->notification_lib->approve_target($this->target_user_id,
+            TARGET_FAIL, $this->target, 0, $subloan_status, $this->target['remark']);
     }
 }
