@@ -7,6 +7,8 @@ use CertificationResult\MessageDisplay;
 use CertificationResult\SocialCertificationResult;
 use CreditSheet\CreditSheetFactory;
 
+class CheckFailedException extends \Exception {}
+
 abstract class Approve_base implements Approve_interface
 {
     protected $CI;
@@ -73,67 +75,62 @@ abstract class Approve_base implements Approve_interface
         // 檢查是否為產轉
         $subloan_status = $this->CI->target_lib->is_sub_loan($this->target['target_no']);
 
-        // 核可前的行為
-        if ($this->check_before_approve() === FALSE)
-        {
-            goto END;
-        }
 
-        // 檢查申貸時間
-        if ($this->check_apply_time() === FALSE)
-        {
-            goto END;
-        }
-
-        // 檢查使用者提交的徵信項，沒完成不繼續
-        if ($this->check_cert($this->user_certs) === FALSE)
-        {
-            goto END;
-        }
-        // 檢查是否符合產品設定，不符合不繼續
-        if ($this->check_product() === FALSE)
-        {
-            goto END;
-        }
-
-        // 檢查額度
-        $this->credit = $this->get_user_credit();
-        if ($this->check_credit($subloan_status) === FALSE)
-        {
-            goto END;
-        }
-
-        // 2023-10-19 所有產轉都不用檢查是否命中反詐欺
-        if (!$subloan_status) {
-            // 檢查是否命中反詐欺
-            switch ($this->check_brookesia())
-            {
-                case self::BROOKESIA_BLOCK:
-                    goto END;
-                case self::BROOKESIA_CLEAR:
-                    break;
-                case self::BROOKESIA_SECOND_INSTANCE:
-                default:
-                    $match_brookesia = TRUE;
+        try {
+            // 核可前的行為
+            if (!$this->check_before_approve()) {
+                throw new CheckFailedException('check_before_approve failed');
             }
+
+            // 檢查申貸時間
+            if (!$this->check_apply_time()) {
+                throw new CheckFailedException('check_apply_time failed');
+            }
+
+            // 檢查使用者提交的徵信項，沒完成不繼續
+            if (!$this->check_cert($this->user_certs)) {
+                throw new CheckFailedException('check_cert failed');
+            }
+            // 檢查是否符合產品設定，不符合不繼續
+            if (!$this->check_product()) {
+                throw new CheckFailedException('check_product failed');
+            }
+
+            // 檢查額度
+            $this->credit = $this->get_user_credit();
+            if (!$this->check_credit($subloan_status)) {
+                throw new CheckFailedException('check_credit failed');
+            }
+
+            // 2023-10-19 所有產轉都不用檢查是否命中反詐欺
+            if (!$subloan_status) {
+                // 檢查是否命中反詐欺
+                switch ($this->check_brookesia()) {
+                    case self::BROOKESIA_BLOCK:
+                        throw new CheckFailedException('BROOKESIA_BLOCK');
+                    case self::BROOKESIA_CLEAR:
+                        break;
+                    case self::BROOKESIA_SECOND_INSTANCE:
+                    default:
+                        $match_brookesia = true;
+                }
+            }
+
+            if (!$this->CI->brookesia_lib->is_user_checked($this->target_user_id, $this->target['id'])) {
+                $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
+                $this->result->set_action_cancel();
+                $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_DEBUG);
+                throw new CheckFailedException('brookesia_lib is_user_checked failed');
+            }
+
+            // 檢查戶役政
+            if (!$this->check_identity($this->target_user_id)) {
+                throw new CheckFailedException('check_identity failed');
+            }
+        } catch (CheckFailedException $e) {
+            echo 'Exception: ' . $e->getMessage() . PHP_EOL;
         }
 
-        $user_checked = $this->CI->brookesia_lib->is_user_checked($this->target_user_id, $this->target['id']);
-        if ($user_checked === FALSE)
-        {
-            $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
-            $this->result->set_action_cancel();
-            $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_DEBUG);
-            goto END;
-        }
-
-        // 檢查戶役政
-        if ($this->check_identity($this->target_user_id) === FALSE)
-        {
-            goto END;
-        }
-
-        END:
         if ($this->result->action_is_cancel())
         {
             $this->set_action_cancellation();
