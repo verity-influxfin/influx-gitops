@@ -2,6 +2,7 @@
 
 namespace Approve_target;
 
+use Approve_target\Credit\Approve_target_credit_base;
 use Approve_target\Credit\Product_home_loan_appliances;
 use Approve_target\Credit\Product_home_loan_renovation;
 use Approve_target\Credit\Product_home_loan_short;
@@ -11,7 +12,7 @@ class Approve_factory
 {
     private $CI;
 
-    public function get_instance_by_model_data($target)
+    public function get_instance_by_model_data($target): ?Approve_target_credit_base
     {
         $this->CI = &get_instance();
 
