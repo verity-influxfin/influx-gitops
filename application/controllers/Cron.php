@@ -703,6 +703,26 @@ class Cron extends CI_Controller
         }
     }
 
+    public function cancel_target_after_14days_if_name_is_verified(){
+        $this->load->model('loan/target_model');
+        $this->load->library('target_lib');
+
+        $target_list = $this->target_model->get_verified_name_but_others_not_fullfiled_14days_target_list();
+
+        $cancelTargetIdArray = array();
+        foreach ($target_list as $target) {
+            $userId = $target->user_id;
+            $targetId = $target->id;
+            if(!in_array($targetId, $cancelTargetIdArray)){
+                $this->target_lib->cancel_target($target, $userId, 0);
+                $this->notification_lib->withdraw_invalid_target($userId, 0);
+                $cancelTargetIdArray[] = $targetId;
+            }
+
+        }
+
+    }
+
     public function notice_msg()
     {
         $input = $this->input->get();
