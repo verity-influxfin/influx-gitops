@@ -7,9 +7,5 @@
  */
 function is_judicial_product(int $product_id): bool
 {
-    if ($product_id < PRODUCT_FOR_JUDICIAL)
-    {
-        return FALSE;
-    }
-    return TRUE;
+    return $product_id >= PRODUCT_FOR_JUDICIAL;
 }
