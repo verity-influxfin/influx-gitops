@@ -46,6 +46,7 @@ class Log_request_info
         $this->method = $method;
         $this->url = $url;
     }
+
     public function get_method()
     {
         if (empty($this->method)) {
@@ -53,6 +54,7 @@ class Log_request_info
         }
         return $this->method;
     }
+
     public function get_url()
     {
         if (empty($this->url)) {
@@ -103,18 +105,22 @@ class Log_request_data
             $this->set_payload($payload);
         }
     }
+
     public function set_investor(int $investor): void
     {
         $this->investor = $investor;
     }
+
     public function set_user_id(int $user_id): void
     {
         $this->user_id = $user_id;
     }
+
     public function set_agent(int $agent): void
     {
         $this->agent = $agent;
     }
+
     private function set_payload(array $payload): void
     {
         $this->payload = json_encode($payload, JSON_UNESCAPED_UNICODE);
