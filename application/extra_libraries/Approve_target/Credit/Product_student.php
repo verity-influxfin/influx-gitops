@@ -188,4 +188,14 @@ class Product_student extends Approve_target_credit_base
 
         return FALSE;
     }
+    
+    /**
+     * 設定額度金額以 n 為計量單位
+     * @return void
+     */
+    protected function set_loan_amount_unit(): void
+    {
+        $this->loan_amount_unit = 1000;
+    }
+
 }
