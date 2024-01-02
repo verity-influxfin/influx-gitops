@@ -22,6 +22,7 @@ abstract class Approve_base implements Approve_interface
     protected $user_certs;
     protected $loan_amount;
     protected $platform_fee;
+    protected $loan_amount_unit;
 
     const BROOKESIA_CLEAR = 'clear';
     const BROOKESIA_SECOND_INSTANCE = 'second_instance';
@@ -59,6 +60,7 @@ abstract class Approve_base implements Approve_interface
         $this->CI->load->model('user/user_meta_model');
 
         $this->CI->config->load('credit', TRUE);
+        $this->set_loan_amount_unit();
     }
 
     /**
@@ -586,8 +588,14 @@ abstract class Approve_base implements Approve_interface
      */
     protected function get_loan_amount_unit(): int
     {
-        return 1000;
+        return $this->loan_amount_unit;
     }
+
+    /**
+     * 設定額度金額以 n 為計量單位
+     * @return void
+     */
+    abstract protected function set_loan_amount_unit(): void;
 
     /**
      * 取得使用者信用額度

@@ -75,13 +75,22 @@ class Product_home_loan_appliances extends Approve_target_credit_base
         return $this->target['certificate_status'] == TARGET_CERTIFICATE_SUBMITTED;
     }
 
-    /**
-     * 取得額度金額以 n 為計量單位
-     * @return int
+//    /**
+//     * 取得額度金額以 n 為計量單位
+//     * @return int
+//     */
+//    protected function get_loan_amount_unit(): int
+//    {
+//        return 10000;
+//    }
+
+    /*
+     * 設定額度金額以 n 為計量單位
+     * @return void
      */
-    protected function get_loan_amount_unit(): int
+    protected function set_loan_amount_unit(): void
     {
-        return 10000;
+        $this->loan_amount_unit = 10000;
     }
 
     /**
