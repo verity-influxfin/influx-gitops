@@ -47,6 +47,7 @@ class User extends REST_Controller
             $this->user_info->agent = $tokenData->agent;
             $this->user_info->expiry_time = $tokenData->expiry_time;
         }
+        $this->load->library('log/Log_request_lib');
     }
 
     /**
@@ -168,6 +169,11 @@ class User extends REST_Controller
     public function registerphone_post()
     {
         $input = $this->input->post(NULL, TRUE);
+
+        $log_request_info = new Log_request_info($this->request->method, $this->uri->uri_string);
+        $log_request_data = new Log_request_data($log_request_info, $input);
+        $log_request_result = $this->log_request_lib->insert($log_request_data);
+        
         $phone = isset($input['phone']) ? trim($input['phone']) : '';
 
         if (!preg_match('/^09[0-9]{8}$/', $phone)) {
