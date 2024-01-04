@@ -170,14 +170,27 @@ class Creditmanagement extends MY_Admin_Controller
         ];
         foreach ($meta_keys as $meta_key) {
             if (isset($this->inputData[$meta_key]) && is_numeric($this->inputData[$meta_key])) {
-                $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key]);
+                $rs = $this->target_meta_model->get_by([
+                    'target_id' => $this->inputData['target_id'],
+                    'meta_key' => $meta_key
+                ]);
                 if (isset($rs)) {
-                    $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key], ['meta_value' => $this->inputData[$meta_key]]);
+                    $this->target_meta_model->update_by(
+                        ['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key],
+                        ['meta_value' => $this->inputData[$meta_key]]
+                    );
                 } else {
-                    $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key, 'meta_value' => $this->inputData[$meta_key]]);
+                    $this->target_meta_model->insert([
+                        'target_id' => $this->inputData['target_id'],
+                        'meta_key' => $meta_key,
+                        'meta_value' => $this->inputData[$meta_key]
+                    ]);
                 }
             } else {
-                $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key], ['meta_value' => '']);
+                $this->target_meta_model->update_by(
+                    ['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key],
+                    ['meta_value' => '']
+                );
             }
         }
 
