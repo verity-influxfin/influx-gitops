@@ -162,69 +162,23 @@ class Creditmanagement extends MY_Admin_Controller
         }
 
         $this->load->model('loan/target_meta_model');
-        if (isset($this->inputData['job_company_taiwan_1000_point']) && is_numeric($this->inputData['job_company_taiwan_1000_point']))
-        {
-            $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_taiwan_1000_point']);
-            if (isset($rs))
-            {
-                $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_taiwan_1000_point'], ['meta_value' => $this->inputData['job_company_taiwan_1000_point']]);
+        $meta_keys = [
+            'job_company_taiwan_1000_point',
+            'job_company_world_500_point',
+            'job_company_medical_institute_point',
+            'job_company_public_agency_point',
+        ];
+        foreach ($meta_keys as $meta_key) {
+            if (isset($this->inputData[$meta_key]) && is_numeric($this->inputData[$meta_key])) {
+                $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key]);
+                if (isset($rs)) {
+                    $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key], ['meta_value' => $this->inputData[$meta_key]]);
+                } else {
+                    $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key, 'meta_value' => $this->inputData[$meta_key]]);
+                }
+            } else {
+                $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => $meta_key], ['meta_value' => '']);
             }
-            else
-            {
-                $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_taiwan_1000_point', 'meta_value' => $this->inputData['job_company_taiwan_1000_point']]);
-            }
-        }
-        else
-        {
-            $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_taiwan_1000_point'], ['meta_value' => '']);
-        }
-        if (isset($this->inputData['job_company_world_500_point']) && is_numeric($this->inputData['job_company_world_500_point']))
-        {
-            $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_world_500_point']);
-            if (isset($rs))
-            {
-                $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_world_500_point'], ['meta_value' => $this->inputData['job_company_world_500_point']]);
-            }
-            else
-            {
-                $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_world_500_point', 'meta_value' => $this->inputData['job_company_world_500_point']]);
-            }
-        }
-        else
-        {
-            $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_world_500_point'], ['meta_value' => '']);
-        }
-        if (isset($this->inputData['job_company_medical_institute_point']) && is_numeric($this->inputData['job_company_medical_institute_point']))
-        {
-            $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_medical_institute_point']);
-            if (isset($rs))
-            {
-                $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_medical_institute_point'], ['meta_value' => $this->inputData['job_company_medical_institute_point']]);
-            }
-            else
-            {
-                $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_medical_institute_point', 'meta_value' => $this->inputData['job_company_medical_institute_point']]);
-            }
-        }
-        else
-        {
-            $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_medical_institute_point'], ['meta_value' => '']);
-        }
-        if (isset($this->inputData['job_company_public_agency_point']) && is_numeric($this->inputData['job_company_public_agency_point']))
-        {
-            $rs = $this->target_meta_model->get_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_public_agency_point']);
-            if (isset($rs))
-            {
-                $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_public_agency_point'], ['meta_value' => $this->inputData['job_company_public_agency_point']]);
-            }
-            else
-            {
-                $this->target_meta_model->insert(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_public_agency_point', 'meta_value' => $this->inputData['job_company_public_agency_point']]);
-            }
-        }
-        else
-        {
-            $this->target_meta_model->update_by(['target_id' => $this->inputData['target_id'], 'meta_key' => 'job_company_public_agency_point'], ['meta_value' => '']);
         }
 
         $adminId 		= $this->login_info->id;
