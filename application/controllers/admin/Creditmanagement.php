@@ -130,8 +130,8 @@ class Creditmanagement extends MY_Admin_Controller
             'instalment'=>$target->instalment,
             'status'=>1
         ]);
-        if(!isset($credit)){
-                $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此額度'])->send();
+        if (!isset($credit)) {
+            $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此額度'])->send();
         }
         // 如果調整過分數、調整過額度，則檢查是否為新用戶、是否年滿35歲
         if ((isset($this->inputData['score']) && $this->inputData['score'] != 0)
