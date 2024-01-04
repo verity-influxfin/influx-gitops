@@ -133,6 +133,7 @@ class Creditmanagement extends MY_Admin_Controller
         if (!isset($credit)) {
             $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此額度'])->send();
         }
+
         // 如果調整過分數、調整過額度，則檢查是否為新用戶、是否年滿35歲
         if ((isset($this->inputData['score']) && $this->inputData['score'] != 0)
             || (isset($this->inputData['fixed_amount']) && $this->inputData['fixed_amount'] != $credit->amount)
@@ -142,10 +143,12 @@ class Creditmanagement extends MY_Admin_Controller
             if (!isset($user_id['user_id'])) {
                 $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此用戶id'])->send();
             }
+
             $user_info = $this->user_model->get($user_id['user_id']);
             if (!isset($user_info)) {
                 $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此用戶'])->send();
             }
+
             $past_targets = $this->target_model->get_many_by([
                 'user_id' => $user_id,
                 'status' => [5, 10],
