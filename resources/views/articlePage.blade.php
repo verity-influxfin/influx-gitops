@@ -5,7 +5,7 @@
 <head>
     <!-- Google Tag Manager -->
     <script>
-        (function (w, d, s, l, i) {
+        (function  (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({
                 'gtm.start': new Date().getTime(),
@@ -18,7 +18,7 @@
             j.src =
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '<?php echo env('APP_ENV ') == 'production ' ? 'GTM - 5Z439PW' : 'GTM - 589Z9H6'; ?>');
+        })(window, document, 'script', 'dataLayer', '<?php echo env('APP_ENV ') == 'production ' ? 'GT M  - 5Z439PW' : ' G TM - 589Z9H6'; ?
     </script>
     <!-- End Google Tag Manager -->
     <meta charset="utf-8">
@@ -64,7 +64,7 @@
 
     <!--Facebook Comments-->
     <script>
-        (function (d, s, id) {
+        (fun ction (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
             js = d.createElement(s);
@@ -73,14 +73,14 @@
                 "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=2194926914163491&autoLogAppEvents=1&d=" +
                 new Date().getTime();
             fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+        }(document, 'script', 'facebook-jssd;
     </script>
 
     <!-- Facebook Pixel Code -->
     <script>
-        ! function (f, b, e, v, n, t, s) {
+        ! fu nction (f, b, e, v, n, t, s) {
             if (f.fbq) return;
-            n = f.fbq = function () {
+            n = f.fbq = f unction () {
                 n.callMethod ?
                     n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
@@ -97,7 +97,7 @@
         }(window, document, 'script',
             'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '2521369841313676');
-        fbq('track', 'PageView');
+        fbq('track', 'Page');
     </script>
     <noscript>
         <img height="1" width="1" src="https://www.facebook.com/tr?id=2521369841313676&ev=PageView
@@ -114,30 +114,29 @@
             dataLayer.push(arguments);
         }
         gtag('js', new Date());
-        gtag('config', 'AW-692812197');
+        gtag('config', 'AW-69281');
     </script>
     <!-- Event snippet for 借款、投資app下載 conversion page In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
     <!-- 借款：WE5GCNWzgpoCEKXzrcoC 投資：vcdCCJyj_ZkCEKXzrcoC -->
     <script>
-        window.addEventListener("load", function (event) {
-            setTimeout(function () {
-                document.querySelectorAll("a[href*='investLink']").forEach(function (e) {
-                    e.addEventListener('click', function () {
+        window.addEventListener("load",  function (event) {
+            setTimeout (function () {
+                document.querySelectorAll("a[href*='investLink']").forEac h(function (e) {
+                    e.addEventListener('click ', function () {
                         gtag('event', 'conversion', {
                             'send_to': 'AW-692812197/vcdCCJyj_ZkCEKXzrcoC'
                         });
                     });
                 });
 
-                document.querySelectorAll("a[href*='borrowLink']").forEach(function (e) {
-                    e.addEventListener('click', function () {
+                document.querySelectorAll("a[href*='borrowLink']").forE ach(function (e) {
+                    e.addEventListener('cli ck', function () {
                         gtag('event', 'conversion', {
                             'send_to': 'AW-692812197/WE5GCNWzgpoCEKXzrcoC'
                         });
                     });
                 });
-            }, 2000)
-        });
+            }, 2000      });
     </script>
 </head>
 
@@ -176,7 +175,7 @@
                                                     <a href="/engineerLoan" class="link-text">資訊工程師貸</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <a href="/houseloan" class="link-text">房屋貸款</a>
+                                                    <a href="/houseLoan" class="link-text">房屋貸款</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -849,17 +848,17 @@
 <script type="text/javascript" src="{{ mix('js/articlepage.js') }}"></script>
 
 <script>
-    $(document).ready(functio n() {
-        $("#stduent_loan_btn").on("click", functio n() {
+    $(docume nt).ready(functio n() {
+        $("#stduent_loan_btn").o n("click", functio n() {
             location.href = '/collegeLoan'
         })
-        $('#office_loan_btn').on('click', functio n() {
+        $('#office_loan_btn'). on('click', functio n() {
             location.href = '/workLoan'
         })
-        $('#enterprise_loan_btn').on('click', functio n() {
+        $('#enterprise_loan_btn') .on('click', functio n() {
             // location.href = '/business-loan/smeg'
         })
-        $('#invest_btn').on('click', functio n() {
+        $('#invest_btn' ).on('click', functio n() {
             location.href = '/investment'
         })
     });
