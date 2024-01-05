@@ -310,16 +310,11 @@ class PersonalCreditSheet extends CreditSheetBase {
             'meta_key' => $meta_keys
         ]);
         $target_meta = array_column($target_meta, 'meta_value', 'meta_key');
-        $job_company_taiwan_1000_point = $target_meta['job_company_taiwan_1000_point'] ?? 0;
-        $job_company_world_500_point = $target_meta['job_company_world_500_point'] ?? 0;
-        $job_company_medical_institute_point = $target_meta['job_company_medical_institute_point'] ?? 0;
-        $job_company_public_agency_point = $target_meta['job_company_public_agency_point'] ?? 0;
-
         $specialInfo = [
-            'job_company_taiwan_1000_point' => $job_company_taiwan_1000_point,
-            'job_company_world_500_point' => $job_company_world_500_point,
-            'job_company_medical_institute_point' => $job_company_medical_institute_point,
-            'job_company_public_agency_point' => $job_company_public_agency_point,
+            'job_company_taiwan_1000_point' => $target_meta['job_company_taiwan_1000_point'] ?? 0,
+            'job_company_world_500_point' => $target_meta['job_company_world_500_point'] ?? 0,
+            'job_company_medical_institute_point' => $target_meta['job_company_medical_institute_point'] ?? 0,
+            'job_company_public_agency_point' => $target_meta['job_company_public_agency_point'] ?? 0,
         ];
         // 上班族階段上架 或 非階段上架之其他產品
         if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
