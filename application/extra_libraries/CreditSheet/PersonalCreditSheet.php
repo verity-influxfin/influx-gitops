@@ -286,8 +286,11 @@ class PersonalCreditSheet extends CreditSheetBase {
      */
     protected function finallyApprove() {
         $this->CI->load->model('loan/credit_model');
+        $this->CI->load->model('loan/subloan_model');
         $this->CI->load->model('loan/target_meta_model');
+        $this->CI->load->library('Certification_lib');
         $this->CI->load->library('credit_lib');
+        $this->CI->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 
         $this->CI->credit_model->trans_start();
         $credit = $this->CI->credit_lib->get_credit($this->user->id, $this->target->product_id, $this->target->sub_product_id, $this->target);
@@ -312,7 +315,6 @@ class PersonalCreditSheet extends CreditSheetBase {
         if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
             // 設定信評加分
             $bonusScore = array_sum(array_column($reviewedInfoList, 'score'));
-            $this->CI->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
             $this->CI->approvalextra->setSkipInsertion(true);
             $this->CI->approvalextra->setExtraPoints($bonusScore);
             $this->CI->approvalextra->set_fixed_amount($reviewedInfoList[0]->fixed_amount ?? 0);
@@ -326,7 +328,6 @@ class PersonalCreditSheet extends CreditSheetBase {
             // 上班族階段上架
             $level = false;
             if($this->target->product_id == PRODUCT_ID_SALARY_MAN && $this->target->sub_product_id == STAGE_CER_TARGET){
-                $this->CI->load->library('Certification_lib');
                 $certification = $this->CI->certification_lib->get_certification_info($this->user->id, 8, 0);
                 $certificationStatus = isset($certification) && $certification && $certification->status == 1;
                 $level = $certificationStatus ? 3 : 4 ;
@@ -364,7 +365,6 @@ class PersonalCreditSheet extends CreditSheetBase {
         }
         else{
             // 檢查是否為產轉案件
-            $this->CI->load->model('loan/subloan_model');
             $subloan = $this->CI->subloan_model->get_by(['new_target_id' => $this->target->id]);
             if ( ! empty($subloan))
             {
