@@ -299,23 +299,7 @@ class PersonalCreditSheet extends CreditSheetBase {
         $reviewedInfoList = $this->CI->credit_sheet_review_model->order_by('group', 'DESC')->get_many_by(
             ['credit_sheet_id' => $this->creditSheetRecord->id]);
 
-        $meta_keys = [
-            'job_company_taiwan_1000_point',
-            'job_company_world_500_point',
-            'job_company_medical_institute_point',
-            'job_company_public_agency_point',
-        ];
-        $target_meta = $this->CI->target_meta_model->as_array()->get_many_by([
-            'target_id' => $this->target->id,
-            'meta_key' => $meta_keys
-        ]);
-        $target_meta = array_column($target_meta, 'meta_value', 'meta_key');
-        $specialInfo = [
-            'job_company_taiwan_1000_point' => $target_meta['job_company_taiwan_1000_point'] ?? 0,
-            'job_company_world_500_point' => $target_meta['job_company_world_500_point'] ?? 0,
-            'job_company_medical_institute_point' => $target_meta['job_company_medical_institute_point'] ?? 0,
-            'job_company_public_agency_point' => $target_meta['job_company_public_agency_point'] ?? 0,
-        ];
+        $specialInfo = $this->getSpecialInfo();
         // 上班族階段上架 或 非階段上架之其他產品
         if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
             // 設定信評加分
@@ -378,6 +362,26 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->target_lib->approve_target($this->target, FALSE, TRUE, FALSE, FALSE, $subloan_status);
         }
     }
+
+    private function getSpecialInfo():array
+    {
+        $meta_keys = [
+            'job_company_taiwan_1000_point',
+            'job_company_world_500_point',
+            'job_company_medical_institute_point',
+            'job_company_public_agency_point',
+        ];
+        $target_meta = $this->CI->target_meta_model->as_array()->get_many_by([
+            'target_id' => $this->target->id,
+            'meta_key' => $meta_keys
+        ]);
+        $target_meta = array_column($target_meta, 'meta_value', 'meta_key');
+        foreach ($meta_keys as $meta_key) {
+            $specialInfo[$meta_key] = $target_meta[$meta_key] ?? 0;
+        }
+        return $specialInfo ?? [];
+    }
+
 
     /**
      * 封存授審表 (審核通過)
