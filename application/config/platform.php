@@ -2808,27 +2808,7 @@ $config['social_patten'] = '全球|財經|數位|兩岸';
 $config['allow_aiBidding_product'] = [1, 2, 3, 4];
 
 # 推播的相關設定
-abstract class NotificationTargetCategory
-{
-    const Investment = 1;
-    const Loan = 2;
-    const All = 3;
-}
-
-abstract class NotificationType
-{
-    const Manual = 1;
-    const RoutineReminder = 2;
-}
-
-abstract class NotificationStatus
-{
-    const Pending = 0;
-    const Accepted = 1;
-    const Rejected = 2;
-    const Sent = 3;
-    const Canceled = 4;
-}
+require_once __DIR__ . '/platform_notification.php';
 
 $config['notification'] = [
     'target_category_name' => [
