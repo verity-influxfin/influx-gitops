@@ -2,6 +2,7 @@
 
 namespace Approve_target;
 
+use Approve_target\Credit\Approve_target_credit_base;
 use Approve_target\Credit\Product_home_loan_appliances;
 use Approve_target\Credit\Product_home_loan_renovation;
 use Approve_target\Credit\Product_home_loan_short;
@@ -59,7 +60,6 @@ class Approve_factory
             $this->_log_error_msg();
         }
     }
-
 
     private function _get_instance_by_target(): ?Approve_base
     {

@@ -1873,6 +1873,9 @@ class Target_lib
                     $value = $this_target;
 
                     $approve_instance = (new Approve_factory())->get_instance_by_model_data($value);
+                    if (!$approve_instance) {
+                      continue;
+                    }
                     if (boolval($approve_instance->approve(false))) {
                         $count++;
                     }
