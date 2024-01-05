@@ -299,12 +299,16 @@ class PersonalCreditSheet extends CreditSheetBase {
         $reviewedInfoList = $this->CI->credit_sheet_review_model->order_by('group', 'DESC')->get_many_by(
             ['credit_sheet_id' => $this->creditSheetRecord->id]);
 
-        $target_meta = $this->CI->target_meta_model->as_array()->get_many_by(['target_id' => $this->target->id, 'meta_key' => [
+        $meta_keys = [
             'job_company_taiwan_1000_point',
             'job_company_world_500_point',
             'job_company_medical_institute_point',
             'job_company_public_agency_point',
-        ]]);
+        ];
+        $target_meta = $this->CI->target_meta_model->as_array()->get_many_by([
+            'target_id' => $this->target->id,
+            'meta_key' => $meta_keys
+        ]);
         $target_meta = array_column($target_meta, 'meta_value', 'meta_key');
         $job_company_taiwan_1000_point = $target_meta['job_company_taiwan_1000_point'] ?? 0;
         $job_company_world_500_point = $target_meta['job_company_world_500_point'] ?? 0;
