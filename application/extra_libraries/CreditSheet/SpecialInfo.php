@@ -2,6 +2,8 @@
 
 namespace CreditSheet;
 
+use CI_Controller;
+
 class SpecialInfo
 {
     private $meta_keys = [
@@ -19,9 +21,15 @@ class SpecialInfo
      * @var int
      */
     private $target_id;
+    /**
+     * @var CI_Controller|object
+     */
+    private $CI;
 
     public function __construct(int $target_id)
     {
+        $this->CI = &get_instance();
+        $this->CI->load->model('loan/target_meta_model');
         $this->target_id = $target_id;
         $target_meta = $this->getTargetMeta($this->target_id, $this->meta_keys);
         $this->setInfo($target_meta);

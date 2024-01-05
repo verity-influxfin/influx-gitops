@@ -287,7 +287,6 @@ class PersonalCreditSheet extends CreditSheetBase {
     protected function finallyApprove() {
         $this->CI->load->model('loan/credit_model');
         $this->CI->load->model('loan/subloan_model');
-        $this->CI->load->model('loan/target_meta_model');
         $this->CI->load->library('Certification_lib');
         $this->CI->load->library('credit_lib');
         $this->CI->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
