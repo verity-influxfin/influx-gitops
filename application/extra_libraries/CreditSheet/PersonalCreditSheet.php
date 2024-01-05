@@ -306,7 +306,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->approvalextra->setSkipInsertion(true);
             $this->CI->approvalextra->setExtraPoints($bonusScore);
             $this->CI->approvalextra->set_fixed_amount($reviewedInfoList[0]->fixed_amount ?? 0);
-            $this->CI->approvalextra->setSpecialInfo($this->getSpecialInfo($this->target->id));
+            $this->CI->approvalextra->setSpecialInfo((new SpecialInfo($this->target->id))->getInfo());
 
             // 上班族階段上架
             $level = false;
@@ -362,24 +362,7 @@ class PersonalCreditSheet extends CreditSheetBase {
         }
     }
 
-    public function getSpecialInfo($target_id): array
-    {
-        $meta_keys = [
-            'job_company_taiwan_1000_point',
-            'job_company_world_500_point',
-            'job_company_medical_institute_point',
-            'job_company_public_agency_point',
-        ];
-        $target_meta = $this->CI->target_meta_model->as_array()->get_many_by([
-            'target_id' => $target_id,
-            'meta_key' => $meta_keys
-        ]);
-        $target_meta = array_column($target_meta, 'meta_value', 'meta_key');
-        foreach ($meta_keys as $meta_key) {
-            $specialInfo[$meta_key] = $target_meta[$meta_key] ?? 0;
-        }
-        return $specialInfo ?? [];
-    }
+
 
 
     /**
