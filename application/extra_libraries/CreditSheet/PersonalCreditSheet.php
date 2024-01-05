@@ -299,7 +299,6 @@ class PersonalCreditSheet extends CreditSheetBase {
         $reviewedInfoList = $this->CI->credit_sheet_review_model->order_by('group', 'DESC')->get_many_by(
             ['credit_sheet_id' => $this->creditSheetRecord->id]);
 
-        $specialInfo = $this->getSpecialInfo();
         // 上班族階段上架 或 非階段上架之其他產品
         if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
             // 設定信評加分
@@ -307,7 +306,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->approvalextra->setSkipInsertion(true);
             $this->CI->approvalextra->setExtraPoints($bonusScore);
             $this->CI->approvalextra->set_fixed_amount($reviewedInfoList[0]->fixed_amount ?? 0);
-            $this->CI->approvalextra->setSpecialInfo($specialInfo);
+            $this->CI->approvalextra->setSpecialInfo($this->getSpecialInfo());
 
             // 上班族階段上架
             $level = false;
@@ -363,7 +362,7 @@ class PersonalCreditSheet extends CreditSheetBase {
         }
     }
 
-    private function getSpecialInfo():array
+    private function getSpecialInfo(): array
     {
         $meta_keys = [
             'job_company_taiwan_1000_point',
