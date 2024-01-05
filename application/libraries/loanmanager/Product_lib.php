@@ -121,12 +121,8 @@ class Product_lib
     public function need_chk_allow_age(int $product_id, int $sub_product_id = 0): bool
     {
         $product = $this->get_exact_product($product_id, $sub_product_id);
-        $company = $this->get_no_allow_age_product_list();
-        if (in_array($product['visul_id'], $company))
-        {
-            return FALSE;
-        }
-        return TRUE;
+        $no_allow_age_list = $this->get_no_allow_age_product_list();
+        return !in_array($product['visul_id'], $no_allow_age_list);
     }
 
     /**
