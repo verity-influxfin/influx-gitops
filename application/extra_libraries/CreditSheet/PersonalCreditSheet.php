@@ -315,6 +315,12 @@ class PersonalCreditSheet extends CreditSheetBase {
         $job_company_medical_institute_point = $target_meta['job_company_medical_institute_point'] ?? 0;
         $job_company_public_agency_point = $target_meta['job_company_public_agency_point'] ?? 0;
 
+        $specialInfo = [
+            'job_company_taiwan_1000_point' => $job_company_taiwan_1000_point,
+            'job_company_world_500_point' => $job_company_world_500_point,
+            'job_company_medical_institute_point' => $job_company_medical_institute_point,
+            'job_company_public_agency_point' => $job_company_public_agency_point,
+        ];
         // 上班族階段上架 或 非階段上架之其他產品
         if($this->target->sub_product_id != STAGE_CER_TARGET || $this->target->product_id == 3) {
             // 設定信評加分
@@ -322,12 +328,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->approvalextra->setSkipInsertion(true);
             $this->CI->approvalextra->setExtraPoints($bonusScore);
             $this->CI->approvalextra->set_fixed_amount($reviewedInfoList[0]->fixed_amount ?? 0);
-            $this->CI->approvalextra->setSpecialInfo([
-                'job_company_taiwan_1000_point' => $job_company_taiwan_1000_point,
-                'job_company_world_500_point' => $job_company_world_500_point,
-                'job_company_medical_institute_point' => $job_company_medical_institute_point,
-                'job_company_public_agency_point' => $job_company_public_agency_point,
-            ]);
+            $this->CI->approvalextra->setSpecialInfo($specialInfo);
 
             // 上班族階段上架
             $level = false;
