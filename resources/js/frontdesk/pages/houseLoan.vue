@@ -68,7 +68,7 @@
                     class="img-fluid mx-auto"
                   />
                 </div>
-                <div class="card-title">低手續費3%</div>
+                <div class="card-title">低手續費3%起</div>
                 <div class="card-divider"></div>
               </div>
             </div>
@@ -122,8 +122,8 @@
             </div>
             <div class="suit-item">•18~45歲</div>
             <div class="suit-item">•信用良好（無催收/呆帳紀錄）</div>
-            <div class="suit-item">•穩定收入之公民</div>
-            <div class="suit-item">•具買賣、裝修合約及不動產</div>
+            <div class="suit-item">•收入穩定之公民</div>
+            <div class="suit-item">•具購買、裝修合約或憑證及所有權狀或謄本</div>
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@
               <!-- step-1 -->
               <div class="swiper-slide">
                 <div class="swiper-left swiper-text-1">
-                  <div>量身製定資金需求</div>
+                  <div>資金需求量身製定</div>
                   <div>提供您更滿意的貸款</div>
                 </div>
                 <img
@@ -182,7 +182,7 @@
                       <div class="swiper-text-3">•銀行存款金融卡</div>
                       <div class="swiper-text-3">•工作收入證明</div>
                       <div class="swiper-text-info">
-                        <div>(1)勞保異動明細</div>
+                        <div>(1)勞保異動明細(必要)</div>
                         <div>(2)近三個月薪資憑證</div>
                         <div>(3)近三個月存摺封面與內頁</div>
                         <div>(4)近年度扣繳憑單</div>
@@ -667,7 +667,7 @@
     <div class="product-feature">
       <div class="block-content">
         <div class="h1">產品特色</div>
-        <h2 class="h2">簡單、快速、安全又隱私，您申辦貸款的首選</h2>
+        <h2 class="h2">簡單、快速、安全又隱私，申辦貸款的首選</h2>
         <div class="product-feature-grid">
           <div
             class="product-feature-item"
@@ -677,7 +677,7 @@
             <div class="product-feature-title">即時審核，快速媒合放款</div>
             <div class="product-feature-text">
               <div>系統自動化審核加快申貸的速度，5分鐘申貸</div>
-              <div>10分鐘核准 最快1小時放款！</div>
+              <div>10分鐘核准 最快1小時到帳！</div>
             </div>
           </div>
           <div
@@ -688,8 +688,8 @@
           >
             <div class="product-feature-title">聯徵不留紀錄</div>
             <div class="product-feature-text">
-              <div>不會留下任何貸款相關紀錄，不影響未來信用</div>
-              <div>狀況，也不佔任何銀行額度。</div>
+              <div>不影響信用紀錄，</div>
+              <div>不占用銀行額度。</div>
             </div>
           </div>
           <div
@@ -701,7 +701,7 @@
             <div class="product-feature-title">不影響其他銀行申貸額度</div>
             <div class="product-feature-text">
               <div>購屋申請銀行房貸，同時申請普匯房產消費貸</div>
-              <div>增加可動用資金，靈活資源</div>
+              <div>增加可動用資金，靈活資源。</div>
             </div>
           </div>
           <div
@@ -719,15 +719,15 @@
             data-aos="fade-left"
             data-aos-duration="500"
           >
-            <div class="product-feature-title">費率單純透明</div>
+            <div class="product-feature-title">費率公開透明</div>
             <div class="product-feature-text">
-              <div>只收取一次性成交手續費，且費率以及每月需</div>
-              <div>還本息金額公開透明，不用擔心被收取其他費用。</div>
+              <div>收取一次性手續費，本息金額公開透明，</div>
+              <div>絕無其他費用，借的安心，還的放心。</div>
             </div>
           </div>
         </div>
         <div class="row no-gutters justify-content-center">
-          <div class="slogan">普匯房產貸 貸你幸福滿載</div>
+          <div class="slogan">普匯房貸 貸您幸福滿載</div>
         </div>
         <div class="row no-gutters justify-content-center mt-5">
           <a href="/borrowLink" target="_blank" rel="noopener noreferrer">

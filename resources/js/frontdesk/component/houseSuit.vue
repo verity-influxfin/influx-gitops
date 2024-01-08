@@ -13,7 +13,7 @@
     </div>
     <div class="main-content">
       <div v-show="tab === 0">
-        <div class="content-title">買房頭期款不足，找普匯！</div>
+        <div class="content-title">買房頭款不足，找普匯！</div>
         <div class="content-sub-divider"></div>
         <div class="content-sub-title-2">
           <div>房子越來越貴，想趁早買房</div>
@@ -22,14 +22,14 @@
         <div class="article-content">
           <div>
             <div class="article-title">
-              <div class="em">一支手機搞定貸款：</div>
+              <div class="em">一支手機搞定房貸：</div>
             </div>
             <div class="article-info">
               <div class="article-info-content">
-                <div>•提供添購傢俱家電合約與發票</div>
-                <div>•不動產所有權狀</div>
-                <div>•即可申貸合約或發票金額</div>
-                <div>8成資金，最高100萬</div>
+                <div>•提供雙證件、聯徵資料</div>
+                <div>•提供90天內有效購屋合約</div>
+                <div>•具購買、裝修合約或憑證及所有權狀或謄本</div>
+                <div>•資金靈活運用，貸你美夢成真</div>
               </div>
               <div class="mt-4 article-info-btn">
                 <a href="/borrowLink" target="_blank">
