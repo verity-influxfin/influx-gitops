@@ -30,6 +30,7 @@
                 <div>•提供90天內有效購屋合約</div>
                 <div>•具購買、裝修合約或憑證及所有權狀或謄本</div>
                 <div>•資金靈活運用，貸你美夢成真</div>
+                <div></div>
               </div>
               <div class="mt-4 article-info-btn">
                 <a href="/borrowLink" target="_blank">

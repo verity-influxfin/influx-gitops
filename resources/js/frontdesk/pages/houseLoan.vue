@@ -1126,7 +1126,7 @@ $color__background--primary: #f3f9fc;
     .suit-item {
       font-style: normal;
       font-weight: 500;
-      font-size: 32px;
+      font-size: 28px;
       line-height: 1.4;
       color: #ffffff;
     }
