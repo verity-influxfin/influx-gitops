@@ -1324,7 +1324,7 @@ class Target_model extends MY_Model
             ->select('t.reason')
             ->select('t.order_id')
             ->select('t.created_at')
-            ->join('user_certification uc', 'uc.user_id = t.user_id', 'LEFT')
+            ->join('p2p_user.user_certification uc', 'uc.user_id = t.user_id', 'LEFT')
             ->select('uc.status as certification_status')
             ->select('uc.certification_id')
             ->where('t.status', TARGET_WAITING_APPROVE)
@@ -1333,11 +1333,9 @@ class Target_model extends MY_Model
                 ->where('uc.status', CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
                 ->or_where('uc.status', CERTIFICATION_STATUS_FAILED)
             ->group_end()
-            ->where('t.created_at <=', $sevenDaysAgo)
-            ->get()
-            ->result();
+            ->where('t.created_at <=', $sevenDaysAgo);
 
-        return $query_target_join_user_cert;
+        return $query_target_join_user_cert->get()->result();
     }
 
     public function get_verified_name_but_others_not_fullfiled_14days_target_list()
@@ -1350,7 +1348,7 @@ class Target_model extends MY_Model
             ->select('t.order_id')
             ->select('t.status as target_status')
             ->select('t.created_at')
-            ->join('user_certification uc', 'uc.user_id = t.user_id', 'LEFT')
+            ->join('p2p_user.user_certification uc', 'uc.user_id = t.user_id', 'LEFT')
             ->select('uc.status as certification_status')
             ->select('uc.certification_id')
             ->where('uc.certification_id !=', CERTIFICATION_IDENTITY) //這個function只檢查實名以外的項目
@@ -1360,10 +1358,9 @@ class Target_model extends MY_Model
                 ->where('uc.status', CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
                 ->or_where('uc.status', CERTIFICATION_STATUS_FAILED)
                 ->or_where('uc.status', CERTIFICATION_STATUS_NOT_COMPLETED)
-            ->group_end()
-            ->get()
-            ->result();
-        return $query_target_join_user_cert;
+            ->group_end();
+
+        return $query_target_join_user_cert->get()->result();
     }
 
     public function get_targets_with_normal_transactions_count($user_id)

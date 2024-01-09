@@ -697,10 +697,17 @@ class Cron extends CI_Controller
 
         $target_list = $this->target_model->get_un_verified_name_7days_target_list();
 
-        foreach ($target_list as $index => $target){
-            $this->target_lib->cancel_target($target, $target->user_id, 0);
-            $this->notification_lib->withdraw_invalid_target($target->user_id, 0);
+        $cancelTargetIdArray = array();
+        foreach ($target_list as $target) {
+            $userId = $target->user_id;
+            $targetId = $target->id;
+            if(!in_array($targetId, $cancelTargetIdArray)){
+                $this->target_lib->cancel_target($target, $target->user_id, 0);
+                $this->notification_lib->withdraw_invalid_target($target->user_id, 0);
+                $cancelTargetIdArray[] = $targetId;
+            }
         }
+
     }
 
     public function cancel_target_after_14days_if_name_is_verified(){
