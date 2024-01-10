@@ -1329,10 +1329,8 @@ class Target_model extends MY_Model
             ->select('uc.certification_id')
             ->where('t.status', TARGET_WAITING_APPROVE)
             ->where('uc.certification_id', CERTIFICATION_IDENTITY)
-            ->group_start()
-                ->where('uc.status', CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
-                ->or_where('uc.status', CERTIFICATION_STATUS_FAILED)
-            ->group_end()
+            ->where_in('t.product_id', [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
+            ->where_in('uc.status', [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_FAILED])
             ->where('t.created_at <=', $sevenDaysAgo);
 
         return $query_target_join_user_cert->get()->result();
@@ -1345,7 +1343,7 @@ class Target_model extends MY_Model
             ->from('p2p_loan.targets t')
             ->select('t.id')
             ->select('t.user_id')
-            ->select('t.order_id')
+            ->select('t.product_id')
             ->select('t.status as target_status')
             ->select('t.created_at')
             ->join('p2p_user.user_certification uc', 'uc.user_id = t.user_id', 'LEFT')
@@ -1353,12 +1351,8 @@ class Target_model extends MY_Model
             ->select('uc.certification_id')
             ->where('uc.certification_id !=', CERTIFICATION_IDENTITY) //這個function只檢查實名以外的項目
             ->where('t.status', TARGET_WAITING_APPROVE)
-            ->where('t.created_at <=', $fourteenDaysAgo)
-            ->group_start()
-                ->where('uc.status', CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
-                ->or_where('uc.status', CERTIFICATION_STATUS_FAILED)
-                ->or_where('uc.status', CERTIFICATION_STATUS_NOT_COMPLETED)
-            ->group_end();
+            ->where_in('uc.status', [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_FAILED, CERTIFICATION_STATUS_NOT_COMPLETED])
+            ->where('t.created_at <=', $fourteenDaysAgo);
 
         return $query_target_join_user_cert->get()->result();
     }

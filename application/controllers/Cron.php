@@ -716,16 +716,23 @@ class Cron extends CI_Controller
 
         $target_list = $this->target_model->get_verified_name_but_others_not_fullfiled_14days_target_list();
 
+        $product_list = $this->config->item('product_list');
         $cancelTargetIdArray = array();
         foreach ($target_list as $target) {
-            $userId = $target->user_id;
-            $targetId = $target->id;
-            if(!in_array($targetId, $cancelTargetIdArray)){
-                $this->target_lib->cancel_target($target, $userId, 0);
-                $this->notification_lib->withdraw_invalid_target($userId, 0);
-                $cancelTargetIdArray[] = $targetId;
-            }
+            $certification_id  = $target->certification_id;
+            $product_of_this_target = $product_list[$target->product_id];
+            $user_certifications_of_this_product = $product_of_this_target['certifications'];
 
+            if( in_array($certification_id, $user_certifications_of_this_product) ){
+                $userId = $target->user_id;
+                $targetId = $target->id;
+                if(!in_array($targetId, $cancelTargetIdArray)){
+                    $this->target_lib->cancel_target($target, $userId, 0);
+                    $this->notification_lib->withdraw_invalid_target($userId, 0);
+                    $cancelTargetIdArray[] = $targetId;
+                }
+
+            }
         }
 
     }
