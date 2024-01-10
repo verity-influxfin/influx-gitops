@@ -356,6 +356,7 @@ class Target_lib
             if (!$credit || $stage_cer != 0) {
                 if(isset($product['checkOwner']) && $product['checkOwner'] == true){
                     $mix_credit = $this->get_associates_user_data($target->id, 'all', [0 ,1], true);
+                    $credit_score = [];
                     foreach ($mix_credit as $value) {
                         $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true, $target->instalment, $target);
                     }
