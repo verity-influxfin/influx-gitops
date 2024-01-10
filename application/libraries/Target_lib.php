@@ -2633,8 +2633,7 @@ class Target_lib
     {
         $sub_product_list = $this->CI->config->item('sub_product_list');
         $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
-        $product = $this->sub_product_profile($product, $sub_product_data);
-        return $product;
+        return $this->sub_product_profile($product, $sub_product_data);
     }
 
     /**
