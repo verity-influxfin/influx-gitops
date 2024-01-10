@@ -2624,7 +2624,12 @@ class Target_lib
         return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product']);
     }
 
-    private function trans_sub_product($product, $sub_product_id)
+    /**
+     * @param $product
+     * @param $sub_product_id
+     * @return array
+     */
+    private function trans_sub_product($product, $sub_product_id): array
     {
         $sub_product_list = $this->CI->config->item('sub_product_list');
         $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
@@ -2632,7 +2637,12 @@ class Target_lib
         return $product;
     }
 
-    private function sub_product_profile($product, $sub_product)
+    /**
+     * @param $product
+     * @param $sub_product
+     * @return array
+     */
+    private function sub_product_profile($product, $sub_product): array
     {
         return array(
             'id' => $product['id'],
