@@ -1329,7 +1329,6 @@ class Target_model extends MY_Model
             ->select('uc.certification_id')
             ->where('t.status', TARGET_WAITING_APPROVE)
             ->where('uc.certification_id', CERTIFICATION_IDENTITY)
-            ->where_in('t.product_id', [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
             ->where_in('uc.status', [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_FAILED])
             ->where('t.created_at <=', $sevenDaysAgo);
 
