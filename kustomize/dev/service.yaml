@@ -1,0 +1,14 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: influx-website-service
+spec:
+  selector:
+    app: influx-website
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 80  # 應用程式實際運行的端口
+  type: LoadBalancer
+  

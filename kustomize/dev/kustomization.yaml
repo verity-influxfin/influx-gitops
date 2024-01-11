@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- deployment.yaml
+- service.yaml
+
+# 這裡可以添加各種修改，如修改標籤、添加註釋等
+# patches:
+# - path: path-to-patch.yaml

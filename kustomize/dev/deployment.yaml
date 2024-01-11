@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influx-website-deployment
+  labels:
+    app: influx-website
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: influx-website
+  template:
+    metadata:
+      labels:
+        app: influx-website
+    spec:
+      containers:
+      - name: influx-website-container
+        image: malikverity/influx-website:ae32077
+        ports:
+        - containerPort: 80
