@@ -1,12 +1,14 @@
 FROM php:7.2-apache
-
-MAINTAINER Jack
-
 WORKDIR /var/www/html
 
 ADD . /var/www/html
+# RUN chmod -R 777 /var/www/html/storage/logs
 
-RUN apt update && apt install -y libpng-dev zlib1g-dev nodejs npm libzip-dev zip
+RUN apt update && apt install -y libpng-dev zlib1g-dev libzip-dev zip
+
+RUN curl -s https://deb.nodesource.com/setup_16.x | bash -
+RUN apt install nodejs -y
+RUN npm install yarn -g
 
 RUN docker-php-ext-configure zip --with-libzip
 RUN docker-php-ext-install mbstring zip gd mysqli pdo pdo_mysql opcache
@@ -21,4 +23,4 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 RUN composer install
 
-RUN npm install
+RUN yarn --frozen-lockfile
