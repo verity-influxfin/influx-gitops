@@ -33,10 +33,5 @@
 		"mikey179/vfsstream": "1.1.*",
 		"kenjis/ci-phpunit-test": "^2.0",
 		"phpunit/phpunit": "^8"
-	},
-    "autoload-dev": {
-        "psr-4": {
-            "Approve_target\\": "application/extra_libraries/Approve_target/"
-        }
-    }
+	}
 }

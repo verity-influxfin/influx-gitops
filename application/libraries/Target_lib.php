@@ -1872,11 +1872,10 @@ class Target_lib
                     // $value 取代成重新取得的資料
                     $value = $this_target;
 
-                    $approve_instance = (new Approve_factory())->get_instance_by_model_data($value);
-                    if (!$approve_instance) {
-                      continue;
-                    }
-                    if (boolval($approve_instance->approve(false))) {
+                    $approve_factory = new Approve_factory();
+                    $approve_instance = $approve_factory->get_instance_by_model_data($value);
+                    if ($approve_instance->approve(FALSE) === TRUE)
+                    {
                         $count++;
                     }
                     continue;

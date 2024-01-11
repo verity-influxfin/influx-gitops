@@ -7,8 +7,6 @@ use CertificationResult\MessageDisplay;
 use CertificationResult\SocialCertificationResult;
 use CreditSheet\CreditSheetFactory;
 
-class CheckFailedException extends \Exception {}
-
 abstract class Approve_base implements Approve_interface
 {
     protected $CI;
@@ -77,62 +75,67 @@ abstract class Approve_base implements Approve_interface
         // 檢查是否為產轉
         $subloan_status = $this->CI->target_lib->is_sub_loan($this->target['target_no']);
 
-
-        try {
-            // 核可前的行為
-            if (!$this->check_before_approve()) {
-                throw new CheckFailedException('check_before_approve failed');
-            }
-
-            // 檢查申貸時間
-            if (!$this->check_apply_time()) {
-                throw new CheckFailedException('check_apply_time failed');
-            }
-
-            // 檢查使用者提交的徵信項，沒完成不繼續
-            if (!$this->check_cert($this->user_certs)) {
-                throw new CheckFailedException('check_cert failed');
-            }
-            // 檢查是否符合產品設定，不符合不繼續
-            if (!$this->check_product()) {
-                throw new CheckFailedException('check_product failed');
-            }
-
-            // 檢查額度
-            $this->credit = $this->get_user_credit();
-            if (!$this->check_credit($subloan_status)) {
-                throw new CheckFailedException('check_credit failed');
-            }
-
-            // 2023-10-19 所有產轉都不用檢查是否命中反詐欺
-            if (!$subloan_status) {
-                // 檢查是否命中反詐欺
-                switch ($this->check_brookesia()) {
-                    case self::BROOKESIA_BLOCK:
-                        throw new CheckFailedException('BROOKESIA_BLOCK');
-                    case self::BROOKESIA_CLEAR:
-                        break;
-                    case self::BROOKESIA_SECOND_INSTANCE:
-                    default:
-                        $match_brookesia = true;
-                }
-            }
-
-            if (!$this->CI->brookesia_lib->is_user_checked($this->target_user_id, $this->target['id'])) {
-                $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
-                $this->result->set_action_cancel();
-                $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_DEBUG);
-                throw new CheckFailedException('brookesia_lib is_user_checked failed');
-            }
-
-            // 檢查戶役政
-            if (!$this->check_identity($this->target_user_id)) {
-                throw new CheckFailedException('check_identity failed');
-            }
-        } catch (CheckFailedException $e) {
-            echo 'Exception: ' . $e->getMessage() . PHP_EOL;
+        // 核可前的行為
+        if ($this->check_before_approve() === FALSE)
+        {
+            goto END;
         }
 
+        // 檢查申貸時間
+        if ($this->check_apply_time() === FALSE)
+        {
+            goto END;
+        }
+
+        // 檢查使用者提交的徵信項，沒完成不繼續
+        if ($this->check_cert($this->user_certs) === FALSE)
+        {
+            goto END;
+        }
+        // 檢查是否符合產品設定，不符合不繼續
+        if ($this->check_product() === FALSE)
+        {
+            goto END;
+        }
+
+        // 檢查額度
+        $this->credit = $this->get_user_credit();
+        if ($this->check_credit($subloan_status) === FALSE)
+        {
+            goto END;
+        }
+
+        // 2023-10-19 所有產轉都不用檢查是否命中反詐欺
+        if (!$subloan_status) {
+            // 檢查是否命中反詐欺
+            switch ($this->check_brookesia())
+            {
+                case self::BROOKESIA_BLOCK:
+                    goto END;
+                case self::BROOKESIA_CLEAR:
+                    break;
+                case self::BROOKESIA_SECOND_INSTANCE:
+                default:
+                    $match_brookesia = TRUE;
+            }
+        }
+
+        $user_checked = $this->CI->brookesia_lib->is_user_checked($this->target_user_id, $this->target['id']);
+        if ($user_checked === FALSE)
+        {
+            $this->CI->brookesia_lib->userCheckAllRules($this->target_user_id, $this->target['id']);
+            $this->result->set_action_cancel();
+            $this->result->add_memo($this->result->get_status(), '反詐欺子系統未處理完畢，案件尚無法核可', Approve_target_result::DISPLAY_DEBUG);
+            goto END;
+        }
+
+        // 檢查戶役政
+        if ($this->check_identity($this->target_user_id) === FALSE)
+        {
+            goto END;
+        }
+
+        END:
         if ($this->result->action_is_cancel())
         {
             $this->set_action_cancellation();
@@ -141,7 +144,7 @@ abstract class Approve_base implements Approve_interface
 
         // 檢查是否需要進二審
         $need_second_instance = $this->get_need_second_instance($match_brookesia);
-        if ($this->check_before_second_instance())
+        if ($this->check_before_second_instance() === TRUE)
         {
             if ($need_second_instance === TRUE)
             {
@@ -159,7 +162,7 @@ abstract class Approve_base implements Approve_interface
         }
 
         $status = $this->result->get_status();
-        if ($subloan_status && $status === TARGET_WAITING_APPROVE)
+        if ($subloan_status === TRUE && $status === TARGET_WAITING_APPROVE)
         {
             $status = TARGET_WAITING_SIGNING;
         }
@@ -169,20 +172,20 @@ abstract class Approve_base implements Approve_interface
             case TARGET_WAITING_SIGNING:
             case TARGET_ORDER_WAITING_VERIFY:
                 $res = $this->set_target_success($renew, $subloan_status);
-                if ($res)
+                if ($res === TRUE)
                 {
                     $res = $this->success_notify($subloan_status);
                 }
                 break;
             case TARGET_FAIL:
                 $res = $this->set_target_failure($subloan_status);
-                if ($res)
+                if ($res === TRUE)
                 {
                     $res = $this->failure_notify($subloan_status);
                 }
                 break;
             case TARGET_WAITING_APPROVE:
-                if ($need_second_instance)
+                if ($need_second_instance === TRUE)
                 {
                     $res = $this->set_target_second_instance();
                 }
@@ -208,26 +211,26 @@ abstract class Approve_base implements Approve_interface
     {
         if ($this->result->get_status() === TARGET_FAIL)
         {
-            return false;
+            return FALSE;
         }
-        if ($this->check_need_second_instance_by_product())
+        if ($this->check_need_second_instance_by_product() === TRUE)
         {
-            return true;
+            return TRUE;
         }
-        if ($match_brookesia)
+        if ($match_brookesia === TRUE)
         {
             // 命中反詐欺
-            return true;
+            return TRUE;
         }
-        if (isset($this->product_config['secondInstance']) && $this->product_config['secondInstance'])
+        if (isset($this->product_config['secondInstance']) && $this->product_config['secondInstance'] === TRUE)
         {
             // 產品設定檔設定需二審
-            return true;
+            return TRUE;
         }
 
         // todo: 如果後台二審審核通過也要共用這個架構，再想辦法
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -827,9 +830,13 @@ abstract class Approve_base implements Approve_interface
      */
     public function can_approve(): bool
     {
-        return $this->is_waiting_approve_status() &&
-            $this->is_script_status_not_use() &&
-            $this->is_submitted();
+        if ($this->is_waiting_approve_status() === TRUE &&
+            $this->is_script_status_not_use() === TRUE &&
+            $this->is_submitted() === TRUE)
+        {
+            return TRUE;
+        }
+        return FALSE;
     }
 
     /**
@@ -844,7 +851,8 @@ abstract class Approve_base implements Approve_interface
      */
     protected function is_script_status_not_use(): bool
     {
-        return $this->update_target_script_status() > 0;
+        $affected_row = $this->update_target_script_status();
+        return $affected_row > 0;
     }
 
     /**
@@ -1161,11 +1169,11 @@ abstract class Approve_base implements Approve_interface
      */
     public function success_notify(bool $subloan_status): bool
     {
-        if ($this->target['status'] == TARGET_WAITING_APPROVE) {
-            return $this->CI->notification_lib->approve_target($this->target_user_id,
-                TARGET_WAITING_SIGNING, $this->target, $this->loan_amount, $subloan_status);
+        if ($this->target['status'] == TARGET_WAITING_APPROVE)
+        {
+            return $this->CI->notification_lib->approve_target($this->target_user_id, TARGET_WAITING_SIGNING, $this->target, $this->loan_amount, $subloan_status);
         }
-        return true;
+        return TRUE;
     }
 
     /**
@@ -1175,7 +1183,6 @@ abstract class Approve_base implements Approve_interface
      */
     public function failure_notify(bool $subloan_status): bool
     {
-        return $this->CI->notification_lib->approve_target($this->target_user_id,
-            TARGET_FAIL, $this->target, 0, $subloan_status, $this->target['remark']);
+        return $this->CI->notification_lib->approve_target($this->target_user_id, TARGET_FAIL, $this->target, 0, $subloan_status, $this->target['remark']);
     }
 }
