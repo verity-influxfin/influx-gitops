@@ -118,8 +118,27 @@ class Sns extends REST_Controller {
 //		}
 //	}
 
+    /**
+     * 測試用，取得信件列表
+     * @return void
+     */
+    public function credit_test_check_total_mail_post()
+    {
+        $input = $this->input->post(null, true);
+        if (isset($input['day']) && $input['day'] > 0) {
+            $list = $this->s3_lib->get_mailbox_day_before_today_list($input['day']);
+        } else {
+            $list = $this->s3_lib->get_mailbox_today_list();
+        }
 
-    public function credit_post()
+        $this->response(['status' => 'success', 'data' => $list], REST_Controller::HTTP_OK);
+    }
+
+    /**
+     * 徵信項、工作收入證明收信處理，處理完後刪除檔案
+     * @return void
+     */
+    public function credit_post(): void
     {
         //        $list = $this->s3_lib->get_mailbox_list();
 
@@ -131,7 +150,7 @@ class Sns extends REST_Controller {
         }
 
         if (empty($list)) {
-            return true;
+            $this->response(['status' => 'success', 'data' => $list, 'message' => 'no item need to process'], REST_Controller::HTTP_OK);
         }
 
         foreach ($list as $s3_url) {
@@ -309,9 +328,15 @@ class Sns extends REST_Controller {
                 $this->record_mailbox_log($detail);
             }
         }
-        return true;
+        $this->response(['status' => 'success', 'data' => $list, 'message' => 'end process'], REST_Controller::HTTP_OK);
     }
 
+    /**
+     * 處理未知的信件，轉為不明檔案，並刪除原始檔案
+     * @param string $s3_url
+     * @param string $bucket
+     * @return array
+     */
     private function process_unknown_mail(string $s3_url, string $bucket): array
     {
         try {
@@ -332,6 +357,11 @@ class Sns extends REST_Controller {
         return $actions;
     }
 
+    /**
+     * 紀錄處理信件的log
+     * @param $log_data
+     * @return void
+     */
     private function record_mailbox_log($log_data)
     {
         $log_data['actions'] = json_encode($log_data['actions'], JSON_UNESCAPED_UNICODE);
