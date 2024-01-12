@@ -118,6 +118,20 @@ class Sns extends REST_Controller {
 //		}
 //	}
 
+    /**
+     * @return void
+     */
+    public function credit_test_check_total_mail_post()
+    {
+        $input = $this->input->post(null, true);
+        if (isset($input['day']) && $input['day'] > 0) {
+            $list = $this->s3_lib->get_mailbox_day_before_today_list($input['day']);
+        } else {
+            $list = $this->s3_lib->get_mailbox_today_list();
+        }
+
+        $this->response(['status' => 'success', 'data' => $list], REST_Controller::HTTP_OK);
+    }
 
     public function credit_post()
     {
