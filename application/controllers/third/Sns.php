@@ -133,6 +133,10 @@ class Sns extends REST_Controller {
         $this->response(['status' => 'success', 'data' => $list], REST_Controller::HTTP_OK);
     }
 
+    /**
+     * 徵信項收信處理，處理完後刪除檔案
+     * @return void
+     */
     public function credit_post()
     {
         //        $list = $this->s3_lib->get_mailbox_list();
@@ -145,7 +149,7 @@ class Sns extends REST_Controller {
         }
 
         if (empty($list)) {
-            return true;
+            $this->response(['status' => 'success', 'data' => $list, 'message' => 'no item need to process'], REST_Controller::HTTP_OK);
         }
 
         foreach ($list as $s3_url) {
@@ -323,7 +327,7 @@ class Sns extends REST_Controller {
                 $this->record_mailbox_log($detail);
             }
         }
-        return true;
+        $this->response(['status' => 'success', 'data' => $list, 'message' => 'end process'], REST_Controller::HTTP_OK);
     }
 
     private function process_unknown_mail(string $s3_url, string $bucket): array
