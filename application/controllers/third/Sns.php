@@ -119,6 +119,7 @@ class Sns extends REST_Controller {
 //	}
 
     /**
+     * 測試用，取得信件列表
      * @return void
      */
     public function credit_test_check_total_mail_post()
