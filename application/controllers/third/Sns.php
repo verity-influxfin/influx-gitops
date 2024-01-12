@@ -135,10 +135,10 @@ class Sns extends REST_Controller {
     }
 
     /**
-     * 徵信項收信處理，處理完後刪除檔案
+     * 徵信項、工作收入證明收信處理，處理完後刪除檔案
      * @return void
      */
-    public function credit_post()
+    public function credit_post(): void
     {
         //        $list = $this->s3_lib->get_mailbox_list();
 
