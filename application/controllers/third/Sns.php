@@ -155,6 +155,7 @@ class Sns extends REST_Controller {
 
         foreach ($list as $s3_url) {
             try {
+                $detail = [];
                 $filename = $this->s3_lib->public_get_filename($s3_url, S3_BUCKET_MAILBOX);
                 $detail['filename'] = $filename;
                 $file_content = file_get_contents('s3://' . S3_BUCKET_MAILBOX . '/' . $filename);
