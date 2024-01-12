@@ -330,6 +330,12 @@ class Sns extends REST_Controller {
         $this->response(['status' => 'success', 'data' => $list, 'message' => 'end process'], REST_Controller::HTTP_OK);
     }
 
+    /**
+     * 處理未知的信件，轉為不明檔案，並刪除原始檔案
+     * @param string $s3_url
+     * @param string $bucket
+     * @return array
+     */
     private function process_unknown_mail(string $s3_url, string $bucket): array
     {
         try {
@@ -350,6 +356,11 @@ class Sns extends REST_Controller {
         return $actions;
     }
 
+    /**
+     * 紀錄處理信件的log
+     * @param $log_data
+     * @return void
+     */
     private function record_mailbox_log($log_data)
     {
         $log_data['actions'] = json_encode($log_data['actions'], JSON_UNESCAPED_UNICODE);
