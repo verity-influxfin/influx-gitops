@@ -89,7 +89,7 @@ class S3_lib {
 		try {
 			$list = $this->client_us2->listObjects(array('Bucket' => $bucket));
 		} catch (S3Exception $e) {
-			echo '洽工程師 檢查連線問題';
+			echo '洽工程師 檢查連線問題'.$e->getMessage();
 			exit();
 		}
 		if (!empty($list['Contents'])) {
@@ -178,7 +178,7 @@ class S3_lib {
                 $url_list[] = $this->client_us2->getObjectUrl($bucket, $object['Key']);
             }
         } catch (S3Exception $e) {
-            echo '洽工程師 檢查連線問題';
+            echo '洽工程師 檢查連線問題'.$e->getMessage();
             exit();
         }
         return $url_list;
