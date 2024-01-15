@@ -237,8 +237,10 @@ class Sendemail
             $emails = [$emails];
         }
         $insert_data = [];
-        foreach ($emails as $email)
-        {
+        foreach ($emails as $email) {
+            if (empty($email)) {
+                continue;
+            }
             $insert_data[] = [
                 'email_to' => $email,
                 'email_from' => GMAIL_SMTP_ACCOUNT,
