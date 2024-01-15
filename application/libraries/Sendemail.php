@@ -312,6 +312,11 @@ class Sendemail
                     $certification_id = $value['certification_id'];
                 }
 			}
+            if (empty($certification_id)) {
+                log_message('error', 'user_id:'.$user_info->id.', email certification id is empty');
+                return false;
+            }
+
 			// 依照 email 的 certification id 找到 user certification 才能找到對應投資人的 email
 			$info = $this->CI->user_certification_model->get($certification_id);
 			$user_certification = json_decode($info->content, true);
