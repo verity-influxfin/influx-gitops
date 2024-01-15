@@ -305,15 +305,15 @@ class Sendemail
 			$this->CI->load->library('certification_lib');
 			$this->CI->load->model('user/user_certification_model');
 
-			// 找出投資人的 certification
-			$certification_info = $this->CI->certification_lib->get_last_status($user_info->id,1,$user_info->company_status);
-			foreach($certification_info as $value) {
+            // 找出投資人的 certification
+            $certification_info = $this->CI->certification_lib->get_last_status($user_info->id, 1, $user_info->company_status);
+            foreach ($certification_info as $value) {
                 if ($value['alias'] == 'email') {
                     $certification_id = $value['certification_id'];
                 }
-			}
+            }
             if (empty($certification_id)) {
-                log_message('error', 'user_id:'.$user_info->id.', email certification id is empty');
+                log_message('error', 'user_id:' . $user_info->id . ', email certification id is empty');
                 return false;
             }
 
