@@ -308,8 +308,9 @@ class Sendemail
 			// 找出投資人的 certification
 			$certification_info = $this->CI->certification_lib->get_last_status($user_info->id,1,$user_info->company_status);
 			foreach($certification_info as $value) {
-				if($value['alias']=='email')
-					$certification_id = $value['certification_id'];
+                if ($value['alias'] == 'email') {
+                    $certification_id = $value['certification_id'];
+                }
 			}
 			// 依照 email 的 certification id 找到 user certification 才能找到對應投資人的 email
 			$info = $this->CI->user_certification_model->get($certification_id);
