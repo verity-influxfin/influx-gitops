@@ -226,9 +226,9 @@ class Sendemail
 		$this->CI->email->from(GMAIL_SMTP_ACCOUNT,GMAIL_SMTP_NAME);
 		$this->CI->email->subject($subject);
 		$this->CI->email->message($content);
-
-        $reply_to?$this->CI->email->reply_to($reply_to,$reply_to_name):'';
-
+        if($reply_to){
+            $this->CI->email->reply_to($reply_to,$reply_to_name);
+        }
 		$rs = $this->CI->email->send();
 
         $this->CI->load->model('log/log_send_email_model');
