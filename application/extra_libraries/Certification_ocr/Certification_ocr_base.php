@@ -88,7 +88,13 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         }
         catch (RequestException $e)
         {
-            $this->insert_log($e->getResponse()->getStatusCode(), $e->getResponse()->getBody()->getContents());
+            $response = $e->getResponse();
+            if ($response === null) {
+                $statusCode = 500;
+            } else {
+                $statusCode = $response->getStatusCode();
+            }
+            $this->insert_log($statusCode, $e->getResponse()->getBody()->getContents());
             $result = FALSE;
         }
         return $this->_chk_ocr_task_create($result);
