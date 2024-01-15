@@ -321,9 +321,16 @@ class Sendemail
 			$info = $this->CI->user_certification_model->get($certification_id);
 			$user_certification = json_decode($info->content, true);
 
+            $email = $user_certification['email'];
+            if (empty($email)) {
+                log_message('error', 'user_id:' . $user_info->id . ', ceritification_id:' .
+                    $certification_id . ', email is empty');
+                return false;
+            }
+
 			$mail_event = $this->CI->config->item('mail_event');
 			$content = $this->CI->parser->parse('email/user_notification', array("title" => $title, "content" => nl2br($notification_content), "type" => $type, "mail_event" => $mail_event, "investor_status" => 1), TRUE);
-			$this->send($user_certification['email'],isset($subject)?$subject:$title, $content);
+            $this->send($email, isset($subject) ? $subject : $title, $content);
 			return true;
 		}
 		return false;
