@@ -249,11 +249,7 @@ class Sendemail
         }
         $this->CI->log_send_email_model->insert_many($insert_data);
 
-		if($rs){
-			return true;
-		}else{
-			return false;
-		}
+        return boolval($rs);
     }
 
     public function lending_success($user_id, $investor, $target_no, $amount, $bankaccount="", $borrower_user_id=0) {
