@@ -91,10 +91,12 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
             $response = $e->getResponse();
             if ($response === null) {
                 $statusCode = 500;
+                $content = '';
             } else {
                 $statusCode = $response->getStatusCode();
+                $content = $response->getBody()->getContents();
             }
-            $this->insert_log($statusCode, $e->getResponse()->getBody()->getContents());
+            $this->insert_log($statusCode, $content);
             $result = FALSE;
         }
         return $this->_chk_ocr_task_create($result);
