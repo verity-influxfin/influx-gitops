@@ -163,14 +163,14 @@
                     />
                     <div class="card-link-text">資訊工程師貸</div>
                   </router-link>
-                  <div class="card-link">
+                  <router-link to="/houseloan" class="card-link clickable">
                     <img
                       src="@/asset/images/house_black.svg"
                       alt="房屋貸款"
                       class="card-link-img"
                     />
                     <div class="card-link-text">房屋貸款</div>
-                  </div>
+                  </router-link>
                 </div>
               </div>
             </div>

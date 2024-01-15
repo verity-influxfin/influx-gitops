@@ -5,7 +5,7 @@
 <head>
     <!-- Google Tag Manager -->
     <script>
-        (function(w, d, s, l, i) {
+        (function  (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({
                 'gtm.start': new Date().getTime(),
@@ -18,7 +18,7 @@
             j.src =
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '<?php echo env('APP_ENV ') == 'production ' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'; ?>');
+        })(window, document, 'script', 'dataLayer', '<?php echo env('APP_ENV ') == 'production ' ? 'GT M  - 5Z439PW' : ' G TM - 589Z9H6'; ?
     </script>
     <!-- End Google Tag Manager -->
     <meta charset="utf-8">
@@ -44,7 +44,7 @@
     <link rel="icon" href="{{ asset('images/site_icon.png') }}">
     <!-- package -->
     @if (isset($meta_data['link']))
-        <link rel="canonical" href="{{ $meta_data['link'] }}" />
+    <link rel="canonical" href="{{ $meta_data['link'] }}" />
     @endif
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/jquery-ui.min.css') }}">
@@ -64,7 +64,7 @@
 
     <!--Facebook Comments-->
     <script>
-        (function(d, s, id) {
+        (fun ction (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
             js = d.createElement(s);
@@ -73,14 +73,14 @@
                 "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=2194926914163491&autoLogAppEvents=1&d=" +
                 new Date().getTime();
             fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+        }(document, 'script', 'facebook-jssd;
     </script>
 
     <!-- Facebook Pixel Code -->
     <script>
-        ! function(f, b, e, v, n, t, s) {
+        ! fu nction (f, b, e, v, n, t, s) {
             if (f.fbq) return;
-            n = f.fbq = function() {
+            n = f.fbq = f unction () {
                 n.callMethod ?
                     n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
@@ -97,11 +97,10 @@
         }(window, document, 'script',
             'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '2521369841313676');
-        fbq('track', 'PageView');
+        fbq('track', 'Page');
     </script>
     <noscript>
-        <img height="1" width="1"
-            src="https://www.facebook.com/tr?id=2521369841313676&ev=PageView
+        <img height="1" width="1" src="https://www.facebook.com/tr?id=2521369841313676&ev=PageView
     &noscript=1" />
     </noscript>
     <!-- End Facebook Pixel Code -->
@@ -115,30 +114,29 @@
             dataLayer.push(arguments);
         }
         gtag('js', new Date());
-        gtag('config', 'AW-692812197');
+        gtag('config', 'AW-69281');
     </script>
     <!-- Event snippet for 借款、投資app下載 conversion page In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
     <!-- 借款：WE5GCNWzgpoCEKXzrcoC 投資：vcdCCJyj_ZkCEKXzrcoC -->
     <script>
-        window.addEventListener("load", function(event) {
-            setTimeout(function() {
-                document.querySelectorAll("a[href*='investLink']").forEach(function(e) {
-                    e.addEventListener('click', function() {
+        window.addEventListener("load",  function (event) {
+            setTimeout (function () {
+                document.querySelectorAll("a[href*='investLink']").forEac h(function (e) {
+                    e.addEventListener('click ', function () {
                         gtag('event', 'conversion', {
                             'send_to': 'AW-692812197/vcdCCJyj_ZkCEKXzrcoC'
                         });
                     });
                 });
 
-                document.querySelectorAll("a[href*='borrowLink']").forEach(function(e) {
-                    e.addEventListener('click', function() {
+                document.querySelectorAll("a[href*='borrowLink']").forE ach(function (e) {
+                    e.addEventListener('cli ck', function () {
                         gtag('event', 'conversion', {
                             'send_to': 'AW-692812197/WE5GCNWzgpoCEKXzrcoC'
                         });
                     });
                 });
-            }, 2000)
-        });
+            }, 2000      });
     </script>
 </head>
 
@@ -177,8 +175,7 @@
                                                     <a href="/engineerLoan" class="link-text">資訊工程師貸</a>
                                                 </div>
                                                 <div class="link-item">
-                                                    <div class="link-text">房屋貸款</div>
-                                                    <div class="link-coming-soon">(coming soon)</div>
+                                                    <a href="/houseLoan" class="link-text">房屋貸款</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -315,17 +312,16 @@
                                                     <a class="link-text" href="/vlog?q=share">小學堂影音</a>
                                                 </div>
                                                 @foreach ($latestArticles as $latestArticle)
-                                                    <div class="link-item">
-                                                        @if (!empty($latestArticle->path))
-                                                            <a class="link-text"
-                                                                href="/articlepage/{{ $latestArticle->path }}">
-                                                            @else
-                                                                <a class="link-text"
-                                                                    href="/articlepage?q=knowledge-{{ $latestArticle->ID }}">
-                                                        @endif
-                                                        {{ $latestArticle->post_title }}
+                                                <div class="link-item">
+                                                    @if (!empty($latestArticle->path))
+                                                    <a class="link-text" href="/articlepage/{{ $latestArticle->path }}">
+                                                        @else
+                                                        <a class="link-text"
+                                                            href="/articlepage?q=knowledge-{{ $latestArticle->ID }}">
+                                                            @endif
+                                                            {{ $latestArticle->post_title }}
                                                         </a>
-                                                    </div>
+                                                </div>
                                                 @endforeach
                                             </div>
                                         </div>
@@ -428,9 +424,9 @@
                         <a href="/blog" class="item">小學堂文章列表</a>
                         <a href="/vlog?q=share" class="item">小學堂影音</a>
                         @foreach ($latestArticles as $latestArticle)
-                            <a class="item" href="/articlepage?q=knowledge-{{ $latestArticle->ID }}">
-                                {{ $latestArticle->post_title }}
-                            </a>
+                        <a class="item" href="/articlepage?q=knowledge-{{ $latestArticle->ID }}">
+                            {{ $latestArticle->post_title }}
+                        </a>
                         @endforeach
                     </div>
                 </div>
@@ -470,16 +466,15 @@
             <section class="banner">
             </section>
             @if ($type == 'knowledge')
-                <div class="knowledge-wrapper container">
-                    <div class="row">
-                        <div class="col-12 col-lg-9 mb-3">
-                            <article class="article">
-                                <h1 class="title post_title">{{ $article->post_title }}</h1>
-                                <div class="info">
-                                    <span class="date">{{ $article->post_date }}</span>
-                                </div>
-                                <img class="cover" src="{{ asset($article->media_link) }}"
-                                    alt="<?php
+            <div class="knowledge-wrapper container">
+                <div class="row">
+                    <div class="col-12 col-lg-9 mb-3">
+                        <article class="article">
+                            <h1 class="title post_title">{{ $article->post_title }}</h1>
+                            <div class="info">
+                                <span class="date">{{ $article->post_date }}</span>
+                            </div>
+                            <img class="cover" src="{{ asset($article->media_link) }}" alt="<?php
                                     if (empty($article->media_alt)) {
                                         preg_match('/\/([^\/]+)$/', $article->media_link, $matches);
                                         $filename = explode('.', $matches[1]);
@@ -487,102 +482,102 @@
                                     } else {
                                         echo $article->media_alt;
                                     } ?>" />
-                                <div class="content">
-                                    {!! $article->post_content !!}
-                                </div>
-                            </article>
-                            <section class="advertise" style="display: flex; justify-content: center;">
-                                <img class="cover adv_img" src=" /{{ $adv->img_url }}" style="max-width: 100%;" />
-                            </section>
-                            <section class="adv_sec" style="margin: 30px 0;">
-                                @if ($adv->type == 'student')
-                                    <button class="adv_btn" id="stduent_loan_btn">
-                                        立即了解更多
-                                    </button>
-                                @elseif ($adv->type == 'office')
-                                    <button class="adv_btn" id="office_loan_btn">
-                                        立即了解更多
-                                    </button>
-                                @elseif ($adv->type == 'enterprise')
-                                    <button class="adv_btn" id="enterprise_loan_btn">
-                                        立即了解更多
-                                    </button>
-                                @elseif ($adv->type == 'invest')
-                                    <button class="adv_btn" id="invest_btn">
-                                        立即了解更多
-                                    </button>
-                                @endif
-                            </section>
-                            <div class="row share">
-                                <div class="col">
-                                    <span class="title">分享：</span>
-                                    <button class="btn btn_link link" @click="addToFB">
-                                        <img :src="'/images/facebook.svg'" class="img-fluid" />
-                                    </button>
-                                    <button class="btn btn_link link" @click="addToLINE">
-                                        <img :src="'/images/line.png'" class="img-fluid" />
-                                    </button>
-                                    <button class="btn btn_link link" @click="copyLink">
-                                        <img :src="'/images/link_grey.svg'" class="img-fluid" />
-                                    </button>
-                                    <span v-if="copied">網址複製成功 !</span>
-                                </div>
+                            <div class="content">
+                                {!! $article->post_content !!}
                             </div>
-                            <div class="row mt-4 no-gutters">
-                                <button @click="returnToBlog" class="btn login-btn"><i
-                                        class="mr-2 fa fa-arrow-left"></i>返回列表</button>
+                        </article>
+                        <section class="advertise" style="display: flex; justify-content: center;">
+                            <img class="cover adv_img" src=" /{{ $adv->img_url }}" style="max-width: 100%;" />
+                        </section>
+                        <section class="adv_sec" style="margin: 30px 0;">
+                            @if ($adv->type == 'student')
+                            <button class="adv_btn" id="stduent_loan_btn">
+                                立即了解更多
+                            </button>
+                            @elseif ($adv->type == 'office')
+                            <button class="adv_btn" id="office_loan_btn">
+                                立即了解更多
+                            </button>
+                            @elseif ($adv->type == 'enterprise')
+                            <button class="adv_btn" id="enterprise_loan_btn">
+                                立即了解更多
+                            </button>
+                            @elseif ($adv->type == 'invest')
+                            <button class="adv_btn" id="invest_btn">
+                                立即了解更多
+                            </button>
+                            @endif
+                        </section>
+                        <div class="row share">
+                            <div class="col">
+                                <span class="title">分享：</span>
+                                <button class="btn btn_link link" @click="addToFB">
+                                    <img :src="'/images/facebook.svg'" class="img-fluid" />
+                                </button>
+                                <button class="btn btn_link link" @click="addToLINE">
+                                    <img :src="'/images/line.png'" class="img-fluid" />
+                                </button>
+                                <button class="btn btn_link link" @click="copyLink">
+                                    <img :src="'/images/link_grey.svg'" class="img-fluid" />
+                                </button>
+                                <span v-if="copied">網址複製成功 !</span>
                             </div>
                         </div>
-                        <div class="col-lg-3 ">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <div class="row mb-3">
-                                        <div class="col">
-                                        </div>
+                        <div class="row mt-4 no-gutters">
+                            <button @click="returnToBlog" class="btn login-btn"><i
+                                    class="mr-2 fa fa-arrow-left"></i>返回列表</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 ">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row mb-3">
+                                    <div class="col">
                                     </div>
-                                    <div class="row">
-                                        <div class="col latest-article">
-                                            <h3 class="section-title">熱門文章</h3>
-                                            @foreach ($latestArticles as $latestArticle)
-                                                <div class="list-group list-group-flush">
-                                                    @if (!empty($latestArticle->path))
-                                                        <a class="list-group-item list-group-item-action"
-                                                            href="/articlepage/{{ $latestArticle->path }}">
-                                                        @else
-                                                            <a class="list-group-item list-group-item-action"
-                                                                href="/articlepage?q=knowledge-{{ $latestArticle->ID }}">
+                                </div>
+                                <div class="row">
+                                    <div class="col latest-article">
+                                        <h3 class="section-title">熱門文章</h3>
+                                        @foreach ($latestArticles as $latestArticle)
+                                        <div class="list-group list-group-flush">
+                                            @if (!empty($latestArticle->path))
+                                            <a class="list-group-item list-group-item-action"
+                                                href="/articlepage/{{ $latestArticle->path }}">
+                                                @else
+                                                <a class="list-group-item list-group-item-action"
+                                                    href="/articlepage?q=knowledge-{{ $latestArticle->ID }}">
                                                     @endif
                                                     <h5 class="title"> {{ $latestArticle->post_title }} </h5>
                                                     <small class="date">
                                                         {{ $latestArticle->post_date }}
                                                     </small>
-                                                    </a>
-                                                </div>
-                                            @endforeach
+                                                </a>
                                         </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             @elseif ($type == 'news')
-                <div class="article-wrapper">
-                    <div class='news-view'>
-                        <h3 class="title">{{ $article->post_title }}</h3>
-                        <div class="info">
-                            <span class="date">發布日期：{{ $article->post_date }}</span>
+            <div class="article-wrapper">
+                <div class='news-view'>
+                    <h3 class="title">{{ $article->post_title }}</h3>
+                    <div class="info">
+                        <span class="date">發布日期：{{ $article->post_date }}</span>
+                    </div>
+                    <div class="contenier">
+                        <div class="title-img">
+                            <img src="{{ $article->image_url }}" class="img-fluid" />
                         </div>
-                        <div class="contenier">
-                            <div class="title-img">
-                                <img src="{{ $article->image_url }}" class="img-fluid" />
-                            </div>
-                            <div class="main-content">
-                                {!! $article->post_content !!}
-                            </div>
+                        <div class="main-content">
+                            {!! $article->post_content !!}
                         </div>
                     </div>
                 </div>
+            </div>
             @endif
         </div>
         <div class="row no-gutters" style="background: #153a71;">
@@ -721,8 +716,8 @@
             </div>
         </div>
         <!--<a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>-->
-        <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog"
-            aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+            aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div v-if="isReset" id="forgetPwdModal" class="modal-content">
                     <div class="modal-header">
@@ -732,8 +727,8 @@
                     <div class="modal-body">
                         <div class="input-group">
                             <span class="input-group-addon label-text">手機：</span>
-                            <input type="text" class="form-control label-input" placeholder="請輸入綁定之手機號碼"
-                                v-model="phone" maxlength="10">
+                            <input type="text" class="form-control label-input" placeholder="請輸入綁定之手機號碼" v-model="phone"
+                                maxlength="10">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text">新密碼：</span>
@@ -779,8 +774,8 @@
                         </div>
                         <div class="input-group" v-if="isCompany">
                             <span class="input-group-addon label-text">公司統編：</span>
-                            <input type="text" class="form-control label-input" placeholder="請輸入統一編號"
-                                autocomplete="off" v-model="businessNum" maxlength="8">
+                            <input type="text" class="form-control label-input" placeholder="請輸入統一編號" autocomplete="off"
+                                v-model="businessNum" maxlength="8">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text">帳號：</span>
@@ -810,8 +805,7 @@
                                 <label for="rememberAccount">記住帳號</label>
                                 <span></span>
                             </div>
-                            <button type="button" :class="['btn', 'btn-password']"
-                                @click="switchForm">忘記密碼?</button>
+                            <button type="button" :class="['btn', 'btn-password']" @click="switchForm">忘記密碼?</button>
                         </div>
                         <div class="input-group">
                         </div>
@@ -836,7 +830,7 @@
 <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-</script>
+    </script>
 <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>
@@ -854,17 +848,17 @@
 <script type="text/javascript" src="{{ mix('js/articlepage.js') }}"></script>
 
 <script>
-    $(document).ready(function() {
-        $("#stduent_loan_btn").on("click", function() {
+    $(docume nt).ready(functio n() {
+        $("#stduent_loan_btn").o n("click", functio n() {
             location.href = '/collegeLoan'
         })
-        $('#office_loan_btn').on('click', function() {
+        $('#office_loan_btn'). on('click', functio n() {
             location.href = '/workLoan'
         })
-        $('#enterprise_loan_btn').on('click', function() {
+        $('#enterprise_loan_btn') .on('click', functio n() {
             // location.href = '/business-loan/smeg'
         })
-        $('#invest_btn').on('click', function() {
+        $('#invest_btn' ).on('click', functio n() {
             location.href = '/investment'
         })
     });
