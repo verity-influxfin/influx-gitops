@@ -3460,7 +3460,7 @@ class Certification_lib{
                 $identity_cer_face = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image']);
 
                 $signing_face = $this->CI->faceplusplus_lib->get_face_token($url);
-                $signing_face_count = count($signing_face);
+                $signing_face_count = is_array($signing_face) ? count($signing_face) : 0;
 
                 $remark['memo']['first_count'] = $signing_face_count;
                 if ($signing_face_count == 0) {
