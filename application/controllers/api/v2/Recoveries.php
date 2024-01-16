@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 require_once(APPPATH . '/libraries/REST_Controller.php');
 use Symfony\Component\HttpClient\HttpClient;
 
@@ -45,13 +45,15 @@ class Recoveries extends REST_Controller
 
             if ($this->request->method != 'get') {
                 $this->load->model('log/log_request_model');
-                $this->log_request_model->insert(array(
-                    'method' => $this->request->method,
-                    'url' => $this->uri->uri_string(),
-                    'investor' => $tokenData->investor,
-                    'user_id' => $tokenData->id,
-                    'agent' => $tokenData->agent,
-                ));
+                $this->log_request_model->insert(
+                    array(
+                        'method' => $this->request->method,
+                        'url' => $this->uri->uri_string(),
+                        'investor' => $tokenData->investor,
+                        'user_id' => $tokenData->id,
+                        'agent' => $tokenData->agent,
+                    )
+                );
             }
 
             $this->user_info->investor = $tokenData->investor;
@@ -139,10 +141,14 @@ class Recoveries extends REST_Controller
     {
         $user_id = $this->user_info->id;
         $httpClient = HttpClient::create();
-        $response = $httpClient->request('GET', getenv('ENV_ERP_HOST') . '/recoveries/dashboard', [
-            'query' => ['user_id' => $user_id],
-            'headers' => ['Content-Type' => 'application/json'],
-        ]);
+        $response = $httpClient->request(
+            'GET',
+            getenv('ENV_ERP_HOST') . '/recoveries/dashboard',
+            [
+                'query' => ['user_id' => $user_id],
+                'headers' => ['Content-Type' => 'application/json'],
+            ]
+        );
         $this->response(array('result' => 'SUCCESS', 'data' => $response->toArray()));
     }
 
@@ -317,23 +323,23 @@ class Recoveries extends REST_Controller
                     'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $target_info->interest_rate ? true : false),
                 );
 
-                if(!isset($pushData[$target_info->user_id])){
+                if (!isset($pushData[$target_info->user_id])) {
                     $temp = [];
                     $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($target_info->user_id);
                     foreach ($getUserLoginLog as $skey => $svalue) {
-                        if(isset($svalue->message)){
+                        if (isset($svalue->message)) {
 
                         }
                         $temp[] = [
                             'type' => 0,
                             'date' => date("Y/m/d", $svalue->end_time),
-                            'title' => ($pushTool[$svalue->push_by] . ' / ' .$pushType[$svalue->push_type]),
-                            'msg' => $pushResultStatus[$svalue->result] . ($svalue->invest_message != '' ? ' - '.$svalue->invest_message : ''),
+                            'title' => ($pushTool[$svalue->push_by] . ' / ' . $pushType[$svalue->push_type]),
+                            'msg' => $pushResultStatus[$svalue->result] . ($svalue->invest_message != '' ? ' - ' . $svalue->invest_message : ''),
                         ];
                     }
                     $pushData[$target_info->user_id] = $temp;
                 }
-                if(count($pushData[$target_info->user_id]) > 0){
+                if (count($pushData[$target_info->user_id]) > 0) {
                     $target['target_message'] = $pushData[$target_info->user_id];
                 }
 
@@ -349,11 +355,10 @@ class Recoveries extends REST_Controller
                 );
 
                 $this->load->model('log/log_legaldoc_status_model');
-                $legal_log = $this->log_legaldoc_status_model->order_by('id','DESC')->limit(1)->get_by([
-                    'target_id'=> $target_info->id
+                $legal_log = $this->log_legaldoc_status_model->order_by('id', 'DESC')->limit(1)->get_by([
+                    'target_id' => $target_info->id
                 ]);
-                if(isset($legal_log))
-                {
+                if (isset($legal_log)) {
                     $temp['lc_description'] = $this->log_legaldoc_status_model->process_status[$legal_log->status];
                     $temp['lc_handle_time'] = $legal_log->created_at;
                 }
@@ -634,7 +639,7 @@ class Recoveries extends REST_Controller
      * @apiSuccess {String} amortization_schedule.list.interest 還款利息
      * @apiSuccess {String} amortization_schedule.list.total_payment 本期還款金額
      * @apiSuccess {String} amortization_schedule.list.repayment 已還款金額
-	 * @apiSuccess {Number} legal_collection 進行法催中
+     * @apiSuccess {Number} legal_collection 進行法催中
      * @apiSuccessExample {Object} SUCCESS
      *    {
      *        "result":"SUCCESS",
@@ -730,7 +735,7 @@ class Recoveries extends REST_Controller
      *                    }
      *                }
      *            },
-	 *			  "legal_collection" :0,
+     *			  "legal_collection" :0,
      *        }
      *    }
      *
@@ -752,7 +757,7 @@ class Recoveries extends REST_Controller
      *       "error": "805"
      *     }
      */
-    public function     info_get($investment_id)
+    public function info_get($investment_id)
     {
         $input = $this->input->get(NULL, TRUE);
         $user_id = $this->user_info->id;
@@ -834,8 +839,8 @@ class Recoveries extends REST_Controller
                     'id_number' => '',
                     'sex' => '',
                     'age' => '',
-                    'company_name'	=> '',
-                    'tax_id'	=> $user_info->id_number,
+                    'company_name' => '',
+                    'tax_id' => $user_info->id_number,
                 );
             }
 
@@ -892,11 +897,13 @@ class Recoveries extends REST_Controller
             count($certification_list) > 0 ? $target['certification'] = $certification_list : '';
 
             $repayment_detail = [];
-            $transaction = $this->transaction_model->order_by('limit_date', 'asc')->get_many_by(array(
-                'target_id' => $target_info->id,
-                'user_to' => $user_id,
-                'status' => [1, 2]
-            ));
+            $transaction = $this->transaction_model->order_by('limit_date', 'asc')->get_many_by(
+                array(
+                    'target_id' => $target_info->id,
+                    'user_to' => $user_id,
+                    'status' => [1, 2]
+                )
+            );
             if ($transaction) {
                 foreach ($transaction as $k => $v) {
                     if (in_array($v->source, [SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST])) {
@@ -938,15 +945,14 @@ class Recoveries extends REST_Controller
                 'transfer' => $transfer,
                 'target' => $target,
                 'amortization_schedule' => $this->target_lib->get_investment_amortization_table($target_info, $investment),
-				'legal_collection' => $this->target_lib->isLegalCollection($investment->legal_collection_at),
+                'legal_collection' => $this->target_lib->isLegalCollection($investment->legal_collection_at),
             ];
 
             $this->load->model('log/log_legaldoc_status_model');
-            $legal_log = $this->log_legaldoc_status_model->order_by('id','DESC')->limit(1)->get_by([
-                'target_id'=> $target_info->id
+            $legal_log = $this->log_legaldoc_status_model->order_by('id', 'DESC')->limit(1)->get_by([
+                'target_id' => $target_info->id
             ]);
-            if(isset($legal_log))
-            {
+            if (isset($legal_log)) {
                 $data['lc_description'] = $this->log_legaldoc_status_model->process_status[$legal_log->status];
                 $data['lc_handle_time'] = $legal_log->created_at;
             }
@@ -1034,12 +1040,14 @@ class Recoveries extends REST_Controller
         }
 
         //檢查金融卡綁定 NO_BANK_ACCOUNT
-        $bank_account = $this->user_bankaccount_model->get_by(array(
-            'investor' => $investor,
-            'status' => 1,
-            'user_id' => $user_id,
-            'verify' => 1
-        ));
+        $bank_account = $this->user_bankaccount_model->get_by(
+            array(
+                'investor' => $investor,
+                'status' => 1,
+                'user_id' => $user_id,
+                'verify' => 1
+            )
+        );
         if (!$bank_account) {
             $this->response(array('result' => 'ERROR', 'error' => NO_BANK_ACCOUNT));
         }
@@ -1053,8 +1061,7 @@ class Recoveries extends REST_Controller
         }
 
         $input['amount'] = (int) $input['amount'];
-        if ($this->transaction_lib->check_minimum_withdraw_amount($input['amount']) === FALSE)
-        {
+        if ($this->transaction_lib->check_minimum_withdraw_amount($input['amount']) === FALSE) {
             $this->response(['result' => 'ERROR', 'error' => LOW_WITHDRAW_AMOUNT]);
         }
         $withdraw = $this->transaction_lib->withdraw($user_id, $input['amount']);
@@ -1210,10 +1217,10 @@ class Recoveries extends REST_Controller
      *                "我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約",
      *                "我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約"
      *              ],
-	 * 				"legal_collection_list" : [
-	 * 					1,
-	 * 					10
-	 * 				],
+     * 				"legal_collection_list" : [
+     * 					1,
+     * 					10
+     * 				],
      *          }
      *    }
      *
@@ -1379,7 +1386,7 @@ class Recoveries extends REST_Controller
             $maxAmount = $data['accounts_receivable'];
 
             if ($amount != 0 && ($amount < $data['fee'])) {
-                $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR, 'data' => ['description' => '您的價金應高於'.$data['fee'].'元的債轉手續費，請重新輸入。']));
+                $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR, 'data' => ['description' => '您的價金應高於' . $data['fee'] . '元的債轉手續費，請重新輸入。']));
             }
             if ($amount != 0 && ($amount < $minAmount || $amount > $maxAmount)) {
                 $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR));
@@ -1397,14 +1404,14 @@ class Recoveries extends REST_Controller
                 $data['interest_rate'] = round($interest_rate_n / $interest_rate_d, 2);
             }
 
-			$legal_collection = $this->investment_model->get_many_by([
-				'id' => $ids,
-				'legal_collection_at >' => '1911-01-01'
-			]);
-			$data['legal_collection_list'] = [];
-			if(isset($legal_collection) && count($legal_collection)) {
-				$data['legal_collection_list'] = array_column(json_decode(json_encode($legal_collection), true), 'id');
-			}
+            $legal_collection = $this->investment_model->get_many_by([
+                'id' => $ids,
+                'legal_collection_at >' => '1911-01-01'
+            ]);
+            $data['legal_collection_list'] = [];
+            if (isset($legal_collection) && count($legal_collection)) {
+                $data['legal_collection_list'] = array_column(json_decode(json_encode($legal_collection), true), 'id');
+            }
 
             $this->response(array('result' => 'SUCCESS', 'data' => $data));
         }
@@ -1508,15 +1515,15 @@ class Recoveries extends REST_Controller
 
         $ids = explode(',', $input['ids']);
         $count = count($ids);
-		$legal_collection = $this->investment_model->get_many_by([
-			'id' => $ids,
-			'legal_collection_at >' => '1911-01-01'
-		]);
-		if(isset($legal_collection) && count($legal_collection)) {
-			$this->response(array('result' => 'ERROR', 'error' => TARGET_IN_LEGAL_COLLECTION));
-		}
+        $legal_collection = $this->investment_model->get_many_by([
+            'id' => $ids,
+            'legal_collection_at >' => '1911-01-01'
+        ]);
+        if (isset($legal_collection) && count($legal_collection)) {
+            $this->response(array('result' => 'ERROR', 'error' => TARGET_IN_LEGAL_COLLECTION));
+        }
 
-        if (!empty($ids)) {//&&count($ids)==1
+        if (!empty($ids)) { //&&count($ids)==1
             foreach ($ids as $key => $id) {
                 $id = intval($id);
                 if (empty($id)) {
@@ -1628,7 +1635,7 @@ class Recoveries extends REST_Controller
             $minAmount = 1;
             $maxAmount = $data['accounts_receivable'];
             if ($amount < $data['transfer_fee']) {
-                $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR, 'data' => ['description' => '您的價金應高於'.$data['transfer_fee'].'元的債轉手續費，請重新輸入。']));
+                $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR, 'data' => ['description' => '您的價金應高於' . $data['transfer_fee'] . '元的債轉手續費，請重新輸入。']));
             }
             if ($amount < $minAmount || $amount > $maxAmount) {
                 $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR));
