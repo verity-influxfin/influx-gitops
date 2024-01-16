@@ -27,8 +27,8 @@ class Transaction_lib
         }
 
         $httpClient = HttpClient::create();
-        $response = $httpClient->request('GET', '', [
-            'body' => json_encode(['virtual_account' => $virtual_account]),
+        $response = $httpClient->request('GET', getenv('ENV_ERP_HOST') . '/recoveries/virtual_funds', [
+            'query' => ['virtual_account' => $virtual_account],
             'headers' => ['Content-Type' => 'application/json'],
         ]);
         return $response->toArray();
