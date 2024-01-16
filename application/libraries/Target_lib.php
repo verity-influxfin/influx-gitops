@@ -469,6 +469,23 @@ class Target_lib
                                             $this->memo_target($target->id, '沒有有效的還款力計算結果，缺少monthly_repayment 或 total_repayment');
                                             goto FORCE_SECOND_INSTANCE;
                                         }
+                                        if (
+                                            !is_numeric($content->monthly_repayment)
+                                            || !is_numeric($content->total_repayment)
+                                        ) {
+                                            $message = '還款力計算結果資料類型不正確' .
+                                                ', monthly_repayment: ' . $content->monthly_repayment .
+                                                ', total_repayment: ' . $content->total_repayment;
+
+                                            log_message('info',
+                                                $message .
+                                                ', target_id: ' . $target->id .
+                                                ', user_id: ' . $user_id .
+                                                ', certification: ' . $certification->id);
+
+                                            $this->memo_target($target->id, $message);
+                                            goto FORCE_SECOND_INSTANCE;
+                                        }
                                         $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
 
                                         $product_id = $target->product_id;
