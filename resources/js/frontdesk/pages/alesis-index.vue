@@ -163,14 +163,14 @@
                     />
                     <div class="card-link-text">資訊工程師貸</div>
                   </router-link>
-                  <div class="card-link">
+                  <router-link to="/houseloan" class="card-link clickable">
                     <img
                       src="@/asset/images/house_black.svg"
                       alt="房屋貸款"
                       class="card-link-img"
                     />
                     <div class="card-link-text">房屋貸款</div>
-                  </div>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -327,6 +327,27 @@
                       class="card-link-img"
                     />
                     <div class="card-link-text">風險報告書</div>
+                  </router-link>
+                </div>
+              </div>
+            </div>
+            <div class="product-item item-6">
+              <div class="card">
+                <div class="card-title">SelfieAuth 持證自拍</div>
+                <hr class="card-hr" />
+                <div class="card-sub">資安神器來助力</div>
+                <div class="card-info">
+                  <div>把代表｢人｣的生物特徵與法定身分資訊連結</div>
+                  <div>驗證、核實並進一步轉換數位虛擬身分</div>
+                </div>
+                <div class="card-content">
+                  <router-link to="/selfieauth" class="card-link clickable" style="width:300px !important;max-width:300px !important;">
+                    <img
+                      src="@/asset/images/selfieauth.svg"
+                      alt="SelfieAuth 持證自拍專利系統"
+                      class="card-link-img"
+                    />
+                    <div class="card-link-text">SelfieAuth 持證自拍專利系統</div>
                   </router-link>
                 </div>
               </div>
@@ -1459,6 +1480,10 @@ export default {
 
       &.item-5 .card {
         background-image: url('~images/index/product-bg-5.jpg');
+      }
+
+      &.item-6 .card {
+        background-image: url('~images/index/product-bg-6.jpg');
       }
 
       .card {
