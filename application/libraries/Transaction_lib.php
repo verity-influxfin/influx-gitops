@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+use Symfony\Component\HttpClient\HttpClient;
 
 class Transaction_lib{
 
@@ -20,49 +21,16 @@ class Transaction_lib{
 	//取得資金資料
 	public function get_virtual_funds($virtual_account='')
 	{
-		if($virtual_account){
-			$total  = 0;
-            $frozen = 0;
-            $frozenes = ['1' => 0,'2' => 0,'3' => 0,'4' => 0];
-            $frozen_arr = $frozenes;
-			$last_recharge_date	= '';
-			$this->CI->load->model('transaction/virtual_passbook_model');
-			$this->CI->load->model('transaction/transaction_model');
-			$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array('virtual_account' => $virtual_account));
+        if(!$virtual_account){
+            return false;
+        }
 
-			$frozen_amount 		= $this->CI->frozen_amount_model->get_many_by(array('virtual_account' => $virtual_account,'status' => 1));
-			if($virtual_passbook){
-				foreach($virtual_passbook as $key => $value){
-					$total = $total + intval($value->amount);
-					if(intval($value->amount) > 0 && $value->tx_datetime > $last_recharge_date){
-                        $remark = json_decode($value->remark, TRUE);
-                        if (isset($remark['source']) && in_array($remark['source'], [SOURCE_RECHARGE, SOURCE_LENDING]))
-                        {
-                            continue;
-                        }
-						$last_recharge_date = $value->tx_datetime;
-					}
-				}
-			}
-
-			if($frozen_amount){
-				foreach($frozen_amount as $key => $value){
-                    $frozen = $frozen + intval($value->amount);
-                    $frozen_arr[$value->type] = $frozen_arr[$value->type] + intval($value->amount);
-				}
-                $frozenes = [
-                    'invest'   => $frozen_arr[1],
-                    'transfer' => $frozen_arr[2],
-                    'withdraw' => $frozen_arr[3],
-                    'other'    => $frozen_arr[4]
-                ];
-			}
-			else{
-                $frozenes = ['invest' => 0,'transfer' => 0,'withdraw' => 0,'other' => 0];
-            }
-			return array('total'=>$total,'last_recharge_date'=>$last_recharge_date,'frozen'=>$frozen,'frozenes'=>$frozenes);
-		}
-		return false;
+        $httpClient = HttpClient::create();
+		$response = $httpClient->request('GET', '', [
+            'body' => json_encode(['virtual_account' => $virtual_account]),
+            'headers' => ['Content-Type' => 'application/json'],
+        ]);
+        return $response->toArray();
 	}
 
 	//代收
