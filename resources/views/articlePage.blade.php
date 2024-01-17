@@ -857,7 +857,7 @@
             location.href = '/workLoan'
         })
         $('#enterprise_loan_btn').on('click', function() {
-            location.href = '/business-loan/smeg'
+            // location.href = '/business-loan/smeg'
         })
         $('#invest_btn').on('click', function() {
             location.href = '/investment'
