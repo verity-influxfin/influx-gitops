@@ -354,8 +354,9 @@ class Target_lib
 
             $credit = $this->CI->credit_lib->get_credit($user_id, $product_id, $sub_product_id, $target);
             if (!$credit || $stage_cer != 0) {
-                if(isset($product['checkOwner']) && $product['checkOwner'] == true){
+                if (isset($product_info['checkOwner']) && $product_info['checkOwner']) {
                     $mix_credit = $this->get_associates_user_data($target->id, 'all', [0 ,1], true);
+                    $credit_score = [];
                     foreach ($mix_credit as $value) {
                         $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true, $target->instalment, $target);
                     }
@@ -2624,15 +2625,24 @@ class Target_lib
         return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product']);
     }
 
-    private function trans_sub_product($product, $sub_product_id)
+    /**
+     * @param $product
+     * @param $sub_product_id
+     * @return array
+     */
+    private function trans_sub_product($product, $sub_product_id): array
     {
         $sub_product_list = $this->CI->config->item('sub_product_list');
         $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
-        $product = $this->sub_product_profile($product, $sub_product_data);
-        return $product;
+        return $this->sub_product_profile($product, $sub_product_data);
     }
 
-    private function sub_product_profile($product, $sub_product)
+    /**
+     * @param $product
+     * @param $sub_product
+     * @return array
+     */
+    private function sub_product_profile($product, $sub_product): array
     {
         return array(
             'id' => $product['id'],
