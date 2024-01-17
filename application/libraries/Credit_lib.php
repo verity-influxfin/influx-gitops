@@ -1541,7 +1541,7 @@ class Credit_lib{
             $point += $job_type_point;
             $score_history[] = '職務性質(內/外勤): ' . $job_type_point;
         }
-        $data_job_salary = (int) $data['job_salary'] ?? 0;
+        $data_job_salary = (int) ($data['job_salary'] ?? 0);
         if (isset($data['job_salary'])) {
             $job_salary_point = $this->get_job_salary_point($data_job_salary);
             $point += $job_salary_point;

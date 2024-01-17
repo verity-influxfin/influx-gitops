@@ -239,7 +239,7 @@ class PersonalCreditSheet extends CreditSheetBase {
 
         $product_list = $this->CI->config->item('product_list');
         $product_id = $this->CI->credit_sheet_review_model->get_product_by_id($this->creditSheetRecord->id);
-        if ($fixed_amount > 0 && ($fixed_amount < $product_list[$product_id]['loan_range_s'] ?? 0 || $fixed_amount > $product_list[$product_id]['loan_range_e'] ?? 0))
+        if ($fixed_amount > 0 && ($fixed_amount < ($product_list[$product_id]['loan_range_s'] ?? 0) || $fixed_amount > ($product_list[$product_id]['loan_range_e'] ?? 0)))
         {
             return self::RESPONSE_CODE_INVALID_FIXED_AMOUNT;
         }
