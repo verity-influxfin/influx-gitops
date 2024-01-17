@@ -818,7 +818,10 @@ class Target extends MY_Admin_Controller
                 $certification = $this->user_certification_model->get_by(['user_id' => $userId, 'certification_id' => 15]);
                 if (isset($certification) && $certification->status == 1) {
                     $content = json_decode($certification->content);
-                    if (isset($content->monthly_repayment) && isset($content->total_repayment)) {
+                    if (
+                        isset($content->monthly_repayment) && isset($content->total_repayment)
+                        && is_numeric($content->monthly_repayment) && is_numeric($content->total_repayment)
+                    ) {
                         $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
                         $product_id = $target->product_id;
                         // 上班族貸款
@@ -832,6 +835,17 @@ class Target extends MY_Admin_Controller
                                     $message = "該會員薪資低於4萬，負債小於22倍，系統給定信用額度為3000~10000元；若需調整請至「額度調整 1000~20000」之欄位填寫額度";
                                 }
                             }
+                        }
+                    } else {
+                        if (!is_numeric($content->monthly_repayment) || !is_numeric($content->total_repayment)) {
+                            $message = '還款力計算結果資料類型不正確' .
+                                ', monthly_repayment: ' . $content->monthly_repayment .
+                                ', total_repayment: ' . $content->total_repayment;
+
+                            log_message('info',
+                                $message .
+                                ', target_id: ' . $target->id .
+                                ', certification: ' . $certification->id);
                         }
                     }
                 }
@@ -2864,7 +2878,10 @@ class Target extends MY_Admin_Controller
             $certification = $this->user_certification_model->get_by(['user_id' => $userId, 'certification_id' => 15]);
             if (isset($certification) && $certification->status == 1) {
                 $content = json_decode($certification->content);
-                if (isset($content->monthly_repayment) && isset($content->total_repayment)) {
+                if (
+                    isset($content->monthly_repayment) && isset($content->total_repayment)
+                    && is_numeric($content->monthly_repayment) && is_numeric($content->total_repayment)
+                ) {
                     $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
                     $product_id = $target->product_id;
                     // 上班族貸款
@@ -2878,6 +2895,17 @@ class Target extends MY_Admin_Controller
                                 $message = "該會員薪資低於4萬，負債小於22倍，系統給定信用額度為3000~10000元；若需調整請至「額度調整 1000~20000」之欄位填寫額度";
                             }
                         }
+                    }
+                } else {
+                    if (!is_numeric($content->monthly_repayment) || !is_numeric($content->total_repayment)) {
+                        $message = '還款力計算結果資料類型不正確' .
+                            ', monthly_repayment: ' . $content->monthly_repayment .
+                            ', total_repayment: ' . $content->total_repayment;
+
+                        log_message('info',
+                            $message .
+                            ', target_id: ' . $target->id .
+                            ', certification: ' . $certification->id);
                     }
                 }
             }
