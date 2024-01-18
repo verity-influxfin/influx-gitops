@@ -62,32 +62,38 @@ die('This file is used for development purposes only.');
  * @property CI_Xmlrpcs          $xmlrpcs                             XML-RPC server class
  * @property CI_Zip              $zip                                 Zip Compression Class
  * @property CI_Utf8             $utf8                                Provides support for UTF-8 environments
- * @property Target_model	$target_model						Target Model
+ *
+ * library
  * @property Target_lib	$target_lib
- * @property Log_targetschange_model	$log_targetschange_model
  * @property Certification_lib	$certification_lib
- * @property Order_model	$order_model
  * @property Order_lib	$order_lib
  * @property Coop_lib	$coop_lib
  * @property Anti_fraud_lib	$anti_fraud_lib
- * @property Anti_fraud $anti_fraud
- * @property Log_script_model	$log_script_model
  * @property Product_lib $product_lib
- * @property Batch_model $batch_model
  * @property Black_list_lib $black_list_lib
- * @property User_certification_model $user_certification_model
- * @property User_bankaccount_model $user_bankaccount_model
- * @property Log_integration_model $log_integration_model
- * @property Log_usercertification_model $log_usercertification_model
  * @property Judicialperson_lib $judicialperson_lib
  * @property Brookesia_lib $brookesia_lib
  * @property Data_verify_lib $data_verify_lib
  * @property Notification_lib $notification_lib
  * @property Subloan_lib $subloan_lib
+ * @property User_lib $user_lib
+ *
+ * model
+ * @property Target_model $target_model
+ * @property Order_model	$order_model
+ * @property Log_targetschange_model $log_targetschange_model
+ * @property Log_script_model $log_script_model
+ * @property Batch_model $batch_model
  * @property Transaction_model $transaction_model
  * @property Target_meta_model $target_meta_model
  * @property Log_version_model $log_version_model
  * @property User_version_update_model $user_version_update_model
+ * @property Sale_dashboard_model $sale_dashboard_model
+ * @property User_certification_model $user_certification_model
+ * @property User_bankaccount_model $user_bankaccount_model
+ * @property Log_integration_model $log_integration_model
+ * @property Log_usercertification_model $log_usercertification_model
+ *
  */
 //batch_model
 //black_list_lib
@@ -104,6 +110,8 @@ die('This file is used for development purposes only.');
 //target_meta_model
 //log_version_model
 //user_version_update_model
+//user_lib
+//sale_dashboard_model
 
 class CI_Controller
 {
