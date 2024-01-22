@@ -69,7 +69,8 @@ class Prepayment_lib{
                 $data['remaining_instalment'] 	= $target->instalment - $instalment_paid;
                 if($remaining_principal){
                     $days  = get_range_days($last_settlement_date,$entering_date);
-
+                    $days += 1;
+                    
                     $product_list = $this->CI->config->item('product_list');
                     $product = $product_list[$target->product_id];
                     $sub_product_id = $target->sub_product_id;
