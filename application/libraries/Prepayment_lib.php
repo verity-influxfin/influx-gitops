@@ -68,8 +68,7 @@ class Prepayment_lib{
 
                 $data['remaining_instalment'] 	= $target->instalment - $instalment_paid;
                 if($remaining_principal){
-                    $days  = get_range_days($last_settlement_date,$entering_date);
-                    $days += 1;
+                    $days  = get_range_days($last_settlement_date,$entering_date) + 1; // 2024/01/22發現提前還款計息日期有誤，缺少一天
                     
                     $product_list = $this->CI->config->item('product_list');
                     $product = $product_list[$target->product_id];
