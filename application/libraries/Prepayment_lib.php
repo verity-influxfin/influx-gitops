@@ -76,6 +76,8 @@ class Prepayment_lib{
                     if($this->is_sub_product($product,$sub_product_id)){
                         $product = $this->trans_sub_product($product,$sub_product_id);
                     }
+
+                    // 2024/01/22 修改了days的計算，因無法重現DS2P1的案件，所以先忽略DS2P1提前還款的影響
                     if($product['visul_id'] == 'DS2P1'){
                         $input = $this->CI->input->get(NULL, TRUE);
                         $this->CI->load->model('log/log_image_model');
