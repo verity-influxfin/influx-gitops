@@ -2,10 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: influx-website-deployment
+  namespace: default
   labels:
     app: influx-website
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: influx-website
@@ -16,6 +17,6 @@ spec:
     spec:
       containers:
       - name: influx-website-container
-        image: malikverity/influx-website:ae32077
+        image: 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:6091c8a
         ports:
         - containerPort: 80
