@@ -1996,7 +1996,6 @@ class Credit_lib{
                     if ($points >= $value['start'] && $points <= $value['end'])
                     {
                         return $level;
-                        break;
                     }
                 }
             }
