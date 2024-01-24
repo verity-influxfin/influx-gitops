@@ -2057,18 +2057,19 @@ class Credit_lib{
 		return false;
 	}
 
-    public function get_credit_amount_list($product_id = 0, $sub_product_id = 0)
+    /**
+     * @param int $product_id
+     * @param int $sub_product_id
+     * @return array
+     */
+    public function get_credit_amount_list(int $product_id = 0, int $sub_product_id = 0): array
     {
-        $list = [];
-        if ($product_id && isset($this->credit['credit_amount_' . $product_id]))
-        {
-            $list = $this->credit['credit_amount_' . $product_id];
-            if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
-            {
-                $list = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
-            }
+        if (!$product_id) {
+            return [];
         }
-        return $list;
+        return $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id] ??
+            $this->credit['credit_amount_' . $product_id] ??
+            [];
     }
 
 	public function delay_credit($user_id,$delay_days=0){
