@@ -2005,8 +2005,49 @@ class Credit_lib{
         return FALSE;
     }
 
-	public function get_rate($level,$instalment,$product_id,$sub_product_id=0,$target=[]){
-		$credit = $this->CI->config->item('credit');
+    /**
+     * @param int $credit_amount
+     * @param int $product_id
+     * @param int $sub_product_id
+     * @param bool $stage_cer
+     * @return int
+     */
+    public function get_credit_score_with_credit_amount(
+        int  $credit_amount = 0,
+        int  $product_id = 0,
+        int  $sub_product_id = 0,
+        bool $stage_cer = FALSE): int
+    {
+        if (!$product_id) {
+            return 0;
+        }
+        if ($credit_amount <= 0 && !$stage_cer) {
+            return 0;
+        }
+
+        $credit_amount_list = $this->get_credit_amount_list($product_id, $sub_product_id);
+        if (empty($credit_amount_list)) {
+            return 0;
+        }
+
+        // 用金額反推最低分數區間的最高分數
+        $min_score_end = 0;
+        foreach ($credit_amount_list as $index => $range) {
+            $range_amount = $range['amount'] ?? $range['max_amount'] ?? 0;
+            if ($index == 0 && $credit_amount > $range_amount) {
+                //                不能超過最大值
+                return $min_score_end;
+            }
+            if ($credit_amount < $range_amount) {
+                break;
+            }
+            $min_score_end = $range['end'];
+        }
+        return $min_score_end;
+    }
+
+    public function get_rate($level, $instalment, $product_id, $sub_product_id = 0, $target = []){
+        $credit            = $this->CI->config->item('credit');
         $credit_level_list = $credit['credit_level_' . $product_id];
         if (isset($credit['credit_level_' . $product_id . '_' . $sub_product_id]))
         {
