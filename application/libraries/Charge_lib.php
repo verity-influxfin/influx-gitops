@@ -847,7 +847,7 @@ class Charge_lib
 						}
 
 						if($user_to_info){
-							$days  		= get_range_days($last_settlement_date,$settlement_date);
+							$days  		= get_range_days($last_settlement_date,$settlement_date) + 1; // 2024/01/22發現提前還款計息日期有誤，缺少一天
 							$leap_year 	= $this->CI->financial_lib->leap_year($target->loan_date,$target->instalment);
 							$year_days 	= $leap_year?366:365;//今年日數
                             $msg = [];
