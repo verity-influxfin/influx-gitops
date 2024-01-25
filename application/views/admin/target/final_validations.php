@@ -2372,7 +2372,6 @@
                     fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
-                    setEvaluationAmountAndResetScore(parseInt(credit.amount));
 				}
 			});
 		});
