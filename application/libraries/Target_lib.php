@@ -31,19 +31,14 @@ class Target_lib
             $param['target_no'] = $this->get_target_no($param['product_id']);
             $insert = $this->CI->target_model->insert($param);
             $this->CI->load->model('log/log_targetschange_model');
-            if ($insert) {
-                $this->CI->log_targetschange_model->insert(
-                    $this->get_target_log_param($insert, TRUE, $param)
-                );
-                return $insert;
-            } else {
+            if (!$insert) {
                 $param['target_no'] = $this->get_target_no($param['product_id']);
-                $insert = $this->CI->target_model->insert($param);
-                $this->CI->log_targetschange_model->insert(
-                    $this->get_target_log_param($insert, TRUE, $param)
-                );
-                return $insert;
+                $insert             = $this->CI->target_model->insert($param);
             }
+            $this->CI->log_targetschange_model->insert(
+                $this->get_target_log_param($insert, TRUE, $param)
+            );
+            return $insert;
         }
         return false;
     }
