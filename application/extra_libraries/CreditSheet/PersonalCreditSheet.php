@@ -168,17 +168,17 @@ class PersonalCreditSheet extends CreditSheetBase {
         }
     }
 
+    /**
+     * @param $product_id
+     * @return int
+     */
     private function get_fixed_amount_min($product_id): int
     {
-        switch ($product_id)
-        {
-            case PRODUCT_ID_SALARY_MAN:
-                return 1000;
-            case PRODUCT_ID_HOME_LOAN:
-                return 30000;
-            default:
-                return 0;
+        $_product_id = intval($product_id);
+        if (!in_array($_product_id, $this::ALLOW_EDIT_FIXED_AMOUNT_PRODUCT_LIST)) {
+            return 0;
         }
+        return $this->CI->config->item('product_list')[$_product_id]['loan_range_s'] ?? 0;
     }
 
     private function get_fixed_amount_max($product_id): int
