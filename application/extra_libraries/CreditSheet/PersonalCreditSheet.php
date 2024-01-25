@@ -181,23 +181,17 @@ class PersonalCreditSheet extends CreditSheetBase {
         return $this->CI->config->item('product_list')[$_product_id]['loan_range_s'] ?? 0;
     }
 
+    /**
+     * @param $product_id
+     * @return int
+     */
     private function get_fixed_amount_max($product_id): int
     {
-        switch ($product_id)
-        {
-            case PRODUCT_ID_SALARY_MAN:
-            case PRODUCT_ID_HOME_LOAN:
-                $this->CI->load->library('credit_lib');
-                $credit = $this->CI->credit_lib->get_credit($this->user->id, $product_id, $this->target->sub_product_id);
-                if (isset($credit) && isset($credit['amount']) && $credit['amount'] > 20000) {
-                    return $credit['amount'];
-                }
-                return $product_id == PRODUCT_ID_HOME_LOAN ? 1000000 : 20000;
-            // case PRODUCT_ID_HOME_LOAN:
-            //     return 1000000;
-            default:
-                return 0;
+        $_product_id = intval($product_id);
+        if (!in_array($_product_id, $this::ALLOW_EDIT_FIXED_AMOUNT_PRODUCT_LIST)) {
+            return 0;
         }
+        return $this->CI->config->item('product_list')[$_product_id]['loan_range_e'] ?? 0;
     }
 
     /**
