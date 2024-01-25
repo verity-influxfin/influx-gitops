@@ -4,6 +4,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 use EdmEvent\EdmEventFactory;
 
+/**
+ * Class Qrcode_lib
+ * @property CI_Controller $CI
+ */
 class Qrcode_lib
 {
 

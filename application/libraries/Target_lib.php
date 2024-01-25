@@ -9,6 +9,9 @@ use CertificationResult\IdentityCertificationResult;
 use CertificationResult\MessageDisplay;
 use CreditSheet\CreditSheetFactory;
 
+/**
+ * @property CI_Controller $CI
+ */
 class Target_lib
 {
 
