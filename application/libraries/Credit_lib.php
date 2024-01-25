@@ -2037,6 +2037,9 @@ class Credit_lib{
                 //                不能超過最大值
                 return $min_score_end;
             }
+
+            $min_score_end = $range['end'];
+
             if ($credit_amount > $range_amount) {
                 break;
             }
