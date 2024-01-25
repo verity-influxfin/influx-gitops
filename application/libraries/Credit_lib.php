@@ -635,26 +635,12 @@ class Credit_lib{
             }
             // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
             // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
-            $old_credit = $this->CI->credit_model->get_by([
-                'user_id' => $user_id,
-                'product_id' => $product_id,
-                'sub_product_id' => $sub_product_id,
-                'instalment' => $instalment,
-                'status' => 1,
-            ]);
-
-            if (!empty($old_credit) && isset($old_credit->amount)) {
-                if ($fixed_amount == $old_credit->amount) {
-                    $param['amount'] = $old_credit->amount;
-                    $param['level'] = $old_credit->level;
-                    $param['points'] = $old_credit->points;
-                } elseif ($fixed_amount < $old_credit->amount) {
-                    $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
-                    $param['amount'] = $fixed_amount;
-                    $param['level'] = 9;
-                    $param['points'] = $credit_level_config[$param['level']]['start'];
-                }
-            }
+            // 2024-01-25: 用fixed_amount去找對應的score，再找到對應的level
+            $param['amount']     = $fixed_amount;
+            $param['points']               = $this->get_credit_score_with_credit_amount($fixed_amount, $product_id,
+                $sub_product_id, $stage_cer);
+            $param['level']                = $this->get_credit_level($param['points'], $product_id, $sub_product_id,
+                $stage_cer);
 
             $tmp_remark = json_decode($param['remark'], TRUE);
             if (isset($tmp_remark['scoreHistory']))
@@ -1041,26 +1027,10 @@ class Credit_lib{
             }
             // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
             // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
-            $old_credit = $this->CI->credit_model->get_by([
-                'user_id' => $user_id,
-                'product_id' => $product_id,
-                'sub_product_id' => $sub_product_id,
-                'instalment' => $instalment,
-                'status' => 1,
-            ]);
-
-            if (!empty($old_credit) && isset($old_credit->amount)) {
-                if ($fixed_amount == $old_credit->amount) {
-                    $param['amount'] = $old_credit->amount;
-                    $param['level'] = $old_credit->level;
-                    $param['points'] = $old_credit->points;
-                } elseif ($fixed_amount < $old_credit->amount) {
-                    $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
-                    $param['amount'] = $fixed_amount;
-                    $param['level'] = 9;
-                    $param['points'] = $credit_level_config[$param['level']]['start'];
-                }
-            }
+            // 2024-01-25: 用fixed_amount去找對應的score，再找到對應的level
+            $param['amount'] = $fixed_amount;
+            $param['points'] = $this->get_credit_score_with_credit_amount($fixed_amount, $product_id, $sub_product_id, $stage_cer);
+            $param['level']  = $this->get_credit_level($param['points'], $product_id, $sub_product_id, $stage_cer);
 
             $tmp_remark = json_decode($param['remark'], TRUE);
             if (isset($tmp_remark['scoreHistory'])) {
