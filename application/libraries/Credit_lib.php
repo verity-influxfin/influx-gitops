@@ -2043,7 +2043,6 @@ class Credit_lib{
             if ($credit_amount > $range_amount) {
                 break;
             }
-            $min_score_end = $range['end'];
         }
         return $min_score_end;
     }
