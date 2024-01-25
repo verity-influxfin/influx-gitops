@@ -24,6 +24,10 @@ class PersonalCreditSheet extends CreditSheetBase {
         PRODUCT_ID_HOME_LOAN
     ];
 
+    public const ALLOW_EDIT_FIXED_AMOUNT_PRODUCT_LIST = [
+        PRODUCT_ID_SALARY_MAN, PRODUCT_ID_HOME_LOAN
+    ];
+
     // 最終核准層次
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
 
