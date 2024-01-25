@@ -1999,7 +1999,8 @@ class Credit_lib{
             return 0;
         }
 
-        // 用金額反推最低分數區間的最高分數
+        // 用金額反推最低分數區間的最低分數
+        // e.g. product_id 1, 150000 -> point 1471
         $min_score_end = 0;
         foreach ($credit_amount_list as $index => $range) {
             $range_amount = $range['amount'] ?? $range['max_amount'] ?? 0;
@@ -2008,11 +2009,10 @@ class Credit_lib{
                 return $min_score_end;
             }
 
-            $min_score_end = $range['end'];
-
             if ($credit_amount > $range_amount) {
                 break;
             }
+            $min_score_end = $range['start'];
         }
         return $min_score_end;
     }
