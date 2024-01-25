@@ -1551,7 +1551,7 @@
 
                 if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
                     // 額度調整預設為原額度
-                    setEvaluationAmount(parseInt(credit.amount));
+                    // setEvaluationAmount(parseInt(credit.amount));
                 }
 
                 if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
