@@ -1,0 +1,69 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - dev
+      - test-devops
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build-and-deploy-dev:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and Push Docker Image (Dev)
+      run: |
+        echo $DEV_ENV | base64 -d > .env
+        echo $DEV_GCP_KEY > ./gcloud-api-key.json
+        echo $MYSQL_PROXY_JSON > ./cloudproxy.json
+
+        docker build -t gcr.io/vrcam-dev-5a815/viewer-backend-v3/viewer-backend-v3-dev:${{ github.sha::7 }} .
+        docker login -u _json_key --password-stdin https://gcr.io < ./gcloud-api-key.json
+        docker push gcr.io/vrcam-dev-5a815/viewer-backend-v3/viewer-backend-v3-dev:${{ github.sha::7 }}
+
+    - name: Update Kustomize Deploy (Dev)
+      run: |
+        git fetch
+        git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+        git fetch origin
+        git switch devops
+
+        sed -E -i "s|(image:[^:]+).*|image:\ gcr.io/vrcam-dev-5a815/viewer-backend-v3/viewer-backend-v3-dev:${{ github.sha::7 }}|g" kustomize/dev/deployment.yaml
+        git add kustomize/dev/deployment.yaml
+        git commit -m "[pipeline] deploy new commit ${{ github.sha::7 }}"
+        git push origin devops
+
+  build-and-deploy-prod:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and Push Docker Image (Prod)
+      run: |
+        echo $PROD_ENV | base64 -d > .env
+        echo $PROD_GCP_KEY > ./gcloud-api-key.json
+        echo $PROD_MYSQL_PROXY_JSON > ./cloudproxy.json
+
+        docker build -t gcr.io/vr-cam-161603/viewer-backend-v3/viewer-backend-v3-prod:${{ github.ref_name }} .
+        docker login -u _json_key --password-stdin https://gcr.io < ./gcloud-api-key.json
+        docker push gcr.io/vr-cam-161603/viewer-backend-v3/viewer-backend-v3-prod:${{ github.ref_name }}
+
+    - name: Update Kustomize Deploy (Prod)
+      run: |
+        git fetch
+        git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+        git fetch origin
+        git switch devops
+
+        sed -E -i "s|(image:[^:]+).*|image:\ gcr.io/vr-cam-161603/viewer-backend-v3/viewer-backend-v3-prod:${{ github.ref_name }}|g" kustomize/prod/deployment.yaml
+        git add kustomize/prod/deployment.yaml
+        git commit -m "[pipeline] deploy new commit ${{ github.ref_name }}"
+        git push origin devops
