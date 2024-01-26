@@ -15,8 +15,41 @@ spec:
       labels:
         app: influx-website
     spec:
+      terminationGracePeriodSeconds: 30
       containers:
       - name: influx-website-container
         image: 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:6091c8a
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "400m"
+            memory: "200Mi"
+          limits:
+            cpu: "800m"
+            memory: "500Mi"
         ports:
         - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+            httpHeaders:
+            - name: User-Agent
+              value: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+            httpHeaders:
+            - name: User-Agent
+              value: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+          initialDelaySeconds: 60  # 增加 initialDelaySeconds 的值
+          periodSeconds: 30
+          timeoutSeconds: 20
+
+# kubectl port-forward pod/<pod-name>10501:80
+# curl -i http://localhost:10501 後來發現沒帶User-Agent的標頭，會被Apache回傳403
+# curl -H 'User-Agent: M' http://localhost:10501 to test if Probe can request pod
