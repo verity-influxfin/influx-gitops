@@ -635,26 +635,12 @@ class Credit_lib{
             }
             // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
             // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
-            $old_credit = $this->CI->credit_model->get_by([
-                'user_id' => $user_id,
-                'product_id' => $product_id,
-                'sub_product_id' => $sub_product_id,
-                'instalment' => $instalment,
-                'status' => 1,
-            ]);
-
-            if (!empty($old_credit) && isset($old_credit->amount)) {
-                if ($fixed_amount == $old_credit->amount) {
-                    $param['amount'] = $old_credit->amount;
-                    $param['level'] = $old_credit->level;
-                    $param['points'] = $old_credit->points;
-                } elseif ($fixed_amount < $old_credit->amount) {
-                    $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
-                    $param['amount'] = $fixed_amount;
-                    $param['level'] = 9;
-                    $param['points'] = $credit_level_config[$param['level']]['start'];
-                }
-            }
+            // 2024-01-25: 用fixed_amount去找對應的score，再找到對應的level
+            $param['amount']     = $fixed_amount;
+            $param['points']               = $this->get_credit_score_with_credit_amount($fixed_amount, $product_id,
+                $sub_product_id, $stage_cer);
+            $param['level']                = $this->get_credit_level($param['points'], $product_id, $sub_product_id,
+                $stage_cer);
 
             $tmp_remark = json_decode($param['remark'], TRUE);
             if (isset($tmp_remark['scoreHistory']))
@@ -1041,26 +1027,10 @@ class Credit_lib{
             }
             // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
             // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
-            $old_credit = $this->CI->credit_model->get_by([
-                'user_id' => $user_id,
-                'product_id' => $product_id,
-                'sub_product_id' => $sub_product_id,
-                'instalment' => $instalment,
-                'status' => 1,
-            ]);
-
-            if (!empty($old_credit) && isset($old_credit->amount)) {
-                if ($fixed_amount == $old_credit->amount) {
-                    $param['amount'] = $old_credit->amount;
-                    $param['level'] = $old_credit->level;
-                    $param['points'] = $old_credit->points;
-                } elseif ($fixed_amount < $old_credit->amount) {
-                    $credit_level_config = $this->CI->config->item('credit')['credit_level_' . $product_id];
-                    $param['amount'] = $fixed_amount;
-                    $param['level'] = 9;
-                    $param['points'] = $credit_level_config[$param['level']]['start'];
-                }
-            }
+            // 2024-01-25: 用fixed_amount去找對應的score，再找到對應的level
+            $param['amount'] = $fixed_amount;
+            $param['points'] = $this->get_credit_score_with_credit_amount($fixed_amount, $product_id, $sub_product_id, $stage_cer);
+            $param['level']  = $this->get_credit_level($param['points'], $product_id, $sub_product_id, $stage_cer);
 
             $tmp_remark = json_decode($param['remark'], TRUE);
             if (isset($tmp_remark['scoreHistory'])) {
@@ -1996,7 +1966,6 @@ class Credit_lib{
                     if ($points >= $value['start'] && $points <= $value['end'])
                     {
                         return $level;
-                        break;
                     }
                 }
             }
@@ -2005,8 +1974,51 @@ class Credit_lib{
         return FALSE;
     }
 
-	public function get_rate($level,$instalment,$product_id,$sub_product_id=0,$target=[]){
-		$credit = $this->CI->config->item('credit');
+    /**
+     * @param int $credit_amount
+     * @param int $product_id
+     * @param int $sub_product_id
+     * @param bool $stage_cer
+     * @return int
+     */
+    public function get_credit_score_with_credit_amount(
+        int  $credit_amount = 0,
+        int  $product_id = 0,
+        int  $sub_product_id = 0,
+        bool $stage_cer = FALSE): int
+    {
+        if (!$product_id) {
+            return 0;
+        }
+        if ($credit_amount <= 0 && !$stage_cer) {
+            return 0;
+        }
+
+        $credit_amount_list = $this->get_credit_amount_list($product_id, $sub_product_id);
+        if (empty($credit_amount_list)) {
+            return 0;
+        }
+
+        // 用金額反推最低分數區間的最低分數
+        // e.g. product_id 1, 150000 -> point 1471
+        $min_score_end = 0;
+        foreach ($credit_amount_list as $index => $range) {
+            $range_amount = $range['amount'] ?? $range['max_amount'] ?? 0;
+            if ($index == 0 && $credit_amount > $range_amount) {
+                //                不能超過最大值
+                return $min_score_end;
+            }
+
+            if ($credit_amount > $range_amount) {
+                break;
+            }
+            $min_score_end = $range['start'];
+        }
+        return $min_score_end;
+    }
+
+    public function get_rate($level, $instalment, $product_id, $sub_product_id = 0, $target = []){
+        $credit            = $this->CI->config->item('credit');
         $credit_level_list = $credit['credit_level_' . $product_id];
         if (isset($credit['credit_level_' . $product_id . '_' . $sub_product_id]))
         {
@@ -2057,18 +2069,19 @@ class Credit_lib{
 		return false;
 	}
 
-    public function get_credit_amount_list($product_id = 0, $sub_product_id = 0)
+    /**
+     * @param int $product_id
+     * @param int $sub_product_id
+     * @return array
+     */
+    public function get_credit_amount_list(int $product_id = 0, int $sub_product_id = 0): array
     {
-        $list = [];
-        if ($product_id && isset($this->credit['credit_amount_' . $product_id]))
-        {
-            $list = $this->credit['credit_amount_' . $product_id];
-            if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
-            {
-                $list = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
-            }
+        if (!$product_id) {
+            return [];
         }
-        return $list;
+        return $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id] ??
+            $this->credit['credit_amount_' . $product_id] ??
+            [];
     }
 
 	public function delay_credit($user_id,$delay_days=0){

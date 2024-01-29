@@ -1048,9 +1048,6 @@
                             </div>
                             <div>
                                 <span style="width:30%;"></span>
-                                <span style="width:70%;">
-                                    <button type="button" id="original-amount-btn" disabled>使用原額度</button>
-                                </span>
                             </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
@@ -1551,7 +1548,7 @@
 
                 if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
                     // 額度調整預設為原額度
-                    setEvaluationAmount(parseInt(credit.amount));
+                    // setEvaluationAmount(parseInt(credit.amount));
                 }
 
                 if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
@@ -1566,9 +1563,6 @@
                         $('#2_fixed_amount').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
                         $('#2_score').prop('disabled', true);
                         $('#2_score').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
-                        $('#original-amount-btn').css('display', 'none');
-                    } else {
-                        $('#original-amount-btn').prop('disabled', false);
                     }
                 }
 			},
@@ -2372,7 +2366,6 @@
                     fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
-                    setEvaluationAmountAndResetScore(parseInt(credit.amount));
 				}
 			});
 		});
@@ -2480,13 +2473,6 @@
             setEvaluationAmount(amount);
             setEvaluationScore(0);
         }
-        
-        // 使用原額度
-        const resetEvaluationAmountAmountTOriginal = () => {
-            setEvaluationAmountAndResetScore(originalAmount);
-        }
-
-        $('#original-amount-btn').click(resetEvaluationAmountAmountTOriginal);
     });
 
 	const v = new Vue({
