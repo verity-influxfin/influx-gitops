@@ -626,32 +626,8 @@ class Credit_lib{
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
 
         // 檢查二審額度調整
-        if (isset($approvalExtra))
-        {
-            $fixed_amount = $approvalExtra->get_fixed_amount();
-            if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE)
-            {
-                goto SKIP_FIXED_AMOUNT;
-            }
-            // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
-            // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
-            // 2024-01-25: 用fixed_amount去找對應的score，再找到對應的level
-            $param['amount']     = $fixed_amount;
-            $param['points']               = $this->get_credit_score_with_credit_amount($fixed_amount, $product_id,
-                $sub_product_id, $stage_cer);
-            $param['level']                = $this->get_credit_level($param['points'], $product_id, $sub_product_id,
-                $stage_cer);
-
-            $tmp_remark = json_decode($param['remark'], TRUE);
-            if (isset($tmp_remark['scoreHistory']))
-            {
-                $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
-                $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
-                $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
-            }
-            $param['remark'] = json_encode($tmp_remark);
-        }
-        SKIP_FIXED_AMOUNT:
+        $param = $this->set_approval_extra_fixed_amount($param,
+            $product_id, $sub_product_id, $approvalExtra, $stage_cer);
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
@@ -1314,6 +1290,37 @@ class Credit_lib{
         return $this->CI->credit_model->insert($param);
     }
 
+    private function set_approval_extra_fixed_amount($param, $product_id, $sub_product_id, $approvalExtra, $stage_cer)
+    {
+        if(!isset($param['amount'])){
+            return $param;
+        }
+
+        $fixed_amount = $approvalExtra->get_fixed_amount();
+        $loan_range_s = $this->product_list[$product_id]['loan_range_s'];
+        $loan_range_e = $this->product_list[$product_id]['loan_range_e'];
+        if ($this->is_valid_fixed_amount($fixed_amount, $loan_range_s,
+                $loan_range_e) === FALSE) {
+            return $param;
+        }
+        // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
+        // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
+        // 2024-01-25: 用fixed_amount去找對應的score，再找到對應的level
+        $param['amount'] = $fixed_amount;
+        $param['points'] = $this->get_credit_score_with_credit_amount($fixed_amount, $product_id,
+            $sub_product_id, $stage_cer);
+        $param['level']  = $this->get_credit_level($param['points'], $product_id, $sub_product_id,
+            $stage_cer);
+
+        $tmp_remark = json_decode($param['remark'], TRUE);
+        if (isset($tmp_remark['scoreHistory'])) {
+            $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
+            $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
+            $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
+        }
+        $param['remark'] = json_encode($tmp_remark);
+        return $param;
+    }
     public function get_business_type_code($business_type)
     {
         $business_type_list = $this->CI->config->item('business_type_list');
