@@ -1295,7 +1295,7 @@ class Credit_lib{
 
     private function set_fixed_amount_into_param($param, $product_id, $sub_product_id, $approvalExtra, $stage_cer)
     {
-        if(!isset($param['amount'])){
+        if(!isset($approvalExtra)){
             return $param;
         }
 
