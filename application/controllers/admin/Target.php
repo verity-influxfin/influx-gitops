@@ -864,7 +864,7 @@ class Target extends MY_Admin_Controller
         $targetId = isset($post["id"]) ? intval($post["id"]) : 0;
         $points = isset($post["points"]) ? intval($post["points"]) : 0;
         $remark = isset($post["reason"]) ? strval($post["reason"]) : false;
-        
+
         if ($points > 400) {
             $points = 400;
         } elseif ($points < -400) {
@@ -899,9 +899,7 @@ class Target extends MY_Admin_Controller
             if ($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET) {
                 $this->load->library('Certification_lib');
                 $certification = $this->certification_lib->get_certification_info($userId, 8, 0);
-                $certificationStatus = isset($certification) && $certification
-                    ? ($certification->status == 1 ? true : false)
-                    : false;
+                $certificationStatus = isset($certification) && $certification->status == 1;
                 $level = $certificationStatus ? 3 : 4;
             }
             $this->load->library('credit_lib');
