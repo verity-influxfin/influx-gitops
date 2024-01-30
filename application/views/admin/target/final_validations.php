@@ -1546,14 +1546,8 @@
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
 
-                if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
-                    // 額度調整預設為原額度
-                    // setEvaluationAmount(parseInt(credit.amount));
-                }
 
-                if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
-                    $('.fixed_amount_block').css('display', 'none');
-                } else if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
+                if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
                     let today = new Date();
                     let new_date = new Date(user.birthday);
                     let eligible_year = 35;
