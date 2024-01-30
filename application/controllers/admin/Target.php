@@ -864,11 +864,12 @@ class Target extends MY_Admin_Controller
         $targetId = isset($post["id"]) ? intval($post["id"]) : 0;
         $points = isset($post["points"]) ? intval($post["points"]) : 0;
         $remark = isset($post["reason"]) ? strval($post["reason"]) : false;
-
-        if ($points > 400)
+        
+        if ($points > 400) {
             $points = 400;
-        if ($points < -400)
+        } elseif ($points < -400) {
             $points = -400;
+        }
 
         $this->load->library('output/json_output');
 
