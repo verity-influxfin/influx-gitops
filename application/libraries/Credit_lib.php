@@ -378,6 +378,9 @@ class Credit_lib{
 
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
 
+        $param = $this->set_fixed_amount_into_param($param,
+            $product_id, $sub_product_id, $approvalExtra, $stage_cer);
+
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()
             || (!empty($credit['level']) && $credit['level'] == 10)) {
             return $param;
@@ -626,7 +629,7 @@ class Credit_lib{
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
 
         // 檢查二審額度調整
-        $param = $this->set_approval_extra_fixed_amount($param,
+        $param = $this->set_fixed_amount_into_param($param,
             $product_id, $sub_product_id, $approvalExtra, $stage_cer);
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
@@ -1290,7 +1293,7 @@ class Credit_lib{
         return $this->CI->credit_model->insert($param);
     }
 
-    private function set_approval_extra_fixed_amount($param, $product_id, $sub_product_id, $approvalExtra, $stage_cer)
+    private function set_fixed_amount_into_param($param, $product_id, $sub_product_id, $approvalExtra, $stage_cer)
     {
         if(!isset($param['amount'])){
             return $param;
