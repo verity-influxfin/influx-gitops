@@ -1943,24 +1943,21 @@ class Credit_lib{
 
     public function get_credit_level($points = 0, $product_id = 0, $sub_product_id = 0, $stage_cer = FALSE)
     {
-        if ((intval($points) > 0 || $stage_cer) && $product_id)
-        {
-            $credit_level_list = $this->credit['credit_level_' . $product_id];
-            if (isset($this->credit['credit_level_' . $product_id . '_' . $sub_product_id]))
-            {
-                $credit_level_list = $this->credit['credit_level_' . $product_id . '_' . $sub_product_id];
-            }
-            if (isset($credit_level_list))
-            {
-                foreach ($credit_level_list as $level => $value)
-                {
-                    if ($points >= $value['start'] && $points <= $value['end'])
-                    {
-                        return $level;
-                    }
-                }
-            }
+        if (!$product_id || (intval($points) <= 0 && !$stage_cer)) {
+            return False;
+        }
 
+        $credit_level_list = $this->credit['credit_level_' . $product_id . '_' . $sub_product_id] ??
+            $this->credit['credit_level_' . $product_id] ??
+            [];
+        if(empty($credit_level_list)){
+            return FALSE;
+        }
+
+        foreach ($credit_level_list as $level => $value) {
+            if ($points >= $value['start'] && $points <= $value['end']) {
+                return $level;
+            }
         }
         return FALSE;
     }
