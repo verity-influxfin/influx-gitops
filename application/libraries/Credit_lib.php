@@ -378,8 +378,8 @@ class Credit_lib{
 
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
 
-        if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || ( ! empty($credit['level']) && $credit['level'] == 10))
-        {
+        if ($approvalExtra && $approvalExtra->shouldSkipInsertion()
+            || (!empty($credit['level']) && $credit['level'] == 10)) {
             return $param;
         }
         $this->CI->credit_model->update_by(
