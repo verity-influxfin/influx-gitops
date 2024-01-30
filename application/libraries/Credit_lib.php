@@ -1943,7 +1943,10 @@ class Credit_lib{
 
     public function get_credit_level($points = 0, $product_id = 0, $sub_product_id = 0, $stage_cer = FALSE)
     {
-        if (!$product_id || (intval($points) <= 0 && !$stage_cer)) {
+        if (!$product_id) {
+            return False;
+        }
+        if (intval($points) <= 0 && !$stage_cer) {
             return False;
         }
 
