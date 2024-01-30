@@ -374,8 +374,8 @@ class Credit_lib{
         $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
 
         // 額度不能「大」於產品的最「大」允許額度
-		    $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
-            
+        $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
+
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || ( ! empty($credit['level']) && $credit['level'] == 10))
