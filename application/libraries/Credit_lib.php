@@ -1946,7 +1946,7 @@ class Credit_lib{
         if (!$product_id) {
             return False;
         }
-        if (intval($points) <= 0 && !$stage_cer) {
+        if (intval($points) < 0 && !$stage_cer) {
             return False;
         }
 
