@@ -2,6 +2,9 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * @property CI_Controller $CI
+ */
 class Estatement_lib{
 
 	public function __construct()
@@ -571,7 +574,13 @@ class Estatement_lib{
 				}
 
 				if($transaction_id){
-					$transactions 	= $this->CI->transaction_model->get_many($transaction_id);
+                    $transaction_id = array_unique($transaction_id);
+                    $transactions = [];
+                    foreach (array_chunk($transaction_id, 500) as $id_chunk) {
+                        $transaction_chunk = $this->CI->transaction_model->get_many($id_chunk);
+                        $transactions      = array_merge($transaction_chunk, $transactions);
+                    }
+
 					foreach($transactions as $key => $value){
                         if(!in_array($value->target_id,$combinations_ids)) {
                             $combinations_info = $this->CI->transfer_lib->check_combination($value->target_id, $value->investment_id);
