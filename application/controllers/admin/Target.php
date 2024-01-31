@@ -899,7 +899,7 @@ class Target extends MY_Admin_Controller
             if ($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET) {
                 $this->load->library('Certification_lib');
                 $certification = $this->certification_lib->get_certification_info($userId, 8, 0);
-                $certificationStatus = $certification->status ?? 0 == 1;
+                $certificationStatus = ($certification->status ?? 0) == 1;
                 $level = $certificationStatus ? 3 : 4;
             }
             $this->load->library('credit_lib');
