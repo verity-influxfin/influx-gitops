@@ -153,6 +153,7 @@ class Credit_lib{
 	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
 
         $total = 0;
+        $school_point_is_lower_than_150_and_point_larger_than_870 = false;
         $param = [
             'product_id' => $product_id,
             'sub_product_id' => $sub_product_id,
@@ -319,6 +320,7 @@ class Credit_lib{
             {
                 $total = 870;
                 $this->scoreHistory[] = '學校信評分在150（含）以下，信評分數不能超過870（含）分';
+                $school_point_is_lower_than_150_and_point_larger_than_870 = true;
             }
             $param['points'] = intval($total);
             goto SKIP_STAGE_CREDIT;
@@ -380,8 +382,8 @@ class Credit_lib{
         $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
-//        學校分數小於等於150分者，使用870對應的額度，否則使用後台人員設定的金額與對應的分數
-        if (isset($school_point) && $school_point > 150) {
+//        學校分數小於等於150分者，且原本分數高於870，不使用固定額度，使用870分對應的額度
+        if (!$school_point_is_lower_than_150_and_point_larger_than_870) {
             $param = $this->set_fixed_amount_into_param($param, $product_id, $sub_product_id, $approvalExtra, $stage_cer);
         }
 
