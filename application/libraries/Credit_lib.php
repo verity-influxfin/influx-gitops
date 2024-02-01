@@ -325,6 +325,14 @@ class Credit_lib{
         }
 
         SKIP_STAGE_CREDIT:
+
+        if ($approvalExtra && $approvalExtra->getExtraPoints()) {
+            $extra_point          = $approvalExtra->getExtraPoints();
+            $total                += $extra_point;
+            $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
+        }
+        $param['points'] = intval($total);
+
         if($mix_credit){
             return $param['points'];
         }
