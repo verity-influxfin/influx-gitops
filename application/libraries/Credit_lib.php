@@ -790,14 +790,10 @@ class Credit_lib{
         $this->scoreHistory[] = '提供社交帳戶認證ID: ' . $cert_social_score;
 
         $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
-        if ($approvalExtra)
-        {
-            if ($approvalExtra->getExtraPoints())
-            {
-                $extra_point = $approvalExtra->getExtraPoints();
-                $total += $extra_point;
-                $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
-            }
+        if ($approvalExtra && $approvalExtra->getExtraPoints()) {
+            $extra_point = $approvalExtra->getExtraPoints();
+            $total += $extra_point;
+            $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
         }
 
         // 總分調整 = 總分 * 性別對應的系數
