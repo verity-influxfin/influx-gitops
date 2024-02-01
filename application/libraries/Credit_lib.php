@@ -383,9 +383,10 @@ class Credit_lib{
         $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
-
-        $param = $this->set_fixed_amount_into_param($param,
-            $product_id, $sub_product_id, $approvalExtra, $stage_cer);
+//        學校分數小於等於150分者，使用870對應的額度，否則使用後台人員設定的金額與對應的分數
+        if (isset($school_point) && $school_point > 150) {
+            $param = $this->set_fixed_amount_into_param($param, $product_id, $sub_product_id, $approvalExtra, $stage_cer);
+        }
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()
             || (!empty($credit['level']) && $credit['level'] == 10)) {
