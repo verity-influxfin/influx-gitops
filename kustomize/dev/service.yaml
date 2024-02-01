@@ -1,0 +1,15 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: deus-service
+  namespace: default
+spec:
+  selector:
+    app: deus
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80  # 應用程式實際運行的端口
+  type: LoadBalancer
+  
