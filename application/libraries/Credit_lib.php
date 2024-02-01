@@ -338,14 +338,9 @@ class Credit_lib{
         $param['level'] 	= $this->get_credit_level($total,$product_id,$sub_product_id);
 
         // 取得額度對照表
-        if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
-        {
-            $credit_amount = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
-        }
-        else
-        {
-            $credit_amount = $this->credit['credit_amount_' . $product_id];
-        }
+        $credit_amount = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id] ??
+            $this->credit['credit_amount_' . $product_id] ??
+            [];
 
         if ( ! empty($credit_amount))
         {
@@ -401,8 +396,7 @@ class Credit_lib{
             ],
             ['status' => 0]
         );
-        $rs 		= $this->CI->credit_model->insert($param);
-		return $rs;
+        return  $this->CI->credit_model->insert($param);
 	}
 
 	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
