@@ -308,7 +308,10 @@ class Credit_lib{
                 $total += $approvalExtra->getExtraPoints();
                 $this->scoreHistory[] = '分數調整 = ' . $approvalExtra->getExtraPoints();
             }
-
+            if ($approvalExtra && $approvalExtra->get_fixed_amount()) {
+                $total = $this->get_credit_score_with_credit_amount($approvalExtra->get_fixed_amount(), $product_id,
+                    $sub_product_id, $stage_cer);
+            }
             // 學校分數小於等於150分者，其credits.points不得高於870，若高於則以870計
             if (( ! isset($school_point) || $school_point <= 150) && $total > 870)
             {
