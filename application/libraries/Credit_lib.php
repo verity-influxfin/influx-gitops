@@ -342,13 +342,11 @@ class Credit_lib{
         $param['level'] 	= $this->get_credit_level($total,$product_id,$sub_product_id);
 
         // 取得額度對照表
-        $credit_amount = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id] ??
-            $this->credit['credit_amount_' . $product_id] ??
-            [];
+        $credit_amount_list = $this->get_credit_amount_list($product_id, $sub_product_id);
 
-        if ( ! empty($credit_amount))
+        if ( ! empty($credit_amount_list))
         {
-            foreach ($credit_amount as $key => $value)
+            foreach ($credit_amount_list as $key => $value)
             {
                 if($param['points']>=$value['start'] && $param['points']<=$value['end']){
                     $param['amount'] = $value['amount'];
