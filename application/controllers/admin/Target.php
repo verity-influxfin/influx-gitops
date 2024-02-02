@@ -804,6 +804,7 @@ class Target extends MY_Admin_Controller
         }
 
         $credit["amount"] = (int) $newCredits["amount"];
+        $credit["remark"] = $newCredits["remark"];
         $message = "";
         if ($fixed_amount == 0) {
             $past_targets = $this->target_model->get_many_by([
