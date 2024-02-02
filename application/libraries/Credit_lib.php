@@ -344,16 +344,8 @@ class Credit_lib{
         // 取得額度對照表
         $credit_amount_list = $this->get_credit_amount_list($product_id, $sub_product_id);
 
-        if ( ! empty($credit_amount_list))
-        {
-            foreach ($credit_amount_list as $key => $value)
-            {
-                if($param['points']>=$value['start'] && $param['points']<=$value['end']){
-                    $param['amount'] = $value['amount'];
-                    break;
-                }
-            }
-        }
+        // 取得區間額度
+        $param['amount'] = $this->get_amount_from_credit_amount_list($credit_amount_list, $param['amount'], $param['points']);
 
         // 額度調整 = 額度 * 性別對應的系數
         if ($user_info->sex == 'M')
@@ -2072,6 +2064,27 @@ class Credit_lib{
         return $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id] ??
             $this->credit['credit_amount_' . $product_id] ??
             [];
+    }
+
+    /**
+     * @param array $credit_amount_list
+     * @param int $param_amount
+     * @param int $param_point
+     * @return int
+     */
+    public function get_amount_from_credit_amount_list(array $credit_amount_list, int $param_amount, int $param_point):
+    int
+    {
+        if (empty($credit_amount_list)) {
+            return $param_amount;
+        }
+
+        foreach ($credit_amount_list as $range) {
+            if ($param_point >= $range['start'] && $param_point <= $range['end']) {
+                return $range['amount'];
+            }
+        }
+        return $param_amount;
     }
 
 	public function delay_credit($user_id,$delay_days=0){
