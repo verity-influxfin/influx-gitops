@@ -1711,9 +1711,8 @@
             if (fixed_amount > 0 && fixed_amount < fixed_amount_min) {
                 fixed_amount = fixed_amount_min;
             }
-            if(fixed_amount>case_aprove_item.creditLineInfo.fixed_amount_max){
-                fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
-                console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
+            if (fixed_amount > fixed_amount_max) {
+                fixed_amount = fixed_amount_max;
             }
             setEvaluationAmountAndResetScore(fixed_amount);
         });
