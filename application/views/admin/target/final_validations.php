@@ -1703,11 +1703,13 @@
         });
         $('#2_fixed_amount').blur(function () {
             let fixed_amount = parseInt($(this).val());
+            fixed_amount_min = case_aprove_item.creditLineInfo.fixed_amount_min;
+            fixed_amount_max = case_aprove_item.creditLineInfo.fixed_amount_max;
             if (fixed_amount < 0) {
                 return;
             }
-            if(fixed_amount>0 && fixed_amount<1000){
-                fixed_amount = 1000;
+            if (fixed_amount > 0 && fixed_amount < fixed_amount_min) {
+                fixed_amount = fixed_amount_min;
             }
             if(fixed_amount>case_aprove_item.creditLineInfo.fixed_amount_max){
                 fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
