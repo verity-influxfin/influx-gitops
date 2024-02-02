@@ -1627,7 +1627,7 @@
             $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
             $(`#2_fixed_amount`).attr({
                 "max": case_aprove_item.creditLineInfo.fixed_amount_max,
-                "min": case_aprove_item.creditLineInfo.fixed_amount_min,
+                // "min": case_aprove_item.creditLineInfo.fixed_amount_min,
             });
         }
 
