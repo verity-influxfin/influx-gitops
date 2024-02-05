@@ -21,7 +21,9 @@ use Credit\due_diligence\Credit_human_resource;
 use Credit\due_diligence\Credit_job_seniority;
 use Credit\due_diligence\Credit_team_seniority;
 
-
+/**
+ * @property CI_Controller $CI
+ */
 class Credit_lib{
 
 	private $credit = [];
