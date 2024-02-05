@@ -1813,6 +1813,25 @@ class Credit_lib{
 		return $point;
 	}
 
+    /**
+     * 學生聯徵信用記錄對照表
+     * @param int $months
+     * @return int
+     */
+    public function get_student_investigation_months_point(int $months = 0): int
+    {
+        if ($months >= 12) {
+            return 100;
+        }
+        if ($months >= 6) {
+            return 50;
+        }
+        if ($months >= 3) {
+            return 10;
+        }
+        return 0;
+	}
+
 	//取得信用評分
 	public function get_credit($user_id,$product_id,$sub_product_id=0,$target=false){
         if ($target && is_array($target))
