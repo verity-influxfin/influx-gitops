@@ -1739,6 +1739,28 @@ class Credit_lib{
 		return $point;
 	}
 
+    /**
+     * 學生聯徵近三個月查詢次數對照
+     * @param int $times
+     * @return int
+     */
+    public function get_student_investigation_times_point(int $times = 0): int
+    {
+        if ($times < 1 || $times >= 10) {
+            return 0;
+        }
+        if ($times <= 3) {
+            return 300;
+        }
+        if ($times <= 6) {
+        return 200;
+        }
+        if ($times <= 9) {
+            return 100;
+        }
+        return 0;
+    }
+
 	public function get_investigation_rate_point($rate = 0, $has_using_credit_card = 0){
         if ( ! $has_using_credit_card)
         {
