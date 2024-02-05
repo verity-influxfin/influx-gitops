@@ -1778,6 +1778,29 @@ class Credit_lib{
 		return $point;
 	}
 
+    /**
+     * 學生信用卡使用率對照表
+     * @param int $rate
+     * @param int $has_using_credit_card
+     * @return int
+     */
+    public function get_student_investigation_rate_point(int $rate = 0, int $has_using_credit_card = 0): int
+    {
+        if (!$has_using_credit_card || $rate < 0) {
+            return 0;
+        }
+        if ($rate <= 30) {
+            return 100;
+        }
+        if ($rate <= 50) {
+            return 50;
+        }
+        if ($rate <= 70) {
+            return 10;
+        }
+        return 0;
+    }
+
 	public function get_investigation_months_point($months = 0){
 		$point 	= 0;
 		if($months >= 12){
