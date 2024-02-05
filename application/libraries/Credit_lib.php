@@ -310,6 +310,7 @@ class Credit_lib{
             }
             $total += $calculate_points;
 
+            // 提供社交帳戶認證LINE
             if (isset($data['line_access_token']) && ! empty($data['line_access_token']))
             {
                 $total += 100;
