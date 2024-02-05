@@ -276,6 +276,17 @@ class Credit_lib{
                 $this->scoreHistory[] = "IG發文關鍵字 = {$calculate_points}\n";
             }
 
+            // 項目: 透明度
+            // 類別: 其他相關資訊
+            $calculate_points = 0;
+            // 聯徵
+            if (isset($data['investigation_status'])) {
+                // 提供最新聯徵MQ
+                $calculate_points     += 50;
+                $this->scoreHistory[] = '提供聯徵 = ' . 50;
+            }
+            $total += $calculate_points;
+
             if (isset($data['line_access_token']) && ! empty($data['line_access_token']))
             {
                 $total += 100;
