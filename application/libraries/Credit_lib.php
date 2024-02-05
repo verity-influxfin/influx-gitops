@@ -282,14 +282,6 @@ class Credit_lib{
                 $this->scoreHistory[] = '提供社交帳戶認證LINE = 100\n';
             }
 
-            // 聯徵
-            if (isset($data['investigation_status']) && ! empty($data['investigation_status']))
-            {
-                $investigationStatus = 150;
-                $total += $investigationStatus;
-                $this->scoreHistory[] = '提供聯徵 = ' . $investigationStatus;
-            }
-
             //SIP
             //if(!empty($data['student_sip_account']) && !empty($data['student_sip_password'])){
             //$total += 150;
