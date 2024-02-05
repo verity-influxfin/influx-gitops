@@ -1785,13 +1785,13 @@ class Credit_lib{
             return 0;
         }
         if ($times <= 3) {
-            return 300;
+            return 100;
         }
         if ($times <= 6) {
-        return 200;
+        return 50;
         }
         if ($times <= 9) {
-            return 100;
+            return 10;
         }
         return 0;
     }
