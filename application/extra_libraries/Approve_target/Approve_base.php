@@ -7,6 +7,9 @@ use CertificationResult\MessageDisplay;
 use CertificationResult\SocialCertificationResult;
 use CreditSheet\CreditSheetFactory;
 
+/**
+ * @property  \CI_Controller $CI
+ */
 abstract class Approve_base implements Approve_interface
 {
     protected $CI;
