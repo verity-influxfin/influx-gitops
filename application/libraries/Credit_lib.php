@@ -284,6 +284,26 @@ class Credit_lib{
                 // 提供最新聯徵MQ
                 $calculate_points     += 50;
                 $this->scoreHistory[] = '提供聯徵 = ' . 50;
+                //聯徵近三個月查詢次數
+                if (isset($data['investigation_times'])) {
+                    $investigation_times_point = $this->get_student_investigation_times_point(intval($data['investigation_times']));
+                    $calculate_points          += $investigation_times_point;
+                    $this->scoreHistory[]      = '聯徵近三個月查詢次數: ' . $investigation_times_point;
+                }
+                //信用卡使用率
+                if (isset($data['investigation_credit_rate'])) {
+                    $investigation_credit_rate_point = $this->get_student_investigation_rate_point(intval($data['investigation_credit_rate']), $data['investigation_has_using_credit_card'] ?? 0);
+                    $calculate_points                += $investigation_credit_rate_point;
+                    $this->scoreHistory[]            = '聯徵信用卡使用率: ' . $investigation_credit_rate_point;
+                }
+
+                //聯徵信用記錄
+                if (isset($data['investigation_months'])) {
+                    $data['investigation_months'] = (int)$data['investigation_months'];
+                    $investigation_months_point   = $this->get_student_investigation_months_point($data['investigation_months']);
+                    $calculate_points             += $investigation_months_point;
+                    $this->scoreHistory[]         = '聯徵信用記錄' . $data['investigation_months'] . '個月: ' . $investigation_months_point;
+                }
             }
             $total += $calculate_points;
 
