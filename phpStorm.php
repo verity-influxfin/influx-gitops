@@ -105,6 +105,7 @@ die('This file is used for development purposes only.');
  * @property Credit_model $credit_model
  * @property User_model $user_model
  * @property Credit_sheet_review_model $credit_sheet_review_model
+ * @property User_meta_model $user_meta_model
  *
  */
 //batch_model
