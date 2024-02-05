@@ -308,7 +308,10 @@ class Credit_lib{
                 }
 
                 // 若征信綜合評分加分合計低於100分，按100分賦分
-                $calculate_points = max($calculate_points, 100);
+                if($calculate_points < 100){
+                    $this->scoreHistory[] = '征信綜合評分加分合計低於100分，按100分賦分：+' . (100 - $calculate_points);
+                    $calculate_points = 100;
+                }
             }
             $total += $calculate_points;
 
