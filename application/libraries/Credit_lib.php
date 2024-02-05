@@ -304,6 +304,9 @@ class Credit_lib{
                     $calculate_points             += $investigation_months_point;
                     $this->scoreHistory[]         = '聯徵信用記錄' . $data['investigation_months'] . '個月: ' . $investigation_months_point;
                 }
+
+                // 若征信綜合評分加分合計低於100分，按100分賦分
+                $calculate_points = max($calculate_points, 100);
             }
             $total += $calculate_points;
 
