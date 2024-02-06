@@ -1781,16 +1781,11 @@ class Credit_lib{
      */
     public function get_student_investigation_times_point(int $times = 0): int
     {
-        if ($times < 1 || $times >= 10) {
-            return 0;
-        }
-        if ($times <= 3) {
+        if ($times >= 1 && $times <= 3) {
             return 100;
-        }
-        if ($times <= 6) {
-        return 50;
-        }
-        if ($times <= 9) {
+        } elseif ($times >= 4 && $times <= 6) {
+            return 50;
+        } elseif ($times >= 7 && $times <= 9) {
             return 10;
         }
         return 0;
