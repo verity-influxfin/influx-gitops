@@ -280,43 +280,44 @@ class Credit_lib{
 
             // 項目: 透明度
             // 類別: 其他相關資訊
-            $calculate_points = 0;
+            $accumulate_points = 0;
             // 聯徵
             if (isset($data['investigation_status'])) {
                 // 提供最新聯徵MQ
-                $calculate_points     += 50;
+                $accumulate_points     += 50;
                 $this->scoreHistory[] = '提供聯徵 = ' . 50;
                 //聯徵近三個月查詢次數
                 if (isset($data['investigation_times'])) {
                     $times                = intval($data['investigation_times']);
-                    $point                = $this->get_student_investigation_times_point($times);
-                    $calculate_points     += $point;
-                    $this->scoreHistory[] = '聯徵近三個月查詢次數 ' . $times . '次: ' . $point;
+                    $points                = $this->get_student_investigation_times_points($times);
+                    $accumulate_points     += $points;
+                    $this->scoreHistory[] = '聯徵近三個月查詢次數 ' . $times . '次: ' . $points;
                 }
+
                 //信用卡使用率
                 if (isset($data['investigation_credit_rate'])) {
                     $rate                  = intval($data['investigation_credit_rate']);
                     $has_using_credit_card = intval($data['investigation_has_using_credit_card'] ?? 0);
-                    $point                 = $this->get_student_investigation_rate_point($rate, $has_using_credit_card);
-                    $calculate_points      += $point;
-                    $this->scoreHistory[]  = '聯徵信用卡使用率 ' . $rate . '%: ' . $point;
+                    $points                 = $this->get_student_investigation_rate_points($rate, $has_using_credit_card);
+                    $accumulate_points      += $points;
+                    $this->scoreHistory[]  = '聯徵信用卡使用率 ' . $rate . '%: ' . $points;
                 }
 
                 //聯徵信用記錄
                 if (isset($data['investigation_months'])) {
                     $months               = intval($data['investigation_months']);
-                    $point                = $this->get_student_investigation_months_point($months);
-                    $calculate_points     += $point;
-                    $this->scoreHistory[] = '聯徵信用記錄 ' . $months . '個月: ' . $point;
+                    $points                = $this->get_student_investigation_months_points($months);
+                    $accumulate_points     += $points;
+                    $this->scoreHistory[] = '聯徵信用記錄 ' . $months . '個月: ' . $points;
                 }
 
                 // 若征信綜合評分加分合計低於100分，按100分賦分
-                if($calculate_points < 100){
-                    $this->scoreHistory[] = '征信綜合評分加分合計低於100分，按100分賦分：+' . (100 - $calculate_points);
-                    $calculate_points = 100;
+                if($accumulate_points < 100){
+                    $this->scoreHistory[] = '征信綜合評分加分合計低於100分，按100分賦分：+' . (100 - $accumulate_points);
+                    $accumulate_points = 100;
                 }
             }
-            $total += $calculate_points;
+            $total += $accumulate_points;
 
             // 提供社交帳戶認證LINE
             if (isset($data['line_access_token']) && ! empty($data['line_access_token']))
@@ -1779,7 +1780,7 @@ class Credit_lib{
      * @param int $times
      * @return int
      */
-    public function get_student_investigation_times_point(int $times = 0): int
+    public function get_student_investigation_times_points(int $times = 0): int
     {
         if ($times >= 1 && $times <= 3) {
             return 100;
@@ -1814,7 +1815,7 @@ class Credit_lib{
      * @param int $has_using_credit_card
      * @return int
      */
-    public function get_student_investigation_rate_point(int $rate = 0, int $has_using_credit_card = 0): int
+    public function get_student_investigation_rate_points(int $rate = 0, int $has_using_credit_card = 0): int
     {
         if (!$has_using_credit_card || $rate < 0) {
             return 0;
@@ -1848,7 +1849,7 @@ class Credit_lib{
      * @param int $months
      * @return int
      */
-    public function get_student_investigation_months_point(int $months = 0): int
+    public function get_student_investigation_months_points(int $months = 0): int
     {
         if ($months >= 12) {
             return 100;
