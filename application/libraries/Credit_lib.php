@@ -1817,16 +1817,13 @@ class Credit_lib{
      */
     public function get_student_investigation_rate_points(int $rate = 0, int $has_using_credit_card = 0): int
     {
-        if (!$has_using_credit_card || $rate < 0) {
+        if (!$has_using_credit_card) {
             return 0;
-        }
-        if ($rate <= 30) {
+        } elseif ($rate >= 0 && $rate <= 30) {
             return 100;
-        }
-        if ($rate <= 50) {
+        } elseif ($rate > 30 && $rate <= 50) {
             return 50;
-        }
-        if ($rate <= 70) {
+        } elseif ($rate > 50 && $rate <= 70) {
             return 10;
         }
         return 0;
@@ -1853,15 +1850,13 @@ class Credit_lib{
     {
         if ($months >= 12) {
             return 100;
-        }
-        if ($months >= 6) {
+        } elseif ($months >= 6 && $months <= 11) {
             return 50;
-        }
-        if ($months >= 3) {
+        } elseif ($months >= 3 && $months <= 5) {
             return 10;
         }
         return 0;
-	}
+    }
 
 	//取得信用評分
 	public function get_credit($user_id,$product_id,$sub_product_id=0,$target=false){
