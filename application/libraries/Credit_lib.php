@@ -296,7 +296,7 @@ class Credit_lib{
 
                 //信用卡使用率
                 if (isset($data['investigation_credit_rate'])) {
-                    $rate                  = intval($data['investigation_credit_rate']);
+                    $rate                  = floatval($data['investigation_credit_rate']);
                     $has_using_credit_card = intval($data['investigation_has_using_credit_card'] ?? 0);
                     $points                 = $this->get_student_investigation_rate_points($rate, $has_using_credit_card);
                     $accumulate_points      += $points;
@@ -1811,11 +1811,11 @@ class Credit_lib{
 
     /**
      * 學生信用卡使用率對照表
-     * @param int $rate
+     * @param float $rate
      * @param int $has_using_credit_card
      * @return int
      */
-    public function get_student_investigation_rate_points(int $rate = 0, int $has_using_credit_card = 0): int
+    public function get_student_investigation_rate_points(float $rate = 0, int $has_using_credit_card = 0): int
     {
         if (!$has_using_credit_card) {
             return 0;
