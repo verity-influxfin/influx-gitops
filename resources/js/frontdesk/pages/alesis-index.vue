@@ -1318,7 +1318,7 @@ export default {
       const now = new Date()
       const [start_bound, end_bound] = mapping[page]
 
-      return now >= start_bound && now <= end_bound
+      return start_bound <= now && now <= end_bound
     },
   },
 }
