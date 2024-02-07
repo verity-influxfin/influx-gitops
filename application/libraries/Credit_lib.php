@@ -1782,11 +1782,13 @@ class Credit_lib{
      */
     public function get_student_investigation_times_points(int $times = 0): int
     {
-        if ($times >= 1 && $times <= 3) {
+        if (1 <= $times && $times <= 3) {
             return 100;
-        } elseif ($times >= 4 && $times <= 6) {
+        }
+        if (4 <= $times && $times <= 6) {
             return 50;
-        } elseif ($times >= 7 && $times <= 9) {
+        }
+        if (7 <= $times && $times <= 9) {
             return 10;
         }
         return 0;
@@ -1819,11 +1821,14 @@ class Credit_lib{
     {
         if (!$has_using_credit_card) {
             return 0;
-        } elseif ($rate >= 0 && $rate <= 30) {
+        }
+        if (0 <= $rate && $rate <= 30) {
             return 100;
-        } elseif ($rate > 30 && $rate <= 50) {
+        }
+        if (30 < $rate && $rate <= 50) {
             return 50;
-        } elseif ($rate > 50 && $rate <= 70) {
+        }
+        if (50 < $rate && $rate <= 70) {
             return 10;
         }
         return 0;
@@ -1848,11 +1853,13 @@ class Credit_lib{
      */
     public function get_student_investigation_months_points(int $months = 0): int
     {
-        if ($months >= 12) {
+        if (12 <= $months) {
             return 100;
-        } elseif ($months >= 6 && $months <= 11) {
+        }
+        if (6 <= $months && $months <= 11) {
             return 50;
-        } elseif ($months >= 3 && $months <= 5) {
+        }
+        if (3 <= $months && $months <= 5) {
             return 10;
         }
         return 0;
