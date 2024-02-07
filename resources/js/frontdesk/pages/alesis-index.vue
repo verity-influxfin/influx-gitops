@@ -7,7 +7,7 @@
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
               <div class="swiper-slide" v-for="page in 4" v-if="isNewyearHeaderShow(page)">
-                <NewyearHeader :headerIndex="page + 1" year="2024"/>
+                <NewyearHeader :headerIndex="page" year="2024"/>
               </div>
               <a class="swiper-slide" href="/selfieauth">
                 <div class="row no-gutters">
