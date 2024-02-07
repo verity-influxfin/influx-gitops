@@ -1708,7 +1708,7 @@
             if (fixed_amount < 0) {
                 return;
             }
-            if (fixed_amount > 0 && fixed_amount < fixed_amount_min) {
+            if (0 < fixed_amount && fixed_amount < fixed_amount_min) {
                 fixed_amount = fixed_amount_min;
             }
             if (fixed_amount > fixed_amount_max) {
