@@ -25,6 +25,7 @@ class PersonalCreditSheet extends CreditSheetBase {
     ];
 
     public const ALLOW_EDIT_FIXED_AMOUNT_PRODUCT_LIST = [
+        PRODUCT_ID_STUDENT,
         PRODUCT_ID_SALARY_MAN, PRODUCT_ID_HOME_LOAN
     ];
 

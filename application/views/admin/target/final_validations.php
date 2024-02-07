@@ -1546,14 +1546,8 @@
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
 
-                if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
-                    // 額度調整預設為原額度
-                    // setEvaluationAmount(parseInt(credit.amount));
-                }
 
-                if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
-                    $('.fixed_amount_block').css('display', 'none');
-                } else if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
+                if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
                     let today = new Date();
                     let new_date = new Date(user.birthday);
                     let eligible_year = 35;
@@ -1633,7 +1627,7 @@
             $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
             $(`#2_fixed_amount`).attr({
                 "max": case_aprove_item.creditLineInfo.fixed_amount_max,
-                "min": case_aprove_item.creditLineInfo.fixed_amount_min,
+                // "min": case_aprove_item.creditLineInfo.fixed_amount_min,
             });
         }
 
@@ -1709,15 +1703,16 @@
         });
         $('#2_fixed_amount').blur(function () {
             let fixed_amount = parseInt($(this).val());
+            fixed_amount_min = case_aprove_item.creditLineInfo.fixed_amount_min;
+            fixed_amount_max = case_aprove_item.creditLineInfo.fixed_amount_max;
             if (fixed_amount < 0) {
                 return;
             }
-            if(fixed_amount>0 && fixed_amount<1000){
-                fixed_amount = 1000;
+            if (0 < fixed_amount && fixed_amount < fixed_amount_min) {
+                fixed_amount = fixed_amount_min;
             }
-            if(fixed_amount>case_aprove_item.creditLineInfo.fixed_amount_max){
-                fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
-                console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
+            if (fixed_amount > fixed_amount_max) {
+                fixed_amount = fixed_amount_max;
             }
             setEvaluationAmountAndResetScore(fixed_amount);
         });

@@ -22,7 +22,7 @@ use Credit\due_diligence\Credit_job_seniority;
 use Credit\due_diligence\Credit_team_seniority;
 
 /**
- * @property CI_Controller $CI
+ * @property  CI_Controller $CI
  */
 class Credit_lib{
 
@@ -153,6 +153,7 @@ class Credit_lib{
 	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
 
         $total = 0;
+        $school_point_is_lower_than_150_and_point_larger_than_870 = false;
         $param = [
             'product_id' => $product_id,
             'sub_product_id' => $sub_product_id,
@@ -344,12 +345,16 @@ class Credit_lib{
                 $total += $approvalExtra->getExtraPoints();
                 $this->scoreHistory[] = '分數調整 = ' . $approvalExtra->getExtraPoints();
             }
-
+            if ($approvalExtra && $approvalExtra->get_fixed_amount()) {
+                $total = $this->get_credit_score_with_credit_amount($approvalExtra->get_fixed_amount(), $product_id,
+                    $sub_product_id, $stage_cer);
+            }
             // 學校分數小於等於150分者，其credits.points不得高於870，若高於則以870計
             if (( ! isset($school_point) || $school_point <= 150) && $total > 870)
             {
                 $total = 870;
                 $this->scoreHistory[] = '學校信評分在150（含）以下，信評分數不能超過870（含）分';
+                $school_point_is_lower_than_150_and_point_larger_than_870 = true;
             }
             $param['points'] = intval($total);
             goto SKIP_STAGE_CREDIT;
@@ -361,6 +366,9 @@ class Credit_lib{
         }
 
         SKIP_STAGE_CREDIT:
+
+        $param['points'] = intval($total);
+
         if($mix_credit){
             return $param['points'];
         }
@@ -368,25 +376,10 @@ class Credit_lib{
         $param['level'] 	= $this->get_credit_level($total,$product_id,$sub_product_id);
 
         // 取得額度對照表
-        if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
-        {
-            $credit_amount = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
-        }
-        else
-        {
-            $credit_amount = $this->credit['credit_amount_' . $product_id];
-        }
+        $credit_amount_list = $this->get_credit_amount_list($product_id, $sub_product_id);
 
-        if ( ! empty($credit_amount))
-        {
-            foreach ($credit_amount as $key => $value)
-            {
-                if($param['points']>=$value['start'] && $param['points']<=$value['end']){
-                    $param['amount'] = $value['amount'];
-                    break;
-                }
-            }
-        }
+        // 取得區間額度
+        $param['amount'] = $this->get_amount_from_credit_amount_list($credit_amount_list, $param['amount'], $param['points']);
 
         // 額度調整 = 額度 * 性別對應的系數
         if ($user_info->sex == 'M')
@@ -410,11 +403,19 @@ class Credit_lib{
         $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
 
         // 額度不能「大」於產品的最「大」允許額度
-		    $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
+        $param['amount'] = min($this->get_credit_max_amount($param['points'], $product_id, $sub_product_id), $param['amount']);
 
-        if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || ( ! empty($credit['level']) && $credit['level'] == 10))
-        {
-            $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
+        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
+//        學校分數小於等於150分者，且原本分數高於870，且二審有調整額度，更新調整的額度為870分對應的額度
+        if ($school_point_is_lower_than_150_and_point_larger_than_870 &&
+            $approvalExtra && $approvalExtra->get_fixed_amount()) {
+            // 取得區間額度
+            $_amount = $this->get_amount_from_credit_amount_list($credit_amount_list, $param['amount'], $param['points']);
+            $approvalExtra->set_fixed_amount($_amount);
+        }
+        $param = $this->set_fixed_amount_into_param($param, $product_id, $sub_product_id, $approvalExtra, $stage_cer);
+        if ($approvalExtra && $approvalExtra->shouldSkipInsertion()
+            || (!empty($credit['level']) && $credit['level'] == 10)) {
             return $param;
         }
         $this->CI->credit_model->update_by(
@@ -426,9 +427,7 @@ class Credit_lib{
             ],
             ['status' => 0]
         );
-        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
-        $rs 		= $this->CI->credit_model->insert($param);
-		return $rs;
+        return  $this->CI->credit_model->insert($param);
 	}
 
 	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment, $target){
@@ -662,32 +661,8 @@ class Credit_lib{
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
 
         // 檢查二審額度調整
-        if (isset($approvalExtra))
-        {
-            $fixed_amount = $approvalExtra->get_fixed_amount();
-            if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE)
-            {
-                goto SKIP_FIXED_AMOUNT;
-            }
-            // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
-            // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
-            // 2024-01-25: 用fixed_amount去找對應的score，再找到對應的level
-            $param['amount']     = $fixed_amount;
-            $param['points']               = $this->get_credit_score_with_credit_amount($fixed_amount, $product_id,
-                $sub_product_id, $stage_cer);
-            $param['level']                = $this->get_credit_level($param['points'], $product_id, $sub_product_id,
-                $stage_cer);
-
-            $tmp_remark = json_decode($param['remark'], TRUE);
-            if (isset($tmp_remark['scoreHistory']))
-            {
-                $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
-                $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
-                $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
-            }
-            $param['remark'] = json_encode($tmp_remark);
-        }
-        SKIP_FIXED_AMOUNT:
+        $param = $this->set_fixed_amount_into_param($param,
+            $product_id, $sub_product_id, $approvalExtra, $stage_cer);
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
@@ -839,14 +814,10 @@ class Credit_lib{
         $this->scoreHistory[] = '提供社交帳戶認證ID: ' . $cert_social_score;
 
         $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
-        if ($approvalExtra)
-        {
-            if ($approvalExtra->getExtraPoints())
-            {
-                $extra_point = $approvalExtra->getExtraPoints();
-                $total += $extra_point;
-                $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
-            }
+        if ($approvalExtra && $approvalExtra->getExtraPoints()) {
+            $extra_point = $approvalExtra->getExtraPoints();
+            $total += $extra_point;
+            $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
         }
 
         // 總分調整 = 總分 * 性別對應的系數
@@ -1056,27 +1027,8 @@ class Credit_lib{
         $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
 
         // 檢查二審額度調整
-        if (isset($approvalExtra)) {
-            $fixed_amount = $approvalExtra->get_fixed_amount();
-            if ($this->is_valid_fixed_amount($fixed_amount, $this->product_list[$product_id]['loan_range_s'], $this->product_list[$product_id]['loan_range_e']) === FALSE) {
-                goto SKIP_FIXED_AMOUNT;
-            }
-            // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
-            // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
-            // 2024-01-25: 用fixed_amount去找對應的score，再找到對應的level
-            $param['amount'] = $fixed_amount;
-            $param['points'] = $this->get_credit_score_with_credit_amount($fixed_amount, $product_id, $sub_product_id, $stage_cer);
-            $param['level']  = $this->get_credit_level($param['points'], $product_id, $sub_product_id, $stage_cer);
-
-            $tmp_remark = json_decode($param['remark'], TRUE);
-            if (isset($tmp_remark['scoreHistory'])) {
-                $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
-                $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
-                $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
-            }
-            $param['remark'] = json_encode($tmp_remark);
-        }
-        SKIP_FIXED_AMOUNT:
+        $param = $this->set_fixed_amount_into_param($param,
+            $product_id, $sub_product_id, $approvalExtra, $stage_cer);
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion())
         {
@@ -1350,6 +1302,37 @@ class Credit_lib{
         return $this->CI->credit_model->insert($param);
     }
 
+    private function set_fixed_amount_into_param($param, $product_id, $sub_product_id, $approvalExtra, $stage_cer)
+    {
+        if(!isset($approvalExtra)){
+            return $param;
+        }
+
+        $fixed_amount = $approvalExtra->get_fixed_amount();
+        $loan_range_s = $this->product_list[$product_id]['loan_range_s'];
+        $loan_range_e = $this->product_list[$product_id]['loan_range_e'];
+        if ($this->is_valid_fixed_amount($fixed_amount, $loan_range_s,
+                $loan_range_e) === FALSE) {
+            return $param;
+        }
+        // old：由二審人員key額度，則該戶信評等級則為上班族貸最低之可授信信評（目前為9），分數要給「671」
+        // new：比對fixed_amount是否與舊額度相同，若相同則不做調整，若小於舊額度則調整為9等級，若大於舊額度則取新計算額度
+        // 2024-01-25: 用fixed_amount去找對應的score，再找到對應的level
+        $param['amount'] = $fixed_amount;
+        $param['points'] = $this->get_credit_score_with_credit_amount($fixed_amount, $product_id,
+            $sub_product_id, $stage_cer);
+        $param['level']  = $this->get_credit_level($param['points'], $product_id, $sub_product_id,
+            $stage_cer);
+
+        $tmp_remark = json_decode($param['remark'], TRUE);
+        if (isset($tmp_remark['scoreHistory'])) {
+            $tmp_remark['scoreHistory'][] = '--- 由二審人員調整額度 ---';
+            $tmp_remark['scoreHistory'][] = "等級: {$param['level']}";
+            $tmp_remark['scoreHistory'][] = "額度: {$param['amount']}";
+        }
+        $param['remark'] = json_encode($tmp_remark);
+        return $param;
+    }
     public function get_business_type_code($business_type)
     {
         $business_type_list = $this->CI->config->item('business_type_list');
@@ -2049,24 +2032,24 @@ class Credit_lib{
 
     public function get_credit_level($points = 0, $product_id = 0, $sub_product_id = 0, $stage_cer = FALSE)
     {
-        if ((intval($points) > 0 || $stage_cer) && $product_id)
-        {
-            $credit_level_list = $this->credit['credit_level_' . $product_id];
-            if (isset($this->credit['credit_level_' . $product_id . '_' . $sub_product_id]))
-            {
-                $credit_level_list = $this->credit['credit_level_' . $product_id . '_' . $sub_product_id];
-            }
-            if (isset($credit_level_list))
-            {
-                foreach ($credit_level_list as $level => $value)
-                {
-                    if ($points >= $value['start'] && $points <= $value['end'])
-                    {
-                        return $level;
-                    }
-                }
-            }
+        if (!$product_id) {
+            return False;
+        }
+        if (intval($points) < 0 && !$stage_cer) {
+            return False;
+        }
 
+        $credit_level_list = $this->credit['credit_level_' . $product_id . '_' . $sub_product_id] ??
+            $this->credit['credit_level_' . $product_id] ??
+            [];
+        if(empty($credit_level_list)){
+            return FALSE;
+        }
+
+        foreach ($credit_level_list as $level => $value) {
+            if ($points >= $value['start'] && $points <= $value['end']) {
+                return $level;
+            }
         }
         return FALSE;
     }
@@ -2179,6 +2162,27 @@ class Credit_lib{
         return $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id] ??
             $this->credit['credit_amount_' . $product_id] ??
             [];
+    }
+
+    /**
+     * @param array $credit_amount_list
+     * @param int $param_amount
+     * @param int $param_point
+     * @return int
+     */
+    public function get_amount_from_credit_amount_list(array $credit_amount_list, int $param_amount, int $param_point):
+    int
+    {
+        if (empty($credit_amount_list)) {
+            return $param_amount;
+        }
+
+        foreach ($credit_amount_list as $range) {
+            if ($param_point >= $range['start'] && $param_point <= $range['end']) {
+                return $range['amount'];
+            }
+        }
+        return $param_amount;
     }
 
 	public function delay_credit($user_id,$delay_days=0){
