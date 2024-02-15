@@ -78,7 +78,7 @@
         </li>
         <li>
           自行法訴
-          <ol>
+          <ol class="curly-bracket">
             <li>
               借款人逾期30日以上者，貸款人得向本公司申請於平台上持有之特定
               逾期債權為自行法訴。經簽署自行法訴協議書，本公司將依貸款人之
@@ -101,16 +101,16 @@
         </li>
         <li>
           委託法訴
-          <ol>
+          <ol class="curly-bracket">
             <li>
               考量訴訟經濟、時間效益與成本收益等因素考量，滿足以下條件
               之債權，本公司將依貸款人委託，受託代為就全部符合條件之債
               權執行法訴工作（委託法訴處理之範圍，限於全部符合條件之債
               權。不受理部分債權委託）。相關條件包括：
-              <ul>
+              <ol class="curly-bracket" style="margin-left: 1em">
                 <li>債權金額需達新台幣1萬元（含）；</li>
                 <li>於債權逾期60日內完成委託法訴程序。</li>
-              </ul>
+              </ol>
             </li>
             <li>
               債權貸款人於委任普匯代為進行法律非訟程序之期間內，為避免非訟
@@ -143,7 +143,7 @@
         </li>
         <li>
           強制返還債權之情形
-          <ol>
+          <ol class="curly-bracket">
             <li>
               借款人逾期還款超過30日者且剩餘本金小於1萬元者，衡量訴訟成本
               與效益，本平台將強制返還該筆債權，不接受貸款人委託法訴。貸款
@@ -172,7 +172,7 @@
         </li>
         <li>
           產品轉換之審核流程，如下：
-          <ol>
+          <ol class="curly-bracket">
             <li>填寫訪談表；</li>
             <li>視訊洽談；</li>
             <li>
@@ -244,6 +244,18 @@ export default {
     div {
       margin-bottom: 20px;
     }
+  }
+
+  ol.curly-bracket {
+    list-style-type: none;
+    counter-reset: custom-counter;
+    padding-left: 0;
+  }
+
+  ol.curly-bracket li::before {
+    content: '(' counter(custom-counter) ')';
+    counter-increment: custom-counter;
+    margin-right: 0.5em;
   }
 
   @media screen and (max-width: 767px) {
