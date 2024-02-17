@@ -298,7 +298,8 @@ class Credit_lib{
                 //信用卡使用率
                 if (isset($data['investigation_credit_rate'])) {
                     $rate                  = floatval($data['investigation_credit_rate']);
-                    $has_using_credit_card = intval($data['investigation_has_using_credit_card'] ?? 0);
+                    $has_using_credit_card = intval(filter_var($data['investigation_has_using_credit_card'] ??
+                        'false', FILTER_VALIDATE_BOOLEAN));
                     $points                 = $this->get_student_investigation_rate_points($rate, $has_using_credit_card);
                     $accumulate_points      += $points;
                     $this->scoreHistory[]  = '聯徵信用卡使用率 ' . $rate . '%: ' . $points;
