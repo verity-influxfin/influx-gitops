@@ -1117,6 +1117,12 @@
                 }
             },
             exportIdentityPPT() {
+                const isDataQueried = this.identityReportDict.identity_household || this.identityReportDict.identity_new_household
+                if (!isDataQueried) {
+                    alert("請先完成查詢")
+                    return
+                }
+
                 var pptx = new PptxGenJS();
 
                 pptx.tableToSlides('identityDiv1');
@@ -1126,8 +1132,8 @@
                 pptx.writeFile({ fileName: "identity.pptx" });
             },
             exportLoanPPT() {
-                const is_data_queried = this.loanReportDict.student_loan || this.loanReportDict.work_loan || this.loanReportDict.trend || this.loanReportDict.statistics
-                if (!is_data_queried) {
+                const isDataQueried = this.loanReportDict.student_loan || this.loanReportDict.work_loan || this.loanReportDict.trend || this.loanReportDict.statistics
+                if (!isDataQueried) {
                     alert("請先完成查詢")
                     return
                 }
@@ -1164,6 +1170,12 @@
                 pptx.writeFile({ fileName: "loan.pptx" });
             },
             exportTransactionPPT() {
+                const isDataQueried = this.transactionReportDict.case || this.transactionReportDict.household || this.transactionReportDict.trend || this.transactionReportDict.new_household || this.transactionReportDict.amount || this.transactionReportDict.amount_trend || this.transactionReportDict.statistics
+                if (!isDataQueried) {
+                    alert("請先完成查詢")
+                    return
+                }
+
                 var pptx = new PptxGenJS();
 
                 pptx.tableToSlides('transactionDiv1');
@@ -1253,7 +1265,11 @@
     });
 
 </script>
-<style>
+<style scoped>
+    * {
+        font-family: PMingLiU;
+    }
+
     .searchDt {
         width: 150px;
         height: 28px;
