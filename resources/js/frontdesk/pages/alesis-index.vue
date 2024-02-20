@@ -1310,7 +1310,7 @@ export default {
   methods: {
     isNewyearHeaderShow(page) {
       const mapping = {
-        1: [new Date('2024-02-07 00:00'), new Date('2024-02-23 23:59:59')],
+        1: [new Date('2024-02-07 00:00'), new Date('2024-02-19 23:59:59')],
         2: [new Date('2024-02-07 00:00'), new Date('2024-02-14 23:59:59')],
         3: [new Date('2024-02-08 12:00'), new Date('2024-02-10 12:00')],
         4: [new Date('2024-02-15 09:00'), new Date('2024-02-15 23:00')],
