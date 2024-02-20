@@ -95,7 +95,11 @@ cache driver: apc, fallback to file, once used in `Page.php`
 
 url: `<base_url>/doc`
 
-非本地環境，帳密可跟同事索取
+非本地環境的帳密可跟同事索取
+
+### 添加方法
+
+主站的API文件在 `doc/api_data.js`，php裡的comment已被棄用
 
 ## App JSON檔
 
