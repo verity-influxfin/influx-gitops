@@ -3,13 +3,17 @@ apiVersion: v1
 kind: Service
 metadata:
   name: influx-website-service
-  namespace: default
 spec:
   selector:
     app: influx-website
   ports:
     - protocol: TCP
-      port: 80
+      name: http
+      port: 80 # ALB HTTP 端口
       targetPort: 80  # 應用程式實際運行的端口
+    - protocol: TCP
+      name: https
+      port: 443 # ALB HTTPS 端口
+      targetPort: 80  # 導向應用程式實際運行的端口
   type: LoadBalancer
   
