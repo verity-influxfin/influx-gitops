@@ -2,8 +2,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: influx-website-ingress
+  namespace: default
+  labels:
+    app: influx-website
   annotations:
-    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/scheme: internet-facing
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.type=lb_cookie,stickiness.lb_cookie.duration_seconds=7200
@@ -16,13 +19,13 @@ spec:
       name: influx-website-service
       port:
         number: 80
-  rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: influx-website-service
-                port:
-                  number: 80
+  # rules:
+  #   - http:
+  #       paths:
+  #         - path: /
+  #           pathType: Prefix
+  #           backend:
+  #             service:
+  #               name: influx-website-service
+  #               port:
+  #                 number: 80
