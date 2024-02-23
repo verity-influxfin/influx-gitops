@@ -618,7 +618,8 @@ class Target extends MY_Admin_Controller
         if ($id) {
             $target = $this->target_model->get($id);
             if ($this->target_lib->reject($target, $this->login_info->id, $remark)) {
-                if ($target->product_id == 5 &&
+                if (
+                    $target->product_id == 5 &&
                     in_array($target->sub_product_id, [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES])
                 ) {
                     $cancel_booking_result = $this->target_lib->cancel_booking_and_certification($target->user_id);
@@ -675,11 +676,9 @@ class Target extends MY_Admin_Controller
         $this->load->library('target_lib');
         $tab = $input['tab'] ?? '';
         $filter_product_ids = $this->target_lib->get_product_id_by_tab($tab);
-        if(!empty($filter_product_ids))
-        {
+        if (!empty($filter_product_ids)) {
             $where['product_id'] = $filter_product_ids;
-            if($tab == 'enterprise')
-            {
+            if ($tab == 'enterprise') {
                 $where['status'] = [TARGET_WAITING_VERIFY, TARGET_BANK_VERIFY];
             }
         }
@@ -842,10 +841,12 @@ class Target extends MY_Admin_Controller
                                 ', monthly_repayment: ' . $content->monthly_repayment .
                                 ', total_repayment: ' . $content->total_repayment;
 
-                            log_message('info',
+                            log_message(
+                                'info',
                                 $message .
                                 ', target_id: ' . $target->id .
-                                ', certification: ' . $certification->id);
+                                ', certification: ' . $certification->id
+                            );
                         }
                     }
                 }
@@ -1497,7 +1498,8 @@ class Target extends MY_Admin_Controller
 
     }
 
-	public function repayment(){
+    public function repayment()
+    {
         $page_data = ['type' => 'list'];
         $input = $this->input->get(NULL, TRUE);
         $where = ['status' => TARGET_REPAYMENTING];
@@ -1505,19 +1507,17 @@ class Target extends MY_Admin_Controller
         $this->load->library('target_lib');
         $category = $input['tab'] ?? '';
         $filter_product_ids = $this->target_lib->get_product_id_by_tab($category);
-        if ( ! empty($filter_product_ids))
-        {
+        if (!empty($filter_product_ids)) {
             $where['product_id'] = $filter_product_ids;
-            if ($category == 'enterprise')
-            {
+            if ($category == 'enterprise') {
                 $where['status'] = [TARGET_BANK_REPAYMENTING];
             }
         }
-		$list = $this->target_model->get_many_by($where);
+        $list = $this->target_model->get_many_by($where);
         $school_list = [];
         $user_list = [];
         $amortization_table = [];
-		if($list){
+        if ($list) {
             // dev use
             // foreach ($list as $key => $value) {
             //     $user_list[] = $value->user_id;
@@ -1537,36 +1537,33 @@ class Target extends MY_Admin_Controller
             //         'remaining_principal' => $amortization_table['remaining_principal'],
             //     ];
             // }
-			foreach($list as $key => $value){
-				$user_list[] = $value->user_id;
-				$limit_date  = $value->created_at + (TARGET_APPROVE_LIMIT*86400);
-				$credit		 = $this->credit_model->order_by('created_at','desc')->get_by([
-					'product_id' 	=> $value->product_id,
-					'user_id' 		=> $value->user_id,
-					'created_at <=' => $limit_date,
-				]);
-				if($credit){
-					$list[$key]->credit = $credit;
-				}
-				$amortization_table = $this->target_lib->get_amortization_table($value);
-				$list[$key]->amortization_table = [
-					'total_payment_m'		=> isset($amortization_table['list'][1]['total_payment']),
-					'total_payment'			=> $amortization_table['total_payment'],
-					'remaining_principal'	=> $amortization_table['remaining_principal'],
-				];
+            foreach ($list as $key => $value) {
+                $user_list[] = $value->user_id;
+                $limit_date = $value->created_at + (TARGET_APPROVE_LIMIT * 86400);
+                $credit = $this->credit_model->order_by('created_at', 'desc')->get_by([
+                    'product_id' => $value->product_id,
+                    'user_id' => $value->user_id,
+                    'created_at <=' => $limit_date,
+                ]);
+                if ($credit) {
+                    $list[$key]->credit = $credit;
+                }
+                $amortization_table = $this->target_lib->get_amortization_table($value);
+                $list[$key]->amortization_table = [
+                    'total_payment_m' => isset($amortization_table['list'][1]['total_payment']),
+                    'total_payment' => $amortization_table['total_payment'],
+                    'remaining_principal' => $amortization_table['remaining_principal'],
+                ];
 
                 $user_data = $this->user_model->get_by(['id' => $value->user_id]);
                 $list[$key]->company = $user_data->name ?? '';
                 $repayment_schedule = $this->target_lib->get_repayment_schedule($value);
-                if ( ! empty($repayment_schedule))
-                {
+                if (!empty($repayment_schedule)) {
                     $list[$key]->paid_instalment = $repayment_schedule[array_key_first($repayment_schedule)]['instalment'] - 1;
-                }
-                else
-                {
+                } else {
                     $list[$key]->paid_instalment = $value->instalment;
                 }
-			}
+            }
 
             $this->load->model('user/user_meta_model');
             $users_school = $this->user_meta_model->get_many_by([
@@ -1599,7 +1596,7 @@ class Target extends MY_Admin_Controller
     {
         $post = $this->input->post(NULL, TRUE);
         $ids = isset($post['ids']) && $post['ids'] ? explode(',', $post['ids']) : '';
-        $status = isset($post['status'])&&$post['status']?$post['status']:[TARGET_REPAYMENTING, TARGET_BANK_REPAYMENTING];
+        $status = isset($post['status']) && $post['status'] ? $post['status'] : [TARGET_REPAYMENTING, TARGET_BANK_REPAYMENTING];
         if ($ids && is_array($ids)) {
             $where = ['id' => $ids];
         } else {
@@ -1946,35 +1943,33 @@ class Target extends MY_Admin_Controller
         $this->load->library('target_lib');
         $category = $input['tab'] ?? '';
         $filter_product_ids = $this->target_lib->get_product_id_by_tab($category);
-        if ( ! empty($filter_product_ids))
-        {
+        if (!empty($filter_product_ids)) {
             $where['product_id'] = $filter_product_ids;
-            if ($category == 'enterprise')
-            {
+            if ($category == 'enterprise') {
                 $where['status'] = TARGET_BANK_REPAYMENTED;
             }
         }
 
         $list = $this->target_model->get_many_by($where);
-		if($list){
-			foreach($list as $key => $value){
-				$user_list[] = $value->user_id;
-				$limit_date  = $value->created_at + (TARGET_APPROVE_LIMIT*86400);
-				$credit		 = $this->credit_model->order_by('created_at','desc')->get_by([
-					'product_id' 	=> $value->product_id,
-					'user_id' 		=> $value->user_id,
-					'created_at <=' => $limit_date,
-				]);
-				if($credit){
-					$list[$key]->credit = $credit;
-				}
-				$amortization_table = $this->target_lib->get_amortization_table($value);
-				$list[$key]->amortization_table = [
-					'total_payment_m'		=> isset($amortization_table['list'][1]['total_payment']),
-					'total_payment'			=> $amortization_table['total_payment'],
-					'remaining_principal'	=> $amortization_table['remaining_principal'],
-				];
-			}
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $user_list[] = $value->user_id;
+                $limit_date = $value->created_at + (TARGET_APPROVE_LIMIT * 86400);
+                $credit = $this->credit_model->order_by('created_at', 'desc')->get_by([
+                    'product_id' => $value->product_id,
+                    'user_id' => $value->user_id,
+                    'created_at <=' => $limit_date,
+                ]);
+                if ($credit) {
+                    $list[$key]->credit = $credit;
+                }
+                $amortization_table = $this->target_lib->get_amortization_table($value);
+                $list[$key]->amortization_table = [
+                    'total_payment_m' => isset($amortization_table['list'][1]['total_payment']),
+                    'total_payment' => $amortization_table['total_payment'],
+                    'remaining_principal' => $amortization_table['remaining_principal'],
+                ];
+            }
 
             $this->load->model('user/user_meta_model');
             $users_school = $this->user_meta_model->get_many_by([
@@ -2498,15 +2493,13 @@ class Target extends MY_Admin_Controller
                         $this->load->library('Target_lib');
                         $this->target_lib->insert_change_log($target_info->id, $param);
                     }
-                }
-                elseif(isset($post['manual_handling'])){
+                } elseif (isset($post['manual_handling'])) {
                     // dev 用
                     // if($target_info->status == TARGET_WAITING_VERIFY
                     //     && $target_info->sub_status ==TARGET_SUBSTATUS_SECOND_INSTANCE
                     //     || $target_info->status == TARGET_BANK_FAIL
                     // )
-                    if ( ! in_array($target_info->status, [TARGET_BANK_LOAN, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED]))
-                    {
+                    if (!in_array($target_info->status, [TARGET_BANK_LOAN, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED])) {
                         $target_data = json_decode($target_info->target_data, TRUE);
                         $target_data['manual_reason'] = TARGET_MSG_NOT_CREDIT_STANDARD;
                         $param = [
@@ -2569,7 +2562,7 @@ class Target extends MY_Admin_Controller
         $response = [];
         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
         $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
-        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'','bank' => $bank]);
+        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id' => $get['target_id'], 'type' => 'text', 'content !=' => '', 'bank' => $bank]);
 
         if (empty($mapping_info)) {
             $this->json_output->setStatusCode(200)->setResponse($response)->send();
@@ -2582,15 +2575,15 @@ class Target extends MY_Admin_Controller
         }
 
         $prefix = get_bank_prefix($bank);
-        $response[$prefix.'MsgNo'] = $msg_no_info->msg_no ?? '';
-        $response[$prefix.'CaseNo'] = $msg_no_info->case_no ?? '';
+        $response[$prefix . 'MsgNo'] = $msg_no_info->msg_no ?? '';
+        $response[$prefix . 'CaseNo'] = $msg_no_info->case_no ?? '';
 
         if (!empty($msg_no_info->request_content)) {
             $request_content = json_decode($msg_no_info->request_content, true);
             $return_msg = json_decode($msg_no_info->response_content, true);
-            $response[$prefix.'CompId'] = $request_content['unencrypted']['CompId'] ?? '';
-            $response[$prefix.'MetaInfo'] = $return_msg['ReturnMsg'] ?? '';
-            $response[$prefix.'Return'] = '成功';
+            $response[$prefix . 'CompId'] = $request_content['unencrypted']['CompId'] ?? '';
+            $response[$prefix . 'MetaInfo'] = $return_msg['ReturnMsg'] ?? '';
+            $response[$prefix . 'Return'] = '成功';
         }
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
@@ -2608,7 +2601,7 @@ class Target extends MY_Admin_Controller
         // TODO:取得總集合
         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
         $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
-        $skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'','bank' => $get['bank'] ?? MAPPING_MSG_NO_BANK_NUM_SKBANK]);
+        $skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id' => $get['target_id'], 'type' => 'text', 'content !=' => '', 'bank' => $get['bank'] ?? MAPPING_MSG_NO_BANK_NUM_SKBANK]);
 
         if (!$skbank_save_info || !isset($skbank_save_info->content) || empty($skbank_save_info->content)) {
             $this->json_output->setStatusCode(400)->setErrorCode(ItemNotFound)->send();
@@ -2716,14 +2709,12 @@ class Target extends MY_Admin_Controller
         $this->load->library('output/json_output');
         $response = [];
 
-        if (empty($get['id']))
-        {
+        if (empty($get['id'])) {
             $this->json_output->setStatusCode(204)->setErrorCode(INPUT_NOT_CORRECT)->setErrorMessage('缺少參數，查無資料，請洽工程師')->send();
         }
 
         $user_info = $this->target_model->get($get['id']);
-        if (empty($user_info->user_id))
-        {
+        if (empty($user_info->user_id)) {
             $this->json_output->setStatusCode(204)->setErrorCode(INPUT_NOT_CORRECT)->setErrorMessage('查無使用者資料')->send();
         }
         $response['data'] = [
@@ -2735,15 +2726,12 @@ class Target extends MY_Admin_Controller
             'target_id' => $get['id']
         ]);
         array_walk($meta_info, function ($element) use (&$response) {
-            switch ($element->meta_key)
-            {
+            switch ($element->meta_key) {
                 case 'changes': // 人力變動狀況
                     $index = $pow = 0;
-                    while ($element->meta_value >= $pow)
-                    {
+                    while ($element->meta_value >= $pow) {
                         $pow = pow(2, ++$index);
-                        if ($element->meta_value & $pow)
-                        {
+                        if ($element->meta_value & $pow) {
                             $element->meta_value -= $pow;
                             $response['data']['meta_info'][$element->meta_key][] = $index;
                         }
@@ -2764,16 +2752,13 @@ class Target extends MY_Admin_Controller
         $this->load->library('output/json_output');
         $response = [];
 
-        if (empty($post['meta']) || empty($post['id']))
-        {
+        if (empty($post['meta']) || empty($post['id'])) {
             $this->json_output->setStatusCode(204)->setErrorCode(INPUT_NOT_CORRECT)->setErrorMessage('缺少參數，資料更新失敗，請洽工程師')->send();
         }
 
         $this->load->model('loan/target_meta_model');
-        foreach ($post['meta'] as $key => $value)
-        {
-            if (is_array($value))
-            {
+        foreach ($post['meta'] as $key => $value) {
+            if (is_array($value)) {
                 $value_tmp = 0;
                 array_walk($value, function ($element) use (&$value_tmp) {
                     $value_tmp += pow(2, $element);
@@ -2782,15 +2767,15 @@ class Target extends MY_Admin_Controller
             }
 
             $exist = $this->target_meta_model->get_by(array('target_id' => $post['id'], 'meta_key' => $key));
-            if ($exist)
-            {
-                $this->target_meta_model->update_by([
-                    'target_id' => $post['id'],
-                    'meta_key' => $key], array('meta_value' => $value)
+            if ($exist) {
+                $this->target_meta_model->update_by(
+                    [
+                        'target_id' => $post['id'],
+                        'meta_key' => $key
+                    ],
+                    array('meta_value' => $value)
                 );
-            }
-            else
-            {
+            } else {
                 $this->target_meta_model->insert([
                     'target_id' => $post['id'],
                     'meta_key' => $key,
@@ -2809,8 +2794,7 @@ class Target extends MY_Admin_Controller
             'status' => TARGET_WAITING_VERIFY,
             'sub_status' => TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL
         ]);
-        foreach ($target_list as $target)
-        {
+        foreach ($target_list as $target) {
             $target->target_data = json_decode($target->target_data, TRUE);
         }
 
@@ -2829,8 +2813,7 @@ class Target extends MY_Admin_Controller
         $post = $this->input->post(NULL, TRUE);
         $this->load->library('output/json_output');
 
-        if ( ! $this->input->is_ajax_request() || ! isset($post['target_id']) || empty($post) || ! is_numeric($post['target_id']))
-        {
+        if (!$this->input->is_ajax_request() || !isset($post['target_id']) || empty($post) || !is_numeric($post['target_id'])) {
             $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->setResponse(['success' => FALSE, "msg" => '錯誤的案件編號'])->send();
         }
 
@@ -2839,8 +2822,7 @@ class Target extends MY_Admin_Controller
             'status' => TARGET_WAITING_VERIFY,
             'sub_status' => TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL
         ]);
-        if ( ! isset($target))
-        {
+        if (!isset($target)) {
             $this->json_output->setStatusCode(400)->setErrorCode(APPLY_NOT_EXIST)->setResponse(['success' => FALSE, "msg" => '找不到案件'])->send();
         }
         $param = [
@@ -2860,10 +2842,10 @@ class Target extends MY_Admin_Controller
 
         $target_id = $input['target_id'];
         $target = $this->target_model->get_by(['id' => $target_id]);
-        if ( !isset($target)) {
+        if (!isset($target)) {
             $this->json_output->setStatusCode(400)->setResponse(['error' => 'target not found'])->send();
         }
-        if($target->loan_amount == 0){
+        if ($target->loan_amount == 0) {
             $this->json_output->setStatusCode(200)->setResponse(["message" => ""])->send();
         }
         $userId = $target->user_id;
@@ -2902,10 +2884,12 @@ class Target extends MY_Admin_Controller
                             ', monthly_repayment: ' . $content->monthly_repayment .
                             ', total_repayment: ' . $content->total_repayment;
 
-                        log_message('info',
+                        log_message(
+                            'info',
                             $message .
                             ', target_id: ' . $target->id .
-                            ', certification: ' . $certification->id);
+                            ', certification: ' . $certification->id
+                        );
                     }
                 }
             }
