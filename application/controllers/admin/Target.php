@@ -1872,17 +1872,17 @@ class Target extends MY_Admin_Controller
         $judicialPersonFormBank = [];
         $externalCooperation = $this->config->item('externalCooperation');
         if ($list) {
-            $this->load->model('log/Log_targetschange_model');
+            $this->load->model('log/log_targetschange_model');
             $this->load->model('user/user_meta_model');
-            foreach ($list as $key => $value) {
-                $target_change = $this->Log_targetschange_model->get_by(
+            foreach ($list as $key => &$value) {
+                $target_change = $this->log_targetschange_model->get_by(
                     array(
                         'target_id' => $value->id,
                         'status' => [TARGET_WAITING_BIDDING, TARGET_BANK_VERIFY],
                     )
                 );
                 if ($target_change) {
-                    $list[$key]->bidding_date = $target_change->created_at;
+                    $value->bidding_date = $target_change->created_at;
                 }
                 if (!isset($tmp[$value->user_id]['school']) || !isset($tmp[$value->user_id]['company'])) {
                     if ($value->product_id >= PRODUCT_FOR_JUDICIAL) {
@@ -1895,7 +1895,7 @@ class Target extends MY_Admin_Controller
                             'user_id' => $value->user_id,
                         ]);
                         if ($get_meta) {
-                            foreach ($get_meta as $skey => $svalue) {
+                            foreach ($get_meta as $svalue) {
                                 $svalue->meta_key == 'school_name' ? $tmp[$svalue->user_id]['school']['school_name'] = $svalue->meta_value : '';
                                 $svalue->meta_key == 'school_department' ? $tmp[$svalue->user_id]['school']['school_department'] = $svalue->meta_value : '';
                                 $svalue->meta_key == 'job_company' ? $tmp[$svalue->user_id]['company'] = $svalue->meta_value : '';
@@ -1904,15 +1904,40 @@ class Target extends MY_Admin_Controller
                     }
                 }
                 if (isset($tmp[$value->user_id]['school']['school_name'])) {
-                    $list[$key]->school_name = $tmp[$value->user_id]['school']['school_name'];
-                    $list[$key]->school_department = $tmp[$value->user_id]['school']['school_department'];
+                    $value->school_name = $tmp[$value->user_id]['school']['school_name'];
+                    $value->school_department = $tmp[$value->user_id]['school']['school_department'];
                 }
 
-                isset($tmp[$value->user_id]['company']) ? $list[$key]->company = $tmp[$value->user_id]['company'] : '';
+                isset($tmp[$value->user_id]['company']) ? $value->company = $tmp[$value->user_id]['company'] : '';
 
                 if ($value->product_id >= PRODUCT_FOR_JUDICIAL) {
                     !in_array($value->product_id, $externalCooperation) ? $judicialPerson[] = $list[$key] : $judicialPersonFormBank[] = $list[$key];
                 } else {
+                    $this->load->model('user/user_certification_model');
+                    // add diploma
+                    $school_system = $this->config->item('school_system');
+                    $diploma_cert = $this->user_certification_model->get_by([
+                        'user_id' => $value->user_id,
+                        'certification_id' => CERTIFICATION_DIPLOMA,
+                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                    ]);
+                    if (!empty($diploma_cert)) {
+                        $system = json_decode($diploma_cert->content)->system;
+                        $value->diploma = $school_system[$system];
+                    } else {
+                        $value->diploma = '';
+                    }
+
+                    // only show for corresponding product
+                    if ($value->product_id == PRODUCT_ID_STUDENT) {
+                        $value->company = '';
+                        $value->diploma = '';
+                    }
+
+                    if ($value->product_id == PRODUCT_ID_SALARY_MAN) {
+                        $value->school_name = '';
+                    }
+
                     $personal[] = $list[$key];
                 }
             }

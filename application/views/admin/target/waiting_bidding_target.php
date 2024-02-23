@@ -79,16 +79,15 @@
                                             <th>產品</th>
                                             <th>會員 ID</th>
                                             <th>信用等級</th>
-                                            <th>
-                                                <? echo $typeKey == 'personal' ? '公司/學校' : '公司名稱' ?>
-                                            </th>
-                                            <?= $typeKey == 'personal' ? '<th>科系</th>' : '' ?>
+                                            <?=
+                                                $typeKey == 'personal' ? '<th>學校</th><th>公司</th><th>最高學歷</th><th>科系</th>' : '<th>公司名稱</th>'
+                                            ?>
                                             <?= $typeKey != 'judicialPersonFormBank' ? '<th>申請金額</th>' : '' ?>
                                             <th>核准額度</th>
                                             <th>利率</th>
                                             <th>貸放期間</th>
                                             <th>計息方式</th>
-                                            <? echo $typeKey != 'judicialPersonFormBank' ? '<th>目前投標金額</th><th>上架次數</th><th>流標期限</th>' : '<th>申貸狀態</th><th>狀態更新日期</th>' ?>
+                                            <?= $typeKey != 'judicialPersonFormBank' ? '<th>目前投標金額</th><th>上架次數</th><th>流標期限</th>' : '<th>申貸狀態</th><th>狀態更新日期</th>' ?>
                                             <th>上架日期</th>
                                             <th>邀請碼</th>
                                             <th>授信審核表</th>
@@ -111,10 +110,13 @@
                                                         <?= isset($value->user_id) ? $value->user_id : '' ?>
                                                     </a>
                                                 </td>
-                                                <td><?= isset($value->credit_level) ? $value->credit_level : '' ?></td>
-                                                <td><?= isset($value->company) ? $value->company : '' ?><?= isset($value->company) && isset($value->school_name) ? ' / ' : '' ?><?= isset($value->school_name) ? $value->school_name : '' ?>
-                                                </td>
-                                                <?= $typeKey == 'personal' ? isset($value->school_department) ? '<td>' . $value->school_department . '</td>' : '<td></td>' : '' ?>
+                                                <td><?= $value->credit_level ?? '' ?></td>
+                                                <?= $typeKey == 'personal' ? '<td>' . $value->school_name ?? '' . '</td>' : '' ?>
+                                                <?= $typeKey == 'personal' ? '<td>' . $value->company ?? '' . '</td>' : '' ?>
+                                                <?= $typeKey == 'personal' ? '<td>' . $value->diploma ?? '' . '</td>' : '' ?>
+                                                <?= $typeKey == 'personal' ? 
+                                                    '<td>' . (isset($value->school_department) ? ($value->school_department ?? '') : '') . '</td>' :
+                                                    '' ?>
                                                 <?= isset($value->amount) && $typeKey != 'judicialPersonFormBank' ? '<td>' . $value->amount . '</td>' : '' ?>
                                                 <td><?= isset($value->loan_amount) && $value->loan_amount ? $value->loan_amount : '' ?>
                                                 </td>
