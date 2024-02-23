@@ -12,6 +12,7 @@ import privacyTerms from '../pages/privacyTerms'
 import loanerTerms from '../pages/loanerTerms'
 import lenderTerms from '../pages/lenderTerms'
 import transferTerms from '../pages/transferTerms'
+import overdueDebtTerms from '../pages/overdueDebtTerms'
 import recruiting from '../pages/recruitingv2'
 import recruitingInfoFrom from '../pages/recruiting/infoForm'
 import recruitingQaFrom from '../pages/recruiting/qaForm'
@@ -83,6 +84,7 @@ const routers = [
   { path: '/loanerTerms', component: loanerTerms },
   { path: '/lenderTerms', component: lenderTerms },
   { path: '/transferTerms', component: transferTerms },
+  { path: '/overdueDebtTerms', component: overdueDebtTerms },
   { path: '/register', component: register },
   {
     path: '/myloan',

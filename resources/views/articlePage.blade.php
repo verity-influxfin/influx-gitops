@@ -695,7 +695,8 @@
                             <a href="/privacyTerms" class="item">隱私權條款</a> |
                             <a href="/loanerTerms" class="item">借款人服務條款</a> |
                             <a href="/lenderTerms" class="item">貸款人服務條款</a> |
-                            <a href="/transferTerms" class="item">債權受讓人服務條款</a>
+                            <a href="/transferTerms" class="item">債權受讓人服務條款</a> |
+                            <a href="/overdueDebtTerms" class="item">逾期債權處理條款</a>
                         </div>
                     </div>
                     <div class="links">
@@ -868,8 +869,6 @@
 </script>
 <style>
     .banner {
-        background-image: url('/images/lil_school_banner.png');
-        height: 40vw;
         background-size: cover;
         background-position: center;
     }
@@ -892,8 +891,6 @@
 
     @media only screen and (max-width: 768px) {
         .banner {
-            background-image: url('/images/lil_school_banner_mobile.png');
-            height: 220vw;
             background-position: center;
         }
 

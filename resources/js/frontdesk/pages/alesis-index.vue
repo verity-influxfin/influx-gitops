@@ -2,9 +2,13 @@
   <div class="index-wrapper">
     <div class="index-intro section">
       <div class="block-content intro-content">
+        <!-- phone -->
         <div class="d-sm-none d-flex">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <div class="swiper-slide" v-for="page in 4" v-if="isNewyearHeaderShow(page)">
+                <NewyearHeader :headerIndex="page" year="2024"/>
+              </div>
               <a class="swiper-slide" href="/selfieauth">
                 <div class="row no-gutters">
                   <div class="col-12">
@@ -58,9 +62,13 @@
             </div>
           </div>
         </div>
+        <!-- web -->
         <div class="d-sm-flex d-none">
           <div class="swiper sw-headers">
             <div class="swiper-wrapper">
+              <div class="swiper-slide" v-for="page in 4" v-if="isNewyearHeaderShow(page)">
+                <NewyearHeader :headerIndex="page" year="2024"/>
+              </div>
               <a
                 class="swiper-slide"
                 href="/selfieauth"
@@ -74,9 +82,6 @@
                   </div>
                 </div>
               </a>
-              <div class="swiper-slide" v-if="newYearHeader(3)">
-                <newyear-2023-header-3 />
-              </div>
               <div class="swiper-slide">
                 <smegHeader />
               </div>
@@ -1193,7 +1198,8 @@ import float from '../component/floatComponent'
 import workloanHeader from '../component/index/header/workloanHeader.vue'
 import collegeloanHeader from '../component/index/header/collegeloanHeader.vue'
 import smegHeader from '../component/index/header/smegHeader'
-import newyear2023Header3 from '../component/index/header/newyear2023Header3.vue'
+// import newyear2023Header3 from '../component/index/header/newyear2023Header3.vue'
+import NewyearHeader from '../component/index/header/newyearHeader.vue'
 import { alesisIndexCounter } from './api'
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
@@ -1208,7 +1214,7 @@ export default {
     workloanHeader,
     collegeloanHeader,
     smegHeader,
-    newyear2023Header3,
+    NewyearHeader,
   },
   data: () => ({
     indexCounter: {},
@@ -1302,32 +1308,17 @@ export default {
     })
   },
   methods: {
-    newYearHeader(page) {
-      const now = new Date()
-      // 最後上班日
-      const date1 = new Date('2023-01-19 09:00')
-      // 休假第二天
-      const date3 = new Date('2023-01-21 00:00')
-      // 休假第三天
-      const date4 = new Date('2023-01-22 00:00')
-      // 開工後一天
-      const date5 = new Date('2023-01-30 00:00')
-      // 開工後週6
-      const date6 = new Date('2023-02-04 18:00')
-      switch (page) {
-        case 1:
-          // 最後上班日 ~ 休假第二天 || 休假第三天 ~ 開工後一天
-          return (now > date1 && now < date3) || (now > date4 && now < date5)
-        case 2:
-          // 最後上班日後 ~ 開工後一天
-          return now > date1 && now < date5
-        case 3:
-          // 開工第一天 ~ 開工後週6
-          return now > date5 && now < date6
-        case 4:
-          // 休假第二天 ~ 休假第三天
-          return now > date3 && now < date4
+    isNewyearHeaderShow(page) {
+      const mapping = {
+        1: [new Date('2024-02-07 00:00'), new Date('2024-02-19 23:59:59')],
+        2: [new Date('2024-02-07 00:00'), new Date('2024-02-14 23:59:59')],
+        3: [new Date('2024-02-08 12:00'), new Date('2024-02-10 12:00')],
+        4: [new Date('2024-02-15 09:00'), new Date('2024-02-15 23:00')],
       }
+      const now = new Date()
+      const [start_bound, end_bound] = mapping[page]
+
+      return start_bound <= now && now <= end_bound
     },
   },
 }
