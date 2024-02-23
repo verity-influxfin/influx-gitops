@@ -376,36 +376,35 @@ class Target_model extends MY_Model
             ->where('status', 3)
             ->get_compiled_select('p2p_loan.investments', TRUE);
 
-        //學校/公司
-        $subquery_user_meta_1 = $this->db
+        //學校 公司 科系 職位
+        $subquery_user_meta = $this->db
             ->select("
-				user_id,
-				GROUP_CONCAT(meta_value SEPARATOR '/') AS user_meta_1
+                user_id,
+                MAX(CASE WHEN meta_key = 'school_name' THEN meta_value END) AS school_name,
+                MAX(CASE WHEN meta_key = 'job_company' THEN meta_value END) AS job_company,
+                MAX(CASE WHEN meta_key = 'school_department' THEN meta_value END) AS school_department,
+                MAX(CASE WHEN meta_key = 'job_position' THEN meta_value END) AS job_position,
 			")
-            ->where_in('meta_key', ['school_name', 'job_company'])
+            ->where_in('meta_key', ['school_name', 'job_company', 'school_department', 'job_position'])
             ->group_by('user_id')
             ->get_compiled_select('p2p_user.user_meta');
 
-        //科系
-        $subquery_user_meta_2 = $this->db
-            ->select('user_id,meta_value')
-            ->where('meta_key', 'school_department')
+        // 最高學歷
+        $subquery_user_diploma = $this->db
+            ->select("
+                user_id,
+                JSON_EXTRACT(content, '$.system') AS diploma
+            ")
+            ->where(['status' => CERTIFICATION_STATUS_SUCCEED, 'certification_id' => CERTIFICATION_DIPLOMA])
             ->group_by('user_id')
-            ->get_compiled_select('p2p_user.user_meta');
-
-        //職位
-        $subquery_user_meta_3 = $this->db
-            ->select('user_id,meta_value')
-            ->where('meta_key', 'job_position')
-            ->group_by('user_id')
-            ->get_compiled_select('p2p_user.user_meta');
+            ->get_compiled_select('p2p_user.user_certification');
 
         //逾期本金
         $subquery_unpaid_principal = $this->db
             ->select('target_id')
             ->select('user_to')
             ->select_sum('amount')
-            ->where(['status' => 1, 'source' => 11])
+            ->where(['status' => 1, 'source' => intval(SOURCE_AR_PRINCIPAL)])
             ->group_by('target_id,user_to')
             ->get_compiled_select('p2p_transaction.transactions', TRUE);
 
@@ -440,9 +439,11 @@ class Target_model extends MY_Model
 				CONCAT(a1.target_id,"-",a1.id) AS ary_key,
 				tr.entering_date,
 				t.delay_days AS delayed_days,
-				a6.user_meta_1,
-				a7.meta_value AS school_department,
-				a8.meta_value AS job_position
+				a6.school_name as school_name,
+				a6.job_company as company,
+				a6.school_department as school_department,
+				a6.job_position as job_position,
+				a7.diploma as diploma,
 			')
             ->select('`tr`.`limit_date`')
             ->from('p2p_loan.targets t')
@@ -459,10 +460,9 @@ class Target_model extends MY_Model
                 'left',
                 FALSE
             )
-            ->join("($subquery_user_meta_1) a6", 'a6.user_id=t.user_id', 'left')
-            ->join("($subquery_user_meta_2) a7", 'a7.user_id=t.user_id', 'left')
-            ->join("($subquery_user_meta_3) a8", 'a8.user_id=t.user_id', 'left')
-            ->where(['t.delay' => 1, 't.status' => 5])
+            ->join("($subquery_user_meta) a6", 'a6.user_id=t.user_id', 'left')
+            ->join("($subquery_user_diploma) a7", 'a7.user_id=t.user_id', 'left')
+            ->where(['t.delay' => 1, 't.status' => intval(TARGET_REPAYMENTING)])
             ->order_by('t.target_no');
 
         foreach ($input as $key => $value) {
@@ -546,18 +546,25 @@ class Target_model extends MY_Model
             ->where_in('i.target_id', $target_ids)
             ->where('i.status', INVESTMENT_STATUS_REPAYING);
         $transaction_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
+
         $product_list = $this->config->item('product_list');
-        $target_rows = array_map(function ($value) use ($product_list) {
+        $school_system = $this->config->item('school_system');
+        $position_name = $this->config->item('position_name');
+        $target_rows = array_map(function ($value) use ($product_list, $school_system, $position_name) {
             if (isset($value['school_department']) && !empty($value['school_department'])) {
                 $value['user_meta_2'][] = $value['school_department'];
             }
             if (isset($value['job_position']) && empty($value['job_position']) && $value['job_position'] !== 0) {
-                $position_name = $this->config->item('position_name');
                 $value['user_meta_2'][] = $position_name[$value['job_position']] ?? '';
             }
-
             $value['user_meta_2'] = implode('/', $value['user_meta_2'] ?? []);
+
             $value['product_name'] = $product_list[$value['product_id']]['name'] ?? '';
+
+            $value['school_name'] = $value['product_id'] != PRODUCT_ID_SALARY_MAN ? $value['school_name'] ?? '' : '';
+            $value['company'] = $value['product_id'] != PRODUCT_ID_STUDENT ? $value['company'] ?? '' : '';
+            $value['diploma'] = $value['product_id'] != PRODUCT_ID_STUDENT ? $school_system[intval($value['diploma'])] ?? '' : '';
+
             return $value;
         }, $target_rows);
 
@@ -566,21 +573,28 @@ class Target_model extends MY_Model
 
     public function get_delayed_report_by_target($input)
     {
-        // 學校/公司
-        $subquery_user_meta_1 = $this->db
-            ->select('user_id')
-            ->select('GROUP_CONCAT(meta_value SEPARATOR "/") AS user_meta_1')
-            ->where_in('meta_key', ['school_name', 'job_company'])
+        //學校 公司 科系 職位
+        $subquery_user_meta = $this->db
+            ->select("
+				user_id,
+				MAX(CASE WHEN meta_key = 'school_name' THEN meta_value END) AS school_name,
+				MAX(CASE WHEN meta_key = 'job_company' THEN meta_value END) AS job_company,
+				MAX(CASE WHEN meta_key = 'school_department' THEN meta_value END) AS school_department,
+				MAX(CASE WHEN meta_key = 'job_position' THEN meta_value END) AS job_position,
+			")
+            ->where_in('meta_key', ['school_name', 'job_company', 'school_department', 'job_position'])
             ->group_by('user_id')
             ->get_compiled_select('p2p_user.user_meta');
 
-        // 科系
-        $subquery_user_meta_2 = $this->db
-            ->select('user_id')
-            ->select('meta_value')
-            ->where('meta_key', 'school_department')
+        // 最高學歷
+        $subquery_user_diploma = $this->db
+            ->select("
+                user_id,
+                JSON_EXTRACT(content, '$.system') AS diploma
+            ")
+            ->where(['status' => CERTIFICATION_STATUS_SUCCEED, 'certification_id' => CERTIFICATION_DIPLOMA])
             ->group_by('user_id')
-            ->get_compiled_select('p2p_user.user_meta');
+            ->get_compiled_select('p2p_user.user_certification');
 
         // 信評
         $subquery_credit = $this->db
@@ -595,6 +609,7 @@ class Target_model extends MY_Model
             )
             ->group_by('user_id,product_id')
             ->get_compiled_select('p2p_loan.credits c');
+
         $subquery_credit = $this->db
             ->select('c.amount')
             ->select('c.created_at')
@@ -632,8 +647,10 @@ class Target_model extends MY_Model
 
         $this->db
             ->select('t.*')
-            ->select('a6.user_meta_1')
-            ->select('a7.meta_value AS school_department')
+            ->select('a6.school_name AS school_name')
+            ->select('a6.job_company AS company')
+            ->select('a6.school_department AS school_department')
+            ->select('a7.diploma AS diploma')
             ->select('a8.amount AS credit_amount')
             ->select('a8.created_at AS credit_created_at')
             ->select('a3.amount AS unpaid_damage')
@@ -643,8 +660,8 @@ class Target_model extends MY_Model
             ->join("({$subquery_unpaid_damage}) a3", 'a3.user_from=t.user_id AND a3.target_id=t.id', 'left')
             ->join("({$subquery_unpaid_interest}) a4", 'a4.user_from=t.user_id AND a4.target_id=t.id', 'left')
             ->join("({$subquery_unpaid_delayinterest}) a5", 'a5.user_from=t.user_id AND a5.target_id=t.id', 'left')
-            ->join("({$subquery_user_meta_1}) a6", 'a6.user_id=t.user_id', 'left')
-            ->join("({$subquery_user_meta_2}) a7", 'a7.user_id=t.user_id', 'left')
+            ->join("({$subquery_user_meta}) a6", 'a6.user_id=t.user_id', 'left')
+            ->join("({$subquery_user_diploma}) a7", 'a7.user_id=t.user_id', 'left')
             ->join("({$subquery_credit}) a8", 'a8.user_id=t.user_id AND a8.product_id=t.product_id', 'left')
             ->where('t.status', TARGET_REPAYMENTING)
             ->where('t.delay', 1);
@@ -713,7 +730,17 @@ class Target_model extends MY_Model
             }
         }
 
-        return $this->db->get()->result_array();
+        $target_rows = $this->db->get()->result_array();
+
+        $school_system = $this->config->item('school_system');
+        $target_rows = array_map(function ($value) use ($school_system) {
+            $value['school_name'] = $value['product_id'] != PRODUCT_ID_SALARY_MAN ? $value['school_name'] ?? '' : '';
+            $value['company'] = $value['product_id'] != PRODUCT_ID_STUDENT ? $value['company'] ?? '' : '';
+            $value['diploma'] = $value['product_id'] != PRODUCT_ID_STUDENT ? $school_system[intval($value['diploma'])] ?? '' : '';
+            return $value;
+        }, $target_rows);
+
+        return $target_rows;
     }
 
     /**
