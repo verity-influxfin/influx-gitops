@@ -45,8 +45,9 @@ class Target extends MY_Admin_Controller
                         'product_name' => ['name' => '產品名稱'],
                         'target_no' => ['name' => '案號', 'width' => 20],
                         'credit_level' => ['name' => '核准信評'],
-                        'user_meta_1' => ['name' => '學校/公司', 'width' => 25],
-                        'user_meta_2' => ['name' => '科系/職位', 'width' => 25],
+                        'company' => ['name' => '公司', 'width' => 25],
+                        'school_name' => ['name' => '學校', 'width' => 25],
+                        'user_meta_1' => ['name' => '科系/職位', 'width' => 25],
                         'invest_amount' => ['name' => '債權總額'],
                         'lender' => ['name' => '投資人ID'],
                         'unpaid_principal_by_investor' => ['name' => '逾期本金'],
@@ -67,7 +68,8 @@ class Target extends MY_Admin_Controller
                         'user_id' => ['name' => '會員ID'],
                         'new_or_old' => ['name' => '新舊戶'],
                         'credit_level' => ['name' => '信評'],
-                        'user_meta_1' => ['name' => '公司/學校', 'width' => 20],
+                        'company' => ['name' => '公司', 'width' => 25],
+                        'school_name' => ['name' => '學校', 'width' => 25],
                         'school_department' => ['name' => '科系', 'width' => 20],
                         'finish_cert_identity' => ['name' => '是否完成實名驗證', 'width' => 20],
                         'amount' => ['name' => '申請金額'],
@@ -105,18 +107,19 @@ class Target extends MY_Admin_Controller
                 $where[$field] = $input[$field];
             }
         }
-        if (isset($input[$field]) && isset($input['tsearch']) && $input['tsearch'] != '') {
+
+        if (isset($input[$field]) && !empty($input['tsearch'])) {
             $tsearch = $input['tsearch'];
             if (preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch)) {
-                $name = $this->user_model->get_many_by(
+                $users = $this->user_model->get_many_by(
                     array(
                         'name like ' => '%' . $tsearch . '%',
                         'status' => 1
                     )
                 );
-                if ($name) {
-                    foreach ($name as $k => $v) {
-                        $where['user_id'][] = $v->id;
+                if ($users) {
+                    foreach ($users as $user) {
+                        $where['user_id'][] = $user->id;
                     }
                 } else {
                     $where['user_id'][] = 0;
@@ -156,6 +159,7 @@ class Target extends MY_Admin_Controller
             $tmp = [];
             if ($list) {
                 $this->load->model('user/user_meta_model');
+                $this->load->model('user/user_certification_model');
                 foreach ($list as $key => $value) {
                     if ($this->isJson($value->reason)) {
                         $reasonJson = json_decode($value->reason, true);
@@ -177,7 +181,7 @@ class Target extends MY_Admin_Controller
                         $list[$key]->bank_account_verify = $tmp[$value->user_id]['bank_account_verify'];
                     }
 
-                    if ($value->status == 9 && $value->remark != '系統自動取消') {
+                    if ($value->status == TARGET_FAIL && $value->remark != '系統自動取消') {
                         $value->credit_sheet_reviewer = $value->fail_target_reviewer;
                     }
 
@@ -187,7 +191,7 @@ class Target extends MY_Admin_Controller
                             'user_id' => $value->user_id,
                         ]);
                         if ($get_meta) {
-                            foreach ($get_meta as $skey => $svalue) {
+                            foreach ($get_meta as $svalue) {
                                 $svalue->meta_key == 'school_name' ? $tmp[$svalue->user_id]['school']['school_name'] = $svalue->meta_value : '';
                                 $svalue->meta_key == 'school_department' ? $tmp[$svalue->user_id]['school']['school_department'] = $svalue->meta_value : '';
                                 $svalue->meta_key == 'job_company' ? $tmp[$svalue->user_id]['company'] = $svalue->meta_value : '';
@@ -200,6 +204,30 @@ class Target extends MY_Admin_Controller
                     }
 
                     isset($tmp[$value->user_id]['company']) ? $list[$key]->company = $tmp[$value->user_id]['company'] : '';
+
+                    // add diploma
+                    $diploma_cert = $this->user_certification_model->get_by([
+                        'user_id' => $value->user_id,
+                        'certification_id' => CERTIFICATION_DIPLOMA,
+                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                    ]);
+
+                    if (!empty($diploma_cert)) {
+                        $system = json_decode($diploma_cert->content)->system;
+                        $value->diploma = $this->config->item('school_system')[$system];
+                    } else {
+                        $value->diploma = '';
+                    }
+
+                    // only show for corresponding product
+                    if ($value->product_id == PRODUCT_ID_STUDENT) {
+                        $list[$key]->company = '';
+                        $list[$key]->diploma = '';
+                    }
+
+                    if ($value->product_id == PRODUCT_ID_SALARY_MAN) {
+                        $list[$key]->school_name = '';
+                    }
 
                     $amortization_table = $this->target_lib->get_amortization_table($value);
                     $list[$key]->remaining_principal = $amortization_table['remaining_principal'];
@@ -222,6 +250,8 @@ class Target extends MY_Admin_Controller
                 }
             }
         }
+
+        // response
         $product_list = $this->config->item('product_list');
         $sub_product_list = $this->config->item('sub_product_list');
         $instalment_list = $this->config->item('instalment');
@@ -232,7 +262,7 @@ class Target extends MY_Admin_Controller
             header('Content-type:application/vnd.ms-excel');
             header('Content-Disposition: attachment; filename=All_targets_' . date('Ymd') . '.xls');
             $html = '<table><thead>
-                    <tr><th>案號</th><th>產品</th><th>會員ID</th><th>新舊戶</th><th>信評</th><th>公司/學校</th>
+                    <tr><th>案號</th><th>產品</th><th>會員ID</th><th>新舊戶</th><th>信評</th><th>學校</th><th>公司</th><th>最高學歷</th>
                     <th>科系</th><th>是否完成實名驗證</th><th>申請金額</th><th>核准金額</th><th>動用金額</th><th>可動用額度</th><th>本金餘額</th>
                     <th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th>
                     <th>狀態</th><th>借款原因</th><th>申請日期</th><th>申請時間</th><th>核准日期</th><th>核准時間</th>
@@ -243,7 +273,7 @@ class Target extends MY_Admin_Controller
                 $this->load->model('user/user_certification_model');
                 $targetIds = array_column($list, 'id');
 
-                $where = ['investor' => USER_BORROWER, 'status' => 1];
+                $where = ['investor' => USER_BORROWER, 'status' => CERTIFICATION_STATUS_SUCCEED];
                 if (isset($input['edate']) && !empty($input['edate']) && strtotime($input['edate']))
                     $where['updated_at <= '] = strtotime($input['edate']);
                 $userCertList = $this->user_certification_model->getCertificationsByTargetId($targetIds, $where);
@@ -263,7 +293,9 @@ class Target extends MY_Admin_Controller
                     $html .= '<td>' . $value->user_id . '</td>';
                     $html .= '<td>' . (isset($user_status[$value->user_id]) ? '舊戶' : '新戶') . '</td>';
                     $html .= '<td>' . $value->credit_level . '</td>';
-                    $html .= '<td>' . (isset($value->company) ? $value->company : '') . (isset($value->company) && isset($value->school_name) ? ' / ' : '') . (isset($value->school_name) ? $value->school_name : '') . '</td>';
+                    $html .= '<td>' . ($value->school_name ?? '') . '</td>';
+                    $html .= '<td>' . ($value->company ?? '') . '</td>';
+                    $html .= '<td>' . ($value->diploma ?? '') . '</td>';
                     $html .= '<td>' . (isset($value->school_department) ? $value->school_department : '') . '</td>';
                     $html .= '<td>' . (isset($userCertList[$value->user_id]) && isset($userCertList[$value->user_id][CERTIFICATION_IDENTITY]) ? "是" : "否") . '</td>';
                     $html .= '<td>' . $value->amount . '</td>';
@@ -298,8 +330,8 @@ class Target extends MY_Admin_Controller
             $page_data['list'] = $list;
             $page_data['status_list'] = $status_list;
             $page_data['delay_list'] = $delay_list;
+            $page_data['subloan_list'] = $this->config->item('subloan_list');
             $page_data['name_list'] = $this->admin_model->get_name_list();
-
 
             $this->load->view('admin/_header');
             $this->load->view('admin/_title', $this->menu);
