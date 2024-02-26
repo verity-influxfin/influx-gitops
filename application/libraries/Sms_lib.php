@@ -4,6 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use Aws\Sns\SnsClient;
 
+/**
+ * @property CI_Controller $CI
+ */
 class Sms_lib {
 
 	private $client;

@@ -1048,9 +1048,6 @@
                             </div>
                             <div>
                                 <span style="width:30%;"></span>
-                                <span style="width:70%;">
-                                    <button type="button" id="original-amount-btn" disabled>使用原額度</button>
-                                </span>
                             </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
@@ -1549,14 +1546,8 @@
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
 
-                if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
-                    // 額度調整預設為原額度
-                    setEvaluationAmount(parseInt(credit.amount));
-                }
 
-                if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
-                    $('.fixed_amount_block').css('display', 'none');
-                } else if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
+                if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
                     let today = new Date();
                     let new_date = new Date(user.birthday);
                     let eligible_year = 35;
@@ -1566,9 +1557,6 @@
                         $('#2_fixed_amount').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
                         $('#2_score').prop('disabled', true);
                         $('#2_score').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
-                        $('#original-amount-btn').css('display', 'none');
-                    } else {
-                        $('#original-amount-btn').prop('disabled', false);
                     }
                 }
 			},
@@ -1639,7 +1627,7 @@
             $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
             $(`#2_fixed_amount`).attr({
                 "max": case_aprove_item.creditLineInfo.fixed_amount_max,
-                "min": case_aprove_item.creditLineInfo.fixed_amount_min,
+                // "min": case_aprove_item.creditLineInfo.fixed_amount_min,
             });
         }
 
@@ -1715,15 +1703,16 @@
         });
         $('#2_fixed_amount').blur(function () {
             let fixed_amount = parseInt($(this).val());
+            fixed_amount_min = case_aprove_item.creditLineInfo.fixed_amount_min;
+            fixed_amount_max = case_aprove_item.creditLineInfo.fixed_amount_max;
             if (fixed_amount < 0) {
                 return;
             }
-            if(fixed_amount>0 && fixed_amount<1000){
-                fixed_amount = 1000;
+            if (0 < fixed_amount && fixed_amount < fixed_amount_min) {
+                fixed_amount = fixed_amount_min;
             }
-            if(fixed_amount>case_aprove_item.creditLineInfo.fixed_amount_max){
-                fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
-                console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
+            if (fixed_amount > fixed_amount_max) {
+                fixed_amount = fixed_amount_max;
             }
             setEvaluationAmountAndResetScore(fixed_amount);
         });
@@ -2372,7 +2361,6 @@
                     fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
-                    setEvaluationAmountAndResetScore(parseInt(credit.amount));
 				}
 			});
 		});
@@ -2480,13 +2468,6 @@
             setEvaluationAmount(amount);
             setEvaluationScore(0);
         }
-        
-        // 使用原額度
-        const resetEvaluationAmountAmountTOriginal = () => {
-            setEvaluationAmountAndResetScore(originalAmount);
-        }
-
-        $('#original-amount-btn').click(resetEvaluationAmountAmountTOriginal);
     });
 
 	const v = new Vue({

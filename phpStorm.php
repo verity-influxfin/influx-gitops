@@ -77,6 +77,14 @@ die('This file is used for development purposes only.');
  * @property Notification_lib $notification_lib
  * @property Subloan_lib $subloan_lib
  * @property User_lib $user_lib
+
+ * @property Log_request_lib $log_request_lib
+ * @property Sms_lib $sms_lib
+ * @property Credit_lib $credit_lib
+ * @property Booking_lib $booking_lib
+ * @property Json_output $json_output
+ * @property Creditapprovalextra $approvalextra
+
  *
  * model
  * @property Target_model $target_model
@@ -93,6 +101,11 @@ die('This file is used for development purposes only.');
  * @property User_bankaccount_model $user_bankaccount_model
  * @property Log_integration_model $log_integration_model
  * @property Log_usercertification_model $log_usercertification_model
+
+ * @property Investment_model $investment_model
+ * @property Frozen_amount_model $frozen_amount_model
+ * @property Credit_model $credit_model
+ * 
  *
  */
 //batch_model

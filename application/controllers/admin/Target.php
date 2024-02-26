@@ -790,9 +790,7 @@ class Target extends MY_Admin_Controller
         if ($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET) {
             $this->load->library('Certification_lib');
             $certification = $this->certification_lib->get_certification_info($userId, 8, 0);
-            $certificationStatus = isset($certification) && $certification
-                ? ($certification->status == 1 ? true : false)
-                : false;
+            $certificationStatus = ($certification->status ?? 0) == 1;
             $level = $certificationStatus ? 3 : 4;
         }
         $newCredits = $this->credit_lib->approve_credit($userId, $target->product_id, $target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment, $target);
@@ -806,6 +804,7 @@ class Target extends MY_Admin_Controller
         }
 
         $credit["amount"] = (int) $newCredits["amount"];
+        $credit["remark"] = $newCredits["remark"];
         $message = "";
         if ($fixed_amount == 0) {
             $past_targets = $this->target_model->get_many_by([
@@ -879,10 +878,11 @@ class Target extends MY_Admin_Controller
         $points = isset($post["points"]) ? intval($post["points"]) : 0;
         $remark = isset($post["reason"]) ? strval($post["reason"]) : false;
 
-        if ($points > 400)
+        if ($points > 400) {
             $points = 400;
-        if ($points < -400)
+        } elseif ($points < -400) {
             $points = -400;
+        }
 
         $this->load->library('output/json_output');
 
@@ -912,9 +912,7 @@ class Target extends MY_Admin_Controller
             if ($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET) {
                 $this->load->library('Certification_lib');
                 $certification = $this->certification_lib->get_certification_info($userId, 8, 0);
-                $certificationStatus = isset($certification) && $certification
-                    ? ($certification->status == 1 ? true : false)
-                    : false;
+                $certificationStatus = ($certification->status ?? 0) == 1;
                 $level = $certificationStatus ? 3 : 4;
             }
             $this->load->library('credit_lib');
