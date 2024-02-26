@@ -9,7 +9,11 @@ spec:
     app: deus
   ports:
     - protocol: TCP
+      name: http
       port: 80
       targetPort: 80  # 應用程式實際運行的端口
+    - protocol: TCP
+      name: https
+      port: 443
+      targetPort: 80 # 應用程式實際運行的端口
   type: LoadBalancer
-  
