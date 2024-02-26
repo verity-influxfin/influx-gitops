@@ -31,7 +31,7 @@ spec:
         - containerPort: 80
         readinessProbe:
           httpGet:
-            path: /
+            path: /doc
             port: 80
             httpHeaders:
             - name: User-Agent
@@ -41,7 +41,7 @@ spec:
           timeoutSeconds: 15
         livenessProbe:
           httpGet:
-            path: /
+            path: /doc
             port: 80
             httpHeaders:
             - name: User-Agent
