@@ -2118,6 +2118,8 @@ class Target_lib
                                 ]);
                                 if ($identity_cert)
                                 {
+                                    //20240227 戶役政目前無法使用，先暫時關閉，直接通過
+                                    goto SKIP_CHECK_INTEGRATION;
                                     // Avoid checking for the same target too many times.
                                     $this->CI->load->model('log/log_integration_model');
                                     $api_verify_log = $this->CI->log_integration_model->order_by('created_at', 'DESC')->get_by([
@@ -2216,6 +2218,10 @@ class Target_lib
                                     }
                                 }
                             }
+
+                            //20240227 戶役政目前無法使用，先暫時關閉，直接通過
+                            SKIP_CHECK_INTEGRATION:
+
 
                             // 判斷是否符合產品申貸年齡限制
                             $this->CI->load->library('loanmanager/product_lib');

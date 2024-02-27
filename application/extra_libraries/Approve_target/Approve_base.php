@@ -299,6 +299,8 @@ abstract class Approve_base implements Approve_interface
             ]);
             if ($identity_cert)
             {
+                //20240227 戶役政目前無法使用，先暫時關閉，直接通過
+                return TRUE;
                 // Avoid checking for the same target too many times.
                 $api_verify_log = $this->CI->log_integration_model->order_by('created_at', 'DESC')->get_by([
                     'user_certification_id' => $identity_cert->id
