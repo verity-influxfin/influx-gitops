@@ -27,11 +27,14 @@ jobs:
     
     - name: Print Architecture
       run: echo ${{ runner.architecture }}
-    
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
     - name: Build and Push Docker Image (Dev)
       run: |
         short_sha=$(echo "${{ github.sha }}" | cut -c1-7)
-        docker build -t 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha --platform linux/amd64 .
+        docker buildx build -t 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha --platform linux/amd64 .
         docker push 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha
 
     - name: Set up Git
