@@ -1574,7 +1574,7 @@ export default {
   position: relative;
   padding: 40px 80px;
   background-color: #036eb7;
-  background-image: url('~images/index/concept-bg.png');
+  background-image: url('https://influx-website.s3.ap-northeast-1.amazonaws.com/20220229/dune_two_5.jpeg');
   background-repeat: no-repeat;
   background-size: cover;
   height: 1044px;
@@ -2678,7 +2678,7 @@ export default {
   .index-concept {
     position: relative;
     padding: 30px 10px;
-    background-image: url('~images/index/concept-bg.png');
+    background-image: url('https://influx-website.s3.ap-northeast-1.amazonaws.com/20220229/dune_two_5.jpeg');
     height: auto;
 
     .block-content {
