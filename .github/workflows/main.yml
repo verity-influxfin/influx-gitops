@@ -21,19 +21,20 @@ jobs:
     - name: Login to Amazon ECR
       run: |
         aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com
+        short_sha=$(echo "${{ github.sha }}" | cut -c1-7)
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     
-    - name: Print Architecture
-      run: echo ${{ runner.architecture }}
+    - name: Print short_sha
+      run: echo $short_sha
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Build and Push Docker Image (Dev)
       run: |
-        short_sha=$(echo "${{ github.sha }}" | cut -c1-7)
+        
         docker buildx build -t 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha --platform linux/amd64 .
         docker push 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha
 
