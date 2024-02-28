@@ -56,21 +56,35 @@ let newsRow = Vue.extend({
   template: `
       <li class="news-card" data-aos="zoom-in" :data-aos-delay="100 * index">
         <a :href="item.link">
-          <div class="img"><img :src="item.image_url" class="img-custom" /></div>
+          <div class="img"><img :src="getImageUrl(item.image_url)" class="img-custom" /></div>
           <div class="cnt">
-            <span class="date" v-if="item.post_date">{{item.post_date.substr(0,10)}}</span>
-            <p class="title">{{filterBr(item.post_title)}}</p>
+            <span class="date" v-if="item.post_date">{{ formatDate(item.post_date) }}</span>
+            <p class="title">{{ removeHtmlTags(item.post_title) }}</p>
           </div>
           <div class="read">Read more+</div>
         </a>
       </li>
   `,
   methods: {
-    filterBr(text) {
-        return text.replace(/<br\s*[\/]?>/gi, '');
+    getImageUrl(imageUrl) {
+      const baseURL = 'https://influx-website.s3.ap-northeast-1.amazonaws.com/';
+      const fullURL = new URL(imageUrl, baseURL).toString();
+      return fullURL;
+    },
+    formatDate(date) {
+      return date ? date.substr(0, 10) : '';
+    },
+    removeHtmlTags(text) {
+      return text ? text.replace(/<br\s*[\/]?>/gi, '') : '';
     }
+  },
+  data() {
+    return {
+      S3_BUCKET_URL: process.env.S3_BUCKET_URL
+    };
   }
 });
+
 
 export default {
   data: () => ({
