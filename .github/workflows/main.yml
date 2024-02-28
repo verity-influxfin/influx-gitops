@@ -19,6 +19,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Login to Amazon ECR
+      run: |
+        aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Build and Push Docker Image (Dev)
       run: |
@@ -26,18 +32,24 @@ jobs:
         docker build -t 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha .
         docker push 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha
 
+    - name: Set up Git
+      run: |
+        git config --global user.email "githubaction@influcfin.com"
+        git config --global user.name "githubaction"
+
     - name: Update Kustomize Deploy (Dev)
       run: |
         git fetch
         git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
         git fetch origin
-        git switch devops
+        git switch test-devops
 
         short_sha=$(echo "${{ github.sha }}" | cut -c1-7)
-        sed -E -i "s|(image:[^:]+).*|image:\ gcr.io/vrcam-dev-5a815/viewer-backend-v3/viewer-backend-v3-dev:$short_sha|g" kustomize/dev/deployment.yaml
+
+        sed -E -i "s|(image:[^:]+).*|image:\ 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha|g" kustomize/dev/deployment.yaml
         git add kustomize/dev/deployment.yaml
         git commit -m "[pipeline] deploy new commit $short_sha"
-        git push origin devops
+        git push origin test-devops
 
   build-and-deploy-prod:
     if: github.event_name == 'release' && github.event.action == 'created' && startsWith(github.event.ref, 'refs/tags/production')
