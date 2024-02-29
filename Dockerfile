@@ -23,6 +23,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 RUN composer install
 
+RUN yarn config set network-timeout 9000000
 RUN yarn cache clean
 RUN yarn
 RUN yarn production
