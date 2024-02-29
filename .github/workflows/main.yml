@@ -18,6 +18,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      
+    - name: Decode .env file
+      run: |
+        ehco Decode .env file
+        echo "${{ secrets.ENV }}" | base64 --decode > .env
+        
     - name: Login to Amazon ECR
       run: |
         aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com
