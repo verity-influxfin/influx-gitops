@@ -58,7 +58,7 @@
             const weekStr = `星期${week[date.getDay()]}`
             // get YYYY-MM-DD
             const dateISO = date.toISOString().split('T')[0]
-            $booking_date.append($('<option>', {'text': `${dateISO} ${weekStr}`, 'value': dateISO}))
+            $booking_date.append($('<option>', {'text': `${date.toLocaleDateString("sv-SE")} ${weekStr}`, 'value': dateISO}))
             date.setDate(date.getDate() + 1)
         }
 
