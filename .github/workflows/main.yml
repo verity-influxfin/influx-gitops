@@ -18,8 +18,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      
     - name: Decode .env file
       run: |
+        ehco Decode .env file
         echo "${{ secrets.ENV }}" | base64 --decode > .env
         
     - name: Login to Amazon ECR
