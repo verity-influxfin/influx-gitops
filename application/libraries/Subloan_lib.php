@@ -147,6 +147,7 @@ class Subloan_lib{
 						'loan_amount'		=> $subloan['amount'],
 						'instalment'		=> $subloan['instalment'],
 						'repayment'			=> $subloan['repayment'],
+                        'reason'            => $target->reason,
 						'credit_level'		=> $credit['level'],
 						'platform_fee'		=> $subloan['platform_fee'],
 						'interest_rate'		=> $interest_rate,

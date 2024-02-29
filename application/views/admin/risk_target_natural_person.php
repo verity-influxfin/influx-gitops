@@ -79,6 +79,15 @@
                         <li role="presentation" data-product="3:9999">
                             <a href="javascript:void(0)" role="tab" data-toggle="tab">上班族簡易速貸</a>
                         </li>
+                        <li role="presentation" data-product="5:10">
+                            <a href="javascript:void(0)" role="tab" data-toggle="tab">房產消費貸(購房貸)</a>
+                        </li>
+                        <li role="presentation" data-product="5:11">
+                            <a href="javascript:void(0)" role="tab" data-toggle="tab">房產消費貸(房屋裝修款)</a>
+                        </li>
+                        <li role="presentation" data-product="5:12">
+                            <a href="javascript:void(0)" role="tab" data-toggle="tab">房產消費貸(添購傢俱家電)</a>
+                        </li>
                     </ul>
                 </div>
                 <table class="" style="text-align: center;">
@@ -107,7 +116,7 @@
     $(document).ready(function () {
         const url = new URL(location.href);
         const urlParams = new URLSearchParams(url.search);
-        let stage = urlParams.get('stage') || 0;
+        let stage = urlParams.get('stage') || 2;
         let product = urlParams.get('product') || '1';
         const stage_title_list = ['身份驗證', '收件檢核', '審核中'];
 

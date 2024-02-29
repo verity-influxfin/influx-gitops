@@ -12,6 +12,8 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     const TYPE_PARSER = 1;
     const TYPE_MARKER = 2;
 
+    private $client;
+
     protected $api_url;
     protected $CI;
     protected $certification;
@@ -63,14 +65,13 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     {
         try
         {
-            $request = (new Client(['base_uri' => $this->api_url]))
-                ->request('POST', 'task/' . urlencode($this->task_path), [
-                    'headers' => [
-                        'accept' => 'application/json',
-                        'Content-Type' => 'application/json'
-                    ],
-                    'body' => json_encode($body)
-                ]);
+            $request = $this->client->request('POST', 'task/' . urlencode($this->task_path), [
+                'headers' => [
+                    'accept' => 'application/json',
+                    'Content-Type' => 'application/json'
+                ],
+                'body' => json_encode($body)
+            ]);
             $res_content = $request->getBody()->getContents();
             $this->insert_log($request->getStatusCode(), $res_content);
 
@@ -87,7 +88,15 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
         }
         catch (RequestException $e)
         {
-            $this->insert_log($e->getResponse()->getStatusCode(), $e->getResponse()->getBody()->getContents());
+            $response = $e->getResponse();
+            if ($response === null) {
+                $statusCode = 500;
+                $content = '';
+            } else {
+                $statusCode = $response->getStatusCode();
+                $content = $response->getBody()->getContents();
+            }
+            $this->insert_log($statusCode, $content);
             $result = FALSE;
         }
         return $this->_chk_ocr_task_create($result);
@@ -103,13 +112,12 @@ abstract class Certification_ocr_base implements Certification_ocr_definition
     {
         try
         {
-            $request = (new Client(['base_uri' => $this->api_url]))
-                ->request('GET', "/task/{$task_id}", [
-                    'headers' => [
-                        'accept' => 'application/json',
-                        'Content-Type' => 'application/json'
-                    ]
-                ]);
+            $request = $this->client->request('GET', "/task/{$task_id}", [
+                'headers' => [
+                    'accept' => 'application/json',
+                    'Content-Type' => 'application/json'
+                ]
+            ]);
             $res_content = $request->getBody()->getContents();
             $this->insert_log($request->getStatusCode(), $res_content);
             $result = json_decode($res_content, TRUE);

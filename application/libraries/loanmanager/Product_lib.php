@@ -45,6 +45,8 @@ class Product_lib
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
             'status' => $sub_product['status'],
+            'check_associates_certs' => isset($sub_product['check_associates_certs']) && $sub_product['check_associates_certs'] === TRUE ? TRUE : FALSE,
+            'checkOwner' => $sub_product['checkOwner']
         );
     }
 

@@ -1,9 +1,14 @@
 <?php
-namespace Adapter;
+namespace Adapter\sk_million;
+use Adapter\Adapter_base;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * [凱基] 送件檢核表 key-value 轉換
+ * 送件檢核表
+ *
+ * 銀行：凱基
+ * 產品：普匯微企e秒貸
  */
 class Adapter_kgi_bank extends Adapter_base
 {

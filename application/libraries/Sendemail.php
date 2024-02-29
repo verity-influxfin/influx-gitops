@@ -188,11 +188,33 @@ class Sendemail
 
 			$rs = $this->CI->email->send();
 
-			if($rs){
-				return true;
-			}else{
-				return false;
-			}
+            $this->CI->load->model('log/log_send_email_model');
+
+            try {
+                $reflection = new ReflectionClass($this->CI->email);
+                $property = $reflection->getProperty('_attachments');
+                $property->setAccessible(true); // 將屬性設為可訪問
+                $propertyValue = $property->getValue($this->CI->email);
+                $propertyValue = array_map(function ($item) {
+                    return $item['name'];
+                }, $propertyValue);
+            } catch (ReflectionException $e) {
+                $propertyValue = [];
+            }
+
+            $insert_data = [
+                'email_to' => $email,
+                'email_from' => GMAIL_SMTP_ACCOUNT,
+                'subject' => $title,
+                'content' => json_encode([
+                    'content' => $content,
+                    'attachments' => $propertyValue
+                ]),
+                'sent_status' => $rs ? 1 : 0
+            ];
+            $result = $this->CI->log_send_email_model->insert($insert_data);
+
+			return boolval($rs);
 		}
 	}
 
@@ -204,9 +226,9 @@ class Sendemail
 		$this->CI->email->from(GMAIL_SMTP_ACCOUNT,GMAIL_SMTP_NAME);
 		$this->CI->email->subject($subject);
 		$this->CI->email->message($content);
-
-        $reply_to?$this->CI->email->reply_to($reply_to,$reply_to_name):'';
-
+        if($reply_to){
+            $this->CI->email->reply_to($reply_to,$reply_to_name);
+        }
 		$rs = $this->CI->email->send();
 
         $this->CI->load->model('log/log_send_email_model');
@@ -215,8 +237,10 @@ class Sendemail
             $emails = [$emails];
         }
         $insert_data = [];
-        foreach ($emails as $email)
-        {
+        foreach ($emails as $email) {
+            if (empty($email)) {
+                continue;
+            }
             $insert_data[] = [
                 'email_to' => $email,
                 'email_from' => GMAIL_SMTP_ACCOUNT,
@@ -227,11 +251,7 @@ class Sendemail
         }
         $this->CI->log_send_email_model->insert_many($insert_data);
 
-		if($rs){
-			return true;
-		}else{
-			return false;
-		}
+        return boolval($rs);
     }
 
     public function lending_success($user_id, $investor, $target_no, $amount, $bankaccount="", $borrower_user_id=0) {
@@ -283,19 +303,32 @@ class Sendemail
 			$this->CI->load->library('certification_lib');
 			$this->CI->load->model('user/user_certification_model');
 
-			// 找出投資人的 certification
-			$certification_info = $this->CI->certification_lib->get_last_status($user_info->id,1,$user_info->company_status);
-			foreach($certification_info as $value) {
-				if($value['alias']=='email')
-					$certification_id = $value['certification_id'];
-			}
+            // 找出投資人的 certification
+            $certification_info = $this->CI->certification_lib->get_last_status($user_info->id, 1, $user_info->company_status);
+            foreach ($certification_info as $value) {
+                if ($value['alias'] == 'email') {
+                    $certification_id = $value['certification_id'];
+                }
+            }
+            if (empty($certification_id)) {
+                log_message('error', 'user_id:' . $user_info->id . ', email certification id is empty');
+                return false;
+            }
+
 			// 依照 email 的 certification id 找到 user certification 才能找到對應投資人的 email
 			$info = $this->CI->user_certification_model->get($certification_id);
 			$user_certification = json_decode($info->content, true);
 
+            $email = $user_certification['email'];
+            if (empty($email)) {
+                log_message('error', 'user_id:' . $user_info->id . ', ceritification_id:' .
+                    $certification_id . ', email is empty');
+                return false;
+            }
+
 			$mail_event = $this->CI->config->item('mail_event');
 			$content = $this->CI->parser->parse('email/user_notification', array("title" => $title, "content" => nl2br($notification_content), "type" => $type, "mail_event" => $mail_event, "investor_status" => 1), TRUE);
-			$this->send($user_certification['email'],isset($subject)?$subject:$title, $content);
+            $this->send($email, isset($subject) ? $subject : $title, $content);
 			return true;
 		}
 		return false;

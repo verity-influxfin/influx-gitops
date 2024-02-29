@@ -81,10 +81,10 @@
                                     <td>狀態：</td>
                                     <td colspan="5">
                                         <select id="status">
-                                            <option value='99' <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])=='99'?"selected":''?>>全部狀態</option>
-                                            <option value='510' <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])=='510'?"selected":''?>>交易案件(還款中+已結案)</option>
+                                            <option value='99' <?=isset($_GET['status'])&&$_GET['status']!=''&& intval($_GET['status']) == '99'?"selected":''?>>全部狀態</option>
+                                            <option value='5,10' <?=isset($_GET['status']) && $_GET['status'] != '' && $_GET['status'] == '5,10' ? "selected" : ''?>>交易案件(還款中+已結案)</option>
                                             <? foreach($status_list as $key => $value){ ?>
-                                            <option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])==intval($key)?"selected":''?>><?=$value?></option>
+                                            <option value="<?=$key?>" <?=isset($_GET['status']) && $_GET['status']!='' && strpos($_GET['status'], ',') == false && intval($_GET['status']) == intval($key) ? "selected" : '' ?>><?=$value?></option>
                                             <? } ?>
                                         </select>
                                     </td>

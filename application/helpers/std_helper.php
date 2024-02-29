@@ -503,6 +503,11 @@ function curl_post_json(string $url, array $data = array(), array $header = arra
 		return in_array($file_type, $pdf_mimes, TRUE);
 	}
 
+    function is_video($file_type)
+    {
+        return preg_match('/^video\/(\w+)/', $file_type);
+    }
+
     /**
 	 * 依照前綴詞取得目前已定義的常數項
 	 * @param array $constants: 變數列表
@@ -553,12 +558,14 @@ function curl_post_json(string $url, array $data = array(), array $header = arra
 		return json_last_error() === JSON_ERROR_NONE;
 	}
 
-	function strip_ROC_date_word($date) {
+    function strip_ROC_date_word(string $date): string
+    {
 		preg_match('/民?國?([0-9]{2,3})(年|-|\/)(0?[1-9]|1[012])(月|-|\/)(0?[1-9]|[12][0-9]|3[01])(日?)$/u', $date, $regex_result);
 		if(!empty($regex_result)) {
 			$date = $regex_result[1].$regex_result[3].$regex_result[5];
 		}
-		return $date;
+        // 2023/10/13 民國年去「0」，如：0851013 => 851013，1010103 => 1010103
+		return strval(intval($date));
 	}
 
 	function pagination_config($config=[]) {
@@ -620,4 +627,19 @@ function curl_post_json(string $url, array $data = array(), array $header = arra
             (!empty($backtrace[1]) ? $backtrace[1]['file'] .'(' . $backtrace[1]['line'] : ''));
     }
 
+    //紀錄國泰api詳細資訊，並刪除1年前資料
+    function write_batchno_log($batch_no, $info)
+    {
+        $log_path = "application/logs/batchno_to_cathy/";
+        write_file($log_path. $batch_no.'.xml', $info, "w+");
+        
+        $last_year = strtotime(date("Y-m-d H:i:s")."-1 year");
+        $file_info = get_dir_file_info($log_path);
+
+        foreach ($file_info as $k){
+            if ($k['date'] < $last_year){
+                unlink($k['server_path']);
+            }
+        }
+    }
 ?>

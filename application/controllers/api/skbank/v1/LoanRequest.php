@@ -262,10 +262,10 @@ END:
                 if ($loanTargetMappingInfo) {
                     // check target exist and update info
                     $this->load->model('loan/target_model');
-                    $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id,'product_id' => 1002]);
+                    $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id,'product_id' => PRODUCT_SK_MILLION_SMEG]);
                     if($targetInfo){
                         $updateTarget = $this->target_model->update($targetInfo->id,[
-                            'status' => 500
+                            'status' => TARGET_BANK_VERIFY
                         ]);
                     }
                 }
@@ -318,9 +318,15 @@ END:
             $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no' => $inputArr['MsgNo'], 'type' => 'text']);
             if($mapping_info)
             {
-                $adapter = Adapter_factory::getInstance($mapping_info->bank);
+                $adapter = Adapter_factory::getInstance($mapping_info->bank, $mapping_info->target_id);
+                if ( ! isset($adapter))
+                {
+                    $result['error'] = 'cannot get Adapter instance';
+                    goto END;
+                }
                 $inputArr = $adapter->convert_text($inputArr);
                 $requestContent = ['converted_data' => $inputArr['Data']];
+
                 $chk_required_column = $adapter->check_required_column($inputArr);
                 if ( ! isset($chk_required_column['success']) || $chk_required_column['success'] !== TRUE)
                 {

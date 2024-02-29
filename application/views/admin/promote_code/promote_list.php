@@ -115,6 +115,17 @@
 										if(isset($list) && !empty($list)) {
                                             foreach($list as $key => $value) {
                                                 $count++;
+
+                                                $student_count = $value['api']['award_info']["student_count"] ?? 0;
+                                                $salary_man_count = $value['api']['award_info']["salary_man_count"] ?? 0;
+                                                $small_enterprise_count = $value['api']['award_info']["small_enterprise_count"] ?? 0;
+                                                $promote_count = $value['api']['award_info']['promote_count'] ?? 0;
+                                                $studentRewardAmount = $value['api']['award_info']['student_amount'] ?? 0;
+                                                $salaryManRewardAmount = $value['api']['award_info']['salary_man_amount'] ?? 0;
+                                                $smallEnterpriseAmount = $value['api']['award_info']['small_enterprise_amount'] ?? 0;
+//                                                $totalRewardAmount = $value['totalRewardAmount'] ?? 0;
+                                                $totalRewardAmount = $studentRewardAmount + $salaryManRewardAmount + $smallEnterpriseAmount;
+
 									?>
                                         <tr class="<?= $count%2==0?"odd":"even"; ?> list <?= $value['info']['id'] ?? '' ?>">
                                             <td><?= $value['info']['contract_end_time']??'' ?></td>
@@ -122,11 +133,11 @@
                                             <td><?= $value['info']['settings']['description']??'' ?></td>
                                             <td><?= $value['info']['name']??'' ?></td>
                                             <td><?= $value['info']['promote_code']??'' ?></td>
-                                            <td><?= $value['fullMemberCount']??'' ?></td>
-                                            <td><?= $value['loanedCount']['student']??'' ?></td>
-                                            <td><?= $value['loanedCount']['salary_man']??'' ?></td>
-                                            <td><?= (($value['loanedCount']['small_enterprise']??0)+(array_sum($value['collaborationCount']??[]))) ?></td>
-                                            <td><?= $value['totalRewardAmount']??'' ?></td>
+                                            <td><?= $promote_count??'' ?></td>
+                                            <td><?= $student_count??'' ?></td>
+                                            <td><?= $salary_man_count??'' ?></td>
+                                            <td><?= $small_enterprise_count??'' ?></td>
+                                            <td><?= $totalRewardAmount ?></td>
                                             <td><?= ($value['info']['status']??'')==1?"啟用":"停用" ?></td>
 											<td><a href="<?=admin_url('sales/promote_detail')."?id=".$value['info']['id'] ?><?=isset($_GET['sdate'])&&$_GET['sdate']!=''?"&sdate=".$_GET['sdate']:''?><?=isset($_GET['edate'])&&$_GET['edate']!=''?"&edate=".$_GET['edate']:''?>" target="_blank" class="btn btn-default">詳細資訊</a></td>
                                         </tr>

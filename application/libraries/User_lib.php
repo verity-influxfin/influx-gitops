@@ -11,13 +11,15 @@ class User_lib {
     private $totalCount;
 
     // 特約方案可以改申貸服務費/利息百分比的產品類別
-    public $appointedRewardCategories = ['student', 'salary_man'];
+    public $appointed_individual_categories = ['student', 'salary_man'];
+    public $appointed_enterprise_categories = ['small_enterprise'];
 
     public $rewardCategories = [
-        'student' => [1, 2],
-        'salary_man' => [3, 4],
+        'student' => [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER],
+        'salary_man' => [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER],
         'small_enterprise' => [PRODUCT_SK_MILLION_SMEG],
     ];
+
     public $categoriesName = [
         'student' => '學生貸',
         'salary_man' => '上班族貸',
@@ -29,6 +31,7 @@ class User_lib {
         'salary_man' => [TARGET_REPAYMENTING, TARGET_REPAYMENTED],
         'small_enterprise' => [TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED],
     ];
+
     public $logRewardColumns = [
         'student', 'salary_man', 'small_enterprise', 'fullMember', 'registered'
     ];
@@ -221,9 +224,10 @@ class User_lib {
      * @param int $limit
      * @param int $offset
      * @param bool $filterDelayed 是否要過濾逾期案
+     * @param bool $initialized 是否只獲得初始化資料結構
      * @return array
      */
-    public function getPromotedRewardInfo(array $where, string $startDate = '', string $endDate = '', int $limit = 0, int $offset = 0, bool $filterDelayed = FALSE, bool $initialized=FALSE): array
+    public function getPromotedRewardInfo(array $where, string $startDate = '', string $endDate = '', int $limit = 0, int $offset = 0, bool $filterDelayed = FALSE, bool $initialized = FALSE): array
     {
         $this->CI->load->model('user/user_qrcode_model');
         $this->CI->load->library('qrcode_lib');
@@ -271,10 +275,27 @@ class User_lib {
         {
             // 取得推薦碼下載數
             $this->CI->load->model('behavion/user_behavior_model');
-            $firstOpenRs = $this->CI->user_behavior_model->getFirstOpenCountByPromoteCode($promoteCodes, $startDate, $endDate);
+            $firstOpenRs = $this->CI->user_behavior_model->getFirstOpenCountByPromoteCode($promoteCodes, $startDate, $endDate, FALSE);
+            $no_duplicate_device_list = [];
             foreach ($firstOpenRs as $rs)
             {
-                $list[$rs['user_qrcode_id']]['downloadedCount'] = $rs['count'];
+                if ( ! isset($promoteCodeList[$rs['user_qrcode_id']]))
+                {
+                    continue;
+                }
+                $settings = json_decode($promoteCodeList[$rs['user_qrcode_id']]['settings'], TRUE) ?? [];
+                if (isset($settings['reward']['download']['amount']) && $settings['reward']['download']['amount'] > 0)
+                {
+                    if ( ! empty($rs['device_id']) && in_array($rs['device_id'], $no_duplicate_device_list[$rs['user_qrcode_id']]))
+                    {
+                        continue;
+                    }
+                }
+                $no_duplicate_device_list[$rs['user_qrcode_id']][] = $rs['device_id'];
+            }
+            foreach ($no_duplicate_device_list as $user_qrcode_id => $device_list)
+            {
+                $list[$user_qrcode_id]['downloadedCount'] = count($device_list);
             }
 
             // 取得推薦之註冊會員數
@@ -414,10 +435,19 @@ class User_lib {
             if ( ! isset($list[$userQrcodeId]['downloadedCount']))
                 $list[$userQrcodeId]['downloadedCount'] = 0;
 
-            if (isset($settings['reward']) && isset($settings['reward']['full_member']))
+            if (isset($settings['reward']))
             {
-                $list[$userQrcodeId]['fullMemberRewardAmount'] = $list[$userQrcodeId]['fullMemberCount'] * intval($settings['reward']['full_member']['amount']);
-                $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['fullMemberRewardAmount'];
+                if(isset($settings['reward']['full_member']))
+                {
+                    $list[$userQrcodeId]['fullMemberRewardAmount'] = $list[$userQrcodeId]['fullMemberCount'] * intval($settings['reward']['full_member']['amount']);
+                    $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['fullMemberRewardAmount'];
+                }
+
+                if (isset($settings['reward']['download']))
+                {
+                    $list[$userQrcodeId]['downloadRewardAmount'] = $list[$userQrcodeId]['downloadedCount'] * intval($settings['reward']['download']['amount']);
+                    $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['downloadRewardAmount'];
+                }
             }
             if (isset($settings['reward']['registered']['amount']))
             {
@@ -705,8 +735,13 @@ class User_lib {
                     'json_data' => json_encode($data),
                 ]);
 
+                $user_qrcode_update_param = ['handle_time' => $today];
                 $this->CI->user_qrcode_model->update_by([
-                    'id' => $qrcode['id']], ['handle_time' => $today]);
+                    'id' => $qrcode['id']], $user_qrcode_update_param);
+                // 寫 log
+                $this->CI->load->model('log/log_user_qrcode_model');
+                $user_qrcode_update_param['user_qrcode_id'] = $qrcode['id'];
+                $this->CI->log_user_qrcode_model->insert_log($user_qrcode_update_param);
 
                 if ($this->CI->user_qrcode_model->trans_status() === TRUE && $this->CI->qrcode_reward_model->trans_status() === TRUE)
                 {
@@ -861,6 +896,10 @@ class User_lib {
     public function get_identified_responsible_user($company_user_id, $investor): int
     {
         // 確認負責人需通過實名認證
+        // 負責人實名定義：
+        // 1. 負責人的個人實名認證 (CERTIFICATION_IDENTITY)
+        // 2. 公司的設立(變更)事項登記表 (CERTIFICATION_GOVERNMENTAUTHORITIES)
+
         $this->CI->load->model('user/user_meta_model');
         $rs = $this->CI->user_meta_model->get_by(['user_id' => $company_user_id, 'meta_key' => 'company_responsible_user_id']);
         if ( ! isset($rs))
@@ -876,6 +915,14 @@ class User_lib {
         {
             throw new \Exception('法人沒有通過負責人實名', NO_RESPONSIBLE_IDENTITY);
         }
+
+        $user_certification = $this->CI->certification_lib->get_certification_info($company_user_id, CERTIFICATION_GOVERNMENTAUTHORITIES,
+            $investor);
+        if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
+        {
+            throw new \Exception('法人沒有通過負責人實名', NO_RESPONSIBLE_IDENTITY);
+        }
+
         return (int)$responsible_user_id;
     }
 
@@ -1316,5 +1363,143 @@ class User_lib {
         $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest'] + ($account_payable_cnt != 0 ? $account_payable_cnt : 1) + 3;
 
         return $data;
+    }
+
+    /**
+     * 檢查是否有相同統編之使用者存在
+     * @param $tax_id : 統編 (users.id_number)
+     * @return array
+     */
+    public function get_exist_company_user_id($tax_id): array
+    {
+        $this->CI->load->model('user/user_model');
+        $result = $this->CI->user_model->get_exit_judicial_person($tax_id);
+        return ['id' => $result['user_id']];
+    }
+
+    /**
+     * 以手機號碼取得相同負責人之公司資訊
+     * @param $phone : 手機號碼 (users.phone)
+     * @return array
+     */
+    public function get_all_certificated_companies_by_phone($phone): array
+    {
+        $companies_info = $this->CI->user_model->as_array()->get_many_by([
+            'phone' => $phone,
+            'company_status' => USER_IS_COMPANY,
+            'status' => 1
+        ]);
+
+        if (empty($companies_info))
+        {
+            return [];
+        }
+
+        $result = [];
+        foreach ($companies_info as $single_company)
+        {
+            $result[] = [
+                'id' => $single_company['id'],
+                'name' => $single_company['name'], // 公司名稱
+                'tax' => $single_company['id_number'], // 統一編號
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * 檢查使用者帳號的有效性
+     * @param $user_id : 使用者帳號
+     * @param $tax_id : 統一編號
+     * @throws Exception
+     */
+    public function check_user_id_validation($user_id, $tax_id)
+    {
+        // 檢查帳號格式
+        $this->check_user_id_format($user_id);
+        // 檢查帳號是否存在
+        $this->check_distinct_user_id($user_id, $tax_id);
+    }
+
+    /**
+     * 檢查使用者帳號格式
+     * @param $user_id : 使用者帳號
+     * @return void
+     * @throws Exception
+     */
+    public function check_user_id_format($user_id)
+    {
+        if ( ! preg_match("/(?=.{9})(?=.*[A-Z])(?=.*[a-z])(?=.*\d)/", $user_id))
+        {
+            throw new Exception('帳號格式有誤', USER_ID_FORMAT_ERROR);
+        }
+    }
+
+    /**
+     * 檢查使用者帳號是否存在
+     * @param $user_id : 使用者帳號
+     * @param $tax_id : 統一編號
+     * @return void
+     * @throws Exception
+     */
+    public function check_distinct_user_id($user_id, $tax_id)
+    {
+        $this->CI->load->model('user/user_model');
+        $company_user_id_exist = $this->CI->user_model->check_user_id_exist($user_id, $tax_id);
+        if ( ! empty($company_user_id_exist))
+        {
+            throw new Exception('公司帳號已存在，請使用其他公司帳號', USER_ID_EXIST);
+        }
+    }
+
+    /**
+     * 檢查密碼
+     * @param $password : 密碼
+     * @return void
+     * @throws Exception
+     */
+    public function check_password($password)
+    {
+        if (strlen($password) < PASSWORD_LENGTH || strlen($password) > PASSWORD_LENGTH_MAX)
+        {
+            throw new Exception('密碼長度有誤', PASSWORD_LENGTH_ERROR);
+        }
+    }
+
+    /**
+     * 檢查統一編號
+     * @param $tax_id : 統一編號
+     * @return void
+     * @throws Exception
+     */
+    public function check_tax_id($tax_id)
+    {
+        // 檢查統編
+        if (strlen($tax_id) != 8)
+        {
+            throw new Exception('統編長度有誤', TAX_ID_LENGTH_ERROR);
+        }
+    }
+
+    // 取得相同負責人的公司列表，及其負責人實名的情況
+    // 0:未提交 1:已通過 2:審核中
+    public function get_company_list_with_identity_status($phone)
+    {
+        $this->CI->load->model('user/user_model');
+        $result = $this->CI->user_model->get_company_list_with_identity_status($phone);
+        array_walk($result, function (&$element) {
+            switch ($element['status'])
+            {
+                case NULL:
+                    $element['status'] = 0;
+                    break;
+                case CERTIFICATION_STATUS_SUCCEED:
+                    $element['status'] = 1;
+                    break;
+                default:
+                    $element['status'] = 2;
+            }
+        });
+        return $result;
     }
 }

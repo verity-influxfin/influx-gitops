@@ -131,6 +131,10 @@ class Website extends REST_Controller {
 		$input 			= $this->input->get();
 		$list			= [];
         $where			= [];
+
+        // User: 115088 ，不想被官網優質案例的API抓到
+        $where['user_id != '] = 115088;
+        
 		if(!isset($input['status']) || !in_array($input['status'],[3, 10])) {
             $this->response(array('result' => 'SUCCESS','data' => [ 'list' => [] ] ));
         }else

@@ -16651,6 +16651,13 @@
             "group": "Success 200",
             "type": "Number",
             "optional": false,
+            "field": "remaining_principal",
+            "description": "<p>剩餘本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
             "field": "created_at",
             "description": "<p>申請日期</p>"
           },
@@ -16681,6 +16688,55 @@
             "optional": false,
             "field": "next_repayment.amount",
             "description": "<p>金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "prepayment_info",
+            "description": "<p>提前還款資訊</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "prepayment_info.settlement_date",
+            "description": "<p>結息日</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "prepayment_info.remaining_instalment",
+            "description": "<p>剩餘期數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "prepayment_info.remaining_principal",
+            "description": "<p>剩餘本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "prepayment_info.interest_payable",
+            "description": "<p>應付利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "prepayment_info.liquidated_damages",
+            "description": "<p>違約金（提還違約金）</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "prepayment_info.total",
+            "description": "<p>合計</p>"
           }
         ]
       },
@@ -17993,6 +18049,153 @@
     "sampleRequest": [
       {
         "url": "https://dev-api.influxfin.com/api/repayment/prepayment/:id"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/v2/repayment/prepayment_list/:id",
+    "title": "借款方 申請多筆提前還款",
+    "version": "0.2.0",
+    "name": "PostRepaymentPrepayment_list",
+    "group": "Repayment",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Targets ID(以逗號隔開)</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>只有正常還款的狀態才可申請，逾期或寬限期內都將不通過</p>",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\"\n   }",
+          "type": "Object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "404",
+            "description": "<p>此申請不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "405",
+            "description": "<p>對此申請無權限</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "407",
+            "description": "<p>目前狀態無法完成此動作</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "903",
+            "description": "<p>已申請提前還款或產品轉換</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "207",
+            "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "404",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "405",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "407",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "903",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"903\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "207",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Repayment.php",
+    "groupTitle": "Repayment",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/repayment/prepayment_list/:id"
       }
     ]
   },

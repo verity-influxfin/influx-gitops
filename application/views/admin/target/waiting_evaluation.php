@@ -12,6 +12,7 @@
     <div class="category-tab">
         <button class="category-tab-item active" id="tab1" onclick="location.search = 'tab=individual'">個金</button>
         <button class="category-tab-item" id="tab2" onclick="location.search = 'tab=enterprise'">企金</button>
+<!--        <button class="category-tab-item" id="tab3" onclick="location.search = 'tab=home_loan'">房產消費貸</button>-->
     </div>
 	<!-- /.row -->
 	<div class="row">

@@ -327,6 +327,7 @@ class Target extends REST_Controller {
                         }
 
                         // 撈新光回應資料
+                        // TODO: APP案件列表要取得保證成數，故需尋訪所有 target_id 的 msg_no
                         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
                         $loanTargetMappingInfo = $this->LoanTargetMappingMsgNo_model->order_by('id','desc')->limit(1)->get_by(['target_id' => $value->id, 'type' => 'text']);
                         if(!empty($loanTargetMappingInfo) && isset($loanTargetMappingInfo->msg_no)){
@@ -527,7 +528,7 @@ class Target extends REST_Controller {
         $user_meta = '';
 
         if(!empty($target) && in_array($target->status,[3,4,504])){
-
+            $this->load->library('loanmanager/product_lib');
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
             $sub_product_id = $target->sub_product_id;
@@ -635,7 +636,8 @@ class Target extends REST_Controller {
                 foreach ($certifications as $key => $value) {
                     $cur_cer[$value->certification_id] = $value;
                 }
-                foreach ($product['certifications'] as $key => $value) {
+                $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, []);
+                foreach ($product_certs as $key => $value) {
                     $cer = $certification[$value];
                     // 不顯示於 APP 的徵信項目
                     if (($cer['show'] ?? TRUE) == FALSE)
@@ -792,6 +794,7 @@ class Target extends REST_Controller {
         $user_meta = '';
 
         if(!empty($target) && in_array($target->status,[504])){
+            $this->load->library('loanmanager/product_lib');
 
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
@@ -824,7 +827,9 @@ class Target extends REST_Controller {
                 foreach ($certifications as $key => $value) {
                     $cur_cer[$value->certification_id] = $value;
                 }
-                foreach ($product['certifications'] as $key => $value) {
+
+                $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, []);
+                foreach ($product_certs as $key => $value) {
                     $cer = $certification[$value];
                     if (!isset($cur_cer[$value])) {
                         $cer['description'] = '未' . $cer['description'];

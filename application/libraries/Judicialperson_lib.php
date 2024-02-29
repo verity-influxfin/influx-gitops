@@ -132,7 +132,7 @@ class Judicialperson_lib{
         }
 		$this->CI->load->model('user/judicial_person_model');
         $judicial_person_info = $this->CI->judicial_person_model->get_by([
-            'company_user_id' => $info->user_id,
+            'company_user_id' => $info->user_id ?? $info['user_id'] ?? 0,
             'status' => 0,
         ]);
 
@@ -157,29 +157,31 @@ class Judicialperson_lib{
         // 人臉辨識
         if($person_image && $governmentauthorities_image){
              $image_info['person_image_url']= $person_image;
+
+            // Todo: 2023-10-11 azure 暫時改回 face++
             // 微軟
-            $this->CI->load->library('azure_lib');
-            $person_image_info = $this->CI->azure_lib->detect($person_image);
-            $governmentauthorities_image_info = $this->CI->azure_lib->detect($governmentauthorities_image);
-            if(!empty($person_image_info) && !empty($governmentauthorities_image_info)){
-                $image_info['azure']['person'] = ! empty($person_image_info) ? $person_image_info : [];
-                $image_info['azure']['governmentauthorities'] = ! empty($person_image_info) ? $person_image_info : [];
-                foreach ($person_image_info as $value) {
-                    $face_id = isset($value['faceId']) ? $value['faceId'] : '';
-                    if($face_id){
-                        foreach ($governmentauthorities_image_info as $value1) {
-                            $face_id1 = isset($value1['faceId']) ? $value1['faceId'] : '';
-                            if($face_id1){
-                                $image_info['azure']['compare'][] = $this->CI->azure_lib->verify($face_id,$face_id1);
-                            }
-                        }
-                    }
-                }
-            }else{
-                $image_info['azure']['person'] = ! empty($person_image_info) ? $person_image_info : [];
-                $image_info['azure']['governmentauthorities'] = ! empty($person_image_info) ? $person_image_info : [];
-                $image_info['azure']['compare'] = [];
-            }
+            // $this->CI->load->library('azure_lib');
+            // $person_image_info = $this->CI->azure_lib->detect($person_image);
+            // $governmentauthorities_image_info = $this->CI->azure_lib->detect($governmentauthorities_image);
+            // if(!empty($person_image_info) && !empty($governmentauthorities_image_info)){
+            //     $image_info['azure']['person'] = ! empty($person_image_info) ? $person_image_info : [];
+            //     $image_info['azure']['governmentauthorities'] = ! empty($person_image_info) ? $person_image_info : [];
+            //     foreach ($person_image_info as $value) {
+            //         $face_id = isset($value['faceId']) ? $value['faceId'] : '';
+            //         if($face_id){
+            //             foreach ($governmentauthorities_image_info as $value1) {
+            //                 $face_id1 = isset($value1['faceId']) ? $value1['faceId'] : '';
+            //                 if($face_id1){
+            //                     $image_info['azure']['compare'][] = $this->CI->azure_lib->verify($face_id,$face_id1);
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }else{
+            //     $image_info['azure']['person'] = ! empty($person_image_info) ? $person_image_info : [];
+            //     $image_info['azure']['governmentauthorities'] = ! empty($person_image_info) ? $person_image_info : [];
+            //     $image_info['azure']['compare'] = [];
+            // }
 
             // 曠世
             $this->CI->load->library('faceplusplus_lib');

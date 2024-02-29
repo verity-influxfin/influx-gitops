@@ -47,7 +47,7 @@ class user_qrcode_model extends MY_Model
         $subQuery = $this->_database->get_compiled_select('', TRUE);
 
         $this->_database
-            ->select("uq.id AS user_qrcode_id, u.id AS user_id, u.app_status, u.app_investor_status, uq.promote_code, uq.settings, uq.start_time, uq.end_time, DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(u.created_at),'%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) as created_at")
+            ->select("uq.id AS user_qrcode_id, uq.alias AS alias, u.id AS user_id, u.app_status, u.app_investor_status, uq.promote_code, uq.settings, uq.start_time, uq.end_time, DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(u.created_at),'%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) as created_at")
             ->from('`p2p_user`.`users` AS `u`')
             ->where("DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(u.created_at), '%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) >= uq.start_time")
             ->where("DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(u.created_at), '%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) <= uq.end_time")
@@ -73,10 +73,12 @@ class user_qrcode_model extends MY_Model
      * @param array $productIdList 產品編號列表
      * @param string $startTime 篩選起始時間
      * @param string $endTime 篩選結束時間
+     * @param bool $returnSQL 是否回傳SQL語句
      * @return mixed
      */
     public function getLoanedCount(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime = '', string $endTime = '', bool $returnSQL = FALSE)
     {
+        $this->load->model('user/qrcode_setting_model');
         $subQuery = $this->getRegisteredUserByPromoteCode($qrcodeWhere, '', '', TRUE);
 
         $this->_database
@@ -88,6 +90,17 @@ class user_qrcode_model extends MY_Model
             ->where("t.loan_date >= DATE_FORMAT(`r`.`start_time`, '%Y-%m-%d')")
             ->where("t.loan_date <= DATE_FORMAT(`r`.`end_time`, '%Y-%m-%d')")
             ->group_by('t.user_id');
+
+        // 特約商合約之新戶定義：透過QR code完成會員註冊時起算半年內之第三人
+        $this->_database
+            ->group_start()
+            ->where('r.alias != ', $this->qrcode_setting_model->appointedCaseAliasName)
+            ->or_group_start()
+            ->where('r.alias', $this->qrcode_setting_model->appointedCaseAliasName)
+            ->where("t.loan_date <= DATE_ADD(DATE_FORMAT(r.created_at, '%Y-%m-%d'), INTERVAL 6 MONTH)")
+            ->group_end()
+            ->group_end();
+
         $fullQuery = $this->_database->get_compiled_select('', TRUE);
 
         $this->_database
@@ -336,6 +349,7 @@ class user_qrcode_model extends MY_Model
      */
     public function get_target_apply_list(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime = '', string $endTime = '', bool $returnSQL = FALSE)
     {
+        $this->load->model('user/qrcode_setting_model');
         $subQuery = $this->getRegisteredUserByPromoteCode($qrcodeWhere, '', '', TRUE);
 
         $this->_database
@@ -359,5 +373,16 @@ class user_qrcode_model extends MY_Model
         if ($returnSQL)
             return $this->_database->get_compiled_select('', TRUE);
         return $this->_database->get()->result_array();
+    }
+
+    public function get_user_name_by_id($id)
+    {
+        return $this->db
+            ->select('u.name')
+            ->from('p2p_user.user_qrcode uq')
+            ->join('p2p_user.users u', 'u.id=uq.user_id')
+            ->where('uq.id', $id)
+            ->get()
+            ->first_row('array');
     }
 }

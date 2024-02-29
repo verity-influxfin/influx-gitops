@@ -54,8 +54,8 @@ class Msgno
 			$this->CI->load->model('skbank/LoanTargetMappingMsgNo_model');
             $mapping_info = $this->CI->LoanTargetMappingMsgNo_model->order_by('id','desc')->get_by(['target_id'=>$target_id, 'type'=> $type, 'bank' => $bank]);
 			if($mapping_info){
-				$msg_no = isset($mapping_info->msg_no) ? $mapping_info->msg_no: '';
-				$action_user = isset($mapping_info->action_user_id) ? $mapping_info->action_user_id: '';
+				$msg_no = $mapping_info->msg_no ?? '';
+				$action_user = $mapping_info->action_user_id ?? '';
 			}else{
 				$msg_no = '';
 				$action_user = '';
@@ -68,7 +68,7 @@ class Msgno
 					$this->CI->load->model('admin/admin_model');
 					$admin_info	= $this->CI->admin_model->get_by(['id'=>$action_user]);
 					if($admin_info){
-						$action_user = isset($admin_info->name) ? $admin_info->name : '';
+						$action_user = $admin_info->name ?? '';
 					}
 				}
 

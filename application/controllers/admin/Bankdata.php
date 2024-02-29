@@ -43,7 +43,7 @@ class Bankdata extends MY_Admin_Controller
 
         if (!$this->input->is_ajax_request()) {
 			if($table_type == 'check'){
-				$this->load->view('admin/sk_bank/check_list');
+				$this->load->view($this->_get_report_view($target_id));
 				return;
 			}
         }
@@ -98,7 +98,7 @@ class Bankdata extends MY_Admin_Controller
                 // 新光收件檢核表儲存資料
                 $this->load->model('skbank/LoanTargetMappingMsgNo_model');
                 $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
-    			$skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$target_id,'type'=>'text','content !='=>'','bank'=>$bank]);
+                $skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id' => $target_id, 'type' => 'text', 'content !=' => '', 'bank' => $bank]);
 
                 if($skbank_save_info){
                     if(isset($skbank_save_info->content)){
@@ -157,23 +157,15 @@ class Bankdata extends MY_Admin_Controller
                         if(!empty($certification_info)){
                             foreach($certification_info as $info_value){
                                 $content = json_decode($info_value->content,true);
-                                if(is_array($content) && isset($content['skbank_form']) && !empty($content['skbank_form'])){
+                                if(is_array($content) && !empty($content)){
                                     $data = array_map(function($key,$values) {
                                         $key = $key.'_content';
                                         return [$key=>$values];
-                                    }, array_keys($content['skbank_form']), $content['skbank_form']);
-                                    $data = array_reduce($data, 'array_merge', array());
-                                    $response = array_merge($response,$data);
-                                }
-                                elseif (is_array($content) && ! empty($content))
-                                {
-                                    $data = array_map(function ($key, $values) {
-                                        $key = $key . '_content';
-                                        return [$key => $values];
                                     }, array_keys($content), $content);
                                     $data = array_reduce($data, 'array_merge', array());
                                     $response = array_merge($response, $data);
                                 }
+                                $response['CompId_content'] = $response['compId_content'] ?? '';
                             }
                         }
                     }
@@ -186,6 +178,33 @@ class Bankdata extends MY_Admin_Controller
 			$this->json_output->setStatusCode(404)->setResponse(['找不到該案件資料'])->send();
 		}
         $this->json_output->setStatusCode(200)->setResponse((array)$response)->send();
+    }
+
+    /**
+     * 取得不同產品對應的送件檢核表 view
+     * @param $target_id
+     * @return string
+     */
+    private function _get_report_view($target_id): string
+    {
+        $this->load->model('loan/target_model');
+        $product_info = $this->target_model->get_product_id_by_id($target_id);
+        if ( ! isset($product_info['product_id']) || ! isset($product_info['sub_product_id']))
+        {
+            return 'admin/sk_bank/check_list';
+        }
+        elseif ($product_info['product_id'] == PRODUCT_SK_MILLION_SMEG)
+        {
+            switch ($product_info['sub_product_id'])
+            {
+                case SUB_PRODUCT_ID_SK_MILLION:
+                    return 'admin/sk_bank/' . VIEW_SUB_PRODUCT_ID_SK_MILLION . '/check_list';
+                case SUB_PRODUCT_ID_CREDIT_INSURANCE:
+                    return 'admin/sk_bank/' . VIEW_SUB_PRODUCT_ID_CREDIT_INSURANCE . '/check_list';
+                default:
+                    return 'admin/sk_bank/check_list';
+            }
+        }
     }
 
 	/**
@@ -241,8 +260,9 @@ class Bankdata extends MY_Admin_Controller
         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
         $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no'=>$input['msg_no'],'type'=>$input['data_type']]);
 
-        if($mapping_info){
-            $this->LoanTargetMappingMsgNo_model->update($mapping_info->id,['content'=>$request_data]);
+        if ($mapping_info)
+        {
+            $this->LoanTargetMappingMsgNo_model->update($mapping_info->id, ['content' => $request_data]);
         }
 
         $this->load->library('output/json_output');

@@ -1327,6 +1327,8 @@ class Payment_lib{
 		$rs 		= iconv('UTF-8', 'BIG-5',CATHAY_CUST_ID.'            '.$this->strToHex($this->encrypt($xml_file,$key)));
 		$res 		= curl_get(CATHAY_AP2APINFO_API_URL,$rs,["Content-type:text/xml"]);
 		$res 		= iconv('big5', 'big5//IGNORE', $res);
+		//將資料存起來
+		write_batchno_log($batch_no, $res);
 		$xml 		= simplexml_load_string($res);
 		$xml 		= json_decode(json_encode($xml),TRUE);
 
@@ -1619,6 +1621,9 @@ class Payment_lib{
             $user_from_company_status_list = call_user_func_array('array_column', [
                 $this->CI->user_model->get_company_status_by_ids($user_from_list), 'company_status', 'id'
             ]);
+            $user_from_company_status_list = array_filter($user_from_company_status_list, function ($status) {
+                return $status != 1;
+            });
 
             if ( ! empty($tax_list))
             {

@@ -3,6 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(APPPATH.'/libraries/REST_Controller.php');
 
 use Certification\Certification_factory;
+use Certification\Cert_identity;
+use CertificationResult\IdentityCertificationResult;
+use CertificationResult\MessageDisplay;
+use GuzzleHttp\Client;
 
 class Product extends REST_Controller {
 
@@ -161,7 +165,13 @@ class Product extends REST_Controller {
         $visul_id_des          = $this->config->item('visul_id_des');
         $sub_product_list      = $this->config->item('sub_product_list');
         $certification = $this->config->item('certifications');
-        $company = isset($this->user_info->company)?$this->user_info->company:false;
+
+        if ($this->get('type') == "company") {
+            $company = true;
+        } else {
+            $company = isset($this->user_info->company) ? $this->user_info->company : false;
+        }
+
         // if($company){
         //     $this->load->model('user/judicial_person_model');
         //     $selling_type = $this->judicial_person_model->get_by(array('company_user_id'=>$this->user_info->id))->selling_type;
@@ -182,11 +192,10 @@ class Product extends REST_Controller {
 
         if(!empty($cproduct_list)){
             $this->load->helper('target');
-            $this->load->helper('user_certification');
             $this->load->helper('product');
             if (isset($this->user_info->id))
             {
-                $exist_target_submitted = exist_approving_target_submitted($this->user_info->id);
+                $exist_target_submitted = $this->target_lib->exist_approving_target_submitted($this->user_info->id);
             }
             else
             {
@@ -245,8 +254,9 @@ class Product extends REST_Controller {
 
                 $certification = [];
                 if (!empty($certification_list)) {
+                    $this->load->library('loanmanager/product_lib');
                     foreach ($certification_list as $k => $v) {
-                        $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
+                        $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
                             USER_BORROWER,
                             is_judicial_product($value['id'])
                         );
@@ -258,7 +268,8 @@ class Product extends REST_Controller {
                             $v['remark'] = NULL;
                         }
 
-                        if (in_array($k, $value['certifications'])) {
+                        $product_certs = $this->product_lib->get_product_certs_by_product($value, []);
+                        if (in_array($k, $product_certs)) {
                             !is_bool($v['optional']) ? $v['optional'] = false : '';
                             $certification[] = $v;
                         }
@@ -369,7 +380,7 @@ class Product extends REST_Controller {
                                             if (!empty($certification_list)) {
                                                 $certification = [];
                                                 foreach ($certification_list as $k => $v) {
-                                                    $truly_failed = certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
+                                                    $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $v['certification_id'] ?? 0,
                                                         USER_BORROWER,
                                                         is_judicial_product($t3['id'])
                                                     );
@@ -421,6 +432,8 @@ class Product extends REST_Controller {
                         'visul' => $id,
                         'name' => $visul_id_des['TO'.$id]['name'],
                         'icon' => $visul_id_des['TO'.$id]['icon'],
+                        'bannerThumbnail' => $visul_id_des['TO' . $id]['bannerThumbnail'] ?? '',
+                        'bannerFull' => $visul_id_des['TO' . $id]['bannerFull'] ?? '',
                         'identity' => $listData[$id],
                         'description' => $visul_id_des['TO'.$id]['description'],
                         'url' => $visul_id_des['TO'.$id]['url'],
@@ -710,33 +723,19 @@ class Product extends REST_Controller {
         $amount = isset($input['amount']) ? $input['amount'] : 0;
         $user_id = $this->user_info->id;
 
-        $product_list = $this->config->item('product_list');
-        $sub_product_list = $this->config->item('sub_product_list');
-        $exp_product  = explode(':',$input['product_id']);
-        $product = isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
-        $product_id = $product['id'];
-        $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
-
-        // 確認黑名單結果是否禁止申貸
-        /*
-        $this->load->library('brookesia/black_list_lib');
-        $is_user_blocked = $this->black_list_lib->check_user($user_id, CHECK_APPLY_PRODUCT);
-
-        // 子系統若無回應不處理
-        if (isset($is_user_blocked['isUserBlocked']) && $is_user_blocked['isUserBlocked'])
+        $exp_product = explode(':', $input['product_id']);
+        if ( ! empty($exp_product[0]))
         {
-            $this->black_list_lib->add_block_log($is_user_blocked);
-            $this->response(
-                [
-                    'result'   => 'ERROR',
-                    'error'    => BLACK_LIST_APPLY_PRODUCT,
-                    'data'     => [
-                        'text' => $this->black_list_lib->get_black_list_text($user_id, $product_id, $sub_product_id)
-                    ]
-                ]
-            );
+            $product_id = $exp_product[0];
+            $sub_product_id = $exp_product[1] ?? 0;
+            $this->load->library('loanmanager/product_lib');
+            $product = $this->product_lib->get_product_info($product_id);
+            $sub_product_list = $this->product_lib->get_sub_product_list();
         }
-*/
+        else
+        {
+            $product = [];
+        }
 
         if ($product) {
 
@@ -997,7 +996,101 @@ class Product extends REST_Controller {
                 $this->load->model('log/log_usercertification_model');
                 $this->log_usercertification_model->insert_many($insert_params);
             }
+            // 正式環境下檢查實名認證，資訊不對就退認證項
+            if (ENVIRONMENT === 'production')
+            {
+                $check_id_card = FALSE;
+                $identity_cert = $this->user_certification_model->get_by([
+                    'investor' => BORROWER,
+                    'status' => CERTIFICATION_STATUS_SUCCEED,
+                    'user_id' => $user_id,
+                    'certification_id' => CERTIFICATION_IDENTITY
+                ]);
+                if ($identity_cert)
+                {
+                    // Avoid checking for the same target too many times.
+                    $this->load->model('log/log_integration_model');
+                    $api_verify_log = $this->log_integration_model->order_by('created_at', 'DESC')->get_by([
+                        'user_certification_id' => $identity_cert->id
+                    ]);
+                    if ( ! empty($api_verify_log))
+                    {
+                        $current_time = date('Y-m-d H:i:s');
+                        $one_day_ago = date("Y-m-d H:i:s", strtotime($current_time.' -1 day'));
+                        if ($api_verify_log->created_at < $one_day_ago)
+                        {
+                            $check_id_card = TRUE;
+                        }
+                    }
+                    if ($check_id_card)
+                    {
+                        $identity_content = json_decode($identity_cert->content, TRUE);
+                        $remark = json_decode($identity_cert->remark, TRUE);
+                        $err_msg = $remark['error'] ?? '';
+                        $result = $this->certification_lib->verify_id_card_info(
+                            $identity_cert->id, $identity_content, $err_msg, $remark['OCR'] ?? []
+                        );
 
+                        // Update user_certification.
+                        $to_update = ['content' => json_encode($identity_content, JSON_INVALID_UTF8_IGNORE)];
+                        if ($err_msg)
+                        {
+                            $remark['error'] = $err_msg;
+                            $to_update['remark'] = json_encode($remark, JSON_INVALID_UTF8_IGNORE);
+                        }
+                        $this->user_certification_model->update($identity_cert->id, $to_update);
+
+                        if ($result[0] && $result[1])  // Existed id card info is wrong.
+                        {
+                            $this->load->model('log/log_usercertification_model');
+                            $this->log_usercertification_model->insert([
+                                'user_certification_id'	=> $identity_cert->id,
+                                'status'				=> CERTIFICATION_STATUS_FAILED,
+                                'change_admin'			=> SYSTEM_ADMIN_ID,
+                            ]);
+                            $rs = \Certification\Cert_identity::set_failed_for_apply($identity_cert, $result[2]);
+                            if ($rs === TRUE)
+                            {
+                                $this->user_certification_model->update($identity_cert->id, [
+                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT
+                                ]);
+                            }
+                            else
+                            {
+                                log_message('error', "實名認證 user_certification {$identity_cert->id} 退件失敗");
+                            }
+                        }
+                        elseif ($result[0] === FALSE && $result[1] === TRUE)
+                        {
+                            $this->load->model('log/log_usercertification_model');
+                            $this->log_usercertification_model->insert([
+                                'user_certification_id' => $identity_cert->id,
+                                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                                'change_admin' => SYSTEM_ADMIN_ID,
+                            ]);
+                            $cert_helper = \Certification\Certification_factory::get_instance_by_model_resource($identity_cert);
+
+                            $cert_helper->result->addMessage(IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE . '，需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+                            $remark = $cert_helper->remark;
+                            $remark['verify_result'] = $cert_helper->result->getAllMessage(MessageDisplay::Backend);
+                            $remark['verify_result_json'] = $cert_helper->result->jsonDump();
+
+                            $rs = $cert_helper->set_review(TRUE, IdentityCertificationResult::$RIS_NO_RESPONSE_MESSAGE);
+                            if ($rs === TRUE)
+                            {
+                                $this->user_certification_model->update($identity_cert->id, [
+                                    'certificate_status' => CERTIFICATION_CERTIFICATE_STATUS_SENT,
+                                    'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE),
+                                ]);
+                            }
+                            else
+                            {
+                                log_message('error', "實名認證 user_certification {$identity_cert->id} 轉人工失敗");
+                            }
+                        }
+                    }
+                }
+            }
             if(method_exists($this, $method)){
                 $this->$method($param,$product,$input);
             }
@@ -1130,6 +1223,7 @@ class Product extends REST_Controller {
 
             if($product){
                 $method = 'type'.$product['type'].'_signing';
+                log_message('debug', "-- Before $method: " . time() . ' --');
                 if(method_exists($this, $method)){
                     $this->$method($param,$product,$input,$target);
                 }
@@ -1221,10 +1315,12 @@ class Product extends REST_Controller {
                 $subloan_target_status     = '';
                 $subloan_target_sub_status = '';
                 if($value->sub_status == 1){
-                    $subloan     = $this->subloan_lib ->get_subloan($value);
-                    $new_target  = $this->target_model->get($subloan->new_target_id);
-                    $subloan_target_status     = $new_target->status;
-                    $subloan_target_sub_status = $new_target->sub_status;
+                    $subloan     = $this->subloan_lib->get_subloan($value);
+                    if($subloan){
+                        $new_target  = $this->target_model->get($subloan->new_target_id);
+                        $subloan_target_status     = $new_target->status;
+                        $subloan_target_sub_status = $new_target->sub_status;
+                    }
                 }
 
                 $reason = $value->reason;
@@ -1251,6 +1347,7 @@ class Product extends REST_Controller {
                     'delay' 			         => intval($value->delay),
                     'status' 			         => intval($value->status),
                     'sub_status' 		         => intval($value->sub_status),
+                    'certificate_status' 		 => intval($value->certificate_status),
                     'associate' 		         => (isset($value->associate) ? $value->associate : false),
                     'subloan_target_status'      => intval($subloan_target_status),
                     'subloan_target_sub_status'  => intval($subloan_target_sub_status),
@@ -1439,14 +1536,10 @@ class Product extends REST_Controller {
         $company_status	= $this->user_info->company;
         $target 			= $this->target_model->get($target_id);
         if(!empty($target)){
-            $product_list = $this->config->item('product_list');
-            $product = isset($product_list[$target->product_id]) ? $product_list[$target->product_id] : $product_list[1];
+            $this->load->library('loanmanager/product_lib');
+            $product = $this->product_lib->get_exact_product($target->product_id, $target->sub_product_id);
+
             $product_name = $product['name'];
-            $sub_product_id = $target->sub_product_id;
-            if($this->is_sub_product($product,$sub_product_id)){
-                $product = $this->trans_sub_product($product,$sub_product_id);
-                $product_name = $product['name'];
-            }
 
             $targetDatas = [];
             $cer_group = [];
@@ -1508,7 +1601,6 @@ class Product extends REST_Controller {
             }
 
             $certification		= [];
-
             $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, TRUE, $target, $product, TRUE);
             $completeness_level = 100 / count($certification_list);
             if(count($cer_group) > 0){
@@ -1529,21 +1621,23 @@ class Product extends REST_Controller {
                     ];
                 }
             }
-            $skip_certification_ids = [];
-            if ( ! empty($target))
+            if ($company_status)
             {
-                $this->load->model('loan/target_meta_model');
-                $target_meta = $this->target_meta_model->as_array()->get_by([
-                    'target_id' => $target->id,
-                    'meta_key' => 'skip_certification_ids'
-                ]);
-                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
-                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
+                $this->load->library('Judicialperson_lib');
+                $naturalPerson = $this->judicialperson_lib->getNaturalPerson($user_id);
+
+                $skip_certification_ids_judicial = $this->certification_lib->get_skip_certification_ids($target, $user_id);
+                $skip_certification_ids_natural = $this->certification_lib->get_skip_certification_ids($target, $naturalPerson->id);
             }
+            else
+            {
+                $skip_certification_ids = $this->certification_lib->get_skip_certification_ids($target);
+            }
+
             if(!empty($certification_list)){
                 $this->load->helper('target');
-                $this->load->helper('user_certification');
                 $this->load->helper('product');
+                $this->load->helper('user_certification');
                 $exist_target_submitted = chk_target_submitted($target->status, $target->certificate_status ?? 0);
 
                 foreach($certification_list as $key => $value){
@@ -1576,11 +1670,33 @@ class Product extends REST_Controller {
 						$content_array_data = new StdClass();
 					}
                     $diploma = $key==8?$value:null;
-                    if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
-                        $truly_failed = certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
+
+                    // 找當前登入的 user 所需的徵信項
+                    $this->load->library('loanmanager/product_lib');
+                    $this->load->model('loan/target_associate_model');
+                    $get_associate_info = $this->target_associate_model->as_array()->get_by(['target_id' => $target->id, 'user_id' => $user_id,]);
+                    $associate_character = ! empty($get_associate_info['character']) ? $get_associate_info['character'] : ASSOCIATES_CHARACTER_REGISTER_OWNER;
+                    $product_certs = $this->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, [$associate_character]);
+
+                    if (in_array($key, $product_certs) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL)
+                    {
+                        $truly_failed = $this->certification_lib->certification_truly_failed($exist_target_submitted, $value['certification_id'] ?? 0,
                             USER_BORROWER,
                             is_judicial_product($target->product_id)
                         );
+
+                        if ($company_status)
+                        {
+                            if (is_judicial_certification($value['id']))
+                            {
+                                $skip_certification_ids = $skip_certification_ids_judicial;
+                            }
+                            else
+                            {
+                                $skip_certification_ids = $skip_certification_ids_natural;
+                            }
+                        }
+
                         if (in_array($key, $skip_certification_ids))
                         {
                             $value['user_status'] = CERTIFICATION_STATUS_SUCCEED;
@@ -1621,7 +1737,8 @@ class Product extends REST_Controller {
                 $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target);
             }
 
-                $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id, $target);
+//                $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id, $target);
+                $credit = $this->credit_lib->get_target_credit($user_id, $target->product_id, $target->sub_product_id, $target_id, $target);
             if (isset($credit['amount']))
             {
                 $this->load->library('credit_lib');
@@ -1714,6 +1831,10 @@ class Product extends REST_Controller {
                 "target_id"		=> $target->id,
                 "status"		=> 3,
             ));
+            if(empty($targetLog)){
+                throw new Exception('no target log was found');
+            }
+
             $targets_start = $targetLog->created_at;
             $currentIndex = strval(floor((time() - $targets_start) / 60 / 60)) + 1;
 //                if(!$currentIndex > 90){
@@ -1825,7 +1946,7 @@ class Product extends REST_Controller {
                 'order_info'            => $order_info,
                 'targetDatas' => $targetDatas,
                 'amount' 			    => intval($target->amount),
-                'loan_amount' 		    => intval($target->loan_amount),
+                'loan_amount'             =>  intval($target->status == 0 ? $target->amount : $target->loan_amount),
                 'platform_fee' 		    => intval($target->platform_fee),
                 'interest_rate' 	    => floatval($target->interest_rate),
                 'instalment' 		    => intval($target->instalment),
@@ -1843,7 +1964,7 @@ class Product extends REST_Controller {
                 'certification'		    => $certification,
                 'amortization_schedule'	=> $amortization_schedule,
                 'biddingHistory' => $biddingHistory,
-                'certificate_status' => (int) $target->certificate_status,
+                'certificate_status' => intval($target->certificate_status),
                 'verify_status' => $this->chk_target_verifying($target->target_data ?? '') ? 1 : 0,
             ];
 
@@ -1906,7 +2027,8 @@ class Product extends REST_Controller {
             if($targets->user_id != $user_id){
                 $associates_target = $this->target_lib->get_associates_target_list($this->user_info->id, $target_id);
                 if ($associates_target) {
-                    if($associates_target->associate['status'] == 0 && !$associates_target->associate['owner']){
+                    # 案件關係人取消成為關係人
+                    if(in_array($associates_target->associate['status'], array(0, 1)) && !$associates_target->associate['owner']){
                         $this->load->model('loan/target_associate_model');
                         $this->target_associate_model->update_by([
                             'target_id' => $target_id,
@@ -1917,7 +2039,10 @@ class Product extends REST_Controller {
                         $this->response(array('result' => 'SUCCESS'));
                     }
                 }
-                $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
+                # 負責人個人帳號可以取消企金案件，不應回傳 APPLY_NO_PERMISSION
+                if ($associates_target && !$associates_target->associate['owner']) {
+                    $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
+                }
             }
 
             if(in_array($targets->status,[
@@ -1933,8 +2058,16 @@ class Product extends REST_Controller {
                     TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET,
                     11
                     ])){
-                    $rs = $this->target_lib->cancel_target($targets,$user_id,$this->user_info->phone);
-                if($rs){
+                $rs = $this->target_lib->cancel_target($targets, $user_id, $this->user_info->phone);
+                if ($rs) {
+                    if ($targets->product_id == 5 &&
+                        in_array($targets->sub_product_id, [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES])
+                    ) {
+                        $cancel_booking_result = $this->target_lib->cancel_booking_and_certification($targets->user_id);
+                        if (!$cancel_booking_result) {
+                            $this->response(array('result' => 'ERROR', 'error' => '取消預約時間失敗'));
+                        }
+                    }
                     $this->response(array('result' => 'SUCCESS'));
                 }
             }
@@ -2565,7 +2698,8 @@ class Product extends REST_Controller {
         $character = $content['character'];
         $characters = $this->config->item('character');
 
-        if($character == 3){
+        if ($character == ASSOCIATES_CHARACTER_SPOUSE)
+        {
             if(!isset($input['guarantor'])){
                 $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
             }
@@ -2573,7 +2707,7 @@ class Product extends REST_Controller {
 
         //同登入的電話號碼(不可加入自己)
         if($content["phone"] == $this->user_info->phone){
-            $this->response(['result' => 'ERROR', 'error' => NO_ALLOW_CHARGE]);
+            $this->response(['result' => 'ERROR', 'error' => NO_ALLOW_CHARGE, 'msg' => '不可與登入的電話號碼相同']);
         }
 
         if(
@@ -2606,7 +2740,7 @@ class Product extends REST_Controller {
         //取得歸戶資料
         $user = $this->user_model->get_by(['id_number' => strval($content['id_number'])]);
 
-        $userId = isset($user->id) ? $user->id : null;
+        $userId = $user->id ?? NULL;
         if ($this->user_info->id == $userId ) {
             $this->response(['result' => 'ERROR','error' => TARGET_SAME_USER]);
         }
@@ -2629,11 +2763,15 @@ class Product extends REST_Controller {
         $this->load->model('loan/target_associate_model');
 
         $associates = $this->target_lib->get_associates_user_data($targetId, 'all', 0, false);
-        foreach ($associates as $key => $value) {
-            if ($character == 1 && $value->character == 1) {
-                return $this->response(['result' => 'ERROR','error' => TARGET_OWNER_EXIST]);
-            }elseif ($content['id_number'] == $value->id_number){
-                return $this->response(['result' => 'ERROR','error' => TARGET_AGITATE_EXIST]);
+        foreach ($associates as $value)
+        {
+            if ($character == ASSOCIATES_CHARACTER_OWNER && $value->character == ASSOCIATES_CHARACTER_OWNER)
+            {
+                $this->response(['result' => 'ERROR', 'error' => TARGET_OWNER_EXIST]);
+            }
+            elseif ($content['id_number'] == $value->id_number)
+            {
+                $this->response(['result' => 'ERROR', 'error' => TARGET_AGITATE_EXIST]);
             }
         }
 
@@ -2643,14 +2781,135 @@ class Product extends REST_Controller {
             $this->response(['result' => 'EXIT_ERROR']);
         }
 
+        if ($userId)
+        {
+            $relationship_mapping = [
+                'A', // 配偶
+                'B', // 血親
+                'C', // 姻親
+                'D', // 股東
+                'E', // 朋友
+                'F', // 本人
+                'G', // 其他
+                'H', // 經營有關之借戶職員
+            ];
+
+            $year_fields = ['StartYear', 'EndYear'];
+            foreach ($year_fields as $year)
+            {
+                if (empty($input[$year]) || ! strtotime($input[$year]))
+                {
+                    $input[$year] = '';
+                    continue;
+                }
+                $input[$year] = (int) $input[$year] - 1911;
+            }
+
+            $this->load->model('user/user_certification_model');
+            switch ($character)
+            {
+                case ASSOCIATES_CHARACTER_REAL_OWNER: // 實際負責人
+                    $uc_id = $this->user_certification_model->insert([
+                        'user_id' => $userId,
+                        'certification_id' => CERTIFICATION_PROFILE,
+                        'investor' => BORROWER,
+                        'content' => json_encode([
+                            'prRelationship' => $relationship_mapping[$content['relationship']] ?? '',
+                            'othRealPrStartYear' => $input['StartYear'],
+                            'othRealPrEndYear' => $input['EndYear'],
+                            'othRealPrSHRatio' => (int) ($input['SHRatio'] ?? 0),
+                            'othRealPrTitle' => $input['PrTitle'] ?? '',
+                        ]),
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                    ]);
+                    if ( ! $uc_id)
+                    {
+                        break;
+                    }
+                    $this->user_certification_model->update_by([
+                        'user_id' => $userId,
+                        'investor' => BORROWER,
+                        'certification_id' => CERTIFICATION_PROFILE,
+                        'id !=' => $uc_id
+                    ], ['status' => CERTIFICATION_STATUS_FAILED]);
+                    break;
+                case ASSOCIATES_CHARACTER_SPOUSE: // 配偶
+
+                    // [前提] 提交個人及公司「聯徵」時，會幫公司、負責人、負責人配偶(若有)新增一條 user_certification
+                    // 若新增當下配偶未歸戶者，會將配偶的 user_certification 掛在負責人名下
+                    // [現] 要將暫時掛在負責人名下的「聯徵A11」，轉到配偶名下，條件：
+                    // 1. user_id = 負責人user_id
+                    // 2. status = CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE
+
+                    $cert_a11_info = $this->user_certification_model->get_by([
+                        'user_id' => $this->user_info->naturalPerson->id, // 負責人user_id
+                        'certification_id' => CERTIFICATION_INVESTIGATIONA11,
+                        'investor' => $this->user_info->investor,
+                        'status' => CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE
+                    ]);
+                    if ( ! empty($cert_a11_info))
+                    {
+                        $this->user_certification_model->update($cert_a11_info->id, [
+                            'user_id' => $userId, // 配偶user_id
+                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW // 待驗證
+                        ]);
+                    }
+                    else
+                    {
+                        $this->user_certification_model->insert([
+                            'user_id' => $userId, // 配偶user_id
+                            'certification_id' => CERTIFICATION_INVESTIGATIONA11,
+                            'investor' => BORROWER,
+                            'content' => json_encode([]),
+                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW // 待驗證
+                        ]);
+                    }
+                    break;
+                case ASSOCIATES_CHARACTER_GUARANTOR_A: // 保證人
+                    $uc_id = $this->user_certification_model->insert([
+                        'user_id' => $userId,
+                        'certification_id' => CERTIFICATION_PROFILE,
+                        'investor' => BORROWER,
+                        'content' => json_encode([
+                            'guOneRelWithPr' => $relationship_mapping[$content['relationship']] ?? '',
+                            'guOneStartYear' => $input['StartYear'],
+                            'guOneEndYear' => $input['EndYear'],
+                            'guOneSHRatio' => (int) ($input['SHRatio'] ?? 0),
+                            'guOneTitle' => $input['PrTitle'] ?? '',
+                        ]),
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                    ]);
+                    if ( ! $uc_id)
+                    {
+                        break;
+                    }
+                    $this->user_certification_model->update_by([
+                        'user_id' => $userId,
+                        'investor' => BORROWER,
+                        'certification_id' => CERTIFICATION_PROFILE,
+                        'id !=' => $uc_id
+                    ], ['status' => CERTIFICATION_STATUS_FAILED]);
+                    break;
+            }
+        }
+
         $productName = '';
         if ($target->sub_product_id == 4) {
             $productName = "孵化基金";
         } elseif ($target->sub_product_id == 5) {
             $productName = "驗資基金";
-        } elseif ($target->product_id == 1002) {
-            // 普匯微企e秒貸
-            $productName = '普匯微企e秒貸';
+        }
+        elseif ($target->product_id == PRODUCT_SK_MILLION_SMEG)
+        {
+            switch ($target->sub_product_id)
+            {
+                case SUB_PRODUCT_ID_SK_MILLION:
+                    $productName = '普匯微企e秒貸';
+                    break;
+                default:
+                    $productName = '普匯信保專案融資';
+                    break;
+            }
         }
 
         $is = $character == 1 ? '借款立約人' : '保證人';
@@ -2660,9 +2919,9 @@ class Product extends REST_Controller {
             $this->sms_lib->notify_target_product_1002_associates(
                 $this->user_info->id,
                 $this->user_info->phone,
-                $this->user_info->name,
+                $naturalPerson->name,
                 $productName,
-                $is
+                $character
             );
         } else {
             $this->sms_lib->notify_target_associates(
@@ -2680,9 +2939,9 @@ class Product extends REST_Controller {
                 // 普匯微企e秒貸
                 $this->notification_lib->notify_target_product_1002_associates(
                     $input['mail'],
-                    $this->user_info->name,
+                    $naturalPerson->name,
                     $productName,
-                    $is
+                    $character
                 );
             }
             else{
@@ -2825,14 +3084,15 @@ class Product extends REST_Controller {
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
-            'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
+            'checkOwner' => $sub_product['checkOwner'] ?? FALSE,
             'status' => $sub_product['status'],
             'allow_age_range' => $sub_product['allow_age_range'] ?? [18, 55],
             'apply_range_s' => $sub_product['apply_range_s'] ?? null,
             'apply_range_e' => $sub_product['apply_range_e'] ?? null,
             'need_upload_images' => $sub_product['need_upload_images'] ?? null,
             'available_company_categories' => $sub_product['available_company_categories'] ?? null,
-            'default_reason' => $sub_product['default_reason'] ?? ''
+            'default_reason' => $sub_product['default_reason'] ?? '',
+            'check_associates_certs' => isset($sub_product['check_associates_certs']) && $sub_product['check_associates_certs'] === TRUE ? TRUE : FALSE,
         );
     }
 
@@ -3022,6 +3282,14 @@ class Product extends REST_Controller {
                 ]);
                 if ($certification && $param['sub_product_id'] == 1) {
                     $this->certification_lib->set_failed($certification->id, '申請新產品。', true);
+                }
+            }
+            if ($param['product_id'] == 5 &&
+                in_array($param['sub_product_id'], [SUB_PRODUCT_ID_HOME_LOAN_SHORT, SUB_PRODUCT_ID_HOME_LOAN_RENOVATION, SUB_PRODUCT_ID_HOME_LOAN_APPLIANCES])
+            ) {
+                $cancel_booking_result = $this->target_lib->cancel_booking_and_certification($param['user_id']);
+                if (!$cancel_booking_result) {
+                    $this->response(array('result' => 'ERROR', 'error' => '取消預約時間失敗'));
                 }
             }
             // 認證逾期判斷處理
@@ -3320,14 +3588,31 @@ class Product extends REST_Controller {
 
         //上傳檔案欄位
         if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
+            log_message('debug', '-- Before upload person image: '. time() . ' --');
             $image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'signing_target');
+            log_message('debug', '-- After upload person image: '. time() . ' --');
             if($image){
                 $param['person_image'] = $image;
             }else{
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                $this->response(array('result' => 'ERROR, upload person_image failed','error' => INPUT_NOT_CORRECT ));
             }
         }else{
-            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            $this->response(array('result' => 'ERROR, no person_image','error' => INPUT_NOT_CORRECT ));
+        }
+
+        if ($target->product_id == PRODUCT_ID_HOME_LOAN && $target->sub_product_id == SUB_PRODUCT_ID_HOME_LOAN_SHORT) {
+            if (!isset($_FILES['deed_image']) || empty($_FILES['deed_image'])) {
+                $this->response(array('result' => 'ERROR, no deed_image', 'error' => INPUT_NOT_CORRECT));
+            }
+            log_message('debug', '-- Before upload deed image: ' . time() . ' --');
+            $image = $this->s3_upload->image($_FILES, 'deed_image', $user_id, 'signing_target');
+            log_message('debug', '-- After upload deed image: ' . time() . ' --');
+            if (!$image) {
+                $this->response(array('result' => 'ERROR, upload deed_image failed', 'error' => INPUT_NOT_CORRECT));
+            }
+            $target_data = json_decode($target->target_data, true);
+            $target_data['deed_image'] = $image;
+            $param['target_data'] = json_encode($target_data);
         }
 
         $this->load->library('loanmanager/product_lib');
@@ -3359,12 +3644,13 @@ class Product extends REST_Controller {
             && $bank_account->verify == 1) {
             $targetData = json_decode($target->target_data);
             $faceDetect = isset($targetData->autoVerifyLog)
-                ? count($targetData->autoVerifyLog) >= 2
-                    ? false : true
-                : true;
+            ? count($targetData->autoVerifyLog) < 2
+            : true;
             if ($faceDetect) {
                 $this->load->library('certification_lib');
+                log_message('debug', '-- Before verify signing face: ' . time() . ' --');
                 $faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $param['person_image']);
+                log_message('debug', '-- After verify signing face: ' . time() . ' --');
                 if (isset($faceDetect_res['error']) && $faceDetect_res['error'] == '') {
                     $target->status = TARGET_WAITING_VERIFY;
                     $targetData->autoVerifyLog[] = [
@@ -3617,6 +3903,16 @@ class Product extends REST_Controller {
         return $insert;
     }
 
+    private function LJ2P1($param, $product, $input)
+    {
+        return $this->J2($param, $product, $input);
+    }
+
+    private function LJ3P1($param, $product, $input)
+    {
+        return $this->J2($param, $product, $input);
+    }
+
     private function associatesapply($param, $product, $input)
     {
         $product_id = $param["product_id"];
@@ -3782,8 +4078,8 @@ class Product extends REST_Controller {
                 ];
                 continue;
             }
-            $stage_cert_list = call_user_func_array('array_merge', $product['certifications_stage']);
-            $need_chk_cert = array_diff($stage_cert_list, $product['option_certifications']);
+            $product_certs = $this->product_lib->get_product_certs_by_product_id($value['product_id'], $value['sub_product_id'], []);
+            $need_chk_cert = array_diff($product_certs, $product['option_certifications']);
             $this->load->model('user_certification_model');
             $cert_list = $this->config->item('certifications');
             $failed_cert_reason = [];
@@ -4029,7 +4325,6 @@ class Product extends REST_Controller {
 
         $target = $this->target_model->get_by([
             'id' => $input['target_id'],
-            'user_id' => $this->user_info->id
         ]);
         if (empty($target))
         {
@@ -4048,25 +4343,37 @@ class Product extends REST_Controller {
             $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '欲略過的徵信資料編號有誤']);
         }
 
-        $this->load->model('loan/target_meta_model');
-        $rs = $this->target_meta_model->get_by([
-            'target_id' => $target->id,
-            'meta_key' => 'skip_certification_ids'
-        ]);
-
-        if (isset($rs))
+        if ($product['check_associates_certs'] ?? FALSE)
         {
-            $is_succeed = $this->target_meta_model->update($rs->id, [
-                'meta_value' => json_encode($skip_cert_ids),
-            ]);
+            $this->load->helper('user_certification');
+            $skip_cert_ids_judicial = [];
+            $skip_cert_ids_natural = [];
+            foreach ($skip_cert_ids as $value)
+            {
+                if (is_judicial_certification($value))
+                {
+                    $skip_cert_ids_judicial[] = $value;
+                }
+                else
+                {
+                    $skip_cert_ids_natural[] = $value;
+                }
+            }
+
+            if ($this->user_info->id == $target->user_id)
+            {
+                $is_succeed_j = $this->update_skip_cert($target->id, $this->user_info->id, $skip_cert_ids_judicial);
+                $is_succeed_n = $this->update_skip_cert($target->id, $this->user_info->naturalPerson->id, $skip_cert_ids_natural);
+                $is_succeed = $is_succeed_j && $is_succeed_n;
+            }
+            else
+            {
+                $is_succeed = $this->update_skip_cert($target->id, $this->user_info->id, $skip_cert_ids_natural);
+            }
         }
         else
-        {
-            $is_succeed = $this->target_meta_model->insert([
-                'target_id' => $target->id,
-                'meta_key' => 'skip_certification_ids',
-                'meta_value' => json_encode($skip_cert_ids),
-            ]);
+        { // default
+            $is_succeed = $this->update_skip_cert($target->id, 0, $skip_cert_ids);
         }
 
         if ($is_succeed)
@@ -4076,6 +4383,121 @@ class Product extends REST_Controller {
         else
         {
             $this->response(['result' => 'ERROR', 'error' => EXIT_DATABASE]);
+        }
+    }
+
+    private function update_skip_cert($target_id, $user_id, $skip_cert_ids)
+    {
+        if (empty($skip_cert_ids))
+        {
+            return TRUE;
+        }
+
+        $param = [
+            'target_id' => $target_id,
+            'meta_key' => 'skip_certification_ids',
+            'user_id' => $user_id
+        ];
+
+        $this->load->model('loan/target_meta_model');
+        $rs = $this->target_meta_model->get_by($param);
+        if (isset($rs))
+        {
+            $tmp_meta_value = $rs->meta_value ?? '';
+            $tmp_meta_value = json_decode($tmp_meta_value, TRUE);
+            $skip_cert_ids = array_unique(array_merge($tmp_meta_value, $skip_cert_ids));
+            $is_succeed = $this->target_meta_model->update($rs->id, [
+                'meta_value' => json_encode($skip_cert_ids),
+            ]);
+        }
+        else
+        {
+            $is_succeed = $this->target_meta_model->insert([
+                'target_id' => $target_id,
+                'meta_key' => 'skip_certification_ids',
+                'meta_value' => json_encode($skip_cert_ids),
+                'user_id' => $user_id
+            ]);
+        }
+
+        return $is_succeed;
+    }
+
+    // 取得可預約時段
+    public function booking_timetable_get()
+    {
+        try
+        {
+            $start_date = $this->input->get('start_date');
+            $end_date = $this->input->get('end_date');
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->get_whole_booking_timetable($start_date, $end_date);
+
+            $this->response($response);
+        }
+        catch (Exception $e)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+    }
+
+    // 取得使用者的預約列表
+    public function user_booking_list_get()
+    {
+        try
+        {
+            $target_id = $this->input->get('target_id');
+            $user_id = $this->user_info->id;
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->get_booked_list_by_user($target_id, $user_id);
+
+            $this->response($response);
+        }
+        catch (Exception $e)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+    }
+
+    // 使用者預約時段
+    public function booking_create_post()
+    {
+        try
+        {
+            $target_id = $this->input->post('target_id');
+            $user_id = $this->user_info->id;
+            $date = $this->input->post('date');
+            $time = $this->input->post('time');
+
+            if (empty($target_id))
+            {
+                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+            }
+
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->create_booking($target_id, $user_id, $date, $time);
+
+            $this->response($response);
+        }
+        catch (Exception $e)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+    }
+
+    // 使用者取消預約時段
+    public function booking_cancel_post($booking_id = '')
+    {
+        try
+        {
+            $this->load->library('booking_lib');
+            $response = $this->booking_lib->cancel_booking($booking_id);
+
+            $this->response($response);
+        }
+        catch (Exception $e)
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
     }
 }

@@ -260,12 +260,14 @@ class Target_model extends MY_Model
     }
 
     public function getUserStatusByTargetId($targetIds) {
-        $this->db->select('*')
+        $this->db
+            ->select('user_id')
+            ->select('created_at')
             ->from("`p2p_loan`.`targets`")
             ->where_in('id', $targetIds);
         $subquery = $this->db->get_compiled_select('', TRUE);
         $this->db
-            ->select('t.user_id, COUNT(*) as total_count')
+            ->select('t.user_id, COUNT(1) as total_count')
             ->from('`p2p_loan`.`targets` AS `t`')
             ->join("($subquery) as `r`", "`t`.`user_id` = `r`.`user_id`")
             ->where('t.created_at < r.created_at')
@@ -344,6 +346,10 @@ class Target_model extends MY_Model
      * @return mixed
      */
     public function getDelayedTarget($targetIds) {
+        if(empty($targetIds))
+        {
+            return [];
+        }
         $this->db->select('target_id, entering_date, user_from, user_to')
             ->from("`p2p_transaction`.`transactions`")
             ->where_in('target_id', $targetIds)
@@ -459,14 +465,54 @@ class Target_model extends MY_Model
 			switch ($key) {
 				case 'tsearch': //搜尋(使用者代號(UserID)/姓名/身份證字號/案號)
 					if (!empty($input['tsearch'])) {
-						$this->db
-							->join('p2p_user.users u', 'u.id=t.user_id')
-							->group_start()
-							->like('u.id', $input['tsearch'])
-							->or_like('u.name', $input['tsearch'])
-							->or_like('u.id_number', $input['tsearch'])
-							->or_like('t.target_no', $input['tsearch'])
-							->group_end();
+                        $this->db->join('p2p_user.users u', 'u.id=t.user_id');
+                        $this->db->group_start();
+                        $tsearch = $input['tsearch'];
+                        if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
+                        {
+                            $user_ids = [];
+                            $name = $this->user_model->get_many_by(array(
+                                'name like '    => '%'.$tsearch.'%',
+                                'status'	    => 1
+                            ));
+                            if($name){
+                                foreach($name as $k => $v){
+                                    $user_ids[] = $v->id;
+                                }
+                            }
+                            else
+                            {
+                                $user_ids[] = 0;
+                            }
+                            $this->db->like('u.id', $user_ids);
+                        }else{
+                            if(preg_match_all('/[A-Za-z]/', $tsearch)==1){
+                                $user_ids=[];
+                                $id_number	= $this->user_model->get_many_by(array(
+                                    'id_number  like'	=> '%'.$tsearch.'%',
+                                    'status'	        => 1
+                                ));
+                                if($id_number){
+                                    foreach($id_number as $k => $v){
+                                        $user_ids[] = $v->id;
+                                    }
+                                }
+                                else
+                                {
+                                    $user_ids[] = 0;
+                                }
+
+                                $this->db->like('u.id', $user_ids);
+                            }
+                            elseif(preg_match_all('/\D/', $tsearch)==0){
+                                $this->db->like('u.id', $tsearch);
+                            }
+                            else{
+//                                $where['target_no like'] = '%'.$tsearch.'%';
+                                $this->db->like('t.target_no', $tsearch);
+                            }
+                        }
+                        $this->db->group_end();
 					}
 					break;
 				case 'sdate': //從
@@ -604,14 +650,47 @@ class Target_model extends MY_Model
             switch ($key) {
                 case 'tsearch': //搜尋(使用者代號(UserID)/姓名/身份證字號/案號)
                     if (!empty($input['tsearch'])) {
-                        $this->db
-                            ->join('p2p_user.users u', 'u.id=t.user_id')
-                            ->group_start()
-                            ->like('u.id', $input['tsearch'])
-                            ->or_like('u.name', $input['tsearch'])
-                            ->or_like('u.id_number', $input['tsearch'])
-                            ->or_like('t.target_no', $input['tsearch'])
-                            ->group_end();
+                        $this->db->join('p2p_user.users u', 'u.id=t.user_id');
+                        $this->db->group_start();
+                        $tsearch = $input['tsearch'];
+                        if (preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch)) {
+                            $user_ids = [];
+                            $name = $this->user_model->get_many_by(array(
+                                'name like ' => '%' . $tsearch . '%',
+                                'status' => 1
+                            ));
+                            if ($name) {
+                                foreach ($name as $k => $v) {
+                                    $user_ids[] = $v->id;
+                                }
+                            } else {
+                                $user_ids[] = 0;
+                            }
+                            $this->db->like('u.id', $user_ids);
+                        } else {
+                            if (preg_match_all('/[A-Za-z]/', $tsearch) == 1) {
+                                $user_ids = [];
+                                $id_number = $this->user_model->get_many_by(array(
+                                    'id_number  like' => '%' . $tsearch . '%',
+                                    'status' => 1
+                                ));
+                                if ($id_number) {
+                                    foreach ($id_number as $k => $v) {
+                                        $user_ids[] = $v->id;
+                                    }
+                                } else {
+                                    $user_ids[] = 0;
+                                }
+
+                                $this->db->like('u.id', $user_ids);
+                            } elseif (preg_match_all('/\D/', $tsearch) == 0) {
+                                $this->db->like('u.id', $tsearch);
+                            } else {
+//                                $where['target_no like'] = '%'.$tsearch.'%';
+                                $this->db->like('t.target_no', $tsearch);
+                            }
+                        }
+                        $this->db->group_end();
                     }
                     break;
                 case 'sdate': //從
@@ -671,16 +750,24 @@ class Target_model extends MY_Model
 
     /** 依targets.status取得不重複的使用者ID
      * @param array $status
+     * @param int $company_Status : 是否為法人 (p2p_user.users.company_status)
+     * @param array $where
      * @return mixed
      */
-    public function get_distinct_user_by_status(array $status)
+    public function get_distinct_user_by_status(array $status, int $company_Status = 0, array $where = [])
     {
-        $this->db
-            ->select('DISTINCT(user_id) AS user_id')
+        $this->_database
+            ->select('DISTINCT(targets.user_id) AS user_id')
             ->from('p2p_loan.targets')
-            ->where_in('status', $status);
+            ->join('p2p_user.users', 'users.id=targets.user_id AND users.company_status=' . $company_Status)
+            ->where_in('targets.status', $status);
 
-        return $this->db->get()->result_array();
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
     }
 
     public function get_apply_target_count($where)
@@ -760,10 +847,10 @@ class Target_model extends MY_Model
      * @param int $investor : 投資人/借款人
      * @param array $cert_status : 徵信項狀態 (參考constant(CERTIFICATION_STATUS_*))
      * @param int $product_id : 產品ID
-     * @param $has_stage_target : 是否撈取階段上架的相關申貸案 (TRUE=只撈階段上架 FALSE=不撈取階段上架 NULL=不管是不是階段上架都撈)
+     * @param array $sub_product_id
      * @return mixed
      */
-    public function get_risk_person_list(int $investor, array $cert_status, int $product_id, $has_stage_target = NULL)
+    public function get_risk_person_list(int $investor, array $cert_status, int $product_id, array $sub_product_id)
     {
         $subquery = $this->db
             ->select('DISTINCT(user_id) AS user_id')
@@ -773,10 +860,18 @@ class Target_model extends MY_Model
             ->get_compiled_select(NULL, TRUE);
 
         $this->db
-            ->select('t.*')
+            ->select('t.id')
+            ->select('t.target_no')
+            ->select('t.user_id')
+            ->select('t.product_id')
+            ->select('t.sub_product_id')
+            ->select('t.certificate_status')
+            ->select('t.status')
+            ->select('t.updated_at')
+            ->select('t.created_at')
             ->from('p2p_loan.targets t')
             ->join("({$subquery}) AS a", 'a.user_id=t.user_id')
-            ->where('t.product_id<', PRODUCT_FOREX_CAR_VEHICLE)
+            ->where('t.product_id<', PRODUCT_FOR_JUDICIAL)
             ->where_in('t.status', [
                 TARGET_WAITING_APPROVE,
                 TARGET_WAITING_SIGNING,
@@ -785,16 +880,8 @@ class Target_model extends MY_Model
                 TARGET_ORDER_WAITING_VERIFY
             ])
             ->where('t.product_id', $product_id)
+            ->where_in('t.sub_product_id', $sub_product_id)
             ->order_by('t.id', 'ASC');
-
-        if ($has_stage_target === FALSE)
-        {
-            $this->db->where('t.sub_product_id !=', STAGE_CER_TARGET);
-        }
-        elseif ($has_stage_target === TRUE)
-        {
-            $this->db->where('t.sub_product_id', STAGE_CER_TARGET);
-        }
 
         return $this->db->get()->result();
     }
@@ -849,8 +936,12 @@ class Target_model extends MY_Model
     {
         $this->db->select('source, status, target_id, user_to, amount')
             ->from("`p2p_transaction`.`transactions`")
-            ->where('status', TRANSACTION_STATUS_TO_BE_PAID)
-            ->where('user_to', $userId);
+            ->where('status', TRANSACTION_STATUS_TO_BE_PAID);
+
+        if (!empty($userId)){
+            $this->db->where('user_to', $userId);
+        }
+        
         if ( ! empty($sourceList))
         {
             $this->db->where_in('source', $sourceList);
@@ -1028,6 +1119,21 @@ class Target_model extends MY_Model
     }
 
     /**
+     * 依案件 id 取得對應的產品 id
+     * @param $id
+     * @return mixed
+     */
+    public function get_product_id_by_id($id)
+    {
+        return $this->db
+            ->select(['product_id', 'sub_product_id'])
+            ->from('p2p_loan.targets')
+            ->where('id', $id)
+            ->get()
+            ->first_row('array');
+    }
+
+    /**
      * @param $target_id
      * @param $update_param
      * @param $where_param
@@ -1065,6 +1171,22 @@ class Target_model extends MY_Model
             ->where('id', $id)
             ->get()
             ->first_row('array');
+    }
+
+    public function get_newest_no_by_condition($where)
+    {
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+        $target = $this->_database
+            ->select('target_no')
+            ->from('p2p_loan.targets')
+            ->order_by('created_at', 'desc')
+            ->get()
+            ->first_row('array');
+
+        return $target['target_no'] ?? '';
     }
 
     public function get_specific_product_status($product_id, $status_list = [TARGET_WAITING_APPROVE])
@@ -1190,7 +1312,50 @@ class Target_model extends MY_Model
             ->get()
             ->result_array();
     }
-    
+
+    public function get_un_verified_name_7days_target_list()
+    {
+        $sevenDaysAgo = strtotime('-7 days');
+        $query_target_join_user_cert = $this->db
+            ->from('p2p_loan.targets t')
+            ->select('t.id')
+            ->select('t.user_id')
+            ->select('t.status as target_status')
+            ->select('t.reason')
+            ->select('t.order_id')
+            ->select('t.created_at')
+            ->join('p2p_user.user_certification uc', 'uc.user_id = t.user_id', 'LEFT')
+            ->select('uc.status as certification_status')
+            ->select('uc.certification_id')
+            ->where('t.status', TARGET_WAITING_APPROVE)
+            ->where('uc.certification_id', CERTIFICATION_IDENTITY)
+            ->where_in('uc.status', [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_FAILED])
+            ->where('t.created_at <=', $sevenDaysAgo);
+
+        return $query_target_join_user_cert->get()->result();
+    }
+
+    public function get_verified_name_but_others_not_fullfiled_14days_target_list()
+    {
+        $fourteenDaysAgo = strtotime('-14 days');
+        $query_target_join_user_cert = $this->db
+            ->from('p2p_loan.targets t')
+            ->select('t.id')
+            ->select('t.user_id')
+            ->select('t.product_id')
+            ->select('t.status as target_status')
+            ->select('t.created_at')
+            ->join('p2p_user.user_certification uc', 'uc.user_id = t.user_id', 'LEFT')
+            ->select('uc.status as certification_status')
+            ->select('uc.certification_id')
+            ->where('uc.certification_id !=', CERTIFICATION_IDENTITY) //這個function只檢查實名以外的項目
+            ->where('t.status', TARGET_WAITING_APPROVE)
+            ->where_in('uc.status', [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_FAILED, CERTIFICATION_STATUS_NOT_COMPLETED])
+            ->where('t.created_at <=', $fourteenDaysAgo);
+
+        return $query_target_join_user_cert->get()->result();
+    }
+
     public function get_targets_with_normal_transactions_count($user_id)
     {
         $sub_query1 = $this->db
@@ -1244,11 +1409,29 @@ class Target_model extends MY_Model
             ->where('csr.admin_id <>', SYSTEM_ADMIN_ID)
             ->get_compiled_select(NULL, TRUE);
 
+        $sub_query3 = $this->db
+            ->select('name')
+            ->select('id')
+            ->from('p2p_admin.admins')
+            ->get_compiled_select(NULL, True);
+
+        $sub_query4 = $this->db
+        ->select('ad.name')
+        ->select('tcl.target_id')
+        ->from('p2p_log.targets_change_log as tcl')
+        ->join("($sub_query3) ad", 'ad.id = tcl.change_admin', 'JOIN')
+        ->where('tcl.status = 9')
+        // 只需要去一次log紀錄就好
+        ->group_by('tcl.target_id')
+        ->get_compiled_select(NULL, TRUE);
+
             $this->_database
             ->select('t.*')
             ->select('a.name AS credit_sheet_reviewer')
+            ->select('b.name AS fail_target_reviewer')
             ->from('p2p_loan.targets t')
-            ->join("({$sub_query2}) a", 'a.target_id = t.id', 'LEFT');
+            ->join("({$sub_query2}) a", 'a.target_id = t.id', 'LEFT')
+            ->join("({$sub_query4}) b", 'b.target_id = t.id', 'LEFT');
         if ( ! empty($target_condition))
         {
             $this->_set_where([$target_condition]);

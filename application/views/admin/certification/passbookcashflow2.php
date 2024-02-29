@@ -102,49 +102,40 @@
                         </div>
                         <div class="col-lg-6">
                             <h1>圖片/文件</h1>
-                            <fieldset >
+                            <fieldset>
                                 <div class="form-group">
-                                    <label>金流證明</label><br>
+                                    <label>近六個月往來存摺封面及內頁</label><br>
                                     <?php
                                     if ( ! empty($content['passbook_image']))
                                     {
                                         $content['passbook_image'] = ! is_array($content['passbook_image']) ? array($content['passbook_image']) : $content['passbook_image'];
                                         foreach ($content['passbook_image'] as $key => $value)
-                                        {
-                                            if (empty($value)) continue; ?>
+                                        { ?>
                                             <a href="<?= $value ?>" data-fancybox="images">
                                                 <img src="<?= $value ?>" style='width:30%;max-width:400px'>
                                             </a>
                                         <?php }
-                                    } ?>
-                                </div>
-                                <div class='form-group'>
-                                    <label>其他</label><br>
-                                    <?php
+                                    }
                                     if ( ! empty($content['file_list']['image']))
-                                    { // 擴大信保【後】的Web上傳圖片
+                                    { // Web上傳圖片
                                         foreach ($content['file_list']['image'] as $key => $value)
-                                        {
-                                            if (empty($value['url'])) continue; ?>
+                                        { ?>
                                             <a href="<?= $value['url'] ?>" data-fancybox="images">
-                                                <img src="<?= $value['url'] ?>"
-                                                     style='width:30%;max-width:400px'>
+                                                <img src="<?= $value['url'] ?>" style='width:30%;max-width:400px'>
                                             </a>
                                         <?php }
-                                        echo '<hr/>';
                                     }
                                     if ( ! empty($content['file_list']['file']))
-                                    { // 擴大信保【後】的Web上傳PDF
+                                    { // Web上傳PDF
                                         foreach ($content['file_list']['file'] as $key => $value)
-                                        {
-                                            if (empty($value['url'])) continue; ?>
+                                        { ?>
                                             <a href="<?= $value['url'] ?>">
                                                 <i class="fa fa-file"> <?= $value['file_name'] ?? '檔案' ?></i>
                                             </a>
                                         <?php }
-                                        echo '<hr/>';
                                     } ?>
-                                    <label></label><br>
+                                    <hr/>
+                                    <label>其他</label><br>
                                     <?php
                                     if ( ! empty($content['pdf']) && is_array($content['pdf']))
                                     {

@@ -1,0 +1,22 @@
+{
+    "request_image_list": [
+        {
+            "MsgNo": "202007070000002",
+            "CompId": "12345678",
+            "CaseNo": "2020070700000011",
+            "DocType": "A01",
+            "DocSeq": 1,
+            "DocUrl": "https://...",
+            "DocFileType": 2
+        },
+        {
+            "MsgNo": "202007070000002",
+            "CompId": "12345678",
+            "CaseNo": "2020070700000011",
+            "DocType": "A01",
+            "DocSeq": 1,
+            "DocUrl": "https://...",
+            "DocFileType": 2
+        }
+    ]
+}

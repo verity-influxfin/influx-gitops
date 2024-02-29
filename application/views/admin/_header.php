@@ -27,7 +27,7 @@
     <link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="//cdn.datatables.net/responsive/1.0.7/css/responsive.dataTables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
-    
+
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <!-- /#wrapper -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
@@ -142,10 +142,20 @@
             url = new URL(location.href)
             const tab1 = document.querySelector('#tab1')
             const tab2 = document.querySelector('#tab2')
+            const tab3 = document.querySelector('#tab3')
             if(url.searchParams.get('tab')){
-                if(url.searchParams.get('tab')==='enterprise'){
-                    tab2.classList.add('active')
-                    tab1.classList.remove('active')
+                $('.category-tab-item').removeClass('active');
+                switch (url.searchParams.get('tab'))
+                {
+                    case 'enterprise':
+                        tab2.classList.add('active');
+                        break;
+                    case 'home_loan':
+                        tab3.classList.add('active');
+                        break;
+                    case 'individual':
+                    default:
+                        tab1.classList.add('active');
                 }
             }
 

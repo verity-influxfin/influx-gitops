@@ -101,7 +101,7 @@ class Creditmanagement extends MY_Admin_Controller
      * @apiSuccess {Object} result
      */
     public function approve() {
-        if(!isset($this->inputData['group']) || !isset($this->inputData['score']) || !isset($this->inputData['opinion'])) {
+        if (!isset($this->inputData['target_id']) || !isset($this->inputData['group']) || !isset($this->inputData['score']) || !isset($this->inputData['opinion'])) {
             $this->json_output->setStatusCode(400)->setResponse(['lack of parameter'])->send();
         }
 
@@ -115,7 +115,52 @@ class Creditmanagement extends MY_Admin_Controller
                 $this->json_output->setStatusCode(400)->setResponse(['msg' => $response['msg']])->send();
             }
         }
-        $user_id = $this->target_model->get_user_id_by_id($this->inputData['target_id']);
+
+        // 檢查是否有此案件
+        $target = $this->target_model->get($this->inputData['target_id']);
+        if(!isset($target)){
+                $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此案件'])->send();
+        }
+
+        $this->load->model('loan/credit_model');
+        $credit = $this->credit_model->get_by([
+            'user_id'=>$target->user_id,
+            'product_id'=>$target->product_id,
+            'sub_product_id'=>$target->sub_product_id,
+            'instalment'=>$target->instalment,
+            'status'=>1
+        ]);
+        if(!isset($credit)){
+                $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此額度'])->send();
+        }
+        // 如果調整過分數、調整過額度，則檢查是否為新用戶、是否年滿35歲
+        if ((isset($this->inputData['score']) && $this->inputData['score'] != 0)
+            || (isset($this->inputData['fixed_amount']) && $this->inputData['fixed_amount'] != $credit->amount)
+        ) {
+            // 檢查使用者是否為新用戶
+            $user_id = $this->target_model->get_user_id_by_id($this->inputData['target_id']);
+            if (!isset($user_id['user_id'])) {
+                $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此用戶id'])->send();
+            }
+            $user_info = $this->user_model->get($user_id['user_id']);
+            if (!isset($user_info)) {
+                $this->json_output->setStatusCode(400)->setResponse(['msg' => '查無此用戶'])->send();
+            }
+            $past_targets = $this->target_model->get_many_by([
+                'user_id' => $user_id,
+                'status' => [5, 10],
+            ]);
+            // 這裡新戶的算法只要看 是否放款過的用戶
+            $is_new_user = count($past_targets) == 0;
+            if ($is_new_user) {
+                $age = get_age($user_info->birthday);
+                // 新戶年齡不可超過35歲
+                if ($age >= 35) {
+                    $this->json_output->setStatusCode(400)->setResponse(['msg' => '借款人年齡超過35歲，不可調整'])->send();
+                }
+            }
+        }
+
         $this->load->model('loan/target_meta_model');
         if (isset($this->inputData['job_company_taiwan_1000_point']) && is_numeric($this->inputData['job_company_taiwan_1000_point']))
         {
@@ -198,6 +243,8 @@ class Creditmanagement extends MY_Admin_Controller
     private function _chk_certification($target_id)
     {
         $response = $this->target_model->get($target_id);
+        $this->load->library('loanmanager/product_lib');
+        $product_certs = $this->product_lib->get_product_certs_by_product_id($response->product_id, $response->sub_product_id, []);
 
         if ( ! isset($response->product_id) || ! isset($response->sub_product_id))
         {
@@ -221,11 +268,16 @@ class Creditmanagement extends MY_Admin_Controller
         // 必填的驗證項
         if (isset($product_detail['backend_option_certifications']))
         { // 過濾掉[後台]上選填的徵信項
-            $certification_need_chk = array_diff($product_detail['certifications'], $product_detail['backend_option_certifications']);
+            $certification_need_chk = array_diff($product_certs, $product_detail['backend_option_certifications']);
         }
         else
         {
-            $certification_need_chk = $product_detail['certifications'];
+            $certification_need_chk = $product_certs;
+        }
+        $this->load->library('certification_lib');
+        if($this->certification_lib->associate_certs_are_succeed($response) == FALSE)
+        {
+            return ['result' => FALSE, 'msg' => '尚有自然關係人未完成'];
         }
 
         foreach ($certification_need_chk as $certification_id)

@@ -30,6 +30,10 @@
 				}
 			</script>
             <!-- /.row -->
+            <div class="category-tab">
+                <button class="category-tab-item active" id="tab1" onclick="location.search = 'tab=personal'">個金</button>
+                <button class="category-tab-item" id="tab2" onclick="location.search = 'tab=enterprise'">企金</button>
+            </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -46,6 +50,7 @@
                                 <table class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                         <tr>
+                                        <?php if(($category ?? '') != 'enterprise') { ?>
                                             <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a></th>
                                             <th>產品</th>
                                             <th>會員 ID</th>
@@ -65,6 +70,24 @@
                                             <th>申請日期</th>
 											<th>核准日期</th>
                                             <th>Detail</th>
+                                        <?php } else { ?>
+                                            <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a></th>
+                                            <th>產品</th>
+                                            <th>會員 ID</th>
+                                            <th>信用等級</th>
+                                            <th>公司名稱</th>
+                                            <th>放款金額</th>
+                                            <th>年化利率</th>
+                                            <th>貸放期間</th>
+                                            <th>計息方式</th>
+                                            <th>已還款期數</th>
+                                            <th>放款日期</th>
+                                            <th>逾期狀況</th>
+                                            <th>狀態</th>
+                                            <th>申請日期</th>
+                                            <th>核准日期</th>
+                                            <th>Detail</th>
+                                        <?php } ?>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -74,6 +97,7 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
+                                        <?php if(($category ?? '') != 'enterprise') { ?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
 											 <td>
 												<input class="targets" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:"" ?>" />
@@ -100,9 +124,35 @@
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><?=isset($value->credit)?date("Y-m-d H:i:s",$value->credit->created_at):"" ?></td>
 											<td><a href="<?=admin_url('target/target_finished_detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
-                                        </tr>                                        
-									<?php 
-										}}
+                                        </tr>
+                                    <?php } else { ?>
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?>">
+                                            <td>
+                                                <input class="targets" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:'' ?>" />
+                                                <?=isset($value->target_no)?$value->target_no:'' ?>
+                                            </td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></td>
+                                            <td>
+                                                <a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_id) ?>" >
+                                                    <?=isset($value->user_id)?$value->user_id:'' ?>
+                                                </a>
+                                            </td>
+                                            <td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
+                                            <td><?= $value->company??'' ?></td>
+                                            <td><?= $value->loan_amount ?? '' ?></td>
+                                            <td><? echo isset($value->interest_rate)&&$value->interest_rate != ''?floatval($value->interest_rate).'%':'-' ?></td>
+                                            <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
+                                            <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
+                                            <td><?=isset($value->paid_instalment)?$value->paid_instalment.'期':'' ?></td>
+                                            <td><?= $value->loan_date ?? '' ?></td>
+                                            <td><?= (($value->delay ?? 0) == 1 ? '已逾期' : '未逾期') ?></td>
+                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?></td>
+                                            <td><?= isset($value->created_at) ? date("Y-m-d",$value->created_at) : '-' ?></td>
+                                            <td><?= $value->loan_date ?? '' ?></td>
+                                            <td><a href="<?=admin_url('target/target_finished_detail')."?id=".$value->id ?>" class="btn btn-default" target="_blank" rel="noopener noreferrer">Detail</a></td>
+                                        </tr>
+									<?php
+										}}}
 									?>
                                     </tbody>
                                 </table>

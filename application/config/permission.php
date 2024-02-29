@@ -85,6 +85,7 @@ $config['permission'] = [
             'credits' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'final_validations' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'final_validations_detail' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'read'],
+            'get_credit_message' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'read'],
             'target_loan' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'update'],
             'target_loan_detail' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'read'],
             'subloan_success' => ['model' => 'Target', 'submodel' => 'waiting_loan', 'action' => 'update'],
@@ -126,6 +127,7 @@ $config['permission'] = [
             'obligations' => ['name' => '全部列表(New)'],
             'waiting_transfer' => ['name' => '債轉待收購'],
             'waiting_transfer_success' => ['name' => '債轉待放款'],
+            'transfer_sheet_success' => ['name' => '債轉移轉成功'],
             'bidding' => ['name' => '已投標'],
         ],
         'detail' => [
@@ -136,7 +138,10 @@ $config['permission'] = [
             'obligations' => ['model' => 'Transfer', 'submodel' => 'obligations', 'action' => 'read'],
             'waiting_transfer' => ['model' => 'Transfer', 'submodel' => 'waiting_transfer', 'action' => 'read'],
             'waiting_transfer_success' => ['model' => 'Transfer', 'submodel' => 'waiting_transfer_success', 'action' => 'read'],
+            'transfer_sheet_success' => ['model' => 'Transfer', 'submodel' => 'transfer_sheet_success', 'action' => 'read'],
             'bidding' => ['model' => 'Transfer', 'submodel' => 'bidding', 'action' => 'read'],
+            'get_transfer_success' => ['model' => 'Transfer', 'submodel' => 'transfer_sheet_success', 'action' => 'read'],
+            'transfer_sheet_spreadsheet' => ['model' => 'Transfer', 'submodel' => 'transfer_sheet_success', 'action' => 'read'],
             'assets_export_new' => ['model' => 'Transfer', 'submodel' => 'obligations', 'action' => 'read'],
             'transfer_assets_export' => ['model' => 'Transfer', 'submodel' => 'index', 'action' => 'read'],
             'obligation_assets_export' => ['model' => 'Transfer', 'submodel' => 'obligations', 'action' => 'read'],
@@ -158,6 +163,7 @@ $config['permission'] = [
             'credit' => ['name' => '信評管理'],
             'credit_management' => ['name' => '授信審核表'],
             'black_list' => ['name' => '黑名單列表'],
+            'booking_timetable' => ['name' => '入屋現勘/遠端視訊預約時間']
         ],
         'permission' => [
             'natural_person' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
@@ -176,6 +182,10 @@ $config['permission'] = [
             'push_audit' => ['model' => 'Target', 'submodel' => 'index', 'action' => 'update'],
             'push_audit_add' => ['model' => 'Target', 'submodel' => 'index', 'action' => 'update'],
             'judicial_associates' => ['model' => 'Risk', 'submodel' => 'juridical_person', 'action' => 'read'],
+            'booking_timetable' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'read'],
+            'get_booking_timetable' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'read'],
+            'create_booking' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'update'],
+            'site_survey_booking' => ['model' => 'Risk', 'submodel' => 'booking_timetable', 'action' => 'read'],
         ],
     ],
     'Passbook' => [
@@ -248,6 +258,7 @@ $config['permission'] = [
             'get_data' => ['model' => 'Risk', 'submodel' => 'natural_person', 'action' => 'read'],
             'approve' => ['model' => 'Target', 'submodel' => 'waiting_evaluation', 'action' => 'update'],
             'waiting_bidding_report' => ['model' => 'Target', 'submodel' => 'waiting_bidding', 'action' => 'read'],
+            'get_structural_data' => ['model' => 'Target', 'submodel' => 'waiting_verify', 'action' => 'read'],
         ],
     ],
     'Certification' => [
@@ -286,6 +297,8 @@ $config['permission'] = [
             'joint_credits' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'user_bankaccount_list' => ['model' => 'Passbook', 'submodel' => 'user_bankaccount_list', 'action' => 'read'],
             'save_company_cert' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'income_statement_ocr_page' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
+            'recheck_land_and_building_transactions_ocr_parser' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
         ],
     ],
     'Scraper' => [
@@ -360,6 +373,7 @@ $config['permission'] = [
         'menu' => [
             'index' => ['name' => '會員列表'],
             'blocked_users' => ['name' => '鎖定帳號管理'],
+            'sms_verify' => ['name' => '簡訊驗證'],
         ],
         'detail' => [
             'edit' => '會員詳細內容'
@@ -373,6 +387,7 @@ $config['permission'] = [
             'block_users' => ['model' => 'User', 'submodel' => 'blocked_users', 'action' => 'update'],
             'get_user_notification' => ['model' => 'User', 'submodel' => 'index', 'action' => 'read'],
             'judicialyuan' => ['model' => 'User', 'submodel' => 'index', 'action' => 'update'],
+            'sms_verify' => ['model' => 'User', 'submodel' => 'sms_verify', 'action' => 'read'],
         ],
     ],
     'Admin' => [
@@ -511,7 +526,7 @@ $config['permission'] = [
             'etpr' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
             'get_etpr_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
             'etpr_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
-            'replayment' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
+            'replayment' => ['model' => 'Erp', 'submodel' => 'replayment', 'action' => 'read'],
             'get_replayment_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
             'get_replayment_spreadsheet' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],
             'get_stack_replayment_schedule_data' => ['model' => 'Erp', 'submodel' => 'etpr', 'action' => 'read'],

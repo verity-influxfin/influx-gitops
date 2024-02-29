@@ -556,7 +556,11 @@
                                     if (isset($content['pro_certificate_image']))
                                     {
                                         echo '<div class="form-group"><label for="disabledSelect"><h4>專業證書</h4></label><br>';
-                                        $arr_pro_certificate = explode(',', $content['pro_certificate']);
+
+                                        if (isset($content['pro_certificate'])){
+
+                                            $arr_pro_certificate = explode(',', $content['pro_certificate']);
+                                        }
                                         foreach ($content['pro_certificate_image'] as $key => $value)
                                         {
                                             echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:100%;max-width:200px"></a><br>';
@@ -567,7 +571,11 @@
                                     if (isset($content['game_work_image']))
                                     {
                                         echo '<div class="form-group"><label for="disabledSelect"><h4>競賽作品</h4></label><br>';
-                                        $arr_game_work = explode(',', $content['game_work']);
+
+                                        if (isset($content['pro_certificate'])){
+                                            
+                                            $arr_game_work = explode(',', $content['game_work']);
+                                        }
                                         foreach ($content['game_work_image'] as $key => $value)
                                         {
                                             echo '<a href="' . $value . '" data-fancybox="images"><img src="' . $value . '" style="width:100%;max-width:200px"></a><br>';

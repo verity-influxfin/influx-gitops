@@ -170,4 +170,18 @@ class Judicial_yuan_lib
 
         return $response;
     }
+
+    public function request_verdicts($name, $domicile)
+    {
+        $verdicts_statuses = $this->requestJudicialYuanVerdictsStatuses($name, $domicile);
+        if (isset($verdicts_statuses['status']))
+        {
+            if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
+                || $verdicts_statuses['status'] == 204)
+            {
+                return $this->requestJudicialYuanVerdicts($name, $domicile);
+            }
+        }
+        return FALSE;
+    }
 }

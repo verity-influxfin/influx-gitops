@@ -145,8 +145,8 @@ class Charge_lib
         if(!empty($account_payable_list)) {
             $target_id_list = array_unique(array_column($account_payable_list, 'target_id'));
 
-            // 欲處理之案件列表，目前只處理學生貸和上班貸 (不處理有法催帳戶的案件 sub_status = 13)
-            $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list, 'product_id' => [1, 3],
+            // 欲處理之案件列表，目前只處理學生貸和上班貸,房貸 (不處理有法催帳戶的案件 sub_status = 13)
+            $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list, 'product_id' => [1, 3, 5],
                 'delay_days > ' => GRACE_PERIOD, 'status' => 5, 'sub_status != ' => 13]);
             $target_id_list = array_column($targets, 'id');
 

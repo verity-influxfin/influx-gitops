@@ -330,11 +330,20 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {Number} delay_days 逾期天數
 	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {Number} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
+     * @apiSuccess {Number} remaining_principal 剩餘本金
 	 * @apiSuccess {Number} created_at 申請日期
 	 * @apiSuccess {Object} next_repayment 最近一期應還款
-	 * @apiSuccess {String} next_repayment.date 還款日
-	 * @apiSuccess {Number} next_repayment.instalment 期數
-	 * @apiSuccess {Number} next_repayment.amount 金額
+     * @apiSuccess {String} next_repayment.date 還款日
+     * @apiSuccess {Number} next_repayment.instalment 期數
+     * @apiSuccess {Number} next_repayment.amount 金額
+     * @apiSuccess {Object} prepayment_info 提前還款資訊
+     * @apiSuccess {String} prepayment_info.settlement_date 結息日
+     * @apiSuccess {Number} prepayment_info.remaining_instalment 剩餘期數
+     * @apiSuccess {Number} prepayment_info.remaining_principal 剩餘本金
+     * @apiSuccess {Number} prepayment_info.interest_payable 應付利息
+     * @apiSuccess {Number} prepayment_info.liquidated_damages 違約金（提還違約金）
+     * @apiSuccess {Number} prepayment_info.total 合計
+     *
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -354,12 +363,21 @@ class Repayment extends REST_Controller {
      * 				"delay_days": 0,
      * 				"status": 5,
      * 				"sub_status": 0,
+     *              “remaining_principal”： 0,
      * 				"created_at": 1547444954,
      * 				"next_repayment": {
      * 					"date": "2019-03-10",
      * 					"instalment": 1,
      * 					"amount": 1687
-     * 				}
+     * 				},
+     *              "prepayment_info": {
+     *                  "settlement_date": "2019-01-25",
+     *                  "remaining_instalment": 3,
+     *                  "remaining_principal": 5000,
+     *                  "interest_payable": 11,
+     *                  "liquidated_damages": 250,
+     *                  "total": 5261
+     *              }
      * 			}
      * 			]
      * 		}
@@ -378,7 +396,7 @@ class Repayment extends REST_Controller {
 		$user_id 			= $this->user_info->id;
 		$targets 			= $this->target_model->get_many_by([
 			'user_id'	=> $user_id,
-			'status'	=> [5,10]
+            'status' => [TARGET_REPAYMENTING, TARGET_REPAYMENTED, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED]
 		]);
 		$list				= [];
 		if(!empty($targets)){
@@ -390,37 +408,21 @@ class Repayment extends REST_Controller {
                     $product = $this->trans_sub_product($product,$sub_product_id);
                     $product_name = $product['name'];
                 }
-				$next_repayment = [
-					'date' 			=> '',
-					'instalment'	=> '',
-					'amount'		=> 0,
-				];
 
-				if($value->status==5){
-					$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by([
-						'target_id'	=> $value->id,
-						'status'	=> 1,
-						'source' 	=> [
-							SOURCE_AR_PRINCIPAL,
-							SOURCE_AR_INTEREST,
-							SOURCE_AR_DAMAGE,
-							SOURCE_AR_DELAYINTEREST
-						],
-					]);
+                $this->load->library('target_lib');
+                $repayment_schedule = $this->target_lib->get_repayment_schedule($value);
+                if ( ! empty($repayment_schedule))
+                {
+                    $next_repayment = $repayment_schedule[array_key_first($repayment_schedule)];
+                }
+                else
+                {
+                    $next_repayment = ['instalment' => '', 'date' => '', 'amount' => 0];
+                }
 
-					if($transaction){
-						$first 							= current($transaction);
-						$next_repayment['date'] 		= $first->limit_date;
-						$next_repayment['instalment']  	= intval($first->instalment_no);
-						foreach($transaction as $k => $v){
-							if($v->limit_date == $next_repayment['date']){
-								$next_repayment['amount'] += $v->amount;
-							}
-						}
-					}
-				}
+                $pay_off_at = $this->target_lib->get_pay_off_date($value);
 
-				$list[] = [
+                $list[] = [
 					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
                     'product_name' => $product_name,
@@ -436,9 +438,13 @@ class Repayment extends REST_Controller {
 					'delay_days' 		=> intval($value->delay_days),
 					'status' 			=> intval($value->status),
 					'sub_status' 		=> intval($value->sub_status),
+                    'remaining_principal' => intval($this->target_lib->get_amortization_table($value)["remaining_principal"]),
 					'created_at' 		=> intval($value->created_at),
 					'next_repayment' 	=> $next_repayment,
+					'pay_off_at' 	    => $pay_off_at,
+                    'prepayment_info'   => $this->prepayment_lib->get_prepayment_info($value)??[]
 				];
+
 			}
 		}
 		$this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
@@ -953,6 +959,112 @@ class Repayment extends REST_Controller {
 			}
 		}
 		$this->response(['result' => 'ERROR','error' => APPLY_NOT_EXIST]);
+    }
+
+    /**
+     * @api {post} /v2/repayment/prepayment_list/:id 借款方 申請提前還款
+     * @apiVersion 0.2.0
+     * @apiName PostRepaymentPrepayment
+     * @apiGroup Repayment
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {String} id Targets ID，用「,」分割Target的id
+     * @apiDescription 只有正常還款的狀態才可申請，逾期或寬限期內都將不通過
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS"
+     *    }
+     *
+     * @apiUse IsInvestor
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     *
+     * @apiError 404 此申請不存在
+     * @apiErrorExample {Object} 404
+     *     {
+     *       "result": "ERROR",
+     *       "error": "404"
+     *     }
+     *
+     * @apiError 405 對此申請無權限
+     * @apiErrorExample {Object} 405
+     *     {
+     *       "result": "ERROR",
+     *       "error": "405"
+     *     }
+     *
+     * @apiError 407 目前狀態無法完成此動作
+     * @apiErrorExample {Object} 407
+     *     {
+     *       "result": "ERROR",
+     *       "error": "407"
+     *     }
+     *
+     * @apiError 903 已申請提前還款或產品轉換
+     * @apiErrorExample {Object} 903
+     *     {
+     *       "result": "ERROR",
+     *       "error": "903"
+     *     }
+     */
+    public function prepayment_list_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+
+        if(isset($input['target_id'])){
+            $target_ids = explode(',', $input['target_id']);
+            $list = $this->target_model->get_many_by([
+                'id' => $target_ids,
+            ]);
+            if ($list && count($list) == count($target_ids)) {
+
+                $virtualAccountParm = [
+                    'status'		=> 1,
+                    'investor'		=> 0,
+                    'user_id'		=> $user_id
+                ];
+                $this->load->model('user/virtual_account_model');
+                $virtual_account = $this->virtual_account_model->get_by($virtualAccountParm);
+        
+                if($virtual_account){
+                    $funds = $this->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+                    $virtual_account_balance = $funds['total'] - $funds['frozen'];
+                }else{
+                    $this->response(['result' => 'ERROR','error' => NOT_ENOUGH_FUNDS]);
+                }
+                foreach ($list as $k => $target) {
+    
+                    if($target->status != 5 || $target->delay_days > 0 || $target->script_status != 0){
+                        $this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
+                    }
+    
+                    if($target->user_id != $user_id){
+                        $this->response(['result' => 'ERROR','error' => APPLY_NO_PERMISSION]);
+                    }
+    
+                    if(!in_array($target->sub_status,[0,8,10])){
+                        $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
+                    }
+                    $info = $this->prepayment_lib->get_prepayment_info($target);
+                    $virtual_account_balance -= intval($info['total']);
+                    if($virtual_account_balance < 0 || empty($info)){
+                        $this->response(['result' => 'ERROR','error' => NOT_ENOUGH_FUNDS]);
+                    }
+                }
+                foreach ($list as $k => $target) {
+                    $rs = $this->prepayment_lib->apply_prepayment($target);
+                }
+                if($rs){
+                        $this->response(['result' => 'SUCCESS']);
+                        
+                    }else{
+                        $this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
+                    }
+            }
+        }
+        $this->response(['result' => 'ERROR','error' => APPLY_NOT_EXIST]);
     }
 
 	/**

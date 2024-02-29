@@ -62,19 +62,31 @@
                                     </form>
                                 </div>
 								<div class="col-lg-6">
-                                    <h1>圖片</h1>
-									<fieldset disabled>
+                                    <h1>圖片/文件</h1>
+									<fieldset>
 										<div class="form-group">
 											<label for="disabledSelect">近6個月封面及內頁存摺</label><br>
                                             <?
                                             if(isset($content['passbook_image'])){
                                                 foreach ($content['passbook_image'] as $key => $value) {
-                                                !is_array($content['passbook_image']) ? $content['passbook_image'] = [$content['passbook_image']] : '';
                                                 ?>
                                                 <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
                                                     <img src="<?=isset($value)?$value:""?>" style='width:30%;max-width:400px'>
                                                 </a>
                                             <? }} ?>
+                                            <hr/>
+                                            <label>其它</label><br>
+                                            <?php
+                                            if ( ! empty($content['pdf']) && is_array($content['pdf']))
+                                            {
+                                                $index = 0;
+                                                foreach ($content['pdf'] as $value)
+                                                { ?>
+                                                    <a href="<?= $value ?>" class="btn btn-info">
+                                                        檔案<?= ++$index; ?>
+                                                    </a>
+                                                <?php }
+                                            } ?>
 										</div>
 									</fieldset>
                                     <? if($data->certification_id == 500 && isset($ocr['upload_page']) ){ ?>

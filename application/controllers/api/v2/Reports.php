@@ -196,7 +196,8 @@ class Reports extends REST_Controller {
         $numRequested = count($imageLogs);
         $response = $this->report_scan_lib->requestForResult($batchType, $imageIds);
         if (!$response) {
-           $this->response(['result' => 'ERROR','error' => EXIT_ERROR,'msg' => 'The result not found.']);
+          $this->response(['result' => 'SUCCESS','data' => []]);
+          //  $this->response(['result' => 'ERROR','error' => EXIT_ERROR,'msg' => 'The result not found.']);
         }
         //removed already OCRed image so sleep time can be reduced
         if ($response->status == 200) {
@@ -234,7 +235,8 @@ class Reports extends REST_Controller {
         $scannedResult = [];
         $response = $this->report_scan_lib->requestForResult($batchType, $numRequestedIds);
         if (!$response) {
-            $this->response(['result' => 'ERROR','error' => EXIT_ERROR, 'msg' => 'The scan result not found.']);
+          $this->response(['result' => 'SUCCESS','data' => []]);
+            // $this->response(['result' => 'ERROR','error' => EXIT_ERROR, 'msg' => 'The scan result not found.']);
         }
 
         if (isset($response->response)) {

@@ -12,6 +12,14 @@
 				$('input#fail').css('display', sel.attr('value') == 'other' ? 'block' : 'none');
 				$('input#fail').attr('disabled', sel.attr('value') == 'other' ? false : true);
 			});
+            function confirmAndSubmit() {
+                var result = confirm("確定要執行嗎？");
+                if (result) {
+                    document.getElementById("confirmForm").submit();
+                } else {
+                    return false;
+                }
+            };
 		</script>
 		<div id="page-wrapper">
 			<div class="row">
@@ -70,6 +78,14 @@
                                             ?>
                                             <label>聯徵資料</label><br>
                                             <a href="<?= $content['pdf_file']; ?>" target="_blank">下載</a>
+                                            <form id="confirmForm" role="form" method="post" action="/admin/certification/user_certification_edit">
+                                            <div class="form-group">
+                                                <input type="hidden" name="delete_pdf_file" value="<?=isset($content['pdf_file']) ? $content['pdf_file'] : '0' ?>" />
+                                                <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
+                                                <input type="hidden" name="from" value="<?=isset($content['pdf_file'])?$content['pdf_file']:"";?>" >
+                                            </div>
+                                            <button type="submit" onclick="return confirmAndSubmit()" class="btn btn-primary" >刪除檔案</button>
+                                        </form><br />
                                         <?php }
                                         elseif ( ! empty($content['images']))
                                         {

@@ -27,13 +27,13 @@ class User_behavior_model extends MY_Model
      * @param bool $group_by_code
      * @return array
      */
-    public function getFirstOpenCountByPromoteCode($promoteCode, $startTime, $endTime, bool $group_by_code = TRUE): array
+    public function getFirstOpenCountByPromoteCode($promoteCode, $startTime, $endTime, $is_group_by_code = TRUE): array
     {
 	    if(empty($promoteCode))
 	        return [];
 
         $this->db
-            ->select('data1 as promote_code, created_at')
+            ->select('data1 as promote_code, created_at, device_id')
             ->from('`behavion`.`user_behavior`')
             ->where('action', 'first_open');
 
@@ -44,22 +44,22 @@ class User_behavior_model extends MY_Model
 
         $subQuery = $this->db->get_compiled_select('', TRUE);
         $this->db
-            ->select('uq.id AS user_qrcode_id, r.promote_code, r.created_at')
+            ->select('uq.id AS user_qrcode_id, r.promote_code, r.created_at, r.device_id')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
             ->join("($subQuery) as `r`", "`r`.`promote_code` = `uq`.`promote_code`")
-            ->where('`uq`.`status`', 1)
             ->where('`r`.`created_at` >= `uq`.`start_time`')
             ->where('`r`.`created_at` < `uq`.`end_time`');
 
-        if ($group_by_code)
+        if ($is_group_by_code)
         {
-            $this->db->select('COUNT(1) as count')
+            $this->db->select('COUNT(r.promote_code) as count')
                 ->group_by('`r`.`promote_code`');
         }
         else
         {
             $this->db->select('1 as count');
         }
+
         if($startTime!='')
             $this->db->where("`r`.`created_at` >=",  $startTime);
         if($endTime!='')

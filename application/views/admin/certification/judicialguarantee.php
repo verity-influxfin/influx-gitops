@@ -1,12 +1,24 @@
 <script type="text/javascript">
-    function check_fail(){
-        var status = $('#status :selected').val();
-        if(status==2){
+    function check_fail() {
+        if ($('#status :selected').val() === '2') {
             $('#fail_div').show();
-        }else{
+        } else {
             $('#fail_div').hide();
         }
     }
+
+    $(document).off("change", "select#fail").on("change", "select#fail", function () {
+        if ($(this).find(':selected').val() === 'other') {
+            $('input#fail').css('display', 'block').attr('disabled', false);
+        } else {
+            $('input#fail').css('display', 'none').attr('disabled', true);
+        }
+    });
+
+    $(document).ready(function () {
+        check_fail();
+        $('select#fail').trigger('change');
+    });
 </script>
 <div id="page-wrapper">
     <div class="row">
@@ -33,12 +45,12 @@
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
-                                <?
-                                    if($remark){
-                                        if(isset($remark["fail"]) && $remark["fail"]){
-                                            echo '<p style="color:red;" class="form-control-static">失敗原因：'.$remark["fail"].'</p>';
-                                        }
-                                    }
+                                <?php $fail = '';
+                                if ( ! empty($remark["fail"]))
+                                {
+                                    $fail = $remark['fail'];
+                                    echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+                                }
                                 ?>
                             </div>
                             <div class="form-group">

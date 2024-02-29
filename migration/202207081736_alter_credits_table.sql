@@ -1,0 +1,1 @@
+ALTER TABLE p2p_loan.credits ADD type_code TINYINT NOT NULL DEFAULT 0 COMMENT '用於特殊類型識別' AFTER `instalment`;

@@ -105,12 +105,12 @@ $new_calculate_algo = isset($content['totalEffectiveDebt']);  // 還款力相關
                                                        id="studentLoans"
                                                        name="studentLoans"
                                                        class="formData"
-                                                       value="<?= $content['studentLoans'] ?? 0; ?>" <?= $disabled ?>> 千元；總筆數：
+                                                       value="<?= $content['studentLoans'] ?? 0; ?>" <?= $disabled ?> /> 千元；總筆數：
                                                 <input type="text"
                                                        id="studentLoansCount"
                                                        name="studentLoansCount"
                                                        class="formData"
-                                                       value="<?= $content['studentLoansCount'] ?? 0; ?>" <?= $disabled ?>>
+                                                       value="<?= $content['studentLoansCount'] ?? 0; ?>" <?= $disabled ?> />
                                             </div>
                                         </li>
                                         <li>
@@ -133,7 +133,7 @@ $new_calculate_algo = isset($content['totalEffectiveDebt']);  // 還款力相關
                                                        id="liabilitiesWithoutAssureTotalAmount"
                                                        name="liabilitiesWithoutAssureTotalAmount"
                                                        class="formData"
-                                                       value="<?= $content['liabilitiesWithoutAssureTotalAmount'] ?? 0; ?>" <?= $disabled ?>> 元
+                                                       value="<?= $content['liabilitiesWithoutAssureTotalAmount'] ?? 0; ?>" <?= $disabled ?> /> 元
                                             </div>
                                         </li>
                                         <li>
@@ -143,7 +143,7 @@ $new_calculate_algo = isset($content['totalEffectiveDebt']);  // 還款力相關
                                                        id="creditCard"
                                                        name="creditCard"
                                                        class="formData"
-                                                       value="<?= $content['creditCard'] ?? 0 ?>" <?= $disabled ?>> 元
+                                                       value="<?= $content['creditCard'] ?? 0 ?>" <?= $disabled ?> /> 元
                                             </div>
                                         </li>
                                         <?php
@@ -179,17 +179,17 @@ $new_calculate_algo = isset($content['totalEffectiveDebt']);  // 還款力相關
                                                                ? number_format($content['totalMonthlyPayment'] * 1000)
                                                                : $content['totalMonthlyPayment'] . '千')
                                                            : '-'; ?>"
-                                                       style="text-align: right;"> 元
+                                                       style="text-align: right;" /> 元
                                             </td>
                                             <td>薪資22倍：</td>
                                             <td><input type="text"
                                                        disabled
-                                                       value="<?php echo ! empty($content['total_repayment']) || is_numeric($content['total_repayment'])
+                                                       value="<?php echo ! empty($content['total_repayment']) && is_numeric($content['total_repayment'])
                                                            ? (strpos($content['total_repayment'], ',') === FALSE
                                                                ? number_format($content['total_repayment'] * 1000)
                                                                : $content['total_repayment'] . '千')
                                                            : '-'; ?>"
-                                                       style="text-align: right;"> 元
+                                                       style="text-align: right;" /> 元
                                             </td>
                                         </tr>
                                         <tr>
@@ -197,7 +197,7 @@ $new_calculate_algo = isset($content['totalEffectiveDebt']);  // 還款力相關
                                             <td><input type="text"
                                                        disabled
                                                        id="monthly_repayment"
-                                                       value="<?php echo ! empty($content['monthly_repayment']) || is_numeric($content['monthly_repayment'])
+                                                       value="<?php echo ! empty($content['monthly_repayment']) && is_numeric($content['monthly_repayment'])
                                                            ? (strpos($content['monthly_repayment'], ',') === FALSE
                                                                ? number_format($content['monthly_repayment'] * 1000)
                                                                : $content['monthly_repayment'] . '千')

@@ -13,7 +13,7 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
     <script data-pace-options='{ "ajax": true }' src="/assets/admin/scripts/pace.js"></script>
-    <title>百萬信保檢核表</title>
+    <title>檢核表</title>
     <style>
         .pointer {
             cursor: pointer;
@@ -51,7 +51,7 @@
     <div id="page-tab-skbank" class="nav-page" data-bankid="1">
         <div class="page">
             <div class="subpage api_data_page">
-                <h3 style="text-align: center;">百萬信保檢核表</h3>
+                <h3 style="text-align: center;">檢核表</h3>
                 <div>
                     <table class="table table-bordered border-dark">
                         <tbody>
@@ -72,7 +72,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompId_content)" value="Edit">
+                                           onclick="edit_click('CompId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -84,7 +84,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompName_content)" value="Edit">
+                                           onclick="edit_click('CompName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -99,7 +99,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompSetDate_content)" value="Edit">
+                                           onclick="edit_click('CompSetDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -111,7 +111,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompCapital_content)" value="Edit">
+                                           onclick="edit_click('CompCapital_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -123,7 +123,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompIdustry_content)" value="Edit">
+                                           onclick="edit_click('CompIdustry_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -139,14 +139,14 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompType_content)" value="Edit">
+                                           onclick="edit_click('CompType_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold-right-border">公司產業別<span style="color: red;">*</span></td>
                             <td colspan="3">
-                                <select name="CompDuType_content" class="table-input" id="CompDuType_content" disabled>
+                                <select name="compDuType_content" class="table-input" id="compDuType_content" disabled>
                                     <option value="" selected></option>
                                     <option value="01">01:水泥</option>
                                     <option value="02">02:食品</option>
@@ -248,7 +248,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompDuType_content)" value="Edit">
+                                           onclick="edit_click('compDuType_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -265,7 +265,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BusinessType_content)" value="Edit">
+                                           onclick="edit_click('BusinessType_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -277,7 +277,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompRegAddrZip_content)" value="Edit">
+                                           onclick="edit_click('CompRegAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -289,7 +289,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompRegAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('CompRegAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -301,7 +301,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompRegAddress_content)" value="Edit">
+                                           onclick="edit_click('CompRegAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -316,7 +316,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrOnboardDay_content)" value="Edit">
+                                           onclick="edit_click('PrOnboardDay_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -328,7 +328,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrOnboardName_content)" value="Edit">
+                                           onclick="edit_click('PrOnboardName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -343,7 +343,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(ExPrOnboardDay_content)" value="Edit">
+                                           onclick="edit_click('ExPrOnboardDay_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -355,7 +355,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(ExPrOnboardName_content)" value="Edit">
+                                           onclick="edit_click('ExPrOnboardName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -370,7 +370,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(ExPrOnboardDay2_content)" value="Edit">
+                                           onclick="edit_click('ExPrOnboardDay2_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -382,7 +382,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(ExPrOnboardName2_content)" value="Edit">
+                                           onclick="edit_click('ExPrOnboardName2_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -394,7 +394,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrCityName_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrCityName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -406,7 +406,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrAreaName_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrAreaName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -418,7 +418,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrRoadName_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrRoadName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -430,7 +430,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrRoadType_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrRoadType_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -442,7 +442,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrSec_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrSec_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -454,7 +454,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrLn_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -466,7 +466,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrAly_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrAly_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -478,7 +478,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrNo_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -490,7 +490,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrNoExt_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrNoExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -502,7 +502,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrFloor_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrFloor_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -514,7 +514,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrFloorExt_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrFloorExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -526,7 +526,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrRoom_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrRoom_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -538,7 +538,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizRegAddrOtherMemo_content)" value="Edit">
+                                           onclick="edit_click('BizRegAddrOtherMemo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -553,7 +553,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(LastPaidInCapitalDate_content)" value="Edit">
+                                           onclick="edit_click('LastPaidInCapitalDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -568,7 +568,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompMajorAddrZip_content)" value="Edit">
+                                           onclick="edit_click('CompMajorAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -580,7 +580,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompMajorAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('CompMajorAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -592,7 +592,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompMajorAddress_content)" value="Edit">
+                                           onclick="edit_click('CompMajorAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -604,7 +604,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompTelAreaCode_content)" value="Edit">
+                                           onclick="edit_click('CompTelAreaCode_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -616,7 +616,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(compContactTel_content)" value="Edit">
+                                           onclick="edit_click('compContactTel_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -628,7 +628,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(compContactExt_content)" value="Edit">
+                                           onclick="edit_click('compContactExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -644,7 +644,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(realBizRegAddressOwner_content)" value="Edit">
+                                           onclick="edit_click('realBizRegAddressOwner_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -661,7 +661,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(bizRegAddrOwner_content)" value="Edit">
+                                           onclick="edit_click('bizRegAddrOwner_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -677,7 +677,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(isBizAddrEqToBizRegAddr_content)" value="Edit">
+                                           onclick="edit_click('isBizAddrEqToBizRegAddr_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -689,7 +689,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrCityName_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrCityName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -701,7 +701,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrAreaName_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrAreaName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -713,7 +713,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrRoadName_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrRoadName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -725,7 +725,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrRoadType_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrRoadType_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -737,7 +737,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrSec_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrSec_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -749,7 +749,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrLn_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -761,7 +761,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrAly_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrAly_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -773,7 +773,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrNo_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -785,7 +785,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrNoExt_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrNoExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -797,7 +797,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrFloor_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrFloor_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -809,7 +809,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrFloorExt_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrFloorExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -821,7 +821,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrRoom_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrRoom_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -833,7 +833,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealBizAddrOtherMemo_content)" value="Edit">
+                                           onclick="edit_click('RealBizAddrOtherMemo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -849,7 +849,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(realBizAddressOwner_content)" value="Edit">
+                                           onclick="edit_click('realBizAddressOwner_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -866,7 +866,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(realBizAddrOwner_content)" value="Edit">
+                                           onclick="edit_click('realBizAddrOwner_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -878,7 +878,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompMajorCityName_content)" value="Edit">
+                                           onclick="edit_click('CompMajorCityName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -890,7 +890,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompMajorAreaName_content)" value="Edit">
+                                           onclick="edit_click('CompMajorAreaName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -902,7 +902,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompMajorSecName_content)" value="Edit">
+                                           onclick="edit_click('CompMajorSecName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -914,7 +914,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompMajorSecNo_content)" value="Edit">
+                                           onclick="edit_click('CompMajorSecNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -933,7 +933,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompMajorOwnership_content)" value="Edit">
+                                           onclick="edit_click('CompMajorOwnership_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -950,7 +950,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompMajorSetting_content)" value="Edit">
+                                           onclick="edit_click('CompMajorSetting_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -968,7 +968,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(BizTaxFileWay_content)" value="Edit">
+                                           onclick="edit_click('BizTaxFileWay_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -980,7 +980,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorAName_content)" value="Edit">
+                                           onclick="edit_click('DirectorAName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -992,7 +992,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorAId_content)" value="Edit">
+                                           onclick="edit_click('DirectorAId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1004,7 +1004,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorBName_content)" value="Edit">
+                                           onclick="edit_click('DirectorBName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1016,7 +1016,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorBId_content)" value="Edit">
+                                           onclick="edit_click('DirectorBId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1028,7 +1028,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorCName_content)" value="Edit">
+                                           onclick="edit_click('DirectorCName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1040,7 +1040,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorCId_content)" value="Edit">
+                                           onclick="edit_click('DirectorCId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1052,7 +1052,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorDName_content)" value="Edit">
+                                           onclick="edit_click('DirectorDName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1064,7 +1064,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorDId_content)" value="Edit">
+                                           onclick="edit_click('DirectorDId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1076,7 +1076,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorEName_content)" value="Edit">
+                                           onclick="edit_click('DirectorEName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1088,7 +1088,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorEId_content)" value="Edit">
+                                           onclick="edit_click('DirectorEId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1100,7 +1100,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorFName_content)" value="Edit">
+                                           onclick="edit_click('DirectorFName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1112,7 +1112,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorFId_content)" value="Edit">
+                                           onclick="edit_click('DirectorFId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1124,7 +1124,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorGName_content)" value="Edit">
+                                           onclick="edit_click('DirectorGName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1136,7 +1136,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(DirectorGId_content)" value="Edit">
+                                           onclick="edit_click('DirectorGId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1148,19 +1148,19 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(employeeNum_content)" value="Edit">
+                                           onclick="edit_click('employeeNum_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
                         <tr>
-                            <td class="bold-right-border">股東人數<span style="color: red;">*</span></td>
+                            <td class="bold-right-border">股東人數</td>
                             <td colspan="3">
-                                <input id="shareholderNum_content" name="shareholderNum_content" type="text" class="table-input" disabled>
+                                <input id="stockholderNum_content" name="stockholderNum_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(shareholderNum_content)" value="Edit">
+                                           onclick="edit_click('stockholderNum_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1175,7 +1175,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrName_content)" value="Edit">
+                                           onclick="edit_click('PrName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1187,7 +1187,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrincipalId_content)" value="Edit">
+                                           onclick="edit_click('PrincipalId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1202,7 +1202,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBirth_content)" value="Edit">
+                                           onclick="edit_click('PrBirth_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1214,7 +1214,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrResAddrZip_content)" value="Edit">
+                                           onclick="edit_click('PrResAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1226,7 +1226,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrResAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('PrResAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1238,7 +1238,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrReslAddress_content)" value="Edit">
+                                           onclick="edit_click('PrReslAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1250,7 +1250,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneName_content)" value="Edit">
+                                           onclick="edit_click('GuOneName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1262,7 +1262,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneId_content)" value="Edit">
+                                           onclick="edit_click('GuOneId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1277,7 +1277,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneBirth_content)" value="Edit">
+                                           onclick="edit_click('GuOneBirth_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1289,7 +1289,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneResAddrZip_content)" value="Edit">
+                                           onclick="edit_click('GuOneResAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1301,7 +1301,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneResAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('GuOneResAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1313,7 +1313,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneReslAddress_content)" value="Edit">
+                                           onclick="edit_click('GuOneReslAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1325,7 +1325,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoName_content)" value="Edit">
+                                           onclick="edit_click('GuTwoName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1337,7 +1337,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoId_content)" value="Edit">
+                                           onclick="edit_click('GuTwoId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1352,7 +1352,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoBirth_content)" value="Edit">
+                                           onclick="edit_click('GuTwoBirth_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1364,7 +1364,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoResAddrZip_content)" value="Edit">
+                                           onclick="edit_click('GuTwoResAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1376,7 +1376,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoResAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('GuTwoResAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1388,7 +1388,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoReslAddress_content)" value="Edit">
+                                           onclick="edit_click('GuTwoReslAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1400,7 +1400,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseName_content)" value="Edit">
+                                           onclick="edit_click('SpouseName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1412,7 +1412,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseId_content)" value="Edit">
+                                           onclick="edit_click('SpouseId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1427,7 +1427,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBirth_content)" value="Edit">
+                                           onclick="edit_click('SpouseBirth_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1439,7 +1439,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseResAddrZip_content)" value="Edit">
+                                           onclick="edit_click('SpouseResAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1451,7 +1451,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseResAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('SpouseResAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1463,7 +1463,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseReslAddress_content)" value="Edit">
+                                           onclick="edit_click('SpouseReslAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1478,7 +1478,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrCurAddrZip_content)" value="Edit">
+                                           onclick="edit_click('PrCurAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1490,7 +1490,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrCurAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('PrCurAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1502,7 +1502,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrCurlAddress_content)" value="Edit">
+                                           onclick="edit_click('PrCurlAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1514,7 +1514,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrTelAreaCode_content)" value="Edit">
+                                           onclick="edit_click('PrTelAreaCode_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1526,7 +1526,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrTelNo_content)" value="Edit">
+                                           onclick="edit_click('PrTelNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1538,7 +1538,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrTelExt_content)" value="Edit">
+                                           onclick="edit_click('PrTelExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1550,7 +1550,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrMobileNo_content)" value="Edit">
+                                           onclick="edit_click('PrMobileNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1566,7 +1566,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(IsPrMarried_content)" value="Edit">
+                                           onclick="edit_click('IsPrMarried_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1582,7 +1582,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(IsPrSpouseGu_content)" value="Edit">
+                                           onclick="edit_click('IsPrSpouseGu_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1600,7 +1600,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(RealPr_content)" value="Edit">
+                                           onclick="edit_click('RealPr_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1615,7 +1615,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrStartYear_content)" value="Edit">
+                                           onclick="edit_click('PrStartYear_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1637,7 +1637,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrEduLevel_content)" value="Edit">
+                                           onclick="edit_click('PrEduLevel_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1659,7 +1659,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(OthRealPrRelWithPr_content)" value="Edit">
+                                           onclick="edit_click('OthRealPrRelWithPr_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1671,7 +1671,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(OthRealPrName_content)" value="Edit">
+                                           onclick="edit_click('OthRealPrName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1683,7 +1683,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(OthRealPrId_content)" value="Edit">
+                                           onclick="edit_click('OthRealPrId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1698,7 +1698,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(OthRealPrBirth_content)" value="Edit">
+                                           onclick="edit_click('OthRealPrBirth_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1713,7 +1713,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(OthRealPrStartYear_content)" value="Edit">
+                                           onclick="edit_click('OthRealPrStartYear_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1725,7 +1725,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(OthRealPrTitle_content)" value="Edit">
+                                           onclick="edit_click('OthRealPrTitle_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1737,7 +1737,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(OthRealPrSHRatio_content)" value="Edit">
+                                           onclick="edit_click('OthRealPrSHRatio_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1758,7 +1758,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneRelWithPr_content)" value="Edit">
+                                           onclick="edit_click('GuOneRelWithPr_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1778,7 +1778,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneCompany_content)" value="Edit">
+                                           onclick="edit_click('GuOneCompany_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1799,7 +1799,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoRelWithPr_content)" value="Edit">
+                                           onclick="edit_click('GuTwoRelWithPr_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1819,7 +1819,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoCompany_content)" value="Edit">
+                                           onclick="edit_click('GuTwoCompany_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1831,7 +1831,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseCurAddrZip_content)" value="Edit">
+                                           onclick="edit_click('SpouseCurAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1843,7 +1843,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseCurAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('SpouseCurAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1855,7 +1855,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseCurlAddress_content)" value="Edit">
+                                           onclick="edit_click('SpouseCurlAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1867,7 +1867,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseTelAreaCode_content)" value="Edit">
+                                           onclick="edit_click('SpouseTelAreaCode_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1879,7 +1879,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseTelNo_content)" value="Edit">
+                                           onclick="edit_click('SpouseTelNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1891,7 +1891,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseTelExt_content)" value="Edit">
+                                           onclick="edit_click('SpouseTelExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1903,7 +1903,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseMobileNo_content)" value="Edit">
+                                           onclick="edit_click('SpouseMobileNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1915,7 +1915,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneCurAddrZip_content)" value="Edit">
+                                           onclick="edit_click('GuOneCurAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1927,7 +1927,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneCurAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('GuOneCurAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1939,7 +1939,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneCurlAddress_content)" value="Edit">
+                                           onclick="edit_click('GuOneCurlAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1951,7 +1951,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneTelAreaCode_content)" value="Edit">
+                                           onclick="edit_click('GuOneTelAreaCode_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1963,7 +1963,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneTelNo_content)" value="Edit">
+                                           onclick="edit_click('GuOneTelNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1975,7 +1975,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneTelExt_content)" value="Edit">
+                                           onclick="edit_click('GuOneTelExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1987,7 +1987,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneMobileNo_content)" value="Edit">
+                                           onclick="edit_click('GuOneMobileNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -1999,7 +1999,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoCurAddrZip_content)" value="Edit">
+                                           onclick="edit_click('GuTwoCurAddrZip_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2011,7 +2011,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoCurAddrZipName_content)" value="Edit">
+                                           onclick="edit_click('GuTwoCurAddrZipName_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2023,7 +2023,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoCurlAddress_content)" value="Edit">
+                                           onclick="edit_click('GuTwoCurlAddress_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2035,7 +2035,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoTelAreaCode_content)" value="Edit">
+                                           onclick="edit_click('GuTwoTelAreaCode_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2047,7 +2047,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoTelNo_content)" value="Edit">
+                                           onclick="edit_click('GuTwoTelNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2059,7 +2059,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoTelExt_content)" value="Edit">
+                                           onclick="edit_click('GuTwoTelExt_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2071,7 +2071,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoMobileNo_content)" value="Edit">
+                                           onclick="edit_click('GuTwoMobileNo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2089,7 +2089,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(AnnualIncomeYear1_content)" value="Edit">
+                                           onclick="edit_click('AnnualIncomeYear1_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2101,7 +2101,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(AnnualIncome1_content)" value="Edit">
+                                           onclick="edit_click('AnnualIncome1_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2116,7 +2116,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(AnnualIncomeYear2_content)" value="Edit">
+                                           onclick="edit_click('AnnualIncomeYear2_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2128,7 +2128,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(AnnualIncome2_content)" value="Edit">
+                                           onclick="edit_click('AnnualIncome2_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2143,7 +2143,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(AnnualIncomeYear3_content)" value="Edit">
+                                           onclick="edit_click('AnnualIncomeYear3_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2155,7 +2155,7 @@
                             <td class="bold-bottom-border">
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(AnnualIncome3_content)" value="Edit">
+                                           onclick="edit_click('AnnualIncome3_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2173,7 +2173,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM1_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM1_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2185,7 +2185,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured1_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured1_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2200,7 +2200,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM2_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM2_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2212,7 +2212,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured2_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured2_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2227,7 +2227,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM3_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM3_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2242,7 +2242,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured3_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured3_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2257,7 +2257,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM4_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM4_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2272,7 +2272,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured4_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured4_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2287,7 +2287,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM5_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM5_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2299,7 +2299,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured5_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured5_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2314,7 +2314,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM6_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM6_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2326,7 +2326,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured6_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured6_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2341,7 +2341,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM7_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM7_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2353,7 +2353,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured7_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured7_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2368,7 +2368,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM8_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM8_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2380,7 +2380,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured8_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured8_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2395,7 +2395,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM9_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM9_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2407,7 +2407,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured9_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured9_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2422,7 +2422,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM10_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM10_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2434,7 +2434,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured10_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured10_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2449,7 +2449,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM11_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM11_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2461,7 +2461,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured11_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured11_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2476,7 +2476,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsuredYM12_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsuredYM12_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2488,7 +2488,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(NumOfInsured12_content)" value="Edit">
+                                           onclick="edit_click('NumOfInsured12_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2501,12 +2501,12 @@
                                 <div style="color:red;">格式:YYYYMMDD</div>
                             </td>
                             <td colspan="3">
-                                <input id="CompJCICQueryDate_content" name="CompJCICQueryDate_content" type="text" class="table-input" disabled>
+                                <input id="jcCompDataDate_content" name="jcCompDataDate_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompJCICQueryDate_content)" value="Edit">
+                                           onclick="edit_click('jcCompDataDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2521,7 +2521,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(MidTermLnYM_content)" value="Edit">
+                                           onclick="edit_click('MidTermLnYM_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2533,7 +2533,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(MidTermLnBal_content)" value="Edit">
+                                           onclick="edit_click('MidTermLnBal_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2548,7 +2548,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(ShortTermLnYM_content)" value="Edit">
+                                           onclick="edit_click('ShortTermLnYM_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2560,7 +2560,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(ShortTermLnBal_content)" value="Edit">
+                                           onclick="edit_click('ShortTermLnBal_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2570,12 +2570,12 @@
                                 <div style="color:red;">格式:YYYYMM</div>
                             </td>
                             <td colspan="3">
-                                <input id="CompJCICDataDate_content" name="CompJCICDataDate_content" type="text" class="table-input" disabled>
+                                <input id="jcCompJ02YM_content" name="jcCompJ02YM_content" type="text" class="table-input" disabled>
                             </td>
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompJCICDataDate_content)" value="Edit">
+                                           onclick="edit_click('jcCompJ02YM_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2587,7 +2587,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(CompCreditScore_content)" value="Edit">
+                                           onclick="edit_click('CompCreditScore_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2602,7 +2602,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrJCICQueryDate_content)" value="Edit">
+                                           onclick="edit_click('PrJCICQueryDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2614,7 +2614,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrCreditScore_content)" value="Edit">
+                                           onclick="edit_click('PrCreditScore_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2629,7 +2629,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrJCICDataDate_content)" value="Edit">
+                                           onclick="edit_click('PrJCICDataDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2641,7 +2641,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBal_CashCard_content)" value="Edit">
+                                           onclick="edit_click('PrBal_CashCard_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2653,7 +2653,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBal_CreditCard_content)" value="Edit">
+                                           onclick="edit_click('PrBal_CreditCard_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2665,7 +2665,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBal_ShortTermLn_content)" value="Edit">
+                                           onclick="edit_click('PrBal_ShortTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2677,7 +2677,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBal_MidTermLn_content)" value="Edit">
+                                           onclick="edit_click('PrBal_MidTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2689,7 +2689,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBal_LongTermLn_content)" value="Edit">
+                                           onclick="edit_click('PrBal_LongTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2701,7 +2701,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBal_ShortTermGuar_content)" value="Edit">
+                                           onclick="edit_click('PrBal_ShortTermGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2713,7 +2713,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBal_MidTermLnGuar_content)" value="Edit">
+                                           onclick="edit_click('PrBal_MidTermLnGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2725,7 +2725,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBal_LongTermLnGuar_content)" value="Edit">
+                                           onclick="edit_click('PrBal_LongTermLnGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2740,7 +2740,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseJCICQueryDate_content)" value="Edit">
+                                           onclick="edit_click('SpouseJCICQueryDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2752,7 +2752,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseCreditScore_content)" value="Edit">
+                                           onclick="edit_click('SpouseCreditScore_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2767,7 +2767,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseJCICDataDate_content)" value="Edit">
+                                           onclick="edit_click('SpouseJCICDataDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2779,7 +2779,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBal_CashCard_content)" value="Edit">
+                                           onclick="edit_click('SpouseBal_CashCard_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2791,7 +2791,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBal_CreditCard_content)" value="Edit">
+                                           onclick="edit_click('SpouseBal_CreditCard_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2803,7 +2803,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBal_ShortTermLn_content)" value="Edit">
+                                           onclick="edit_click('SpouseBal_ShortTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2815,7 +2815,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBal_MidTermLn_content)" value="Edit">
+                                           onclick="edit_click('SpouseBal_MidTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2827,7 +2827,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBal_LongTermLn_content)" value="Edit">
+                                           onclick="edit_click('SpouseBal_LongTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2839,7 +2839,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBal_ShortTermGuar_content)" value="Edit">
+                                           onclick="edit_click('SpouseBal_ShortTermGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2851,7 +2851,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBal_MidTermLnGuar_content)" value="Edit">
+                                           onclick="edit_click('SpouseBal_MidTermLnGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2863,7 +2863,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBal_LongTermLnGuar_content)" value="Edit">
+                                           onclick="edit_click('SpouseBal_LongTermLnGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2878,7 +2878,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneJCICQueryDate_content)" value="Edit">
+                                           onclick="edit_click('GuOneJCICQueryDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2890,7 +2890,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneCreditScore_content)" value="Edit">
+                                           onclick="edit_click('GuOneCreditScore_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2905,7 +2905,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneJCICDataDate_content)" value="Edit">
+                                           onclick="edit_click('GuOneJCICDataDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2917,7 +2917,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneBal_CashCard_content)" value="Edit">
+                                           onclick="edit_click('GuOneBal_CashCard_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2929,7 +2929,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneBal_CreditCard_content)" value="Edit">
+                                           onclick="edit_click('GuOneBal_CreditCard_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2941,7 +2941,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneBal_ShortTermLn_content)" value="Edit">
+                                           onclick="edit_click('GuOneBal_ShortTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2953,7 +2953,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneBal_MidTermLn_content)" value="Edit">
+                                           onclick="edit_click('GuOneBal_MidTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2965,7 +2965,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneBal_LongTermLn_content)" value="Edit">
+                                           onclick="edit_click('GuOneBal_LongTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2977,7 +2977,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneBal_ShortTermGuar_content)" value="Edit">
+                                           onclick="edit_click('GuOneBal_ShortTermGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -2989,7 +2989,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneBal_MidTermLnGuar_content)" value="Edit">
+                                           onclick="edit_click('GuOneBal_MidTermLnGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3001,7 +3001,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneBal_LongTermLnGuar_content)" value="Edit">
+                                           onclick="edit_click('GuOneBal_LongTermLnGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3016,7 +3016,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoJCICQueryDate_content)" value="Edit">
+                                           onclick="edit_click('GuTwoJCICQueryDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3028,7 +3028,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoCreditScore_content)" value="Edit">
+                                           onclick="edit_click('GuTwoCreditScore_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3043,7 +3043,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoJCICDataDate_content)" value="Edit">
+                                           onclick="edit_click('GuTwoJCICDataDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3055,7 +3055,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoBal_CashCard_content)" value="Edit">
+                                           onclick="edit_click('GuTwoBal_CashCard_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3067,7 +3067,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoBal_CreditCard_content)" value="Edit">
+                                           onclick="edit_click('GuTwoBal_CreditCard_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3079,7 +3079,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoBal_ShortTermLn_content)" value="Edit">
+                                           onclick="edit_click('GuTwoBal_ShortTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3091,7 +3091,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoBal_MidTermLn_content)" value="Edit">
+                                           onclick="edit_click('GuTwoBal_MidTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3103,7 +3103,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoBal_LongTermLn_content)" value="Edit">
+                                           onclick="edit_click('GuTwoBal_LongTermLn_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3115,7 +3115,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoBal_ShortTermGuar_content)" value="Edit">
+                                           onclick="edit_click('GuTwoBal_ShortTermGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3127,7 +3127,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoBal_MidTermLnGuar_content)" value="Edit">
+                                           onclick="edit_click('GuTwoBal_MidTermLnGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3139,7 +3139,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoBal_LongTermLnGuar_content)" value="Edit">
+                                           onclick="edit_click('GuTwoBal_LongTermLnGuar_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3151,7 +3151,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrBeingOthCompPrId_content)" value="Edit">
+                                           onclick="edit_click('PrBeingOthCompPrId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3163,7 +3163,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseBeingOthCompPrId_content)" value="Edit">
+                                           onclick="edit_click('SpouseBeingOthCompPrId_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3181,7 +3181,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrLaborQryDate_content)" value="Edit">
+                                           onclick="edit_click('PrLaborQryDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3193,7 +3193,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(PrLaborInsSalary_content)" value="Edit">
+                                           onclick="edit_click('PrLaborInsSalary_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3208,7 +3208,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseLaborQryDate_content)" value="Edit">
+                                           onclick="edit_click('SpouseLaborQryDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3220,7 +3220,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(SpouseLaborInsSalary_content)" value="Edit">
+                                           onclick="edit_click('SpouseLaborInsSalary_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3235,7 +3235,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneLaborQryDate_content)" value="Edit">
+                                           onclick="edit_click('GuOneLaborQryDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3247,7 +3247,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuOneLaborInsSalary_content)" value="Edit">
+                                           onclick="edit_click('GuOneLaborInsSalary_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3262,7 +3262,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoLaborQryDate_content)" value="Edit">
+                                           onclick="edit_click('GuTwoLaborQryDate_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3274,7 +3274,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(GuTwoLaborInsSalary_content)" value="Edit">
+                                           onclick="edit_click('GuTwoLaborInsSalary_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3287,7 +3287,7 @@
                             <td>
                                 <center>
                                     <input class="input-width" type="button"
-                                           onclick="edit_click(OtherMemo_content)" value="Edit">
+                                           onclick="edit_click('OtherMemo_content')" value="Edit">
                                 </center>
                             </td>
                         </tr>
@@ -3394,85 +3394,55 @@
 </div>
 </body>
 <script>
+    const SKBANK_ID = 1; // 新光銀行
+    const BANK_LIST = [SKBANK_ID];
+
     let urlString;
     let url;
     let target_id;
     let table_type;
     let data_type;
-    let msg_no;
-    let msg_data;
-    let all_data = {};
-    let IDs = [];
-    let key = '';
-    let value = '';
-    let image_list_data = [];
     // 下拉選單列表
-    let select_array = ['CompType_content', 'BusinessType_content', 'CompDuType_content', 'bizRegAddrOwner_content', 'isBizAddrEqToBizRegAddr_content', 'BizTaxFileWay_content',
+    let select_array = ['CompType_content', 'BusinessType_content', 'compDuType_content', 'bizRegAddrOwner_content', 'isBizAddrEqToBizRegAddr_content', 'BizTaxFileWay_content',
         'IsPrMarried_content', 'IsPrSpouseGu_content', 'RealPr_content', 'realBizRegAddressOwner_content', 'realBizAddressOwner_content', 'realBizAddrOwner_content', 'OthRealPrRelWithPr_content',
         'GuOneRelWithPr_content', 'GuOneCompany_content', 'GuTwoRelWithPr_content', 'GuTwoCompany_content', 'PrEduLevel_content', 'CompMajorOwnership_content', 'CompMajorSetting_content'];
     // 原始檔案圖片-附件資料表
     let rawData_array = [
-        'A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08'
+        'A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'B02', 'B03', 'B08', 'B09', 'B10', 'B11', 'B13', 'B14', 'B15', 'B16',
     ];
     // 送出時為數字欄位
-    let is_int_array = ['CompCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'OthRealPrSHRatio',
-        'employeeNum', 'shareholderNum'];
+    let is_int_array = {
+        [SKBANK_ID]: ['CompCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'OthRealPrSHRatio', 'employeeNum', 'stockholderNum']
+    };
 
-    const SKBANK_ID = 1; // 新光銀行
-    const BANK_LIST = [SKBANK_ID];
-
-    function edit_click(id_content, id_verified, id_reason) {
-        $(id_content).prop('disabled', function (i, v) {
-            let s = !v;
-            if (select_array.includes($(id_content).attr('id'))) {
-                if ($(id_content)[0].selectize) {
-                    if (!s) {
-                        $(id_content)[0].selectize.enable();
-                    } else {
-                        $(id_content)[0].selectize.disable();
-                    }
-                } else {
-                    let id = $(id_content).attr('id');
-                    if (!s) {
-                        $(`#${id}`).prop('disabled', false);
-                    } else {
-                        $(`#${id}`).prop('disabled', true);
-                    }
-                }
-            }
-            return !v;
-        });
+    function edit_click(id_content) {
+        $(`[name=${id_content}]`).each((i, e) => {
+            $(e).prop('disabled', function (i, v) {
+                return !v;
+            })
+        })
     }
 
     function fillReport(data) {
         Object.keys(data).forEach(function (key) {
-            if ($(`#${key}`).length) {
-                if (select_array.includes($(`#${key}`).attr('id'))) {
-                    var $select = $(`#${key}`).selectize();
-                    var selectize = $select[0].selectize;
-                    if (data[key] !== '') {
-                        selectize.setValue(selectize.search(data[key]).items[0].id);
-                    }
-                }
-                if (rawData_array.includes($(`#${key}`).attr('id'))) {
+            let $attachment_block = $(`#${key}`);
+            if ($attachment_block.length) {
+                if (rawData_array.includes($attachment_block.attr('id'))) {
                     $.each(data[key], function (doc_type, doc_list) {
                         let a_tag = '';
                         if (doc_type === 'image') {
                             $.each(doc_list, function (index, doc) {
-                                a_tag += `<a href="${doc}" data-fancybox="images">
-                        	<img id="${key}_${index}"  src="${doc}" style='width:30%;max-width:400px'>
-                        </a>`;
+                                a_tag += `<a href="${doc}" data-fancybox="images"><img id="${key}_${index}"  src="${doc}" style='width:30%;max-width:400px'></a>`;
                             })
                         } else if (doc_type === 'pdf') {
                             $.each(doc_list, function (index, doc) {
                                 a_tag += `<span style="margin: 0 2px 0 2px"><a href="${doc}">檔案${index + 1}</a></span>`;
                             })
                         }
-                        $(`#${key}`).append(a_tag + '<br/>');
+                        $attachment_block.append(a_tag + '<br/>');
                     });
-                }
-                if (!select_array.includes($(`#${key}`).attr('id')) && !rawData_array.includes($(`#${key}`).attr('id'))) {
-                    $(`#${key}`).val(data[key]);
+                } else {
+                    $attachment_block.val(data[key]);
                 }
             }
         })
@@ -3507,13 +3477,17 @@
     }
 
     // 取得收件檢核表文字資料
-    function getCheckLisTexttData(bank_num) {
+    function getCheckLisTextData(bank_num) {
         let selectIds = []
         let all_data = {}
         $(`[data-bankid=${bank_num}] input, [data-bankid=${bank_num}] select`).each(function () {
             if (this.name) selectIds.push(this.name)
         })
-        selectIds.forEach((item, index) => {
+
+        let bank_int_array = is_int_array[bank_num];
+        selectIds.forEach((item) => {
+            let key = '';
+            let value = '';
             if (item) {
                 if (item.match(/.*-selectized/g)) {
                     key = item.replace(/-selectized/g, '');
@@ -3522,7 +3496,7 @@
                 }
                 value = $(`[name="${key}"]`).eq(0).val();
                 key = key.replace(/_content/g, '');
-                if (is_int_array.includes(key)) {
+                if (bank_int_array.includes(key)) {
                     if (value) {
                         value = parseInt(value);
                     } else {
@@ -3536,10 +3510,14 @@
     }
 
     function getCheckListImagesData() {
+        let IDs = [];
+        let all_data = {}
         $(".api_file_page").find("img").each(function () {
             IDs.push(this.id);
         });
-        IDs.forEach((item, index) => {
+        IDs.forEach((item) => {
+            let key = '';
+            let value = '';
             if (item) {
                 key = item;
                 value = $(`#${key}`).attr('src');
@@ -3575,15 +3553,15 @@
         const sendData = (bank_num) => {
             return new Promise((resolve) => {
                 $("#text_list").val("資料處理中");
-                all_data = getCheckLisTexttData(bank_num);
-                data_type = 'text';
-                getMappingMsgNo(target_id, 'send', data_type, bank_num, function (data) {
-                    msg_data = data;
+                let all_data = getCheckLisTextData(bank_num);
 
+                getMappingMsgNo(target_id, 'send', 'text', bank_num, function (data) {
+                    let msg_data = data;
                     if (!msg_data) {
                         return 'no response';
                     }
 
+                    let msg_no = '';
                     if (msg_data.status.code == 201 || msg_data.status.code == 202) {
                         msg_no = msg_data.data.msg_no;
                     } else {
@@ -3613,19 +3591,18 @@
         const sendImageList = (bank_num) => {
             return new Promise((resolve) => {
                 $("#image_list").val("資料處理中");
-                all_data = getCheckListImagesData();
+                let all_data = getCheckListImagesData();
                 let request_data = [];
-                image_list_data = [];
+                let image_list_data = [];
                 let case_no = $('#case_no').val();
                 let compId_input = $('#CompId_content').val();
 
                 if (case_no) {
                     Object.keys(all_data).forEach((key) => {
-                        new_string = key.split('_');
+                        const new_string = key.split('_');
                         data_type = new_string[0];
                         getMappingMsgNo(target_id, 'send', key, bank_num, (data) => {
-                            msg_data = data;
-                            msg_no = msg_data.data.msg_no;
+                            let msg_no = data.data.msg_no;
                             request_data.push({
                                 'MsgNo': msg_no,
                                 'CompId': compId_input,
@@ -3656,8 +3633,12 @@
     }
 
     function changeTab(tab) {
-        $('.nav-page').css('display', 'none');
-        $(`#page-${tab}`).css('display', '');
+        $('.nav-link').removeClass('active')
+        $(`#nav-${tab}`).toggleClass('active')
+        $('.nav-page').each((i, e) => {
+            $(e).hide()
+        })
+        $(`#page-${tab}`).show()
     }
 
     $(document).ready(function () {
@@ -3665,7 +3646,7 @@
         url = new URL(urlString);
         target_id = url.searchParams.get("target_id");
         table_type = url.searchParams.get("table_type");
-        IDs = []
+        let IDs = [];
         $("body").find("input").each(function () {
             if (this.name) IDs.push(this.name);
         });

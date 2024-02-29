@@ -1,13 +1,21 @@
 <?php
-namespace Adapter;
+namespace Adapter\sk_million;
+use Adapter\Adapter_base;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * [新光] 送件檢核表 key-value 轉換
+ * 送件檢核表
+ *
+ * 銀行：新光
+ * 產品：普匯微企e秒貸
  */
 class Adapter_sk_bank extends Adapter_base
 {
-    public static $mapping_table = ['compContactTel' =>'CompTelNo', 'compContactExt' => 'CompTelExt', 'realBizRegAddressOwner' => 'IsBizRegAddrSelfOwn', 'bizRegAddrOwner' => 'BizRegAddrOwner', 'isBizAddrEqToBizRegAddr' => 'IsBizAddrEqToBizRegAddr', 'realBizAddressOwner' => 'IsRealBizAddrSelfOwn', 'realBizAddrOwner' => 'RealBizAddrOwner', 'employeeNum' => 'EmployeeNum', 'shareholderNum' => 'ShareholderNum'];
+    public static $mapping_table = ['compName' => 'CompName', 'compSetDate' => 'CompSetDate', 'compCapital' => 'CompCapital', 'businessCycleCode' => 'CompIdustry', 'businessTypeCode' => 'BusinessType', 'compContactTel' =>'CompTelNo', 'compContactExt' => 'CompTelExt', 'prName' => 'PrName', 'realBizRegAddressOwner' => 'IsBizRegAddrSelfOwn', 'bizRegAddrOwner' => 'BizRegAddrOwner', 'isBizAddrEqToBizRegAddr' => 'IsBizAddrEqToBizRegAddr', 'realBizAddressOwner' => 'IsRealBizAddrSelfOwn', 'realBizAddrOwner' => 'RealBizAddrOwner', 'employeeNum' => 'EmployeeNum',
+        'directorAName' => 'DirectorAName', 'directorAId' => 'DirectorAId', 'directorBName' => 'DirectorBName', 'directorBId' => 'DirectorBId', 'directorCName' => 'DirectorCName', 'directorCId' => 'DirectorCId', 'directorDName' => 'DirectorDName', 'directorDId' => 'DirectorDId', 'directorEName' => 'DirectorEName', 'directorEId' => 'DirectorEId', 'directorFName' => 'DirectorFName', 'directorFId' => 'DirectorFId', 'lastPaidInCapitalDate' => 'LastPaidInCapitalDate',
+        'bizRegAddressCity' => 'BizRegAddrCityName', 'bizRegAddressArea' => 'BizRegAddrAreaName', 'bizRegAddressRoad' => 'BizRegAddrRoadName', 'bizRegAddressRoadType' => 'BizRegAddrRoadType', 'bizRegAddressSec' => 'BizRegAddrSec', 'bizRegAddressLn' => 'BizRegAddrLn', 'bizRegAddressAly' => 'BizRegAddrAly', 'bizRegAddressNo' => 'BizRegAddrNo', 'bizRegAddressNoExt' => 'BizRegAddrNoExt', 'bizRegAddressFloor' => 'BizRegAddrFloor', 'bizRegAddressFloorExt' => 'BizRegAddrFloorExt', 'bizRegAddressRoom' => 'BizRegAddrRoom',
+        'realBizAddressCity' => 'RealBizAddrCityName', 'realBizAddressArea' => 'RealBizAddrAreaName', 'realBizAddressRoad' => 'RealBizAddrRoadName', 'realBizAddressRoadType' => 'RealBizAddrRoadType', 'realBizAddressSec' => 'RealBizAddrSec', 'realBizAddressLn' => 'RealBizAddrLn', 'realBizAddressAly' => 'RealBizAddrAly', 'realBizAddressNo' => 'RealBizAddrNo', 'realBizAddressNoExt' => 'RealBizAddrNoExt', 'realBizAddressFloor' => 'RealBizAddrFloor', 'realBizAddressFloorExt' => 'RealBizAddrFloorExt', 'realBizAddressRoom' => 'RealBizAddrRoom', 'stockholderNum' => 'ShareholderNum'];
 
     public static $required_attach_table = [
         'A01' => 'A01', // 公司變更事項登記卡及工商登記查詢
@@ -20,7 +28,7 @@ class Adapter_sk_bank extends Adapter_base
         'A08' => 'A08', // 公司、負責人及保證人近六個月存摺餘額明細及存摺封面
     ];
 
-    public static $mapping_option_table = ['BizRegAddrOwner' => ['A' => 'B', 'B' => 'C', 'C' => 'A'], 'RealBizAddrOwner' => ['A' => 'B', 'B' => 'C', 'C' => 'A']];
+    public static $mapping_option_table = ['BizRegAddrOwner' => ['A' => 'B', 'B' => 'C', 'C' => 'A'], 'RealBizAddrOwner' => ['A' => 'B', 'B' => 'C', 'C' => 'A'], 'BusinessType' => ['1' => 'A', '2' => 'B', '3' => 'C']];
     public static $required_column_table = ['CompName', 'CompSetDate', 'CompCapital', 'CompIdustry', 'CompType', 'CompDuType', 'CompRegAddrZip', 'CompRegAddrZipName', 'CompRegAddress', 'CompMajorAddrZip', 'CompMajorAddrZipName', 'CompMajorAddress', 'CompTelAreaCode', 'CompTelNo', 'PrName', 'PrBirth'];
     public static $date_format_table = ['CompSetDate' => 'YYYYMMDD', 'PrBirth' => 'YYYYMMDD', 'SpouseBirth' => 'YYYYMMDD', 'GuOneBirth' => 'YYYYMMDD', 'GuTwoBirth' => 'YYYYMMDD', 'PrOnboardDay' => 'YYYYMMDD', 'ExPrOnboardDay' => 'YYYYMMDD', 'ExPrOnboardDay2' => 'YYYYMMDD', 'AnnualIncomeYear1' => 'YYYYMMDD', 'AnnualIncomeYear2' => 'YYYYMMDD', 'AnnualIncomeYear3' => 'YYYYMMDD',
         'NumOfInsuredYM1' => 'YYYYMM', 'NumOfInsuredYM2' => 'YYYYMM', 'NumOfInsuredYM3' => 'YYYYMM', 'NumOfInsuredYM4' => 'YYYYMM', 'NumOfInsuredYM5' => 'YYYYMM', 'NumOfInsuredYM6' => 'YYYYMM', 'NumOfInsuredYM7' => 'YYYYMM', 'NumOfInsuredYM8' => 'YYYYMM', 'NumOfInsuredYM9' => 'YYYYMM', 'NumOfInsuredYM10' => 'YYYYMM', 'NumOfInsuredYM11' => 'YYYYMM', 'NumOfInsuredYM12' => 'YYYYMM',

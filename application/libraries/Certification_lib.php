@@ -80,7 +80,8 @@ class Certification_lib{
 			);
             !$get_fail ? $param['status'] = [CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
                 CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_PENDING_TO_REVIEW,
-                CERTIFICATION_STATUS_NOT_COMPLETED, CERTIFICATION_STATUS_AUTHENTICATED] : '';
+                CERTIFICATION_STATUS_NOT_COMPLETED, CERTIFICATION_STATUS_AUTHENTICATED]
+                : $param['status NOT'] = [CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE];
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
                 if ($get_expired == FALSE && $certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDENTITY,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
@@ -111,6 +112,7 @@ class Certification_lib{
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
+                'status NOT' => [CERTIFICATION_STATUS_PENDING_SPOUSE_ASSOCIATE]
 			]);
 			if(!empty($certification)){
 				$certification->id 					= intval($certification->id);
@@ -151,9 +153,6 @@ class Certification_lib{
 						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
 					}
 
-                    // 驗證推薦碼
-                    $this->verify_promote_code($info, FALSE);
-
 					return $rs;
 				}
 			}
@@ -172,7 +171,10 @@ class Certification_lib{
         $this->CI->load->model('user/user_qrcode_model');
         $this->CI->load->model('user/qrcode_setting_model');
         $this->CI->load->library('qrcode_lib');
-        $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
+        $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => [
+            PROMOTE_STATUS_PENDING_TO_VERIFY,
+            PROMOTE_STATUS_CAN_SIGN_CONTRACT
+        ]]);
         if ( ! isset($promoteCode))
         {
             return FALSE;
@@ -194,10 +196,21 @@ class Certification_lib{
             $this->CI->load->library('Notification_lib');
             if ($failed)
             {
-                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                $user_qrcode_update_param = [
                     'status' => PROMOTE_STATUS_PENDING_TO_SENT,
-                ]);
+                    'sub_status' => PROMOTE_SUB_STATUS_DEFAULT,
+                ];
+                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], $user_qrcode_update_param);
                 $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", CERTIFICATION_STATUS_FAILED);
+                // 寫 log
+                $this->CI->load->model('log/log_user_qrcode_model');
+                $user_qrcode_update_param['user_qrcode_id'] = $promoteCode->id;
+                $this->CI->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+                $this->CI->load->model('user/user_qrcode_apply_model');
+                $apply_info = $this->CI->user_qrcode_apply_model->get_by(['user_qrcode_id' => $promoteCode->id, 'status != ' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
+                if ($apply_info){
+                    $this->CI->user_qrcode_apply_model->update_by(['id' => $apply_info->id], ['status' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
+                }
             }
             else
             {
@@ -219,9 +232,10 @@ class Certification_lib{
                     return FALSE;
                 }
 
-                if ($company)
+                $this->CI->load->library('qrcode_lib');
+                if ($this->CI->qrcode_lib->is_appointed_type($promoteCode->alias))
                 {
-                    // 公司需等合約審核過才可以通過
+                    // 特約通路商需等合約審核過才可以通過
                     $this->CI->load->model('user/user_qrcode_apply_model');
                     $apply_info = $this->CI->user_qrcode_apply_model->get_by(['user_qrcode_id' => $promoteCode->id, 'status != ' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
                     if ( ! isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_SUCCESS)
@@ -232,10 +246,16 @@ class Certification_lib{
 
                 $settings = json_decode($promoteCode->settings, TRUE);
                 $settings['certification_id'] = array_column($certifications, 'id');
-                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                $user_qrcode_update_param = [
                     'settings' => json_encode($settings),
                     'status' => PROMOTE_STATUS_AVAILABLE,
-                ]);
+                ];
+                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], $user_qrcode_update_param);
+                // 寫 log
+                $this->CI->load->model('log/log_user_qrcode_model');
+                $user_qrcode_update_param['user_qrcode_id'] = $promoteCode->id;
+                $this->CI->log_user_qrcode_model->insert_log($user_qrcode_update_param);
+
                 $this->CI->load->library('contract_lib');
                 $raw_contract = $this->CI->contract_lib->raw_contract($promoteCode->contract_id);
                 if (isset($raw_contract))
@@ -253,9 +273,9 @@ class Certification_lib{
                     if ( ! $company)
                     {
                         $content = json_decode($certifications[CERTIFICATION_IDENTITY]->content, TRUE);
-
-                        $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_GENERAL_CONTRACT_TYPE_NAME,
-                            $content['name'] ?? '', $content['address'] ?? '', $settings, $origin_contract_date);
+                        $name = $content['name'] ?? '';
+                        $id_number = $content['id_number'] ?? '';
+                        $address = $content['address'] ?? '';
                     }
                     else
                     {
@@ -264,10 +284,12 @@ class Certification_lib{
                         $judicial_person_info = $this->CI->judicial_person_model->get_by(['company_user_id' => $info->user_id]);
                         $name = $judicial_person_info->company ?? '';
                         $address = $judicial_person_info->cooperation_address ?? '';
-
-                        $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME,
-                            $name, $address, $settings, $origin_contract_date);
+                        $id_number = $judicial_person_info->tax_id ?? '';
                     }
+                    $contract_type = $this->CI->qrcode_lib->get_contract_type_by_alias($promoteCode->alias);
+                    $contract = $this->CI->qrcode_lib->get_contract_format_content($contract_type,
+                        $name, $id_number, $address, $settings, $origin_contract_date);
+
                     if ( ! empty($contract))
                     {
                         $this->CI->contract_lib->update_contract($promoteCode->contract_id, $contract);
@@ -720,7 +742,7 @@ class Certification_lib{
      * Use 戶役政 API to verify ID card info.
      * @param $user_certification_id : id of user_certification with certification_id == CERTIFICATION_IDENTITY
      * @param $identity_content : array version of the corresponding user_certification.content
-     * @return [$risVerified, $risVerificationFailed] : [TRUE, TRUE] means [呼叫戶役政 API 成功, 身分證資料有誤]
+     * @return [$risVerified, $risVerificationFailed, $param['checkIdCardApplyFormat']] : [TRUE, TRUE, Message] means [呼叫戶役政 API 成功, 身分證資料有誤, 戶役政回應的內容]
      */
     public function verify_id_card_info($user_certification_id, array &$identity_content, &$error_message, $ocr_info=[]): array
     {
@@ -810,20 +832,17 @@ class Certification_lib{
                 $param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
 
                 $risVerified = TRUE;
-                if (in_array($result['response']['response']['rowData']['responseData']['checkIdCardApply'], [2,3,4])) {
+                if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] != 1) {
+                    $error_message .= "{$msg_prefix}[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
                     $risVerificationFailed = TRUE;
                 } else {
-                    if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] != 1)
-                    {
-                        $error_message .= "{$msg_prefix}[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
-                    }
                     $risVerificationFailed = FALSE;
                 }
             }
             $identity_content['id_card_api'] = $result['response'];
         }
         $this->CI->log_integration_model->insert($param);
-        return [$risVerified, $risVerificationFailed];
+        return [$risVerified, $risVerificationFailed, $param['checkIdCardApplyFormat']];
     }
 
     // 實名認證
@@ -881,7 +900,7 @@ class Certification_lib{
                                                 $user_info = ! empty($user_certification->content) ? $user_certification->content : [];
                                                 // 判斷是否有資料
                                                 if ($sip_data && isset($sip_data['response']['result']))
-                                                {   
+                                                {
                                                     $name = $user_info['name']  ?? '';
                                                     $id_number = $user_info['id_number'] ?? '';
                                                     $sip_name = $sip_data['response']['result']['name'] ?? '';
@@ -1229,16 +1248,16 @@ class Certification_lib{
                       $num = 0;
                       foreach($company_user_info as $k=>$v){
                           if($num==0){
-                            $info->content['skbank_form']['PrOnboardDay'] = $k;
-                            $info->content['skbank_form']['PrOnboardName'] = $v;
+                            $info->content['PrOnboardDay'] = $k;
+                            $info->content['PrOnboardName'] = $v;
                           }
                           if($num==1){
-                            $info->content['skbank_form']['ExPrOnboardDay'] = $k;
-                        	$info->content['skbank_form']['ExPrOnboardName'] = $v;
+                            $info->content['ExPrOnboardDay'] = $k;
+                        	$info->content['ExPrOnboardName'] = $v;
                           }
                           if($num==2){
-                        	$info->content['skbank_form']['ExPrOnboardDay2'] = $k;
-                        	$info->content['skbank_form']['ExPrOnboardName2'] = $v;
+                        	$info->content['ExPrOnboardDay2'] = $k;
+                        	$info->content['ExPrOnboardName2'] = $v;
                           }
                           if($num==3){
                         	break;
@@ -1264,314 +1283,14 @@ class Certification_lib{
 	}
 
 	public function balancesheet_verify($info = array(), $url=null){
-		// $user_certification	= $this->get_certification_info($user_id,1007,$info->investor);
-		// if($user_certification==false || $user_certification->status!=1){
-		// 	return false;
-		// }
+
 		$info->content = isset($info->content) ? json_decode($info->content,true) : '';
 		if($info && $info->certification_id == 1001 && $info->status == 0 && !empty($info->content['balance_sheet_image'])){
 
 			// 資產負債暫時性
 			$status = 3;
 
-			// $this->CI->load->model('log/log_image_model');
-			// $image_id = $this->CI->log_image_model->getIDByUrl([$info->content['balance_sheet_image']]);
-			// foreach($image_id as $v){
-			// 	$imageIds[] = $v->id;
-			// }
-			// $this->CI->load->library('ocr/report_scan_lib');
-			// $batchType = 'balance_sheets';
-			// $response = $this->CI->report_scan_lib->requestForResult($batchType, $imageIds);
-			// if ($response && $response->status == 200) {
-			// 	$response = isset($response->response->balance_sheet_logs->items[0]) ? $response->response->balance_sheet_logs->items[0] : '';
-			// 	if($response && $response->status=='finished'){
-			// 		$this->CI->load->model('user/judicial_person_model');
-			// 		$company_info = $this->CI->judicial_person_model->get_many_by([
-			// 		    'company_user_id' => $info->user_id,
-			// 		]);
-			// 		$tax_id = isset($response->balance_sheet->companyInfo->taxId) ? $response->balance_sheet->companyInfo->taxId : '';
-			// 		$company_name = isset($response->balance_sheet->companyInfo->name) ? $response->balance_sheet->companyInfo->name : '';
-			// 		$report_time = isset($response->balance_sheet->reportTime) ? $response->balance_sheet->reportTime : '';
-			// 		if($tax_id != $company_info[0]->tax_id){
-			// 			$status = 3;
-			// 			$info->content['error_message'][] = '公司統一編號不一致';
-			// 		}
-			// 		if($company_name != $company_info[0]->company){
-			// 			$status = 3;
-			// 			$info->content['error_message'][] = '公司名稱不一致';
-			// 		}
-			//
-			// 		$image_info = $this->CI->log_image_model->get_many_by([
-			// 		    'url' => $info->content['balance_sheet_image'],
-			// 		]);
-			// 		$update_time = $image_info->created_at;
-			// 		if(preg_match("/^[0-9]{3}年(0?[1-9]|1[012])月(0?[1-9]|[12][0-9]|3[01])日$/", $report_time)){
-			// 			$report_time = date_parse_from_format('Y-m-d',$report_time);
-			// 			$update_time = explode('-',date('Y-m-d',$update_time));
-			// 			$report_time = explode('-',$report_time['year'].'-'.$report_time['month'].'-'.$report_time['day']);
-			// 			if(count($report_time)>=3){
-			// 				if($update_time[1]>=6){
-			// 					$update_time[0] -= 1;
-			// 				}
-			// 				if($update_time[1]<6){
-			// 					$update_time[0] -= 2;
-			// 				}
-			// 				if($update_time[0] != $report_time[0]){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '日期不為近一年';
-			// 				}
-			// 			}else{
-			// 				$status = 3;
-			// 				$info->content['error_message'][] = '日期無法辨識';
-			// 			}
-			// 		}else{
-			// 			$status = 3;
-			// 			$info->content['error_message'][] = '日期格式不正確';
-			// 		}
-			//
-			// 		if($status == 1){
-			// 			$this->set_success($info->id ,true);
-			// 		}
-			//
-			// 	}else{
-			// 		$status = 3;
-			// 	}
-			// }else{
-			// 	$status = 3;
-			// }
-			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status,
-				'sys_check' => 1,
-				'content' => json_encode($info->content)
-			));
-			return true;
-		}
-		return false;
-	}
 
-	public function incomestatement_verify($info = array(), $url=null){
-		// $user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
-		// if($user_certification==false || $user_certification->status!=1){
-		// 	return false;
-		// }
-		$info->content = isset($info->content) ? json_decode($info->content,true) : [];
-		if($info && $info->certification_id == 1002 && $info->status == 0){
-			$status = 3;
-	        $data = [];
-            if(isset($info->content['result']) && !empty($info->content['result'])){
-                foreach($info->content['result'] as $k=>$v){
-    				// 使用者校驗資料
-    				if(isset($v['origin_type']) && $v['origin_type'] == 'user_confirm'){
-    					$data[$k]['report_time'] = isset($v['report_time']) ? $v['report_time']: '';
-    					$data[$k]['company_name'] = isset($v['company_name']) ? $v['company_name']: '';
-    					$data[$k]['company_tax_id'] = isset($v['company_tax_id']) ? $v['company_tax_id']: '';
-    					$data[$k]['input_89'] = isset($v['input_89']) ? $v['input_89']: '';
-    					$data[$k]['input_90'] = isset($v['input_90']) ? $v['input_90']: '';
-    					$data[$k]['id'] = $k;
-    				}
-    				if(! isset($v['origin_type'])){
-    					// 找所有圖片ID
-    			    // $this->CI->load->model('log/log_image_model');
-    			    // if(is_array($info->content['income_statement_image'])){
-    			    //   $imgurl = $info->content['income_statement_image'];
-    			    // }else{
-    			    //   $imgurl = [$info->content['income_statement_image']];
-    			    // }
-    			    // $image_info = $this->CI->log_image_model->get_many_by([
-    			    //     'url' => $imgurl,
-    			    // ]);
-    			    // if($image_info){
-    			    //   $update_time = $image_info[0]->created_at;
-    			    //   foreach($image_info as $v){
-    			    //     $imageIds[] = $v->id;
-    			    //   }
-    			    // }
-
-    					// 找所有ocr資料
-    			    $this->CI->load->library('ocr/report_scan_lib');
-    			    $response = $this->CI->report_scan_lib->requestForResult('income_statements', $k);
-    					if ($response && $response->status == 200) {
-    						foreach($response as $k1=>$v1){
-    		          $data[$k]['report_time'] = isset($v1->income_statement->report_time_range->end_at) ? $v1->income_statement->report_time_range->end_at : '';
-    		          $data[$k]['company_name'] = isset($v1->income_statement->company->companyName) ? $v1->income_statement->company->companyName : '';
-    		          $data[$k]['company_tax_id'] = isset($v1->income_statement->company->taxId) ? $v1->income_statement->company->taxId : '';
-    		          $data[$k]['input_89'] = isset($v1->income_statement->operationIncome->{'89'}) ? $v1->income_statement->operationIncome->{'89'} : '';
-    		          $data[$k]['input_90'] = isset($v1->income_statement->operationIncome->{'90'}) ? $v1->income_statement->operationIncome->{'90'} : '';
-    		          $data[$k]['id'] = isset($v1->id) ? $v1->id : '';
-    		          foreach($v1->income_statement->netIncomeTable as $v2){
-    		            if($v2->key =='04'){
-    		              $data[$k]['input_4_1'] = $v2->value->left;
-    		              $data[$k]['input_4_2'] = $v2->value->right;
-    		              break;
-    		            }
-    		          }
-    		        }
-    					}
-    				}
-    			}
-            }
-
-			if($data){
-				$this->CI->load->library('verify/data_legalize_lib');
-				$res = $this->CI->data_legalize_lib->legalize_incomestatement($info->user_id,$data);
-
-				$info->remark = $res['error_message'];
-				if(empty($res['error_message'])){
-					$status = 1;
-				}
-				$info->content['error_location'] = $res['error_location'];
-				// 寫入資料
-				foreach($res['result'] as $k => $v){
-					$info->content['result'][$data[$k]['id']] = [
-						'action_user' => '系統',
-						'send_time' => time(),
-						'status' => 1,
-						'company_name' => isset($res[$k]['company_name']) ? $res[$k]['company_name']: '',
-						'report_time' => isset($res[$k]['report_time']) ? $res[$k]['report_time'] :'',
-						'company_tax_id' => isset($res[$k]['company_tax_id']) ? $res[$k]['company_tax_id'] :'',
-						'input_89' => isset($res[$k]['input_89']) ? $res[$k]['input_89']:'',
-						'input_90' => isset($res[$k]['input_90']) ? $res[$k]['input_90'] : '',
-						'input_4_1' => isset($data[$k]['input_4_1']) ? $data[$k]['input_4_1'] : '',
-						'input_4_2' => isset($data[$k]['input_4_2']) ? $data[$k]['input_4_2'] : '',
-					];
-				}
-
-			}
-            $this->CI->user_certification_model->update($info->id, array(
-                'status' => 3,
-                'sys_check' => 1,
-                'content' => json_encode($info->content),
-                'remark' => json_encode($info->remark)
-            ));
-			if($status == 1){
-				$this->set_success($info->id ,true);
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public function businesstax_verify($info = array(), $url=null){
-		// $user_certification	= $this->get_certification_info($user_id,1015,$info->investor);
-		// if($user_certification==false || $user_certification->status!=1){
-		// 	return false;
-		// }
-		$info->content = isset($info->content) ? json_decode($info->content,true) : '';
-		if($info && $info->certification_id == CERTIFICATION_BUSINESSTAX && $info->status == 0 && !empty($info->content['business_tax_image'])){
-			// 401暫時性
-			$status = 3;
-			// $this->CI->load->model('log/log_image_model');
-			// $image_id = $this->CI->log_image_model->getIDByUrl([$info->content['business_tax_image']]);
-			// foreach($image_id as $v){
-			// 	$imageIds[] = $v->id;
-			// }
-			// $this->CI->load->library('ocr/report_scan_lib');
-			// $batchType = 'business_tax_return_reports';
-			// $response = $this->CI->report_scan_lib->requestForResult($batchType, $imageIds);
-			// if ($response && $response->status == 200) {
-			// 	$response = isset($response->response->business_tax_return_logs->items) ? $response->response->business_tax_return_logs->items : '';
-			// 	if($response){
-			// 		$this->CI->load->model('user/judicial_person_model');
-			// 		$company_info = $this->CI->judicial_person_model->get_many_by([
-			// 		    'company_user_id' => $info->user_id,
-			// 		]);
-			// 		$this->CI->load->library('gcis_lib');
-		  //     $gcis_info = $this->CI->gcis_lib->account_info($tax_id);
-			// 		$company_address = isset($gcis_info['Company_Location']) ? $gcis_info['Company_Location'] : '';
-			// 		$company_responser = isset($gcis_info['Responsible_Name']) ? $gcis_info['Responsible_Name'] : '';
-			//
-			// 		$check_list =[];
-			// 		$info->content['error_message']=[];
-			// 		foreach($response as $k=>$v){
-			// 			$check_list[$k]['taxId'] = isset($v->business_tax_return->company_info->taxId) ? $v->business_tax_return->company_info->taxId : '';
-			// 			$check_list[$k]['name'] = isset($v->business_tax_return->company_info->name) ? $v->business_tax_return->company_info->name : '';
-			// 			$check_list[$k]['address'] = isset($v->business_tax_return->company_info->address) ? $v->business_tax_return->company_info->address : '';
-			// 			$check_list[$k]['responser'] = isset($v->business_tax_return->company_info->responser) ? $v->business_tax_return->company_info->responser : '';
-			// 			$check_list[$k]['time'] = isset($v->business_tax_return->report_time_range) ? $v->business_tax_return->report_time_range : '';
-			// 		}
-			// 		$now = date('md');
-			// 		if($now < 115){
-			// 			$start_range = date('Y')-2-1911;
-			// 			$start_range .= '11';
-			// 			$end_range = date('Y')-1-1911;
-			// 			$end_range .= '10';
-			// 		}
-			// 		if((115 >= $now) && ($now > 315)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '1';
-			// 			$end_range = date('Y')-1-1911;
-			// 			$end_range .= '12';
-			// 		}
-			// 		if((315 >= $now) && ($now > 515)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '03';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '02';
-			// 		}
-			// 		if((515 >= $now) && ($now > 715)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '05';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '02';
-			// 		}
-			// 		if((715 >= $now) && ($now > 915)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '07';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '06';
-			// 		}
-			// 		if((915 >= $now) && ($now > 1115)){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '9';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '08';
-			// 		}
-			// 		if(1115>= $now){
-			// 			$start_range = date('Y')-1-1911;
-			// 			$start_range .= '11';
-			// 			$end_range = date('Y')-1911;
-			// 			$end_range .= '10';
-			// 		}
-			// 		foreach($check_list as $v){
-			// 			if(! in_array('公司統一編號不一致',$info->content['error_message'])){
-			// 				if($v->taxId != $company_info[0]->tax_id){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '公司統一編號不一致';
-			// 				}
-			// 			}
-			// 			if(! in_array('公司名稱不一致',$info->content['error_message'])){
-			// 				if($v->name != $company_info[0]->company){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '公司名稱不一致';
-			// 				}
-			// 			}
-			// 			if(! in_array('公司地址不一致',$info->content['error_message'])){
-			// 				if($v->address != $company_address){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '公司地址不一致';
-			// 				}
-			// 			}
-			// 			if(! in_array('公司負責人不一致',$info->content['error_message'])){
-			// 				if($v->responser != $company_responser){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '公司負責人不一致';
-			// 				}
-			// 			}
-			// 			if(! in_array('資料不符合近一年區間',$info->content['error_message'])){
-			// 				$time = explode("年",$v->time);
-			// 				$time[1] = explode("-",$time);
-			// 				if( ($start_range < $time[0].$time[1][0]) || ($end_range > $time[0].$time[1][0]) ){
-			// 					$status = 3;
-			// 					$info->content['error_message'][] = '資料不符合近一年區間';
-			// 				}
-			// 			}
-			// 		}
-			// 		if($status == 1){
-			// 			$this->set_success($info->id ,true);
-			// 		}
-			//
-			// 	}
-			// }
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status,
 				'sys_check' => 1,
@@ -1691,6 +1410,11 @@ class Certification_lib{
 	}
 
     public function judicialguarantee_verify($info = array(), $url=null){
+        $cert = Certification_factory::get_instance_by_id($info->id);
+        if (isset($cert))
+        {
+            return $cert->verify();
+        }
         if($info && $info->certification_id == CERTIFICATION_JUDICIALGUARANTEE && $info->status == 0){
             $info->content = isset($info->content) ? json_decode($info->content,true) : [];
             $this->CI->load->library('Judicialperson_lib');
@@ -1996,23 +1720,19 @@ class Certification_lib{
 		return false;
 	}
 
-    public function save_mail_url($info = array(), $url, $is_valid_pdf)
+    public function save_mail_url($info = array(), $url, $is_valid_pdf): bool
     {
         $content = json_decode($info->content, TRUE);
         $content['pdf_file'] = $url;
         $content['is_valid_pdf'] = $is_valid_pdf;
+        $mail_file_status = $url ? 1 : 0;
+        $content['mail_file_status'] = $mail_file_status;
 
-		if($url){
-			$content['mail_file_status'] = 1;
-		}else{
-			$content['mail_file_status'] = 0;
-		}
-
-		$this->CI->user_certification_model->update($info->id, array(
-			'content'=>json_encode($content)
-		));
-		return true;
-	}
+        $this->CI->user_certification_model->update($info->id, array(
+            'content' => json_encode($content)
+        ));
+        return (bool)$mail_file_status;
+    }
 
 	// to do : 待加入並合併普匯微企e秒貸
 	public function job_verify($info = array(),$url=null): bool
@@ -2061,16 +1781,23 @@ class Certification_lib{
 				$image_data = ob_get_contents();
 				ob_end_clean();
 
-				if($system=='azure'){
-				    $this->CI->load->library('Azure_lib');
-                    $count  = count($this->CI->azure_lib->detect($url,$user_id));
-                }
-				else{
-                    $base64 = base64_encode($image_data);
-                    $this->CI->load->library('faceplusplus_lib');
-                    $token = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,$user_id,$cer_id);
-                    $count = is_array($token) ? count($token) : 0;
-                }
+                // Todo: 2023-10-11 azure 暫時改回 face++
+                // if($system=='azure'){
+                //     $this->CI->load->library('Azure_lib');
+                //     $count  = count($this->CI->azure_lib->detect($url,$user_id));
+                // }
+                // else{
+                //     $base64 = base64_encode($image_data);
+                //     $this->CI->load->library('faceplusplus_lib');
+                //     $token = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,$user_id,$cer_id);
+                //     $count = is_array($token) ? count($token) : 0;
+                // }
+
+                $base64 = base64_encode($image_data);
+                $this->CI->load->library('faceplusplus_lib');
+                $token = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64, $user_id, $cer_id);
+                $count = is_array($token) ? count($token) : 0;
+                
                 if($count){
                     $this->CI->load->library('s3_upload');
                     $url = $this->CI->s3_upload->image_by_data($image_data, basename($url), $user_id, 'id_card', 'rotate');
@@ -2108,7 +1835,12 @@ class Certification_lib{
                 $subcode = $this->CI->user_subcode_model->get_by(['registered_id' => $content['id_number']]);
                 if (isset($subcode))
                 {
-                    $this->CI->user_qrcode_model->update_by(['id' => $subcode->user_qrcode_id], ['user_id' => $user->id]);
+                    $user_qrcode_update_param = ['user_id' => $user->id];
+                    $this->CI->user_qrcode_model->update_by(['id' => $subcode->user_qrcode_id], $user_qrcode_update_param);
+                    // 寫 log
+                    $this->CI->load->model('log/log_user_qrcode_model');
+                    $user_qrcode_update_param['user_qrcode_id'] = $subcode->user_qrcode_id;
+                    $this->CI->log_user_qrcode_model->insert_log($user_qrcode_update_param);
                 }
             }
 
@@ -2811,6 +2543,11 @@ class Certification_lib{
         return false;
     }
 
+    private function passbookcashflow2_success($info)
+    {
+        return $this->passbookcashflow_success($info);
+    }
+
 		private function governmentauthorities_success($info){
 		    if($info){
                 $content = $info->content;
@@ -2821,9 +2558,9 @@ class Certification_lib{
                 // 寫入法人基本資料
                 $this->CI->load->model('user/user_model');
                 $this->CI->user_model->update($info->user_id, array(
-                    'name' => isset($content['skbank_form']['CompName']) ? $content['skbank_form']['CompName'] : '',
+                    'name' => $content['compName'] ?? '',
                     // 地址暫時不寫入
-                    'address' => isset($content['address']) ? $content['address'] : '',
+                    'address' => $content['address'] ?? '',
                 ));
                 // 找自然人資料
                 $this->CI->load->model('user/user_model');
@@ -2834,10 +2571,10 @@ class Certification_lib{
                     // 新建法人歸戶資料
                     $param = [
                         'user_id' => $user->id,
-                        'company_type' => isset($content['skbank_form']['CompType']) ? $content['skbank_form']['CompType'] : '',
-                        'company' => isset($content['skbank_form']['CompName']) ? $content['skbank_form']['CompName'] : '',
+                        'company_type' => $content['compType'] ?? '',
+                        'company' => $content['compName'] ?? '',
                         'company_user_id' => $info->user_id,
-                        'tax_id' => isset($content['skbank_form']['CompId']) ? $content['skbank_form']['CompId'] : '',
+                        'tax_id' => $content['compId'] ?? '',
                         'status' => 3,
                         'enterprise_registration' => json_encode(['enterprise_registration_image' => $info->content['governmentauthorities_image']])
                     ];
@@ -3145,7 +2882,9 @@ class Certification_lib{
             }
 
             if($product){
-                foreach($product['certifications'] as $key => $value) {
+                $this->CI->load->library('loanmanager/product_lib');
+                $product_certs = $this->CI->product_lib->get_product_certs_by_product($product, [ASSOCIATES_CHARACTER_REGISTER_OWNER]);
+                foreach($product_certs as $key => $value) {
                     $data = $this->certification[$value];
                     if($company){
                         if(in_array($value, [
@@ -3156,7 +2895,8 @@ class Certification_lib{
                             CERTIFICATION_FINANCIALWORKER,
                             CERTIFICATION_INVESTIGATION,
                             CERTIFICATION_JOB,
-                            CERTIFICATION_PROFILE
+                            CERTIFICATION_PROFILE,
+                            CERTIFICATION_PASSBOOKCASHFLOW_2
                         ]))
                         {
                             $user_certification = $this->get_certification_info($naturalPerson->id, $value, 0, $get_fail, $get_expired);
@@ -3174,7 +2914,7 @@ class Certification_lib{
                             $certification[$value] = $data;
                         }
                     }else{
-                        if($value <= CERTIFICATION_FOR_JUDICIAL){
+                        if($value < CERTIFICATION_FOR_JUDICIAL){
                             $certification[$value] = $data;
                         }
                     }
@@ -3252,17 +2992,7 @@ class Certification_lib{
                 }
             }
 
-            $skip_certification_ids = [];
-            if ( ! empty($target))
-            {
-                $this->CI->load->model('loan/target_meta_model');
-                $target_meta = $this->CI->target_meta_model->as_array()->get_by([
-                    'target_id' => $target->id,
-                    'meta_key' => 'skip_certification_ids'
-                ]);
-                $skip_certification_ids = json_decode($target_meta['meta_value'] ?? '[]', TRUE);
-                $skip_certification_ids = is_array($skip_certification_ids) ? $skip_certification_ids : [];
-            }
+            $skip_certification_ids = $this->get_skip_certification_ids($target);
 
 			foreach($certification as $key => $value){
 				$userId = $user_id;
@@ -3318,16 +3048,18 @@ class Certification_lib{
             $target = json_decode(json_encode($target));
         }
 		if($user_id){
+            $this->CI->load->library('loanmanager/product_lib');
 			$certification = [];
             $company_source_user_id = false;
             if($target){
+                $product_certs = $this->CI->product_lib->get_product_certs_by_product_id($target->product_id, $target->sub_product_id, []);
                 if($target->product_id >= PRODUCT_FOR_JUDICIAL){
 //                    $company = $this->get_company_type($user_id);
 //                    $company_source_user_id = $company->user_id;
                 }
                 foreach($this->certification as $key => $value) {
-                    if ($target->product_id >= PRODUCT_FOR_JUDICIAL && $key >= CERTIFICATION_FOR_JUDICIAL || $target->product_id < PRODUCT_FOR_JUDICIAL && $key < CERTIFICATION_FOR_JUDICIAL) {
-                        $product_info && !in_array($key, $product_info['certifications']) ? '' : $certification[$key] = $value;
+                    if (in_array($key, $product_certs)) {
+                        $certification[$key] = $value;
                     }
                     else{
                         unset($certification[$key]);
@@ -3539,6 +3271,7 @@ class Certification_lib{
 			foreach($user_certifications as $key => $value){
 				switch($value->certification_id){
                     case CERTIFICATION_REPAYMENT_CAPACITY:
+                    case CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS:
                         break;
 					default:
 						$this->verify($value);
@@ -3549,6 +3282,8 @@ class Certification_lib{
 		}
 
         // $this->repayment_capacity_verify();
+        $this->land_and_building_transactions_verify();
+        $this->site_surve_video_verify();
 
 		return $count;
 	}
@@ -3712,13 +3447,26 @@ class Certification_lib{
                 // && (isset($diploma_cer->content['school']) && !preg_match('/\(自填\)/', $diploma_cer->content['school']))
             ) {
                 $cer_id = $identity_cer->id;
-                $this->CI->load->library('Azure_lib');
-                $identity_cer_face = $this->CI->azure_lib->detect($identity_cer->content['person_image'], $user_id, $cer_id);
-                $signing_face = $this->CI->azure_lib->detect($url, $user_id, $cer_id);
-                $signing_face_count = count($signing_face);
+                // Todo: 2023-10-11 azure 暫時改回 face++
+                // Azure
+                // $this->CI->load->library('Azure_lib');
+                // $identity_cer_face = $this->CI->azure_lib->detect($identity_cer->content['person_image'], $user_id, $cer_id);
+                // $signing_face = $this->CI->azure_lib->detect($url, $user_id, $cer_id);
+                // $signing_face_count = count($signing_face);
+
+                // face++
+                $this->CI->load->library('faceplusplus_lib');
+
+                $identity_cer_face = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image']);
+
+                $signing_face = $this->CI->faceplusplus_lib->get_face_token($url);
+                $signing_face_count = is_array($signing_face) ? count($signing_face) : 0;
+
                 $remark['memo']['first_count'] = $signing_face_count;
                 if ($signing_face_count == 0) {
-                    $rotate = $this->face_rotate($url, $user_id);
+                    // Todo: 2023-10-11 azure 暫時改回 face++
+                    // $rotate = $this->face_rotate($url, $user_id);
+                    $rotate = $this->face_rotate($url, $user_id, 'faceplusplus');
                     $remark['memo']['first_rotate'] = $rotate;
                     if ($rotate) {
                         $identity_cer->content['person_image'] = $rotate['url'];
@@ -3726,10 +3474,24 @@ class Certification_lib{
                     }
                 }
                 if ($signing_face_count >= 2 && $signing_face_count <= 3) {
-                    $person_compare[] = $this->CI->azure_lib->verify($identity_cer_face[0]['faceId'], $signing_face[0]['faceId'], $user_id, $cer_id);
-                    $person_compare[] = $this->CI->azure_lib->verify($identity_cer_face[1]['faceId'], $signing_face[1]['faceId'], $user_id, $cer_id);
-                    $remark['face'] = [$person_compare[0]['confidence'] * 100, $person_compare[1]['confidence'] * 100];
-                    $remark['face_flag'] = [$person_compare[0]['isIdentical'], $person_compare[1]['isIdentical']];
+
+                    // Todo: 2023-10-11 azure 暫時改回 face++
+                    // Azure
+                    // $person_compare[] = $this->CI->azure_lib->verify($identity_cer_face[0]['faceId'], $signing_face[0]['faceId'], $user_id, $cer_id);
+                    // $person_compare[] = $this->CI->azure_lib->verify($identity_cer_face[1]['faceId'], $signing_face[1]['faceId'], $user_id, $cer_id);
+                    // confidence 0.0~1.0
+                    // $remark['face'] = [$person_compare[0]['confidence'] * 100, $person_compare[1]['confidence'] * 100];
+                    // isIdentical true/false, https://learn.microsoft.com/en-us/rest/api/faceapi/face/verify-face-to-face?tabs=HTTP
+                    // $remark['face_flag'] = [$person_compare[0]['isIdentical'], $person_compare[1]['isIdentical']];
+
+                    // face++
+                    $person_compare[] = $this->CI->faceplusplus_lib->token_compare($identity_cer_face[0][0], $signing_face[0][0], $user_id, $cer_id);
+                    $person_compare[] = $this->CI->faceplusplus_lib->token_compare($identity_cer_face[1][0], $signing_face[1][0], $user_id, $cer_id);
+                    //confidence 0.0~100.0
+                    $remark['face'] = [$person_compare[0], $person_compare[1]];
+                    // 根據azure的定義，confidence >= 50 face_flag為true
+                    $remark['face_flag'] = [$person_compare[0] >= 50, $person_compare[1] >= 50];
+
                     if ($remark['face'][0] < 90 || $remark['face'][1] < 90) {
                         $this->CI->load->library('Faceplusplus_lib');
                         $identity_cer_token = $this->CI->faceplusplus_lib->get_face_token($identity_cer->content['person_image'], $user_id, $cer_id);
@@ -3888,20 +3650,89 @@ class Certification_lib{
             $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY, USER_BORROWER, FALSE, TRUE);
             if (empty($info))
             {
-                $this->CI->user_certification_model->insert([
+                $id = $this->CI->user_certification_model->insert([
                     'user_id' => $user['user_id'],
                     'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
                     'investor' => USER_BORROWER,
                     'content' => json_encode([]),
                     'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
                 ]);
-                $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY);
+            }
+            else
+            {
+                $id = $info->id;
             }
 
-            $cert = Certification_factory::get_instance_by_model_resource($info);
+            $cert = Certification_factory::get_instance_by_id($id);
             $cert->verify();
         }
 
+        return TRUE;
+    }
+
+    // 土地建物謄本
+    public function land_and_building_transactions_verify()
+    {
+        // 取得有案件「待核可」的使用者ID
+        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE], 0, [
+            'product_id' => PRODUCT_ID_HOME_LOAN
+        ]);
+        if (empty($user_lists))
+        {
+            return TRUE;
+        }
+
+        foreach ($user_lists as $user)
+        {
+            $info = $this->get_certification_info($user['user_id'], CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS, USER_BORROWER, FALSE, TRUE);
+            if ( ! empty($info))
+            {
+                $cert = Certification_factory::get_instance_by_id($info->id);
+                $cert->verify();
+                continue;
+            }
+
+            $this->CI->user_certification_model->insert([
+                'user_id' => $user['user_id'],
+                'certification_id' => CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS,
+                'investor' => USER_BORROWER,
+                'content' => json_encode([]),
+                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+            ]);
+        }
+        return TRUE;
+    }
+
+    // 入屋現勘/遠端視訊影片
+    public function site_surve_video_verify()
+    {
+        // 取得有案件「待核可」的使用者ID
+        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE], 0, [
+            'product_id' => PRODUCT_ID_HOME_LOAN
+        ]);
+        if (empty($user_lists))
+        {
+            return TRUE;
+        }
+
+        foreach ($user_lists as $user)
+        {
+            $info = $this->get_certification_info($user['user_id'], CERTIFICATION_SITE_SURVEY_VIDEO, USER_BORROWER, FALSE, TRUE);
+            if ( ! empty($info))
+            {
+                $cert = Certification_factory::get_instance_by_id($info->id);
+                $cert->verify();
+                continue;
+            }
+
+            $this->CI->user_certification_model->insert([
+                'user_id' => $user['user_id'],
+                'certification_id' => CERTIFICATION_SITE_SURVEY_VIDEO,
+                'investor' => USER_BORROWER,
+                'content' => json_encode([]),
+                'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW
+            ]);
+        }
         return TRUE;
     }
 

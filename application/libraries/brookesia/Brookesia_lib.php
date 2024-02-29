@@ -10,14 +10,14 @@ class Brookesia_lib
 		$this->brookesiaUrl = "http://" . getenv('GRACULA_IP') . ":{$brookesiaPort}/brookesia/api/v1.0/";
 	}
 
-	public function userCheckAllRules($userId)
+	public function userCheckAllRules($userId, $target_id)
 	{
 		if(!$userId) {
 			return false;
 		}
 
 		$url = $this->brookesiaUrl  . "check/checkAll";
-		$data = ["userId" => $userId];
+		$data = ['userId' => $userId, 'targetId' => $target_id];
 
 		$result = curl_get($url, $data);
 		$response = json_decode($result);
@@ -29,9 +29,9 @@ class Brookesia_lib
 		return true;
 	}
 
-	public function is_user_checked($userId)
+	public function is_user_checked($user_id, $target_id)
 	{
-		$url = $this->brookesiaUrl  . "check/checkAll?userId=" . $userId;
+		$url = $this->brookesiaUrl  . "check/checkAll?userId=" . $user_id . "&targetId=" . $target_id;
 
 		$result = curl_get($url);
 		$response = json_decode($result);

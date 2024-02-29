@@ -7,8 +7,7 @@
 </style>
 <script type="text/javascript">
     function check_fail() {
-        var status = $('#status :selected').val();
-        if (status == 2) {
+        if ($('#status :selected').val() === '2') {
             $('#fail_div').show();
         } else {
             $('#fail_div').hide();
@@ -16,9 +15,11 @@
     }
 
     $(document).off("change", "select#fail").on("change", "select#fail", function () {
-        var sel = $(this).find(':selected');
-        $('input#fail').css('display', sel.attr('value') == 'other' ? 'block' : 'none');
-        $('input#fail').attr('disabled', sel.attr('value') == 'other' ? false : true);
+        if ($(this).find(':selected').val() === 'other') {
+            $('input#fail').css('display', 'block').attr('disabled', false);
+        } else {
+            $('input#fail').css('display', 'none').attr('disabled', true);
+        }
     });
 </script>
 <div id="page-wrapper">
@@ -48,44 +49,108 @@
                                 <label>交件方式</label>
                                 <p class="form-control-static">
                                     <?php
-                                        if(defined('return_type')){
-                                            echo $return_type;
-                                        }elseif(isset($content['return_type'])){
-                                            if($content['return_type'] == 1){
-                                                echo '電子郵件';
-                                            }else{
-                                                echo '紙本';
-                                            }
-                                            echo $content['return_type'];
-                                        }else{
-                                            echo '';
-                                        }
+                                    if (isset($return_type))
+                                    {
+                                        echo $return_type;
+                                    }
+                                    else
+                                    {
+                                        echo '';
+                                    }
                                     ?>
                                 </p>
                             </div>
+                            <form id="app1" class="form-group" @submit.prevent="doSubmit">
+                                <ul class="nav nav-tabs">
+                                    <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-kgibank'}"><a @click="changeTab('tab-kgibank')">凱基</a></li>
+                                </ul>
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-skbank'">
+                                    <tbody>
+                                    <tr style="text-align: center;">
+                                        <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-票債信情形是否異常</span></td>
+                                        <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-聯徵中心資料日期</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompDataDate"
+                                                   placeholder="格式:YYYYMMDD"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-聯徵J02資料年月</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompJ02YM"
+                                                   placeholder="格式:YYYYMM"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-企業信用評分</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditScore"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-授信總餘額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-往來銀行家數</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompBankDealingNum"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-kgibank'">
+                                    <tbody>
+                                    <tr style="text-align: center;">
+                                        <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-票債信情形是否異常</span></td>
+                                        <td><select v-model="formData.jcCompDebtLog" class="table-input sk-input form-control">
+                                                <option :value="''"></option>
+                                                <option :value="'1'">1:是</option>
+                                                <option :value="'0'">0:否</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-聯徵中心資料日期</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompDataDate"
+                                                   placeholder="格式:YYYYMMDD"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-聯徵J02資料年月</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompJ02YM"
+                                                   placeholder="格式:YYYYMM"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-企業信用評分</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditScore"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-授信總餘額</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompCreditAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司聯徵-往來銀行家數</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.jcCompBankDealingNum"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </form>
                             <div class="form-group">
-                                <form role="form" action="/admin/certification/sendSkbank" method="post">
-                                    <table class="table table-striped table-bordered table-hover dataTable">
-                                        <tbody>
-                                            <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
-                                            <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                            <tr><td><span>企業聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="CompJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
-                                            <tr><td><span>公司中期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="MidTermLnYM" placeholder="格式:YYYYMM"></td></tr>
-                                            <tr><td><span>公司中期放款餘額</span></td><td><input class="sk-input" type="text" name="MidTermLnBal"></td></tr>
-                                            <tr><td><span>公司短期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="ShortTermLnYM" placeholder="格式:YYYYMM"></td></tr>
-                                            <tr><td><span>公司短期放款餘額</span></td><td><input class="sk-input" type="text" name="ShortTermLnBal"></td></tr>
-                                            <tr><td><span>企業聯徵J02資料年月</span></td><td><input class="sk-input" type="text" name="CompJCICDataDate" placeholder="格式:YYYYMM"></td></tr>
-                                            <tr><td><span>企業信用評分</span></td><td><input class="sk-input" type="text" name="CompCreditScore"></td></tr>
-                                            <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
-                                        </tbody>
-                                    </table>
-                                </form>
-                            </div>
-                            <div class="form-group">
-                              <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
-                              foreach ($ocr['url'] as $key => $value) { ?>
-                                  <label><a href="<?= isset($value) ? $value : ''; ?>" target="_blank">前往編輯頁面</a></label>
-                              <? } ?>
+                                <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
+                                foreach ($ocr['url'] as $key => $value) { ?>
+                                    <label><a href="<?= isset($value) ? $value : ''; ?>" target="_blank">前往編輯頁面</a></label>
+                                <? } ?>
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
@@ -112,7 +177,7 @@
                                         <select id="status" name="status" class="form-control" onchange="check_fail();">
                                             <? foreach ($status_list as $key => $value) { ?>
                                                 <option value="<?= $key ?>"
-                                                        <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
+                                                    <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
                                             <? } ?>
                                         </select>
                                         <input type="hidden" name="id"
@@ -139,7 +204,7 @@
                         </div>
                         <div class="col-lg-6">
                             <h1>圖片/文件</h1>
-                            <fieldset >
+                            <fieldset>
                                 <div class="form-group">
                                     <label>法人聯徵資料</label><br>
                                     <? isset($content['legal_person_mq_image']) && !is_array($content['legal_person_mq_image']) ? $content['legal_person_mq_image'] = array($content['legal_person_mq_image']) : [];
@@ -224,37 +289,53 @@
     <!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+
 <script>
-$('select').selectize({
-    sortField: 'text',
-});
-$(document).ready(function() {
-    $.ajax({
-        type: "GET",
-        url: `/admin/certification/getSkbank?id=<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>`,
-        dataType: "json",
-        success: function (response) {
-            if(response.status.code == 200 && response.response != ''){
-                Object.keys(response.response).forEach(function(key) {
-                    console.log(key);
-                    console.log(response.response[key]);
-                    if($(`[name='${key}']`).length){
-                        if($(`[name='${key}']`).is("input")){
-                            $(`[name='${key}']`).val(response.response[key]);
-                        }else{
-                            let $select = $(`[name='${key}']`).selectize();
-                            let selectize = $select[0].selectize;
-                            selectize.setValue(selectize.search(response.response[key]).items[0].id);
-                        }
-                    }
-                })
-            }else{
-                console.log(response);
+    const v = new Vue({
+        el: '#app1',
+        data() {
+            return {
+                tab: 'tab-skbank',
+                pageId: '',
+                formData: {
+                    jcCompDebtLog: '',
+                    jcCompDataDate: '',
+                    jcCompJ02YM: '',
+                    jcCompCreditScore: '',
+                    jcCompCreditAmount: '',
+                    jcCompBankDealingNum: '',
+                }
             }
         },
-        error: function(error) {
-          alert(error);
-        }
-    });
-});
+        mounted() {
+            const url = new URL(location.href);
+            this.pageId = url.searchParams.get('id');
+            this.getData()
+        },
+        methods: {
+            changeTab(tab) {
+                this.tab = tab
+            },
+            doSubmit() {
+                let selector = this.$el;
+                $(selector).find('button').attr('disabled', true).text('資料更新中...');
+                return axios.post('/admin/certification/save_company_cert', {
+                    ...this.formData,
+                    id: this.pageId
+                }).then(({ data }) => {
+                    alert(data.result)
+                    location.reload()
+                })
+            },
+            getData() {
+                axios.get('/admin/certification/getSkbank', {
+                    params: {
+                        id: this.pageId
+                    }
+                }).then(({ data }) => {
+                    mergeDeep(this.formData, data.response)
+                })
+            }
+        },
+    })
 </script>

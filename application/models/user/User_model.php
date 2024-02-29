@@ -39,6 +39,7 @@ class User_model extends MY_Model
 	protected function before_data_c($data)
     {
 		$data['password'] 	= sha1($data['password']);
+        ! isset($data['user_id']) ?: $data['user_id'] = sha1($data['user_id']);
         $data['created_at'] = $data['updated_at'] = time();
         $data['created_ip'] = $data['updated_ip'] = get_ip();
         return $data;
@@ -49,6 +50,10 @@ class User_model extends MY_Model
 		if(isset($data['password']) && !empty($data['password'])){
 			$data['password'] 	= sha1($data['password']);
 		}
+        if (isset($data['user_id']) && ! empty($data['user_id']))
+        {
+            $data['user_id'] = sha1($data['user_id']);
+        }
 		
 		if(isset($data['transaction_password']) && !empty($data['transaction_password'])){
 			$data['transaction_password'] 	= sha1($data['transaction_password']);
@@ -204,6 +209,116 @@ class User_model extends MY_Model
         return $this->db->select(['id', 'company_status'])
             ->from('p2p_user.users')
             ->where_in('id', $id_list)
+            ->get()
+            ->result_array();
+    }
+
+    /**
+     * 取得相同手機號碼的公司資料
+     * @param $phone : 手機號碼
+     * @return mixed
+     */
+    public function get_same_company_responsible_user_by_phone($phone)
+    {
+        $sub_query = $this->db
+            ->select('user_id')
+            ->where('status', CERTIFICATION_STATUS_SUCCEED)
+            ->where('certification_id', CERTIFICATION_GOVERNMENTAUTHORITIES)
+            ->get_compiled_select('user_certification', TRUE);
+
+        return $this->db
+            ->select(['u.id', 'u.name', 'u.id_number AS tax'])
+            ->from('users u')
+            ->join("({$sub_query}) a", 'a.user_id=u.id')
+            ->where('u.phone', $phone)
+            ->where('u.company_status', USER_IS_COMPANY)
+            ->where('u.status', 1)
+            ->get()
+            ->result_array();
+    }
+
+    /**
+     * 以統編取得使用者 ID
+     * @param $tax_id : 統編
+     * @return mixed
+     */
+    public function get_exit_judicial_person($tax_id)
+    {
+        $query = $this->db->query("
+            SELECT `jp`.`user_id` FROM `p2p_user`.`judicial_person` `jp` WHERE `jp`.`tax_id`='{$tax_id}' AND `jp`.`status`!=2
+	        UNION
+	        SELECT `u`.`id` AS `user_id` FROM `p2p_user`.`users` `u` WHERE `u`.`id_number`='{$tax_id}' AND `u`.`company_status`=1
+	    ");
+        return $query->first_row('array');
+    }
+
+    /**
+     * 檢查帳號是否已存在
+     * @param $user_id : 帳號 (users.user_id)
+     * @param $tax_id : 統編 (users.id_number)
+     * @return bool
+     */
+    public function check_user_id_exist($user_id, $tax_id)
+    {
+        $this->db
+            ->select('1')
+            ->from('users')
+            ->where('user_id', sha1($user_id))
+            ->where('id_number !=', $tax_id);
+        return ! empty($this->db->get()->first_row());
+    }
+
+    /**
+     * 依條件取得使用者 ID
+     * @param array $where
+     * @return mixed
+     */
+    public function get_id_by_condition(array $where = [])
+    {
+        $this->_database
+            ->select('id')
+            ->from('p2p_user.users');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
+
+    public function get_user_name_by_id($id)
+    {
+        $info = $this->db
+            ->select('name')
+            ->from('p2p_user.users')
+            ->where('id', $id)
+            ->get()
+            ->first_row('array');
+
+        return $info['name'] ?? '';
+    }
+
+    public function get_company_list_with_identity_status($phone)
+    {
+        $sub_query = $this->db->select('id')->where('phone', $phone)->where('company_status', USER_IS_COMPANY)->get_compiled_select('p2p_user.users', TRUE);
+
+        $sub_query = $this->db
+            ->select(['MAX(id)', 'user_id', 'status'])
+            ->where("user_id IN ({$sub_query})")
+            ->where('certification_id', CERTIFICATION_GOVERNMENTAUTHORITIES)
+            ->where('status !=', CERTIFICATION_STATUS_FAILED)
+            ->group_by('user_id')
+            ->get_compiled_select('p2p_user.user_certification', TRUE);
+        
+        return $this->db
+            ->select('id')
+            ->select('name')
+            ->select('id_number as tax')
+            ->select('a.status')
+            ->from('p2p_user.users')
+            ->join("($sub_query) as a", 'a.user_id=users.id', 'LEFT')
+            ->where('phone', $phone)
+            ->where('company_status', USER_IS_COMPANY)
             ->get()
             ->result_array();
     }

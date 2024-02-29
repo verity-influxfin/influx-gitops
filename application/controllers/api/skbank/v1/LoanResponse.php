@@ -97,7 +97,8 @@ class LoanResponse extends REST_Controller {
                     $response['result'] = 'SUCCESS';
 
                     // TODO: merge all sql query in one
-                    if(isset($insertData['apply_agree']) && isset($insertData['apply_accept']) && $insertData['apply_agree'] == 'A' && $insertData['apply_accept'] == 'A'){
+                    if (isset($insertData['apply_agree']) && isset($insertData['apply_accept']))
+                    {
                         // search loan request log data
                         $this->load->model('skbank/LoanSendRequestLog_model');
         				$loanRequestLogInfo = $this->LoanSendRequestLog_model->get_by(['case_no' => $input['case_no']]);
@@ -108,22 +109,52 @@ class LoanResponse extends REST_Controller {
                             if ($loanTargetMappingInfo) {
                                 // check target exist and update info
                                 $this->load->model('loan/target_model');
-                                $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id,'product_id' => 1002]);
+                                $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id, 'product_id' => PRODUCT_SK_MILLION_SMEG]);
                                 if($targetInfo){
-                                    // transfer repayment type
-                                    $repayment = '';
-                                    if (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'A') {
-                                        $repayment = 1;
-                                    }elseif (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'B') {
-                                        $repayment = 2;
+                                    if($insertData['apply_agree'] == 'A' && $insertData['apply_accept'] == 'A' &&
+                                        in_array($targetInfo->status, [TARGET_BANK_VERIFY, TARGET_BANK_GUARANTEE]))
+                                    {
+                                        // transfer repayment type
+                                        $repayment = '';
+                                        if (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'A')
+                                        {
+                                            $repayment = 1;
+                                        }
+                                        elseif (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'B')
+                                        {
+                                            $repayment = 2;
+                                        }
+                                        if ( ! empty($repayment))
+                                        {
+                                            $updateTarget = $this->target_model->update($targetInfo->id, [
+                                                'loan_amount' => $insertData['loan_amount'],
+                                                'interest_rate' => ((float) $insertData['loan_rate']) * 100,
+                                                'repayment' => $repayment,
+                                                'status' => TARGET_BANK_LOAN,
+                                                'loan_date' => $insertData['funding_date']
+                                            ]);
+                                        }
+                                        if (! empty($insertData['funding_date']))
+                                        {
+                                            $updateTarget = $this->target_model->update($targetInfo->id, [
+                                                'loan_amount' => $insertData['funding_amount'] ?? 0,
+                                                'interest_rate' => ((float) $insertData['funding_rate'] ?? 0),
+                                                'status' => TARGET_BANK_REPAYMENTING,
+                                                'loan_date' => $insertData['funding_date']
+                                            ]);
+                                        }
                                     }
-                                    if(!empty($repayment)){
-                                        $updateTarget = $this->target_model->update($targetInfo->id,[
-                                            'loan_amount' => $insertData['loan_amount'],
-                                            'interest_rate' => ((float) $insertData['loan_rate'])*100,
-                                            'repayment' => $repayment,
-                                            'status' => 504,
-                                            'loan_date' => $insertData['funding_date']
+                                    else if (($insertData['apply_agree'] == 'B' || $insertData['apply_accept'] == 'B') &&
+                                        in_array($targetInfo->status, [TARGET_BANK_VERIFY, TARGET_BANK_GUARANTEE]))
+                                    {
+                                        $target_data = json_decode($targetInfo->target_data, TRUE);
+                                        $target_data['manual_reason'] = TARGET_MSG_BANK_NOT_APPROVED;
+                                        $updateTarget = $this->target_model->update($targetInfo->id, [
+                                            'loan_amount' => 0,
+                                            'interest_rate' => 0,
+                                            'status' => TARGET_WAITING_VERIFY,
+                                            'sub_status' => TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL,
+                                            'target_data' => json_encode($target_data)
                                         ]);
                                     }
                                 }

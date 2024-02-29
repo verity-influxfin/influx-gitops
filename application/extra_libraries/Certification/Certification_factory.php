@@ -126,6 +126,24 @@ class Certification_factory
                 return new Cert_criminalrecord($certification, $certification_result);
             case CERTIFICATION_SOCIAL_INTELLIGENT: // (名校貸)社交帳號
                 return new Cert_social_intelligent($certification, $certification_result);
+            case CERTIFICATION_HOUSE_CONTRACT:
+                return new Cert_house_contract($certification, $certification_result);
+            case CERTIFICATION_HOUSE_RECEIPT:
+                return new Cert_house_receipt($certification, $certification_result);
+            case CERTIFICATION_RENOVATION_CONTRACT:
+                return new Cert_renovation_contract($certification, $certification_result);
+            case CERTIFICATION_RENOVATION_RECEIPT:
+                return new Cert_renovation_receipt($certification, $certification_result);
+            case CERTIFICATION_APPLIANCE_CONTRACT_RECEIPT:
+                return new Cert_appliance_contract_receipt($certification, $certification_result);
+            case CERTIFICATION_HOUSE_DEED:
+                return new Cert_house_deed($certification, $certification_result);
+            case CERTIFICATION_LAND_AND_BUILDING_TRANSACTIONS:
+                return new Cert_land_and_building_transaction($certification, $certification_result);
+            case CERTIFICATION_SITE_SURVEY_VIDEO:
+                return new Cert_site_survey_video($certification, $certification_result);
+            case CERTIFICATION_SITE_SURVEY_BOOKING:
+                return new Cert_site_survey_booking($certification, $certification_result);
             case CERTIFICATION_SIMPLIFICATIONFINANCIAL: // 財務收支
                 return new Cert_simplificationfinancial($certification, $certification_result);
             case CERTIFICATION_SIMPLIFICATIONJOB: // 工作資料

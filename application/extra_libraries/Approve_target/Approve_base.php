@@ -22,6 +22,7 @@ abstract class Approve_base implements Approve_interface
     protected $user_certs;
     protected $loan_amount;
     protected $platform_fee;
+    protected $loan_amount_unit;
 
     const BROOKESIA_CLEAR = 'clear';
     const BROOKESIA_SECOND_INSTANCE = 'second_instance';
@@ -59,6 +60,7 @@ abstract class Approve_base implements Approve_interface
         $this->CI->load->model('user/user_meta_model');
 
         $this->CI->config->load('credit', TRUE);
+        $this->set_loan_amount_unit();
     }
 
     /**
@@ -103,17 +105,21 @@ abstract class Approve_base implements Approve_interface
             goto END;
         }
 
-        // 檢查是否命中反詐欺
-        switch ($this->check_brookesia())
-        {
-            case self::BROOKESIA_BLOCK:
-                goto END;
-            case self::BROOKESIA_CLEAR:
-                break;
-            case self::BROOKESIA_SECOND_INSTANCE:
-            default:
-                $match_brookesia = TRUE;
+        // 2023-10-19 所有產轉都不用檢查是否命中反詐欺
+        if (!$subloan_status) {
+            // 檢查是否命中反詐欺
+            switch ($this->check_brookesia())
+            {
+                case self::BROOKESIA_BLOCK:
+                    goto END;
+                case self::BROOKESIA_CLEAR:
+                    break;
+                case self::BROOKESIA_SECOND_INSTANCE:
+                default:
+                    $match_brookesia = TRUE;
+            }
         }
+
         $user_checked = $this->CI->brookesia_lib->is_user_checked($this->target_user_id, $this->target['id']);
         if ($user_checked === FALSE)
         {
@@ -582,8 +588,14 @@ abstract class Approve_base implements Approve_interface
      */
     protected function get_loan_amount_unit(): int
     {
-        return 1000;
+        return $this->loan_amount_unit;
     }
+
+    /**
+     * 設定額度金額以 n 為計量單位
+     * @return void
+     */
+    abstract protected function set_loan_amount_unit(): void;
 
     /**
      * 取得使用者信用額度
@@ -633,7 +645,7 @@ abstract class Approve_base implements Approve_interface
         // 取得產品設定的徵信項設定檔
         $cert_config = $this->CI->config->item('certifications');
         $product_cert = $this->product_config_cert;
-        array_filter($cert_config, function ($value) use ($product_cert) {
+        $cert_config = array_filter($cert_config, function ($value) use ($product_cert) {
             return in_array($value, $product_cert);
         }, ARRAY_FILTER_USE_KEY);
 

@@ -880,14 +880,18 @@ econtent;
 		$this->CI->sendemail->email_notification($mail,$title,nl2br($content));
 	}
 
-	public function notify_target_product_1002_associates($mail, $username, $subProduct, $character){
+    public function notify_target_product_1002_associates($mail, $username, $subProduct, $character)
+    {
+        $this->CI->load->library('target_lib');
+        $character = $this->CI->target_lib->get_product_1002_character_meaning($character);
 
-		$title = "【普匯微企e秒貸】新增 「負責人配偶/保證人」";
-		$content = "「{$username}」公司已申請加入您作為「負責人配偶/保證人」
-請下載「普匯 influx」APP，並完成以下流程：
-1.註冊「一般使用者」並登入帳號，並從「資料中心」完成實名認證
-2.至「產品列表」中「普匯微企e秒貸」點選「查看狀態」
-3.完成其餘資料更新（個人資料表、聯徵報告...）";
+		$title = "【{$subProduct}】新增「{$character}」";
+        $content = "「{$username}」已加入您作為「{$character}」
+1.下載「普匯inFlux」APP。
+2.完成「一般使用者」會員註冊。
+3.成功登入會員。
+4.至「產品列表」中「{$subProduct}」點選「查看狀態」。
+5.完成資料提供(實名認證、個人基本資料...)。";
 
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->email_notification($mail,$title,nl2br($content));

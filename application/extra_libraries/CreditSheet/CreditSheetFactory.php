@@ -32,6 +32,14 @@ class CreditSheetFactory {
         {
             $call_type = USER_NOT_COMPANY;
         }
+        elseif (in_array($target->product_id, $CI->target_lib->get_product_id_by_tab(PRODUCT_TAB_HOME_LOAN)))
+        {
+            $call_type = USER_NOT_COMPANY;
+        }
+        else
+        {
+            return NULL;
+        }
 
         if(isset($creditSheetRecord)) {
             // 已封存之個金授審表

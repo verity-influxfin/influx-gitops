@@ -5,6 +5,7 @@ class Target_meta_model extends MY_Model
     public $_table = 'target_meta';
     public $before_create = array('before_data_c');
     public $before_update = array('before_data_u');
+    public const REQUIRED_KEY = ['background', 'capacity', 'capitalization', 'changes', 'group_seniority', 'guarantor', 'seniority'];
     public const BK_SELF = 1;
     public const BK_SUCCESSOR = 2;
     public const BK_FAMILY_SUPPORT = 3;
@@ -36,6 +37,7 @@ class Target_meta_model extends MY_Model
     public const GUARANTOR_JOB_GENERAL = 4;
     public const GUARANTOR_JOB_INVALID = 5;
 
+
     public function __construct()
     {
         parent::__construct();
@@ -54,5 +56,17 @@ class Target_meta_model extends MY_Model
         $data['updated_at'] = date('Y-m-d H:i:s');
         $data['updated_ip'] = get_ip();
         return $data;
+    }
+
+    public function get_required_key_value($target_id)
+    {
+        return $this->db
+            ->select('meta_key,meta_value')
+            ->from('p2p_loan.target_meta')
+            ->where_in('meta_key', self::REQUIRED_KEY)
+            ->where('meta_key IS NOT NULL', NULL, FALSE)
+            ->where('target_id', $target_id)
+            ->get()
+            ->result_array();
     }
 }

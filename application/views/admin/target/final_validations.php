@@ -549,6 +549,9 @@
 								</div>
 							</div>
 						</div>
+                        <button id="credit-original-info-modal-btn" class="btn btn-info mr-2" type="button" data-toggle="modal" data-target="#credit-original-info-modal" disabled>
+                            查看分數額度組成原因
+                        </button>
 					</div>
 				</div>
 			</div>
@@ -956,6 +959,7 @@
 								</td>
 							</tr>
 						</table>
+                        <div id="credit-info-message"></div>
 					</div>
 				</div>
 				<div class="panel-body">
@@ -1028,8 +1032,9 @@
 									<span class="score_range"></span>
 									<span>：</span>
 								</span>
-								<span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1"
-										disabled></span>
+								<span style="width:70%;">
+                                    <input id="2_score" type="number" value="0" min="0" step="1" disabled>
+                                </span>
 							</div>
                             <div class="fixed_amount_block">
 								<span style="width:30%;">
@@ -1037,8 +1042,15 @@
 									<span class="amount_range"></span>
 									<span>：</span>
 								</span>
-                                <span style="width:70%;"><input id="2_fixed_amount" type="number" value="0" min="0" step="1"
-                                                                disabled></span>
+                                <span style="width:70%;">
+                                    <input id="2_fixed_amount" type="number" value="0" min="0" step="1" disabled>
+                                </span>
+                            </div>
+                            <div>
+                                <span style="width:30%;"></span>
+                                <span style="width:70%;">
+                                    <button type="button" id="original-amount-btn" disabled>使用原額度</button>
+                                </span>
                             </div>
 							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
 							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
@@ -1179,6 +1191,24 @@
             </div>
 		</div>
 	</div>
+    <div class="modal fade" id="credit-original-info-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title">分數額度組成原因</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="original-remark"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	<!-- /.row -->
 </div>
 </div>
@@ -1414,6 +1444,7 @@
 		var modifiedPoints = null;
 		var targetInfoAjaxLock = false;
 		var relatedUserAjaxLock = false;
+        var originalAmount = 0;
 		$('#blockUserId').val(userId);
 		$('#blackLink').prop('href', `/admin/Risk/black_list?id=${userId}`)
 		const t = $('#antifraud').DataTable({
@@ -1468,6 +1499,7 @@
 
 				let currentTargetJson = response.response.target;
 				target = new Target(currentTargetJson);
+
 				fillCurrentTargetInfo(target)
 				!$.isEmptyObject(target.targetData) ? fillCurrentTargetData(target.targetData, target.productTargetData, target.creditTargetData) : '';
 
@@ -1517,6 +1549,11 @@
 				fillUploadedContract(response.response.contract_list);
                 fillTopSpecialList(response.response.special_list);
 
+                if (response.response.target.product.id !== '<?= PRODUCT_ID_STUDENT ?>') {
+                    // 額度調整預設為原額度
+                    setEvaluationAmount(parseInt(credit.amount));
+                }
+
                 if (response.response.target.product.id === '<?= PRODUCT_ID_STUDENT ?>') {
                     $('.fixed_amount_block').css('display', 'none');
                 } else if (response.response.target.product.id === '<?= PRODUCT_ID_SALARY_MAN ?>') {
@@ -1524,9 +1561,14 @@
                     let new_date = new Date(user.birthday);
                     let eligible_year = 35;
                     new_date.setFullYear(new_date.getFullYear() + eligible_year);
-                    if (new_date <= today) {
+                    if (response.response?.new_or_old === '新戶' && new_date <= today) {
                         $('.fixed_amount_block input').prop('disabled', true);
                         $('#2_fixed_amount').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
+                        $('#2_score').prop('disabled', true);
+                        $('#2_score').after(`<br/><span>借款人年齡超過${eligible_year}歲，不可調整</span>`);
+                        $('#original-amount-btn').css('display', 'none');
+                    } else {
+                        $('#original-amount-btn').prop('disabled', false);
                     }
                 }
 			},
@@ -1534,6 +1576,21 @@
 				alert('資料載入失敗。請重新整理。');
 			}
 		});
+        $.ajax({
+            type: "GET",
+            url: "/admin/Target/get_credit_message?user_id=" + userId + "&target_id=" + caseId,
+            success:function (response){
+                if(response?.status?.code == 400){
+                    alert('查詢使用者是否薪資低於4萬，負債大於22倍失敗。請重新整理。');
+                    return;
+                }
+                let credit_message = response?.response?.message;
+                fillCreditMessage(credit_message);
+            },
+            error:function (error){
+                alert('查詢使用者是否薪資低於4萬，負債大於22倍，資料載入失敗。請重新整理。');
+            }
+        })
 
 		// 取得案件核貸資料
 		case_aprove_item = get_default_item(caseId);
@@ -1577,14 +1634,12 @@
                     `else if(value<=${case_aprove_item.creditLineInfo.scoringMin}){value=${case_aprove_item.creditLineInfo.scoringMin}}`
 			});
 		}
-
         if (case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_min") && case_aprove_item.creditLineInfo.hasOwnProperty("fixed_amount_max")) {
+            originalAmount = case_aprove_item.creditLineInfo.fixed_amount_max;
             $(`.amount_range`).text(`${case_aprove_item.creditLineInfo.fixed_amount_min}~${case_aprove_item.creditLineInfo.fixed_amount_max}`);
             $(`#2_fixed_amount`).attr({
                 "max": case_aprove_item.creditLineInfo.fixed_amount_max,
                 "min": case_aprove_item.creditLineInfo.fixed_amount_min,
-                "onblur": `if(value>=${case_aprove_item.creditLineInfo.fixed_amount_max}){value=${case_aprove_item.creditLineInfo.fixed_amount_max}}` +
-                    `else if(value<=${case_aprove_item.creditLineInfo.fixed_amount_min}){value=${case_aprove_item.creditLineInfo.fixed_amount_min}}`
             });
         }
 
@@ -1648,13 +1703,29 @@
 			}
 			$('#credit_test').val(score_vue);
 		});
-        $('#2_fixed_amount').on('blur', function () {
+        $("#2_score").blur(() => {
+            setEvaluationAmount(0);
+        })
+        $('#2_fixed_amount').change(function () {
             let fixed_amount = parseInt($(this).val());
             if (fixed_amount <= 0) {
                 return;
             }
             $('div.opinion_button button.score').prop('disabled', true);
-            $('#credit_test_fixed_amount').val(fixed_amount);
+        });
+        $('#2_fixed_amount').blur(function () {
+            let fixed_amount = parseInt($(this).val());
+            if (fixed_amount < 0) {
+                return;
+            }
+            if(fixed_amount>0 && fixed_amount<1000){
+                fixed_amount = 1000;
+            }
+            if(fixed_amount>case_aprove_item.creditLineInfo.fixed_amount_max){
+                fixed_amount = case_aprove_item.creditLineInfo.fixed_amount_max;
+                console.log(case_aprove_item.creditLineInfo.fixed_amount_max);
+            }
+            setEvaluationAmountAndResetScore(fixed_amount);
         });
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
@@ -1990,8 +2061,16 @@
 			$("#" + prefix + "credit-points").text(credit.points);
 			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
 			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
+            if (!isReEvaluated) {
+                $("#credit-original-info-modal-btn").removeAttr('disabled');
+                credit.remark?.scoreHistory?.forEach(function (item) {
+                    $("<div>").text(item).appendTo("#original-remark");
+                });
+            }
 		}
-
+        function fillCreditMessage(message) {
+            $("#credit-info-message").text(message);
+        }
 		function fillFakeVerifications(type, show = true) {
 			var tableId = "#" + type + "-verifications";
 			for (var i = 0; i < 3; i++) {
@@ -2271,6 +2350,7 @@
 				beforeSend: function () {
 					changeReevaluationLoading(true);
 					clearCreditInfo(true);
+                    fillCreditMessage('');
 				},
 				complete: function () {
 					changeReevaluationLoading(false);
@@ -2285,10 +2365,14 @@
 					}
 
 					let creditJson = response.response.credits;
+                    let message = response.response.message;
+                    let productId = creditJson.product.id;
 					credit = new Credit(creditJson);
 					fillCreditInfo(credit, true);
+                    fillCreditMessage(message);
 					modifiedPoints = points;
 					$('#credit-evaluation button').attr('disabled', false);
+                    setEvaluationAmountAndResetScore(parseInt(credit.amount));
 				}
 			});
 		});
@@ -2378,7 +2462,32 @@
                 }
             });
         });
-	});
+
+        // 二審意見分數調整
+        const setEvaluationScore = (score) => {
+            $('#2_score').val(score);
+            $('#credit_test').val(score);
+        }
+
+        // 二審意見額度調整
+        const setEvaluationAmount = (amount) => {
+            $('#2_fixed_amount').val(amount)
+            $('#credit_test_fixed_amount').val(amount);
+        }
+
+        // 二審意見額度調整，並設定分數為0
+        const setEvaluationAmountAndResetScore = (amount) => {
+            setEvaluationAmount(amount);
+            setEvaluationScore(0);
+        }
+        
+        // 使用原額度
+        const resetEvaluationAmountAmountTOriginal = () => {
+            setEvaluationAmountAndResetScore(originalAmount);
+        }
+
+        $('#original-amount-btn').click(resetEvaluationAmountAmountTOriginal);
+    });
 
 	const v = new Vue({
 		el: '#page-wrapper',
