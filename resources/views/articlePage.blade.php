@@ -571,7 +571,7 @@
                     </div>
                     <div class="contenier">
                         <div class="title-img">
-                            <img src="{{ trim('https://influx-website.s3.ap-northeast-1.amazonaws.com' . $article->image_url, '/') }}" class="img-fluid" />
+                            <img src="{{ 'https://influx-website.s3.ap-northeast-1.amazonaws.com' . $article->image_url }}" class="img-fluid" />
                         </div>
                         <div class="main-content">
                             {!! $article->post_content !!}
