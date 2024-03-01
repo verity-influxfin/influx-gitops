@@ -23,6 +23,7 @@ jobs:
       run: |
         echo Decode .env file
         echo "${{ secrets.ENV }}" | base64 --decode > .env
+        cat .env
         
     - name: Login to Amazon ECR
       run: |
