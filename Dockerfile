@@ -2,7 +2,8 @@ FROM php:7.2-apache
 WORKDIR /var/www/html
 
 ADD . /var/www/html
-RUN chmod -R 777 /var/www/html/storage/logs
+# RUN chmod -R 777 /var/www/html/storage/logs
+RUN chmod -R 777 /var/www/html/storage
 
 RUN apt update \
 && apt install -y libpng-dev zlib1g-dev libzip-dev zip \
