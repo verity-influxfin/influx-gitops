@@ -36,11 +36,13 @@ jobs:
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
+      with:
+        cache: true
     - name: Build and Push Docker Image (Dev)
       run: |
         short_sha=$(echo "${{ github.sha }}" | cut -c1-7)
         echo $short_sha
-        docker buildx build --push  -t 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha --platform linux/arm64 .
+        docker buildx build --push -t 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:$short_sha --platform linux/arm64 .
 
     - name: Set up Git
       run: |
