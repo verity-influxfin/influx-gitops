@@ -18,7 +18,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: influx-website-container
-        image: 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:ea0ca09
+        image: 425212047113.dkr.ecr.ap-northeast-1.amazonaws.com/influx-website:4aa019e
         imagePullPolicy: Always
         resources:
           requests:
