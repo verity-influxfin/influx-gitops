@@ -2700,6 +2700,14 @@ class Target extends MY_Admin_Controller
         $this->load->view('admin/_footer');
     }
 
+    public function personal_finance_report()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/personal_finance_report');
+        $this->load->view('admin/_footer');
+    }
+
     // 渲染「DD查核」頁面
     public function meta()
     {

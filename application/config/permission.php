@@ -56,6 +56,7 @@ $config['permission'] = [
             'prepayment' => ['name' => '提前還款'],
             'order_target' => ['name' => '消費貸 - 案件列表'],
             'waiting_approve_order_transfer' => ['name' => '消費貸 - 債轉待批覆'],
+            'personal_finance_report' => ['name' => '個金報表']
         ],
         'detail' => [
             'edit' => '借款詳細內容'
@@ -116,6 +117,7 @@ $config['permission'] = [
             'meta' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
             'get_meta_info' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'read'],
             'save_meta_info' => ['model' => 'Certification', 'submodel' => 'user_certification_list', 'action' => 'update'],
+            'personal_finance_report' => ['model' => 'Target', 'submodel' => 'personal_finance_report', 'action' => 'read'],
         ],
     ],
     'Transfer' => [
