@@ -483,7 +483,7 @@ class Payment_lib{
 					}
 				}
 
-				$upload 	= $this->upload_file($content,'atm');
+				$upload 	= $this->upload_file($content,'atm_loan_txt');
                 $batch_no = isset($upload['batch_no']) ? $upload['batch_no'] : "";
                 $txn_key = isset($upload['txn_key']) ? $upload['txn_key'] : "";
                 $res = isset($upload['res']) ? $upload['res'] : "";
@@ -618,7 +618,7 @@ class Payment_lib{
 					}
 				}
 
-				$upload 	= $this->upload_file($content,'atm');
+				$upload 	= $this->upload_file($content,'atm_withdraw_txt');
                 $batch_no = isset($upload['batch_no']) ? $upload['batch_no'] : "";
                 $txn_key = isset($upload['txn_key']) ? $upload['txn_key'] : "";
                 $res = isset($upload['res']) ? $upload['res'] : "";
