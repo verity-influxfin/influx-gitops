@@ -2,6 +2,9 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * @property CI_Controller $CI
+ */
 class Transaction_lib{
 
 

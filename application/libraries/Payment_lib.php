@@ -2,6 +2,10 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * class Payment_lib
+ * @property CI_Controller $CI
+ */
 class Payment_lib{
     private $charity_virtual_account = [];
 
