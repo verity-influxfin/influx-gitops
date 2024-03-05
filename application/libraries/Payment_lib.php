@@ -724,19 +724,10 @@ class Payment_lib{
 			return false;
 		}
 
-		$fxml 	= '';
-		$ftype 	= 'BRMT/BRMT/0';
-		$source = '1';
-		if($type=='atm'){
-			$fxml 	= '';
-			$ftype 	= 'BTRS/BRMT/0';
-			$source = '2';
-		}
-		if($type=='fxml'){
-			$fxml 	= 'FXML';
-			$ftype 	= 'BRMT/BRMT/0';
-			$source = '3';
-		}
+        $xml_content_info = $this->get_xml_content_info($type);
+        $fxml             = $xml_content_info->fxml;
+        $ftype            = $xml_content_info->ftype;
+        $source           = $xml_content_info->source;
 
 		// YmdHis + 1~3(source: (normal:1), (atm:2), (fxml:3)) + 0~9(隨機)
 		$txnkey = date("YmdHis").$source.rand(0, 9);
