@@ -734,7 +734,7 @@ class Payment_lib{
 			$source = '3';
 		}
 
-
+		// YmdHis + 1~3(source: (normal:1), (atm:2), (fxml:3)) + 0~9(隨機)
 		$txnkey = date("YmdHis").$source.rand(0, 9);
 		$xml_file 	=
 '<?xml version="1.0" encoding="big5"?>
