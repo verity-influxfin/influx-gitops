@@ -115,14 +115,16 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" width="100%" id="dataTables-tables">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-tables">
                                     <thead>
                                         <tr>
                                             <th>案號</th>
                                             <th>產品</th>
                                             <th>會員 ID</th>
                                             <th>信評</th>
-                                            <th>公司/學校</th>
+                                            <th>學校</th>
+                                            <th>公司</th>
+                                            <th>最高學歷</th>
                                             <th>科系</th>
                                             <th>申請金額</th>
                                             <th>核准金額</th>
@@ -149,31 +151,32 @@
                                     <tbody>
 									<?php
 										if(isset($list) && !empty($list)){
-                                            $subloan_list = $this->config->item('subloan_list');
 											$count = 0;
-                                    foreach($list as $key => $value){
-                                        $count++;
+                                            foreach($list as $key => $value){
+                                                $count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
-                                            <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
-                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
-                                            <td><?=isset($value->user_id)?$value->user_id:'' ?></td>
-                                            <td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
-                                            <td><?=isset($value->company)?$value->company:'' ?><?=isset($value->company)&&isset($value->school_name)?' / ':'' ?><?=isset($value->school_name)?$value->school_name:'' ?></td>
-                                            <td><?=isset($value->school_department)?$value->school_department:'' ?></td>
-                                            <td><?=isset($value->amount)?$value->amount:'' ?></td>
-                                            <td><?=isset($value->credit->amount)?$value->credit->amount:'' ?></td>
-                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
-                                            <td><?php // 可動用額度
-                                                echo $value->remain_amount ?? ''; ?>
+                                        <tr class="<?=$count % 2 == 0 ? "odd" : "even"; ?> list <?=$value->user_id ?? '' ?>">
+                                            <td><?=$value->target_no ?? '' ?></td>
+                                            <td><?=isset($product_list[$value->product_id]) ? $product_list[$value->product_id]['name'] : '' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
+                                            <td><?=$value->user_id ?? '' ?></td>
+                                            <td><?=$value->credit_level ?? '' ?></td>
+                                            <td><?=$value->school_name ?? '' ?></td>
+                                            <td><?=$value->company ?? '' ?></td>
+                                            <td><?=$value->diploma ?? '' ?></td>
+                                            <td><?=$value->school_department ?? '' ?></td>
+                                            <td><?=$value->amount ?? '' ?></td>
+                                            <td><?=$value->credit->amount ?? '' ?></td>
+                                            <td><?=$value->loan_amount ?? '' ?></td>
+                                            <td><?= // 可動用額度
+                                                $value->remain_amount ?? '' ?>
                                             </td>
-                                            <td><?=isset($value->remaining_principal)?$value->remaining_principal:'' ?></td>
-                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?floatval($value->interest_rate):'' ?></td>
-                                            <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
-                                            <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
-                                            <td><?=isset($value->loan_date)?$value->loan_date:'' ?></td>
-                                            <td><?=isset($value->delay)?$delay_list[$value->delay]:'' ?></td>
-											<td><?=isset($value->delay_days)?intval($value->delay_days):"" ?></td>
+                                            <td><?=$value->remaining_principal ?? '' ?></td>
+                                            <td><?=isset($value->interest_rate) && $value->interest_rate ? floatval($value->interest_rate) : '' ?></td>
+                                            <td><?=isset($value->instalment) ? $instalment_list[$value->instalment] : '' ?></td>
+                                            <td><?=isset($value->repayment) ? $repayment_type[$value->repayment] : '' ?></td>
+                                            <td><?=$value->loan_date ?? '' ?></td>
+                                            <td><?=isset($value->delay) ? $delay_list[$value->delay] : '' ?></td>
+											<td><?=isset($value->delay_days) ? intval($value->delay_days) : "" ?></td>
                                             <td>
 											<?=isset($value->status)?($value->sub_status==5?'待廠商出貨 (分期)':$status_list[$value->status]):'' ?>
 											<? 	if($value->status==2 && !$value->bank_account_verify){
@@ -191,7 +194,8 @@
 											<td><a href="<?=admin_url('target/detail')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>
 									<?php
-									}}
+									        }
+                                        }
 									?>
                                     </tbody>
                                 </table>
@@ -205,10 +209,11 @@
             </div>
         </div>
         <!-- /#page-wrapper -->
+
 <script type="text/javascript">
     $(document).ready(function () {
-        let url = new URL(location.href);
-        let match = url.pathname.split("/");
+        const url = new URL(location.href);
+        const match = url.pathname.split("/");
         if (match[3] !== 'index') {
             $('.for_all_target').css('display', 'none');
         }
