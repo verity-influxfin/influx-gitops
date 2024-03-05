@@ -1689,3 +1689,15 @@ class Payment_lib{
         return $count;
     }
 }
+class XmlContentInfo
+{
+    public $fxml;
+    public $ftype;
+    public $source;
+    public function __construct($fxml, $ftype, $source)
+    {
+        $this->fxml = $fxml;
+        $this->ftype = $ftype;
+        $this->source = $source;
+    }
+}
