@@ -777,6 +777,42 @@ class Payment_lib{
 
 	}
 
+    /**
+     * @param  string  $type
+     * @return XmlContentInfo
+     */
+    private function get_xml_content_info(string $type = 'normal'): XmlContentInfo
+    {
+        $type_list = ['normal', 'atm', 'fxml', 'atm_loan_txt', 'atm_withdraw_txt'];
+        $_type = in_array($type, $type_list) ? $type : 'normal';
+
+        $fxml_map = [
+            'normal' => '',
+            'atm' => 'FXML',
+            'fxml' => 'FXML',
+            'atm_loan_txt' => 'FXML',
+            'atm_withdraw_txt' => 'FXML',
+        ];
+        $ftype_map = [
+            'normal' => 'BRMT/BRMT/0',
+            'atm' => 'BTRS/BRMT/0',
+            'fxml' => 'BRMT/BRMT/0',
+            'atm_loan_txt' => 'BTRS/BRMT/0',
+            'atm_withdraw_txt' => 'BTRS/BRMT/0',
+        ];
+        $source_map = [
+            'normal' => '1',
+            'atm' => '2',
+            'fxml' => '3',
+            'atm_loan_txt' => '4',
+            'atm_withdraw_txt' => '5',
+        ];
+
+        return new XmlContentInfo(
+            $fxml_map[$_type], $ftype_map[$_type], $source_map[$_type]
+        );
+    }
+
 	// hsiang  串國泰回應API 邏輯
 	public function check_batchno_to_cathay()
 	{
