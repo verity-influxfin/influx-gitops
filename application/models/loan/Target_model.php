@@ -259,7 +259,8 @@ class Target_model extends MY_Model
         return $query->result();
     }
 
-    public function getUserStatusByTargetId($targetIds) {
+    public function getUserStatusByTargetId($targetIds)
+    {
         $this->db
             ->select('user_id')
             ->select('created_at')
@@ -284,8 +285,9 @@ class Target_model extends MY_Model
      * @param $new_status
      * @return array|stdClass
      */
-    public function setScriptStatus($target_ids, $old_status, $new_status) {
-        if(!is_array($target_ids) || empty($target_ids))
+    public function setScriptStatus($target_ids, $old_status, $new_status)
+    {
+        if (!is_array($target_ids) || empty($target_ids))
             return [];
 
         $this->db->trans_begin();
@@ -294,14 +296,14 @@ class Target_model extends MY_Model
             ->from('`p2p_loan`.`targets`')
             ->get()->result();
 
-        if(is_array($targets) && !empty($targets)) {
+        if (is_array($targets) && !empty($targets)) {
             $this->db->where_in('id', $target_ids)
                 ->where('script_status', $old_status)
                 ->set(['script_status' => $new_status])
                 ->update('`p2p_loan`.`targets`');
 
             // 更新失敗需回傳 empty array
-            if($this->db->affected_rows() != count($target_ids)) {
+            if ($this->db->affected_rows() != count($target_ids)) {
                 $this->db->trans_rollback();
                 return [];
             }
@@ -321,7 +323,8 @@ class Target_model extends MY_Model
      * @param int $filterTime
      * @return mixed
      */
-    public function getRepaymentingTargets(int $userId, array $productIdList, int $filterTime=0) {
+    public function getRepaymentingTargets(int $userId, array $productIdList, int $filterTime = 0)
+    {
         $this->db->select('*')
             ->from("`p2p_loan`.`targets`")
             ->where('status', TARGET_REPAYMENTING)
@@ -335,7 +338,7 @@ class Target_model extends MY_Model
             ->where('tra.user_to', 't.user_id', FALSE)
             ->join("($subquery) as `t`", "`t`.`id` = `tra`.`target_id`")
             ->group_by('t.id');
-        if($filterTime)
+        if ($filterTime)
             $this->db->where('tra.created_at < ', $filterTime);
         return $this->db->get()->result();
     }
@@ -345,9 +348,9 @@ class Target_model extends MY_Model
      * @param $targetIds
      * @return mixed
      */
-    public function getDelayedTarget($targetIds) {
-        if(empty($targetIds))
-        {
+    public function getDelayedTarget($targetIds)
+    {
+        if (empty($targetIds)) {
             return [];
         }
         $this->db->select('target_id, entering_date, user_from, user_to')
@@ -365,67 +368,66 @@ class Target_model extends MY_Model
         return $this->db->get()->result_array();
     }
 
-	public function get_delayed_report_by_investor($input)
-	{
-		//投資人ID/債權總額
-		$subquery_investment = $this->db
-			->select('target_id,user_id,amount,id')
-			->where('status', 3)
-			->get_compiled_select('p2p_loan.investments', TRUE);
+    public function get_delayed_report_by_investor($input)
+    {
+        //投資人ID/債權總額
+        $subquery_investment = $this->db
+            ->select('target_id,user_id,amount,id')
+            ->where('status', 3)
+            ->get_compiled_select('p2p_loan.investments', TRUE);
 
-		//學校/公司
-		$subquery_user_meta_1 = $this->db
-			->select("
-				user_id,
-				GROUP_CONCAT(meta_value SEPARATOR '/') AS user_meta_1
+        //學校 公司 科系 職位
+        $subquery_user_meta = $this->db
+            ->select("
+                user_id,
+                MAX(CASE WHEN meta_key = 'school_name' THEN meta_value END) AS school_name,
+                MAX(CASE WHEN meta_key = 'job_company' THEN meta_value END) AS job_company,
+                MAX(CASE WHEN meta_key = 'school_department' THEN meta_value END) AS school_department,
+                MAX(CASE WHEN meta_key = 'job_position' THEN meta_value END) AS job_position,
 			")
-			->where_in('meta_key', ['school_name', 'job_company'])
-			->group_by('user_id')
-			->get_compiled_select('p2p_user.user_meta');
+            ->where_in('meta_key', ['school_name', 'job_company', 'school_department', 'job_position'])
+            ->group_by('user_id')
+            ->get_compiled_select('p2p_user.user_meta');
 
-		//科系
-		$subquery_user_meta_2 = $this->db
-			->select('user_id,meta_value')
-			->where('meta_key', 'school_department')
-			->group_by('user_id')
-			->get_compiled_select('p2p_user.user_meta');
+        // 最高學歷
+        $subquery_user_diploma = $this->db
+            ->select("
+                user_id,
+                JSON_EXTRACT(content, '$.system') AS diploma
+            ")
+            ->where(['status' => CERTIFICATION_STATUS_SUCCEED, 'certification_id' => CERTIFICATION_DIPLOMA])
+            ->group_by('user_id')
+            ->get_compiled_select('p2p_user.user_certification');
 
-		//職位
-		$subquery_user_meta_3 = $this->db
-			->select('user_id,meta_value')
-			->where('meta_key', 'job_position')
-			->group_by('user_id')
-			->get_compiled_select('p2p_user.user_meta');
-
-		//逾期本金
-		$subquery_unpaid_principal = $this->db
-			->select('target_id')
+        //逾期本金
+        $subquery_unpaid_principal = $this->db
+            ->select('target_id')
             ->select('user_to')
-			->select_sum('amount')
-			->where(['status' => 1, 'source' => 11])
-			->group_by('target_id,user_to')
-			->get_compiled_select('p2p_transaction.transactions', TRUE);
+            ->select_sum('amount')
+            ->where(['status' => 1, 'source' => intval(SOURCE_AR_PRINCIPAL)])
+            ->group_by('target_id,user_to')
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
 
-		//逾期利息
-		$subquery_unpaid_interest = $this->db
-			->select('target_id')
+        //逾期利息
+        $subquery_unpaid_interest = $this->db
+            ->select('target_id')
             ->select('user_to')
-			->select_sum('amount')
-			->where(['status' => 1, 'source' => 13])
-			->group_by('target_id,user_to')
-			->get_compiled_select('p2p_transaction.transactions', TRUE);
+            ->select_sum('amount')
+            ->where(['status' => 1, 'source' => 13])
+            ->group_by('target_id,user_to')
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
 
-		//延滯息
-		$subquery_delay_interest = $this->db
-			->select('target_id')
+        //延滯息
+        $subquery_delay_interest = $this->db
+            ->select('target_id')
             ->select('user_to')
-			->select_sum('amount')
-			->where(['status' => 1, 'source' => 93])
-			->group_by('target_id,user_to')
-			->get_compiled_select('p2p_transaction.transactions', TRUE);
+            ->select_sum('amount')
+            ->where(['status' => 1, 'source' => 93])
+            ->group_by('target_id,user_to')
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
 
-		$this->db
-			->select('
+        $this->db
+            ->select('
 				t.id,
 				t.user_id,
 				t.product_id,
@@ -437,99 +439,98 @@ class Target_model extends MY_Model
 				CONCAT(a1.target_id,"-",a1.id) AS ary_key,
 				tr.entering_date,
 				t.delay_days AS delayed_days,
-				a6.user_meta_1,
-				a7.meta_value AS school_department,
-				a8.meta_value AS job_position
+				a6.school_name as school_name,
+				a6.job_company as company,
+				a6.school_department as school_department,
+				a6.job_position as job_position,
+				a7.diploma as diploma,
 			')
             ->select('`tr`.`limit_date`')
-			->from('p2p_loan.targets t')
-			->join("($subquery_investment) a1", 'a1.target_id=t.id', 'left')
+            ->from('p2p_loan.targets t')
+            ->join("($subquery_investment) a1", 'a1.target_id=t.id', 'left')
             ->join(
                 'p2p_transaction.transactions tr',
                 'tr.target_id=t.id AND tr.id=(
                     SELECT `id`
                       FROM `p2p_transaction`.`transactions` 
-                     WHERE `status` IN ('.TRANSACTION_STATUS_DELETED.','.TRANSACTION_STATUS_TO_BE_PAID.','.TRANSACTION_STATUS_PAID_OFF.')
-                       AND `source`='.SOURCE_AR_DELAYINTEREST.'
+                     WHERE `status` IN (' . TRANSACTION_STATUS_DELETED . ',' . TRANSACTION_STATUS_TO_BE_PAID . ',' . TRANSACTION_STATUS_PAID_OFF . ')
+                       AND `source`=' . SOURCE_AR_DELAYINTEREST . '
                        AND `target_id`=`tr`.`target_id`
                      ORDER BY `id` LIMIT 1)',
                 'left',
-                FALSE)
-			->join("($subquery_user_meta_1) a6", 'a6.user_id=t.user_id', 'left')
-			->join("($subquery_user_meta_2) a7", 'a7.user_id=t.user_id', 'left')
-			->join("($subquery_user_meta_3) a8", 'a8.user_id=t.user_id', 'left')
-			->where(['t.delay' => 1, 't.status' => 5])
-			->order_by('t.target_no');
+                FALSE
+            )
+            ->join("($subquery_user_meta) a6", 'a6.user_id=t.user_id', 'left')
+            ->join("($subquery_user_diploma) a7", 'a7.user_id=t.user_id', 'left')
+            ->where(['t.delay' => 1, 't.status' => intval(TARGET_REPAYMENTING)])
+            ->order_by('t.target_no');
 
-		foreach ($input as $key => $value) {
-			switch ($key) {
-				case 'tsearch': //搜尋(使用者代號(UserID)/姓名/身份證字號/案號)
-					if (!empty($input['tsearch'])) {
+        foreach ($input as $key => $value) {
+            switch ($key) {
+                case 'tsearch': //搜尋(使用者代號(UserID)/姓名/身份證字號/案號)
+                    if (!empty($input['tsearch'])) {
                         $this->db->join('p2p_user.users u', 'u.id=t.user_id');
                         $this->db->group_start();
                         $tsearch = $input['tsearch'];
-                        if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
-                        {
+                        if (preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch)) {
                             $user_ids = [];
-                            $name = $this->user_model->get_many_by(array(
-                                'name like '    => '%'.$tsearch.'%',
-                                'status'	    => 1
-                            ));
-                            if($name){
-                                foreach($name as $k => $v){
+                            $name = $this->user_model->get_many_by(
+                                array(
+                                    'name like ' => '%' . $tsearch . '%',
+                                    'status' => 1
+                                )
+                            );
+                            if ($name) {
+                                foreach ($name as $k => $v) {
                                     $user_ids[] = $v->id;
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 $user_ids[] = 0;
                             }
                             $this->db->like('u.id', $user_ids);
-                        }else{
-                            if(preg_match_all('/[A-Za-z]/', $tsearch)==1){
-                                $user_ids=[];
-                                $id_number	= $this->user_model->get_many_by(array(
-                                    'id_number  like'	=> '%'.$tsearch.'%',
-                                    'status'	        => 1
-                                ));
-                                if($id_number){
-                                    foreach($id_number as $k => $v){
+                        } else {
+                            if (preg_match_all('/[A-Za-z]/', $tsearch) == 1) {
+                                $user_ids = [];
+                                $id_number = $this->user_model->get_many_by(
+                                    array(
+                                        'id_number  like' => '%' . $tsearch . '%',
+                                        'status' => 1
+                                    )
+                                );
+                                if ($id_number) {
+                                    foreach ($id_number as $k => $v) {
                                         $user_ids[] = $v->id;
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     $user_ids[] = 0;
                                 }
 
                                 $this->db->like('u.id', $user_ids);
-                            }
-                            elseif(preg_match_all('/\D/', $tsearch)==0){
+                            } elseif (preg_match_all('/\D/', $tsearch) == 0) {
                                 $this->db->like('u.id', $tsearch);
-                            }
-                            else{
-//                                $where['target_no like'] = '%'.$tsearch.'%';
+                            } else {
+                                //                                $where['target_no like'] = '%'.$tsearch.'%';
                                 $this->db->like('t.target_no', $tsearch);
                             }
                         }
                         $this->db->group_end();
-					}
-					break;
-				case 'sdate': //從
-					if (!empty($input['sdate'])) {
-						$this->db->where('t.created_at >=', strtotime($input['sdate']));
-					}
-					break;
-				case 'edate': //到
-					if (!empty($input['edate'])) {
-						$this->db->where('t.created_at <=', strtotime($input['edate']));
-					}
-					break;
-			}
-		}
+                    }
+                    break;
+                case 'sdate': //從
+                    if (!empty($input['sdate'])) {
+                        $this->db->where('t.created_at >=', strtotime($input['sdate']));
+                    }
+                    break;
+                case 'edate': //到
+                    if (!empty($input['edate'])) {
+                        $this->db->where('t.created_at <=', strtotime($input['edate']));
+                    }
+                    break;
+            }
+        }
 
-		$target_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
-		$target_ids = array_column($target_rows, 'id');
+        $target_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
+        $target_ids = array_column($target_rows, 'id');
 
         $this->db
             ->select('
@@ -544,54 +545,71 @@ class Target_model extends MY_Model
             ->join("($subquery_delay_interest) a5", 'a5.target_id=i.target_id AND a5.user_to=i.user_id', 'left')
             ->where_in('i.target_id', $target_ids)
             ->where('i.status', INVESTMENT_STATUS_REPAYING);
-		$transaction_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
+        $transaction_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
+
         $product_list = $this->config->item('product_list');
-		$target_rows = array_map(function ($value) use ($product_list) {
-			if (isset($value['school_department']) && !empty($value['school_department'])) {
-				$value['user_meta_2'][] = $value['school_department'];
-			}
-			if (isset($value['job_position']) && empty($value['job_position']) && $value['job_position'] !== 0) {
-				$position_name = $this->config->item('position_name');
-				$value['user_meta_2'][] = $position_name[$value['job_position']] ?? '';
-			}
+        $school_system = $this->config->item('school_system');
+        $position_name = $this->config->item('position_name');
+        $target_rows = array_map(function ($value) use ($product_list, $school_system, $position_name) {
+            if (isset($value['school_department']) && !empty($value['school_department'])) {
+                $value['user_meta_2'][] = $value['school_department'];
+            }
+            if (isset($value['job_position']) && empty($value['job_position']) && $value['job_position'] !== 0) {
+                $value['user_meta_2'][] = $position_name[$value['job_position']] ?? '';
+            }
+            $value['user_meta_2'] = implode('/', $value['user_meta_2'] ?? []);
 
-			$value['user_meta_2'] = implode('/', $value['user_meta_2'] ?? []);
             $value['product_name'] = $product_list[$value['product_id']]['name'] ?? '';
-			return $value;
-		}, $target_rows);
 
-		return array_replace_recursive($target_rows, $transaction_rows);
-	}
+            $value['school_name'] = $value['product_id'] != PRODUCT_ID_SALARY_MAN ? $value['school_name'] ?? '' : '';
+            $value['company'] = $value['product_id'] != PRODUCT_ID_STUDENT ? $value['company'] ?? '' : '';
+            $value['diploma'] = $value['product_id'] != PRODUCT_ID_STUDENT ? $school_system[intval($value['diploma'])] ?? '' : '';
+
+            return $value;
+        }, $target_rows);
+
+        return array_replace_recursive($target_rows, $transaction_rows);
+    }
 
     public function get_delayed_report_by_target($input)
     {
-        // 學校/公司
-        $subquery_user_meta_1 = $this->db
-            ->select('user_id')
-            ->select('GROUP_CONCAT(meta_value SEPARATOR "/") AS user_meta_1')
-            ->where_in('meta_key', ['school_name', 'job_company'])
+        //學校 公司 科系 職位
+        $subquery_user_meta = $this->db
+            ->select("
+				user_id,
+				MAX(CASE WHEN meta_key = 'school_name' THEN meta_value END) AS school_name,
+				MAX(CASE WHEN meta_key = 'job_company' THEN meta_value END) AS job_company,
+				MAX(CASE WHEN meta_key = 'school_department' THEN meta_value END) AS school_department,
+				MAX(CASE WHEN meta_key = 'job_position' THEN meta_value END) AS job_position,
+			")
+            ->where_in('meta_key', ['school_name', 'job_company', 'school_department', 'job_position'])
             ->group_by('user_id')
             ->get_compiled_select('p2p_user.user_meta');
 
-        // 科系
-        $subquery_user_meta_2 = $this->db
-            ->select('user_id')
-            ->select('meta_value')
-            ->where('meta_key', 'school_department')
+        // 最高學歷
+        $subquery_user_diploma = $this->db
+            ->select("
+                user_id,
+                JSON_EXTRACT(content, '$.system') AS diploma
+            ")
+            ->where(['status' => CERTIFICATION_STATUS_SUCCEED, 'certification_id' => CERTIFICATION_DIPLOMA])
             ->group_by('user_id')
-            ->get_compiled_select('p2p_user.user_meta');
+            ->get_compiled_select('p2p_user.user_certification');
 
         // 信評
         $subquery_credit = $this->db
             ->select('MAX(c.id) AS id')
             ->select('c.user_id')
             ->select('c.product_id')
-            ->join('p2p_loan.targets t',
+            ->join(
+                'p2p_loan.targets t',
                 'c.product_id=t.product_id AND
                  c.user_id=t.user_id AND
-                 c.created_at<=(t.created_at+' . (TARGET_APPROVE_LIMIT * 86400) . ')')
+                 c.created_at<=(t.created_at+' . (TARGET_APPROVE_LIMIT * 86400) . ')'
+            )
             ->group_by('user_id,product_id')
             ->get_compiled_select('p2p_loan.credits c');
+
         $subquery_credit = $this->db
             ->select('c.amount')
             ->select('c.created_at')
@@ -629,8 +647,10 @@ class Target_model extends MY_Model
 
         $this->db
             ->select('t.*')
-            ->select('a6.user_meta_1')
-            ->select('a7.meta_value AS school_department')
+            ->select('a6.school_name AS school_name')
+            ->select('a6.job_company AS company')
+            ->select('a6.school_department AS school_department')
+            ->select('a7.diploma AS diploma')
             ->select('a8.amount AS credit_amount')
             ->select('a8.created_at AS credit_created_at')
             ->select('a3.amount AS unpaid_damage')
@@ -640,8 +660,8 @@ class Target_model extends MY_Model
             ->join("({$subquery_unpaid_damage}) a3", 'a3.user_from=t.user_id AND a3.target_id=t.id', 'left')
             ->join("({$subquery_unpaid_interest}) a4", 'a4.user_from=t.user_id AND a4.target_id=t.id', 'left')
             ->join("({$subquery_unpaid_delayinterest}) a5", 'a5.user_from=t.user_id AND a5.target_id=t.id', 'left')
-            ->join("({$subquery_user_meta_1}) a6", 'a6.user_id=t.user_id', 'left')
-            ->join("({$subquery_user_meta_2}) a7", 'a7.user_id=t.user_id', 'left')
+            ->join("({$subquery_user_meta}) a6", 'a6.user_id=t.user_id', 'left')
+            ->join("({$subquery_user_diploma}) a7", 'a7.user_id=t.user_id', 'left')
             ->join("({$subquery_credit}) a8", 'a8.user_id=t.user_id AND a8.product_id=t.product_id', 'left')
             ->where('t.status', TARGET_REPAYMENTING)
             ->where('t.delay', 1);
@@ -655,10 +675,12 @@ class Target_model extends MY_Model
                         $tsearch = $input['tsearch'];
                         if (preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch)) {
                             $user_ids = [];
-                            $name = $this->user_model->get_many_by(array(
-                                'name like ' => '%' . $tsearch . '%',
-                                'status' => 1
-                            ));
+                            $name = $this->user_model->get_many_by(
+                                array(
+                                    'name like ' => '%' . $tsearch . '%',
+                                    'status' => 1
+                                )
+                            );
                             if ($name) {
                                 foreach ($name as $k => $v) {
                                     $user_ids[] = $v->id;
@@ -670,10 +692,12 @@ class Target_model extends MY_Model
                         } else {
                             if (preg_match_all('/[A-Za-z]/', $tsearch) == 1) {
                                 $user_ids = [];
-                                $id_number = $this->user_model->get_many_by(array(
-                                    'id_number  like' => '%' . $tsearch . '%',
-                                    'status' => 1
-                                ));
+                                $id_number = $this->user_model->get_many_by(
+                                    array(
+                                        'id_number  like' => '%' . $tsearch . '%',
+                                        'status' => 1
+                                    )
+                                );
                                 if ($id_number) {
                                     foreach ($id_number as $k => $v) {
                                         $user_ids[] = $v->id;
@@ -686,7 +710,7 @@ class Target_model extends MY_Model
                             } elseif (preg_match_all('/\D/', $tsearch) == 0) {
                                 $this->db->like('u.id', $tsearch);
                             } else {
-//                                $where['target_no like'] = '%'.$tsearch.'%';
+                                //                                $where['target_no like'] = '%'.$tsearch.'%';
                                 $this->db->like('t.target_no', $tsearch);
                             }
                         }
@@ -706,7 +730,17 @@ class Target_model extends MY_Model
             }
         }
 
-        return $this->db->get()->result_array();
+        $target_rows = $this->db->get()->result_array();
+
+        $school_system = $this->config->item('school_system');
+        $target_rows = array_map(function ($value) use ($school_system) {
+            $value['school_name'] = $value['product_id'] != PRODUCT_ID_SALARY_MAN ? $value['school_name'] ?? '' : '';
+            $value['company'] = $value['product_id'] != PRODUCT_ID_STUDENT ? $value['company'] ?? '' : '';
+            $value['diploma'] = $value['product_id'] != PRODUCT_ID_STUDENT ? $school_system[intval($value['diploma'])] ?? '' : '';
+            return $value;
+        }, $target_rows);
+
+        return $target_rows;
     }
 
     /**
@@ -762,8 +796,7 @@ class Target_model extends MY_Model
             ->join('p2p_user.users', 'users.id=targets.user_id AND users.company_status=' . $company_Status)
             ->where_in('targets.status', $status);
 
-        if ( ! empty($where))
-        {
+        if (!empty($where)) {
             $this->_set_where([0 => $where]);
         }
 
@@ -775,8 +808,7 @@ class Target_model extends MY_Model
         $this->_database->select('user_id, COUNT(*) as total_count')
             ->from("`p2p_loan`.`targets`")
             ->group_by('user_id');
-        if ( ! empty($where))
-        {
+        if (!empty($where)) {
             $this->_set_where([0 => $where]);
         }
 
@@ -788,8 +820,7 @@ class Target_model extends MY_Model
         $this->_database->select('user_id, MIN(id) as first_id, MAX(id) as last_id')
             ->from("`p2p_loan`.`targets`")
             ->group_by('user_id');
-        if ( ! empty($where))
-        {
+        if (!empty($where)) {
             $this->_set_where([0 => $where]);
         }
 
@@ -802,8 +833,7 @@ class Target_model extends MY_Model
             ->from("`p2p_loan`.`targets`")
             ->like('remark', '經AI')
             ->group_by('user_id');
-        if ( ! empty($where))
-        {
+        if (!empty($where)) {
             $this->_set_where([0 => $where]);
         }
 
@@ -817,11 +847,11 @@ class Target_model extends MY_Model
             ->from('p2p_loan.targets')
             ->where('user_id', $user_id)
             ->group_start()
-                ->where('status', TARGET_FAIL)
-                ->or_group_start()
-                    ->where('status', TARGET_WAITING_APPROVE)
-                    ->where('certificate_status', TARGET_CERTIFICATE_SUBMITTED)
-                ->group_end()
+            ->where('status', TARGET_FAIL)
+            ->or_group_start()
+            ->where('status', TARGET_WAITING_APPROVE)
+            ->where('certificate_status', TARGET_CERTIFICATE_SUBMITTED)
+            ->group_end()
             ->group_end()
             ->group_by('product_id')
             ->group_by('sub_product_id')
@@ -905,11 +935,9 @@ class Target_model extends MY_Model
             ->where('user_id', $user_id)
             ->where_in('status', $target_status);
 
-        if ($prod_subprod_id)
-        {
+        if ($prod_subprod_id) {
             $this->db->group_start();
-            foreach ($prod_subprod_id as $key => $value)
-            {
+            foreach ($prod_subprod_id as $key => $value) {
                 $this->db
                     ->or_group_start()
                     ->where('product_id', $key)
@@ -938,12 +966,11 @@ class Target_model extends MY_Model
             ->from("`p2p_transaction`.`transactions`")
             ->where('status', TRANSACTION_STATUS_TO_BE_PAID);
 
-        if (!empty($userId)){
+        if (!empty($userId)) {
             $this->db->where('user_to', $userId);
         }
-        
-        if ( ! empty($sourceList))
-        {
+
+        if (!empty($sourceList)) {
             $this->db->where_in('source', $sourceList);
         }
 
@@ -953,12 +980,10 @@ class Target_model extends MY_Model
             ->from('`p2p_loan`.`targets` AS `t`')
             ->join("({$sub_query}) as `tra`", "`t`.`id` = `tra`.`target_id`")
             ->where("t.delay_days {$logic}", GRACE_PERIOD);
-        if ( ! empty($product_id_list))
-        {
+        if (!empty($product_id_list)) {
             $this->db->where_in('t.product_id', $product_id_list);
         }
-        if ($isGroup)
-        {
+        if ($isGroup) {
             $this->db->group_by('t.product_id');
         }
 
@@ -1031,25 +1056,23 @@ class Target_model extends MY_Model
             'SME' => 0, // TODO 當中小企業上線後，需要在下方新增他的 case
         ];
 
-        foreach ($targets as $target)
-        {
-            switch (TRUE)
-            {
-            case $target['product_id'] == PRODUCT_ID_STUDENT && $target['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT:
-                $result['SMART_STUDENT'] += 1;
-                break;
+        foreach ($targets as $target) {
+            switch (TRUE) {
+                case $target['product_id'] == PRODUCT_ID_STUDENT && $target['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT:
+                    $result['SMART_STUDENT'] += 1;
+                    break;
 
-            case $target['product_id'] == PRODUCT_ID_STUDENT:
-                $result['STUDENT'] += 1;
-                break;
+                case $target['product_id'] == PRODUCT_ID_STUDENT:
+                    $result['STUDENT'] += 1;
+                    break;
 
-            case $target['product_id'] == PRODUCT_ID_SALARY_MAN:
-                $result['SALARY_MAN'] += 1;
-                break;
+                case $target['product_id'] == PRODUCT_ID_SALARY_MAN:
+                    $result['SALARY_MAN'] += 1;
+                    break;
 
-            case $target['product_id'] == PRODUCT_SK_MILLION_SMEG:
-                $result['SK_MILLION'] += 1;
-                break;
+                case $target['product_id'] == PRODUCT_SK_MILLION_SMEG:
+                    $result['SK_MILLION'] += 1;
+                    break;
             }
         }
 
@@ -1061,12 +1084,10 @@ class Target_model extends MY_Model
         $this->_database
             ->select('1')
             ->from('`p2p_loan`.`targets`');
-        if ( ! empty($condition))
-        {
+        if (!empty($condition)) {
             $this->_set_where([0 => $condition]);
         }
-        if ( ! empty($this->_database->get()->first_row()))
-        {
+        if (!empty($this->_database->get()->first_row())) {
             return TRUE;
         }
         return FALSE;
@@ -1079,8 +1100,7 @@ class Target_model extends MY_Model
      */
     public function get_targets_detail($conditions): array
     {
-        if ( ! empty($conditions))
-        {
+        if (!empty($conditions)) {
             $this->_set_where([$conditions]);
         }
 
@@ -1141,18 +1161,15 @@ class Target_model extends MY_Model
      */
     public function get_affected_after_update($target_id, $update_param, $where_param): int
     {
-        if (empty($update_param))
-        {
+        if (empty($update_param)) {
             return 0;
         }
 
-        if ( ! empty($where_param))
-        {
+        if (!empty($where_param)) {
             $this->_set_where([0 => $where_param]);
         }
 
-        foreach ($update_param as $key => $value)
-        {
+        foreach ($update_param as $key => $value) {
             $this->_database->set($key, $value);
         }
 
@@ -1175,8 +1192,7 @@ class Target_model extends MY_Model
 
     public function get_newest_no_by_condition($where)
     {
-        if ( ! empty($where))
-        {
+        if (!empty($where)) {
             $this->_set_where([0 => $where]);
         }
         $target = $this->_database
@@ -1230,8 +1246,7 @@ class Target_model extends MY_Model
         $this->_database
             ->select('id')
             ->select('promote_code');
-        if ( ! empty($user_condition))
-        {
+        if (!empty($user_condition)) {
             $this->_set_where([$user_condition]);
         }
         $sub_query = $this->_database->get_compiled_select('p2p_user.users', TRUE);
@@ -1260,10 +1275,11 @@ class Target_model extends MY_Model
 
     public function get_old_user(array $user_ids = [], $time_before = '')
     {
-        if ((string) (int) $time_before !== $time_before ||
+        if (
+            (string) (int) $time_before !== $time_before ||
             $time_before > PHP_INT_MAX ||
-            $time_before < ~PHP_INT_MAX)
-        {
+            $time_before < ~PHP_INT_MAX
+        ) {
             $time_before = time();
         }
         $time_before -= 1;
@@ -1416,24 +1432,23 @@ class Target_model extends MY_Model
             ->get_compiled_select(NULL, True);
 
         $sub_query4 = $this->db
-        ->select('ad.name')
-        ->select('tcl.target_id')
-        ->from('p2p_log.targets_change_log as tcl')
-        ->join("($sub_query3) ad", 'ad.id = tcl.change_admin', 'JOIN')
-        ->where('tcl.status = 9')
-        // 只需要去一次log紀錄就好
-        ->group_by('tcl.target_id')
-        ->get_compiled_select(NULL, TRUE);
+            ->select('ad.name')
+            ->select('tcl.target_id')
+            ->from('p2p_log.targets_change_log as tcl')
+            ->join("($sub_query3) ad", 'ad.id = tcl.change_admin', 'JOIN')
+            ->where('tcl.status = 9')
+            // 只需要去一次log紀錄就好
+            ->group_by('tcl.target_id')
+            ->get_compiled_select(NULL, TRUE);
 
-            $this->_database
+        $this->_database
             ->select('t.*')
             ->select('a.name AS credit_sheet_reviewer')
             ->select('b.name AS fail_target_reviewer')
             ->from('p2p_loan.targets t')
             ->join("({$sub_query2}) a", 'a.target_id = t.id', 'LEFT')
             ->join("({$sub_query4}) b", 'b.target_id = t.id', 'LEFT');
-        if ( ! empty($target_condition))
-        {
+        if (!empty($target_condition)) {
             $this->_set_where([$target_condition]);
         }
         return $this->_database->get()->result();
