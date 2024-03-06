@@ -11,11 +11,11 @@ spec:
     kind: Deployment
     name: deus-deployment
   minReplicas: 2
-  maxReplicas: 30
+  maxReplicas: 4
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 30
+        averageUtilization: 85
