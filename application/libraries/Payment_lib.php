@@ -729,7 +729,7 @@ class Payment_lib{
         $ftype            = $xml_content_info->ftype;
         $source           = $xml_content_info->source;
 
-		// YmdHis + 1~3(source: (normal:1), (atm:2), (fxml:3)) + 0~9(隨機)
+		// TXNKEY組成：YmdHis + 1~5(source: (normal:1), (atm:2), (fxml:3), (atm_loan_txt:4), (atm_withdraw_txt:5)) + 0~9(隨機)
 		$txnkey = date("YmdHis").$source.rand(0, 9);
 		$xml_file 	=
 '<?xml version="1.0" encoding="big5"?>
