@@ -1505,7 +1505,9 @@ class Credit_lib{
                     'status' => CERTIFICATION_STATUS_SUCCEED
                 ]
             );
-            if ($_certification_financial_worker && isset($_certification_financial_worker->content)) {
+            if ( ! $_certification_financial_worker || ! isset($_certification_financial_worker->content)) {
+                $data_job_salary = $data['job_salary'];
+            } else {
                 $content = json_decode($_certification_financial_worker->content, true);
                 $data_job_salary = intval($content['admin_salary'] ?? $data['job_salary']);
             }
