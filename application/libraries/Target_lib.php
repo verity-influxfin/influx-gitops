@@ -1074,11 +1074,16 @@ class Target_lib
                             ? $schedule['legal_affairs_fee'] += $value->amount : $schedule['platform_fees'] += $value->amount;
                         break;
                     case SOURCE_PRINCIPAL:
-                        $list[$value->instalment_no]['r_principal'] += $value->amount;
                     case SOURCE_INTEREST:
                     case SOURCE_DELAYINTEREST:
                     case SOURCE_DAMAGE:
                     case SOURCE_PREPAYMENT_DAMAGE:
+                        if ($value->source == SOURCE_PRINCIPAL) {
+                            $list[$value->instalment_no]['r_principal'] += $value->amount;
+                        }
+                        if ($value->source == SOURCE_PREPAYMENT_DAMAGE) {
+                            $list[$value->instalment_no]['days'] += 1;
+                        }
                         $list[$value->instalment_no]['repayment'] += $value->amount;
                         !isset($schedule['repaid']) ? $schedule['repaid'] = 0 : '';
                         $schedule['repaid'] += $value->amount;
@@ -1102,7 +1107,7 @@ class Target_lib
                 $total_payment = $value['interest'] + $value['principal'] + $value['delay_interest'] + $value['liquidated_damages'];
                 $list[$key]['total_payment'] = $total_payment;
                 $schedule['total_payment'] += $total_payment;
-                $list[$key]['days'] = get_range_days($old_date, $value['repayment_date']);
+                $list[$key]['days'] += get_range_days($old_date, $value['repayment_date']);
                 $list[$key]['remaining_principal'] = $total;
                 $old_date = $value['repayment_date'];
                 $total = $total - $value['principal'];
@@ -1720,6 +1725,20 @@ class Target_lib
                 $schedule['total_payment'] += $value['total_payment'];
                 $xirr_dates[] = isset($value['repayment_date'])?$value['repayment_date']:null;
                 $xirr_value[] = $value['total_payment'];
+            }
+
+            // 出借方需判斷是否為提前還款，如果有提前還款，最後一期的天數要另外加一天
+            $this->CI->load->model('loan/prepayment_model');
+            $prepayment = $this->CI->prepayment_model->get_by([
+                'target_id' => $target->id,
+            ]);
+            if ($prepayment){
+                // 取得所有的 key
+               $keys = array_keys($list);
+               // 找到最後一個元素的 key
+               $lastKey = end($keys);
+               // 替換最後一個元素的 days 值
+               $list[$lastKey]['days'] += 1;
             }
 
             $schedule['XIRR'] = 0;//200306 close
