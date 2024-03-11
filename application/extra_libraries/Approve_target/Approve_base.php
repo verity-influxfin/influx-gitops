@@ -7,6 +7,9 @@ use CertificationResult\MessageDisplay;
 use CertificationResult\SocialCertificationResult;
 use CreditSheet\CreditSheetFactory;
 
+/**
+ * @property  \CI_Controller $CI
+ */
 abstract class Approve_base implements Approve_interface
 {
     protected $CI;
@@ -222,7 +225,7 @@ abstract class Approve_base implements Approve_interface
             // 命中反詐欺
             return TRUE;
         }
-        if (isset($this->product_config['secondInstance']) && $this->product_config['secondInstance'] === TRUE)
+        if ($this->product_config['secondInstance'] ?? FALSE)
         {
             // 產品設定檔設定需二審
             return TRUE;

@@ -13,7 +13,7 @@ class Product_lib
         $product_list = $this->CI->config->item('product_list');
         $sub_product_list = $this->CI->config->item('sub_product_list');
 
-        $product = isset($product_list[$productId]) ? $product_list[$productId] : $product_list[1];
+        $product = $product_list[$productId] ?? $product_list[1];
         $sub_product_id = $subProductId;
         if(isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product'])){
             $product = $this->trans_sub_product($product,$sub_product_id);
