@@ -2,6 +2,10 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * Prepayment_lib Class
+ * @property CI_Controller $CI
+ */
 class Prepayment_lib{
 	
 	public function __construct()
