@@ -46,7 +46,6 @@ class Credit_output
                 'loan_range_s' => $this->productMapping[$credit->product_id]['loan_range_s'],
                 'loan_range_e' => $this->productMapping[$credit->product_id]['loan_range_e'],
 			],
-            'remark' => $credit->remark ?? new stdClass(),
 			'level' => $credit->level,
 			'points' => $credit->points,
 			'amount' => $credit->amount,
