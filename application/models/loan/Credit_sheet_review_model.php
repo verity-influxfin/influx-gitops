@@ -45,7 +45,7 @@ class Credit_sheet_review_model extends MY_Model
         return $result['product_id'];
     }
 
-    public function has_info_by_target_id($target_id, $group = NULL): bool
+    public function has_info_by_target_id($target_id, $group = NULL)
     {
         $this->db
             ->select('1')

@@ -279,53 +279,18 @@ class Credit_lib{
                 $this->scoreHistory[] = "IG發文關鍵字 = {$calculate_points}\n";
             }
 
-            // 項目: 透明度
-            // 類別: 其他相關資訊
-            $accumulate_points = 0;
-            // 聯徵
-            if (isset($data['investigation_status'])) {
-                // 提供最新聯徵MQ
-                $accumulate_points     += 50;
-                $this->scoreHistory[] = '提供聯徵 = ' . 50;
-                //聯徵近三個月查詢次數
-                if (isset($data['investigation_times'])) {
-                    $times                = intval($data['investigation_times']);
-                    $points                = $this->get_student_investigation_times_points($times);
-                    $accumulate_points     += $points;
-                    $this->scoreHistory[] = '聯徵近三個月查詢次數 ' . $times . '次: ' . $points;
-                }
-
-                //信用卡使用率
-                if (isset($data['investigation_credit_rate'])) {
-                    $rate                  = floatval($data['investigation_credit_rate']);
-                    $has_using_credit_card = intval(filter_var($data['investigation_has_using_credit_card'] ??
-                        'false', FILTER_VALIDATE_BOOLEAN));
-                    $points                 = $this->get_student_investigation_rate_points($rate, $has_using_credit_card);
-                    $accumulate_points      += $points;
-                    $this->scoreHistory[]  = '聯徵信用卡使用率 ' . $rate . '%: ' . $points;
-                }
-
-                //聯徵信用記錄
-                if (isset($data['investigation_months'])) {
-                    $months               = intval($data['investigation_months']);
-                    $points                = $this->get_student_investigation_months_points($months);
-                    $accumulate_points     += $points;
-                    $this->scoreHistory[] = '聯徵信用記錄 ' . $months . '個月: ' . $points;
-                }
-
-                // 若征信綜合評分加分合計低於100分，按100分賦分
-                if($accumulate_points < 100){
-                    $this->scoreHistory[] = '征信綜合評分加分合計低於100分，按100分賦分：+' . (100 - $accumulate_points);
-                    $accumulate_points = 100;
-                }
-            }
-            $total += $accumulate_points;
-
-            // 提供社交帳戶認證LINE
             if (isset($data['line_access_token']) && ! empty($data['line_access_token']))
             {
                 $total += 100;
                 $this->scoreHistory[] = '提供社交帳戶認證LINE = 100\n';
+            }
+
+            // 聯徵
+            if (isset($data['investigation_status']) && ! empty($data['investigation_status']))
+            {
+                $investigationStatus = 150;
+                $total += $investigationStatus;
+                $this->scoreHistory[] = '提供聯徵 = ' . $investigationStatus;
             }
 
             //SIP
@@ -1759,25 +1724,6 @@ class Credit_lib{
 		return $point;
 	}
 
-    /**
-     * 學生聯徵近三個月查詢次數對照
-     * @param int $times
-     * @return int
-     */
-    public function get_student_investigation_times_points(int $times = 0): int
-    {
-        if (1 <= $times && $times <= 3) {
-            return 100;
-        }
-        if (4 <= $times && $times <= 6) {
-            return 50;
-        }
-        if (7 <= $times && $times <= 9) {
-            return 10;
-        }
-        return 0;
-    }
-
 	public function get_investigation_rate_point($rate = 0, $has_using_credit_card = 0){
         if ( ! $has_using_credit_card)
         {
@@ -1795,29 +1741,6 @@ class Credit_lib{
 		return $point;
 	}
 
-    /**
-     * 學生信用卡使用率對照表
-     * @param float $rate
-     * @param int $has_using_credit_card
-     * @return int
-     */
-    public function get_student_investigation_rate_points(float $rate = 0, int $has_using_credit_card = 0): int
-    {
-        if (!$has_using_credit_card) {
-            return 0;
-        }
-        if (0 <= $rate && $rate <= 30) {
-            return 100;
-        }
-        if (30 < $rate && $rate <= 50) {
-            return 50;
-        }
-        if (50 < $rate && $rate <= 70) {
-            return 10;
-        }
-        return 0;
-    }
-
 	public function get_investigation_months_point($months = 0){
 		$point 	= 0;
 		if($months >= 12){
@@ -1829,25 +1752,6 @@ class Credit_lib{
 		}
 		return $point;
 	}
-
-    /**
-     * 學生聯徵信用記錄對照表
-     * @param int $months
-     * @return int
-     */
-    public function get_student_investigation_months_points(int $months = 0): int
-    {
-        if (12 <= $months) {
-            return 100;
-        }
-        if (6 <= $months && $months <= 11) {
-            return 50;
-        }
-        if (3 <= $months && $months <= 5) {
-            return 10;
-        }
-        return 0;
-    }
 
 	//取得信用評分
 	public function get_credit($user_id,$product_id,$sub_product_id=0,$target=false){
