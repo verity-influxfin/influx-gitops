@@ -114,6 +114,7 @@ abstract class Approve_base implements Approve_interface
             switch ($this->check_brookesia())
             {
                 case self::BROOKESIA_BLOCK:
+                    $this->result->set_action_cancel();
                     goto END;
                 case self::BROOKESIA_CLEAR:
                     break;
