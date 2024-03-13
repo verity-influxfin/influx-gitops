@@ -1889,11 +1889,16 @@ class Target_lib
                     // $value 取代成重新取得的資料
                     $value = $this_target;
 
+                    try {
                     $approve_factory = new Approve_factory();
                     $approve_instance = $approve_factory->get_instance_by_model_data($value);
                     if ($approve_instance->approve(FALSE) === TRUE)
                     {
                         $count++;
+                    }
+                    } catch (Exception $e) {
+                        log_message_line_of_function('ERROR', "script_approve_target", $value->id . " " . $e->getMessage(),
+                            true);
                     }
                     continue;
                 }
@@ -1911,6 +1916,7 @@ class Target_lib
                 $subloan_list = $this->CI->config->item('subloan_list');
                 foreach ($list as $product_id => $targets) {
                     foreach ($targets as $target_id => $value) {
+                        try {
                         // 迴圈當下重新確認是否狀態一樣
                         $this_target = $this->CI->target_model->get_by([
                             'id' => $value->id,
@@ -2360,8 +2366,12 @@ class Target_lib
                                 }
                             }
                         }
-
-                        $this->CI->target_model->update($value->id, ['script_status' => 0]);
+                        }catch (Exception $e) {
+                            log_message_line_of_function('ERROR', "script_approve_target", $target_id . " " . $e->getMessage(),
+                                true);
+                        } finally {
+                            $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+                        }
                     }
                 }
                 return $count;
