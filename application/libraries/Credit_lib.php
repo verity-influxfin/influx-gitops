@@ -1531,25 +1531,12 @@ class Credit_lib{
             $point += $job_type_point;
             $score_history[] = '職務性質(內/外勤): ' . $job_type_point;
         }
-
-        $data_job_salary = 0;
-        // 檢查是否有「財務訊息資訊」的「最終確認月薪」 ，有的話加分，沒有則不加分
-        $_certification_financial_worker = $this->CI->user_certification_model->get_by(
-            [
-                'user_id' => $data['user_id'],
-                'certification_id' => CERTIFICATION_FINANCIALWORKER,
-                'status' => CERTIFICATION_STATUS_SUCCEED
-            ]
-        );
-        if ($_certification_financial_worker && isset($_certification_financial_worker->content)) {
-            $content = json_decode($_certification_financial_worker->content, true);
-            $data_job_salary = intval($content['admin_salary'] ?? 0);
-
+        $data_job_salary = (int) $data['job_salary'] ?? 0;
+        if (isset($data['job_salary'])) {
             $job_salary_point = $this->get_job_salary_point($data_job_salary);
             $point += $job_salary_point;
-            $score_history[] = '薪資對應分數: '.$job_salary_point;
+            $score_history[] = '薪資: ' . $job_salary_point;
         }
-
         if ( ! empty($data['job_has_license']) && $data['job_has_license'] === '1')
         {
             $job_license_point = 100;
