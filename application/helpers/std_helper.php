@@ -628,19 +628,21 @@ function curl_post_json(string $url, array $data = array(), array $header = arra
     }
 
 /**
+ * @param string $level the error level: 'error', 'debug' or 'info'
  * @param string $function_name
  * @param string $message
  * @param bool $need_debug_backtrace
  * @return bool
  */
-function log_message_line_of_function(string $function_name, string $message, bool $need_debug_backtrace = false): bool
+function log_message_line_of_function(string $level = 'DEBUG', string $function_name, string $message, bool
+$need_debug_backtrace = false): bool
 {
 	$dir = 'application/logs/' . $function_name;
 	if (!is_dir($dir)) {
 		mkdir($dir, 0777, true);
 	}
 
-	$log_message = "ERROR - " . date('Y-m-d H:i:s') . " --> ";
+	$log_message = "$level - " . date('Y-m-d H:i:s') . " --> ";
 	if ($need_debug_backtrace) {
 		$backtrace = debug_backtrace();
 		for ($i = 0; $i < count($backtrace); $i++) {

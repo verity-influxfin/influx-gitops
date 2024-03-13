@@ -1897,7 +1897,7 @@ class Target_lib
                         $count++;
                     }
                     } catch (Exception $e) {
-                        log_message_line_of_function("script_approve_target", $value->id . " " . $e->getMessage(),
+                        log_message_line_of_function('INFO', "script_approve_target", $value->id . " " . $e->getMessage(),
                             true);
                     }
                     continue;
@@ -2367,7 +2367,7 @@ class Target_lib
                             }
                         }
                         }catch (Exception $e) {
-                            log_message_line_of_function("script_approve_target", $target_id . " " . $e->getMessage(),
+                            log_message_line_of_function('INFO', "script_approve_target", $target_id . " " . $e->getMessage(),
                                 true);
                         } finally {
                             $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
