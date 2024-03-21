@@ -1662,7 +1662,7 @@ class Certification extends MY_Admin_Controller {
                         $file['pdf'] = $field;
                         $pdf = $this->s3_upload->pdf(
                             file_get_contents($field['tmp_name']),
-                            'pdf' . $post['user_id'] . round(microtime(TRUE) * 1000) . rand(1, 99) . '.pdf',
+                            'pdf' . $post['user_id'] . round(microtime(TRUE) * 1000) . rand(1, 99) . '_by_admin' . '.pdf',
                             $post['user_id'],
                             "certification/{$post['user_certification_id']}"
                         );
