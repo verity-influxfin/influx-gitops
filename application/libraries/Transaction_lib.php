@@ -3,9 +3,10 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 use Symfony\Component\HttpClient\HttpClient;
 
-class Transaction_lib
-{
-
+/**
+ * @property CI_Controller $CI
+ */
+class Transaction_lib{
 
     public function __construct()
     {

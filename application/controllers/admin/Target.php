@@ -850,10 +850,11 @@ class Target extends MY_Admin_Controller
                 $certification = $this->user_certification_model->get_by(['user_id' => $userId, 'certification_id' => 15]);
                 if (isset($certification) && $certification->status == 1) {
                     $content = json_decode($certification->content);
-                    if (
-                        isset($content->monthly_repayment) && isset($content->total_repayment)
-                        && is_numeric($content->monthly_repayment) && is_numeric($content->total_repayment)
-                    ) {
+                    if (isset($content->monthly_repayment) && isset($content->total_repayment)) {
+                        if ( ! is_numeric($content->monthly_repayment) || ! is_numeric($content->total_repayment)) {
+                            $this->json_output->setStatusMessage('還款力計算結果資料類型不正確');
+                            $this->json_output->setStatusCode(400)->send();
+                        }
                         $liabilitiesWithoutAssureTotalAmount = $content->liabilitiesWithoutAssureTotalAmount ?? 0;
                         $product_id = $target->product_id;
                         // 上班族貸款

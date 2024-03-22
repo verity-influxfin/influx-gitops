@@ -2,6 +2,10 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * Prepayment_lib Class
+ * @property CI_Controller $CI
+ */
 class Prepayment_lib{
 	
 	public function __construct()
@@ -68,14 +72,16 @@ class Prepayment_lib{
 
                 $data['remaining_instalment'] 	= $target->instalment - $instalment_paid;
                 if($remaining_principal){
-                    $days  = get_range_days($last_settlement_date,$entering_date);
-
+                    $days  = get_range_days($last_settlement_date,$entering_date) + 1; // 2024/01/22發現提前還款計息日期有誤，缺少一天
+                    
                     $product_list = $this->CI->config->item('product_list');
                     $product = $product_list[$target->product_id];
                     $sub_product_id = $target->sub_product_id;
                     if($this->is_sub_product($product,$sub_product_id)){
                         $product = $this->trans_sub_product($product,$sub_product_id);
                     }
+
+                    // 2024/01/22 修改了days的計算，因無法重現DS2P1的案件，所以先忽略DS2P1提前還款的影響
                     if($product['visul_id'] == 'DS2P1'){
                         $input = $this->CI->input->get(NULL, TRUE);
                         $this->CI->load->model('log/log_image_model');

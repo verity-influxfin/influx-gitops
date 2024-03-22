@@ -81,6 +81,7 @@ class Sendemail
 	}
 
 	public function verify_code($type="",$email="",$code=""){
+		log_message('error', '[verify_code] type: '.$type. 'email:'. $email . 'code: ' . $code);
 		if(!empty($type) && !empty($email) && !empty($code)){
 
 			$param = array(

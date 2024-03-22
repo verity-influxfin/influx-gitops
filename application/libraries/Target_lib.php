@@ -1092,11 +1092,16 @@ class Target_lib
                             ? $schedule['legal_affairs_fee'] += $value->amount : $schedule['platform_fees'] += $value->amount;
                         break;
                     case SOURCE_PRINCIPAL:
-                        $list[$value->instalment_no]['r_principal'] += $value->amount;
                     case SOURCE_INTEREST:
                     case SOURCE_DELAYINTEREST:
                     case SOURCE_DAMAGE:
                     case SOURCE_PREPAYMENT_DAMAGE:
+                        if ($value->source == SOURCE_PRINCIPAL) {
+                            $list[$value->instalment_no]['r_principal'] += $value->amount;
+                        }
+                        if ($value->source == SOURCE_PREPAYMENT_DAMAGE) {
+                            $list[$value->instalment_no]['days'] += 1;
+                        }
                         $list[$value->instalment_no]['repayment'] += $value->amount;
                         !isset($schedule['repaid']) ? $schedule['repaid'] = 0 : '';
                         $schedule['repaid'] += $value->amount;
@@ -1120,7 +1125,7 @@ class Target_lib
                 $total_payment = $value['interest'] + $value['principal'] + $value['delay_interest'] + $value['liquidated_damages'];
                 $list[$key]['total_payment'] = $total_payment;
                 $schedule['total_payment'] += $total_payment;
-                $list[$key]['days'] = get_range_days($old_date, $value['repayment_date']);
+                $list[$key]['days'] += get_range_days($old_date, $value['repayment_date']);
                 $list[$key]['remaining_principal'] = $total;
                 $old_date = $value['repayment_date'];
                 $total = $total - $value['principal'];
@@ -1740,6 +1745,20 @@ class Target_lib
                 $xirr_value[] = $value['total_payment'];
             }
 
+            // 出借方需判斷是否為提前還款，如果有提前還款，最後一期的天數要另外加一天
+            $this->CI->load->model('loan/prepayment_model');
+            $prepayment = $this->CI->prepayment_model->get_by([
+                'target_id' => $target->id,
+            ]);
+            if ($prepayment){
+                // 取得所有的 key
+               $keys = array_keys($list);
+               // 找到最後一個元素的 key
+               $lastKey = end($keys);
+               // 替換最後一個元素的 days 值
+               $list[$lastKey]['days'] += 1;
+            }
+
             $schedule['XIRR'] = 0;//200306 close
         }
         $schedule['list'] = $list;
@@ -1888,11 +1907,16 @@ class Target_lib
                     // $value 取代成重新取得的資料
                     $value = $this_target;
 
+                    try {
                     $approve_factory = new Approve_factory();
                     $approve_instance = $approve_factory->get_instance_by_model_data($value);
                     if ($approve_instance->approve(FALSE) === TRUE)
                     {
                         $count++;
+                    }
+                    } catch (Exception $e) {
+                        log_message_line_of_function('ERROR', "script_approve_target", $value->id . " " . $e->getMessage(),
+                            true);
                     }
                     continue;
                 }
@@ -1910,6 +1934,7 @@ class Target_lib
                 $subloan_list = $this->CI->config->item('subloan_list');
                 foreach ($list as $product_id => $targets) {
                     foreach ($targets as $target_id => $value) {
+                        try {
                         // 迴圈當下重新確認是否狀態一樣
                         $this_target = $this->CI->target_model->get_by([
                             'id' => $value->id,
@@ -2136,6 +2161,8 @@ class Target_lib
                                 ]);
                                 if ($identity_cert)
                                 {
+                                    //20240227 戶役政目前無法使用，先暫時關閉，直接通過
+                                    goto SKIP_CHECK_INTEGRATION;
                                     // Avoid checking for the same target too many times.
                                     $this->CI->load->model('log/log_integration_model');
                                     $api_verify_log = $this->CI->log_integration_model->order_by('created_at', 'DESC')->get_by([
@@ -2234,6 +2261,10 @@ class Target_lib
                                     }
                                 }
                             }
+
+                            //20240227 戶役政目前無法使用，先暫時關閉，直接通過
+                            SKIP_CHECK_INTEGRATION:
+
 
                             // 判斷是否符合產品申貸年齡限制
                             $this->CI->load->library('loanmanager/product_lib');
@@ -2353,8 +2384,12 @@ class Target_lib
                                 }
                             }
                         }
-
-                        $this->CI->target_model->update($value->id, ['script_status' => 0]);
+                        }catch (Exception $e) {
+                            log_message_line_of_function('ERROR', "script_approve_target", $target_id . " " . $e->getMessage(),
+                                true);
+                        } finally {
+                            $this->CI->target_model->update($value->id, ['script_status' => TARGET_SCRIPT_STATUS_NOT_IN_USE]);
+                        }
                     }
                 }
                 return $count;

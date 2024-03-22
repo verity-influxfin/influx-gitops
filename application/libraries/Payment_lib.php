@@ -2,6 +2,10 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * class Payment_lib
+ * @property CI_Controller $CI
+ */
 class Payment_lib{
     private $charity_virtual_account = [];
 
@@ -479,7 +483,7 @@ class Payment_lib{
 					}
 				}
 
-				$upload 	= $this->upload_file($content,'atm');
+				$upload 	= $this->upload_file($content,'atm_loan_txt');
                 $batch_no = isset($upload['batch_no']) ? $upload['batch_no'] : "";
                 $txn_key = isset($upload['txn_key']) ? $upload['txn_key'] : "";
                 $res = isset($upload['res']) ? $upload['res'] : "";
@@ -614,7 +618,7 @@ class Payment_lib{
 					}
 				}
 
-				$upload 	= $this->upload_file($content,'atm');
+				$upload 	= $this->upload_file($content,'atm_withdraw_txt');
                 $batch_no = isset($upload['batch_no']) ? $upload['batch_no'] : "";
                 $txn_key = isset($upload['txn_key']) ? $upload['txn_key'] : "";
                 $res = isset($upload['res']) ? $upload['res'] : "";
@@ -720,21 +724,12 @@ class Payment_lib{
 			return false;
 		}
 
-		$fxml 	= '';
-		$ftype 	= 'BRMT/BRMT/0';
-		$source = '1';
-		if($type=='atm'){
-			$fxml 	= '';
-			$ftype 	= 'BTRS/BRMT/0';
-			$source = '2';
-		}
-		if($type=='fxml'){
-			$fxml 	= 'FXML';
-			$ftype 	= 'BRMT/BRMT/0';
-			$source = '3';
-		}
+        $xml_content_info = $this->get_xml_content_info($type);
+        $fxml             = $xml_content_info->fxml;
+        $ftype            = $xml_content_info->ftype;
+        $source           = $xml_content_info->source;
 
-
+		// TXNKEY組成：YmdHis + 1~5(source: (normal:1), (atm:2), (fxml:3), (atm_loan_txt:4), (atm_withdraw_txt:5)) + 0~9(隨機)
 		$txnkey = date("YmdHis").$source.rand(0, 9);
 		$xml_file 	=
 '<?xml version="1.0" encoding="big5"?>
@@ -772,6 +767,42 @@ class Payment_lib{
 		return array('res' => $xml);
 
 	}
+
+    /**
+     * @param  string  $type
+     * @return XmlContentInfo
+     */
+    private function get_xml_content_info(string $type = 'normal'): XmlContentInfo
+    {
+        $type_list = ['normal', 'atm', 'fxml', 'atm_loan_txt', 'atm_withdraw_txt'];
+        $_type = in_array($type, $type_list) ? $type : 'normal';
+
+        $fxml_map = [
+            'normal' => '',
+            'atm' => 'FXML',
+            'fxml' => 'FXML',
+            'atm_loan_txt' => 'FXML',
+            'atm_withdraw_txt' => 'FXML',
+        ];
+        $ftype_map = [
+            'normal' => 'BRMT/BRMT/0',
+            'atm' => 'BTRS/BRMT/0',
+            'fxml' => 'BRMT/BRMT/0',
+            'atm_loan_txt' => 'BTRS/BRMT/0',
+            'atm_withdraw_txt' => 'BTRS/BRMT/0',
+        ];
+        $source_map = [
+            'normal' => '1',
+            'atm' => '2',
+            'fxml' => '3',
+            'atm_loan_txt' => '4',
+            'atm_withdraw_txt' => '5',
+        ];
+
+        return new XmlContentInfo(
+            $fxml_map[$_type], $ftype_map[$_type], $source_map[$_type]
+        );
+    }
 
 	// hsiang  串國泰回應API 邏輯
 	public function check_batchno_to_cathay()
@@ -1683,5 +1714,17 @@ class Payment_lib{
             }
         }
         return $count;
+    }
+}
+class XmlContentInfo
+{
+    public $fxml;
+    public $ftype;
+    public $source;
+    public function __construct($fxml, $ftype, $source)
+    {
+        $this->fxml = $fxml;
+        $this->ftype = $ftype;
+        $this->source = $source;
     }
 }

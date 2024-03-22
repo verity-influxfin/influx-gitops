@@ -627,6 +627,40 @@ function curl_post_json(string $url, array $data = array(), array $header = arra
             (!empty($backtrace[1]) ? $backtrace[1]['file'] .'(' . $backtrace[1]['line'] : ''));
     }
 
+/**
+ * @param string $level the error level: 'error', 'debug' or 'info'
+ * @param string $function_name
+ * @param string $message
+ * @param bool $need_debug_backtrace
+ * @return bool
+ */
+function log_message_line_of_function(string $level = 'DEBUG', string $function_name, string $message, bool
+$need_debug_backtrace = false): bool
+{
+	$dir = 'application/logs/' . $function_name;
+	if (!is_dir($dir)) {
+		mkdir($dir, 0777, true);
+	}
+
+	$log_message = "$level - " . date('Y-m-d H:i:s') . " --> ";
+	if ($need_debug_backtrace) {
+		$backtrace = debug_backtrace();
+		for ($i = 0; $i < count($backtrace); $i++) {
+			if ($i == 0) {
+				$log_message .= $backtrace[0]['file'] . '(' . $backtrace[0]['line'] . ') :: ' . $message;
+			} else {
+				$log_message .= $backtrace[$i]['file'] . '(' . $backtrace[$i]['line'] . ')';
+			}
+			$log_message .= PHP_EOL;
+		}
+	} else {
+		$log_message .= "message: " . $message . PHP_EOL;
+	}
+
+	$log_file = $dir . "/log-" . date('Y-m-d') . ".php";
+	return error_log($log_message, 3, $log_file);
+}
+
     //紀錄國泰api詳細資訊，並刪除1年前資料
     function write_batchno_log($batch_no, $info)
     {

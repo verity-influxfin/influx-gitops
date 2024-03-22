@@ -111,6 +111,7 @@ abstract class Approve_base implements Approve_interface
             switch ($this->check_brookesia())
             {
                 case self::BROOKESIA_BLOCK:
+                    $this->result->set_action_cancel();
                     goto END;
                 case self::BROOKESIA_CLEAR:
                     break;
@@ -299,6 +300,8 @@ abstract class Approve_base implements Approve_interface
             ]);
             if ($identity_cert)
             {
+                //20240227 戶役政目前無法使用，先暫時關閉，直接通過
+                return TRUE;
                 // Avoid checking for the same target too many times.
                 $api_verify_log = $this->CI->log_integration_model->order_by('created_at', 'DESC')->get_by([
                     'user_certification_id' => $identity_cert->id
@@ -903,7 +906,7 @@ abstract class Approve_base implements Approve_interface
     {
         $param = $this->get_action_cancel_param();
         if(isset($param['memo'])){
-            log_message('error', 'Approve_target '.$this->target['id'].' set_action_cancellation memo: ' . json_encode($param['memo']));
+            log_message_line_of_function('INFO', 'approve_target_check_result', $this->target['id'] . ' set_action_cancellation memo: ' . json_encode($param['memo'], JSON_UNESCAPED_UNICODE), true);
         }
         $res = $this->CI->target_model->update($this->target['id'], $param);
         if ($res)
@@ -948,7 +951,7 @@ abstract class Approve_base implements Approve_interface
         }
 
         if(isset($param['memo'])){
-            log_message('error', 'Approve_target '.$this->target['id'].' set_target_success memo: ' . json_encode($param['memo']));
+            log_message_line_of_function('INFO', 'approve_target_check_result', $this->target['id'] . ' set_target_success memo: ' . json_encode($param['memo'], JSON_UNESCAPED_UNICODE), true);
         }
 
         $this->CI->target_model->update($this->target['id'], $param);
@@ -1046,7 +1049,7 @@ abstract class Approve_base implements Approve_interface
         }
 
         if(isset($param['memo'])){
-            log_message('error', 'Approve_target '.$this->target['id'].' set_target_failure memo: ' . json_encode($param['memo']));
+            log_message_line_of_function('INFO', 'approve_target_check_result', $this->target['id'] . ' set_target_failure memo: ' . json_encode($param['memo'], JSON_UNESCAPED_UNICODE), true);
         }
 
         $this->CI->target_model->update($this->target['id'], $param);
@@ -1106,7 +1109,7 @@ abstract class Approve_base implements Approve_interface
         if ( ! empty($memo))
         {
             $param['memo'] = json_encode($memo, JSON_PRETTY_PRINT);
-            log_message('error', 'Approve_target '.$this->target['id'].' set_target_waiting_approve memo: ' . json_encode($param['memo']));
+            log_message_line_of_function('INFO', 'approve_target_check_result', $this->target['id'] . ' set_target_waiting_approve memo: ' . json_encode($param['memo'], JSON_UNESCAPED_UNICODE), true);
         }
 
         $this->CI->target_model->update($this->target['id'], $param);
@@ -1128,8 +1131,7 @@ abstract class Approve_base implements Approve_interface
             return FALSE;
         }
         if(isset($param['memo'])){
-            log_message('error', 'Approve_target '.$this->target['id'].' set_target_second_instance memo: ' .
-                json_encode($param['memo']));
+            log_message_line_of_function('INFO', 'approve_target_check_result', $this->target['id'] . ' set_target_second_instance memo: ' . json_encode($param['memo'], JSON_UNESCAPED_UNICODE), true);
         }
         $credit_sheet = CreditSheetFactory::getInstance($this->target['id']);
         $credit_sheet_approve_res = $credit_sheet->approve($credit_sheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
